@@ -2,7 +2,7 @@
 
 echo "start time: `date`"
 echo "" > .procmail/pmlog
-getmail -a -d
+# getmail -a -d
 
 for i in `ls -1 -d */ 2> /dev/null`
 do
@@ -51,7 +51,7 @@ do
 # TODAY=`gdate +%Y_%m_%d`
 TODAY="2018_11_0${i}"
 # TODAY="2018_10_*"
-FILE=0_kernel_fanaticism/${TODAY}.txt
+FILE=../kernel_fanaticism/${TODAY}.txt
 echo "" > ${FILE}
 for i in `ls -1 -d */ 2> /dev/null`
 do

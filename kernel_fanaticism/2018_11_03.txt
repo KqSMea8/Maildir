@@ -1,0 +1,1305 @@
+
+0_Greg_Kroah-Hartman/
+=============
+      2  Re: [PATCH 4.14 053/143] x86/power: Fix some ordering bugs in
+      1  [PATCH 4.19 24/24] net: bridge: remove ipv6 zero address check in mcast queries
+      1  [PATCH 4.19 23/24] sparc64: Wire up compat getpeername and getsockname.
+      1  [PATCH 4.19 22/24] sparc64: Make corrupted user stacks more debuggable.
+      1  [PATCH 4.19 21/24] sparc64: Export __node_distance.
+      1  [PATCH 4.19 20/24] sctp: check policy more carefully when getting pr status
+      1  [PATCH 4.19 19/24] Revert "be2net: remove desc field from be_eq_obj"
+      1  [PATCH 4.19 18/24] r8169: fix broken Wake-on-LAN from S5 (poweroff)
+      1  [PATCH 4.19 17/24] net: Properly unlink GRO packets on overflow.
+      1  [PATCH 4.19 16/24] net: drop skb on failure in ip_check_defrag()
+      1  [PATCH 4.19 15/24] mlxsw: core: Fix devlink unregister flow
+      1  [PATCH 4.19 14/24] mlxsw: spectrum_switchdev: Dont ignore deletions of learned MACs
+      1  [PATCH 4.19 13/24] net/smc: fix smc_buf_unuse to use the lgr pointer
+      1  [PATCH 4.19 12/24] net/ipv6: Allow onlink routes to have a device mismatch if it is the default route
+      1  [PATCH 4.19 11/24] openvswitch: Fix push/pop ethernet validation
+      1  [PATCH 4.19 10/24] bonding: fix length of actor system
+      1  [PATCH 4.19 09/24] vhost: Fix Spectre V1 vulnerability
+      1  [PATCH 4.19 08/24] rtnetlink: Disallow FDB configuration for non-Ethernet device
+      1  [PATCH 4.19 07/24] Revert "net: simplify sock_poll_wait"
+      1  [PATCH 4.19 06/24] net: udp: fix handling of CHECKSUM_COMPLETE packets
+      1  [PATCH 4.19 05/24] net: stmmac: Fix stmmac_mdio_reset() when building stmmac as modules
+      1  [PATCH 4.19 04/24] net: sched: gred: pass the right attribute to gred_change_table_def()
+      1  [PATCH 4.19 03/24] net/mlx5e: fix csum adjustments caused by RXFCS
+      1  [PATCH 4.19 02/24] ipv6/ndisc: Preserve IPv6 control buffer if protocol error handlers are called
+      1  [PATCH 4.19 01/24] bridge: do not add port to router list when receives query with source 0.0.0.0
+      1  [PATCH 4.19 00/24] 4.19.1-stable review
+      1  [PATCH 4.18 150/150] net: bridge: remove ipv6 zero address check in mcast queries
+      1  [PATCH 4.18 149/150] sparc: Throttle perf events properly.
+      1  [PATCH 4.18 148/150] sparc: Fix syscall fallback bugs in VDSO.
+      1  [PATCH 4.18 147/150] sparc: Fix single-pcr perf event counter management.
+      1  [PATCH 4.18 146/150] sparc64: Wire up compat getpeername and getsockname.
+      1  [PATCH 4.18 145/150] sparc64: Set %l4 properly on trap return after handling signals.
+      1  [PATCH 4.18 144/150] sparc64: Make proc_id signed.
+      1  [PATCH 4.18 143/150] sparc64: Make corrupted user stacks more debuggable.
+      1  [PATCH 4.18 142/150] sparc64: Export __node_distance.
+      1  [PATCH 4.18 141/150] mlxsw: core: Fix devlink unregister flow
+      1  [PATCH 4.18 140/150] net/mlx5: WQ, fixes for fragmented WQ buffers API
+      1  [PATCH 4.18 139/150] net: fix pskb_trim_rcsum_slow() with odd trim offset
+      1  [PATCH 4.18 138/150] net: drop skb on failure in ip_check_defrag()
+      1  [PATCH 4.18 137/150] net: bpfilter: use get_pid_task instead of pid_task
+      1  [PATCH 4.18 136/150] mlxsw: spectrum_switchdev: Dont ignore deletions of learned MACs
+      1  [PATCH 4.18 135/150] net/smc: fix smc_buf_unuse to use the lgr pointer
+      1  [PATCH 4.18 134/150] net/mlx5: Fix memory leak when setting fpga ipsec caps
+      1  [PATCH 4.18 133/150] sctp: not free the new asoc when sctp_wait_for_connect returns err
+      1  [PATCH 4.18 132/150] sctp: fix the data size calculation in sctp_data_size
+      1  [PATCH 4.18 131/150] net/ipv6: Allow onlink routes to have a device mismatch if it is the default route
+      1  [PATCH 4.18 130/150] net/sched: cls_api: add missing validation of netlink attributes
+      1  [PATCH 4.18 129/150] net: sched: Fix for duplicate class dump
+      1  [PATCH 4.18 128/150] net: bcmgenet: Poll internal PHY for GENETv5
+      1  [PATCH 4.18 127/150] net/mlx5: Take only bit 24-26 of wqe.pftype_wq for page fault type
+      1  [PATCH 4.18 126/150] net: ipmr: fix unresolved entry dumps
+      1  [PATCH 4.18 125/150] openvswitch: Fix push/pop ethernet validation
+      1  [PATCH 4.18 124/150] ip6_tunnel: Fix encapsulation layout
+      1  [PATCH 4.18 123/150] bonding: fix length of actor system
+      1  [PATCH 4.18 122/150] ethtool: fix a privilege escalation bug
+      1  [PATCH 4.18 121/150] virtio_net: avoid using netif_tx_disable() for serializing tx routine
+      1  [PATCH 4.18 120/150] vhost: Fix Spectre V1 vulnerability
+      1  [PATCH 4.18 119/150] udp6: fix encap return code for resubmitting
+      1  [PATCH 4.18 118/150] tipc: fix unsafe rcu locking when accessing publication list
+      1  [PATCH 4.18 117/150] sctp: fix race on sctp_id2asoc
+      1  [PATCH 4.18 116/150] rtnetlink: Disallow FDB configuration for non-Ethernet device
+      1  [PATCH 4.18 115/150] r8169: fix NAPI handling under high load
+      1  [PATCH 4.18 114/150] net: udp: fix handling of CHECKSUM_COMPLETE packets
+      1  [PATCH 4.18 113/150] net: stmmac: Fix stmmac_mdio_reset() when building stmmac as modules
+      1  [PATCH 4.18 112/150] net: socket: fix a missing-check bug
+      1  [PATCH 4.18 111/150] net: sched: gred: pass the right attribute to gred_change_table_def()
+      1  [PATCH 4.18 110/150] net/mlx5e: fix csum adjustments caused by RXFCS
+      1  [PATCH 4.18 109/150] net/ipv6: Fix index counter for unicast addresses in in6_dump_addrs
+      1  [PATCH 4.18 108/150] net: fec: dont dump RX FIFO register when not available
+      1  [PATCH 4.18 107/150] llc: set SOCK_RCU_FREE in llc_sap_add_socket()
+      1  [PATCH 4.18 106/150] ipv6: rate-limit probes for neighbourless routes
+      1  [PATCH 4.18 105/150] ipv6/ndisc: Preserve IPv6 control buffer if protocol error handlers are called
+      1  [PATCH 4.18 104/150] ipv6: mcast: fix a use-after-free in inet6_mc_check
+      1  [PATCH 4.18 103/150] bridge: do not add port to router list when receives query with source 0.0.0.0
+      1  [PATCH 4.18 102/150] perf tools: Disable parallelism for make clean
+      1  [PATCH 4.18 101/150] Revert "netfilter: ipv6: nf_defrag: drop skb dst before queueing"
+      1  [PATCH 4.18 100/150] Revert "mm: slowly shrink slabs with a relatively small number of objects"
+      1  [PATCH 4.18 099/150] fs/fat/fatent.c: add cond_resched() to fat_count_free_clusters()
+      1  [PATCH 4.18 098/150] afs: Fix cell proc list
+      1  [PATCH 4.18 097/150] vmlinux.lds.h: Fix linker warnings about orphan .LPBX sections
+      1  [PATCH 4.18 096/150] vmlinux.lds.h: Fix incomplete .text.exit discards
+      1  [PATCH 4.18 095/150] selftests: udpgso_bench.sh explicitly requires bash
+      1  [PATCH 4.18 094/150] selftests: rtnetlink.sh explicitly requires bash.
+      1  [PATCH 4.18 093/150] rds: RDS (tcp) hangs on sendto() to unresponding address
+      1  [PATCH 4.18 092/150] IB/mlx5: Unmap DMA addr from HCA before IOMMU
+      1  [PATCH 4.18 091/150] gpio: Assign gpio_irq_chip::parents to non-stack pointer
+      1  [PATCH 4.18 090/150] net: ena: fix NULL dereference due to untimely napi initialization
+      1  [PATCH 4.18 089/150] net: ena: fix rare bug when failed restart/resume is followed by driver removal
+      1  [PATCH 4.18 088/150] net: ena: fix warning in rmmod caused by double iounmap
+      1  [PATCH 4.18 087/150] KVM: x86: support CONFIG_KVM_AMD=y with CONFIG_CRYPTO_DEV_CCP_DD=m
+      1  [PATCH 4.18 086/150] rxrpc: Fix connection-level abort handling
+      1  [PATCH 4.18 085/150] rxrpc: Only take the rwind and mtu values from latest ACK
+      1  [PATCH 4.18 084/150] rxrpc: Carry call state out of locked section in rxrpc_rotate_tx_window()
+      1  [PATCH 4.18 083/150] rxrpc: Dont check RXRPC_CALL_TX_LAST after calling rxrpc_rotate_tx_window()
+      1  [PATCH 4.18 082/150] perf record: Use unmapped IP for inline callchain cursors
+      1  [PATCH 4.18 081/150] perf python: Use -Wno-redundant-decls to build with PYTHON=python3
+      1  [PATCH 4.18 080/150] ARM: dts: imx53-qsb: disable 1.2GHz OPP
+      1  [PATCH 4.18 079/150] compiler.h: Allow arch-specific asm/compiler.h
+      1  [PATCH 4.18 078/150] HID: i2c-hid: Remove RESEND_REPORT_DESCR quirk and its handling
+      1  [PATCH 4.18 077/150] tls: Fix improper revert in zerocopy_from_iter
+      1  [PATCH 4.18 076/150] perf report: Dont try to map ip to invalid map
+      1  [PATCH 4.18 075/150] libertas: call into generic suspend code before turning off power
+      1  [PATCH 4.18 074/150] clk: mvebu: armada-37xx-periph: Remove unused var num_parents
+      1  [PATCH 4.18 073/150] x86/paravirt: Fix some warning messages
+      1  [PATCH 4.18 072/150] mm/migrate.c: split only transparent huge pages when allocation fails
+      1  [PATCH 4.18 071/150] mm/gup_benchmark: fix unsigned comparison to zero in __gup_benchmark_ioctl
+      1  [PATCH 4.18 070/150] ocfs2: fix crash in ocfs2_duplicate_clusters_by_page()
+      1  [PATCH 4.18 069/150] yam: fix a missing-check bug
+      1  [PATCH 4.18 068/150] net: cxgb3_main: fix a missing-check bug
+      1  [PATCH 4.18 067/150] powerpc/numa: Skip onlining a offline node in kdump path
+      1  [PATCH 4.18 066/150] be2net: dont flip hw_features when VXLANs are added/deleted
+      1  [PATCH 4.18 065/150] drm/amd/display: Signal hw_done() after waiting for flip_done()
+      1  [PATCH 4.18 064/150] locking/ww_mutex: Fix runtime warning in the WW mutex selftest
+      1  [PATCH 4.18 063/150] Revert "serial: 8250_dw: Fix runtime PM handling"
+      1  [PATCH 4.18 062/150] RISCV: Fix end PFN for low memory
+      1  [PATCH 4.18 061/150] declance: Fix continuation with the adapter identification message
+      1  [PATCH 4.18 060/150] net: fec: fix rare tx timeout
+      1  [PATCH 4.18 059/150] thunderbolt: Initialize after IOMMUs
+      1  [PATCH 4.18 058/150] thunderbolt: Do not handle ICM events after domain is stopped
+      1  [PATCH 4.18 057/150] perf/x86/amd/uncore: Set ThreadMask and SliceMask for L3 Cache perf events
+      1  [PATCH 4.18 056/150] perf/x86/intel/uncore: Fix PCI BDF address of M3UPI on SKX
+      1  [PATCH 4.18 055/150] perf/ring_buffer: Prevent concurent ring buffer access
+      1  [PATCH 4.18 054/150] perf/x86/intel/uncore: Use boot_cpu_data.phys_proc_id instead of hardcorded physical package ID 0
+      1  [PATCH 4.18 053/150] perf/core: Fix perf_pmu_unregister() locking
+      1  [PATCH 4.18 052/150] KVM: nVMX: Fix emulation of VM_ENTRY_LOAD_BNDCFGS
+      1  [PATCH 4.18 051/150] KVM: x86: Do not use kvm_x86_ops->mpx_supported() directly
+      1  [PATCH 4.18 050/150] KVM: nVMX: Do not expose MPX VMX controls when guest MPX disabled
+      1  [PATCH 4.18 049/150] cfg80211: fix use-after-free in reg_process_hint()
+      1  [PATCH 4.18 048/150] smsc95xx: Check for Wake-on-LAN modes
+      1  [PATCH 4.18 047/150] smsc75xx: Check for Wake-on-LAN modes
+      1  [PATCH 4.18 046/150] r8152: Check for supported Wake-on-LAN Modes
+      1  [PATCH 4.18 045/150] sr9800: Check for supported Wake-on-LAN modes
+      1  [PATCH 4.18 044/150] lan78xx: Check for supported Wake-on-LAN modes
+      1  [PATCH 4.18 043/150] ax88179_178a: Check for supported Wake-on-LAN modes
+      1  [PATCH 4.18 042/150] asix: Check for supported Wake-on-LAN modes
+      1  [PATCH 4.18 041/150] netfilter: avoid erronous array bounds warning
+      1  [PATCH 4.18 040/150] netfilter: nft_set_rbtree: add missing rb_erase() in GC routine
+      1  [PATCH 4.18 039/150] rxrpc: Fix error distribution
+      1  [PATCH 4.18 038/150] rxrpc: Fix transport sockopts to get IPv4 errors on an IPv6 socket
+      1  [PATCH 4.18 037/150] rxrpc: Fix RTT gathering
+      1  [PATCH 4.18 036/150] rxrpc: Fix checks as to whether we should set up a new call
+      1  [PATCH 4.18 035/150] scsi: qedi: Initialize the stats mutex lock
+      1  [PATCH 4.18 034/150] nl80211: Fix possible Spectre-v1 for CQM RSSI thresholds
+      1  [PATCH 4.18 033/150] qed: Avoid implicit enum conversion in qed_iwarp_parse_rx_pkt
+      1  [PATCH 4.18 032/150] qed: Avoid constant logical operation warning in qed_vf_pf_acquire
+      1  [PATCH 4.18 031/150] qed: Avoid implicit enum conversion in qed_roce_mode_to_flavor
+      1  [PATCH 4.18 030/150] qed: Fix mask parameter in qed_vf_prep_tunn_req_tlv
+      1  [PATCH 4.18 029/150] qed: Avoid implicit enum conversion in qed_set_tunn_cls_info
+      1  [PATCH 4.18 028/150] pxa168fb: prepare the clock
+      1  [PATCH 4.18 027/150] Bluetooth: SMP: fix crash in unpairing
+      1  [PATCH 4.18 026/150] mac80211_hwsim: do not omit multicast announce of first added radio
+      1  [PATCH 4.18 025/150] mac80211_hwsim: fix race in radio destruction from netlink notifier
+      1  [PATCH 4.18 024/150] mac80211_hwsim: fix locking when iterating radios during ns exit
+      1  [PATCH 4.18 023/150] nl80211: Fix possible Spectre-v1 for NL80211_TXRATE_HT
+      1  [PATCH 4.18 022/150] soc: fsl: qe: Fix copy/paste bug in ucc_get_tdm_sync_shift()
+      1  [PATCH 4.18 021/150] soc: fsl: qbman: qman: avoid allocating from non existing gen_pool
+      1  [PATCH 4.18 020/150] net: macb: Clean 64b dma addresses if they are not detected
+      1  [PATCH 4.18 019/150] ARM: dts: BCM63xx: Fix incorrect interrupt specifiers
+      1  [PATCH 4.18 018/150] arm64: hugetlb: Fix handling of young ptes
+      1  [PATCH 4.18 017/150] netfilter: conntrack: get rid of double sizeof
+      1  [PATCH 4.18 016/150] netfilter: bridge: Dont sabotage nf_hook calls from an l3mdev
+      1  [PATCH 4.18 015/150] drm/i2c: tda9950: set MAX_RETRIES for errors only
+      1  [PATCH 4.18 014/150] drm/i2c: tda9950: fix timeout counter check
+      1  [PATCH 4.18 013/150] xfrm: validate template mode
+      1  [PATCH 4.18 012/150] ARM: 8799/1: mm: fix pci_ioremap_io() offset check
+      1  [PATCH 4.18 011/150] xfrm: Fix NULL pointer dereference when skb_dst_force clears the dst_entry.
+      1  [PATCH 4.18 010/150] mac80211: fix TX status reporting for ieee80211s
+      1  [PATCH 4.18 009/150] mac80211: TDLS: fix skb queue/priority assignment
+      1  [PATCH 4.18 008/150] cfg80211: Address some corner cases in scan result channel updating
+      1  [PATCH 4.18 007/150] mac80211: fix pending queue hang due to TX_DROP
+      1  [PATCH 4.18 006/150] cfg80211: reg: Init wiphy_idx in regulatory_hint_core()
+      1  [PATCH 4.18 005/150] mac80211: Always report TX status
+      1  [PATCH 4.18 004/150] xfrm: reset crypto_done when iterating over multiple input xfrms
+      1  [PATCH 4.18 003/150] xfrm: reset transport header back to network header after all input transforms ahave been applied
+      1  [PATCH 4.18 002/150] xfrm6: call kfree_skb when skb is toobig
+      1  [PATCH 4.18 001/150] xfrm: Validate address prefix lengths in the xfrm selector.
+      1  [PATCH 4.18 000/150] 4.18.17-stable review
+      1  [PATCH 4.14 143/143] net/sched: cls_api: add missing validation of netlink attributes
+      1  [PATCH 4.14 142/143] net: bcmgenet: Poll internal PHY for GENETv5
+      1  [PATCH 4.14 141/143] net: ipmr: fix unresolved entry dumps
+      1  [PATCH 4.14 140/143] rtnetlink: Disallow FDB configuration for non-Ethernet device
+      1  [PATCH 4.14 139/143] net/mlx5e: fix csum adjustments caused by RXFCS
+      1  [PATCH 4.14 138/143] net: fix pskb_trim_rcsum_slow() with odd trim offset
+      1  [PATCH 4.14 137/143] net: drop skb on failure in ip_check_defrag()
+      1  [PATCH 4.14 136/143] net: sched: Fix for duplicate class dump
+      1  [PATCH 4.14 135/143] net/mlx5: Take only bit 24-26 of wqe.pftype_wq for page fault type
+      1  [PATCH 4.14 134/143] openvswitch: Fix push/pop ethernet validation
+      1  [PATCH 4.14 133/143] ip6_tunnel: Fix encapsulation layout
+      1  [PATCH 4.14 132/143] bonding: fix length of actor system
+      1  [PATCH 4.14 131/143] ethtool: fix a privilege escalation bug
+      1  [PATCH 4.14 130/143] virtio_net: avoid using netif_tx_disable() for serializing tx routine
+      1  [PATCH 4.14 129/143] vhost: Fix Spectre V1 vulnerability
+      1  [PATCH 4.14 128/143] udp6: fix encap return code for resubmitting
+      1  [PATCH 4.14 127/143] sctp: fix race on sctp_id2asoc
+      1  [PATCH 4.14 126/143] r8169: fix NAPI handling under high load
+      1  [PATCH 4.14 125/143] net: udp: fix handling of CHECKSUM_COMPLETE packets
+      1  [PATCH 4.14 124/143] net: stmmac: Fix stmmac_mdio_reset() when building stmmac as modules
+      1  [PATCH 4.14 123/143] net: socket: fix a missing-check bug
+      1  [PATCH 4.14 122/143] net: sched: gred: pass the right attribute to gred_change_table_def()
+      1  [PATCH 4.14 121/143] net/ipv6: Fix index counter for unicast addresses in in6_dump_addrs
+      1  [PATCH 4.14 120/143] net: fec: dont dump RX FIFO register when not available
+      1  [PATCH 4.14 119/143] llc: set SOCK_RCU_FREE in llc_sap_add_socket()
+      1  [PATCH 4.14 118/143] ipv6/ndisc: Preserve IPv6 control buffer if protocol error handlers are called
+      1  [PATCH 4.14 117/143] ipv6: mcast: fix a use-after-free in inet6_mc_check
+      1  [PATCH 4.14 116/143] net: bridge: remove ipv6 zero address check in mcast queries
+      1  [PATCH 4.14 115/143] bridge: do not add port to router list when receives query with source 0.0.0.0
+      1  [PATCH 4.14 114/143] drm/i915/gvt: fix memory leak of a cmd_entry struct on error exit path
+      1  [PATCH 4.14 113/143] perf tools: Disable parallelism for make clean
+      1  [PATCH 4.14 112/143] Revert "netfilter: ipv6: nf_defrag: drop skb dst before queueing"
+      1  [PATCH 4.14 111/143] ALSA: usx2y: Fix invalid stream URBs
+      1  [PATCH 4.14 110/143] media: uvcvideo: Fix driver reference counting
+      1  [PATCH 4.14 109/143] ARM: dts: r8a7790: Correct critical CPU temperature
+      1  [PATCH 4.14 108/143] kvm: x86: fix WARN due to uninitialized guest FPU state
+      1  [PATCH 4.14 107/143] mtd: spi-nor: Add support for is25wp series chips
+      1  [PATCH 4.14 106/143] sch_netem: restore skb->dev after dequeuing from the rbtree
+      1  [PATCH 4.14 105/143] fs/fat/fatent.c: add cond_resched() to fat_count_free_clusters()
+      1  [PATCH 4.14 104/143] selftests: rtnetlink.sh explicitly requires bash.
+      1  [PATCH 4.14 103/143] net: ena: fix NULL dereference due to untimely napi initialization
+      1  [PATCH 4.14 102/143] net: ena: fix warning in rmmod caused by double iounmap
+      1  [PATCH 4.14 101/143] rxrpc: Fix connection-level abort handling
+      1  [PATCH 4.14 100/143] rxrpc: Only take the rwind and mtu values from latest ACK
+      1  [PATCH 4.14 099/143] rxrpc: Dont check RXRPC_CALL_TX_LAST after calling rxrpc_rotate_tx_window()
+      1  [PATCH 4.14 098/143] perf python: Use -Wno-redundant-decls to build with PYTHON=python3
+      1  [PATCH 4.14 097/143] ARM: dts: imx53-qsb: disable 1.2GHz OPP
+      1  [PATCH 4.14 096/143] compiler.h: Allow arch-specific asm/compiler.h
+      1  [PATCH 4.14 095/143] perf tests: Fix indexing when invoking subtests
+      1  [PATCH 4.14 094/143] libertas: call into generic suspend code before turning off power
+      1  [PATCH 4.14 093/143] kconfig: fix the rule of mainmenu_stmt symbol
+      1  [PATCH 4.14 092/143] net: stmmac: mark PM functions as __maybe_unused
+      1  [PATCH 4.14 091/143] x86/paravirt: Fix some warning messages
+      1  [PATCH 4.14 089/143] btrfs: quota: Set rescan progress to (u64)-1 if we hit last leaf
+      1  [PATCH 4.14 088/143] scsi: sd: Remember that READ CAPACITY(16) succeeded
+      1  [PATCH 4.14 087/143] scsi: ibmvfc: Avoid unnecessary port relogin
+      1  [PATCH 4.14 086/143] selftests/powerpc: Add ptrace hw breakpoint test
+      1  [PATCH 4.14 085/143] iio: buffer: fix the function signature to match implementation
+      1  [PATCH 4.14 084/143] enic: do not overwrite error code
+      1  [PATCH 4.14 083/143] lan78xx: Dont reset the interface on open
+      1  [PATCH 4.14 082/143] MIPS: Workaround GCC __builtin_unreachable reordering bug
+      1  [PATCH 4.14 081/143] mmc: dw_mmc-rockchip: correct property names in debug
+      1  [PATCH 4.14 080/143] IB/usnic: Update with bug fixes from core code
+      1  [PATCH 4.14 079/143] xen-netfront: Fix mismatched rtnl_unlock
+      1  [PATCH 4.14 078/143] xen-netfront: Update features after registering netdev
+      1  [PATCH 4.14 077/143] tpm: tpm_crb: relinquish locality on error path.
+      1  [PATCH 4.14 076/143] bpf: sockmap, map_release does not hold refcnt for pinned maps
+      1  [PATCH 4.14 075/143] tpm: move the delay_msec increment after sleep in tpm_transmit()
+      1  [PATCH 4.14 074/143] sparc64: Fix regression in pmdp_invalidate().
+      1  [PATCH 4.14 073/143] KVM: x86: Update the exit_qualification access bits while walking an address
+      1  [PATCH 4.14 072/143] test_bpf: Fix testing with CONFIG_BPF_JIT_ALWAYS_ON=y on other arches
+      1  [PATCH 4.14 071/143] cifs: Use ULL suffix for 64-bit constant
+      1  [PATCH 4.14 070/143] l2tp: remove configurable payload offset
+      1  [PATCH 4.14 069/143] ARM: tegra: Fix ULPI regression on Tegra20
+      1  [PATCH 4.14 068/143] IB/mlx5: Avoid passing an invalid QP type to firmware
+      1  [PATCH 4.14 067/143] kbuild: set no-integrated-as before incl. arch Makefile
+      1  [PATCH 4.14 066/143] scsi: qla2xxx: Avoid double completion of abort command
+      1  [PATCH 4.14 065/143] net/mlx5e: Refine ets validation function
+      1  [PATCH 4.14 064/143] net: phy: Add general dummy stubs for MMD register access
+      1  [PATCH 4.14 063/143] net: phy: realtek: Use the dummy stubs for MMD register access for rtl8211b
+      1  [PATCH 4.14 062/143] dm integrity: fail early if required HMAC key is not available
+      1  [PATCH 4.14 061/143] powerpc/pseries: Add empty update_numa_cpu_lookup_table() for NUMA=n
+      1  [PATCH 4.14 060/143] net/mlx5: Fix mlx5_get_vector_affinity function
+      1  [PATCH 4.14 059/143] s390/qeth: fix error handling in adapter command callbacks
+      1  [PATCH 4.14 058/143] IB/rxe: put the pool on allocation failure
+      1  [PATCH 4.14 057/143] IB/ipoib: Fix lockdep issue found on ipoib_ib_dev_heavy_flush
+      1  [PATCH 4.14 056/143] scsi: aacraid: address UBSAN warning regression
+      1  [PATCH 4.14 055/143] usbip: vhci_hcd: update status file header and format
+      1  [PATCH 4.14 054/143] tools/testing/nvdimm: unit test clear-error commands
+      1  [PATCH 4.14 053/143] x86/power: Fix some ordering bugs in __restore_processor_context()
+      1  [PATCH 4.14 052/143] iwlwifi: fix the ALIVE notification layout
+      1  [PATCH 4.14 051/143] iwlwifi: dbg: allow wrt collection before ALIVE
+      1  [PATCH 4.14 050/143] iwlwifi: mvm: check for short GI only for OFDM
+      1  [PATCH 4.14 049/143] ocfs2: fix crash in ocfs2_duplicate_clusters_by_page()
+      1  [PATCH 4.14 048/143] yam: fix a missing-check bug
+      1  [PATCH 4.14 047/143] net: cxgb3_main: fix a missing-check bug
+      1  [PATCH 4.14 046/143] be2net: dont flip hw_features when VXLANs are added/deleted
+      1  [PATCH 4.14 045/143] locking/ww_mutex: Fix runtime warning in the WW mutex selftest
+      1  [PATCH 4.14 044/143] net: qualcomm: rmnet: Skip processing loopback packets
+      1  [PATCH 4.14 043/143] declance: Fix continuation with the adapter identification message
+      1  [PATCH 4.14 042/143] net: fec: fix rare tx timeout
+      1  [PATCH 4.14 041/143] perf/x86/amd/uncore: Set ThreadMask and SliceMask for L3 Cache perf events
+      1  [PATCH 4.14 040/143] perf/x86/intel/uncore: Fix PCI BDF address of M3UPI on SKX
+      1  [PATCH 4.14 039/143] perf/ring_buffer: Prevent concurent ring buffer access
+      1  [PATCH 4.14 038/143] perf/core: Fix perf_pmu_unregister() locking
+      1  [PATCH 4.14 037/143] cfg80211: fix use-after-free in reg_process_hint()
+      1  [PATCH 4.14 036/143] smsc95xx: Check for Wake-on-LAN modes
+      1  [PATCH 4.14 035/143] smsc75xx: Check for Wake-on-LAN modes
+      1  [PATCH 4.14 034/143] r8152: Check for supported Wake-on-LAN Modes
+      1  [PATCH 4.14 033/143] sr9800: Check for supported Wake-on-LAN modes
+      1  [PATCH 4.14 032/143] lan78xx: Check for supported Wake-on-LAN modes
+      1  [PATCH 4.14 031/143] ax88179_178a: Check for supported Wake-on-LAN modes
+      1  [PATCH 4.14 030/143] asix: Check for supported Wake-on-LAN modes
+      1  [PATCH 4.14 029/143] nl80211: Fix possible Spectre-v1 for CQM RSSI thresholds
+      1  [PATCH 4.14 028/143] qed: Avoid implicit enum conversion in qed_iwarp_parse_rx_pkt
+      1  [PATCH 4.14 027/143] qed: Avoid constant logical operation warning in qed_vf_pf_acquire
+      1  [PATCH 4.14 026/143] qed: Avoid implicit enum conversion in qed_roce_mode_to_flavor
+      1  [PATCH 4.14 025/143] qed: Fix mask parameter in qed_vf_prep_tunn_req_tlv
+      1  [PATCH 4.14 024/143] qed: Avoid implicit enum conversion in qed_set_tunn_cls_info
+      1  [PATCH 4.14 023/143] pxa168fb: prepare the clock
+      1  [PATCH 4.14 022/143] Bluetooth: SMP: fix crash in unpairing
+      1  [PATCH 4.14 021/143] mac80211_hwsim: do not omit multicast announce of first added radio
+      1  [PATCH 4.14 020/143] nl80211: Fix possible Spectre-v1 for NL80211_TXRATE_HT
+      1  [PATCH 4.14 019/143] soc: fsl: qe: Fix copy/paste bug in ucc_get_tdm_sync_shift()
+      1  [PATCH 4.14 018/143] soc: fsl: qbman: qman: avoid allocating from non existing gen_pool
+      1  [PATCH 4.14 017/143] net: macb: Clean 64b dma addresses if they are not detected
+      1  [PATCH 4.14 016/143] ARM: dts: BCM63xx: Fix incorrect interrupt specifiers
+      1  [PATCH 4.14 015/143] arm64: hugetlb: Fix handling of young ptes
+      1  [PATCH 4.14 014/143] netfilter: bridge: Dont sabotage nf_hook calls from an l3mdev
+      1  [PATCH 4.14 013/143] xfrm: validate template mode
+      1  [PATCH 4.14 012/143] ARM: 8799/1: mm: fix pci_ioremap_io() offset check
+      1  [PATCH 4.14 011/143] xfrm: Fix NULL pointer dereference when skb_dst_force clears the dst_entry.
+      1  [PATCH 4.14 010/143] mac80211: fix TX status reporting for ieee80211s
+      1  [PATCH 4.14 009/143] mac80211: TDLS: fix skb queue/priority assignment
+      1  [PATCH 4.14 008/143] cfg80211: Address some corner cases in scan result channel updating
+      1  [PATCH 4.14 007/143] mac80211: fix pending queue hang due to TX_DROP
+      1  [PATCH 4.14 006/143] cfg80211: reg: Init wiphy_idx in regulatory_hint_core()
+      1  [PATCH 4.14 005/143] mac80211: Always report TX status
+      1  [PATCH 4.14 004/143] xfrm: reset crypto_done when iterating over multiple input xfrms
+      1  [PATCH 4.14 003/143] xfrm: reset transport header back to network header after all input transforms ahave been applied
+      1  [PATCH 4.14 002/143] xfrm6: call kfree_skb when skb is toobig
+      1  [PATCH 4.14 001/143] xfrm: Validate address prefix lengths in the xfrm selector.
+      1  [PATCH 4.14 000/143] 4.14.79-stable review
+      1  Re: [PATCH] vt: fix broken display when running aptitude
+      1  Re: [PATCH] mremap: properly flush TLB before releasing the page
+      1  Re: [PATCH 4.14 000/143] 4.14.79-stable review
+
+
+0_kernel-hardening/
+=============
+      3  Re: [PATCH 10/17] prmem: documentation
+      1  [PATCH v8 4/4] Kselftest for module text allocation benchmarking
+      1  [PATCH v8 3/4] vmalloc: Add debugfs modfraginfo
+      1  [PATCH v8 2/4] x86/modules: Increase randomization for modules
+      1  [PATCH v8 1/4] vmalloc: Add __vmalloc_node_try_addr function
+      1  [PATCH v8 0/4] KASLR feature to randomize each loadable module
+
+
+0_linux-kernel/
+=============
+      4  Re: lib/genalloc
+      4  Re: [RFC PATCH] x86/mm/fault: Allow stack access below %rsp
+      2  Re: [RFC] doc: rcu: remove note on smp_mb during synchronize_rcu
+      2  Re: [PATCH 7/8] pstore: Remove needless lock during console writes
+      2  RE: [PATCH] genirq/affinity: Spread IRQs to all available NUMA nodes
+      1  [SPAM] Re: [Ksummit-discuss] Call to Action Re: [PATCH 0/7]
+      1  [RFC PATCH] x86/mm/fault: Allow stack access below %rsp
+      1  [Patch v2] genirq/affinity: Spread IRQs to all available NUMA nodes
+      1  [PATCH] tracing: eliminate const char[] auto variables
+      1  [PATCH] trace: fix memory leak in create_filter()
+      1  [PATCH] sched/rt: Remove unnecessary check for next_task in push_rt_task()
+      1  [PATCH] perf: replace automatic const char[] variables by statics
+      1  [PATCH] mailmap: Update email for Punit Agrawal
+      1  [PATCH] bloat-o-meter: ignore __addressable_ symbols
+      1  [PATCH] Correct comparison statements in documentation
+      1  [PATCH 1/5] lib: cordic: Move cordic macros and defines to header file
+      1  Re: [RFC PATCH 0/7] runtime format string checking
+      1  Re: [RFC 00/60] Coscheduling for Linux
+      1  Re: [PATCH] vt: fix broken display when running aptitude
+      1  Re: [PATCH] copy_{to,from}_user(): fix compile-time sanity checks
+      1  Re: [PATCH v14 3/3]: perf record: extend trace writing to multi AIO
+      1  Re: [PATCH v14 2/3]: perf record: enable asynchronous trace writing
+      1  Re: [PATCH v14 1/3]: perf util: map data buffer for preserving
+      1  Re: [PATCH 8/8] pstore/ram: Correctly calculate usable PRZ bytes
+      1  Re: [PATCH 2/8] pstore: Do not use crash buffer for decompression
+      1  Re: [PATCH 00/10] steal tasks to improve CPU utilization
+      1  Re: [LKP] [net/ipv6] 4ed591c8ab:
+      1  Re: [Ksummit-discuss] Call to Action Re: [PATCH 0/7] Code of
+      1  RE: [PATCH] genirq/affinity: Spread IRQs to all available NUMA
+      1  "x86/mm: Introduce the 'no5lvl' kernel parameter" broke SETUP_DTB?
+
+
+1_kernel_test_robot/
+=============
+      1  drivers/acpi/pmic/intel_pmic_xpower.c:183: undefined reference to
+      1  [SPAM] Re: [PATCH] include/asm/cmpxchg.h: Remove duplicate
+      1  [SPAM] Re: [PATCH 4/6] tpm: move tpm_validate_commmand() to
+      1  [SPAM] Re: [PATCH 3/6] phy: phy-of-simple: Add support for
+      1  [SPAM] Re: [PATCH 1/1] Add vhost_blk driver
+      1  Re: [PATCH] include/asm/cmpxchg.h: Remove duplicate header
+      1  Re: [PATCH v6 1/3] printk: Add line-buffered printk() API.
+
+
+Aaro_Koskinen/
+=============
+      1  [PATCH v3] arm64: dts: stratix10: fix multicast filtering
+
+
+Alan_Stern/
+=============
+      2  Re: [PATCH 4/6] usb: gadget: add functions to signal udc driver to
+
+
+Andrey_Ryabinin/
+=============
+      1  Re: [RFC PATCH] lib: Introduce generic __cmpxchg_u64() and use it
+
+
+Ard_Biesheuvel/
+=============
+      1  Re: [PATCH v2] arm64: kprobe: make page to RO mode when allocate it
+
+
+Arnd_Bergmann/
+=============
+      2  Re: [PATCH] net/mlx5e: fix high stack usage
+      2  Re: [PATCH] ACPI / PMIC: xpower: fix IOSF_MBI dependency
+      1  [PATCH] btrfs: avoid link error with CONFIG_NO_AUTO_INLINE
+      1  [PATCH] ath10k: avoid -Wmaybe-uninitialized warning
+      1  Re: [PATCH] copy_{to,from}_user(): fix compile-time sanity checks
+      1  Re: [PATCH] ASoC: sunxi: rename SND_SUN8I_ADDA_PR_REGMAP
+      1  Re: [PATCH] ASoC: skl: always select SND_SOC_HDAC_HDA
+
+
+Bart_Van_Assche/
+=============
+      1  Re: [PATCH 0/2] loop: Better discard for block devices
+
+
+Bjorn_Andersson/
+=============
+      1  [PATCH] arm64: dts: sdm845-mtp: Reserve reserved gpios
+      1  [PATCH] arm64: defconfig: Enable core Qualcomm SDM845 options
+
+
+Boris_Brezillon/
+=============
+      1  Re: [GIT PULL] Addition of the I3C subsystem in 4.20 (5.0)?
+
+
+CHROME_Olof_Johansson/
+=============
+      1  [PATCH] kdb: fix strncpy warning
+      1  Re: linux-next: Signed-off-by missing for commit in the arm-soc tree
+      1  Re: [PATCH] ubsan: don't mark __ubsan_handle_builtin_unreachable as noreturn
+      1  Re: [PATCH] arm64: defconfig: Enable some IPMI configs
+      1  Re: [PATCH] ARM: orion: avoid VLA in orion_mpp_conf
+      1  Re: [PATCH v3 0/2] dt-bindings: uniphier: two trivial DT bindings
+      1  Re: [GIT PULL] sprd dts for kernel v4.20-rc1
+
+
+Catalin_Marinas/
+=============
+      1  [GIT PULL] arm64 2nd round of updates for 4.20
+      1  Re: [PATCH] arm64: hide unused swiotlb functions
+      1  Re: [PATCH v2] arm64: kprobe: make page to RO mode when allocate it
+      1  Re: [PATCH v2] arm64: kdump: fix small typo
+
+
+Charles_Keepax/
+=============
+      1  Re: [PATCH] [v2] ASoC: wm97xx: fix uninitialized regmap pointer
+
+
+Christoffer_Dall/
+=============
+      1  Re: [PATCH 16/16] KVM: arm/arm64: vgic: Replace spin_is_locked()
+
+
+Christoph_Hellwig/
+=============
+      1  [GIT PULL] dma-mapping fix for 4.20
+
+
+Corey_Minyard/
+=============
+      1  Re: [PATCH] ipmi: clean an indentation issue, remove extraneous space
+
+
+Daniel_Lezcano/
+=============
+      1  [PATCH 4/4] dt-bindings: timer: gx6605s SOC timer
+      1  [PATCH 3/4] clocksource/drivers/c-sky: Add gx6605s SOC system timer
+      1  [PATCH 2/4] dt-bindings: timer: C-SKY Multi-processor timer
+      1  [PATCH 1/4] clocksource/drivers/c-sky: Add C-SKY SMP timer
+      1  [GIT PULL] timer for tip/urgent
+      1  Re: [GIT PULL] timer for tip/urgent
+
+
+Daniel_Thompson/
+=============
+      1  Re: [PATCH] kdb: fix strncpy warning
+      1  Re: [PATCH v2 2/2] kgdb: Fix kgdb_roundup_cpus() for arches who used
+
+
+David_S_Miller/
+=============
+      1  [PATCH] perf: Remove strchr() in map__process_kallsyms_symbol().
+      1  Re: [PATCH] net: move
+      1  Re: [PATCH] net: document skb parameter in function
+      1  Re: [PATCH] bonding:avoid repeated display of same link status
+      1  Re: [PATCH v2] usbnet: smsc95xx: disable carrier check while
+      1  Re: [PATCH net] rxrpc: Fix lockup due to no error backoff after
+      1  Re: [PATCH net] bonding/802.3ad: fix link_failure_count tracking
+      1  Re: [PATCH RFC] hist lookups
+
+
+Dominique_Martinet/
+=============
+      1  Re: WARNING in kmem_cache_create_usercopy
+      1  Re: INFO: task hung in grab_super
+
+
+Frank_Rowand/
+=============
+      1  [PATCH v4] of: overlay: user space synchronization
+      1  Re: [PATCH v3] of: overlay: user space synchronization
+
+
+Gao_Xiang/
+=============
+      2  Re: [git pull] mount API series
+      1  [PATCH] staging: erofs: remove the redundant d_rehash() for the root dentry
+
+
+Guenter_Roeck/
+=============
+      2  Re: [PATCH v4 1/5] hwmon: (core) Add pm ops to hwmon class
+      1  Re: [PATCH 4/4] hwmon: k10temp: add support for AMD F17h M30h CPUs
+      1  Re: [PATCH 4.19 00/24] 4.19.1-stable review
+      1  Re: [PATCH 4.18 000/150] 4.18.17-stable review
+      1  Re: [PATCH 4.14 000/143] 4.14.79-stable review
+      1  Re: [PATCH 1/4] k10temp: x86/amd_nb: consolidate shared device IDs
+
+
+Hans_de_Goede/
+=============
+      1  Re: [PATCH] vbox: fix link error with 'gcc -Og'
+      1  Re: [PATCH] ACPI / battery: Fix reporting "Not charging" when
+
+
+Helen_Koike/
+=============
+      1  [PATCH v10 2/2] init: add support to directly boot to a mapped device
+      1  [PATCH v10 1/2] dm ioctl: add a device mapper ioctl function.
+      1  [PATCH v10 0/2] dm: boot a mapped device without an initramfs
+
+
+Hyper-V-linux-driver-devel/
+=============
+      1  [PATCH v3 4/4] Drivers: hv: Enable CONFIG_HYPERV on ARM64
+      1  [PATCH v3 3/4] Drivers: hv: vmbus: Add hooks for per-CPU IRQ
+      1  [PATCH v3 2/4] arm64: hyperv: Add support for Hyper-V as a hypervisor
+      1  [PATCH v3 1/4] arm64: hyperv: Add core Hyper-V include files
+      1  [PATCH v3 0/4] 
+      1  Enable Linux guests on Hyper-V on ARM64
+
+
+Icenowy_Zheng/
+=============
+      1  [PATCH v2 3/3] arm64: allwinner: h6: add support for the Ethernet on Pine H64
+      1  [PATCH v2 2/3] arm64: allwinner: h6: add EMAC device nodes
+      1  [PATCH v2 1/3] dt-binding: dwmac-sun8i: add H6 compatible string (w/ A64 fallback)
+      1  [PATCH v2 0/3] Allwinner H6 Ethernet support
+
+
+James_E_J_Bottomley/
+=============
+      1  [GIT PULL] final round of SCSI updates for the 4.19+ merge window
+      1  Re: [RFC PATCH 6/6] shiftfs: support nested shiftfs mounts
+
+
+James_Morris/
+=============
+      1  Re: [GIT PULL] security: keys updates for v4.20
+
+
+Jarkko_Sakkinen/
+=============
+      3  Re: RFC: userspace exception fixups
+      1  [PATCH] tpm: move tpm_validate_commmand() to tpm2-space.c
+      1  [PATCH] tpm: access command header through struct in  tpm_try_transmit()
+      1  [PATCH v15 23/23] x86/sgx: Driver documentation
+      1  [PATCH v15 22/23] platform/x86: ptrace() support for the SGX driver
+      1  [PATCH v15 21/23] x86/sgx: Add a simple swapper for the EPC memory manager
+      1  [PATCH v15 20/23] platform/x86: sgx: Add swapping functionality to the Intel SGX driver
+      1  [PATCH v15 19/23] platform/x86: Intel SGX driver
+      1  [PATCH v15 18/23] x86/sgx: Add sgx_einit() for initializing enclaves
+      1  [PATCH v15 17/23] x86/sgx: Add functions to allocate and free EPC pages
+      1  [PATCH v15 16/23] x86/sgx: Enumerate and track EPC sections
+      1  [PATCH v15 15/23] x86/sgx: Add wrappers for ENCLS leaf functions
+      1  [PATCH v15 14/23] x86/cpu/intel: Clear SGX_LC capability if not enabled in FEATURE_CONTROL
+      1  [PATCH v15 13/23] x86/msr: Add SGX Launch Control MSR definitions
+      1  [PATCH v15 12/23] x86/cpufeatures: Add Intel-defined SGX_LC feature bit
+      1  [PATCH v15 11/23] x86/sgx: Add definitions for SGX's CPUID leaf and variable sub-leafs
+      1  [PATCH v15 10/23] x86/sgx: Add SGX1 and SGX2 architectural data structures
+      1  [PATCH v15 09/23] x86/sgx: Add ENCLS architectural error codes
+      1  [PATCH v15 08/23] x86/sgx: Define SGX1 and SGX2 ENCLS leafs
+      1  [PATCH v15 07/23] x86/mm: x86/sgx: Signal SIGSEGV for userspace #PFs w/ PF_SGX
+      1  [PATCH v15 06/23] x86/mm: x86/sgx: Add new 'PF_SGX' page fault error code bit
+      1  [PATCH v15 05/23] x86/cpu/intel: Detect SGX support and update caps appropriately
+      1  [PATCH v15 04/23] x86/msr: Add IA32_FEATURE_CONTROL.SGX_ENABLE definition
+      1  [PATCH v15 03/23] x86/cpufeatures: Add SGX sub-features (as Linux-defined bits)
+      1  [PATCH v15 02/23] x86/cpufeatures: Add Intel-defined SGX feature bit
+      1  [PATCH v15 01/23] x86/sgx: Update MAINTAINERS
+      1  [PATCH v15 00/23] Intel SGX1
+      1  [PATCH 6/6] tpm: move TPM space code out of tpm_transmit()
+      1  [PATCH 5/6] tpm: encapsulate tpm_dev_transmit()
+      1  [PATCH 4/6] tpm: move tpm_validate_commmand() to tpm2-space.c
+      1  [PATCH 1/6] tpm: use tpm_buf in tpm_transmit_cmd() as the IO parameter
+      1  [PATCH 0/6] Detach TPM space code from tpm_transmit() flow
+      1  Re: [PATCH v15 02/23] x86/cpufeatures: Add Intel-defined SGX feature
+
+
+Jiri_Kosina/
+=============
+      1  Re: [PATCH v3 1/7] Fix "x86/alternatives: Lockdep-enforce text_mutex
+
+
+John_Stultz/
+=============
+      1  Re: [RFC PATCH v2] android: ion: How to properly clean caches for
+
+
+Jonathan_Cameron/
+=============
+      1  Re: [PATCH v7 3/3] staging: iio: ad2s1210: Add device tree table.
+      1  Re: [PATCH v7 2/3] staging: iio: ad2s1210: Drop the gpioin flag.
+      1  Re: [PATCH v7 1/3] staging: iio: ad2s1210: Switch to the gpio
+      1  Re: [PATCH v3 3/3] staging: iio: ad7780: remove unnecessary stashed
+      1  Re: [PATCH v3 3/3] dt-bindings: iio: adc: Add docs for ad7124
+      1  Re: [PATCH v3 2/3] staging: iio: ad7780: update voltage on read
+      1  Re: [PATCH v3 2/3] iio: adc: Add ad7124 support
+      1  Re: [PATCH v3 2/3] iio: adc: Add Xilinx AMS driver
+      1  Re: [PATCH v3 1/3] staging: iio: ad7780: fix offset read value
+      1  Re: [PATCH v2 2/6] staging:iio:ad2s90: Make probe handle spi_setup
+      1  Re: [PATCH v2 1/6] staging:iio:ad2s90: Make read_raw return
+      1  Re: [PATCH 1/2] dt-bindings: iio: pressure: Add support for
+
+
+João_Paulo_Rechi_Vita/
+=============
+      1  [PATCH] ACPI / battery: Fix reporting "Not charging" when capacity is 100%
+
+
+Juergen_Gross/
+=============
+      1  Re: [Xen-devel] [PATCH v3] CONFIG_XEN_PV breaks
+
+
+K_Y_Srinivasan/
+=============
+      1  Re: [PATCH V2 3/5] Drivers: hv: kvp: Fix the recent regression c=
+      1  RE: [PATCH V2 3/5] Drivers: hv: kvp: Fix the recent regression caused
+
+
+Kees_Cook/
+=============
+      1  Re: [RFC PATCH 0/7] runtime format string checking
+      1  Re: [PATCH security-next v5 12/30] LSM: Provide separate ordered initialization
+      1  Re: [PATCH 8/8] pstore/ram: Correctly calculate usable PRZ bytes
+      1  Re: [PATCH 7/8] pstore: Remove needless lock during console writes
+
+
+Keith_Busch/
+=============
+      2  Re: [PATCH 1/3] PCI/AER: Option to leave System Error Interrupts
+
+
+LEAKING_ADDRESSES_Tycho_Andersen/
+=============
+      1  [PATCH 3/3] dlm: don't leak kernel pointer to userspace
+      1  [PATCH 2/3] dlm: don't allow zero length names
+      1  [PATCH 1/3] dlm: fix invalid free
+      1  [PATCH 0/3] dlm: fix various incorrect behaviors
+
+
+Laurent_Pinchart/
+=============
+      1  Re: [PATCH 4/6] usb: gadget: add functions to signal udc driver to delay status stage
+
+
+Linus_Torvalds/
+=============
+      4  Re: [PULL] vhost: cleanups and fixes
+      1  Re: [git pull] drm next fixes for 4.20-rc1
+      1  Re: [PATCH] mremap: properly flush TLB before releasing the page
+      1  Re: [GIT PULL] vfs: fix many problems in vfs clone/dedupe implementation
+      1  Re: [GIT PULL] sound fixes for 4.20-rc1
+      1  Re: [GIT PULL] pwm: Changes for v4.20-rc1
+      1  Re: [GIT PULL] apparmor updates for v4.20
+      1  Re: [GIT PULL] RISC-V Patches for the 4.20 Merge Window, Part 3
+      1  Re: [GIT PULL] Please pull powerpc/linux.git powerpc-4.20-2 tag
+      1  Re: [GIT PULL] EDAC updates for 4.20, part 2
+
+
+MEMCG_Michal_Hocko/
+=============
+      3  Re: Will the recent memory leak fixes be backported to longterm
+      1  Re: [PATCH v3] mm, drm/i915: mark pinned shmemfs pages as unevictable
+
+
+Marc_Kleine-Budde/
+=============
+      1  Re: [PATCH 1/6] phy: Add max_bitrate attribute &
+
+
+Marc_Zyngier/
+=============
+      1  [PATCH] iov_iter: Fix 9p virtio breakage
+      1  [PATCH v2] iov_iter: Fix 9p virtio breakage
+      1  Re: [PATCH] iov_iter: Fix 9p virtio breakage
+
+
+Mark_Rutland/
+=============
+      1  Re: [PATCH] Correct comparison statements in documentation
+      1  Re: Supporting core-specific instruction sets (e.g. big.LITTLE) with
+
+
+Masahiro_Yamada/
+=============
+      1  [GIT PULL] more Kbuild updates for v4.20
+
+
+Masami_Hiramatsu/
+=============
+      3  Re: [PATCH v3 1/2] kretprobe: produce sane stack traces
+      1  Re: [BUGFIX PATCH] tracing/kprobes: Fix strpbrk() argument order
+
+
+Matt_Turner/
+=============
+      2  Re: [PATCH] include/asm/cmpxchg.h: Remove duplicate header
+
+
+Michael_S_Tsirkin/
+=============
+      3  Re: [PULL] vhost: cleanups and fixes
+      2  Re: [PATCH 1/1] Add vhost_blk driver
+      1  Re: [PATCH 0/1] vhost: add vhost_blk driver
+
+
+Miguel_Ojeda_Sandonis/
+=============
+      1  Re: linux-next: Tree for Nov 2 (compiler-gcc.h)
+      1  Re: [PATCH v3] include/linux/compiler*.h: define asm_volatile_goto
+
+
+Nadav_Amit/
+=============
+      1  [PATCH v3 7/7] x86/alternatives: remove text_poke() return value
+      1  [PATCH v3 6/7] x86/alternatives: use temporary mm for text poking
+      1  [PATCH v3 5/7] x86/alternatives: initializing temporary mm for patching
+      1  [PATCH v3 4/7] fork: provide a function for copying init_mm
+      1  [PATCH v3 3/7] x86/mm: temporary mm struct
+      1  [PATCH v3 2/7] x86/jump_label: Use text_poke_early() during early_init
+      1  [PATCH v3 1/7] Fix "x86/alternatives: Lockdep-enforce text_mutex in text_poke*()"
+      1  [PATCH v3 0/7] x86/alternatives: text_poke() fixes
+
+
+Nicolin_Chen/
+=============
+      1  Re: [PATCH] iommu/dma: Zero pages manually in a length of scatterlist
+      1  Re: [PATCH v4 1/5] hwmon: (core) Add pm ops to hwmon class
+
+
+P1_devicetree/
+=============
+      1  [PATCH v1] regulator: pfuze100-regulator: add coin support for pfuze100
+      1  Re: [PATCH v1] regulator: pfuze100-regulator: add coin support for pfuze100
+
+
+P1_kvm/
+=============
+      4  Re: [Qemu-devel] [QEMU PATCH v2 0/2]: KVM: i386: Add support for save
+      3  Re: [Qemu-devel] [QEMU PATCH v2 0/2]: KVM: i386: Add support for
+      1  [PATCH 1/1] vhost: add per-vq worker thread
+      1  [PATCH 1/1] Add vhost_blk driver
+      1  [PATCH 0/1] vhost: parallel virtqueue handling
+      1  [PATCH 0/1] vhost: add vhost_blk driver
+      1  Re: [RFC PATCH] kvm: Use huge pages for DAX-backed files
+      1  Re: [PATCH 10/11] x86/fpu: prepare copy_fpstate_to_sigframe for
+      1  Re: [PATCH 1/2] KVM: x86: replace KVM_PAGES_PER_HPAGE with
+      1  Re: [PATCH 1/1] Add vhost_blk driver
+      1  Re: [PATCH 0/1] vhost: add vhost_blk driver
+
+
+P1_linux-mm/
+=============
+      2  Re: [PATCH] mm: Create the new vm_fault_t type
+      1  [PATCH] mm: Create the new vm_fault_t type
+
+
+P1_netdev/
+=============
+      1  [PATCH] net: core: netpoll: Enable netconsole IPv6 link local address
+
+
+Pablo_Neira_Ayuso/
+=============
+      1  Re: [PATCH v2] netfilter: conntrack: fix calculation of next bucket
+
+
+Paolo_Valente/
+=============
+      1  Re: [PATCH RFC] block, bfq: set default slice_idle to zero for
+
+
+Paul_E_McKenney/
+=============
+      3  Re: srcu hung task panic
+      2  Re: [RFC] doc: rcu: remove note on smp_mb during synchronize_rcu
+      1  Re: [PATCH tip/core/rcu 02/19] rcu: Defer reporting RCU-preempt
+      1  Re: [PATCH 16/16] KVM: arm/arm64: vgic: Replace spin_is_locked()
+
+
+Pavel_Machek/
+=============
+      1  Re: [PATCH] irqchip/mmp: only touch the PJ4 & FIQ bits on
+      1  Re: [PATCH] dt-bindings: mrvl,intc: fix a trivial typo
+      1  Re: [PATCH] ARM: mmp/mmp2: use cpu_is_pj4() instead of cpu_is_mmp2()
+      1  Re: [PATCH v2] DT: marvell,mmp2: add MMC controllers
+      1  Re: [PATCH 12/14] dt-bindings: ehci-mv: add bindings
+      1  Re: [PATCH 02/15] Revert "platform/olpc: Make ec explicitly
+      1  Re: [PATCH 01/15] power: supply: olpc_battery: correct the
+
+
+Rich_Felker/
+=============
+      1  Re: RFC: userspace exception fixups
+
+
+Richard_Weinberger/
+=============
+      1  Re: [PATCH] ubifs: replay: fix high stack usage
+      1  Re: [PATCH] Make JFFS2 endianness configurable
+      1  Re: [PATCH v10 0/2] dm: boot a mapped device without an initramfs
+
+
+Rob_Herring/
+=============
+      1  Re: [RFC 1/2] dt-bindings: topology: Add RISC-V cpu topology.
+
+
+Saeed_Mahameed/
+=============
+      4  Re: [PATCH] net/mlx5e: fix high stack usage
+
+
+Shuah_Khan/
+=============
+      1  Re: [RFC v2 01/14] kunit: test: add KUnit test runner core
+      1  Re: [RFC v2 00/14] kunit: introduce KUnit, the Linux kernel unit
+
+
+Stefano_Stabellini/
+=============
+      3  Re: [Xen-devel] [OSSTEST PATCH] README.hardware-acquisition [and 1
+      2  Re: [Xen-devel] [PATCH v5 11/25] xen/arm: introduce allocate_memory
+      1  [Xen-devel] [PATCH v6 26/26] xen/arm: split domain_build.c
+      1  [Xen-devel] [PATCH v6 25/26] xen/arm: move kernel.h to asm-arm/
+      1  [Xen-devel] [PATCH v6 24/26] xen/vpl011: buffer out chars when the
+      1  [Xen-devel] [PATCH v6 23/26] xen/arm: Allow vpl011 to be used by
+      1  [Xen-devel] [PATCH v6 22/26] xen: support console_switching between
+      1  [Xen-devel] [PATCH v6 21/26] xen/arm: refactor vpl011_data_avail
+      1  [Xen-devel] [PATCH v6 20/26] xen/arm: introduce a union in vpl011
+      1  [Xen-devel] [PATCH v6 19/26] xen/arm: generate vpl011 node on
+      1  [Xen-devel] [PATCH v6 18/26] xen/arm: make set_interrupt_ppi able
+      1  [Xen-devel] [PATCH v6 17/26] xen/arm: generate a simple device tree
+      1  [Xen-devel] [PATCH v6 16/26] xen/arm: implement construct_domU
+      1  [Xen-devel] [PATCH v6 15/26] xen/arm: introduce create_domUs
+      1  [Xen-devel] [PATCH v6 14/26] xen/arm: move
+      1  [Xen-devel] [PATCH v6 13/26] xen/arm: refactor construct_dom0
+      1  [Xen-devel] [PATCH v6 12/26] xen/arm: introduce allocate_memory
+      1  [Xen-devel] [PATCH v6 11/26] xen/arm: rename allocate_memory to
+      1  [Xen-devel] [PATCH v6 10/26] xen/arm: rename get_11_allocation_size
+      1  [Xen-devel] [PATCH v6 09/26] xen/arm: add start to struct
+      1  [Xen-devel] [PATCH v6 08/26] xen/arm: probe domU kernels and initrds
+      1  [Xen-devel] [PATCH v6 06/26] xen/arm: introduce bootcmdlines
+      1  [Xen-devel] [PATCH v6 05/26] xen/arm: check for multiboot nodes
+      1  [Xen-devel] [PATCH v6 04/26] xen/arm: increase MAX_MODULES
+      1  [Xen-devel] [PATCH v6 03/26] xen/arm: document dom0less
+      1  [Xen-devel] [PATCH v6 01/26] xen: allow console_io hypercalls from
+      1  [Xen-devel] [PATCH v6 00/25] dom0less step1: boot multiple domains
+      1  Re: [Xen-devel] [RFC 14/16] xen/arm: p2m: Extend p2m_get_entry to
+      1  Re: [Xen-devel] [RFC 13/16] xen/arm: p2m: Allow to flush cache on
+      1  Re: [Xen-devel] [RFC 12/16] xen/arm: Rework p2m_cache_flush to take
+      1  Re: [Xen-devel] [RFC 09/16] xen/arm: p2m: Introduce a function to
+      1  Re: [Xen-devel] [RFC 07/16] xen/arm: p2m: Introduce p2m_is_valid
+      1  Re: [Xen-devel] [PATCH v5 08/25] xen/arm: probe domU kernels and
+      1  Re: [Xen-devel] [PATCH v5 07/25] xen/arm: don't add duplicate boot
+
+
+Stephen_Boyd/
+=============
+      1  Re: [PATCH v8] clk: qcom: Add lpass clock controller driver for SDM845
+      1  Re: [PATCH v3 2/4] clk: qcom: Add clk_rcg2_gfx3d_ops for SDM845
+      1  Re: [PATCH 0/5] Implement devm_of_clk_add_provider
+
+
+Steven_Rostedt/
+=============
+      2  Re: [PATCH v3 1/2] kretprobe: produce sane stack traces
+      1  Re: [BUGFIX PATCH] tracing/kprobes: Fix strpbrk() argument order
+
+
+Sudip_Mukherjee/
+=============
+      1  Re: [PATCH 4.14 069/143] ARM: tegra: Fix ULPI regression on Tegra20
+      1  Re: [PATCH 4.14 060/143] net/mlx5: Fix mlx5_get_vector_affinity function
+      1  Re: [PATCH 4.14 053/143] x86/power: Fix some ordering bugs in __restore_processor_context()
+
+
+TOMOYO_SECURITY_Tetsuo_Handa/
+=============
+      1  Re: [PATCH v6 1/3] printk: Add line-buffered printk() API.
+      1  Re: [PATCH 3/3] lockdep: Use line-buffered printk() for lockdep
+      1  Re: INFO: task hung in lo_release
+
+
+Thomas_Gleixner/
+=============
+      1  Re: [PATCH] tsc: make calibration refinement more robust
+      1  Re: [PATCH v3] genirq/matrix: Choose CPU for managed IRQs based on
+      1  Re: [GIT PULL] timer for tip/urgent
+
+
+Tony_Luck/
+=============
+      1  Re: [PATCH] EDAC: skx_edac: add ACPI dependency
+
+
+VFS_Alexander_Viro/
+=============
+      1  [git pull] followup fix to work.afs
+      1  Re: [git pull] mount API series
+      1  Re: [PULL] vhost: cleanups and fixes
+      1  Re: [PATCH] iov_iter: Fix 9p virtio breakage
+
+
+Wei_Liu/
+=============
+      1  [Xen-devel] [PATCH] x86: put vcpumask_to_pcpumask under CONFIG_PV
+      1  [Xen-devel] [PATCH] automation: build some customised configs
+
+
+Will_Deacon/
+=============
+      1  Re: [PATCH] mailmap: Update email for Punit Agrawal
+
+
+Wolfgang_Grandegger/
+=============
+      1  Re: [RFC PATCH 1/3] can: m_can: Create m_can core to leverage common
+
+
+X86_Borislav_Petkov/
+=============
+      2  Re: [PATCH] EDAC: skx_edac: add ACPI dependency
+      1  Re: [PATCH v15 02/23] x86/cpufeatures: Add Intel-defined SGX feature
+      1  Re: [PATCH 2/4] x86/amd_nb: add support for newer PCI topologies
+      1  Re: [PATCH 1/3] PCI/AER: Option to leave System Error Interrupts
+
+
+acpi4asus-user/
+=============
+      1  Re: [PATCH 0/3] Fix display off hotkey on Asus machines
+
+
+alsa-devel/
+=============
+      3  Re: [PATCH v2 3/3] ALSA: hda: add support for Huawei WMI MicMute LED
+      2  Re: [PATCH] ASoC: sunxi: rename SND_SUN8I_ADDA_PR_REGMAP
+      2  Re: [PATCH v2 1/3] x86: add support for Huawei WMI hotkeys.
+      1  Re: [PATCH v2 2/3] ALSA: hda: fix front speakers on Huawei MBXP.
+      1  Re: [PATCH v2 0/3] Huawei laptops WMI & sound fixes
+
+
+ath10k/
+=============
+      1  [PATCH] ath10k: ath10k_snoc_{read,write}32() should be static
+      1  [PATCH 3/3] ath10k: fix struct init whitespace in SNOC driver
+      1  [PATCH 2/3] ath10k: don't assume this is a PCI dev in generic code
+      1  [PATCH 1/3] ath10k: assign 'n_cipher_suites' for WCN3990
+      1  Re: [PATCH] ath10k: avoid -Wmaybe-uninitialized warning
+
+
+b43-dev/
+=============
+      1  [PATCH 5/5] b43: Drop internal cordic algorithm implementation
+      1  [PATCH 4/5] b43: Use common cordic algorithm from kernel lib
+      1  [PATCH 0/5] Use common cordic algorithm for b43
+
+
+brcm80211-dev-list/
+=============
+      1  [PATCH 3/5] brcmfmac: Drop unused cordic defines and macros
+      1  [PATCH 2/5] brcmfmac: Use common CORDIC_FLOAT macro from lib
+
+
+dri-devel/
+=============
+      1  [PATCH v3 5/5] drm/i915: Add short HPD IRQ storm detection for non-MST systems
+      1  [PATCH v3 4/5] drm/i915: Clarify flow for disabling IRQs on storms
+      1  [PATCH v3 3/5] drm/i915: Fix threshold check in intel_hpd_irq_storm_detect()
+      1  [PATCH v3 2/5] drm/i915: Fix NULL deref when re-enabling HPD IRQs on systems with MST
+      1  [PATCH v3 1/5] drm/i915: Fix possible race in intel_dp_add_mst_connector()
+      1  [PATCH v3 0/5] drm/i915: HPD IRQ storm detection fixes 
+      1  [PATCH 2/2] drm/msm/dsi: Get PHY ref clock from the DT
+      1  [PATCH 10/10] [DO NOT MERGE] arm64: allwinner: a64: pine64-lts: Enable Feiyang FY07024DI26A30-D DSI panel
+      1  [PATCH 1/2] dt-bindings: msm/dsi: Add ref clock for 10nm PHY
+      1  [PATCH 09/10] drm/panel: Add Feiyang FY07024DI26A30-D MIPI-DSI LCD panel
+      1  [PATCH 07/10] drm/sun4i: sun6i_mipi_dsi: Enable burst mode HBP, HSA_HSE
+      1  [PATCH 06/10] drm/sun4i: sun6i_mipi_dsi: Enable 2byte trail for 4-lane burst mode
+      1  [PATCH 05/10] drm/sun4i: sun6i_mipi_dsi: Enable burst mode
+      1  [PATCH 04/10] drm/sun4i: sun6i_mipi_dsi: Setup burst mode
+      1  [PATCH 03/10] drm/sun4i: sun6i_mipi_dsi: Setup burst mode timings
+      1  [PATCH 02/10] drm/sun4i: sun6i_mipi_dsi: Support instruction loop selection
+      1  [PATCH 01/10] drm/sun4i: sun6i_mipi_dsi: Compute burst mode loop N1 instruction delay
+      1  [PATCH 00/10] drm/sun4i: Allwinner MIPI-DSI Burst mode support
+      1  Re: [PATCH] drm/panel: simple: Add Ampire am800480b3tmqw
+      1  Re: [PATCH v2 4/4] ARM: dts: imx6sx: Add DISPLAY power domain support
+      1  Re: [PATCH v2 3/3] drm/i915: Add short HPD IRQ storm detection for
+      1  Re: [PATCH v2 2/3] drm/i915: Fix NULL deref when re-enabling HPD
+      1  Re: [PATCH 2/2] uapi: fix more linux/kfd_ioctl.h userspace
+      1  Re: [PATCH 01/10] drm/sun4i: sun6i_mipi_dsi: Compute burst mode loop
+
+
+inbox/
+=============
+      1  [SPAM]
+
+
+iommu/
+=============
+      1  Re: [PATCH] iommu/dma: Zero pages manually in a length of scatterlist
+
+
+keyrings/
+=============
+      1  [SPAM] general protection fault in keyctl_pkey_params_get
+      1  [PATCH] KEYS: always initialize keyring_index_key::desc_len
+      1  [PATCH v2] KEYS: always initialize keyring_index_key::desc_len
+      1  Re: [PATCH] KEYS: always initialize keyring_index_key::desc_len
+
+
+linux-alpha/
+=============
+      3  Re: [PATCH] include/asm/cmpxchg.h: Remove duplicate header
+
+
+linux-amlogic/
+=============
+      1  Re: [PATCH v6 3/3] clk: meson: add sub MMC clock controller driver
+
+
+linux-api/
+=============
+      1  Re: Supporting core-specific instruction sets (e.g. big.LITTLE) with restartable sequences
+      1  Re: Supporting core-specific instruction sets (e.g. big.LITTLE) with
+
+
+linux-arch/
+=============
+      1  [PATCH V13 resend 4/4] dt-bindings: timer: gx6605s SOC timer
+      1  [PATCH V13 resend 3/4] clocksource: add gx6605s SOC system timer
+      1  [PATCH V13 resend 2/4] dt-bindings: timer: C-SKY Multi-processor timer
+      1  [PATCH V13 resend 1/4] clocksource: add C-SKY SMP timer
+      1  Re: [PATCH security-next v5 12/30] LSM: Provide separate ordered
+
+
+linux-block/
+=============
+      1  Re: INFO: task hung in lo_release
+
+
+linux-btrfs/
+=============
+      2  Re: [PATCH] Change the total_dirty from SZ_256M to SZ_64M.
+      1  [PATCH] Change the total_dirty from SZ_256M to SZ_64M.
+
+
+linux-can/
+=============
+      1  [PATCH 6/6] can: m_can: Add support for transceiver as phy
+      1  [PATCH 5/6] dt-bindings: can: can-transceiver: Remove legacy binding documentation
+      1  [PATCH 4/6] dt-bindings: can: m_can: Document transceiver implementation as a phy
+      1  [PATCH 3/6] phy: phy-of-simple: Add support for simple generic phy driver
+      1  [PATCH 2/6] dt-bindings: phy: phy-of-simple: Document new binding
+      1  [PATCH 1/6] phy: Add max_bitrate attribute & phy_get_max_bitrate()
+      1  [PATCH 0/6] Add Support for MCAN transceivers in AM65x-evm
+
+
+linux-cifs/
+=============
+      1  [PATCH] cifs: clean up indentation, replace spaces with tab
+
+
+linux-clk/
+=============
+      1  Re: [PATCH v8] clk: qcom: Add lpass clock controller driver for
+
+
+linux-crypto/
+=============
+      1  Re: [PATCH v2 0/2] crypto: streebog - add Streebog hash function
+
+
+linux-fbdev/
+=============
+      1  [PATCH] video: clps711x-fb: release disp device node in probe()
+
+
+linux-fsdevel/
+=============
+      1  Re: [PATCH 4/6] mm: introduce page->dma_pinned_flags, _count
+      1  Re: [LKP] [sunrpc] 6a7da2a288: kernel_BUG_at_lib/iov_iter.c
+      1  Re: INFO: task hung in grab_super
+      1  Re: INFO: task hung in fuse_reverse_inval_entry
+
+
+linux-gpio/
+=============
+      1  Re: [PATCH v2] gpiolib: Fix possible use after free on label
+
+
+linux-hwmon/
+=============
+      1  [PATCH 4/4] hwmon: k10temp: add support for AMD F17h M30h CPUs
+      1  [PATCH 3/4] x86/amd_nb: add PCI device IDs for F17h M30h
+      1  [PATCH 2/4] x86/amd_nb: add support for newer PCI topologies
+      1  [PATCH 1/4] k10temp: x86/amd_nb: consolidate shared device IDs
+      1  [PATCH 0/4] Update DF/SMN access and k10temp for AMD F17h M30h
+      1  Re: [PATCH 2/4] x86/amd_nb: add support for newer PCI topologies
+
+
+linux-i2c/
+=============
+      2  Re: [PATCH] i2c: i2c-qcom-geni: Fix runtime PM mismatch with child devices
+      1  [PATCH] i2c: i2c-qcom-geni: Fix runtime PM mismatch with child devices
+      1  [PATCH v2] i2c: i2c-qcom-geni: Fix runtime PM mismatch with child devices
+      1  Re: [PATCH v2] i2c: i2c-qcom-geni: Fix runtime PM mismatch with child devices
+
+
+linux-iio/
+=============
+      1  Re: [PATCH v7 3/3] staging: iio: ad2s1210: Add device tree table.
+      1  Re: [PATCH v7 1/3] staging: iio: ad2s1210: Switch to the gpio
+      1  Re: [PATCH v5 04/11] dt-bindings: iio: adc: add AXP803 ADC bindings
+      1  Re: [PATCH v3 1/3] staging: iio: ad7780: fix offset read value
+
+
+linux-kbuild/
+=============
+      1  Re: [PATCH] kconfig: merge_config: avoid false positive matches from
+
+
+linux-kselftest/
+=============
+      1  [SPAM] Re: [PATCH v3 1/2] kretprobe: produce sane stack
+
+
+linux-media/
+=============
+      1  Re: [PATCH v3] media: venus: add support for key frame
+
+
+linux-mtd/
+=============
+      2  Re: [PATCH] Make JFFS2 endianness configurable
+      1  [PATCH v2] arch/sh: mach-kfr2r09: fix struct mtd_oob_ops build
+      1  Re: [PATCH resend] arch/sh: mach-kfr2r09: fix struct mtd_oob_ops
+
+
+linux-next/
+=============
+      2  Re: linux-next: Tree for Oct 31 (vboxguest)
+      1  linux-next: Signed-off-by missing for commit in the arm-soc tree
+
+
+linux-nvme/
+=============
+      1  Re: [PATCH 13/16] irq: add support for allocating (and affinitizing)
+
+
+linux-perf-users/
+=============
+      1  Re: perf script doesn't dump a normal call trace
+      1  Re: PEBS level 2/3 breaks dwarf unwinding! [WAS: Re: Broken dwarf
+
+
+linux-pm/
+=============
+      1  Re: [PATCH 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
+
+
+linux-rdma/
+=============
+      4  Re: [PATCH] net/mlx5e: fix high stack usage
+
+
+linux-riscv/
+=============
+      3  Re: [RFC 0/2] Add RISC-V cpu topology
+      2  Re: [RFC 1/2] dt-bindings: topology: Add RISC-V cpu topology.
+
+
+linux-scsi/
+=============
+      1  Re: [PATCH] scsi: myrs: avoid stack overflow warning
+      1  Re: [PATCH] scsi: myrb: fix sprintf buffer overflow warning
+      1  Re: [PATCH v7 0/8] mpt3sas: some bug fixes patches
+      1  RE: [PATCH v7 0/8] mpt3sas: some bug fixes patches
+
+
+linux-serial/
+=============
+      1  Re: [PATCH 1/7] serial: qcom_geni_serial: Finish supporting sysrq
+
+
+linux-sgx/
+=============
+     15  Re: RFC: userspace exception fixups
+      2  Re: [PATCH v15 16/23] x86/sgx: Enumerate and track EPC sections
+      1  Re: [PATCH v15 15/23] x86/sgx: Add wrappers for ENCLS leaf functions
+      1  Re: [PATCH v15 14/23] x86/cpu/intel: Clear SGX_LC capability if not
+      1  Re: [PATCH v15 11/23] x86/sgx: Add definitions for SGX's CPUID leaf
+      1  Re: [PATCH v15 05/23] x86/cpu/intel: Detect SGX support and update
+
+
+linux-soc/
+=============
+      1  [PATCH] arm64: dts: msm8916: remove bogus argument to the cpu clock
+
+
+linux-xfs/
+=============
+      1  Re: [GIT PULL] vfs: fix many problems in vfs clone/dedupe
+
+
+linuxppc-dev/
+=============
+      1  [PATCH] macintosh: ans-lcd: make anslcd_logo static and __initconst
+      1  Re: [PATCH v2] raid6/ppc: Fix build for clang
+
+
+osuosl-devel/
+=============
+      1  [PATCH][staging-next] drivers: staging: cedrus: find ctx before dereferencing it ctx
+      1  [PATCH v2] staging: olpc_dcon: olpc_dcon_xo_1.c: Switch to the gpio
+
+
+platform-driver-x86/
+=============
+      1  Re: [PATCH v3 3/3] platform/x86: intel_pmc_core: Decode Snoop / Non
+      1  Re: [PATCH v3 2/3] platform/x86: intel_pmc_core: Fix LTR IGNORE Max offset
+      1  Re: [PATCH v3 1/3] platform/x86: intel_pmc_core: Show Latency
+      1  Re: Re: [PATCH V6 3/8] misc/pvpanic: add MMIO support
+
+
+sparclinux/
+=============
+      1  [PATCH] arch/sparc: Use kzalloc_node
+
+
+x86_Andy_Lutomirski/
+=============
+      4  Re: RFC: userspace exception fixups
+      1  Re: [RFC PATCH] x86/mm/fault: Allow stack access below %rsp
+      1  Re: [PATCHv3 3/3] x86/ldt: Remove unused variable in map_ldt_struct()
+      1  Re: [PATCHv3 1/3] x86/mm: Move LDT remap out of KASLR region on
+
+
+xen-devel/
+=============
+      3  Re: [Xen-devel] [OSSTEST PATCH] README.hardware-acquisition [and 1
+      2  [Xen-devel] x86 Community Call: Nov 14 - 15:00 - 16:00 UTC - Call
+      1  [Xen-devel] [xen-unstable-smoke test] 129330: tolerable all pass -
+      1  [Xen-devel] [xen-unstable test] 129319: regressions - FAIL
+      1  [Xen-devel] [qemu-mainline test] 129305: tolerable FAIL - PUSHED
+      1  [Xen-devel] [ovmf baseline-only test] 75561: tolerable FAIL
+      1  [Xen-devel] [linux-linus test] 129304: regressions - FAIL
+      1  [Xen-devel] [linux-linus bisection] complete
+      1  [Xen-devel] [distros-debian-stretch test] 75566: tolerable FAIL
+      1  [Xen-devel] [distros-debian-jessie test] 75562: tolerable FAIL
+      1  [Xen-devel] [PATCH] x86/vcpu: Remove struct vcpu allocation
+      1  [Xen-devel] [PATCH] flask/policy: allow dom0 to use
+      1  [Xen-devel] [PATCH v2 2/2] x86: deal with firmware setting bogus
+      1  [Xen-devel] [PATCH v2 1/2] x86/TSC: don't allow deadline timer to
+      1  [Xen-devel] [PATCH v2 0/2] x86: deal with firmware setting bogus
+      1  [Xen-devel] [PATCH 8/8] tools/libvchan: libxenvchan_client_init:
+      1  [Xen-devel] [PATCH 7/8] tools/libvchan: libxenvchan_*_init: Promise
+      1  [Xen-devel] [PATCH 6/8] tools/libvchan: Add xentoollog to direct
+      1  [Xen-devel] [PATCH 5/8] tools/libvchan: init_xs_srv: Turn xs retry
+      1  [Xen-devel] [PATCH 4/8] tools/libvchan: init_xs_srv: Simplify error
+      1  [Xen-devel] [PATCH 3/8] tools/libvchan: init_xs_srv: Simplify error
+      1  [Xen-devel] [PATCH 3/3] x86emul: consolidate CR4 handling
+      1  [Xen-devel] [PATCH 2/8] tools/xenstore: Document that xs_close(0)
+      1  [Xen-devel] [PATCH 2/3] x86emul: raise #GP(0) in VME mode for POPF
+      1  [Xen-devel] [PATCH 1/8] tools/libvchan: Initialise xs_transaction_t
+      1  [Xen-devel] [PATCH 1/3] x86emul: VME and PVI modes require a #GP(0)
+      1  [Xen-devel] [PATCH 0/8] libvchan: Minor improvements
+      1  [Xen-devel] [PATCH 0/3] x86emul: VME/PVI mode fixes
+      1  Re: [Xen-devel] [XEN][ARM64] PVUSB device attach causing DomU hang
+      1  Re: [Xen-devel] [RFC PATCH v2 13/17] xenconsoled: add support for
+      1  Re: [Xen-devel] [RFC PATCH v2 00/17] Add support for qemu-xen
+      1  Re: [Xen-devel] [PATCH] x86: put vcpumask_to_pcpumask under
+      1  Re: [Xen-devel] [PATCH v2 2/2] x86: deal with firmware setting
+      1  Re: [Xen-devel] [PATCH v2 1/2] x86/TSC: don't allow deadline timer
+      1  Re: [Xen-devel] [PATCH 3/3] x86emul: consolidate CR4 handling
+      1  Re: [Xen-devel] [PATCH 2/3] x86emul: raise #GP(0) in VME mode for
+      1  Re: [Xen-devel] [PATCH 1/3] x86emul: VME and PVI modes require a
+
+
