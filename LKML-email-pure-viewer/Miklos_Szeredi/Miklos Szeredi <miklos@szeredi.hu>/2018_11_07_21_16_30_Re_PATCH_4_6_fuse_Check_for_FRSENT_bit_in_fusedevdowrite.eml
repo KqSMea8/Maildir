@@ -1,0 +1,147 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 13:35:30 -0000
+Received: from icoremail.net (unknown [209.85.210.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f7XK5eJbch1YAQ--.26143S3;
+	Wed, 07 Nov 2018 21:16:59 +0800 (CST)
+Received: from mail-pf1-f182.google.com (unknown [209.85.210.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnCkbI5eJbJooXAA--.5514S3;
+	Wed, 07 Nov 2018 21:16:56 +0800 (CST)
+Received: by mail-pf1-f182.google.com with SMTP id n11-v6so7694790pfb.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:16:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :in-reply-to:references:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=TfpKNjDM3NE/OHRhe9KKo+nM/qluXKAp76DgMlGkpRQ=;
+        b=LR8iCghYEvuEOlIBKtGg3FPLZnDaiYRAq8qPORlgwZ7Z/qQcnP3kT/MA7vI/iituCH
+         jMMZxO7eRQXyH8/fi4ccbIDemb+fHY97xPcwQ8ituEgT5ZLcvLLIvoIRAWEBxjhBbzw/
+         yGn4HJUIHiHGkj4xYssgwE71HsGcP8D3pmTz735VggMEDWvxJCNgGPodNdpyTOEzSe7T
+         wnOIJkgQgdaZQsXi+DlIbIcSfBz0ixEHwHyPeRsB11Xhrw8l0jLsoSjCDZMOvPDQFVgN
+         5fDo4QuoLl4kX6LdRhVLlpnDk7iiVU23hxT9eIFhSuepmV/CmzHwSmldOTvzEFyQut35
+         VYCQ==
+X-Gm-Message-State: AGRZ1gJbStOg3ofuXBV5AKKf52NS3VxeEIrAP1FwzGKv/GPI0dPHTDxl
+	ycqu22T9VPSV1WHE8hYPMMBTX8KgFetgWbGGj7jk7uivQsu92zw1MA==
+X-Received: by 2002:a63:5816:: with SMTP id m22-v6mr152369pgb.332.1541596616340;
+        Wed, 07 Nov 2018 05:16:56 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5232866pjt;
+        Wed, 7 Nov 2018 05:16:55 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dmZO2xoQYnxEhLRWuY4KJsYd77akQFoR0epJaNdoS7i6NSfx23ou+vPOqSqiFl0L/nw+Gk
+X-Received: by 2002:a63:ae01:: with SMTP id q1mr146483pgf.402.1541596615033;
+        Wed, 07 Nov 2018 05:16:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541596615; cv=none;
+        d=google.com; s=arc-20160816;
+        b=eIRK/qt25DW2CAwm+J39Fc2gkm7rse224uN3NZSB9hJkF+UaGjTRZ7oy6ZH82aviM9
+         0BG8lMaaih8EjgChBHLNYbks8D7pr3eTXlg2LXf+TH7kwfpz3C+asDsqlO+9EGsBzl3p
+         4nzwRlq5vLjsDhwL5GUwHMwD5GRVEe03J4UpvQtJENVkPyihFftuUulGgRj2opDh2pQq
+         OyvlWcydWFXXR2eW0QrqtNsmdLwbuQvKxbaJmHTnoXED+wiZd7HY7p7L1uR86uaA7cIS
+         PvQz39HOXQpsKk7LmiA9m13zvT0dpWFF8+1NezEvOJnONe7bhyOMtEf7i5PUiiUKDS1E
+         S49Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :references:in-reply-to:mime-version:dkim-signature;
+        bh=TfpKNjDM3NE/OHRhe9KKo+nM/qluXKAp76DgMlGkpRQ=;
+        b=uzkUiiudbdiVgS0B+w8Y5z39qzqb/LtWlzdKf682Q5CZ39KCWIGArphiwwWxcnS7+f
+         xN7asZ7/z8+6JTTCuK+JYjCQ2wT24LpgEloTc4VDG+OQvd5JGXIxwHj2tLCMAC43fJq7
+         Pspb/Y0eFtVSMhchBz00IXfg9APeEPh/yeqwrRXAM36S+pe/UwTHsnlcudZG2vHoRYRb
+         xZoqorohypgECZNbubosQEHRRqsSDsF3VaTVhssYStR0e3s0gZLGMhw6gYBZvRDKm8Vh
+         p8pK1fGiQPSxY8mSqGGbigCDz1TtbsBC7uqoLPxmwElAXEFp2XA6BYMpRkLRMLMTqQ6Z
+         tTnw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=temperror (no key for signature) header.i=@szeredi.hu header.s=google header.b=ZB5v6DO5;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id c9-v6si649363plo.270.2018.11.07.05.16.39;
+        Wed, 07 Nov 2018 05:16:55 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726893AbeKGWqy (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:46:54 -0500
+Received: from mail-it1-f194.google.com ([209.85.166.194]:54030 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbeKGWqy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:46:54 -0500
+Received: by mail-it1-f194.google.com with SMTP id r12-v6so19953340ita.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 05:16:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=TfpKNjDM3NE/OHRhe9KKo+nM/qluXKAp76DgMlGkpRQ=;
+        b=ZB5v6DO55lInLQvTQo/BnyLAEIiH81CYOd6tTn7OxFf1wtaZ9wzWu9yUjNgUKdTrlx
+         So3EKlt/ayP9UqNN0YmSnCfXct28YAootX5PFKXRAd2rhyJNYJtV89hbTbwYssOAS7lR
+         OK1wunMt8ThXBr8BHH8DJD5Q/pBvbZVJVsdNo=
+X-Received: by 2002:a24:7d8d:: with SMTP id b135-v6mr111765itc.121.1541596593187;
+ Wed, 07 Nov 2018 05:16:33 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a6b:ac42:0:0:0:0:0 with HTTP; Wed, 7 Nov 2018 05:16:30 -0800 (PST)
+X-Originating-IP: [212.96.48.140]
+In-Reply-To: <154149664975.17764.16537105755726576371.stgit@localhost.localdomain>
+References: <154149586524.17764.5252013294539109287.stgit@localhost.localdomain>
+ <154149664975.17764.16537105755726576371.stgit@localhost.localdomain>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Wed, 7 Nov 2018 14:16:30 +0100
+Message-ID: <CAJfpegttTpU0=yF_7QNx_PCOELetG0eGoEtmRyv0m4czK9EGNQ@mail.gmail.com>
+Subject: Re: [PATCH 4/6] fuse: Check for FR_SENT bit in fuse_dev_do_write()
+To: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnCkbI5eJbJooXAA--.5514S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jw4fKrW7ArW5WFWfuF1DAwb_yoWfGFX_WF
+	ykCw4kZ3Z5Crs3ZrWrCFyrJr9Y9w43GFy8Xw1jvFnxJ398Ww1xZwnI9w1fJF4agrW5JFy5
+	Gwn3Ja9xt3ya9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbS8YjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWU
+	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UMx02cVCv0xWlc7CjxV
+	AKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vEIxC_Xr4lc2IjII80
+	xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26rxl6s0DMxvI42IY6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4
+	v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bncTPUUUUU=
+
+On Tue, Nov 6, 2018 at 10:30 AM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+> It's not possible to have answer to a request,
+> before the request is actually sent. Add sanity
+> check for that.
+
+It's checking for the impossible.  That sometimes makes sense as a
+WARN_ON() or in special cases a BUG_ON().
+
+
+>
+> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> ---
+>  fs/fuse/dev.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+> index 739968ee8b0c..c603f1ebf0fd 100644
+> --- a/fs/fuse/dev.c
+> +++ b/fs/fuse/dev.c
+> @@ -1947,7 +1947,7 @@ static ssize_t fuse_dev_do_write(struct fuse_dev *fud,
+>                 goto err_unlock_pq;
+>
+>         req = request_find(fpq, oh.unique & ~FUSE_INT_REQ_BIT);
+> -       if (!req)
+> +       if (!req || !test_bit(FR_SENT, &req->flags))
+>                 goto err_unlock_pq;
+>
+>         /* Is it an interrupt reply ID? */
+>

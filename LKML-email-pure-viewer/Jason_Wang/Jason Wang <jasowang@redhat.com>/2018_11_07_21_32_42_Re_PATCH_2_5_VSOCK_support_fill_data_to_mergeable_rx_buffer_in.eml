@@ -1,0 +1,163 @@
+Return-Path: <kvm-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 13:35:35 -0000
+Received: from icoremail.net (unknown [209.85.215.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgCHv+QV6uJbtTZYAQ--.26115S3;
+	Wed, 07 Nov 2018 21:35:19 +0800 (CST)
+Received: from mail-pg1-f171.google.com (unknown [209.85.215.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBnTkr66eJbzpsXAA--.5538S3;
+	Wed, 07 Nov 2018 21:34:50 +0800 (CST)
+Received: by mail-pg1-f171.google.com with SMTP id r9-v6so7333771pgv.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:34:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language
+         :sender:precedence:list-id;
+        bh=QTjR2aN/NEGHo7tFIsmRDuIIE+H5WV64oP8BngkbaqI=;
+        b=EZpO0CCQ1gNeMC2GTr2axeM+dIhE49VEB90LebVlOfbTIZ4iXRWnycQDi1c92GJuTI
+         KMWMMz1IlUspKorxgegORd5NHtXVRlERf3VhqhGeT5Z6NKoyqHV7UAtVJt1G4RSLXQ50
+         asyolP+S+qFhVTP8LK2OL+QSXzbJezp5XYSjyojZwgjHtr9aPHwOjFme901bxC9jZEAt
+         jka+AO5HhkS2bqElChGfOqx4q8ZDEoxdHmz6oR5oewyiDWFpeYV4J4qsZuMfpChPoAo1
+         zUAErWIk5G/M2s8W49icV8USNahb/pwgIW0DGAlUD/PQiS23xoKNUS1NYSJD0EbsiBOz
+         dWjg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=kvm-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+X-Gm-Message-State: AGRZ1gLN621c1hM9UWFEbHONyJI69eLrcOLkVa7GcSAZkadFgXEp1Wfm
+	Y9p+bvqkHheoXhRCdLTswx6PjybJMMz+m49a9PlrLEUgFZ5zI4dsCA==
+X-Received: by 2002:a63:9402:: with SMTP id m2mr189581pge.93.1541597690027;
+        Wed, 07 Nov 2018 05:34:50 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5252245pjt;
+        Wed, 7 Nov 2018 05:34:49 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f/ojuPwmav8bWFXe9YLgaGD+UDcbeKSXujOAKpfmGcVnrwyspdYUChddNaMBgnrqjCueg1
+X-Received: by 2002:a63:e80e:: with SMTP id s14mr223681pgh.30.1541597689393;
+        Wed, 07 Nov 2018 05:34:49 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541597689; cv=none;
+        d=google.com; s=arc-20160816;
+        b=W6rldE6Fvdd3j8+IoxUEbJpSvxAQ5yVUkuHA5BgduirXkA07pZBE7NAWzYHCtIDPAU
+         0u8HWadQhBX+UuUuomDOVX/CRG3hC8ijE5EOr/sbWVlnrCVf/2KEviasm5sT4QGBLGE0
+         khmGnyFmnHr/xNzq2RmhCseuXq4V64hJpGNQCJRf9SF/0b9fh1kvBfAvlOW861D+y9Qx
+         UFUELMgorLhPjMV+EL6XIaOseibkBxOc7U2fqStvfFA5mpIwOMbOL/BCI/hPT1HQrskz
+         OtZbQ2R2ZTEgQ8f/4vhNwS2UApTopI8Vl1Vbu2kljLVysNKRiHe9ca+DXT6KFIfD2BYt
+         eIqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-language
+         :content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject;
+        bh=QTjR2aN/NEGHo7tFIsmRDuIIE+H5WV64oP8BngkbaqI=;
+        b=OP2JiRXsIL8mecfNKKbBgKV7BtdOOjMC/So7Ai3yxhZ70sXp7KLaQoUcF/jcm1AYN2
+         xI6Ph1IRqj4M7/7r4B1sXQyyXoZRRzlBWMRrmLfV28zFzJhv4Q9QZMDVcJrG0Wh1EZbD
+         02dwllllmk3gsy/uzIpSU/cYiCCRpprv90edH75wCZTIdcUAQKT9aHVMkg3ob7bquXYa
+         0f4NuGgf6ae5p+wP0Il2GMZRyRYEy0gF6NL5utch5wACP7e0ZJHb9o+z0zHhHEiYvB6D
+         t2OOVHCSHRYxjr65aE1eftncIlp88NV1Tb1PgiGjj+K7XPEtXF0S6PUyk6MMEE8Fb/IP
+         UvXQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=kvm-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v1-v6si683293plo.134.2018.11.07.05.34.34;
+        Wed, 07 Nov 2018 05:34:49 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726825AbeKGXDQ (ORCPT <rfc822;fanshuming2011@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:03:16 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:28593 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726411AbeKGXDQ (ORCPT <rfc822;kvm@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:03:16 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id ECDEA30820C8;
+        Wed,  7 Nov 2018 13:32:52 +0000 (UTC)
+Received: from [10.72.12.117] (ovpn-12-117.pek2.redhat.com [10.72.12.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E37584D732;
+        Wed,  7 Nov 2018 13:32:44 +0000 (UTC)
+Subject: Re: [PATCH 2/5] VSOCK: support fill data to mergeable rx buffer in
+ host
+To: jiangyiwen <jiangyiwen@huawei.com>, stefanha@redhat.com,
+        stefanha@gmail.com
+Cc: netdev@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+References: <5BDFF537.3050806@huawei.com>
+ <485c2c5d-d73e-e679-9549-aad3de02f0ab@redhat.com>
+ <5BE134EF.1070009@huawei.com>
+ <8963dba5-c2fb-69d0-4adb-72d751a9dedf@redhat.com> <5BE2903C.50608@huawei.com>
+From: Jason Wang <jasowang@redhat.com>
+Message-ID: <76732898-8e4f-910a-aac5-ea4b635a1c15@redhat.com>
+Date: Wed, 7 Nov 2018 21:32:42 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <5BE2903C.50608@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 07 Nov 2018 13:32:53 +0000 (UTC)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <kvm.vger.kernel.org>
+X-Mailing-List: kvm@vger.kernel.org
+X-CM-TRANSID: AQAAfwBnTkr66eJbzpsXAA--.5538S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWruFyftw1fZw4kWF4fZFWxCrg_yoWfurX_uw
+	1FvrnakrZrJr1DArnrtFn8CrsrG3y7JFyrXayrX3WUK3s8X3WDZF1kGF97J3yFq3yvvrn8
+	Cr1DXFWUtF9IvjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbvxYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAKzI0EY4vE52x082I5MxkFs20E
+	Y4vE44CYbxCE4x80FwCY02Avz4vEIxC_Xr4lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjx
+	v20xvE14v26r1I6r4UMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lcIIF0xvEx4A2
+	jsIE14v26rxl6s0DMxvI42IY6I8E87Iv6xkF7I0E14v26rxl6s0DMxAIw28IcxkI7VAKI4
+	8JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4U
+	MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
+	AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVF
+	xhVjvjDU0xZFpf9x07bnLvtUUUUU=
+
+
+On 2018/11/7 下午3:11, jiangyiwen wrote:
+> On 2018/11/7 14:18, Jason Wang wrote:
+>> On 2018/11/6 下午2:30, jiangyiwen wrote:
+>>>> Seems duplicated with the one used by vhost-net.
+>>>>
+>>>> In packed virtqueue implementation, I plan to move this to vhost.c.
+>>>>
+>>> Yes, this code is full copied from vhost-net, if it can be packed into
+>>> vhost.c, it would be great.
+>>>
+>> If you try to reuse vhost-net, you don't even need to care about this:)
+>>
+>> Thanks
+>>
+>>
+>> .
+>>
+> Hi Jason,
+>
+> Thank your advice, I will consider your idea. But I don't know
+> what's stefan's suggestion? It seems that he doesn't care much
+> about this community.:(
+
+
+I think not. He is probably busy these days.
+
+
+>
+> I still hope this community can have some vitality.
+>
+
+Let's wait for few more days for the possible comments from Stefan or 
+Michael. But I do prefer to unify the virtio networking datapath which 
+will be easier to be extended and maintained.
+
+Thanks

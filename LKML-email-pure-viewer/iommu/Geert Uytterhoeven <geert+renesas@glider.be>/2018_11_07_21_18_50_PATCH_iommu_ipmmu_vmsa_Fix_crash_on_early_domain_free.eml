@@ -1,0 +1,155 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 13:35:31 -0000
+Received: from icoremail.net (unknown [209.85.214.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv9JX5uJbBSFYAQ--.26449S3;
+	Wed, 07 Nov 2018 21:19:21 +0800 (CST)
+Received: from mail-pl1-f181.google.com (unknown [209.85.214.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBX0ExV5uJbHowXAA--.6443S3;
+	Wed, 07 Nov 2018 21:19:17 +0800 (CST)
+Received: by mail-pl1-f181.google.com with SMTP id c13-v6so7845784plz.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:19:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:sender:precedence:list-id;
+        bh=ZezANteDHl53+KYrTYzU0kc/kI+QUiFXa+7Xwn2/rU4=;
+        b=ZeGsHvNKsAy7XCLLuQUe1vS41PbFyt7onJxTeuK12ZVjttcRM1MKQxDTolNhlGGaPz
+         H6ne7bIA+KstkRIlpl+RVGVgLiDfmNahLZHUrJxDRpY6j+C7aETqPhQarw1HBXsc60Or
+         vGjxBNX76fQwoavwx1elDA8mFLbqjFliI5fZ/xC8fxDZ3DRXqunEUMwYe9W1FFVoA7iy
+         xx6OIYbVd7ATQcktNwDUR96GHDCMKLzEK6T1cSYPKsLuo9TJ/pCM+G7T/xX96ItcjHAI
+         kYm24wIKjZsHYKUvaYUyijE3o7AcneAsqXDZkoJFoimCJ7kQJjg7U7xxr+vtpT7IhRqm
+         68hQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gK8Jftwgks0WYY7+WHweYffkC2Tk9J0PDGWd/xvYChDN8KxX1rs
+	KAcBOxscPA2wR5tlo+mPPimML38z59g9B89nVg28UOo8jRmyTaz02A==
+X-Received: by 2002:a17:902:50e3:: with SMTP id c32-v6mr189864plj.39.1541596756806;
+        Wed, 07 Nov 2018 05:19:16 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5235447pjt;
+        Wed, 7 Nov 2018 05:19:16 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eGwQRKVYd/vLGB9yxE5E9jAZahX1xXcVY3rCBmyx0Lzy5R8/kk3HBKiDtyp8l7hw9mCUvK
+X-Received: by 2002:a63:ca44:: with SMTP id o4mr166613pgi.258.1541596755943;
+        Wed, 07 Nov 2018 05:19:15 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541596755; cv=none;
+        d=google.com; s=arc-20160816;
+        b=emIqONDTBjpbsW77+d1sDuXcv62wk7sRJylR0aXhMa3gBXUc9VCsYw9UCu3Snv/EKY
+         2EvomZjG9omhJP09B06sQYoOLJEXZ2vVf48RF8/H2CS5b/iQh2Q3GpmxRQ7YBxhPQ0MT
+         Y1oJ5WYD4VO5XqUN40FMvjihM+4dlh6qB01CA7rlqwf/yUjGSXRm11NPGrss1179hyww
+         3uwIjsWEbLJ0Kpz/8U6YtEA4AITCrKuiQXLuxL70/u2nHP+tbMZNOCb5IXuBcBIcOU+9
+         eaZRhnzKiI6XN21CCaMFGR6I01vRd9ZP0XczjxsiOwaaeZCWoA+wjnCZRLpr3s5PCNw5
+         4nJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:date:subject:cc:to:from;
+        bh=ZezANteDHl53+KYrTYzU0kc/kI+QUiFXa+7Xwn2/rU4=;
+        b=r1FF1jCXATaLcMlxAWeftJGfbCMQ08uqgYrnfFf5hvEb5HFpOAEliAWRsYvQ6/eeG6
+         lK96mHNbZdLYvRqGJYwSv6LXQg11AqjSAp1qggZfjD4xchhEZNWLb3eg2aZf74hqOxI9
+         G4Y+Lss9WTIW07Yd7nCuM+LfdBIXpgbuDbzuwoThIrLkMMGlJlYuq5JEM0iUC4MVxbyG
+         sk0ml+Gb43Bnpaq9d2ZiWQVj8GYCRQDjX9yAqYdbYtFLrN+XQwLV+XA3mAK3BpiPCd0Y
+         j7x6Ag/4gQoiedsTJWbibatsOnLXx5PALThAtYfVN11ZdXp66pbCgTh4oBNMMKrGxxyF
+         17uw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id n17si559098pgj.191.2018.11.07.05.19.00;
+        Wed, 07 Nov 2018 05:19:15 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726887AbeKGWtP (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:49:15 -0500
+Received: from laurent.telenet-ops.be ([195.130.137.89]:37476 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbeKGWtP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:49:15 -0500
+Received: from ramsan.of.borg ([84.194.111.163])
+        by laurent.telenet-ops.be with bizsmtp
+        id x1Js1y00m3XaVaC011JshV; Wed, 07 Nov 2018 14:18:53 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtp (Exim 4.86_2)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1gKNjQ-0004yr-Nj; Wed, 07 Nov 2018 14:18:52 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1gKNjQ-00031Z-Kn; Wed, 07 Nov 2018 14:18:52 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>
+Cc: iommu@lists.linux-foundation.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] iommu/ipmmu-vmsa: Fix crash on early domain free
+Date: Wed,  7 Nov 2018 14:18:50 +0100
+Message-Id: <20181107131850.11584-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBX0ExV5uJbHowXAA--.6443S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw1DGFW5ZrWfKw4UtFyxKrg_yoW8XryxpF
+	47GrW3ur4xJF40ya17J3W8Zry5KFZ5Za4jk34fK3909ry5t3s3GF1DXa4Ykr1j9r48Jry7
+	Aa17Jr42kr1YyaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Fb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE
+	2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcV
+	C2z280aVAFwI0_GcCE3s1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij
+	64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr
+	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+	17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcS
+	sGvfC2KfnxnUUI43ZEXa7IUYuVbPUUUUU==
+
+If iommu_ops.add_device() fails, iommu_ops.domain_free() is still
+called, leading to a crash, as the domain was only partially
+initialized:
+
+    ipmmu-vmsa e67b0000.mmu: Cannot accommodate DMA translation for IOMMU page tables
+    sata_rcar ee300000.sata: Unable to initialize IPMMU context
+    iommu: Failed to add device ee300000.sata to group 0: -22
+    Unable to handle kernel NULL pointer dereference at virtual address 0000000000000038
+    ...
+    Call trace:
+     ipmmu_domain_free+0x1c/0xa0
+     iommu_group_release+0x48/0x68
+     kobject_put+0x74/0xe8
+     kobject_del.part.0+0x3c/0x50
+     kobject_put+0x60/0xe8
+     iommu_group_get_for_dev+0xa8/0x1f0
+     ipmmu_add_device+0x1c/0x40
+     of_iommu_configure+0x118/0x190
+
+Fix this by checking if the domain's context already exists, before
+trying to destroy it.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/iommu/ipmmu-vmsa.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
+index c4114b92652eb0c9..a8b2c649c1d1f1b9 100644
+--- a/drivers/iommu/ipmmu-vmsa.c
++++ b/drivers/iommu/ipmmu-vmsa.c
+@@ -498,6 +498,9 @@ static int ipmmu_domain_init_context(struct ipmmu_vmsa_domain *domain)
+ 
+ static void ipmmu_domain_destroy_context(struct ipmmu_vmsa_domain *domain)
+ {
++	if (!domain->mmu)
++		return;
++
+ 	/*
+ 	 * Disable the context. Flush the TLB as required when modifying the
+ 	 * context registers.
+-- 
+2.17.1

@@ -1,0 +1,139 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 13:35:32 -0000
+Received: from icoremail.net (unknown [209.85.214.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX1_R6OJb1i9YAQ--.26457S3;
+	Wed, 07 Nov 2018 21:29:54 +0800 (CST)
+Received: from mail-pl1-f169.google.com (unknown [209.85.214.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBnT0vP6OJblpUXAA--.8939S3;
+	Wed, 07 Nov 2018 21:29:51 +0800 (CST)
+Received: by mail-pl1-f169.google.com with SMTP id p4-v6so5481455plo.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:29:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=PSjp/uuMteZjf9yStVYDEc3rGuv4ggHe5Faj9Ro5sfA=;
+        b=GdszToYEXoaNsAsJSJTmJ68Ewccl0ChU8i9oDqjJQ7m8/7tl2m7bQMzDOiTsix1W4q
+         IyIsXMDdqIPD5xXuLFVshokIFgOgxo3GwZFQKkk4Fq7IFSfBFjDBP8rVW7lvV8fxQFUv
+         YPqIK0IacOsCcKUDPF8toZyf508MXoAdnoYpEzEv7wJ59NKw+3isM0ScWEYx2XHUi4ae
+         XmHkv0PEIQjq63LEa5HuCN5v8FOk0Yhb/Y6Gk8sV8IlP+BljEYS4lnx3K0Meg4yeXUx0
+         oVMDG5SLbo/nn527CMVtEVWMr/38eUJjYqK8hdW2n9jUeA7dg4TOg/4OZgK8gP+Uo4Xr
+         SSBQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=iki.fi
+X-Gm-Message-State: AGRZ1gKy8hjGG7zlooYINFITlPeZd3/Cm7nlNPHqL3fzBjFIlE8b4gQ4
+	Qd8UkAj9iCZS4jAg/VBNqtGKrGqRJN2dmdTddTM/HaAG33S218beBg==
+X-Received: by 2002:a17:902:bd4a:: with SMTP id b10-v6mr214899plx.171.1541597391644;
+        Wed, 07 Nov 2018 05:29:51 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5246893pjt;
+        Wed, 7 Nov 2018 05:29:50 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fU5PZbw4A2nb9SmJ8SxEsWfQks2jcGA3XyO5vwuClGWxdIl22olyWwQDwcmetZso4/wGal
+X-Received: by 2002:a63:f241:: with SMTP id d1mr210993pgk.2.1541597390639;
+        Wed, 07 Nov 2018 05:29:50 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541597390; cv=none;
+        d=google.com; s=arc-20160816;
+        b=cWYXa2wuzFBkQR4KxFeA04hHPbFl4MTvGmZwJHzk0gIgtp6l8eKNmJ6BLN4DfBV4t1
+         uNkyaqoFv7Xe/08ZBnCGPhCR3JxsPq0jOS1cRFxml56Wf0FnVRw2QUuRhCvzeB59tqXJ
+         9os8lipQ60oB9iCCh+KkzsYcjyZTAB/p1IQQkP3IdQaUb1gQdRedx2LaS9XGjw7eIpsB
+         RZx8erW5KGCMLgr/V1nS+AD50xnY2B8f8TSgTAMU/0MsDQr6Flp81ZoA6Qn/yc45kfnD
+         e/JgLuB9ST06dpS4c34Afv+/C1Q268MM/QU3lDwtw2udrP2tJljHiWCzLQu1LdSeU+pM
+         aXIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=PSjp/uuMteZjf9yStVYDEc3rGuv4ggHe5Faj9Ro5sfA=;
+        b=M71hP/xh+yTHk5uQ7i5bZ3fikWzDWxnDcYbqE1niEqOpV0rx3v1KxiaCmaUfijQCjo
+         iFnUWNSncHjLaTEmh4y9ywLZYqFvhOB6I1/e3FMUm1uziMWfX/1PeTbmjvv4Ua2VMwv3
+         DLAUHmezAo5G27EpWmr4PoBsMaKyTVh1qs2c38FflTIMUuANAbcsNZ45WVdCpUwfjxYV
+         elMaOX9sq7wnuLj92Ae1y6So148j3wqIZ8i4azt8/lezmLBT++DMuSZ10KVhMlGgobDl
+         VsjgTnSCmlSXS7WgOKj4bcA9FMeQoc2Ojy6jBfKhrEEhY3nJs2TL7S1JJrq4l2IbkOTc
+         Ubyg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=iki.fi
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d14-v6si628567pll.301.2018.11.07.05.29.33;
+        Wed, 07 Nov 2018 05:29:50 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727546AbeKGW7w (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:59:52 -0500
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:36366 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726411AbeKGW7v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:59:51 -0500
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2001:1bc8:1a6:d3d5::80:2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id BF12E634C83;
+        Wed,  7 Nov 2018 15:29:27 +0200 (EET)
+Received: from sakke by valkosipuli.localdomain with local (Exim 4.89)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1gKNtf-0002SX-J0; Wed, 07 Nov 2018 15:29:27 +0200
+Date: Wed, 7 Nov 2018 15:29:27 +0200
+From: Sakari Ailus <sakari.ailus@iki.fi>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media@vger.kernel.org,
+        Archit Taneja <architt@codeaurora.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        Krzysztof Witos <kwitos@cadence.com>,
+        Rafal Ciepiela <rafalc@cadence.com>
+Subject: Re: [PATCH v2 1/9] phy: Add MIPI D-PHY mode
+Message-ID: <20181107132927.k4vkbznie3ryogqn@valkosipuli.retiisi.org.uk>
+References: <cover.c2c2ae47383b9dbbdee6b69cafdd7391c06dde4f.1541516029.git-series.maxime.ripard@bootlin.com>
+ <74b2dfd695a5d28f9a07634cea17acec0a6aaa49.1541516029.git-series.maxime.ripard@bootlin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <74b2dfd695a5d28f9a07634cea17acec0a6aaa49.1541516029.git-series.maxime.ripard@bootlin.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBnT0vP6OJblpUXAA--.8939S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUYA7k0a2IF6F1UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW5GwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07
+	x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
+	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI4
+	8JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IU8NAw3UU
+	UUU==
+
+On Tue, Nov 06, 2018 at 03:54:13PM +0100, Maxime Ripard wrote:
+> MIPI D-PHY is a MIPI standard meant mostly for display and cameras in
+> embedded systems. Add a mode for it.
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
