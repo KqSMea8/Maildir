@@ -1,0 +1,175 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:32 -0000
+Received: from icoremail.net (unknown [209.85.210.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn33zC2+JbD+JXAQ--.26283S3;
+	Wed, 07 Nov 2018 20:34:11 +0800 (CST)
+Received: from mail-pf1-f172.google.com (unknown [209.85.210.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHa0fB2+JbDWEXAA--.12199S3;
+	Wed, 07 Nov 2018 20:34:09 +0800 (CST)
+Received: by mail-pf1-f172.google.com with SMTP id v68-v6so4062987pfk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:34:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=3lnZ0Ntub6NQc+/a1crZh57IwQonXfSE1Kw7FGWt1so=;
+        b=te7kFbH9USZKSRX1QhWz80a5dMSJNbPR7MhXl4bdSA4fJRRsEEGYM3l3k04vdbgb9f
+         pHOtpSXA4qJHUQ+9SouObtwxBFsoBrlSjML1Xh9/B+iptRg6yUjqCfMlx+H0BXuk21WA
+         EveuBqCoWZaNiqqEvQg7p9hgl/ccJB3JtXFqDQdRwxOcBU0LoUeTbl9STgruPbRSPAIo
+         g8chpcXqRNqmgf7Br6J9oWs3ds3KpdqlS7qZlHJgb2Xp+u2amtFHOpmBO8uDOHUyzlWU
+         AxowfTkOwxtlxJlUW5levzqRvtoM4x00N1cpqdQzeoAtqSbXT031sjK5Yqo7Ss80VfLo
+         DkWg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gLQ4M+ms0CqxhK1eX0O6ghMdkU30ZMDDFC4ZGI6FhScnhbxudfU
+	MvfM1DpuUH90SWfegKkKetp6Zl4lDggyXVOETOG7BO7DnTxSVxE=
+X-Received: by 2002:a63:2c0e:: with SMTP id s14mr39062pgs.132.1541594049506;
+        Wed, 07 Nov 2018 04:34:09 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5187549pjt;
+        Wed, 7 Nov 2018 04:34:08 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eeKbeQ0ClQprqHRFYiugN+PfLlV9Zq0mRzTOK0oMWjPJMl7wCDQw3uixXCWInQAZC/TwyP
+X-Received: by 2002:a63:f047:: with SMTP id s7mr1343284pgj.441.1541594048756;
+        Wed, 07 Nov 2018 04:34:08 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541594048; cv=none;
+        d=google.com; s=arc-20160816;
+        b=QRv45sutXADsVkUkTahojR1f2t+DZO5w4QzyjS27iLs8XuYQK3g7QOYiwmhYaRPHwd
+         EllkNnwppZdUq4hjxhhqs/4bcNC1J2ySIIRLte7Bta7Dm3xEU3XrO79KUaizb3GbH/9F
+         m3E8RU83RIlUJRVPchcAGn9/fAwfY0J6AA2iHdzVUhHi2gU3CiUbPx9jlOz025AioSIx
+         HxK2RbFxJp8JgZ0uX2CCtZSVGVv73um3diVFPewEuPXOCi95capJ7AulSh5DTfdp70gF
+         OVwJ3o6StS4n0bzN/uMzG2KK3sFhS+mGJjOPYtpXm1xB+0CWnMjVlH4epjONtqT67mQw
+         Disg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=3lnZ0Ntub6NQc+/a1crZh57IwQonXfSE1Kw7FGWt1so=;
+        b=wCkKoDMgGdd7y6AnYYa2hmmZwp3bz7mG21u53r171WvK9t4QyhweogObzzeJf2tDdR
+         BSeaYH2YHRvDc/EOnjj6C/cpGPr6wh4ScKtVYI4fgcmxG5aUVx+WA1At5lanEcvLOx2i
+         wRpI50esfpEpIt++Xoegv6ZKGOuzq6jbd2n5i40sgEnj9N5rHEq6vifjV9pQbTPkdVHX
+         9XT/+ujnbj1nqmOdgqpv25/Rmnz+RvXeUi8PT7kEmngmY1NjbtPQhpcrBPpJZL34pqHH
+         3FGga3VdKRD4FQbRKCzZAa5RqxHTi+W14jUTjgRkZkww+wuqkraeD5Oi7SBwjofdyDE0
+         iS9Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id a11si393866pga.198.2018.11.07.04.33.52;
+        Wed, 07 Nov 2018 04:34:08 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726721AbeKGWDx (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:03:53 -0500
+Received: from mga02.intel.com ([134.134.136.20]:16582 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726388AbeKGWDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:03:53 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 04:33:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,475,1534834800"; 
+   d="scan'208";a="106039638"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 07 Nov 2018 04:33:36 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 07 Nov 2018 14:33:35 +0200
+Date: Wed, 7 Nov 2018 14:33:35 +0200
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: kbuild@01.org, kbuild-all@01.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 4/6] drivers: base: Introducing software nodes to the
+ firmware node framework
+Message-ID: <20181107123335.GF13048@kuha.fi.intel.com>
+References: <20181105145928.46819-5-heikki.krogerus@linux.intel.com>
+ <20181107043933.wqszrfajrfy6hv7u@mwanda>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107043933.wqszrfajrfy6hv7u@mwanda>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHa0fB2+JbDWEXAA--.12199S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxGF4fXF1rWFy3Wr4kJw4ruFg_yoW5GrW5pa
+	93Kry8GFs8Kr4jkry8JF18A3y09w1xJrWUJ3s7C3WxZr9rCFnrCr4DZrWFgrWfZw18ta9I
+	yF4DXr4qy3ZFkaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP0b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6ryUMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJr0_GcWlcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Cr1j6rxdMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52
+	x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwI
+	xGrwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF7vcSsGvfC2KfnxnUUI43ZEXa7IU5co7tUU
+	UUU==
+
+On Wed, Nov 07, 2018 at 07:39:33AM +0300, Dan Carpenter wrote:
+> Hi Heikki,
+> 
+> url:    https://github.com/0day-ci/linux/commits/Heikki-Krogerus/device-property-Introducing-software-nodes/20181106-031310
+> 
+> smatch warnings:
+> drivers/base/swnode.c:391 fwnode_create_software_node() error: dereferencing freed memory 'swnode'
+> 
+> # https://github.com/0day-ci/linux/commit/a8c9678ea46a0171baed68e4ec355a9b3f967458
+> git remote add linux-review https://github.com/0day-ci/linux
+> git remote update linux-review
+> git checkout a8c9678ea46a0171baed68e4ec355a9b3f967458
+> vim +/swnode +391 drivers/base/swnode.c
+> 
+> a8c9678e Heikki Krogerus 2018-11-05  365  
+> a8c9678e Heikki Krogerus 2018-11-05  366  struct fwnode_handle *
+> a8c9678e Heikki Krogerus 2018-11-05  367  fwnode_create_software_node(const struct property_entry *properties,
+> a8c9678e Heikki Krogerus 2018-11-05  368  			    const struct fwnode_handle *parent)
+> a8c9678e Heikki Krogerus 2018-11-05  369  {
+> a8c9678e Heikki Krogerus 2018-11-05  370  	struct software_node *p = NULL;
+> a8c9678e Heikki Krogerus 2018-11-05  371  	struct software_node *swnode;
+> a8c9678e Heikki Krogerus 2018-11-05  372  	char node_name[20];
+> a8c9678e Heikki Krogerus 2018-11-05  373  	int ret;
+> a8c9678e Heikki Krogerus 2018-11-05  374  
+> a8c9678e Heikki Krogerus 2018-11-05  375  	if (parent) {
+> a8c9678e Heikki Krogerus 2018-11-05  376  		if (IS_ERR(parent))
+> a8c9678e Heikki Krogerus 2018-11-05  377  			return ERR_CAST(parent);
+> a8c9678e Heikki Krogerus 2018-11-05  378  		if (!is_software_node(parent))
+> a8c9678e Heikki Krogerus 2018-11-05  379  			return ERR_PTR(-EINVAL);
+> a8c9678e Heikki Krogerus 2018-11-05  380  		p = to_software_node(parent);
+> a8c9678e Heikki Krogerus 2018-11-05  381  	}
+> a8c9678e Heikki Krogerus 2018-11-05  382  
+> a8c9678e Heikki Krogerus 2018-11-05  383  	swnode = kzalloc(sizeof(*swnode), GFP_KERNEL);
+> a8c9678e Heikki Krogerus 2018-11-05  384  	if (!swnode)
+> a8c9678e Heikki Krogerus 2018-11-05  385  		return ERR_PTR(-ENOMEM);
+> a8c9678e Heikki Krogerus 2018-11-05  386  
+> a8c9678e Heikki Krogerus 2018-11-05  387  	swnode->id = ida_simple_get(p ? &p->child_ids : &swnode_root_ids, 0, 0,
+> a8c9678e Heikki Krogerus 2018-11-05  388  				    GFP_KERNEL);
+> a8c9678e Heikki Krogerus 2018-11-05  389  	if (swnode->id < 0) {
+> a8c9678e Heikki Krogerus 2018-11-05  390  		kfree(swnode);
+>                                                               ^^^^^^
+> a8c9678e Heikki Krogerus 2018-11-05 @391  		return ERR_PTR(swnode->id);
+>                                                                        ^^^^^^^^^^
+> a8c9678e Heikki Krogerus 2018-11-05  392  	}
+
+Thanks!
+
+-- 
+heikki

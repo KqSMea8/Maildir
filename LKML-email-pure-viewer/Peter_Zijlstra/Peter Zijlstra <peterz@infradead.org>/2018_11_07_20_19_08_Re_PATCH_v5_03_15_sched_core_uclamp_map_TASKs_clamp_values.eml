@@ -1,0 +1,147 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:26 -0000
+Received: from icoremail.net (unknown [209.85.214.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_4+V2eJbwtVXAQ--.58131S3;
+	Wed, 07 Nov 2018 20:24:55 +0800 (CST)
+Received: from mail-pl1-f169.google.com (unknown [209.85.214.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnDEhf2OJbb1UXAA--.5091S3;
+	Wed, 07 Nov 2018 20:19:44 +0800 (CST)
+Received: by mail-pl1-f169.google.com with SMTP id p4-v6so5408807plo.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:19:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=v23055yEHBFvJw7hZgkV2moVDYtXEwtvERZbDc7AyEM=;
+        b=Kw4CALShzgdDS5AzSQp/zTrbyCB+g96KEWGlE2F+/ezPXk1T0aY5Ewd/3bRSnJ1TOx
+         nJNZlejkyGcL0G5h0teBhU4lrprloBKazwWqUAHugyJo9bwKCxpAVDDj4B+npCZWRfs5
+         eH4j/KqEP9SzM4OS/aqfz2onHWXIdGBKWu8P+H/A5LiUcB7iqnUQ+mXLQNkgl1PkmFD5
+         RlZgkrAHOywNcCFGSM7ZMFUrmG1qV2UByYN/2vwbaYXKPzY4f+8GjDSC9WQtlVXgiWjk
+         du/IpMwxxarBmqSL1uwOUGqgOqmjH7gRoQpzstcV0+8CuYa4Jw3RcacNTB0Wx4U3t24m
+         n6nA==
+X-Gm-Message-State: AGRZ1gLrFiYLOwbc9dvv1hLIzlC4CcxU5F+8Xylj+OwHY40UKP2vWhXV
+	VhaWtkBeAoGy63lYXjQHLuH3F4h8lX6LSZ+Z+ZigVR4N4dI60EI=
+X-Received: by 2002:a17:902:9698:: with SMTP id n24-v6mr1698923plp.9.1541593183796;
+        Wed, 07 Nov 2018 04:19:43 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5174296pjt;
+        Wed, 7 Nov 2018 04:19:43 -0800 (PST)
+X-Google-Smtp-Source: AJdET5endQKL4KFhULyiQo4sD9J+SSJ+XLFY26DFZY4vUppEZSj82pC3przPaQbM4VLO5L40udHm
+X-Received: by 2002:a17:902:ac8f:: with SMTP id h15-v6mr14878plr.46.1541593183177;
+        Wed, 07 Nov 2018 04:19:43 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541593183; cv=none;
+        d=google.com; s=arc-20160816;
+        b=K6QGg9N8zA7Ktwt7aKsXCvacNfjjmsH6HR4qtbYRDb56so6lS522+2Len6HU4vomcc
+         h+4v5LoLTcK764xJ5A3b/wOOMX2A/YUesI7nqmjwwWH87koI7897i2e4u05evqit59iv
+         Y2RxuPC5WxGC5tOlvtlE/+iVU3AcEPa+9Un2JtcRZsIgchwdpYKjoWZSCwT5vzIv2MFo
+         CjgS6VnUGcdFJbnwZ38IhDj20h9i8zvxwDua3mBIKXFNngqkIAccsqYrPXlw4m+IISRe
+         897t3CtRz+IyDJWq2+vA7iaT/2zUTx9AnpU2H3+aqNDgqKrJBqj0phUV00q9CksDcvcn
+         mGgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=v23055yEHBFvJw7hZgkV2moVDYtXEwtvERZbDc7AyEM=;
+        b=fgPViOueE7ialHZ9dRZY1drWfzJc8B4TWIGth0MnFDfrjDbxhq3efF/WppcnOxdoSb
+         HbvhFa2Inu0+sfR3Kh5rCIakJFofwgfCJKfY+Gra70tS4FN8KXF7rQ8LcIJ+Zdjcsb/a
+         rwYeSmkULPfd3DVx2+msI6GN0G2P5wdMARgCTsjNR70Of62dI4V08nHsJFqKBdgp1X6Q
+         5zJgteBhqvQ+5JIFpBMDNPmKCMuFx95E3qLsNlPporSUiMkUimIPzF7XWv8NtPbFIsMb
+         21GEO+1pN4e9hkZYvXqvOe5qIgRce1t0D5AFncoHRBusqy2xERYv0brgXxIomtsdP/dg
+         5bzg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@infradead.org header.s=bombadil.20170209 header.b="Eq/9Z3dD";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b40-v6si503426pla.285.2018.11.07.04.19.26;
+        Wed, 07 Nov 2018 04:19:43 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730533AbeKGVtX (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 16:49:23 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57480 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbeKGVtW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 16:49:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=v23055yEHBFvJw7hZgkV2moVDYtXEwtvERZbDc7AyEM=; b=Eq/9Z3dDAdDZiaU62/V+5KScA
+        C6uuj5dgY2nt+cQv0t2fvuNImlFl+0x62Rp/oRCMxSYrgwIOz6NWksxDyRe0relN0O1wHHbxzJW+d
+        /Xe5xQ+FuZM9UFtPidbaNQHJkWQPh04Qr3prPvhzXsg90IC0lHXZENPZUuBuMX1adxtskOQKaxMNc
+        xBfocgjXi9Nt1zOypopCQb/W3HST8Y4xxKWcn7nIPQH1h+njGqomKfp6zv9y8Yq3nn/O6T0nuz5aO
+        yYTtfjRUuUCqETkx+t5BhWQyTumOsdtUNS4yMJg9dGeO6/wdxfmKywKwlYk9HBNBzjBK65blB8XEx
+        MhNnXZxjA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1gKMne-0004Cb-UO; Wed, 07 Nov 2018 12:19:11 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CCB3A20284F94; Wed,  7 Nov 2018 13:19:08 +0100 (CET)
+Date: Wed, 7 Nov 2018 13:19:08 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Patrick Bellasi <patrick.bellasi@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v5 03/15] sched/core: uclamp: map TASK's clamp values
+ into CPU's clamp groups
+Message-ID: <20181107121908.GO9781@hirez.programming.kicks-ass.net>
+References: <20181029183311.29175-1-patrick.bellasi@arm.com>
+ <20181029183311.29175-4-patrick.bellasi@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181029183311.29175-4-patrick.bellasi@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnDEhf2OJbb1UXAA--.5091S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUYC7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW5JwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Cr1j6rxdMxvI42IY
+	6I8E87Iv6xkF7I0E14v26F4UJVW0owCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07b1dgAU
+	UUUU=
+
+On Mon, Oct 29, 2018 at 06:32:57PM +0000, Patrick Bellasi wrote:
+> +struct uclamp_se {
+> +	unsigned int value		: SCHED_CAPACITY_SHIFT + 1;
+> +	unsigned int group_id		: order_base_2(UCLAMP_GROUPS);
+
+Are you sure about ob2() ? seems weird we'll end up with 0 for
+UCLAMP_GROUPS==1.
+
+> +	unsigned int mapped		: 1;
+> +};

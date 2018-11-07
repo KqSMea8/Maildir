@@ -1,0 +1,188 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:52 -0000
+Received: from icoremail.net (unknown [209.85.215.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH+bH3eJbsuxXAQ--.26004S3;
+	Wed, 07 Nov 2018 20:42:47 +0800 (CST)
+Received: from mail-pg1-f182.google.com (unknown [209.85.215.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHbUnG3eJbDGgXAA--.4329S3;
+	Wed, 07 Nov 2018 20:42:46 +0800 (CST)
+Received: by mail-pg1-f182.google.com with SMTP id f8-v6so7290186pgq.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:42:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:sender:precedence:list-id;
+        bh=y55hNUlpPoJRfkqdR0AEOQOUS0jEFkuQSDG73K2n+XY=;
+        b=VsbfB6r5EVfqFrRrlbV5o5GOwODJXiS0HjNO/DfJMhD7KXQEKMGAeU1ixaTQ5YXLqZ
+         qnb1d564RL4bblZWgON6S743YLCqj589VUVn0NKcM/l6daVul/084WDc9enyi91/KXRa
+         3A/iPxgFGStjhtLDALphZONcuIJtN/oP6T/3IlTzdTvMWbPQJi8fEPzBgYjbjAFMfF8v
+         oS8qFjr0+y2kFJwutRUrs0lBjKjQagKLUWplg9gYyOBUCQiQLEz42DPzrg2AuVOmGUfl
+         K1nC3rujtoFDsXJmMrf1qETXXsOMwoCF6YV55WVVMifKCyTe4kI5EmsuMXhVml9qbiMs
+         vI9g==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIzkenORi1aWWf5FkDGJnU0vo3ip9IIl9H06BG/QdMlgjBku3kV
+	LgfU3eUYZuEyRSdbFp1le14BMamlojBQSxoiUzby0evkX3+pkAk=
+X-Received: by 2002:a63:40c2:: with SMTP id n185-v6mr62201pga.116.1541594565921;
+        Wed, 07 Nov 2018 04:42:45 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5195946pjt;
+        Wed, 7 Nov 2018 04:42:45 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d01ww3OvBr6oOzEfuWm9HOoyK0gZD+mO3yDWlo7eX+0Q2uNUslKRych0nnzsjD7m+ZXLnN
+X-Received: by 2002:a62:9702:: with SMTP id n2-v6mr58242pfe.222.1541594565168;
+        Wed, 07 Nov 2018 04:42:45 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541594565; cv=none;
+        d=google.com; s=arc-20160816;
+        b=SwNxp5Y1XNKxL8qGSOzKB1OzpRWoJd19HvytJ6RLVLZobo7SA1A7tTYY50cbNdILNh
+         qthN24Q8d7u4IqhWCJkmGZxIhxVit21K34s2WH6Dhe/JFzkydiVwvQdYeHosFSJYFAqn
+         vXbOPhitqMAh2ST0vVi+CLquaTyv+WslzuPcDDWILqW7OY7v9NHSXS1ZoS7Gy35yO3bf
+         2mgXG+ACZ7U1Z65IhJBM1vNrRQC67O1Bb60Jlht3XjTZQ/mYmSXnQQL2d/szVSLngYGU
+         gQApY969wr+PpGwtjuXOLFKBsPT1IJyg03IO5sfpnib6t5v/ZMd6omNzzrwx0PgSSzjA
+         PQDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version;
+        bh=y55hNUlpPoJRfkqdR0AEOQOUS0jEFkuQSDG73K2n+XY=;
+        b=CBweO4jtNUqasqtPbXhxvcvT9CYk3keWC+tRx+3bQrUEdLVJMlgMN0s+dtmePfjqHQ
+         KvVNEw1iFDobbCmphuFGjm1EedpLDr9B24l3rk0Oc7I1JGEcp8C8M1DdeuqEIwV/pXbd
+         6tGulJ5yZL12IbRd5QQWmLazgZz5GnVJNUViwAx7+UZy1GlTJjbXh7uW30diHYGXaOpb
+         wgJY4CawCQLKnCf0duzBcrgYcxjnSvRM4mJWBenrfgqpAzmdbOK/10qAmgTqXJW1Iq2v
+         78Mi4gC4dQKWe96m1p1J68fgROGvWkGhgfa3pywg5kQ8nN0VDq4por1nJalB8MCjpAc9
+         WTEw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id o184si460410pgo.591.2018.11.07.04.42.29;
+        Wed, 07 Nov 2018 04:42:45 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726825AbeKGWMh (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:12:37 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:37463 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbeKGWMg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:12:36 -0500
+Received: by mail-qk1-f193.google.com with SMTP id 131so20461107qkd.4;
+        Wed, 07 Nov 2018 04:42:22 -0800 (PST)
+X-Received: by 2002:ac8:1d11:: with SMTP id d17-v6mr1383108qtl.343.1541594112361;
+ Wed, 07 Nov 2018 04:35:12 -0800 (PST)
+MIME-Version: 1.0
+References: <20181107003250.5832-1-elder@linaro.org> <20181107003250.5832-13-elder@linaro.org>
+In-Reply-To: <20181107003250.5832-13-elder@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Wed, 7 Nov 2018 13:34:56 +0100
+Message-ID: <CAK8P3a2X1zstSWP89uDxyf+rvyzzDY98_cvE4fzc-ZGbyVz23w@mail.gmail.com>
+Subject: Re: [RFC PATCH 12/12] soc: qcom: ipa: build and "ipa_i.h"
+To: Alex Elder <elder@linaro.org>
+Cc: David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Networking <netdev@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-soc@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syadagir@codeaurora.org, mjavid@codeaurora.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHbUnG3eJbDGgXAA--.4329S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7tryDCry3KFWDKry7Zr15twb_yoW8Kw45pa
+	yjga4jkF4DuF4Iyw47t3ykAF1SkFs8G345WrWkX3WFvF43GF1vkF4DKF4agFyUCrnIya40
+	vr4YvayDtF1qyaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW5JwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Cr1j6rxdMxvI42IY
+	6I8E87Iv6xkF7I0E14v26F4UJVW0owCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUQ6pP
+	UUUUU
+
+On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
+> +config IPA_ASSERT
+> +       bool "Enable IPA assertions"
+> +       depends on IPA
+> +       default y
+> +       help
+> +        Incorporate IPA assertion verification in the build.  This
+> +        cause various design assumptions to be checked at runtime,
+> +        generating a report (and a crash) if any assumed condition
+> +        does not hold.  You may wish to disable this to avoid the
+> +        overhead of checking.
+
+Maybe remove this from the submission.
+
+> +#define ipa_debug(fmt, args...)        dev_dbg(ipa_ctx->dev, fmt, ## args)
+> +#define ipa_err(fmt, args...)  dev_err(ipa_ctx->dev, fmt, ## args)
+
+These macros refer to variables in the caller that are not passed as arguments,
+which is generally a bad idea. They also trivially wrap a standard kernel
+interface, so better just that directly.
+
+> +#define ipa_bug() \
+> +       do {                                                            \
+> +               ipa_err("an unrecoverable error has occurred\n");       \
+> +               BUG();                                                  \
+> +       } while (0)
+> +
+> +#define ipa_bug_on(condition)                                          \
+> +       do {                                                            \
+> +               if (condition) {                                \
+> +                       ipa_err("ipa_bug_on(%s) failed!\n", #condition); \
+> +                       ipa_bug();                                      \
+> +               }                                                       \
+> +       } while (0)
+
+According to a discussion at the kernel summit, we should generally
+try to avoid BUG() as it rarely does anything useful: it crashes the
+current task, but in a network driver that usually means killing the
+entire kernel since you are not in process context.
+
+Try questioning each one to see if it can possibly happen, or if the
+code can be rewritten in a way to guarantee that it cannot.
+
+If continuing after the bug was detected does not cause a security
+hole or permanent data corruption, you can also use WARN_ON()
+or WARN_ONCE() (without a wrapper).
+
+> +int ipa_wwan_init(void);
+> +void ipa_wwan_cleanup(void);
+> +
+> +int ipa_stop_gsi_channel(u32 ep_id);
+> +
+> +void ipa_cfg_ep(u32 ep_id);
+> +
+> +int ipa_tx_dp(enum ipa_client_type dst, struct sk_buff *skb);
+> +
+> +bool ipa_endp_aggr_support(u32 ep_id);
+> +enum ipa_seq_type ipa_endp_seq_type(u32 ep_id);
+> +
+> +void ipa_endp_init_hdr_cons(u32 ep_id, u32 header_size,
+> +                           u32 metadata_offset, u32 length_offset);
+> +void ipa_endp_init_hdr_prod(u32 ep_id, u32 header_size,
+> +                           u32 metadata_offset, u32 length_offset);
+
+I'm surprised to see many functions that don't take a pointer
+to an instance as the first argument, which often indicates
+that you have global state variables and the driver won't
+work with multiple hardware instances.
+
+      Arnd

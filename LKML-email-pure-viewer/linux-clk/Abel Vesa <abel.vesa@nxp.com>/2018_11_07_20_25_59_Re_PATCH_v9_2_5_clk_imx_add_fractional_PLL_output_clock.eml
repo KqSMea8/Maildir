@@ -1,0 +1,371 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:29 -0000
+Received: from icoremail.net (unknown [209.85.210.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3__tS2+Jbnd9XAQ--.26428S3;
+	Wed, 07 Nov 2018 20:32:19 +0800 (CST)
+Received: from mail-pf1-f176.google.com (unknown [209.85.210.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3Hkoc2uJb41sXAA--.6295S3;
+	Wed, 07 Nov 2018 20:27:08 +0800 (CST)
+Received: by mail-pf1-f176.google.com with SMTP id g7-v6so5375711pfo.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:27:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :thread-topic:thread-index:date:message-id:references:in-reply-to
+         :accept-language:content-language:spamdiagnosticoutput
+         :spamdiagnosticmetadata:content-id:content-transfer-encoding
+         :mime-version:sender:precedence:list-id;
+        bh=lWdlKFMkANVCMuvXHla/TZLHCvxgiR9pEzgDRS5YITo=;
+        b=brYr72zGHtW2fCWyL1+r0O0HlksUNxrBcTVP8yIuXThxDyWG3BCbfHxQC5/eL6BKsb
+         itVS2zAJViZhrWZuG2AVYNSTsJYPWhJGqV7FOl4ZFs/ik01p/w3utEbWXH4U57dT35Ds
+         vYRZKAUuaqTamv0GKrj+TwLU7SoWpKsJc9GozPh8t0YFm1Ntd0jyueRtw0iLdlug8hG5
+         hLsLPeHDE/QKYy2zf0LjIn/SrMcFpPR7DTF8r3/YWoUTwqbaYYy84VlyS+ZW6109MojF
+         vRUv8/Y0i53GP7m4EPuloPfJnEIFmV0kG1NM24ldpVLSsLxMZlEuQ0+YLfSGHeK49iJu
+         yvBA==
+X-Gm-Message-State: AGRZ1gKkl2WklxQrN/9C2awObr89+NKfiPHCn6ClddfuwdOoE5YLbchM
+	fuzh9D+vFbb+FJd3rrNKnglBrI10o5ImIl5U/KJYFcPLSBK31PQ=
+X-Received: by 2002:aa7:8498:: with SMTP id u24-v6mr9399pfn.220.1541593626951;
+        Wed, 07 Nov 2018 04:27:06 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5181076pjt;
+        Wed, 7 Nov 2018 04:27:05 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cftUUo+sSvbTctpEF1hlp3OyP+SXBDOCzlGAiqRoz38CoE5biUczufwQ8u8sAbnxG22aeY
+X-Received: by 2002:a62:5904:: with SMTP id n4-v6mr14243pfb.174.1541593625886;
+        Wed, 07 Nov 2018 04:27:05 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541593625; cv=none;
+        d=google.com; s=arc-20160816;
+        b=F+2nTojDZZ8qmVuxjgiUmBbjLyFOXhsnswbCF1i/17GKIhES7+q8fca3722fKY12DV
+         CZ04+NXJAeyAi3J6IFS/5gFNpbiMw+DpApCqremaRKuZXp/45aSKfuW6tt64TcQ3YaW0
+         +RTkB3t/Kg4MWmgDq01vytYkpSAJBfjhgWstL+bc3jAtgH6YqLIdRI4qIqRVfUxdEP+L
+         yfgfSA9jIW9CSc/dLCvgeJhG3RmGsQ3YR9vEMF8iwMrQmlEeTUmKN7ilkidc3KgDSOZX
+         FphT8o18Uh0KSmtaT13fGV537muKKoQdkU3TbSpzI6gJeHKvnQ8Me4C4/7xcJjf5d3lP
+         CELw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:content-transfer-encoding
+         :content-id:spamdiagnosticmetadata:spamdiagnosticoutput
+         :content-language:accept-language:in-reply-to:references:message-id
+         :date:thread-index:thread-topic:subject:cc:to:from:dkim-signature;
+        bh=lWdlKFMkANVCMuvXHla/TZLHCvxgiR9pEzgDRS5YITo=;
+        b=JZbVbQARPYNtNa5/VAy/PGFIJCv/p9F6Z687oY857fQtvXhkK5TSaNjwtt5eLkAK2j
+         FfxeTehZdnFn4wogr6L9g50IIXRoeC066UpmY2cF4XqR4BqjPATgUcJj7yJyk8RlIW9x
+         /c21QAvi0lRHzL9qa8YiExH4AcXdM3tv9gvLjn+4bBKey0yUfMOei0MSKpo0M2R8lfSo
+         S0gCbaofyEqV0nFOFsrJs3lt1zUoETny3fjPqpmrBsoltl+CG/TmJezt2kdrY0GQFrfo
+         xuGe2JVzcem9wyea5gOkDS9HpGJ39iKivkwQHqq3+wx5p/pj+9Djf3XxQwZgObs5oa2P
+         Ossg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@nxp.com header.s=selector1 header.b=qZX0oPFT;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=nxp.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id f39-v6si553953plb.149.2018.11.07.04.26.50;
+        Wed, 07 Nov 2018 04:27:05 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727710AbeKGV4z (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 16:56:55 -0500
+Received: from mail-ve1eur01on0043.outbound.protection.outlook.com ([104.47.1.43]:4072
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726669AbeKGV4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 16:56:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lWdlKFMkANVCMuvXHla/TZLHCvxgiR9pEzgDRS5YITo=;
+ b=qZX0oPFTzospr9uB6MPZv1xSlVdejzuADSXvJVwdkowz+N1kTkTzrjaQXygOtDppqdcqxmHLcYhWq63qjIYZwcYsCtLYeYzSpfWy2FG6CNUdyJgWGI9hSMat/aYq4kSVAtLTLLEum9wwJ73Oo4TC9gbvTufLpZmcsTZXDkFphYo=
+Received: from AM6PR0402MB3654.eurprd04.prod.outlook.com (52.133.28.145) by
+ AM6PR0402MB3767.eurprd04.prod.outlook.com (52.133.29.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1294.32; Wed, 7 Nov 2018 12:25:59 +0000
+Received: from AM6PR0402MB3654.eurprd04.prod.outlook.com
+ ([fe80::5195:5e4c:be83:408b]) by AM6PR0402MB3654.eurprd04.prod.outlook.com
+ ([fe80::5195:5e4c:be83:408b%4]) with mapi id 15.20.1294.034; Wed, 7 Nov 2018
+ 12:25:59 +0000
+From: Abel Vesa <abel.vesa@nxp.com>
+To: Stephen Boyd <sboyd@kernel.org>
+CC: Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "A.s. Dong" <aisheng.dong@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Rob Herring <robh@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, Abel Vesa <abelvesa@linux.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
+Subject: Re: [PATCH v9 2/5] clk: imx: add fractional PLL output clock
+Thread-Topic: [PATCH v9 2/5] clk: imx: add fractional PLL output clock
+Thread-Index: AQHUU/MMUMe0FdAvrE6d03JzIJMOT6Uj//8AgCCCLQA=
+Date: Wed, 7 Nov 2018 12:25:59 +0000
+Message-ID: <20181107122558.mlul4keytay4lrtc@fsr-ub1664-175>
+References: <1537785597-26499-1-git-send-email-abel.vesa@nxp.com>
+ <1537785597-26499-3-git-send-email-abel.vesa@nxp.com>
+ <153980638471.5275.2935268205764106887@swboyd.mtv.corp.google.com>
+In-Reply-To: <153980638471.5275.2935268205764106887@swboyd.mtv.corp.google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [95.76.156.53]
+x-ms-publictraffictype: Email
+x-microsoft-exchange-diagnostics: 1;AM6PR0402MB3767;6:Q/JrAUHUPbMjJtbNEt5BBIGARNn+tgWTN29ulVmwSuWF9zGozMpjMDtvV9qF+VYNAZgDuEiqjpbxEkMcfPRYb4+c36wFwFucOHhbm9fde3E/Z4XYjgzgI8YUXb32eNtIPGjG6PICJa+AJlN6MJxNNsy7XPmPw1F8o84VudXDfkT7DUnItQbqCC5tYB5w83R1Vu/NjBTHiyuGkss2j6vLUO4awp4lx5sQpoxTxAXYB+jQakSkj+pv1H58KxQMhL578kkwZ0V9dDaoKlsSchfkUW6aMvVrkYGl+uP2yLwa4N1WH6vJVT+/vQ1r+w6Ii+XCbWZj2xuUV+7jlSCbmK6L0q5TfaIfJX0Adabgs+xObqVCh35NK9K9TQK00DRCu0Bug0rg6dvg2Cn8NJFxKKgflAaGJreWwtffbLx8zf6k44HwF7xLKpkBZMrk7Q7B8Dn4ncBo768zCOppGMyH7HdHBA==;5:1w4VGa+bSixx75Wq8ty7mafkdsold+HaxBJAfBbIgnxeycI15N+vS+f3Xend08lJDHpLfzHC8sf7lgd3rmvsmI0epzWCNMN9bD3diQ13/xDoCfXEKpS7AuxHR7QFebhcihRegwPwQvk8wPrEYsSjDZJVH4b2u4VNIUlkH95gakg=;7:pcjAbMjp6yKupiBTqY3eb39lWyFlsad/w+WDIG66DtSiicE/PT+pUpfBSz5FhVLDogLwIY8LH/wjIW9BN0jW6AUwL8NSMTeAT5dxsqcKFmFjXD0GpWVE4xOoPY9VgErTwrw5GCC0TnJknA/cB/okIg==
+x-ms-exchange-antispam-srfa-diagnostics: SOS;
+x-ms-office365-filtering-correlation-id: 7d1b1368-6418-4f7c-05e5-08d644ac2ccc
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(7020095)(4652040)(8989299)(5600074)(711020)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:AM6PR0402MB3767;
+x-ms-traffictypediagnostic: AM6PR0402MB3767:
+x-microsoft-antispam-prvs: <AM6PR0402MB3767A889EF2BB17644D1C4D8F6C40@AM6PR0402MB3767.eurprd04.prod.outlook.com>
+x-exchange-antispam-report-test: UriScan:(185117386973197);
+x-ms-exchange-senderadcheck: 1
+x-exchange-antispam-report-cfa-test: BCL:0;PCL:0;RULEID:(8211001083)(6040522)(2401047)(5005006)(8121501046)(3231382)(944501410)(52105095)(3002001)(10201501046)(93006095)(93001095)(6055026)(148016)(149066)(150057)(6041310)(20161123560045)(20161123562045)(20161123558120)(20161123564045)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(201708071742011)(7699051)(76991095);SRVR:AM6PR0402MB3767;BCL:0;PCL:0;RULEID:;SRVR:AM6PR0402MB3767;
+x-forefront-prvs: 08497C3D99
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(39860400002)(376002)(136003)(346002)(366004)(396003)(189003)(199004)(229853002)(256004)(1076002)(97736004)(3846002)(6116002)(7416002)(6916009)(33896004)(53936002)(6246003)(6486002)(4326008)(39060400002)(9686003)(25786009)(105586002)(6512007)(6436002)(71190400001)(76176011)(54906003)(81166006)(316002)(81156014)(7736002)(8936002)(8676002)(86362001)(26005)(186003)(106356001)(71200400001)(6506007)(305945005)(2900100001)(486006)(446003)(102836004)(5660300001)(33716001)(478600001)(11346002)(2906002)(44832011)(476003)(99286004)(68736007)(14454004)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3767;H:AM6PR0402MB3654.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-microsoft-antispam-message-info: Y4IkemREcpI94oFEMmR6+LKDnXLdP2h7Z3KNwS+MQ9IsolIv36s01i35L0+uLwwPCpM05jA5i5qhomyAYHLbwdhhF44WvBuP7xtSut+XEF7G9LZzwD3wC+jN/N63stvuPSwXil7cVAwZFiC+QAqF7AYWSgkS15iAtULooTkba5H/HELJL8Urp+MqV5VBal1yMLS0T1+t8dFrogucTMYoqY1LI/ns+NrB0ES7DcJrXcB9pmISgUBD2FipQ0QquN7TST8A2DK188bjFHRCSr8D0h5BG1SbmopC78fDOlpQ9lRzzswDZPlxHsMfpsS1OLpZzP7GyiD4UWYMKyO6uIXhI9uTvaue2ZvOnTbDEzexL8E=
+spamdiagnosticoutput: 1:99
+spamdiagnosticmetadata: NSPM
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C90F878DA08E2E469BA19D4101D89A67@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d1b1368-6418-4f7c-05e5-08d644ac2ccc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2018 12:25:59.5175
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3767
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3Hkoc2uJb41sXAA--.6295S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3AF1rZw1kWF4UJFW8urWDtwb_yoW7Xr1UpF
+	ykGF47tF4UJw1UAwn0qFs8ZFna9r4qyF1Utry3Ka4xJrnakr1FgFWfCwnxCr4rCF4Skw4Y
+	v3yjqwnrCF4aqFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBIb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwCjxxvEa2IrMxkF7I
+	0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6ryUMxkI7II2
+	jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJr0_GcWlcIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Cr1j6rxdMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjx
+	CrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xAIw2
+	0EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IU5wXo7UUUUU==
+
+On Wed, Oct 17, 2018 at 12:59:44PM -0700, Stephen Boyd wrote:
+> Quoting Abel Vesa (2018-09-24 03:39:54)
+> > From: Lucas Stach <l.stach@pengutronix.de>
+> >=20
+> > This is a new clock type introduced on i.MX8.
+>=20
+> Ok, what's the clock type? Add another sentence please.
+>=20
+
+Added in the next version a link with the pdf describing the hardware
+and specified in the commit message that is a fractional clock.
+
+> >=20
+> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> [..]
+> > diff --git a/drivers/clk/imx/clk-frac-pll.c b/drivers/clk/imx/clk-frac-=
+pll.c
+> > new file mode 100644
+> > index 0000000..030df76
+> > --- /dev/null
+> > +++ b/drivers/clk/imx/clk-frac-pll.c
+> > @@ -0,0 +1,215 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright 2018 NXP.
+> > + */
+> > +
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/err.h>
+> > +#include <linux/io.h>
+> > +#include <linux/iopoll.h>
+> > +#include <linux/jiffies.h>
+>=20
+> Is this used for something?
+>
+
+Removed in the next version.
+
+> > +#include <linux/slab.h>
+> > +#include <linux/bitfield.h>
+> > +
+> > +#include "clk.h"
+> [...]
+> > +
+> > +static unsigned long clk_pll_recalc_rate(struct clk_hw *hw,
+> > +                                        unsigned long parent_rate)
+> > +{
+> > +       struct clk_frac_pll *pll =3D to_clk_frac_pll(hw);
+> > +       u32 val, divff, divfi, divq;
+> > +       u64 temp64;
+> > +
+> > +       val =3D readl_relaxed(pll->base + PLL_CFG0);
+> > +       divq =3D ((val & PLL_OUTPUT_DIV_MASK) + 1) * 2;
+> > +       val =3D readl_relaxed(pll->base + PLL_CFG1);
+> > +       divff =3D FIELD_GET(PLL_FRAC_DIV_MASK, val);
+> > +       divfi =3D (val & PLL_INT_DIV_MASK);
+>=20
+> Nitpick: Drop useless parenthesis please.
+>=20
+
+Removed in the next version.
+
+> > +
+> > +       temp64 =3D (u64)parent_rate * 8;
+> > +       temp64 *=3D divff;
+> > +       do_div(temp64, PLL_FRAC_DENOM);
+> > +       temp64 /=3D divq;
+> > +
+> > +       return parent_rate * 8 * (divfi + 1) / divq + (unsigned long)te=
+mp64;
+> > +}
+> > +
+> > +static long clk_pll_round_rate(struct clk_hw *hw, unsigned long rate,
+> > +                              unsigned long *prate)
+> > +{
+> > +       unsigned long parent_rate =3D *prate;
+> > +       u32 divff, divfi;
+> > +       u64 temp64;
+> > +
+> > +       parent_rate *=3D 8;
+>=20
+> And parent_rate can't overflow if it's a u32? Maybe it could be a u64 so
+> that we don't need casting later on in this function.
+>=20
+
+Fixed in the next version.
+
+> > +       rate *=3D 2;
+> > +       divfi =3D rate / parent_rate;
+> > +       temp64 =3D (u64)(rate - divfi * parent_rate);
+> > +       temp64 *=3D PLL_FRAC_DENOM;
+> > +       do_div(temp64, parent_rate);
+> > +       divff =3D temp64;
+> > +
+> > +       temp64 =3D (u64)parent_rate;
+> > +       temp64 *=3D divff;
+> > +       do_div(temp64, PLL_FRAC_DENOM);
+> > +
+> > +       return (parent_rate * divfi + (unsigned long)temp64) / 2;
+> > +}
+> > +
+> > +/*
+> > + * To simplify the clock calculation, we can keep the 'PLL_OUTPUT_VAL'=
+ at zero
+> > + * (means the PLL output will be divided by 2). So the PLL output can =
+use
+> > + * the below formula:
+> > + * pllout =3D parent_rate * 8 / 2 * DIVF_VAL;
+> > + * where DIVF_VAL =3D 1 + DIVFI + DIVFF / 2^24.
+> > + */
+> > +static int clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+> > +                           unsigned long parent_rate)
+> > +{
+> > +       struct clk_frac_pll *pll =3D to_clk_frac_pll(hw);
+> > +       u32 val, divfi, divff;
+> > +       u64 temp64;
+> > +       int ret;
+> > +
+> > +       parent_rate *=3D 8;
+> > +       rate *=3D 2;
+> > +       divfi =3D rate / parent_rate;
+> > +       temp64 =3D (u64) (rate - divfi * parent_rate);
+> > +       temp64 *=3D PLL_FRAC_DENOM;
+> > +       do_div(temp64, parent_rate);
+> > +       divff =3D temp64;
+> > +
+> > +       val =3D readl_relaxed(pll->base + PLL_CFG1);
+> > +       val &=3D ~(PLL_FRAC_DIV_MASK | PLL_INT_DIV_MASK);
+> > +       val |=3D ((divff << 7) | (divfi - 1));
+>=20
+> Nitpick: Drop the extra parenthesis please.
+>=20
+
+Removed in the next version.
+
+> > +       writel_relaxed(val, pll->base + PLL_CFG1);
+> > +
+> > +       val =3D readl_relaxed(pll->base + PLL_CFG0);
+> > +       val &=3D ~0x1f;
+> > +       writel_relaxed(val, pll->base + PLL_CFG0);
+> > +
+> > +       /* Set the NEV_DIV_VAL to reload the DIVFI and DIVFF */
+> > +       val =3D readl_relaxed(pll->base + PLL_CFG0);
+> > +       val |=3D PLL_NEWDIV_VAL;
+> > +       writel_relaxed(val, pll->base + PLL_CFG0);
+> > +
+> > +       ret =3D clk_wait_ack(pll);
+> > +
+> > +       /* clear the NEV_DIV_VAL */
+> > +       val =3D readl_relaxed(pll->base + PLL_CFG0);
+> > +       val &=3D ~PLL_NEWDIV_VAL;
+> > +       writel_relaxed(val, pll->base + PLL_CFG0);
+> > +
+> > +       return ret;
+> > +}
+> > +
+> > +static const struct clk_ops clk_frac_pll_ops =3D {
+> > +       .prepare        =3D clk_pll_prepare,
+> > +       .unprepare      =3D clk_pll_unprepare,
+> > +       .is_prepared    =3D clk_pll_is_prepared,
+> > +       .recalc_rate    =3D clk_pll_recalc_rate,
+> > +       .round_rate     =3D clk_pll_round_rate,
+> > +       .set_rate       =3D clk_pll_set_rate,
+> > +};
+> > +
+> > +struct clk *imx_clk_frac_pll(const char *name, const char *parent_name=
+,
+> > +                            void __iomem *base)
+> > +{
+> > +       struct clk_init_data init;
+> > +       struct clk_frac_pll *pll;
+> > +       struct clk *clk;
+> > +
+> > +       pll =3D kzalloc(sizeof(*pll), GFP_KERNEL);
+> > +       if (!pll)
+> > +               return ERR_PTR(-ENOMEM);
+> > +
+> > +       pll->base =3D base;
+> > +       init.name =3D name;
+> > +       init.ops =3D &clk_frac_pll_ops;
+> > +       init.flags =3D 0;
+> > +       init.parent_names =3D &parent_name;
+> > +       init.num_parents =3D 1;
+> > +
+> > +       pll->hw.init =3D &init;
+> > +
+> > +       clk =3D clk_register(NULL, &pll->hw);
+>=20
+> clk_hw based please.
+>=20
+
+Fixed in the next version.
+
+> > +       if (IS_ERR(clk))
+> > +               kfree(pll);
+> > +
+> > +       return clk;
+> > +}
+
+-- =

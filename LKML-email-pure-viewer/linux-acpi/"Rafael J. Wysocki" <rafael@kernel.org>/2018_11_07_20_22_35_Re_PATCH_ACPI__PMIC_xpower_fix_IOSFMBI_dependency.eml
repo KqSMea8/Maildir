@@ -1,0 +1,150 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:23 -0000
+Received: from icoremail.net (unknown [209.85.210.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv9I42eJbENNXAQ--.26363S3;
+	Wed, 07 Nov 2018 20:23:23 +0800 (CST)
+Received: from mail-pf1-f180.google.com (unknown [209.85.210.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHKkY02eJbgVgXAA--.6218S3;
+	Wed, 07 Nov 2018 20:23:16 +0800 (CST)
+Received: by mail-pf1-f180.google.com with SMTP id y18-v6so5248925pfn.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:23:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:sender:precedence:list-id;
+        bh=5pno4t+SJk+xSPz+MEHryyP72JoQu+JF1pHNOTwLtJo=;
+        b=ivgV851fr5D/qf8AnFwz4V1ptQ5xRdwSFujbBOfs+DWY/CVpav++bEbPsMO7JA0dAa
+         uZWHfrnAxWnUIBOhXsMwAm7smlduQk4v1fiFInWWxvLu7cvqsDPGE7QzsnUv/1cPWFrT
+         eP9hznozDL7O2PqJSJTXPa90v4uwRdPytHELEjHzMBRDr2ocv88+ccso58kdEsp1k7zw
+         +btENriRQHnzUU04Dpd9ukRWRhnx4kB5I4+BbMVPbJrLB9OITebpegsFf/sH/yTXYIuv
+         /k7TfBYH/XX2y7Qqo4gQs/vdolhyevXrwZI2P1H3HSwLtMq2b0HfYVEt0TcXaud/epkO
+         wF6g==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+X-Gm-Message-State: AGRZ1gIedWOycPzgX4s6TWBbyF6WHoSPX5ERF/O1UVNrJ9TEXCt4d2Yl
+	nOY0Xj1voVK3M9Hr3ViQulOs39aufRRpRgd6MSMxN6mNopYIiOw=
+X-Received: by 2002:a63:3c44:: with SMTP id i4mr1942pgn.286.1541593396392;
+        Wed, 07 Nov 2018 04:23:16 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5177544pjt;
+        Wed, 7 Nov 2018 04:23:15 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cOs6YPr+8Pv4EWiy5B2G5GgUDEexWT7BTWiXN3G+pQnFFd7BpSDmcPihI3oTjsl6Rcjzv3
+X-Received: by 2002:a63:cb4a:: with SMTP id m10mr1295922pgi.105.1541593395334;
+        Wed, 07 Nov 2018 04:23:15 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541593395; cv=none;
+        d=google.com; s=arc-20160816;
+        b=piNI+5gF6Ih6EHScxZuGO6gEBeE3IVtAiIqnl5qk34eJYuqglGNgBZxMtr0njVXh4k
+         7L5xyRGofokSTp31J/yLMFG6x0b7nIiXq6yy1qGUrlQslp/RAEdBku6SaqSR2G67IODk
+         Nzf+gGdQraMlZCRfSNXEPCVeWgnOAz36knhm1LegN4qy1cNYmP56FzJcwI2qOqa3qdXR
+         L0/+tp6Am82m+zLsAoeQ+fko5yRGeb6o2La9GdE89dKwIdrrB7Y2MGcJUamEPDNRGqVG
+         CtFzg2gTZkHk3h5vgRSUHOD2Bb+g8bqX9J6kaotu0L4Zc4HqAhFTZe+3PakXYaKQw4T0
+         qgPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version;
+        bh=5pno4t+SJk+xSPz+MEHryyP72JoQu+JF1pHNOTwLtJo=;
+        b=VQ+Tv1deaPRvvHrCSH8zoRALPfqjGI25Hv3PcK2EoKyatQuUoBBw4JkuXMDvig7S9M
+         l2dU+IK8ufiJ6y45icnSVXNzXnhwqAbmyrsOTUYTxqJRQP0I+9o2V08uF9AGS4S1/lG5
+         DPb5BGz0YrZDleUcfKnMDkdxAwSY+lhah3q4NaamPYfu5vOEZnA3Bvsmc40S9dFowN3U
+         wZcYHzIzQU3Ys1/L07Aqzi80jsW7VzA2rJNxIefbgYW9QE1BAUTaY5YEWA1cfII2RNgU
+         alu4QGCTH2Ut8aEVx+H20wNWS2vSTC3Faqs8gKnP25nxMO1lHpek2vD4hoQ3NI+D/3v2
+         hX9Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id r20-v6si455795pgm.28.2018.11.07.04.22.59;
+        Wed, 07 Nov 2018 04:23:15 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727634AbeKGVw4 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 16:52:56 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36503 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbeKGVwz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 16:52:55 -0500
+Received: by mail-ot1-f66.google.com with SMTP id k98so4352262otk.3;
+        Wed, 07 Nov 2018 04:22:46 -0800 (PST)
+X-Received: by 2002:a9d:42c7:: with SMTP id c7mr816018otj.119.1541593366399;
+ Wed, 07 Nov 2018 04:22:46 -0800 (PST)
+MIME-Version: 1.0
+References: <20181102110653.118257-1-arnd@arndb.de>
+In-Reply-To: <20181102110653.118257-1-arnd@arndb.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 7 Nov 2018 13:22:35 +0100
+Message-ID: <CAJZ5v0grpLSh=QAO3iwwrX0MPzJVxFenFo3j7V+JpeYEu63CjA@mail.gmail.com>
+Subject: Re: [PATCH] ACPI / PMIC: xpower: fix IOSF_MBI dependency
+To: Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHKkY02eJbgVgXAA--.6218S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7KF13Zr4rJF13Zw1kArW3GFg_yoW8GF4Dpa
+	93Xa47GF1UJF4rWa9FkryxWFW3XanrA34rGF45Jw17uF9ruasayryDXr9rJFyUCrn7urW0
+	qrs0gF1UG3Wj9FDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Yb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0
+	cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z2
+	80aVAFwI0_Cr1j6rxdMxvI42IY6I8E87Iv6xkF7I0E14v26F4UJVW0owCF04k20xvY0x0E
+	wIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJV
+	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+	1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCT
+	nIWIevJa73UjIFyTuYvjxUfrWFUUUUU
+
+On Fri, Nov 2, 2018 at 12:07 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> We still get a link failure with IOSF_MBI=m when the xpower driver
+> is built-in:
+>
+> drivers/acpi/pmic/intel_pmic_xpower.o: In function `intel_xpower_pmic_update_power':
+> intel_pmic_xpower.c:(.text+0x4f2): undefined reference to `iosf_mbi_block_punit_i2c_access'
+> intel_pmic_xpower.c:(.text+0x5e2): undefined reference to `iosf_mbi_unblock_punit_i2c_access'
+>
+> This makes the dependency stronger, so we can only build when IOSF_MBI
+> is built-in.
+>
+> Fixes: 6a9b593d4b6f ("ACPI / PMIC: xpower: Add depends on IOSF_MBI to Kconfig entry")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/acpi/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+> index 18851e7eedd5..31a3c4a03f61 100644
+> --- a/drivers/acpi/Kconfig
+> +++ b/drivers/acpi/Kconfig
+> @@ -514,7 +514,7 @@ config CRC_PMIC_OPREGION
+>
+>  config XPOWER_PMIC_OPREGION
+>         bool "ACPI operation region support for XPower AXP288 PMIC"
+> -       depends on MFD_AXP20X_I2C && IOSF_MBI
+> +       depends on MFD_AXP20X_I2C && IOSF_MBI=y
+>         help
+>           This config adds ACPI operation region support for XPower AXP288 PMIC.
+>
+> --
+
+At this point I'm inclined to apply the patch as is as a short-term
+fix and improvements can be made on top of it.
+
+Any objections?

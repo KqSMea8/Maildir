@@ -1,0 +1,153 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:33 -0000
+Received: from icoremail.net (unknown [209.85.214.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3yQn3OJbM+RXAQ--.26533S3;
+	Wed, 07 Nov 2018 20:35:52 +0800 (CST)
+Received: from mail-pl1-f170.google.com (unknown [209.85.214.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnDUkl3OJbn2IXAA--.13496S3;
+	Wed, 07 Nov 2018 20:35:49 +0800 (CST)
+Received: by mail-pl1-f170.google.com with SMTP id t6-v6so7815783plo.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:35:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=ts/vIsDxBC3socgZPePQMdxraG8NlSSfhM412Ti/4WE=;
+        b=KRrpcyul5YhsyKFszmaQB1C42mwK13tEbknxwVpvjswLgvVwD8zJiEJlD28D/BNGP5
+         S2EsMF7B+IyUAv33xqaEh2ymohgF28ENNnptFiY/UAsa2JJOrSe7SRl9JVIkV4ybhoZW
+         G1tzcevS5zS65c96CNQPl3pzRLV2je+93Zcw+ZnOzINtErvYZZl/3vwei/NNWTmaATfT
+         yF1GSaCvTZOMpD2c+DlSBN6s+vNN4s5iZD9sJhvruvKXtop/Cq+IRp1Uj0jm4FkXx6qz
+         9kShqQ+CH6fL9/ZmwcHkBY1cygdTU+QQoL+j3zw5CUV2ErGNFuakjgmYSzdhbPCLNLC7
+         NaFA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gIcnG12LG6cwZBMCzgFhUKi63xI2LAsoraLHiNYunOZnpr1LV81
+	AKsdkh+P7YpdvemE64UPTd+YnWzBf2XiZdv0RSNvykFsT6i/uOo=
+X-Received: by 2002:a17:902:b789:: with SMTP id e9-v6mr35810pls.338.1541594148840;
+        Wed, 07 Nov 2018 04:35:48 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5189150pjt;
+        Wed, 7 Nov 2018 04:35:48 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dL0Y6cAcpiD0t4yBq+Hu3DvTOWK/I2BJr5IBwUY1yct1uXrIqrb3YyYjMTF22uSRme8euQ
+X-Received: by 2002:a62:34c5:: with SMTP id b188-v6mr25944pfa.65.1541594148213;
+        Wed, 07 Nov 2018 04:35:48 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541594148; cv=none;
+        d=google.com; s=arc-20160816;
+        b=bW1s8JkjPC347nASi7UpA2jAhzk/kYlyKpbeYEqi0VKMG/wYON6Hfc07Vx0Mzmz1FL
+         6PxxKe4TAc90OY7S0z7a2hXcbvejzHeeYyR/Wa5l/UKbuVBw45GQ1Sm6Ww+eW9rB/Lju
+         FPa/KFsVsZW03K+WDWd34OBcQmDmW7+IK5a3qYMG4V2JKNQWRDeHcJgURVjAJGHWhPpY
+         wJVvt7REQWEvJUyK8+/I4m/tsn9ah1glnS+CdSWrO2eeMcqo1dT+3RuEZ5cR2OPqBduv
+         d+or46GA2MvZyGIziV0+SWOsblhEBnHmGpGLqLcNHiKL2P+7rph8EJtvkowD/Kc7Eb6/
+         npyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=ts/vIsDxBC3socgZPePQMdxraG8NlSSfhM412Ti/4WE=;
+        b=02+wM7sTFAqTZJ1gdFFo2NNU281FQ3p7CWLmr6FFYzMy9tESPZMWUVxnzGJf4o9NY+
+         n29Fq41XtFMLc+bobo+ikbxBNJ7OqRTBIu73pbRCQSOrh98DlRPAyit+MqHn7/THl/1M
+         qDzDisoutSXC+wXnuZMgqOjQs79xZX0y+mE++BX6qVwAqXkKKDQYXBhGwZPQ0xUfre8y
+         W3aMwvfWYcDB7rGWaUe/QZL5Dpcn0WdVDw33Wb8ySiNPK/irNJ3IbAAgXdFGqbB1mKc4
+         PcehzmZgOVbA44oCgwSJ91CtgbnPZaqBBmoFX2SUGvELgVDobA9JXgeHt3GP4jxBkAAA
+         kX8w==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id h2-v6si550122plh.157.2018.11.07.04.35.32;
+        Wed, 07 Nov 2018 04:35:48 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726721AbeKGWFf (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:05:35 -0500
+Received: from mga14.intel.com ([192.55.52.115]:34533 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726361AbeKGWFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:05:35 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 04:35:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,475,1534834800"; 
+   d="scan'208";a="106039861"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 07 Nov 2018 04:35:20 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 07 Nov 2018 14:35:19 +0200
+Date: Wed, 7 Nov 2018 14:35:19 +0200
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/4] of/property: Introduce of_fwnode_name()
+Message-ID: <20181107123519.GH13048@kuha.fi.intel.com>
+References: <20181105091727.25544-4-heikki.krogerus@linux.intel.com>
+ <CAL_Jsq+aRAv+9gDKwVi9xYQPYzXK4NMPjzfkuYB08+K6KTYXFg@mail.gmail.com>
+ <20181106105803.GS10650@smile.fi.intel.com>
+ <20181106122734.GC13048@kuha.fi.intel.com>
+ <CAL_Jsq+kspp1GYrMjG1cC=CyCa2_jO1suFdD9fn+gOwKRYdhtw@mail.gmail.com>
+ <20181106144037.GD13048@kuha.fi.intel.com>
+ <20181106145537.GB10650@smile.fi.intel.com>
+ <20181106150503.GE13048@kuha.fi.intel.com>
+ <20181106155347.GC10650@smile.fi.intel.com>
+ <CAL_JsqLdEciRtssX+x8TRmPX6QzZtNyMX9MrT9=J0DhhewFMZg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLdEciRtssX+x8TRmPX6QzZtNyMX9MrT9=J0DhhewFMZg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnDUkl3OJbn2IXAA--.13496S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrKFW7Zr17GrW8ZFy8WFWrAFb_yoWxtrg_u3
+	ykCr18Ca18Cr1Dt3WDKrWaqF4qyF1xWryqyan7GF95X3y3XrW5Xa47WasFqFW7Zr42qr9x
+	Gr1vqr15Za4jvjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbDxYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vE
+	IxC_Xr1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26F4UJVW0owCYIxAIcVC2
+	z280aVCY1x0267AKxVWxJr0_GcWl42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07
+	x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
+	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI4
+	8JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUDM5lUUUU
+	U
+
+On Tue, Nov 06, 2018 at 12:13:30PM -0600, Rob Herring wrote:
+> On Tue, Nov 6, 2018 at 9:53 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Tue, Nov 06, 2018 at 05:05:03PM +0200, Heikki Krogerus wrote:
+> >
+> > > Maybe it would be best to just read the "name" device property in
+> > > fwnode_name() and not have of_fwnode_name at all.
+> >
+> > If it's a mandatory property or somehow its presence is guaranteed, it would work.
+> 
+> It is currently, but after removing the name ptr, my current plan is
+> to remove the 'name' property too for FDT. On real OpenFirmware, it is
+> a real property so it will remain for sure in some cases.
+
+OK. I think we'll use the full_name after all.
+
+thanks,
+
+-- 
+heikki

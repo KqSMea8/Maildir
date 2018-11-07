@@ -1,0 +1,157 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:53 -0000
+Received: from icoremail.net (unknown [209.85.215.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn33yA3uJbFvFXAQ--.26299S3;
+	Wed, 07 Nov 2018 20:45:53 +0800 (CST)
+Received: from mail-pg1-f180.google.com (unknown [209.85.215.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDHrEh+3uJbUmoXAA--.5368S3;
+	Wed, 07 Nov 2018 20:45:50 +0800 (CST)
+Received: by mail-pg1-f180.google.com with SMTP id c10-v6so7291160pgq.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:45:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :in-reply-to:references:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=nwes3/5X+l7FBPnP8N7guJ9b8/Oh2apJCRFWHwwsQN8=;
+        b=ifnWktG1qn8MWywz6pTgq50lnA44aLrizH3Fm+darPihvB5TCU7TqYlKjPaQ1PNbE0
+         xUbAORLydovCOLXtcP6i5WJZmh7kijTcrDOXknoyZgb5IweAHQ78AKUgyJ8a7HMl6Ak1
+         jG+o12B5MKnrZe2Xmq/1JrMgtG4C4SamS5UcTL4Ta8P+fJvxFmILd0+LGrXvpvvYrAJe
+         42hRXO5GKGseYLahi6GZ8HOZGjSR4ImQJVXlcGX6rk0A795kRPZex6/OVXPJyKZ4SzzU
+         KcXfwZTveeJ/z+N7t1tBThxyRn6FHRAzccJdHX4+OLSGSXGqd30yNSev8gNA+sQL10Hs
+         kG/w==
+X-Gm-Message-State: AGRZ1gKRyVLSQWikY8D1jXDLpKwaGuWTSESvJxqZhBFAU/kz2hJsbZuw
+	6tWg8KSMoQkfDnl7nGqB3cCX2TvNeNQcu25kbGK2QhrhDnHqtV4=
+X-Received: by 2002:a63:cd17:: with SMTP id i23mr51255pgg.13.1541594750425;
+        Wed, 07 Nov 2018 04:45:50 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5199133pjt;
+        Wed, 7 Nov 2018 04:45:49 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eaivBzxoAs0kcVy+uwqf4VzBsltdm9FLuJCx9wCC5yb/TS3JcIL+x9yHT2HQAudN7/iqtE
+X-Received: by 2002:a63:5e43:: with SMTP id s64mr47786pgb.101.1541594749228;
+        Wed, 07 Nov 2018 04:45:49 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541594749; cv=none;
+        d=google.com; s=arc-20160816;
+        b=MCT7UVOBOqmRI4HdN6YxW+PVvtRGxtgKa5dum7sj+yzDx1dJ8EIeDXuGpQSckU6RNj
+         emhHI53wQ0uUFXqqcyR2FlgTuN3JyBdqY2sEfzTAW16BI8kL7n1uPGqlq40X4Etmzot4
+         QR17dIDFDdkFnB7stjNEDIKTBbgZnBERgqd3YvhVhBGdVO1O1u6ClAQ8WoShHfm/Iek+
+         pc+OBJjoTm3P1ZFcWHAosAwq3UJIBbtvnY+vXAzP4WlxmxnQAkYEykqW79HIbHM8KeEb
+         gBu9jzZvcJOGpf7WHyGK79nGVlNmIr4LrZmC36Q6cEIa/Ch2JLPRJvQRVU+Gri7GSJjX
+         Zb4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :references:in-reply-to:mime-version:dkim-signature;
+        bh=nwes3/5X+l7FBPnP8N7guJ9b8/Oh2apJCRFWHwwsQN8=;
+        b=cic2fxbkC9XgHuIS43Unm/PtyGEe5DMNIXviXZBFfdsSd+LpH8UZo2s3HAAowUrA9v
+         U+XMR0t0gJ6kE79ByTfdl4I9HlMEV3nUkiiI2lF3T93XNv8VIa2UaTaiSCULiCIeW6EK
+         r+V4Ruci6Qxv9Ao9LmCqWv0Q9QkSl7VXOLkMlXx4WBgGkES4hVl2P+YBAyvT+WJPPtC0
+         uSrDfuQsMaRdiI8e1fmxdoGPPEAf5s5sJvQlXObvCy+5JQNVhlgoCxSuPbcJ+9F3X1EX
+         A+H+s8YFhBiDT+J8TyS2vwcFMQxk+hpEVdPHOwsThkUL91a61KhWVVR6FoV3uofiWIeC
+         BxZQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=temperror (no key for signature) header.i=@szeredi.hu header.s=google header.b="lu/abGNY";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id g6-v6si523390plt.212.2018.11.07.04.45.33;
+        Wed, 07 Nov 2018 04:45:49 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726693AbeKGWPm (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:15:42 -0500
+Received: from mail-it1-f196.google.com ([209.85.166.196]:39875 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbeKGWPl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:15:41 -0500
+Received: by mail-it1-f196.google.com with SMTP id m15so22463418itl.4
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 04:45:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=nwes3/5X+l7FBPnP8N7guJ9b8/Oh2apJCRFWHwwsQN8=;
+        b=lu/abGNYMDGkHubbzrEbumyAlZZxpPro7GtVVOpMBkNk5aYKwCRi5gfRE4sLoN6zWA
+         XfEQ6SZs2Zc5Hamu4I7qYYzVg9lD0cXd+H+H6VWZLq0kglSiqJLNFhj/U8FRnKvhMkrn
+         7ZS+6lRrOAGIu8FOQKckT0QP71dSjXcsu5X34=
+X-Received: by 2002:a24:fe88:: with SMTP id w130-v6mr41880ith.69.1541594727008;
+ Wed, 07 Nov 2018 04:45:27 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a6b:ac42:0:0:0:0:0 with HTTP; Wed, 7 Nov 2018 04:45:26 -0800 (PST)
+X-Originating-IP: [212.96.48.140]
+In-Reply-To: <154149663324.17764.5859568987168525822.stgit@localhost.localdomain>
+References: <154149586524.17764.5252013294539109287.stgit@localhost.localdomain>
+ <154149663324.17764.5859568987168525822.stgit@localhost.localdomain>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Wed, 7 Nov 2018 13:45:26 +0100
+Message-ID: <CAJfpegtCYsA3zn121AZr+kF+GSNCCz=AjhJrZZMvydT9=w_SUA@mail.gmail.com>
+Subject: Re: [PATCH 1/6] fuse: Kill fasync only if interrupt is queued in queue_interrupt()
+To: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDHrEh+3uJbUmoXAA--.5368S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7KF48Zr43KryfKFWfZrWDArb_yoW8GF1xpF
+	W5KF45KanrXFWUWFy5Jr47ua1Fqw18Gr1fGry0ya4j9rnIqrya93ZYgFW5JrnYyFn3Xrs8
+	Zr4qkrWfuw1UA3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBSb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4wCY1x
+	0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VW5JwCY0x0I
+	x7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Cr1j6rxdMxvI42IY6I8E87Iv6xkF7I0E
+	14v26F4UJVW0owCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77
+	IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVCF04
+	k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUDqXdUUUUU
+
+On Tue, Nov 6, 2018 at 10:30 AM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+> We should sent signal only in case of interrupt is really queued.
+> Not a real problem, but this makes the code clearer and intuitive.
+>
+> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> ---
+>  fs/fuse/dev.c |    6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+> index fb2530ed84b3..7705f75c77a3 100644
+> --- a/fs/fuse/dev.c
+> +++ b/fs/fuse/dev.c
+> @@ -468,6 +468,8 @@ static void request_end(struct fuse_conn *fc, struct fuse_req *req)
+>
+>  static void queue_interrupt(struct fuse_iqueue *fiq, struct fuse_req *req)
+>  {
+> +       bool kill = false;
+> +
+>         spin_lock(&fiq->waitq.lock);
+>         if (test_bit(FR_FINISHED, &req->flags)) {
+>                 spin_unlock(&fiq->waitq.lock);
+> @@ -476,9 +478,11 @@ static void queue_interrupt(struct fuse_iqueue *fiq, struct fuse_req *req)
+>         if (list_empty(&req->intr_entry)) {
+>                 list_add_tail(&req->intr_entry, &fiq->interrupts);
+>                 wake_up_locked(&fiq->waitq);
+> +               kill = true;
+>         }
+>         spin_unlock(&fiq->waitq.lock);
+> -       kill_fasync(&fiq->fasync, SIGIO, POLL_IN);
+> +       if (kill)
+> +               kill_fasync(&fiq->fasync, SIGIO, POLL_IN);
+
+All other cases just do the kill_fasync() inside the fiq->waitq.lock
+locked region.  That seems the simpler and more readable solution to
+this.
+
+Thanks,
+Miklos

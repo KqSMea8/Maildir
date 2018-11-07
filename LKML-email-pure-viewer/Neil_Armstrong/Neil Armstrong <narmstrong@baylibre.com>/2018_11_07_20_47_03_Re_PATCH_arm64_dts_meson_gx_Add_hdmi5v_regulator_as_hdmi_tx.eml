@@ -1,0 +1,241 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:55 -0000
+Received: from icoremail.net (unknown [209.85.214.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH3r93uJbgvNXAQ--.25965S3;
+	Wed, 07 Nov 2018 20:47:58 +0800 (CST)
+Received: from mail-pl1-f169.google.com (unknown [209.85.214.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3W0f83uJbDGwXAA--.6242S3;
+	Wed, 07 Nov 2018 20:47:56 +0800 (CST)
+Received: by mail-pl1-f169.google.com with SMTP id q19-v6so4829416pll.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:47:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:openpgp:autocrypt:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=dabjdtAH3uYSr1byjY4hPEot3YFqQg2gR9qaYXaRVQA=;
+        b=l1czJRBLEZFpBCM9rkjdMxRGBGR5kQZBt5YwmeTsBdPnqZYljCRPKqPNNhzc1ABDMM
+         kplhF7i1TwCR9eLIL2ks370Vd68z1kZ8p5HA1tuBxlz9xhuwvHggWcLyK0NWVneqAAC6
+         9ft/ZD4FuLGEgwkBBS4O2g8bCJlER17xMQipccWEOE9SL2z4OUTD6v2tmCBqa8xj6Bl3
+         eqxiK6hVYB1VEvUJKxOfBTu1b8n3hF00OIC8TRQUGiWDNN6eAYX9C0ftzrul6/uIo1o8
+         IkDFTC70PKMw3+nY4AiKx8kRBE070MAvDwcZOuiHK3EnOz3Q4fJrtq4vb5B8hucpLPcT
+         fGHg==
+X-Gm-Message-State: AGRZ1gIFQ4N2RY6QQgx6hAc2KAIAvoo1CdqIXW0DfAn3rqlzVQkgZWw3
+	2l3gF6prt/Ph2bjn2VlNsgo6CBkQ9QPIjj+JTMbtHMh1up4ksAo=
+X-Received: by 2002:a17:902:6686:: with SMTP id e6-v6mr63927plk.173.1541594875927;
+        Wed, 07 Nov 2018 04:47:55 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5201252pjt;
+        Wed, 7 Nov 2018 04:47:55 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eCZCFlKnYlFvuFFLFSZn0aKWvzPfm8edHSm1sbuWVP/C1vOeDGRiS+xy5GE5VAqeYOLiq1
+X-Received: by 2002:a62:32c4:: with SMTP id y187-v6mr99811pfy.4.1541594875001;
+        Wed, 07 Nov 2018 04:47:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541594874; cv=none;
+        d=google.com; s=arc-20160816;
+        b=QOuJU/bJJY8kLndGQl/roP+Gdu0pUs7i/HrJA6Q5zyItZst0l/kGj5HeemJx7pTujw
+         nzKEgWybqYXP67QPVLep5/dSJDszGR9ybxP6Kzr78cbCZCYMM+gvO1huzwxoK7ZZjDXw
+         0pE8nj3QH+qqUUIHzjt6RuwbWBWCRXvnW2WGPWUv/011L/rPi5HYj2uvc0JkJLlt3hXU
+         lPn9dBsViIntRGUupf7N82uZbdeIYwZm919kkuge2acY6tKHCJvgtC4BPgbarZF+Z5cg
+         blkrfDAGMmXQ+oi0PblRmJVNAbdIr+LdmjwcxIj+SyyiphXFufRBtqnAQrqnWxexzL4e
+         RAJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:organization:autocrypt:openpgp:from:references:cc:to
+         :subject:dkim-signature;
+        bh=dabjdtAH3uYSr1byjY4hPEot3YFqQg2gR9qaYXaRVQA=;
+        b=DZQqjuLsGbPMRonQ24DSwzGRDqzdiDPEYQFSatkz4RkA9AEg3STONaZg5C2P5noPXQ
+         T9Nh8pFGlFcX6nMJCsIh1pbxUr5RH/V/nW5186iA7yCfzsKKqwM9P6Hn5IL1CCDlF97c
+         Lexov5Ca4dEv6KBDgceqdVm8ni6j31KU1wEO6pAqBL3Bz7tGkGdd763QoiYnPFZlBdXz
+         mmF+cYOQlt4FxQBi4pmyuQEozD/+IQJ0QfspMiRUkOqrnJtEsQuBxIsVqRzYmgj7AidJ
+         pybqtK+8z+CMQBz5gPx/Mf6u89JNxVF46t60ZM4KdrQHqykKX8kCNML7XuSrPUkb9o1v
+         HA+Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@baylibre-com.20150623.gappssmtp.com header.s=20150623 header.b=In5Z78tV;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id o184si460410pgo.591.2018.11.07.04.47.38;
+        Wed, 07 Nov 2018 04:47:54 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727265AbeKGWRV (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:17:21 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39322 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbeKGWRV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:17:21 -0500
+Received: by mail-wr1-f65.google.com with SMTP id r10-v6so17248263wrv.6
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 04:47:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=dabjdtAH3uYSr1byjY4hPEot3YFqQg2gR9qaYXaRVQA=;
+        b=In5Z78tVCHDL8D7jFhyn/eAgCBxQ3V1Y+ntyOcqOI2XqcGIypKzS+oKTZhm4orAscN
+         qUdaUFZR6wa76OMpCVjzNf3V7PmQoMrzK9BiAp40FhuNGi+KlMEK3xgTb9cc1PELbVtK
+         sFQxIA4Gmh3AHa/iOAV8lJi6k60fMWRRc6KKtmKbGMEYvbesLHW7zd43v8D0KythCF32
+         GiPgvtEE1bM9Fq2wTlYVyyuewHtYPgrBRB62elHUmfTeCD1BMU0A3RrEjN6vQJ7ZHq0Q
+         jke+LjQqcn8+h5DwZIEhnJxegZxVepOqa2m1dZY6RCV9aXfW3m9bzhcoo5PvZ85tZcpO
+         0/tg==
+X-Received: by 2002:adf:a599:: with SMTP id g25-v6mr87391wrc.188.1541594824698;
+        Wed, 07 Nov 2018 04:47:04 -0800 (PST)
+Received: from [10.1.2.12] ([90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id o130-v6sm1578952wmd.11.2018.11.07.04.47.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 04:47:03 -0800 (PST)
+Subject: Re: [PATCH] arm64: dts: meson-gx: Add hdmi_5v regulator as hdmi tx
+ supply
+To: khilman@baylibre.com
+Cc: linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1541434917-18126-1-git-send-email-narmstrong@baylibre.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT7CwHsEEwEKACUC
+ GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
+ RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
+ NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
+ 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
+ ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
+ YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIXOwE0ETVkGzwEIALyKDN/O
+ GURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYpQTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXM
+ coJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hi
+ SvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY4yG6xI99NIPEVE9lNBXBKIlewIyVlkOa
+ YvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoMMtsyw18YoX9BqMFInxqYQQ3j/HpVgTSv
+ mo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUXoUk33HEAEQEAAcLAXwQYAQIACQUCTVkG
+ zwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfnM7IbRuiSZS1unlySUVYu3SD6YBYnNi3G
+ 5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa33eDIHu/zr1HMKErm+2SD6PO9umRef8V8
+ 2o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCSKmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+
+ RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJ
+ C3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTTQbM0WUIBIcGmq38+OgUsMYu4NzLu7uZF
+ Acmp6h8g
+Organization: Baylibre
+Message-ID: <1b209a7e-e69a-079c-51e1-67b18410e5a0@baylibre.com>
+Date: Wed, 7 Nov 2018 13:47:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <1541434917-18126-1-git-send-email-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3W0f83uJbDGwXAA--.6242S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxCryDtw1UJFW7Zr43Ary5Arb_yoW5uFW8pr
+	n7uF4kXrnagr1UKa4Yv3s8tw4UCas3JrWY9w4UWw1jgr17Zas5GF4SqrZa9398ZrZxua18
+	Zr4FyF9xXa1qvFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmab7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik2
+	6cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6ryUMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7
+	IYx2IY67AKxVW5JVW7JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E
+	87Iv67AKxVWxJr0_GcWlcIIF0xvEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdMxAIw28IcxkI7V
+	AKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j
+	6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsG
+	vfC2KfnxnUUI43ZEXa7IU501v3UUUUU==
+
+On 05/11/2018 17:21, Neil Armstrong wrote:
+> The hdmi_5v regulator must be enabled to provide power to the physical HDMI
+> PHY and enables the HDMI 5V presence loopback for the monitor.
+> 
+> Fixes: b409f625a6d5 ("ARM64: dts: meson-gx: Add HDMI_5V regulator on selected boards")
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi          | 1 +
+>  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts   | 1 +
+>  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 1 +
+>  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts         | 1 +
+>  arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts        | 1 +
+>  5 files changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+> index 765247b..eb8eec8 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+> @@ -125,6 +125,7 @@
+>  	status = "okay";
+>  	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
+>  	pinctrl-names = "default";
+> +	phy-supply = <&hdmi_5v>;
+>  };
+>  
+>  &hdmi_tx_tmds_port {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+> index d32cf38..69c28c4 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+> @@ -78,6 +78,7 @@
+>  	status = "okay";
+>  	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
+>  	pinctrl-names = "default";
+> +	phy-supply = <&hdmi_5v>;
+>  };
+>  
+>  &hdmi_tx_tmds_port {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+> index 90a56af..86a7be8 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+> @@ -155,6 +155,7 @@
+>  	status = "okay";
+>  	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
+>  	pinctrl-names = "default";
+> +	phy-supply = <&hdmi_5v>;
+>  };
+>  
+>  &hdmi_tx_tmds_port {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
+> index 5896e8a..8a39d95 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
+> @@ -51,6 +51,7 @@
+>  	status = "okay";
+>  	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
+>  	pinctrl-names = "default";
+> +	phy-supply = <&hdmi_5v>;
+>  };
+>  
+>  &hdmi_tx_tmds_port {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+> index 313f88f..50d2be1 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+> @@ -271,6 +271,7 @@
+>  	status = "okay";
+>  	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
+>  	pinctrl-names = "default";
+> +	phy-supply = <&hdmi_5v>;
+>  };
+>  
+>  &hdmi_tx_tmds_port {
+> 
+
+
+Oops, it should be hdmi_supply...
+
+I'll resend..
+
+neil

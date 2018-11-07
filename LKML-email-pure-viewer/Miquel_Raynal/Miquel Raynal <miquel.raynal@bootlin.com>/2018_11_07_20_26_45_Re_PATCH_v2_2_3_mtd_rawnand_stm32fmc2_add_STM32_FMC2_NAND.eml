@@ -1,0 +1,179 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:27 -0000
+Received: from icoremail.net (unknown [209.85.215.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv+4g2uJbFtlXAQ--.26411S3;
+	Wed, 07 Nov 2018 20:27:14 +0800 (CST)
+Received: from mail-pg1-f179.google.com (unknown [209.85.215.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDHrEgd2uJb6VsXAA--.5263S3;
+	Wed, 07 Nov 2018 20:27:10 +0800 (CST)
+Received: by mail-pg1-f179.google.com with SMTP id z17-v6so7280502pgv.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:27:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=ODox0V+uO9406CKP1xvwM5OQXGZKkuLsnHgfy3pBfto=;
+        b=kcYp/pfvZeRKpjKqyH2n/y/peqMPDuZ6hEfAtlH+fyw3SF+IeBdanUG+cagekKnPvE
+         cZ7VVB8047ztRjxbmA3Z+Ow2Y19zgz3DS/Mz6AjlfndGr6JGCnNsCdU0ixNbTc7i4lVP
+         h6hsP1r0PtvEi88vb+aRLON88zGjTLF765Fs8ppVps8H5yIy5TI2len8iH9jQgS89F0v
+         QvYk7zE1WdBEJ4G6zQP02CNOMazIuMW7huJvfLXoi/7G7c0o5taKIh4GKcLAcrCNrsZ7
+         LLghjWmxmhsPlm8twrM2dN/yNiE03tcV6CtVrfi60mT21lQlegbkz0QajoAUf3BOuoYM
+         O9JA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLXQXzTJMXNeIR6I3yeVm9xTyUMGNJ/pchryL2yBm0qXI1ufGAM
+	44Cxx8TkPOpnpM6KYByNZW3KgoUxveZXuXQTdE8R+rcs/G8+lAk=
+X-Received: by 2002:a63:cd17:: with SMTP id i23mr2047pgg.13.1541593629777;
+        Wed, 07 Nov 2018 04:27:09 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5181142pjt;
+        Wed, 7 Nov 2018 04:27:09 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eL9h0tFpr3Oza/p9gOLarB7RHXU16Jt/MUNcapg5y7lFlCUEHSBuw9kBc7BjTC/3vhwVPG
+X-Received: by 2002:a17:902:925:: with SMTP id 34-v6mr1637067plm.243.1541593629082;
+        Wed, 07 Nov 2018 04:27:09 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541593629; cv=none;
+        d=google.com; s=arc-20160816;
+        b=V1x6HBvC6+LcMNbgJ7qkGrLlXjkB/8ONvMcfG95tZBWeLwLBwG3xXqdK1+WsTP29bC
+         i5iopC2o2gGr+VgFnEuTmie37D0pwAxZxB9wS2ILdv6fvE3wWzcFS1Adrg6h5E+rtZwy
+         lEpM1j4En9RUOrnfXmjhI/DME0CMyCD8k8CKTO7Sa4c5CPPIAwwzlbFMH2a+VguT14p2
+         HUtgYVpJUbtLhlSgsBLP5fpvJDoE5Vbic6/WarRQ0WnAqXYttoOSwVBHC4StY1D5Fcqm
+         o1wlSEZnjL0GC0DsNb2nALR7ocAXRrjSCpz42rOXksGd+q94q1TL3VTaXi8jf73UnuHI
+         YHFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :organization:references:in-reply-to:message-id:subject:cc:to:from
+         :date;
+        bh=ODox0V+uO9406CKP1xvwM5OQXGZKkuLsnHgfy3pBfto=;
+        b=TsRKMlHrrypkMMU79c8kEc2YLTNYRpF92jEZJa4K0Nd15o8cLi1/IVj3kTjYgzRP4W
+         NiLkYsh3Z0Uq97D/uq/gHAcOzAoi+k8mASqeWh3n3jHhzUDKRxU5UjF/DO1DrwBZ9N+N
+         F+SdV5OEw/gpbKN/dBCBJbl7gawGmPi0JMzhlE9a+Sm1jA1ojTvEognPysnC36Zk23ij
+         2/WAffIFEJhBpX/83L55gfVin4nmE9Oxm6GrNHEPXEiFJrlIdq57z7NGxXm96A8XqOfH
+         l2L7VIx+qHWFbv6SlYvDXgKvMbNJ0evvdObkVY94oymGVu6yVulHZA+07FzQaiQWCeGk
+         O/2A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v35si402619pgl.130.2018.11.07.04.26.54;
+        Wed, 07 Nov 2018 04:27:09 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730897AbeKGV46 convert rfc822-to-8bit (ORCPT
+        <rfc822;wanghaifine@gmail.com> + 99 others);
+        Wed, 7 Nov 2018 16:56:58 -0500
+Received: from mail.bootlin.com ([62.4.15.54]:55631 "EHLO mail.bootlin.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726388AbeKGV46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 16:56:58 -0500
+Received: by mail.bootlin.com (Postfix, from userid 110)
+        id 837C4208CB; Wed,  7 Nov 2018 13:26:46 +0100 (CET)
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail.bootlin.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=5.0 tests=ALL_TRUSTED,SHORTCIRCUIT,
+        URIBL_BLOCKED shortcircuit=ham autolearn=disabled version=3.4.2
+Received: from xps13 (aaubervilliers-681-1-93-44.w90-88.abo.wanadoo.fr [90.88.34.44])
+        by mail.bootlin.com (Postfix) with ESMTPSA id 20F6A206D8;
+        Wed,  7 Nov 2018 13:26:46 +0100 (CET)
+Date: Wed, 7 Nov 2018 13:26:45 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Christophe Kerello <christophe.kerello@st.com>, <richard@nod.at>,
+        <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
+        <marek.vasut@gmail.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH v2 2/3] mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND
+ flash controller driver
+Message-ID: <20181107132645.7271e705@xps13>
+In-Reply-To: <20181107132342.33790247@bbrezillon>
+References: <1538732520-2800-1-git-send-email-christophe.kerello@st.com>
+        <1538732520-2800-3-git-send-email-christophe.kerello@st.com>
+        <20181105173905.385dd06e@bbrezillon>
+        <70f99d79-a9d8-0651-d464-2d81b334dbfb@st.com>
+        <20181107132342.33790247@bbrezillon>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDHrEgd2uJb6VsXAA--.5263S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7AF1UGr13try3tr13uF1xZrb_yoW8Cw45pF
+	Wa9a1Utr4kJF17AwsFq3yfXF1FvwsrXrW2qr48Krn3ur45uFyxZrySvFW2kw1xWrn7W3Wj
+	vF4fuas7CFZ8ZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6ryUMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJr0_GcWlcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bb
+	eOJUUUUU=
+
+Hi Christophe,
+
+Boris Brezillon <boris.brezillon@bootlin.com> wrote on Wed, 7 Nov 2018
+13:23:42 +0100:
+
+> On Wed, 7 Nov 2018 12:08:58 +0100
+> Christophe Kerello <christophe.kerello@st.com> wrote:
+> 
+> > >> +
+> > >> +write_8bit:
+> > >> +	for (i = 0; i < len; i++)
+> > >> +		writeb_relaxed(p[i], io_addr_w);    
+> > > 
+> > > Is 8bit access really enforced by the byte accessor? In this case, how
+> > > can you be sure 32-bit accesses are doing the right thing? Isn't there
+> > > a bit somewhere in the config reg to configure the bus width?
+> > >     
+> > 
+> > I have checked the framework after Miquèl comment sent on v1 => "If you 
+> > selected BOUNCE_BUFFER in the options, buf is supposedly
+> > aligned, or am I missing something?".
+> > 
+> > After checking the framework, my understanding was:
+> >   - In case of 8-bit access is requested, the framework provides no 
+> > guarantee on buf. To avoid any issue, I write byte per byte.
+> >   - In case of 8-bit access is not requested, it means that the 
+> > framework will try to write data in the page or in the oob. When writing 
+> > to oob, chip->oob_poi will be used and this buffer is aligned. When 
+> > writing to the page, as the driver enables NAND_USE_BOUNCE_BUFFER 
+> > option, buf is guarantee aligned.  
+> 
+> It's probably what happens right now, but there's no guarantee that all
+> non-8-bit accesses will be provided a 32-bit aligned buffer. The only
+> guarantee we provide is on buffer passed to the
+> chip->ecc.read/write_xxx() hooks, and ->exec_op() can be used outside
+> of the "page access" path.
+> 
+> > 
+> > But, I agree that it would be safe to reconfigure the bus width in 8-bit 
+> > before writing byte per byte in case of a 16-bit NAND is used.  
+> 
+> Yes, and I also think you should not base your is-aligned check on the
+> force_8bit value. Use IS_ALIGNED() instead.
+
+Maybe the "configure the bus in 8/16-bit" blocks could deserve a
+helper. There is probably other locations within this driver with the
+same logic?
+
+
+Thanks,
+Miquèl

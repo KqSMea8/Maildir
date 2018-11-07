@@ -1,0 +1,171 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:49 -0000
+Received: from icoremail.net (unknown [209.85.214.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX+8_3eJbE+pXAQ--.26595S3;
+	Wed, 07 Nov 2018 20:40:31 +0800 (CST)
+Received: from mail-pl1-f181.google.com (unknown [209.85.214.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXe0c93eJbP2YXAA--.5261S3;
+	Wed, 07 Nov 2018 20:40:30 +0800 (CST)
+Received: by mail-pl1-f181.google.com with SMTP id o19-v6so7803593pll.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:40:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding
+         :sender:precedence:list-id;
+        bh=n2vey61mauEgB8Bos0irlzpX4C+U/tQvb6hV36sZRbg=;
+        b=niR8ihYmq7uA9urVIYbGans1Qhq61WTCOYM32Vt7PJxxIRYtzg1nvgs2y8BBZ2XC2A
+         qbS/WD3+R/CN08cASLKrObm4xspyZhVFOdFJBD35bvxnaeir4mIncmPc/z8KeIA0VbzO
+         9DQOncLjnOER28WUaoVWP1w/UHHQ+BBqL+yakj1oghdKbDQOdgCiGWKYNgpgsDvbBYTg
+         D5WyYqr90j9oqPnsKSF5egieqnzmosiV0hHZbSif9OMPh96Fs6CZK5TqAkvGeH3izgkI
+         cjoduflhR47uIbuYTl6xa83VYK8iUjTjwOteI1jjNHuVoVjTRcoGWXMQvS/knga0QLqx
+         Mckw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+X-Gm-Message-State: AGRZ1gJr9T30TO5xShW/IgQ9UET6BblSO+IkZWL/aMJPhKlwogCJtZbV
+	qq8jSm7q9z1zbWWYx86SIstygAXWux1+38v8ginIzry/eGv2KiE=
+X-Received: by 2002:a17:902:a9:: with SMTP id a38-v6mr52275pla.7.1541594429630;
+        Wed, 07 Nov 2018 04:40:29 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5193644pjt;
+        Wed, 7 Nov 2018 04:40:28 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dNpySCAWEUYavfaazvQ8ADoc5nnMrd9f+f1pyM8pzjnFrFDCXjBL0MgdJ0g5ILwd3nWIC0
+X-Received: by 2002:a17:902:5a4b:: with SMTP id f11-v6mr50778plm.49.1541594428941;
+        Wed, 07 Nov 2018 04:40:28 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541594428; cv=none;
+        d=google.com; s=arc-20160816;
+        b=AJ9eSfj7DlbuQ5i7Cq6QfAa0K62i/osH4Km1UNZVMol8voyszWomTArrD1wHS3MSXk
+         lQHG7vz3n6VMviXw0H6GTL0dV7QP+keg++JAWw+ZZK/Cf4LtxfQvKXgsi+ChOJB7eTkx
+         VhA0IPRtcRNNKhGQlAs+0NJAW63gzrONORPPJyp8C5j0XkJOOCXgoiD4GJXcc81+lIXX
+         LNydxh1q4KOpMGOe53vRQKscUU05owr1JT7w/N6jGg6iEewKp4nWhLLb8lM4EVZsCIiB
+         qGl06BealGvb7jsfMmoKyAm4uknAR1dlqZE27wvu3ndED60uMwnaKHHdh+GnZzymXxgP
+         SeJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject;
+        bh=n2vey61mauEgB8Bos0irlzpX4C+U/tQvb6hV36sZRbg=;
+        b=uPdcLjEVOR4liRpiTFalSRvtkoEVUEtAWkV64NsiZEuRfj0J5uOUudEBW29YKfNAcD
+         4VXgvklDMrCu+x5c3xCYMqmPFiFCEatY6CtPnWJPPmpt0yK1/64WDbn2JCABvzgjgPZL
+         tpyv3GzvrEOcVa4syYDBUh9EeeX42CYG2AXTMRjnPHrgeW6NE4PJmow8HxFCPU6xzZkO
+         TGphCh7uB9MzLKRMsvBE0OOpCBOr3Y3Zj/uhgjbLoY20drFNp0xJ1ugEgbXKgtM7RroV
+         e+NtwbOUA7ktcriTryKmsobHKZkY/rJJ6b2dltopSUTzhzfYTkErkhsPdklImCXbNbQK
+         XPzw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id c27-v6si479002pgc.461.2018.11.07.04.40.13;
+        Wed, 07 Nov 2018 04:40:28 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730906AbeKGWKQ (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:10:16 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37961 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbeKGWKQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:10:16 -0500
+Received: by mail-ed1-f65.google.com with SMTP id a2-v6so8700166edi.5
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 04:40:02 -0800 (PST)
+X-Received: by 2002:a50:b4bb:: with SMTP id w56-v6mr30936edd.179.1541594401111;
+        Wed, 07 Nov 2018 04:40:01 -0800 (PST)
+Received: from shalem.localdomain (546A5441.cm-12-3b.dynamic.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id m1-v6sm224803edb.10.2018.11.07.04.40.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 04:40:00 -0800 (PST)
+Subject: Re: [PATCH] ACPI / PMIC: xpower: fix IOSF_MBI dependency
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20181102110653.118257-1-arnd@arndb.de>
+ <CAJZ5v0grpLSh=QAO3iwwrX0MPzJVxFenFo3j7V+JpeYEu63CjA@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Message-ID: <74d77804-bc05-4060-3182-a7cdecba3c53@redhat.com>
+Date: Wed, 7 Nov 2018 13:39:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
+MIME-Version: 1.0
+In-Reply-To: <CAJZ5v0grpLSh=QAO3iwwrX0MPzJVxFenFo3j7V+JpeYEu63CjA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXe0c93eJbP2YXAA--.5261S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF4rurW8uw4kXrW7KF18AFb_yoW8XFy3pa
+	93Za47CF1UJF4rWanFkryfWFW3XanrA34rGF45Jr17uFyUuasayryDXr9rJFyUCwn7C3y0
+	qan0gF1UG3Wj9FDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPYb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAKzI0EY4vE52x082I5MxkIecxE
+	wVCI4VW5JwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Cr1j6rxdMxvI42IY
+	6I8E87Iv6xkF7I0E14v26F4UJVW0owCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6r1I6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jtxhJU
+	UUUU=
+
+Hi,
+
+On 07-11-18 13:22, Rafael J. Wysocki wrote:
+> On Fri, Nov 2, 2018 at 12:07 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>>
+>> We still get a link failure with IOSF_MBI=m when the xpower driver
+>> is built-in:
+>>
+>> drivers/acpi/pmic/intel_pmic_xpower.o: In function `intel_xpower_pmic_update_power':
+>> intel_pmic_xpower.c:(.text+0x4f2): undefined reference to `iosf_mbi_block_punit_i2c_access'
+>> intel_pmic_xpower.c:(.text+0x5e2): undefined reference to `iosf_mbi_unblock_punit_i2c_access'
+>>
+>> This makes the dependency stronger, so we can only build when IOSF_MBI
+>> is built-in.
+>>
+>> Fixes: 6a9b593d4b6f ("ACPI / PMIC: xpower: Add depends on IOSF_MBI to Kconfig entry")
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> ---
+>>   drivers/acpi/Kconfig | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+>> index 18851e7eedd5..31a3c4a03f61 100644
+>> --- a/drivers/acpi/Kconfig
+>> +++ b/drivers/acpi/Kconfig
+>> @@ -514,7 +514,7 @@ config CRC_PMIC_OPREGION
+>>
+>>   config XPOWER_PMIC_OPREGION
+>>          bool "ACPI operation region support for XPower AXP288 PMIC"
+>> -       depends on MFD_AXP20X_I2C && IOSF_MBI
+>> +       depends on MFD_AXP20X_I2C && IOSF_MBI=y
+>>          help
+>>            This config adds ACPI operation region support for XPower AXP288 PMIC.
+>>
+>> --
+> 
+> At this point I'm inclined to apply the patch as is as a short-term
+> fix and improvements can be made on top of it.
+> 
+> Any objections?
+
+Not from me, go for it :)
+
+Regards,
+
+Hans

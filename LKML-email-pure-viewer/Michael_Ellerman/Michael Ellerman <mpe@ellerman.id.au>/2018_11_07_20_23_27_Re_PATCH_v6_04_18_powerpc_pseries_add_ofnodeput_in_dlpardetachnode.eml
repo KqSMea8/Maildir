@@ -1,0 +1,169 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:24 -0000
+Received: from icoremail.net (unknown [209.85.210.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH8Jc2eJbxNNXAQ--.26319S3;
+	Wed, 07 Nov 2018 20:23:58 +0800 (CST)
+Received: from mail-pf1-f178.google.com (unknown [209.85.210.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnzkpb2eJbIVkXAA--.5208S3;
+	Wed, 07 Nov 2018 20:23:56 +0800 (CST)
+Received: by mail-pf1-f178.google.com with SMTP id j13-v6so7630979pff.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:23:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version:sender:precedence:list-id;
+        bh=ZtPkHr+30gzL0Y8RKFUnmpOOadqDr5/JGNdLMZKPkME=;
+        b=q79IyTmdPufMGkLT4fezmVtO2N/lY463MRu6vF0e/BVXNBrmP9H8JR8Yt5u2excnwf
+         bbO5bUL5aDwWkI37XNdlMRGaY4Z6LxZSZrt268JEt/M74UqLzhdDXHGNwiFjmn+/Rgfq
+         w2J44JLDao3l4CNzogRgjkbyG7rzu0eu8sMAcJ+I/zs2pBIzwgDcNbH+FqJ21ANyaf5h
+         iHfAF0Z47NsolreHhNzDcM1qcYxlqopC2OmhYpfHfkGzDRr/WS85+MMk8fcS4nvv6O/p
+         zK7p96emY5+S4DZMKZuDg9zvRcApNW9WaFvKuZ0k4jniL/RMaKtnUmIAKvHgAv8E4P6W
+         asDQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKL8Zv1jswF3Gi+s1sHL3e1qfMpWHxbfrQV6zTbj6MPVs7Q8opk
+	Tlv7h/EH4SEZJWZquKmgORVJxn1EmjDC1ghi7x7OpW+euVqvkjQ=
+X-Received: by 2002:a63:2c0e:: with SMTP id s14mr13345pgs.132.1541593435792;
+        Wed, 07 Nov 2018 04:23:55 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5178159pjt;
+        Wed, 7 Nov 2018 04:23:55 -0800 (PST)
+X-Google-Smtp-Source: AJdET5di9bOV/lWFxnaLuJ/KOyEg+qYUsCK1Z3a7hcWMuNldWXBckH0JRSUSRdfWyIhStaGbc2Qg
+X-Received: by 2002:a17:902:162:: with SMTP id 89-v6mr1630440plb.293.1541593434985;
+        Wed, 07 Nov 2018 04:23:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541593434; cv=none;
+        d=google.com; s=arc-20160816;
+        b=GzU2PXY1Bxo6dwvg+2T6vnJ5hN6uSbkYkmsrdw5nX8aRsQCF4M70Qv9l5LF0p9acwa
+         QGLPrFofwJOBrkzj0dwB9PBIDDrRDkh9aZRayYCtx/wU1iikFY/pb5fZr5XXGgCag9ao
+         UI96yq2R1gQdAq9njtcnn3B2mJOjAr3uvFbedkRLTOKAISEAz0HuSmCmGiz2msueXHvi
+         3B1yb9+dawB+FCO4HXwQXZdHOm3QhT2H0lx8Lqx9Bl+da1PhY0BVYdM14OdBlwEKEupz
+         HXd2/cYrCYUsxSF8tPLEBVuoG23Qba6NQyHy+hRbgpeqRW0A4bMeALRg2AL6XLOQ9eX7
+         3QZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from;
+        bh=ZtPkHr+30gzL0Y8RKFUnmpOOadqDr5/JGNdLMZKPkME=;
+        b=MmicLPxu1pbeGQG62Tb3WtprpfM5gXhva+YACssjlIMk6pw+di72TfIM0qvzqnAaIH
+         MreWBmiJBtE3QZJcMMqlQ6NOkCi9DKc0n0bIYUBR1sqZXJ+JqPlhnvBN2CIq8DG6lYJR
+         EgZHvpSahkOt6NJ4tg5CPXggu63tmbeY5Wtc8Z8Yr8Zp/5h6BW/igoanwsvS2TfIwsS/
+         sRgwpxBZNM0RTWt//dlOFoiFsqUMJetbS34eVZcIEbGI6d/lYFvQ1ti6Ld/SO4wVyoOI
+         5DuE9G4OwPIYYnQ3RkO7dNypJpeir8NkPRMfBDZEEUgsreSnecngVnYxjzSSOZYLixtT
+         bQCw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id n17-v6si362373pgk.501.2018.11.07.04.23.37;
+        Wed, 07 Nov 2018 04:23:54 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730533AbeKGVxl (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 16:53:41 -0500
+Received: from ozlabs.org ([203.11.71.1]:51285 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726248AbeKGVxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 16:53:41 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.org (Postfix) with ESMTPSA id 42qlv50QSPz9sCw;
+        Wed,  7 Nov 2018 23:23:29 +1100 (AEDT)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
+Subject: Re: [PATCH v6 04/18] powerpc/pseries: add of_node_put() in dlpar_detach_node()
+In-Reply-To: <1541431515-25197-5-git-send-email-frowand.list@gmail.com>
+References: <1541431515-25197-1-git-send-email-frowand.list@gmail.com> <1541431515-25197-5-git-send-email-frowand.list@gmail.com>
+Date: Wed, 07 Nov 2018 23:23:27 +1100
+Message-ID: <87muqlqdog.fsf@concordia.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnzkpb2eJbIVkXAA--.5208S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7ArWUAw4DtFyUtr4fKF1xZrb_yoW8Ar18pw
+	srKr4akF45G3y8uFyIka47Wr4vqw48Jr4Ygw1qka97u3WDWwn5Wr1I93WfA398Gry8Gw1S
+	yFnFq3ZIq3WDWaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP0b7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6ryUMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJr0_GcWlcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Cr1j6rxdMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52
+	x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwI
+	xGrwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF7vcSsGvfC2KfnxnUUI43ZEXa7IU501v3UU
+	UUU==
+
+frowand.list@gmail.com writes:
+
+> From: Frank Rowand <frank.rowand@sony.com>
+>
+> "of: overlay: add missing of_node_get() in __of_attach_node_sysfs"
+
+It would be clearer if you said 'The previous commit "of: overlay ..."
+
+> added a missing of_node_get() to __of_attach_node_sysfs().  This
+> results in a refcount imbalance for nodes attached with
+> dlpar_attach_node().  The calling sequence from dlpar_attach_node()
+> to __of_attach_node_sysfs() is:
+>
+>    dlpar_attach_node()
+>       of_attach_node()
+>          __of_attach_node_sysfs()
+>
+> Tested-by: Alan Tull <atull@kernel.org>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> ---
+>
+> ***** UNTESTED.  I need people with the affected PowerPC systems
+> *****            (systems that dynamically allocate and deallocate
+> *****            devicetree nodes) to test this patch.
+
+This looks OK to me in light of the previous patch.
+
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+
+It also means dlpar_detach_node() is again behaving as described in the
+comment to of_detach_node().
+
+It would be good to make mention of:
+
+  Fixes: 68baf692c435 ("powerpc/pseries: Fix of_node_put() underflow during DLPAR remove")
+
+Which removed an of_node_put() in the exact same place for different
+reasons.
+
+cheers
+
+> diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
+> index 7625546caefd..17958043e7f7 100644
+> --- a/arch/powerpc/platforms/pseries/dlpar.c
+> +++ b/arch/powerpc/platforms/pseries/dlpar.c
+> @@ -270,6 +270,8 @@ int dlpar_detach_node(struct device_node *dn)
+>  	if (rc)
+>  		return rc;
+>  
+> +	of_node_put(dn);
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> Frank Rowand <frank.rowand@sony.com>

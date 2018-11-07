@@ -1,0 +1,412 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:37 -0000
+Received: from icoremail.net (unknown [209.85.215.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv2Lm3OJbUehXAQ--.26583S3;
+	Wed, 07 Nov 2018 20:39:03 +0800 (CST)
+Received: from mail-pg1-f170.google.com (unknown [209.85.215.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBnSUXj3OJbCmUXAA--.9586S3;
+	Wed, 07 Nov 2018 20:38:59 +0800 (CST)
+Received: by mail-pg1-f170.google.com with SMTP id 32-v6so7291348pgu.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:38:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :thread-topic:thread-index:date:message-id:references:in-reply-to
+         :accept-language:content-language:spamdiagnosticoutput
+         :spamdiagnosticmetadata:content-transfer-encoding:mime-version
+         :sender:precedence:list-id;
+        bh=HwnztoQH1KrtAgE2pm8PGQog3cKpXNUfx9Vua0NEWkk=;
+        b=ifZ7CCVAMak69La/3M8eVZJ8Llr8LNQyICzuzl8C9fLfAkVIymScHmE5mCqKn7IFad
+         cOKsxMz7dnfnx12U3eyw9ARd/1zbdA7vRh26Iwa3PdbQoER3EIaErppQefkRC6ZLCdkj
+         01z1r/7OJ11Dl7R6y+EuNoZF7eWg3SiUOH2iQe1Z6BtTHSFadOiLq1sDlaXgKJdhL1JI
+         jxybw8tHsyE50H3pVIUeNZQE6EmCajZdRhRqcqct6CJNwYoPMqbUAexS1bJqtDDLg6Fd
+         rr45GVIxYr+ITAUau1qfNae48qC+h2lU/Zmqr7toW3Va9WhX4igqiGk/Fo5oqC9POdK8
+         oceA==
+X-Gm-Message-State: AGRZ1gKH7g658z+8U7fxkFGHsLRAcBqgBn4OKmZzoUJDeuJgWm68gnIQ
+	plEFcAXX9DspyTAnoAM1Xm8mqG21cXcc8odVkSp1Km4xlhz775s=
+X-Received: by 2002:a63:fd53:: with SMTP id m19mr41443pgj.340.1541594339550;
+        Wed, 07 Nov 2018 04:38:59 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5192182pjt;
+        Wed, 7 Nov 2018 04:38:58 -0800 (PST)
+X-Google-Smtp-Source: AJdET5frTfrXF/5r5piBnRXloN+1En96qBi/paP2RvnmRcV+Ggc7I83h1Oa+wbJ8gHuXuFnpFSaF
+X-Received: by 2002:a17:902:110a:: with SMTP id d10-v6mr40041pla.85.1541594338785;
+        Wed, 07 Nov 2018 04:38:58 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541594338; cv=none;
+        d=google.com; s=arc-20160816;
+        b=vIGYKhwauCdoaGRixwlqsT3J8IsIQXWNc7pXq0eufycrya8MYHnDX6CvtJ5zRYOr2N
+         sWxfGU+GgoGtf56LbtTePt/cahrQPU6mdBMoRbyS0UWQqAhtQFnmmxHGP1bq/qpt/YaR
+         1MsYSZInV93o64XwK+3Bp1GMClF0Cd77+uPM2Zo1cZPSeQPN1FTv9alsvviKdDGq9Vu9
+         NT6g6CcVU687CtXYNnwKL8/BZEeeBesObNAdHagg5vpYteZXmyJtFAZV86VnrPb/oknJ
+         PHLgb8d7aUauh2xfwXv23sy08LeIGpCk2I8XkCM/NkFfzaUnFMI1hS3vw5Yx5XXeyDRT
+         ETAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:content-transfer-encoding
+         :spamdiagnosticmetadata:spamdiagnosticoutput:content-language
+         :accept-language:in-reply-to:references:message-id:date:thread-index
+         :thread-topic:subject:cc:to:from:dkim-signature;
+        bh=HwnztoQH1KrtAgE2pm8PGQog3cKpXNUfx9Vua0NEWkk=;
+        b=NNTVqxm0H8+VN9GkeeAY3Crgr90NInE6b2a9/HCEc3j+QJ5mJQXuHcDvrlKCOn3GdU
+         D+WzIy7DtqAyM8SzSJREHDjLcGiN8dUjpJzgJYHDIPZ65w/EPdmJg4GeV4Q8FXeQb/WR
+         1TELPD0lp6Vd/FyXE+AlTMStnFDXJMWhcmiZES/giprds7EJ4WG62zpZdGbKXBqUWfCu
+         bbiFbtPYsEyhjAmytctaTq3BABIRKKr5l3y5d1GFCOE1TtHvJpHgeX7SQE49NFaygpzB
+         hMcfE36YWybGi/SHnWZAJYYwe/MWRDyL8BTMaTkVm9pJHZp0E7o2I9zwyfgfYwnkdc0G
+         lN3A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@nxp.com header.s=selector1 header.b=RDJIfKoQ;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=nxp.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id a59-v6si598879pla.60.2018.11.07.04.38.44;
+        Wed, 07 Nov 2018 04:38:58 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730906AbeKGWI3 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:08:29 -0500
+Received: from mail-eopbgr20085.outbound.protection.outlook.com ([40.107.2.85]:21948
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726560AbeKGWI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:08:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HwnztoQH1KrtAgE2pm8PGQog3cKpXNUfx9Vua0NEWkk=;
+ b=RDJIfKoQ70pUZA7RghPjjZz8Qo2+752VOe6VbppDF3yq0Tb9V2p0IsY+k8/DYFZhqI0/0EeGndKU1ECEKe0bW+ySI5XeiWy/ew2sj2NXrTlMfkglTGlEx8F4413WJazsOE6gpSolrrr4+B9WCvg72QxV9RGZkoAiq8g4tzKDoMo=
+Received: from AM6PR0402MB3654.eurprd04.prod.outlook.com (52.133.28.145) by
+ AM6PR0402MB3461.eurprd04.prod.outlook.com (52.133.19.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1294.23; Wed, 7 Nov 2018 12:38:09 +0000
+Received: from AM6PR0402MB3654.eurprd04.prod.outlook.com
+ ([fe80::5195:5e4c:be83:408b]) by AM6PR0402MB3654.eurprd04.prod.outlook.com
+ ([fe80::5195:5e4c:be83:408b%4]) with mapi id 15.20.1294.034; Wed, 7 Nov 2018
+ 12:38:09 +0000
+From: Abel Vesa <abel.vesa@nxp.com>
+To: Sascha Hauer <kernel@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        "A.s. Dong" <aisheng.dong@nxp.com>
+CC: Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v12 4/5] clk: imx: Add imx composite clock
+Thread-Topic: [PATCH v12 4/5] clk: imx: Add imx composite clock
+Thread-Index: AQHUdpa9dT6KaqJjRky/YmugSbvrGQ==
+Date: Wed, 7 Nov 2018 12:38:09 +0000
+Message-ID: <1541594266-16712-5-git-send-email-abel.vesa@nxp.com>
+References: <1541594266-16712-1-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <1541594266-16712-1-git-send-email-abel.vesa@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6PR06CA0009.eurprd06.prod.outlook.com
+ (2603:10a6:20b:14::22) To AM6PR0402MB3654.eurprd04.prod.outlook.com
+ (2603:10a6:209:19::17)
+x-originating-ip: [95.76.156.53]
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-microsoft-exchange-diagnostics: 1;AM6PR0402MB3461;6:c7lqA+fowiZ5ItKDQVkIg4g7q3JPUswUfWmVJeSQlVu8hk+s61JVPh2274aEt/vfFmib1JDM75N4LN+b/WBJ0xuESDJj7AjxTBxUsj41/+cQQSzSt9LhXD3DwpWDDbpDjQWWoRv1BdSkx1L4DNKhQ4e+mxYA3XkfOtMtGOWfKCYx3ZN9xObqfiQeKF8cITZF0I1m5zaXpaCK3/tuhVKROqo5/It2+J64Oi2OffECoiaFJEfSdBBNpmDa/rrWlpd0UtGcVOjLdutXvVIltRrKqlqmLkqHmxqp1Z/DiH/AizhGyTDiYrQ8w7y8lYRpf6pCnbsF/vX/h2WtYq0ttTQk6yujMKkE3Xi2iutZq1tNrkcOUp3myNr7fYUFQHy7R70pRTwf2PvSj0UeQDqeC872F9u4eWWanKgIHaYS2zG7quGK9XJlVbMsiodRaqEnRwB4Rt3+Hs/cCC6MIhmkE7DPTA==;5:f4G8UvMHaFw0sajEAm+mX1oAS8b7t4Xl48e8uilYfA0FmueUjZi6UhzCekPEuTHrkFYHCILSAv9/unJOyXknauukIbe3H9zDWt4cO7An92is1Vn5F0BBZKD+Xidlwc5qhhFZYCJXRH6S+UBMsGUUkD4nSdaeBAdPP0un5LvwBD0=;7:yM3pY1wDSvKh/LSXEHRl9HtsrvGXgaZbpo3t2XsuOxqkAWSXTSvCC2V7bcWJSOBW7wpNJeL+rw0GKf/sr1Okk+NXpMDMtuIqqlR89aaRPYMara2DWxGFSo/fFdIKigZA1+msQdF8hF5zQAudSdfDPg==
+x-ms-office365-filtering-correlation-id: bde25103-d4cc-499f-4f74-08d644addf9f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(7020095)(4652040)(8989299)(5600074)(711020)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:AM6PR0402MB3461;
+x-ms-traffictypediagnostic: AM6PR0402MB3461:
+x-microsoft-antispam-prvs: <AM6PR0402MB3461219EF1B6AB4D00D25CEBF6C40@AM6PR0402MB3461.eurprd04.prod.outlook.com>
+x-exchange-antispam-report-test: UriScan:(185117386973197);
+x-ms-exchange-senderadcheck: 1
+x-exchange-antispam-report-cfa-test: BCL:0;PCL:0;RULEID:(8211001083)(6040522)(2401047)(8121501046)(5005006)(93006095)(93001095)(10201501046)(3002001)(3231382)(944501410)(52105095)(6055026)(148016)(149066)(150057)(6041310)(20161123558120)(20161123564045)(20161123562045)(20161123560045)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(201708071742011)(7699051)(76991095);SRVR:AM6PR0402MB3461;BCL:0;PCL:0;RULEID:;SRVR:AM6PR0402MB3461;
+x-forefront-prvs: 08497C3D99
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(376002)(396003)(136003)(39860400002)(199004)(189003)(8936002)(26005)(2906002)(6512007)(446003)(53936002)(7736002)(2616005)(11346002)(478600001)(476003)(305945005)(110136005)(71200400001)(81166006)(86362001)(6436002)(575784001)(14454004)(316002)(486006)(6486002)(71190400001)(81156014)(8676002)(6636002)(44832011)(186003)(105586002)(106356001)(99286004)(54906003)(36756003)(25786009)(4326008)(97736004)(52116002)(3846002)(6116002)(5660300001)(68736007)(14444005)(66066001)(7416002)(256004)(6506007)(2900100001)(76176011)(102836004)(386003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3461;H:AM6PR0402MB3654.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:3;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-microsoft-antispam-message-info: cZfrY6avlhKGdIthd8JmJOsRTyNy/K5kE9kJU/Cz81wnwq/hnd1A1R+zcj7nFsJWUweo57LZbUKjYahuJefNJXkdiqQ7uBhoG66eSJTvzuYYt6ZqnazCiq75WpE+xdMfjvRxLeOnyMcOobLW4JbSdhkVCpLIltH02DgWlFPzwUe36HRNehXpROGdzO8qstiTqnvHn2vv5q+mM4bRV9CGQ3V1wqaFOI4nAGOWy7K0mg6bD3ZooffBEl1G872MnpShlTlg6oMOKFOpKaVnd4uFnATN9Ja/14QClEwf3rTNQG7QGZ+gduTHnrQhDH71a/qGBs/AU87YoXwwM5zv5Zr2avXIJgrrujxSiaY6go1AGXg=
+spamdiagnosticoutput: 1:99
+spamdiagnosticmetadata: NSPM
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bde25103-d4cc-499f-4f74-08d644addf9f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2018 12:38:09.4266
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3461
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBnSUXj3OJbCmUXAA--.9586S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxKFy5Zr13KrW5JrW8GFy5twb_yoWxAF4xpF
+	W0kFyDCFW2qr47u3W3tFyUJF1fX3WFy3WUCr97u34fXry5Xa42y3ySkFyFvFs2yrWFg34a
+	qayqqF4UGr1ftrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBIb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwCjxxvEa2IrMxkF7I
+	0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6ryUMxkI7II2
+	jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJr0_GcWlcIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Cr1j6rxdMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjx
+	CrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF7vcSsGvfC2KfnxnUUI43ZEXa7IU5wXo7UUUUU==
+
+Since a lot of clocks on imx8m are formed by a mux, gate, predivider and
+divider, the idea here is to combine all of those into one composite clock,
+but we need to deal with both predivider and divider at the same time and
+therefore we add the imx8m_clk_composite_divider_ops and register
+the composite clock with those.
+
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+Suggested-by: Sascha Hauer <s.hauer@pengutronix.de>
+Reviewed-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+ drivers/clk/imx/Makefile           |   1 +
+ drivers/clk/imx/clk-composite-8m.c | 178 +++++++++++++++++++++++++++++++++=
+++++
+ drivers/clk/imx/clk.h              |  16 ++++
+ 3 files changed, 195 insertions(+)
+ create mode 100644 drivers/clk/imx/clk-composite-8m.c
+
+diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
+index b87513c..237444b 100644
+--- a/drivers/clk/imx/Makefile
++++ b/drivers/clk/imx/Makefile
+@@ -3,6 +3,7 @@
+ obj-y +=3D \
+ 	clk.o \
+ 	clk-busy.o \
++	clk-composite-8m.o \
+ 	clk-cpu.o \
+ 	clk-fixup-div.o \
+ 	clk-fixup-mux.o \
+diff --git a/drivers/clk/imx/clk-composite-8m.c b/drivers/clk/imx/clk-compo=
+site-8m.c
+new file mode 100644
+index 0000000..bcd31d8
+--- /dev/null
++++ b/drivers/clk/imx/clk-composite-8m.c
+@@ -0,0 +1,178 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2018 NXP
++ */
++
++#include <linux/errno.h>
++#include <linux/slab.h>
++#include <linux/clk-provider.h>
++
++#include "clk.h"
++
++#define PCG_PREDIV_SHIFT	16
++#define PCG_PREDIV_WIDTH	3
++#define PCG_PREDIV_MAX		8
++
++#define PCG_DIV_SHIFT		0
++#define PCG_DIV_WIDTH		6
++#define PCG_DIV_MAX		64
++
++#define PCG_PCS_SHIFT		24
++#define PCG_PCS_MASK		0x7
++
++#define PCG_CGC_SHIFT		28
++
++static unsigned long imx8m_clk_composite_divider_recalc_rate(struct clk_hw=
+ *hw,
++						unsigned long parent_rate)
++{
++	struct clk_divider *divider =3D to_clk_divider(hw);
++	unsigned long prediv_rate;
++	unsigned int prediv_value;
++	unsigned int div_value;
++
++	prediv_value =3D readl(divider->reg) >> divider->shift;
++	prediv_value &=3D clk_div_mask(divider->width);
++
++	prediv_rate =3D divider_recalc_rate(hw, parent_rate, prediv_value,
++						NULL, divider->flags,
++						divider->width);
++
++	div_value =3D readl(divider->reg) >> PCG_DIV_SHIFT;
++	div_value &=3D clk_div_mask(PCG_DIV_WIDTH);
++
++	return divider_recalc_rate(hw, prediv_rate, div_value, NULL,
++				   divider->flags, PCG_DIV_WIDTH);
++}
++
++static int imx8m_clk_composite_compute_dividers(unsigned long rate,
++						unsigned long parent_rate,
++						int *prediv, int *postdiv)
++{
++	int div1, div2;
++	int error =3D INT_MAX;
++	int ret =3D -EINVAL;
++
++	*prediv =3D 1;
++	*postdiv =3D 1;
++
++	for (div1 =3D 1; div1 <=3D PCG_PREDIV_MAX; div1++) {
++		for (div2 =3D 1; div2 <=3D PCG_DIV_MAX; div2++) {
++			int new_error =3D ((parent_rate / div1) / div2) - rate;
++
++			if (abs(new_error) < abs(error)) {
++				*prediv =3D div1;
++				*postdiv =3D div2;
++				error =3D new_error;
++				ret =3D 0;
++			}
++		}
++	}
++	return ret;
++}
++
++static long imx8m_clk_composite_divider_round_rate(struct clk_hw *hw,
++						unsigned long rate,
++						unsigned long *prate)
++{
++	int prediv_value;
++	int div_value;
++
++	imx8m_clk_composite_compute_dividers(rate, *prate,
++						&prediv_value, &div_value);
++	rate =3D DIV_ROUND_UP(*prate, prediv_value);
++
++	return DIV_ROUND_UP(rate, div_value);
++
++}
++
++static int imx8m_clk_composite_divider_set_rate(struct clk_hw *hw,
++					unsigned long rate,
++					unsigned long parent_rate)
++{
++	struct clk_divider *divider =3D to_clk_divider(hw);
++	unsigned long flags =3D 0;
++	int prediv_value;
++	int div_value;
++	int ret =3D 0;
++	u32 val;
++
++	ret =3D imx8m_clk_composite_compute_dividers(rate, parent_rate,
++						&prediv_value, &div_value);
++	if (ret)
++		return -EINVAL;
++
++	spin_lock_irqsave(divider->lock, flags);
++
++	val =3D readl(divider->reg);
++	val &=3D ~((clk_div_mask(divider->width) << divider->shift) |
++			(clk_div_mask(PCG_DIV_WIDTH) << PCG_DIV_SHIFT));
++
++	val |=3D (u32)(prediv_value  - 1) << divider->shift;
++	val |=3D (u32)(div_value - 1) << PCG_DIV_SHIFT;
++	writel(val, divider->reg);
++
++	spin_unlock_irqrestore(divider->lock, flags);
++
++	return ret;
++}
++
++static const struct clk_ops imx8m_clk_composite_divider_ops =3D {
++	.recalc_rate =3D imx8m_clk_composite_divider_recalc_rate,
++	.round_rate =3D imx8m_clk_composite_divider_round_rate,
++	.set_rate =3D imx8m_clk_composite_divider_set_rate,
++};
++
++struct clk *imx8m_clk_composite_flags(const char *name,
++					const char **parent_names,
++					int num_parents, void __iomem *reg,
++					unsigned long flags)
++{
++	struct clk_hw *hw =3D NULL, *mux_hw =3D NULL;
++	struct clk_hw *div_hw =3D NULL, *gate_hw =3D NULL;
++	struct clk_divider *div =3D NULL;
++	struct clk_gate *gate =3D NULL;
++	struct clk_mux *mux =3D NULL;
++
++	mux =3D kzalloc(sizeof(*mux), GFP_KERNEL);
++	if (!mux)
++		goto fail;
++
++	mux_hw =3D &mux->hw;
++	mux->reg =3D reg;
++	mux->shift =3D PCG_PCS_SHIFT;
++	mux->mask =3D PCG_PCS_MASK;
++
++	div =3D kzalloc(sizeof(*div), GFP_KERNEL);
++	if (!div)
++		goto fail;
++
++	div_hw =3D &div->hw;
++	div->reg =3D reg;
++	div->shift =3D PCG_PREDIV_SHIFT;
++	div->width =3D PCG_PREDIV_WIDTH;
++	div->lock =3D &imx_ccm_lock;
++	div->flags =3D CLK_DIVIDER_ROUND_CLOSEST;
++
++	gate =3D kzalloc(sizeof(*gate), GFP_KERNEL);
++	if (!gate)
++		goto fail;
++
++	gate_hw =3D &gate->hw;
++	gate->reg =3D reg;
++	gate->bit_idx =3D PCG_CGC_SHIFT;
++
++	hw =3D clk_hw_register_composite(NULL, name, parent_names, num_parents,
++			mux_hw, &clk_mux_ops, div_hw,
++			&imx8m_clk_composite_divider_ops,
++			gate_hw, &clk_gate_ops, flags);
++	if (IS_ERR(hw))
++		goto fail;
++
++	return hw->clk;
++
++fail:
++	kfree(gate);
++	kfree(div);
++	kfree(mux);
++	return ERR_CAST(hw);
++}
+diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
+index 864cd8a..cb3e92c 100644
+--- a/drivers/clk/imx/clk.h
++++ b/drivers/clk/imx/clk.h
+@@ -239,4 +239,20 @@ struct clk *imx_clk_cpu(const char *name, const char *=
+parent_name,
+ 		struct clk *div, struct clk *mux, struct clk *pll,
+ 		struct clk *step);
+=20
++struct clk *imx8m_clk_composite_flags(const char *name,
++					const char **parent_names,
++					int num_parents, void __iomem *reg,
++					unsigned long flags);
++
++#define __imx8m_clk_composite(name, parent_names, reg, flags) \
++	imx8m_clk_composite_flags(name, parent_names, \
++		ARRAY_SIZE(parent_names), reg, \
++		flags | CLK_SET_RATE_NO_REPARENT | CLK_OPS_PARENT_ENABLE)
++
++#define imx8m_clk_composite(name, parent_names, reg) \
++	__imx8m_clk_composite(name, parent_names, reg, 0)
++
++#define imx8m_clk_composite_critical(name, parent_names, reg) \
++	__imx8m_clk_composite(name, parent_names, reg, CLK_IS_CRITICAL)
++
+ #endif
+--=20
+2.7.4

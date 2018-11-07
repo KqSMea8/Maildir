@@ -1,0 +1,210 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:43 -0000
+Received: from icoremail.net (unknown [209.85.210.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv34K3eJbC+lXAQ--.26829S3;
+	Wed, 07 Nov 2018 20:39:39 +0800 (CST)
+Received: from mail-pf1-f170.google.com (unknown [209.85.210.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXO0cJ3eJblGUXAA--.9656S3;
+	Wed, 07 Nov 2018 20:39:37 +0800 (CST)
+Received: by mail-pf1-f170.google.com with SMTP id j13-v6so7645785pff.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:39:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :thread-topic:thread-index:date:message-id:accept-language
+         :content-language:spamdiagnosticoutput:spamdiagnosticmetadata
+         :content-transfer-encoding:mime-version:sender:precedence:list-id;
+        bh=0alN577rb7a/7vF82Br8TrX8xGw0pllUVSRb9wXWd30=;
+        b=MZxv3Rb/f4ZCWs5e8QkuYasDJWXKoux+8T0HlUUEDZ+DdFuJa8Qg6b1og/PabBM8xF
+         eKcK0dV274EOsZcZgA3MkcsR9QXcjObCIEje2i+fo/WWeCm7yCRsaM16Tscsv3wJCIZb
+         /100XSZAseFn8T27xQB0FkspKmLCIczQ+06+uzbNr6vBPPJykIxQTqbiYL98WJDvYUTK
+         pM8KjsurWprM6pZI8DQYh2e0g+7ZIz44EqcDtHgxy4pqve1u5GrSVMF7Hw3xFtWNzssP
+         smKNxXi0Jtwf3MxfZo9mDbUHKTVyCVFcDmwjd/sh5VPS5mWRCr5L1fqSj2QvUB8oxUbU
+         AsAg==
+X-Gm-Message-State: AGRZ1gJEfAhbywWPC9FAAL9juFn/rfodr5zrtfyBm7f26xlZO61qPzAT
+	yu/uaEADbYtRDrGN9IlYdrmPeQe/2Q/toWaNF7MgUokuYr6KKkw=
+X-Received: by 2002:a63:2c0e:: with SMTP id s14mr53896pgs.132.1541594377437;
+        Wed, 07 Nov 2018 04:39:37 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5192874pjt;
+        Wed, 7 Nov 2018 04:39:36 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d7c4epaTqShTGlqSxgnIQZPHf8gTO8GjWXJsFg0/ps3bjDDRZ0Y40de2w8ZjPjBJNmsK/R
+X-Received: by 2002:a63:e055:: with SMTP id n21mr13284pgj.397.1541594376668;
+        Wed, 07 Nov 2018 04:39:36 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541594376; cv=none;
+        d=google.com; s=arc-20160816;
+        b=gB1npP0Rss3vSA7La1XpgcN47klIl8XEPjG9gUq6KnjwbJ9w0boMEJxjNrJDKdDlp+
+         EDHoomRyhpm8ymoYb+E5ctYyvFmTyAzkYMpqONcme3evkDKpkHphk/Y2AxlbQ4hy58UA
+         sj9JmplyqjiSKtLvxFkQPYg66L3EoytGLdrH9QudDF2L0JV6q3RsIn3wRjHOvot0bdIW
+         ok01MsaavvWFDT+nKHwnUecXG9anmuHAy2PAgWVZlNaNYDnk+Yi3ajW4pWge+JYRhV/V
+         NF6eetDuhyZBQS4IaZpqhYb7lpfR4MxZc/NeRqwLgGrwBq0giKLzi1gRdAAp0phdM8ZY
+         N8JQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:content-transfer-encoding
+         :spamdiagnosticmetadata:spamdiagnosticoutput:content-language
+         :accept-language:message-id:date:thread-index:thread-topic:subject
+         :cc:to:from:dkim-signature;
+        bh=0alN577rb7a/7vF82Br8TrX8xGw0pllUVSRb9wXWd30=;
+        b=PF2qS+izFA02x8G8J+ZnpDXglYg8yZncMGqlnprR/murwi/XuMKLymnsXFfAdbcSYd
+         wCDCXsiifLxSsK6UKdx9MWgEuL1K4PIOgc2DvXmHA/5g8H5JgoVTivqyLRywWn3xAERf
+         w38Nc48yReCHLhRrvmMVZXOE0Ff+DQa0a25QgTCRQPfBo59pTipjhgDa+nDXslC6fRnP
+         R9B9zuEqH7Gu/VPeDxNaHiLTOklUJg2gdaZkcWLt2m4O0xUd7ciJElV9d6UgD36GYXmm
+         bdbcRGHDziIxG8eq6KWg6q50IsehCFjPr+IcMGBPZaogL6y1D/o3se8h9OoU5y+2XND4
+         RazA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@nxp.com header.s=selector1 header.b="bfmAF/E9";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=nxp.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b3-v6si552889plc.103.2018.11.07.04.39.21;
+        Wed, 07 Nov 2018 04:39:36 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730702AbeKGWI1 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:08:27 -0500
+Received: from mail-eopbgr00089.outbound.protection.outlook.com ([40.107.0.89]:35217
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726388AbeKGWIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:08:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0alN577rb7a/7vF82Br8TrX8xGw0pllUVSRb9wXWd30=;
+ b=bfmAF/E9b3dBYlQALuoNOxEpmss92f7unWmo7UNY9hNJ+s1i0NEktKhZpFSPLTK1DXse6zbZIzhknqY36AIejw8YobU1Cd7ziaaNqC9Iv4i9jj042eyFtTbg0Y4GMpxr4noz8qrEuS2JS7XR08B52HQIfLP7KxdM0FxQK+lU33M=
+Received: from AM6PR0402MB3654.eurprd04.prod.outlook.com (52.133.28.145) by
+ AM6PR0402MB3494.eurprd04.prod.outlook.com (52.133.19.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1294.26; Wed, 7 Nov 2018 12:38:05 +0000
+Received: from AM6PR0402MB3654.eurprd04.prod.outlook.com
+ ([fe80::5195:5e4c:be83:408b]) by AM6PR0402MB3654.eurprd04.prod.outlook.com
+ ([fe80::5195:5e4c:be83:408b%4]) with mapi id 15.20.1294.034; Wed, 7 Nov 2018
+ 12:38:05 +0000
+From: Abel Vesa <abel.vesa@nxp.com>
+To: Sascha Hauer <kernel@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        "A.s. Dong" <aisheng.dong@nxp.com>
+CC: Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v12 0/5] Add i.MX8MQ clock driver
+Thread-Topic: [PATCH v12 0/5] Add i.MX8MQ clock driver
+Thread-Index: AQHUdpa6tQxfFOevC0+oXcF/U1kvxQ==
+Date: Wed, 7 Nov 2018 12:38:05 +0000
+Message-ID: <1541594266-16712-1-git-send-email-abel.vesa@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6PR06CA0009.eurprd06.prod.outlook.com
+ (2603:10a6:20b:14::22) To AM6PR0402MB3654.eurprd04.prod.outlook.com
+ (2603:10a6:209:19::17)
+x-originating-ip: [95.76.156.53]
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-microsoft-exchange-diagnostics: 1;AM6PR0402MB3494;6:uyZvVJPgJnnVDyrsV9vw5/rpcQxW8/BALtM51VXbTAw+O20/nbj5xpKW2UHsqXBzVBfjFBiL7npb3YQwk4nXOq58fqlFKb6KxhT1EUlospaxo73RNeOQ+SwQ0BTr8fpjsS4B7/DLZBLNfKSd7YPSXOrOYiX5MuW+h6RtU8nE361a9GadvdpLqz5FSKOd5acaUymjkNGL12xxWoaqHXhgUme8KRsC4BC5XUiL+BJwwQ62nd5JppmZnYa4TG6f+LjZepkU5xlnUPrfwQWOy9Q4PyW2yf61CUcq/v8q5wOmLBulsODJXZWevxFXu/e7FHpE5JU56YshvWtde9UpvyOLeEicPuYX0Z0deKeWh5paLkuZMBhtE4Zm8i5619TGxtSEJJoiI6BbvhMTl1CQCOcMcnhzi9e+yhujrAiTx4VPMR4San76qM//vqJzgoEkzLLKM6QsJDnFvLjtlDErJ9DmSw==;5:0+7jx4nN1wHBLcHelrH5HzzLjpEQ5/00lE+G0e4MmGjGxq5fL0q9jUt7Nq8Tl51EembvGBoQz19MraSHfl5LqH9xAV4UKkvR6jvMAWBB68qkYBI2l4TP6+STbISUjGNLKZFzjfF+EPw66/AumuPXUEdYgOiXFU690WbTh+eUAgA=;7:jJzEjdQC354790nJ8+jofihEazLdw0bGe1eh3+DIdfuz4TBi5dfBvmeHhOuwM3SPPEq9jUMWpWzZmXIYLxowDUa2MVbx1PYtnZK7zGqRAQZrfpW0O5VuOofnwB7EfRFzTjl8dRPaum6cDgB8PeYbjQ==
+x-ms-office365-filtering-correlation-id: 3631fb17-a552-479d-bb43-08d644addd17
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(7020095)(4652040)(8989299)(5600074)(711020)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:AM6PR0402MB3494;
+x-ms-traffictypediagnostic: AM6PR0402MB3494:
+x-microsoft-antispam-prvs: <AM6PR0402MB3494651641F5CD0783D9F6BFF6C40@AM6PR0402MB3494.eurprd04.prod.outlook.com>
+x-exchange-antispam-report-test: UriScan:;
+x-ms-exchange-senderadcheck: 1
+x-exchange-antispam-report-cfa-test: BCL:0;PCL:0;RULEID:(8211001083)(6040522)(2401047)(5005006)(8121501046)(10201501046)(3002001)(93006095)(93001095)(3231382)(944501410)(52105095)(6055026)(148016)(149066)(150057)(6041310)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(20161123562045)(20161123558120)(20161123564045)(20161123560045)(201708071742011)(7699051)(76991095);SRVR:AM6PR0402MB3494;BCL:0;PCL:0;RULEID:;SRVR:AM6PR0402MB3494;
+x-forefront-prvs: 08497C3D99
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(136003)(396003)(346002)(376002)(189003)(199004)(8936002)(2900100001)(4326008)(6306002)(97736004)(476003)(53936002)(6512007)(2906002)(486006)(256004)(14444005)(44832011)(7416002)(386003)(6486002)(186003)(6436002)(36756003)(2616005)(25786009)(478600001)(6506007)(52116002)(102836004)(7736002)(305945005)(71190400001)(71200400001)(3846002)(99286004)(5660300001)(66066001)(316002)(966005)(6116002)(26005)(6636002)(86362001)(81156014)(81166006)(110136005)(105586002)(106356001)(54906003)(14454004)(68736007)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3494;H:AM6PR0402MB3654.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-microsoft-antispam-message-info: M0XSErTEolQ+FhhagxpPO4FlBiO06dRo+cngkqIV/5GNFSOUEajVpv8+lBWz/kB2f72H0Yss85ILxP8qsgoPopZSFWr+LAQLM2i0JGa9wJ4SwIDRxAWTQF5zwnitTYvVuO2ivUJHugZKiGO7Tz5h6xeFF4K74yEyeAVwhnXpgkEay9Njo8AU/2B2Ab5NyBJWpi1be/XQ1ApOB7OI7ADa7pK8C8LQ01LAGOrbRwaZoQiuuZT75doYv9YCB4ts9b4Tw8G6SEzF+xrTy6DnifcNTQHXyk7LROBrvMZuYVc3I/aghVWbGnzzYiwethY0UIOsi9olwijY2MIfGm809vJyryv7mvy+qiD07K2jSUbvbSw=
+spamdiagnosticoutput: 1:99
+spamdiagnosticmetadata: NSPM
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3631fb17-a552-479d-bb43-08d644addd17
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2018 12:38:05.1616
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3494
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXO0cJ3eJblGUXAA--.9656S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cr1ruw13Jw4rJw1fXFWDJwb_yoW8Ar4Upa
+	yDCrWrAr1vkrWxXrs3tF4UuF1rXa48CFyrKFW2q34jvrWfCFyUJF1Fg3yvqrn7Xr4fAw1S
+	qFy2kr4rKF4YyF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBIb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwCjxxvEa2IrMxkF7I
+	0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6ryUMxkI7II2
+	jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJr0_GcWlcIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Cr1j6rxdMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjx
+	CrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF7vcSsGvfC2KfnxnUUI43ZEXa7IU5Fjg7UUUUU==
+
+So this is all cleaned up now. The switch from clk to clk_hw registration
+is done only for the newly added clock types because changing the older
+ones will imply a bigger change. I will spend some time on that, but this
+can't be delayed by that since this is needed in order to boot up.
+
+Here is a link to the 11th version:
+https://lkml.org/lkml/2018/10/10/292
+
+Changes since v11:
+ * changed the authorship of the CCM driver
+     since it has changed drastically from the original version.
+ * changed the CCM driver to platform driver
+ * changed all new clock types to clk_hw based registration
+ * fixed the all other comments from Stephen
+
+Abel Vesa (2):
+  clk: imx: Add imx composite clock
+  clk: imx: Add clock driver for i.MX8MQ CCM
+
+Lucas Stach (3):
+  dt-bindings: add binding for i.MX8MQ CCM
+  clk: imx: add fractional PLL output clock
+  clk: imx: Add SCCG PLL type
+
+ .../devicetree/bindings/clock/imx8mq-clock.txt     |  20 +
+ drivers/clk/imx/Makefile                           |   6 +-
+ drivers/clk/imx/clk-composite-8m.c                 | 178 +++++++
+ drivers/clk/imx/clk-frac-pll.c                     | 221 ++++++++
+ drivers/clk/imx/clk-imx8mq.c                       | 589 +++++++++++++++++=
+++++
+ drivers/clk/imx/clk-sccg-pll.c                     | 256 +++++++++
+ drivers/clk/imx/clk.h                              |  64 +++
+ include/dt-bindings/clock/imx8mq-clock.h           | 395 ++++++++++++++
+ 8 files changed, 1728 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/imx8mq-clock.tx=
+t
+ create mode 100644 drivers/clk/imx/clk-composite-8m.c
+ create mode 100644 drivers/clk/imx/clk-frac-pll.c
+ create mode 100644 drivers/clk/imx/clk-imx8mq.c
+ create mode 100644 drivers/clk/imx/clk-sccg-pll.c
+ create mode 100644 include/dt-bindings/clock/imx8mq-clock.h
+
+--=20
+2.7.4

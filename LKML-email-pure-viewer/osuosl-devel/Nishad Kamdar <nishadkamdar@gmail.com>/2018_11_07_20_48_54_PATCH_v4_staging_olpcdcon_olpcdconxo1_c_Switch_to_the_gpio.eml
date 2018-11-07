@@ -1,0 +1,287 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:57 -0000
+Received: from icoremail.net (unknown [209.85.215.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv0Jj3+JbivVXAQ--.25903S3;
+	Wed, 07 Nov 2018 20:49:40 +0800 (CST)
+Received: from mail-pg1-f173.google.com (unknown [209.85.215.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3H0ti3+JbZW0XAA--.6217S3;
+	Wed, 07 Nov 2018 20:49:38 +0800 (CST)
+Received: by mail-pg1-f173.google.com with SMTP id k1-v6so7303753pgq.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:49:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:mime-version:content-disposition:user-agent
+         :sender:precedence:list-id;
+        bh=euAPtF5QankM66nnRvSjerWX0WPzKv2MbQqo7hxGLRQ=;
+        b=CKuVCOPQRHwsVm7Tgnv+EVpudIbw5euJDSKqQb21Qd7cnaHMJIuEGFtGWHycDE2s1m
+         esenJK4tY3JcO8UCVnojV7Dl200maKSEw1TQxiHpn41VI9MONENGJrAQ05ggeSRUPf59
+         SEy9snYhpdc3Keq8GsPjnPRkKTzBNZOGHwNYqwTIlSqXEB6SymjCuwt2rrT4MZhIfcep
+         J83oShw6eTyv7oQfv5osaxExUGiMCivoAo/sy+EEZxjzaKTO1ZE+KugJU6xfcML1T2uY
+         N69/eazIFgaak9HrTycO64W0d2wvSB3XIH/1KYy8MCVv0vwIkNgVPI0ge6TSrxZMTXjr
+         Ucpg==
+X-Gm-Message-State: AGRZ1gJ5y1KCeNynMm9E6Uwwnebmd9qP7oUqCZlyCUUKB37Ow70K1aFY
+	nEwVeGvYGc4jCUQes0APt+YFHXv2vH0Yy1Va679LTjBPilBo/TU=
+X-Received: by 2002:a63:5816:: with SMTP id m22-v6mr68508pgb.332.1541594978094;
+        Wed, 07 Nov 2018 04:49:38 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5202906pjt;
+        Wed, 7 Nov 2018 04:49:37 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eAL/mo1Oz/Q93RjwepDSjFME9CMPyBF0z/9+VUZF6g6WhClCPJycY34oXR2OskmgbHQG8j
+X-Received: by 2002:a63:5122:: with SMTP id f34mr71804pgb.218.1541594977286;
+        Wed, 07 Nov 2018 04:49:37 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541594977; cv=none;
+        d=google.com; s=arc-20160816;
+        b=D+yERyDG6dbv8yVDmovhpPyPAlsrDgGmmmsVBDjor3MfZSGwKaPVLLPrUtJP3T7Blz
+         4Sny4i4bHkb9JmhNC7u/NiPIHDfUYmG7EVqd1GTvGomlEYAb19yey6GwZyRh8VO1EcW0
+         N7UTe/MWRoXP058rCuASPPW6izBnjioIvVePgHJRNeS+kOkXXNB/u+Yk5cGtnBl51dlp
+         9+jJtvkgXP0vPVVwZ+8n5W20bRlCahWMDd1DnbiM8EZhKUbD/QaD4eToMW/9fMwPm26K
+         0YOzpL9o5YRglpgUbO5LhcFP3AUV/hD8KxEUtoGICrPsG5m3aEAmU0lBvKMmsKGfJKoS
+         jt8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:content-disposition
+         :mime-version:message-id:subject:cc:to:from:date:dkim-signature;
+        bh=euAPtF5QankM66nnRvSjerWX0WPzKv2MbQqo7hxGLRQ=;
+        b=beuqFyz4VcPLms7jSsIuocTnNIEf2pSot6wIkBaCLzVW6kChSyTWzlySt/ns/krPxD
+         YN+nfFC99pg8oY2kbqV3LJPfBU8tGE7vkhhcjOGMVdLQ25YlrA6gHSu040foc8pbWb77
+         7w6lcFViK2WU63HcpQqwdSZa8DnXqw6leUmZf/80YISz3YebSK7yYM3vBs7h4HDBt445
+         TU2643TnsrEqP6QsX48Syw5OfyP1saqWglGWejCkysPijco5O5pZ8DdW/QUmFdjnxcVf
+         6v0DallmS8BYbuU0vRXp4xs3xTy9Wv0oU7eeuLsMD7+kFrhyr7/PIrQVi67QO0WIkps3
+         /Urg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b="bGOmxlP/";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id o13-v6si605825pfd.46.2018.11.07.04.49.21;
+        Wed, 07 Nov 2018 04:49:37 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727265AbeKGWTV (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:19:21 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39002 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbeKGWTV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:19:21 -0500
+Received: by mail-pg1-f195.google.com with SMTP id r9-v6so7290409pgv.6
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 04:49:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=euAPtF5QankM66nnRvSjerWX0WPzKv2MbQqo7hxGLRQ=;
+        b=bGOmxlP/DO5+t8APTrNLtZtRnEzUUquvWjXQdQyiljZLvmX/0mQ18KG+ygz8g24mwd
+         coLOsp7wZmBNJNj0IsWeT794le7NCyZsuENSvImaFbRi94O0WWDemhrR1EVSxOvXVXbd
+         lc7uuMFiJf7Iv/gO3SisWVBn0tdYL2Yn6iUEDNRQibgQ0X6E7kbVPqetrb4TlWvscO/9
+         Nzs/UUglqPBycFQxRhcaso74gEAk47FrU/Ng6XLdMlY9QVevUE6fmSnM18yC0hBlqS9g
+         KQV0MD1HB/tXfi5UalPJCV4uL+o7RXxW1GVvEPI62RIseqOnccV2QQ3Sop2mTFMv7fUP
+         r+5Q==
+X-Received: by 2002:a63:5b1f:: with SMTP id p31mr84501pgb.56.1541594945318;
+        Wed, 07 Nov 2018 04:49:05 -0800 (PST)
+Received: from nishad ([2401:4900:1880:5d72:7998:219b:665e:21b1])
+        by smtp.gmail.com with ESMTPSA id m5-v6sm1260856pfc.188.2018.11.07.04.49.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 04:49:04 -0800 (PST)
+Date: Wed, 7 Nov 2018 18:18:54 +0530
+From: Nishad Kamdar <nishadkamdar@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jens Frederich <jfrederich@gmail.com>,
+        Daniel Drake <dsd@laptop.org>,
+        Jon Nettleton <jon.nettleton@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4] staging: olpc_dcon: olpc_dcon_xo_1.c: Switch to the gpio
+ descriptor interface
+Message-ID: <20181107124849.GA21899@nishad>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3H0ti3+JbZW0XAA--.6217S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3GF17Xr47GrWxJFykZw1xuFg_yoW7GrWkpF
+	s0k3WSq34F9F1rtrnrtr4DArs8Arn7Kry3GrnFkr1UXFy3XF4vqw4DtayavrnrK34vyw47
+	KFs8ur48uFZ09aUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
+	6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW5JwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Cr1j6rxdMxvI42IY
+	6I8E87Iv6xkF7I0E14v26F4UJVW0owCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUQxhL
+	UUUUU
+
+Use the gpiod interface instead of the deprecated old non-descriptor
+interface in olpc_dcon_xo_1.c.
+
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+Changes in v4:
+ - Move changelog after signed-off line.
+Changes in v3:
+ - Resolve a few compilation errors.
+Changes in v2:
+ - Resolve a few compilation errors.
+ - Add a level of indirection to read and write gpios.
+---
+ drivers/staging/olpc_dcon/olpc_dcon_xo_1.c | 90 +++++++++++-----------
+ 1 file changed, 47 insertions(+), 43 deletions(-)
+
+diff --git a/drivers/staging/olpc_dcon/olpc_dcon_xo_1.c b/drivers/staging/olpc_dcon/olpc_dcon_xo_1.c
+index ff145d493e1b..80b8d4153414 100644
+--- a/drivers/staging/olpc_dcon/olpc_dcon_xo_1.c
++++ b/drivers/staging/olpc_dcon/olpc_dcon_xo_1.c
+@@ -11,35 +11,51 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/cs5535.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/delay.h>
++#include <linux/i2c.h>
+ #include <asm/olpc.h>
+ 
+ #include "olpc_dcon.h"
+ 
++enum dcon_gpios {
++	OLPC_DCON_STAT0,
++	OLPC_DCON_STAT1,
++	OLPC_DCON_IRQ,
++	OLPC_DCON_LOAD,
++	OLPC_DCON_BLANK,
++};
++
++struct dcon_gpio {
++	const char *name;
++	unsigned long flags;
++};
++
++static const struct dcon_gpio gpios_asis[] = {
++	[OLPC_DCON_STAT0] = { .name = "dcon_stat0", .flags = GPIOD_ASIS },
++	[OLPC_DCON_STAT1] = { .name = "dcon_stat1", .flags = GPIOD_ASIS },
++	[OLPC_DCON_IRQ] = { .name = "dcon_irq", .flags = GPIOD_ASIS },
++	[OLPC_DCON_LOAD] = { .name = "dcon_load", .flags = GPIOD_ASIS },
++	[OLPC_DCON_BLANK] = { .name = "dcon_blank", .flags = GPIOD_ASIS },
++};
++
++struct gpio_desc *gpios[5];
++
+ static int dcon_init_xo_1(struct dcon_priv *dcon)
+ {
+ 	unsigned char lob;
+-
+-	if (gpio_request(OLPC_GPIO_DCON_STAT0, "OLPC-DCON")) {
+-		pr_err("failed to request STAT0 GPIO\n");
+-		return -EIO;
+-	}
+-	if (gpio_request(OLPC_GPIO_DCON_STAT1, "OLPC-DCON")) {
+-		pr_err("failed to request STAT1 GPIO\n");
+-		goto err_gp_stat1;
+-	}
+-	if (gpio_request(OLPC_GPIO_DCON_IRQ, "OLPC-DCON")) {
+-		pr_err("failed to request IRQ GPIO\n");
+-		goto err_gp_irq;
+-	}
+-	if (gpio_request(OLPC_GPIO_DCON_LOAD, "OLPC-DCON")) {
+-		pr_err("failed to request LOAD GPIO\n");
+-		goto err_gp_load;
+-	}
+-	if (gpio_request(OLPC_GPIO_DCON_BLANK, "OLPC-DCON")) {
+-		pr_err("failed to request BLANK GPIO\n");
+-		goto err_gp_blank;
++	int ret, i;
++	struct dcon_gpio *pin = &gpios_asis[0];
++
++	for (i = 0; i < ARRAY_SIZE(gpios_asis); i++) {
++		gpios[i] = devm_gpiod_get(&dcon->client->dev, pin[i].name,
++					  pin[i].flags);
++		if (IS_ERR(gpios[i])) {
++			ret = PTR_ERR(gpios[i]);
++			pr_err("failed to request %s GPIO: %d\n", pin[i].name,
++			       ret);
++			return ret;
++		}
+ 	}
+ 
+ 	/* Turn off the event enable for GPIO7 just to be safe */
+@@ -61,12 +77,12 @@ static int dcon_init_xo_1(struct dcon_priv *dcon)
+ 	dcon->pending_src = dcon->curr_src;
+ 
+ 	/* Set the directions for the GPIO pins */
+-	gpio_direction_input(OLPC_GPIO_DCON_STAT0);
+-	gpio_direction_input(OLPC_GPIO_DCON_STAT1);
+-	gpio_direction_input(OLPC_GPIO_DCON_IRQ);
+-	gpio_direction_input(OLPC_GPIO_DCON_BLANK);
+-	gpio_direction_output(OLPC_GPIO_DCON_LOAD,
+-			      dcon->curr_src == DCON_SOURCE_CPU);
++	gpiod_direction_input(gpios[OLPC_DCON_STAT0]);
++	gpiod_direction_input(gpios[OLPC_DCON_STAT1]);
++	gpiod_direction_input(gpios[OLPC_DCON_IRQ]);
++	gpiod_direction_input(gpios[OLPC_DCON_BLANK]);
++	gpiod_direction_output(gpios[OLPC_DCON_LOAD],
++			       dcon->curr_src == DCON_SOURCE_CPU);
+ 
+ 	/* Set up the interrupt mappings */
+ 
+@@ -84,7 +100,7 @@ static int dcon_init_xo_1(struct dcon_priv *dcon)
+ 	/* Register the interrupt handler */
+ 	if (request_irq(DCON_IRQ, &dcon_interrupt, 0, "DCON", dcon)) {
+ 		pr_err("failed to request DCON's irq\n");
+-		goto err_req_irq;
++		return -EIO;
+ 	}
+ 
+ 	/* Clear INV_EN for GPIO7 (DCONIRQ) */
+@@ -125,18 +141,6 @@ static int dcon_init_xo_1(struct dcon_priv *dcon)
+ 	cs5535_gpio_set(OLPC_GPIO_DCON_BLANK, GPIO_EVENTS_ENABLE);
+ 
+ 	return 0;
+-
+-err_req_irq:
+-	gpio_free(OLPC_GPIO_DCON_BLANK);
+-err_gp_blank:
+-	gpio_free(OLPC_GPIO_DCON_LOAD);
+-err_gp_load:
+-	gpio_free(OLPC_GPIO_DCON_IRQ);
+-err_gp_irq:
+-	gpio_free(OLPC_GPIO_DCON_STAT1);
+-err_gp_stat1:
+-	gpio_free(OLPC_GPIO_DCON_STAT0);
+-	return -EIO;
+ }
+ 
+ static void dcon_wiggle_xo_1(void)
+@@ -180,13 +184,13 @@ static void dcon_wiggle_xo_1(void)
+ 
+ static void dcon_set_dconload_1(int val)
+ {
+-	gpio_set_value(OLPC_GPIO_DCON_LOAD, val);
++	gpiod_set_value(gpios[OLPC_DCON_LOAD], val);
+ }
+ 
+ static int dcon_read_status_xo_1(u8 *status)
+ {
+-	*status = gpio_get_value(OLPC_GPIO_DCON_STAT0);
+-	*status |= gpio_get_value(OLPC_GPIO_DCON_STAT1) << 1;
++	*status = gpiod_get_value(gpios[OLPC_DCON_STAT0]);
++	*status |= gpiod_get_value(gpios[OLPC_DCON_STAT1]) << 1;
+ 
+ 	/* Clear the negative edge status for GPIO7 */
+ 	cs5535_gpio_set(OLPC_GPIO_DCON_IRQ, GPIO_NEGATIVE_EDGE_STS);
+-- 
+2.17.1

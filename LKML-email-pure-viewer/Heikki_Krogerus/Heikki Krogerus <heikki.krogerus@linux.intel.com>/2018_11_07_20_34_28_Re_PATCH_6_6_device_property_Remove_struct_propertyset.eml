@@ -1,0 +1,144 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:33 -0000
+Received: from icoremail.net (unknown [209.85.214.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH8L12+JbEeNXAQ--.26340S3;
+	Wed, 07 Nov 2018 20:35:04 +0800 (CST)
+Received: from mail-pl1-f181.google.com (unknown [209.85.214.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHKkbz2+Jb_mEXAA--.6294S3;
+	Wed, 07 Nov 2018 20:34:59 +0800 (CST)
+Received: by mail-pl1-f181.google.com with SMTP id w22-v6so4490923plk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:34:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=oPDclwjTnq3H+Ug9Fal8n6M13wmskBpF32ax/QreCAQ=;
+        b=f3tAnrv5ATcEGAigqiR2RDwdQ693eB4HBjsj0NyU1I0Uk9nlL9U32Ur/3KFofKO9jM
+         +MUAMNKwvH/tUOlI+tBSkUPuvUkMMzrOPhuIYvuVcsJLLMYtY2wYp43dFyuVjDp3Kg3Z
+         fNJttRardKxyDhYznm1s8X/i9PTCuLU6y4QRMFrqdRo0vVjuVZCTWY01g3AUdy8+/S3B
+         Yq7qRVuAq7PPXpjIvtrHF5mxVcT2WeQhaTxs8nW5g7n2bQc+128nojmuC6XOCFFK+78E
+         6vtxQmgxxYowZLGR8m1gBWYBJsquWPRiHkluWHFbKjw1GlqQKB1WiKgiR3tfFbjvyXS8
+         8RrQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gJHl8BkeI31Qf2K9UBT4ASIh4a46M69/DRYwK9UufVzcWRdmqw5
+	wopKdQdJ+YX89+Sr+79XAXQW3txQY8QHC7vqu4wBxwQt1gSzdW0=
+X-Received: by 2002:a17:902:6686:: with SMTP id e6-v6mr19916plk.173.1541594098954;
+        Wed, 07 Nov 2018 04:34:58 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5188287pjt;
+        Wed, 7 Nov 2018 04:34:58 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cTbytVQZwBF8XJqa9KMJEkES+K/K8ju2qKuWQdygLU6yoj9IDwKHGQNOavzx+ZXMzkBn8b
+X-Received: by 2002:a17:902:6b46:: with SMTP id g6-v6mr30720plt.33.1541594098150;
+        Wed, 07 Nov 2018 04:34:58 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541594098; cv=none;
+        d=google.com; s=arc-20160816;
+        b=NACtexJKtazNpFLyspREQ+Y6OFrWr8Tz2qGxappjCun1JDZVBqY3JQpANBFsDMNPep
+         kfiG84Zc0ZSfnXlqdHtMgup9yL2fcTW+oAJKrkmUO9xvncGP8uQRhVjiZue+mBW669l7
+         E0JNZ0bHAAgoyc7/T7m5wdDFIRYySKaG/WfDyvJniCzMoBhBjz3Q8nvDJ1fcxColqKrP
+         00gkJtNxN1cxFqmViKd+3vtDtX+Ra5vDKKfLXEcadfQwRfspVt7CERq0PwAZTMKq37dJ
+         tZAsfWu8UXUS9qLx6ThygUJ85H0r3X/sy4ShtTqp6MnaTJAxcEfxcXVXe4GN2hJJodKP
+         TDgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=oPDclwjTnq3H+Ug9Fal8n6M13wmskBpF32ax/QreCAQ=;
+        b=tMQgPavLhHfzHU0ykKBPyjPjTIiJXg6CdgNb8kWthgnV4frLmrA2kLgu0mJjUWm73O
+         k3tNr1nldNeiuqzkPRBL7cDaMpttZq0eJKUrdHYk8R15XYF5l3eFdowKMY4tVexpS+Vp
+         4E8clQr7EGLekU/esjeZv+vhsX5h9TSIRBxNjqrr5TvofRS0EaNmkXDoocu3z6+7IPf4
+         6tfyP+7qPBZq9hXX36hEoOif3kiJHVhZ9V/vJWzmRgoN5qQReorAOyRQa8s5Ja+Pd8ch
+         LusrSoCGiUDxyO83pYlr98t9A94qnjSd3+PJFwe7DImaRfwpQsi8y3qJ1JquBqiukZYS
+         cLYQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id w11si397230pgf.452.2018.11.07.04.34.42;
+        Wed, 07 Nov 2018 04:34:58 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727532AbeKGWEn (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:04:43 -0500
+Received: from mga12.intel.com ([192.55.52.136]:37968 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726370AbeKGWEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:04:43 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 04:34:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,475,1534834800"; 
+   d="scan'208";a="106039719"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 07 Nov 2018 04:34:29 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 07 Nov 2018 14:34:28 +0200
+Date: Wed, 7 Nov 2018 14:34:28 +0200
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 6/6] device property: Remove struct property_set
+Message-ID: <20181107123428.GG13048@kuha.fi.intel.com>
+References: <20181105145928.46819-1-heikki.krogerus@linux.intel.com>
+ <20181105145928.46819-7-heikki.krogerus@linux.intel.com>
+ <20181106144641.GA10650@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181106144641.GA10650@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHKkbz2+Jb_mEXAA--.6294S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw15JF4rurWxXryDKFWkXrb_yoWxKwc_Z3
+	yqyryUC34kJr40q3Z3JrZFyrZ3AFW7KrWUAFn7Kr4rCFy3X3yYqan09r9a9F1xtrWvq39r
+	Wr4rXw4rA3WxCjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUb3xYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IY
+	x2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87
+	Iv67AKxVWxJr0_GcWlcIIF0xvEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdMxAIw28IcxkI7VAK
+	I48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvf
+	C2KfnxnUUI43ZEXa7IUn_-PUUUUUU==
+
+On Tue, Nov 06, 2018 at 04:46:41PM +0200, Andy Shevchenko wrote:
+> On Mon, Nov 05, 2018 at 05:59:28PM +0300, Heikki Krogerus wrote:
+> > Replacing struct property_set with the software nodes that
+> > were just introduced.
+> > 
+> > The API and functionality for adding properties to devices
+> > remains the same, however, the goal is to convert the
+> > drivers to use the API for software nodes when the device
+> > has no real firmware node, and use the old API only when
+> > "extra" build-in properties are needed.
+> 
+> It might be slightly easier to review if you preserve the ordering of
+> functions, i.e. device_add_properties() and device_remove_properties().
+
+True, that change does not belong to this series.
+
+thanks,
+
+-- 
+heikki

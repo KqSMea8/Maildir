@@ -1,0 +1,153 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:53 -0000
+Received: from icoremail.net (unknown [209.85.210.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3__vA3uJbOvJXAQ--.26448S3;
+	Wed, 07 Nov 2018 20:46:57 +0800 (CST)
+Received: from mail-pf1-f172.google.com (unknown [209.85.210.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHbUm_3uJbBWsXAA--.4355S3;
+	Wed, 07 Nov 2018 20:46:55 +0800 (CST)
+Received: by mail-pf1-f172.google.com with SMTP id v68-v6so4074955pfk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:46:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=mlpGnthCumwwml9wvbukE3fDDjhbz2+cW9Pvq9KKRG4=;
+        b=jK2dd/g7aI3oBTghW1qvfzl5q+MEfkQzeORtOoNEsxw5DO1bYGDWdySFL2ir0Jjkb1
+         m2ULXg57FiFj3DDT0snz4o0j0OxFH2f7KIcjnDF/KKZ4qaA0GeGuisEuJZZZEaJNuZof
+         rJFdmRaVeKl4dAEBPt7UntUNu/99paoz6dec8aIgDv/P4Dy8RZMXJnJwnd6ONuvppQSX
+         4yCtcQpJ7dlOxn2uXyx/5m5UtkbXwiaTdLmTxMMKk1lVz+9WqbY5RM1sx3MFaTCloO9G
+         OlpCXfAogDdkS8zVYkOLB47NxCKTDY9R3goVjoc03IbWHAm46VFEktSsPe9MfbEyjV+J
+         HrYw==
+X-Gm-Message-State: AGRZ1gJe3Vd6BBdHCzGnh83DheHKj4viAijfoND2jwm6VXrZ0Mu8qsj1
+	wesTrvzfk0n0z8WCwnMzfQ+Q1/UL8j/aEsUIKH/S3IbfGveHyE4=
+X-Received: by 2002:aa7:87d0:: with SMTP id i16-v6mr94055pfo.20.1541594815309;
+        Wed, 07 Nov 2018 04:46:55 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5200318pjt;
+        Wed, 7 Nov 2018 04:46:54 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cSrUjRFXSTQ4An8AG2GxFN31G+NieZUNQKxxBHpDWe6MlDlowzAX7d/dS98LsJk/1wapXm
+X-Received: by 2002:a17:902:bc4a:: with SMTP id t10-v6mr51812plz.249.1541594814561;
+        Wed, 07 Nov 2018 04:46:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541594814; cv=none;
+        d=google.com; s=arc-20160816;
+        b=qnJXg/0DIBOR0MSUc8lhnZXAuaHsGQm1eKRVDfZm7Yrnj3MxhkcDY4zVwZxaQarYZQ
+         eHWCWd1LjErOSyeyFI4H43EN04sjWj0YSuVroUGsawtCMGR2K25r1d4mraJRuP+pOG1u
+         KzRtmUqVAh/Z/WQFEVMYVc9KQfHoKrcTtA0ZgeaTGd3CKBr4/Xn0eq/VOAyPwv5Kps/4
+         W495Esw4EoD7hPUOlfqCNoLQ1UTr3VU4lUSmN30LiWFxTS/ioBiZ1qv9RxTpd1i075Gd
+         63KMHL2cuhBxWq1gXP+nztrE+HUzUbNFeAV4lFRP5xzevwDln2Ev55eoF4qDugttTtEl
+         Le/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=mlpGnthCumwwml9wvbukE3fDDjhbz2+cW9Pvq9KKRG4=;
+        b=DB3H0DPYQgZJiPCOtUuUKhGqK1K6ZmOYChhLP6AyXsB9sl1O89irTNetfq4AIlbT4m
+         bHEQ/eJRcJALUrJJoLBjroUK9DHewKSMnZcjtkkIXeqb4iiDppWyQXFrtW7QkWKWdBsp
+         KmmsjSXVgG2VTSz7vMJcl0dE4PuAx2pGn54FL/wXbw8lMmq+CZ9AorQXQ17J4VEVwD7Q
+         kJ3USKUkt9rKNd4prJhRBimvJyEI6YSLHpaqmPzF/FgEY588seFRbI8ejl6k2O+iEXzm
+         1hakqdVDNypKy4A/iE6PS6WyCQGLRfu8B/gX5Dz61xciCqqPT5RzkOUAmyXbRrE+qg/z
+         kKUg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=dcuVhSLf;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 28si442692pgz.593.2018.11.07.04.46.38;
+        Wed, 07 Nov 2018 04:46:54 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726886AbeKGWQ3 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:16:29 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35869 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbeKGWQ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:16:29 -0500
+Received: by mail-pg1-f195.google.com with SMTP id z17-v6so7297259pgv.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 04:46:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mlpGnthCumwwml9wvbukE3fDDjhbz2+cW9Pvq9KKRG4=;
+        b=dcuVhSLfIeSWLWy4NP71vh2VG/AFdHMBC5DMDBN4mvC1kO3jWhPmlYk2kBHj0eNJlA
+         n8xdQGqkAewTjp9GxWQz78FepTidnpMn8J051nY6AR9pvcX5kDF4At9tDcqgXYxpHuZ+
+         5bjOqgB1qsKE9xE3y/E8IGrdlJKFdW0X5JPXLvOWjhGxMQctRlWeTLSDP0VOAjgaDCOO
+         pR7gMp/8KSf23Tlgg+la1MQamb3vpNXfA0Msyh1hTj6twjah4JnxO6tnNO9iGarVdtGv
+         4UTmKCy4oIZFB3gigLXjjIJf/9MhYnxZkrhZLryJF0hEzadfETs8eMLwaY+Z6AeEAZ0z
+         tAqQ==
+X-Received: by 2002:a62:2681:: with SMTP id m123-v6mr52287pfm.131.1541594774196;
+        Wed, 07 Nov 2018 04:46:14 -0800 (PST)
+Received: from nishad ([2401:4900:1880:5d72:7998:219b:665e:21b1])
+        by smtp.gmail.com with ESMTPSA id v37sm733397pgn.5.2018.11.07.04.46.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 04:46:13 -0800 (PST)
+Date: Wed, 7 Nov 2018 18:16:04 +0530
+From: Nishad Kamdar <nishadkamdar@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jens Frederich <jfrederich@gmail.com>,
+        Daniel Drake <dsd@laptop.org>,
+        Jon Nettleton <jon.nettleton@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] staging: olpc_dcon: olpc_dcon_xo_1.c: Switch to the
+ gpio descriptor interface
+Message-ID: <20181107124601.GA21698@nishad>
+References: <20181106074314.GA11430@nishad>
+ <20181107113652.GA16124@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107113652.GA16124@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHbUm_3uJbBWsXAA--.4355S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrZFyxWF43JF4rur43KFWkXrb_yoWxArX_G3
+	40k34Du3yDGrWvk3Zavry5ur409a15JFnxtFZrGryrJa4kWFZ8X3WkKF9avF1fXrWftF1f
+	Wr93Zrs09w1akjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbDAYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
+	JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6ryUMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJr0_GcWlcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Cr1j6rxdMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52
+	x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
+	xGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bbR6wU
+	UUUU=
+
+On Wed, Nov 07, 2018 at 12:36:52PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Nov 06, 2018 at 01:13:19PM +0530, Nishad Kamdar wrote:
+> > Use the gpiod interface instead of the deprecated old non-descriptor
+> > interface in olpc_dcon_xo_1.c.
+> > ---
+> > Changes in v3:
+> >  - Resolve a few compilation errors.
+> > Changes in v2:
+> >  - Resolve a few compilation errors.
+> >  - Add a level of indirection to read and write gpios.
+> > Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+> 
+> The signed-off-by has to be above the --- line otherwise it will get
+> stripped off by git when the patch is applied :(
+> 
+Ok, I'll change it.
+
+Thanks for the review.
+
+regards,
+Nishad

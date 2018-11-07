@@ -1,0 +1,217 @@
+Return-Path: <kvm-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:56 -0000
+Received: from icoremail.net (unknown [209.85.215.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgA3cI4g3+JbPfRXAQ--.29467S3;
+	Wed, 07 Nov 2018 20:48:34 +0800 (CST)
+Received: from mail-pg1-f178.google.com (unknown [209.85.215.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3nEge3+Jbk2wXAA--.5503S3;
+	Wed, 07 Nov 2018 20:48:31 +0800 (CST)
+Received: by mail-pg1-f178.google.com with SMTP id 70so1713237pgh.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:48:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=Omb1468dmeRXbHuQgRdfS8uiLKleak/UviPaPQIB8aU=;
+        b=GOXivj9EeE0Fa06pM7BU+jjd48l7vg0YoAyMfC6xBfeH3IVv2Hw9+SAErMsYTUpO0O
+         e/rrrAcTySTfzGAWyaRY8ZmGPHmpujfg/dwXcjKrRQCAeqbyfvJtzOAUNorW7REmZ2qr
+         EakWJ3+95YNFClLBm+6xm8UYIjAMaGBH8nbbCO/EBRZw9xesUHh3cTAqotQSaBOdYxUb
+         CxqaE71adyL3zlBIwlVyFAcjl1FjIgx+tiXvLOLq0TuRuG4QlLLKN2SSq0APDzS/k8kt
+         QF/yoswbdAodtXXswsZmSyePWh21q8BOCKm3VtqczEmDZ4eATkz7huO88bSkPhWPJORS
+         cvMw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=kvm-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+X-Gm-Message-State: AGRZ1gIbGGNQLGbm17xuVZbywBg0YtO1YVuVIzSHUZ++bQb7dng8Tl24
+	vDjB063NkHIcBDm/YAh+Lt4j9IY2xtfvnvPohRoVZ7R6wyUzf+g=
+X-Received: by 2002:a62:1c53:: with SMTP id c80-v6mr100856pfc.14.1541594910734;
+        Wed, 07 Nov 2018 04:48:30 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5201825pjt;
+        Wed, 7 Nov 2018 04:48:29 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fuagSIl8J1siwuToDOdmscYjrZD3WzJQqRbQfYMkilzGFVgvD52+MleKPkyeWVw2b1b7CL
+X-Received: by 2002:a63:8c0b:: with SMTP id m11-v6mr62980pgd.422.1541594909956;
+        Wed, 07 Nov 2018 04:48:29 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541594909; cv=none;
+        d=google.com; s=arc-20160816;
+        b=NlcASvEaVkEk5CCYn+FPPpj/s+lPgXYOFItC9/fTJoJkZ6kzuH/sRwT/l36waa2vN7
+         GJPDhv20BPKviSFTeqK6bOlQyIL5/iyAMizDIK2eg6WvsfjYlsQhULYerNwZ+RTQrBaA
+         RR7sWqMYzesZTIEnDx2gY4E/pPJxpxBy2wWoHnKnFVIBIHuQYZMK/VQU8W1gH2Uum1Z2
+         Ezkv60ywRCUc9ZK8cddWTxf4V8oA4Qt5CWVZeFsLZnGI95YhHTEAYayFUv0w4C784zmh
+         GaRudkxZDfLeVm5tbkzpJRDzS3Pcm2WAPBJ6EUSEX/N4q1xNk4VZzYRFzT3rH2oZQRqj
+         d+eA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:autocrypt:openpgp:from:references:cc:to:subject;
+        bh=Omb1468dmeRXbHuQgRdfS8uiLKleak/UviPaPQIB8aU=;
+        b=HlY/LWVnLEQkMjExal40Tb4Zgu+6/X23Hh/04cuiR+zsvuYI0X+nnejMIU2Hw+GOlr
+         qopWnzNg3X/UUnQMR3FevwAKvlRGB9KsQECRY5AYHUEDpBSleg5NR8PFWIOr99yz1n9q
+         rzWG4L4CJTFuiqV5hS6mt4AedDA2oBhLRElvlYB8XO0s/p24PazcXTegoUWmAEJiDK+x
+         yRZ0CxqV3hqvupgUP+VrjNlmy6LfTaOzBGuzrr2xHmAECrkOEvsxlnKw+acN+CatwYNX
+         mZFDrPOYrVfo+hCo2gbOGfatjZc8D5ThUR9SNGjvM0VDGLUIjDkYnv6rdSZxpPQ4VNL7
+         lT1g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=kvm-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id e6si473731pgk.201.2018.11.07.04.48.09;
+        Wed, 07 Nov 2018 04:48:29 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726598AbeKGWSS (ORCPT <rfc822;fanshuming2011@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:18:18 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:54046 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726413AbeKGWSS (ORCPT <rfc822;kvm@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:18:18 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7F39E3082B23;
+        Wed,  7 Nov 2018 12:48:03 +0000 (UTC)
+Received: from [10.36.112.47] (ovpn-112-47.ams2.redhat.com [10.36.112.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A00CC18660;
+        Wed,  7 Nov 2018 12:48:01 +0000 (UTC)
+Subject: Re: KMSAN: kernel-infoleak in kvm_vcpu_write_guest_page
+To: Alexander Potapenko <glider@google.com>,
+        syzbot+ded1696f6b50b615b630@syzkaller.appspotmail.com
+Cc: kvm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        rkrcmar@redhat.com, syzkaller-bugs@googlegroups.com
+References: <0000000000005de8da057a092ba2@google.com>
+ <CAG_fn=Wmc+YU8BMcY_RXxAvVTpAMez5QUFyQSH3UsRg4Y-ZwMQ@mail.gmail.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <9d2e26fb-1d2a-248f-5451-ee95d8a6c017@redhat.com>
+Date: Wed, 7 Nov 2018 13:47:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.0
+MIME-Version: 1.0
+In-Reply-To: <CAG_fn=Wmc+YU8BMcY_RXxAvVTpAMez5QUFyQSH3UsRg4Y-ZwMQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 07 Nov 2018 12:48:03 +0000 (UTC)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <kvm.vger.kernel.org>
+X-Mailing-List: kvm@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3nEge3+Jbk2wXAA--.5503S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxJrWrWryxuFy3Ww47Ar1DKFg_yoW8uF1fp3
+	4kWFsYgr10qr97Zwn7tF1kWw4vk392vFnrGry0gr13AF1Ygr95GF4kt3y5XrW8JrykuF4x
+	tr15ZFs3Zan8t3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY02Av
+	z4vEIxC_Xr1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26F4UJVW0owCYIxAI
+	cVC2z280aVCY1x0267AKxVWxJr0_GcWl42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxU6c_T
+	UUUUU
+
+On 07/11/2018 13:10, Alexander Potapenko wrote:
+> This appears to be a real bug in KVM.
+> Please see a simplified reproducer attached.
+
+Thanks, I agree it's a reael bug.  The basic issue is that the
+kvm_state->size member is too small (1040) in the KVM_SET_NESTED_STATE
+ioctl, aka 0x4080aebf.
+
+One way to fix it would be to just change kmalloc to kzalloc when
+allocating cached_vmcs12 and cached_shadow_vmcs12, but really the ioctl
+is wrong and should be rejected.  And the case where a shadow VMCS has
+to be loaded is even more wrong, and we have to fix it anyway, so I
+don't really like the idea of papering over the bug in the allocation.
+
+I'll test this patch and submit it formally:
+
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index c645f777b425..c546f0b1f3e0 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -14888,10 +14888,13 @@ static int vmx_set_nested_state(struct
+kvm_vcpu *vcpu,
+ 	if (ret)
+ 		return ret;
+
+-	/* Empty 'VMXON' state is permitted */
+-	if (kvm_state->size < sizeof(kvm_state) + sizeof(*vmcs12))
++	/* Empty 'VMXON' state is permitted.  A partial VMCS12 is not.  */
++	if (kvm_state->size == sizeof(kvm_state))
+ 		return 0;
+
++	if (kvm_state->size < sizeof(kvm_state) + VMCS12_SIZE)
++		return -EINVAL;
++
+ 	if (kvm_state->vmx.vmcs_pa != -1ull) {
+ 		if (kvm_state->vmx.vmcs_pa == kvm_state->vmx.vmxon_pa ||
+ 		    !page_address_valid(vcpu, kvm_state->vmx.vmcs_pa))
+@@ -14917,6 +14920,7 @@ static int vmx_set_nested_state(struct kvm_vcpu
+*vcpu,
+ 	}
+
+ 	vmcs12 = get_vmcs12(vcpu);
++	BUILD_BUG_ON(sizeof(*vmcs12) > VMCS12_SIZE);
+ 	if (copy_from_user(vmcs12, user_kvm_nested_state->data, sizeof(*vmcs12)))
+ 		return -EFAULT;
+
+@@ -14932,7 +14936,7 @@ static int vmx_set_nested_state(struct kvm_vcpu
+*vcpu,
+ 	if (nested_cpu_has_shadow_vmcs(vmcs12) &&
+ 	    vmcs12->vmcs_link_pointer != -1ull) {
+ 		struct vmcs12 *shadow_vmcs12 = get_shadow_vmcs12(vcpu);
+-		if (kvm_state->size < sizeof(kvm_state) + 2 * sizeof(*vmcs12))
++		if (kvm_state->size < sizeof(kvm_state) + 2 * VMCS12_SIZE)
+ 			return -EINVAL;
+
+ 		if (copy_from_user(shadow_vmcs12,
+
+Paolo

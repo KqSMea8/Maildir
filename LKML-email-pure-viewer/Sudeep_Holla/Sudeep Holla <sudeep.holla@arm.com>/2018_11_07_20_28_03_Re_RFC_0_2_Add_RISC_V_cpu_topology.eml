@@ -1,0 +1,332 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 12:52:32 -0000
+Received: from icoremail.net (unknown [209.85.210.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgCHv+TD2+JbF+JXAQ--.26019S3;
+	Wed, 07 Nov 2018 20:34:12 +0800 (CST)
+Received: from mail-pf1-f169.google.com (unknown [209.85.210.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBX0EyN2uJbPF0XAA--.6062S3;
+	Wed, 07 Nov 2018 20:29:01 +0800 (CST)
+Received: by mail-pf1-f169.google.com with SMTP id u13-v6so7651540pfm.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:29:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=6PSv/00Yi0e5x3l22ZQP6wGDEVVDGXgstkJnF3d+z1M=;
+        b=kH8gLCglLco0mt/dgi15Eo+BeB4OEJ0o4rnTJVkoDwajA3SKjkQnsjy4p3960Vml6M
+         +ADMGI4JhmvSwDJvAqrtyNG/27iRDRN63jg4aEzaIHpzEIajLdJie4APXYOr2yQByQGC
+         IxVmihZFWp9FNlz1U30UIPy8ExOEUBhI3fyl0+anavVzYZX6XWmGe1ZKFzmOzlkK+0Jk
+         NQwOGuYh6OuZZwKd+PblYu8GdEN8BB91+tfcrjK+nYsuGM4eSEncV5ctMZFBC/afbR1X
+         c6v8czC9t4G4/v7b0d+v7hp0UNLXm3bJu1SvhtEczxe7BdrROyT2BIHbzXYO1r1uMcVv
+         Vm1g==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIOYD6wbc8ByuCO+O62Th7R42VHaddMalh+0C6UacvC/aZus6t1
+	XsTAKuPwUorzI0Zr4v9c4dH0LXKVS7xQ+tipl+ncg9jYlkQqobc=
+X-Received: by 2002:a62:22c3:: with SMTP id p64-v6mr9664pfj.9.1541593741375;
+        Wed, 07 Nov 2018 04:29:01 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5182751pjt;
+        Wed, 7 Nov 2018 04:29:00 -0800 (PST)
+X-Google-Smtp-Source: AJdET5c5Xyy6gunRFIKNFbuqq2LM9Ema9lssq/WOZRvTEUDVVDuJUEBRSjGWo19WO57eGGfumQKS
+X-Received: by 2002:a17:902:ba83:: with SMTP id k3-v6mr23677pls.200.1541593740398;
+        Wed, 07 Nov 2018 04:29:00 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541593740; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ya1EDegOJTseh1ZdYfS0aORJqh5zxq5rCS4VOIG7m+3gSfYlqSTwOgJf6OzA25f/7K
+         /5jBSnfV29pFWpNxj0vHx/M2t0FI82oOWbIEpigVeuLh0Zo5+uzmcnhbzVdHSYKaiQia
+         BwZAw3H9m3UJXBw8vK5gi0Ibnyf3HRpkxtrEvve3Z3GKisWdOh/AqCOAKmQmokaTTubB
+         n5kiq42VUcfRjdVh4OL/T+3A9nviPFle4BrS5iIfp2v3AxrZlCNQph43AyHjQC7muELJ
+         3pCKimS3XkkzZhWAjAXHUq73Y8dEcwcenrYo3/WILFO4E64QfJj6JPKKRzA8B1SwJErk
+         7Tbg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=6PSv/00Yi0e5x3l22ZQP6wGDEVVDGXgstkJnF3d+z1M=;
+        b=AkPaHdoXsonE3rAiYn/ODJ3du0kHGXs/EhqJyRGHlEOlODgmE+6Es29TMeEf5s/LYM
+         PzYQaBbZNCe8n/551AuaO5hJRwoOCe/xCoKFGMGoxsCxLypo4ehiP5ryGPHVAMVmhSMj
+         +BbMDM5tycYU3OHFy0Uxl3DABv6CPM1+wJbVmgYVdKi6UInhsNwsX22sUUT7yESWVy4d
+         z5ZaulwiZ9/VmlJ1CKBnCBnvK28SQJUipevcxGIK4xuuSoNWLB6FlUnnmah2OKwJ0eZR
+         6abVPxGVlUXZS+u0GBJwcZb2hBdTx4WiFPHkZlWAJYUL6cr+HCnd23Sv/CjPR4LgPtOk
+         dOmQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id r20-v6si455795pgm.28.2018.11.07.04.28.44;
+        Wed, 07 Nov 2018 04:29:00 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730894AbeKGV6X (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 16:58:23 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50074 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726388AbeKGV6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 16:58:22 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF95580D;
+        Wed,  7 Nov 2018 04:28:11 -0800 (PST)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6434E3F5CF;
+        Wed,  7 Nov 2018 04:28:09 -0800 (PST)
+Date: Wed, 7 Nov 2018 12:28:03 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Nick Kossifidis <mick@ics.forth.gr>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        Damien.LeMoal@wdc.com, alankao@andestech.com, zong@andestech.com,
+        anup@brainfault.org, palmer@sifive.com,
+        linux-kernel@vger.kernel.org, hch@infradead.org,
+        robh+dt@kernel.org, tglx@linutronix.de,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [RFC 0/2] Add RISC-V cpu topology
+Message-ID: <20181107122803.GA8433@e107155-lin>
+References: <1541113468-22097-1-git-send-email-atish.patra@wdc.com>
+ <866dedbc78ab4fa0e3b040697e112106@mailhost.ics.forth.gr>
+ <20181106141331.GA28458@e107155-lin>
+ <969fc2a5198984e0dfe8c3f585dc65f9@mailhost.ics.forth.gr>
+ <20181106162051.w7fyweuxrl7ujzuz@lakrids.cambridge.arm.com>
+ <abcae019e6ae749b17ecb0c721fd3177@mailhost.ics.forth.gr>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <abcae019e6ae749b17ecb0c721fd3177@mailhost.ics.forth.gr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBX0EyN2uJbPF0XAA--.6062S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3GFW3uw1kuryrWFWUKr4xtFb_yoWxtFy5pF
+	W3KFW0kw1kJFn7Gw1vkw4xXrySv34fAa15Xw13Kr1qkws8WF92qryfK3Z09FyUCr4Ivr4j
+	vr4jgF9xuF9rZFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP0b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6ryUMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJr0_GcWlcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Cr1j6rxdMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52
+	x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwI
+	xGrwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF7vcSsGvfC2KfnxnUUI43ZEXa7IUOBMNUUU
+	UUU==
+
+On Wed, Nov 07, 2018 at 04:31:34AM +0200, Nick Kossifidis wrote:
+[...]
+
+>
+> Mark and Sudeep thanks a lot for your feedback, I guess you convinced me
+> that having a device tree binding for the scheduler is not a correct
+> approach.
+>
+
+Thanks :)
+
+> It's not a device after all and I agree that the device tree shouldn't
+> become an OS configuration file. Regarding multiple levels of shared
+> resources my point is that since cpu-map doesn't contain any information of
+> what is shared among the cluster/core members it's not easy to do any
+> further translation. Last time I checked the arm code that uses cpu-map, it
+> only defines one domain for SMT, one for MC and then everything else is
+> ignored. No matter how many clusters have been defined, anything above the
+> core level is the same (and then I guess you started talking about adding
+> "packages" on the representation side).
+>
+
+Correct.
+
+> The reason I proposed to have a binding for the scheduler directly is not
+> only because it's simpler and closer to what really happens in the code, it
+> also makes more sense to me than the combination of cpu-map with all the
+> related mappings e.g. for numa or caches or power domains etc.
+>
+
+Again you are just looking at it with Linux kernel perspective.
+
+> However you are right we could definitely augment cpu-map to include support
+> for what I'm saying and clean things up, and since you are open about
+> improving it here is a proposal that I hope you find interesting: At first
+> let's get rid of the <thread> nodes, they don't make sense:
+>
+> thread0 {
+>  cpu = <&CPU0>;
+> };
+>
+
+Do you have any strong reasons to do so ?
+Since it's already there for some time, I believe we can't remove it for
+backward compatibility reasons.
+
+> A thread node can't have more than one cpu entry and any properties
+> should be on the cpu node itself, so it doesn't / can't add any
+> more information. We could just have an array of cpu nodes on the
+> <core> node, it's much cleaner this way.
+>
+> core0 {
+>  members = <&CPU0>, <&CPU1>;
+> };
+>
+
+I agree, but we have kernel code using it(arm64/kernel/topology.c). It's
+too late to remove it. But we can always keep to optional if we move the
+ARM64 binding as generic to start with and mandate it for only ARM64.
+
+> Then let's allow the cluster and core nodes to accept attributes that are
+> common for the cpus they contain. Right now this is considered invalid.
+>
+
+Yes, we have discussed in the past and decided not to. I am fine if we
+need to change it, but assuming the topology implies other information
+could be wrong. On ARM platforms we have learnt it, so we kept any
+information away from topology. I assume same with RISC-V, different
+vendors implement in different ways, so it's better to consider those
+factors.
+
+> For power domains we have a generic binding described on
+> Documentation/devicetree/bindings/power/power_domain.txt
+> which basically says that we need to put power-domains = <power domain
+> specifiers> attribute on each of the cpu nodes.
+>
+
+OK, but what's wrong with that. I gives full flexibility.
+
+> The same happens with the capacity binding specified for arm on
+> Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> which says we should add the capacity-dmips-mhz on each of the cpu nodes.
+>
+
+Ditto, we may need this for our single cluster DSU systems.
+
+> The same also happens with the generic numa binding on
+> Documentation/devicetree/bindings/numa.txt
+> which says we should add the nuna-node-id on each of the cpu nodes.
+>
+
+Yes, but again what's the problem ?
+
+> We could allow for these attributes to exist on cluster and core nodes
+> as well so that we can represent their properties better. It shouldn't
+> be a big deal and it can be done in a backwards-compatible way (if we
+> don't find them on the cpu node, climb up the topology hierarchy until
+> we find them / not find them at all). All I'm saying is that I prefer this:
+>
+
+[...]
+
+>
+> cluster0 {
+>  cluster0 {
+>   core0 {
+>    power-domains = <&pdc 0>;
+>    numa-node-id = <0>;
+>    capacity-dmips-mhz = <578>;
+>    members = <&cpu0>, <&cpu1>;
+>   }
+>  };
+>  cluster1 {
+>   capacity-dmips-mhz = <1024>;
+>   core0 {
+>    power-domains = <&pdc 1>;
+>    numa-node-id = <1>;
+>    members = <&cpu2>;
+>   };
+>   core1 {
+>    power-domains = <&pdc 2>;
+>    numa-node-id = <2>;
+>    members = <&cpu3>;
+>   };
+>  };
+> }
+>
+
+Why are you so keen on optimising the representation ?
+If you are worried about large systems, generate one instead of
+handcrafted.
+
+> When it comes to shared resources, the standard dt mappings we have are for
+> caches and are on the device spec standard (coming from power pc's ePAPR
+> standard I think). The below comes from HiFive unleashed's device tree
+> (U540Config.dts) that follows the spec:
+>
+
+I don't understand what you are trying to explain, ePAPR does specify
+per CPU entries.
+
+[...]
+
+> Note that the cache-controller node that's common between the 4 cores can
+> exist anywhere BUT the cluster node ! However it's a property of the
+> cluster.
+> A quick search through the tree got me r8a77980.dtsi that defines the cache
+> on the cpus node and I'm sure there are other similar cases. Wouldn't this
+> be better ?
+>
+> cluster0 {
+>  core0 {
+>   cache-controller@2010000 {
+>    cache-block-size = <64>;
+>    cache-level = <2>;
+>    cache-sets = <2048>;
+>    cache-size = <2097152>;
+>    cache-unified;
+>    compatible = "sifive,ccache0", "cache";
+>    ...
+>   };
+>   members = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
+
+Not a good idea IMO.
+
+> We could even remove next-level-cache from the cpu nodes and infer it from
+> the  topology (search the topology upwards until we get a node that's
+> "cache"-compatible), we can again make this backwards-compatible.
+>
+
+Why are you assuming that they *have* to be so aligned with topology ?
+How do you deal with different kind of systems ?
+
+>
+> Finally from the examples above I'd like to stress out that the distinction
+> between a cluster and a core doesn't make much sense and it also makes the
+> representation more complicated. To begin with, how would you call the setup
+> on HiFive Unleashed ? A cluster of 4 cores that share the same L3 cache ?
+> One core with 4 harts that share the same L3 cache ? We could represent it
+> like this instead:
+>
+
+Just represent each physical cache and get the list of CPUs sharing it.
+Doesn't matter what it is: cluster or cluster of clusters or cluster of
+harts, blah, blah. It really doesn't matter.
+
+>
+> We could e.g. keep only cluster nodes and allow them to contain either an
+> array of harts or other cluster sub-nodes + optionally a set of attributes,
+> common to the members/sub-nodes of the cluster. This way we'll get in the
+> first example:
+>
+
+All these fancy new ideas you are proposing are good if vendors follow
+some things religiously, but I really doubt if that's true. So just
+have maximum flexibility so that we can represent maximum number of
+systems without having to redefine the bindings again and again for the
+same thing.
+
+So instead of finding ways to optimise, you should really come up with
+list of shortcomings in the existing bindings so that we cover more
+platforms with generic bindings. IMO you are too concerned on optimisation
+of DT representation which may defeat the purpose of generic bindings.
+
+--
+Regards,
+Sudeep
