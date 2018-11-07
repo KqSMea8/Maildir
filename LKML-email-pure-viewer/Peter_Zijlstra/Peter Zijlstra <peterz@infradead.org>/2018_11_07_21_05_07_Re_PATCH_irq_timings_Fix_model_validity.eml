@@ -1,0 +1,211 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 13:15:04 -0000
+Received: from icoremail.net (unknown [209.85.214.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3yQv4+JbagxYAQ--.26591S3;
+	Wed, 07 Nov 2018 21:05:52 +0800 (CST)
+Received: from mail-pl1-f171.google.com (unknown [209.85.214.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnDEgu4+Jb0nsXAA--.5385S3;
+	Wed, 07 Nov 2018 21:05:50 +0800 (CST)
+Received: by mail-pl1-f171.google.com with SMTP id c13-v6so7831296plz.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:05:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=LX38V2snMzi7Z0f79R9pskMuYEeIMOrNQmAvtTr/MuI=;
+        b=R4oQJXw4zveGc+Pt3xvYumlSG8TOFwDx14IZFuVJJHoEhXW3Hk7F0UAy81bBBDn8Xo
+         XBdDnb30mdgc1RFXrRst+B7BJwgj/VNH4Pzopv8a5Gg+TJjtel92lPxT2JwtajFULEFk
+         raNOATg4ti2KrUl86P1wFmTHSrmdPI0uQt3wM+aljqUTlb2UHq49xrHDO7xxlzyCfU+1
+         5G79TXfoBFXKkXZPZYCAMeslup/ne0cLnYnCWgANawC80DHyeDsK8+l+1Jlbxr8UpSFd
+         kaP+hfqbroJGbiChnHep4CSA12tQV3F5MBv1yrc707pYBzl4H+BWY+ncLboFh1Zv/N4U
+         JQ9w==
+X-Gm-Message-State: AGRZ1gLZOqKmT2+YipXbjt6iOiGE+ayxUJkQcAsdJwA08pR0dPdExXv7
+	7S/w2tKO4sVu63g/+2KOXKUYoBCzUg1es2thYPX2SjW+MndZoqOe0A==
+X-Received: by 2002:a17:902:6b4b:: with SMTP id g11-v6mr126708plt.213.1541595949808;
+        Wed, 07 Nov 2018 05:05:49 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5219918pjt;
+        Wed, 7 Nov 2018 05:05:48 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fsBCO1z1nGSDdwNaIT3BEh3P0roW6cuolKl9cx/VE7erm7V9SUOLeHOj+Egkk37XQSfafl
+X-Received: by 2002:a63:104d:: with SMTP id 13mr95017pgq.303.1541595948645;
+        Wed, 07 Nov 2018 05:05:48 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541595948; cv=none;
+        d=google.com; s=arc-20160816;
+        b=JwAX6pRTjnQTvR29GjZErD6VY0DbF43YMzbUAY3GVaDCxoicI1+RCj/Yro7B51gt/R
+         RiSMzwDoTIos6dL7fliSpekhmt9lyrNYIsg6Ujq8F9ljerSwwWTM5hU2BL0bmoTwzgPf
+         WQ61Patw5jwgDmBkOlvt+WDdGJU/D1IErFh6Fs24GRrivchBGtXNYllgvDE01HzsxN7k
+         dMm4a8EE8ejVgUn90kumwOUE+5yjubnWBvMw4BebaeA1SrHQEGa9OJkwZRNEnMkxXoBB
+         AramBE8XwKiQYo/Fb6kcN/v2nKhKrbp6n/VrWxsbeIUYmRC1rWNbujvLsfjqujwsckf5
+         l7RA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=LX38V2snMzi7Z0f79R9pskMuYEeIMOrNQmAvtTr/MuI=;
+        b=pjrzaBq03djYhwjYHgQPXaRfrpEHypGLmBfLcGKtWYl4IQwANs55frF/LLNyxZwLwJ
+         c6Iv43Gu1li35UAqxiJqwJ0UYQoqCVncTpmtvN+8M6jWkNYzfYlQ+XqthOVbirhbVl49
+         DLvJt4Ef0DPA6OxK/Pzw7ZfE7LAx+FGsSlV1Enkvvhft1TQmSbA605kiGWmrVZnXF98U
+         EfrSzGHn2MDgfW9l7wcjkHpmpONsC7wX2YqvJ5WuihpD9ISbluoN5DtACX3fWVXTw+Zn
+         t9/5vd7EoiJ2BmcKhLT13TZ5lG6qWXE3fndT2/de5EOwkLWXHNgvGLSKIjSXmKvbrFxX
+         raXw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@infradead.org header.s=bombadil.20170209 header.b=NeZ+RNpE;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id s11-v6si539023pgh.511.2018.11.07.05.05.32;
+        Wed, 07 Nov 2018 05:05:48 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726887AbeKGWfo (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:35:44 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:35732 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbeKGWfo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:35:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LX38V2snMzi7Z0f79R9pskMuYEeIMOrNQmAvtTr/MuI=; b=NeZ+RNpE2+HGv4SM4KaPVpwN9
+        +zXcfoatTP9yoIzKvlDn6Ew7jeW4lisfwYYWaW7c+r98+DAdIHtNKnubENg8Xhzi8oiLW031uXEgi
+        iA6/9L/lW/7S2LtwG4T1Ndu/8FGnbamq2J3NCC4lunMrg4pe4zsba44ZZMn7dIMgHNKGwrBIKNzS4
+        NrqDiKI+EK0nu6X2uNo4EKKqsQBTYfSRpt4uY/Y1/fJUwX66o/S/Xorry4U1AwQLSkqxfA1mf0mbq
+        nawLsn/hNg77OuaGkZTBcoWHzZR4oCKVmI13rY+K7Ojw5q4SFJBGzGzHpXM/BZ3s42VR9jPgZpsWV
+        7A9lTOsvQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1gKNW9-0006X6-GR; Wed, 07 Nov 2018 13:05:10 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CE85A20284F98; Wed,  7 Nov 2018 14:05:07 +0100 (CET)
+Date: Wed, 7 Nov 2018 14:05:07 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Doug Smythies <dsmythies@telus.net>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [PATCH] irq/timings: Fix model validity
+Message-ID: <20181107130507.GD9761@hirez.programming.kicks-ass.net>
+References: <1556808.yKVbhZSazi@aspire.rjw.lan>
+ <20181106170442.GC9781@hirez.programming.kicks-ass.net>
+ <CAJZ5v0hmm2UWRt1j6hQo14nZLgPrE3DZkOznfo2kMxsZ1spo-Q@mail.gmail.com>
+ <20181106195127.GD9781@hirez.programming.kicks-ass.net>
+ <CAJZ5v0iPs8Wt0PneBVWptqJPP6dEze+=GvxjU=dHBRbmty+kOw@mail.gmail.com>
+ <20181107085936.GI9781@hirez.programming.kicks-ass.net>
+ <20181107094624.GB9828@hirez.programming.kicks-ass.net>
+ <ab9e60d7-e2d3-7d0c-dbf1-c0bed7bdb516@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab9e60d7-e2d3-7d0c-dbf1-c0bed7bdb516@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnDEgu4+Jb0nsXAA--.5385S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7CF18KFW5tFyUZw1rtFyDGFg_yoW8Zw1DpF
+	WfJF1xKFyktr15Kw4qg39Fgr92kwn5WFy3CF1xGa4aqrn8twn7Wrnay3y5WFWjkrZ5Xa4j
+	va1jqasrA3WFya7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBab7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwCjxxvEa2IrMxkF7I
+	0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6ry8MxkI7II2
+	jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCYIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMxvI42IY6I8E87Iv67AKxVWxJr0_GcWlcIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Cr1j6rxdMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjx
+	CrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw2
+	0EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bnLvtUUUUU=
+
+On Wed, Nov 07, 2018 at 11:52:31AM +0100, Daniel Lezcano wrote:
+> > @@ -146,11 +152,38 @@ static void irqs_update(struct irqt_stat *irqs, u64 ts)
+> >  	 */
+> >  	diff = interval - irqs->avg;
+> >  
+> > +	/*
+> > +	 * Online average algorithm:
+> > +	 *
+> > +	 *  new_average = average + ((value - average) / count)
+> > +	 *
+> > +	 * The variance computation depends on the new average
+> > +	 * to be computed here first.
+> > +	 *
+> > +	 */
+> > +	irqs->avg = irqs->avg + (diff >> IRQ_TIMINGS_SHIFT);
+> > +
+> > +	/*
+> > +	 * Online variance algorithm:
+> > +	 *
+> > +	 *  new_variance = variance + (value - average) x (value - new_average)
+> > +	 *
+> > +	 * Warning: irqs->avg is updated with the line above, hence
+> > +	 * 'interval - irqs->avg' is no longer equal to 'diff'
+> > +	 */
+> > +	irqs->variance = irqs->variance + (diff * (interval - irqs->avg));
+> > +
+> >  	/*
+> >  	 * Increment the number of samples.
+> >  	 */
+> >  	irqs->nr_samples++;
+
+FWIW, I'm confused on this. The normal (Welford's) online algorithm
+does:
+
+	count++;
+	delta = value - mean;
+	mean += delta / count;
+	M2 += delta * (value - mean);
+
+But the above uses:
+
+	mean += delta / 32;
+
+Which, for count >> 32, over-estimates the mean adjustment. But worse,
+it significantly under-estimates the mean during training.
+
+How is the computed variance still correct with this? I can not find any
+comments that clarifies this. I'm thinking that since the mean will
+slowly wander towards it's actual location (assuming an actual standard
+distribution input) the resulting variance will be far too large, since
+the (value - mean) term will be much larger than 'expected'.
+
+> > @@ -158,16 +191,12 @@ static void irqs_update(struct irqt_stat *irqs, u64 ts)
+> >  	 * more than 32 and dividing by 32 instead of 31 is enough
+> >  	 * precise.
+> >  	 */
+> > +	variance = irqs->variance >> IRQ_TIMINGS_SHIFT;
+
+Worse; variance is actually (as the comment states):
+
+	s^2 = M2 / (count -1)
+
+But instead you compute:
+
+	s^2 = M2 / 32;
+
+Which is again much larger than the actual result; assuming count >> 32.
+
+So you compute a variance that is inflated in two different ways.
+
+
+I'm not seeing how this thing works reliably.

@@ -1,0 +1,158 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 13:15:04 -0000
+Received: from icoremail.net (unknown [209.85.214.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f0GO4+Jb5g9YAQ--.26053S3;
+	Wed, 07 Nov 2018 21:07:27 +0800 (CST)
+Received: from mail-pl1-f171.google.com (unknown [209.85.214.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHb0uM4+Jban0XAA--.10563S3;
+	Wed, 07 Nov 2018 21:07:25 +0800 (CST)
+Received: by mail-pl1-f171.google.com with SMTP id s5-v6so7832063plq.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:07:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=uKu5HNIb+12yUdXma5DMUb1RnDWXv0oEP0eeg/5jqYY=;
+        b=fo/hMpaGBGDDwi9ZGeneQlSlVlL6yvoVRzzAxwTWdPnonoSI3zjndm7r79ss0TbOsm
+         Ae5BCI8q6Bcvlz1+BulWfMsbvFMm93o8LKZz/DVdtYURLfh7XQOKhWlHG+JD7o/F6Ze+
+         Z1vElom1DRCfXKc+rCzaZH5QnARe8bc1P/HuoZVuHfhrjnmi1zJyZ74qSpCLHxq8x9Kh
+         oR3mIR2qIHRhqbMqisgeDxSWygCycjoX8ewwVrpDzN0Ua+GwMqpm4ZCNP17uvQ4OhofR
+         6gWiOpHJUEIWawkU2wx0xQdAqJZNyEW1DAyINbJ900apTdLsjMUCrd4iMXwLWWvsXwLa
+         dCJQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+X-Gm-Message-State: AGRZ1gLI1RIPAv7CZwUplZ4Ws3rc7s9FJahPj2UsWVvQrfJzPi1LuaL+
+	mcfLLcsMxspedCBBcTgGLUb5sNrUVXcRyg/Dtd+qRya8cG8DDFJIag==
+X-Received: by 2002:a17:902:758f:: with SMTP id j15-v6mr167155pll.160.1541596044661;
+        Wed, 07 Nov 2018 05:07:24 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5221815pjt;
+        Wed, 7 Nov 2018 05:07:24 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cItPORN8ZxjgZXDayOB2UBJrG3LyAweMzeukMB9KtrIa466dVN8HQupDvrqalwGVcMDoKJ
+X-Received: by 2002:a63:1f1c:: with SMTP id f28mr106900pgf.193.1541596043965;
+        Wed, 07 Nov 2018 05:07:23 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541596043; cv=none;
+        d=google.com; s=arc-20160816;
+        b=GGh6GZnY9oI9ZhOTBPfPMB2ptC2cc5Iez8Iw5AHbi+uGsczEuPmZ/AQdrUft8ikTTt
+         dHv3Os6YQVGJpBjcBz7SDg0a5qx/ehkuYhhxSLWBcOQ6VU8EQiRg7nVa5j7I6zCOTnpc
+         Al55xrUIacw6aDAxulJWKgMKMKz83Caaq8nuZIiTOAxSlZ+Izc6PFrrXAeqv5sAGyHCC
+         W7wUh2eV2h2lO/3at0QvhCGIaY5qOL6fS1lp8qSv4YA8TR4KweYT2HL81AuoXUsA3iMb
+         tXZ0iEQMeSwCFEzt/AZfUonyLNBnnZ7fCpW9612kvWo3kNw27MT8GhuLTZuk4UAleGsj
+         5KIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=uKu5HNIb+12yUdXma5DMUb1RnDWXv0oEP0eeg/5jqYY=;
+        b=UZhcftzqPRPJV+x8eB1k8ScLis/R7CbmnAFaV2FlG6dguh9xK+whojmblyhVBtzHmF
+         Af5aBAC1f+D3LmiT3uRJf9Mzf6MCH/5w70vgOg61lFC6cbmzE6yh2E5PVAFtkm81r4Hn
+         E//adK6fojnktiPLPnPhZ0zMSfJ3LWh9QsUNs+HxA62ImBhAIaoi84jn5CmGE2xUDyay
+         OFMT0Z9lNg1RPdnVqwVgqkcX2orIhq+1R+AJysro/A2IbPFKjqpCWoeCsBNm/rCfyqEG
+         +SFSdcuStjtrqjn53t8DL9nUe7XQIcTb5WFPw0KZeMWV0c9u5hLZ52twJ8rEt7zS6lPj
+         EHvA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id cd9-v6si679567plb.231.2018.11.07.05.07.08;
+        Wed, 07 Nov 2018 05:07:23 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727372AbeKGWhQ (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:37:16 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57616 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726598AbeKGWhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:37:16 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2B366AE61;
+        Wed,  7 Nov 2018 13:06:56 +0000 (UTC)
+Date: Wed, 7 Nov 2018 14:06:55 +0100
+From: Michal Hocko <mhocko@kernel.org>
+To: Balbir Singh <bsingharora@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Oscar Salvador <OSalvador@suse.com>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm, memory_hotplug: check zone_movable in
+ has_unmovable_pages
+Message-ID: <20181107130655.GE27423@dhcp22.suse.cz>
+References: <20181106095524.14629-1-mhocko@kernel.org>
+ <20181106203518.GC9042@350D>
+ <20181107073548.GU27423@dhcp22.suse.cz>
+ <20181107125324.GD9042@350D>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107125324.GD9042@350D>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHb0uM4+Jban0XAA--.10563S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7CFyfKFyrCF4DtrWktFWkZwb_yoW8GryfpF
+	W8G3W8Ka1qgryxZrWIyw1qvrn5urnrW3yUGF15Kr40ya98GFyavrWS9Fy8uFWkWFZ8Gw10
+	grW0qas7Cr1DZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBEb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6ry8MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW0oVCq3wCYIxAIcVC2
+	z280aVCY1x0267AKxVW0oVCq3wCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij2
+	8IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr4
+	1lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07b0-BNUUUUU
+	=
+
+On Wed 07-11-18 23:53:24, Balbir Singh wrote:
+> On Wed, Nov 07, 2018 at 08:35:48AM +0100, Michal Hocko wrote:
+> > On Wed 07-11-18 07:35:18, Balbir Singh wrote:
+[...]
+> > > The check seems to be quite aggressive and in a loop that iterates
+> > > pages, but has nothing to do with the page, did you mean to make
+> > > the check
+> > > 
+> > > zone_idx(page_zone(page)) == ZONE_MOVABLE
+> > 
+> > Does it make any difference? Can we actually encounter a page from a
+> > different zone here?
+> > 
+> 
+> Just to avoid page state related issues, do we want to go ahead
+> with the migration if zone_idx(page_zone(page)) != ZONE_MOVABLE.
+
+Could you be more specific what kind of state related issues you have in
+mind?
+
+> > > it also skips all checks for pinned pages and other checks
+> > 
+> > Yes, this is intentional and the comment tries to explain why. I wish we
+> > could be add a more specific checks for movable pages - e.g. detect long
+> > term pins that would prevent migration - but we do not have any facility
+> > for that. Please note that the worst case of a false positive is a
+> > repeated migration failure and user has a way to break out of migration
+> > by a signal.
+> >
+> 
+> Basically isolate_pages() will fail as opposed to hotplug failing upfront.
+> The basic assertion this patch makes is that all ZONE_MOVABLE pages that
+> are not reserved are hotpluggable.
+
+Yes, that is correct.
+
+-- 
+Michal Hocko
+SUSE Labs

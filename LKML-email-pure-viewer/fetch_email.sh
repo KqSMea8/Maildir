@@ -2,7 +2,7 @@
 
 echo "start time: `date`"
 echo "" > .procmail/pmlog
-#getmail -a -d
+getmail -a -d
 
 for i in `ls -1 -d */ 2> /dev/null`
 do

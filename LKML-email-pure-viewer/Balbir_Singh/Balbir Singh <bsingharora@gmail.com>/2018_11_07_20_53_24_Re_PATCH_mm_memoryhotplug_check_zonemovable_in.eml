@@ -1,0 +1,232 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 13:15:00 -0000
+Received: from icoremail.net (unknown [209.85.214.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXvwqI4OJb4_xXAQ--.26403S3;
+	Wed, 07 Nov 2018 20:54:36 +0800 (CST)
+Received: from mail-pl1-f178.google.com (unknown [209.85.214.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnCkaF4OJbiXEXAA--.5306S3;
+	Wed, 07 Nov 2018 20:54:29 +0800 (CST)
+Received: by mail-pl1-f178.google.com with SMTP id q19-v6so4836157pll.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:54:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=ImsRjFHz81aAoZFUZoZ6p387TSHywmxyKWLF3SR1+so=;
+        b=eiv6Jr/wPWX6XTzVsAl99FEYBXUq9RBJ5hZ+LyZzkW20KJUXdnZqWSPaPtkp0qOPS9
+         7NdfYOn1iIs/M8bPudj+wKigCBrnDaXi62ASxxMqGuW/k7jysXegeyoxZRN7rsVLnury
+         RzUSwZuic5I690WBE5I1Gs0MATo7liNr2AS18QNfipO5YypmCfmBdKcde6+WdorS++mj
+         wp/RnbZ7ojSGlR/YxeoTSzeSJOTVIW7aWrSo7MauD0SGMV3EfwtoXz6zxEJjQ8BCCv7c
+         jpo4dUHLF33pZ296gv49iM47agN+dGFiVc6K/Fksl+RTc6tWuVkMHCLc6IzPOI1op3D/
+         bpAw==
+X-Gm-Message-State: AGRZ1gLzOE6CutzG4lahWyKB/cSceBdc0IcUbmzCzM5AyN8XA+004nNg
+	SIkdjo4UmG3VlcB1e7iZkqKeyHK4x5Y4FnlbSWvd0558APZ90GU=
+X-Received: by 2002:a17:902:9698:: with SMTP id n24-v6mr101663plp.9.1541595269444;
+        Wed, 07 Nov 2018 04:54:29 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5207426pjt;
+        Wed, 7 Nov 2018 04:54:28 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fteAFMluk7qxwTOMkAEPaSNo5YhRyB+0Rpkf8CCyT5ORyjszQfY93nqutuPhXyMraghtni
+X-Received: by 2002:a17:902:a717:: with SMTP id w23-v6mr125378plq.24.1541595268579;
+        Wed, 07 Nov 2018 04:54:28 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541595268; cv=none;
+        d=google.com; s=arc-20160816;
+        b=VyUAXETwkVUcjX/JvoNo0BA8epG3lnV3AJrVlFWd+urcfQ0SGVBwW5GGCc5wXh+lpb
+         WCUT+x7MiARnc9N93BmKQQLX2mm2DoByTeiuTbGWH7qKaHiJWARE8YZJnCwGxz/QwCjR
+         +2Ugk4ngt4XyC+B006n5jqxnFDs/ppWPr8iy9Mll9MtagLpD5TWrEvr3XEOukSoAiTdT
+         nYQDKerd1jObod5D3H49vwxMIGfbGGFUg04/Slwgij4pyNBpH9miUvIVTzRNFbCX9F95
+         FRnOwr4Gvy/ljguxwbnAWpLafPrVK7vrx3qbw5hnhnTx9OwuefgmyN8tsK/R1Jz7k30K
+         Isdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=ImsRjFHz81aAoZFUZoZ6p387TSHywmxyKWLF3SR1+so=;
+        b=KA+6YDsDF5aczka+Z6thsiQ9fBTe9XyEWuK6c18C5olQj6zvCg494ph2qIRoUvfQjX
+         ZFXyXTWOdOJCfO37jag6pWmQMsrZuawVR6rv8/vhuv2sqeD6qMp6CuXUrgJmdKTpEOkv
+         MDW++0JGQr01RRTkZHIIAMeCewOa51r6Lm2qnMvzg7x3LMwDlV2yPLMfeLE945Sjqpzo
+         Vix12Qfn20zbDzHoBQuK9lmpoRGXK3/qX3D/BhcWJbRA45lQNlnXEhMhZaRKhgBPlKbT
+         qrRw6+XexGQF5uF+kTZyxETMZStfEGoIFDRGd4CVMaFGpAMd17+O5NEHAbKM7GBZmAtb
+         p7uQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=bujUtv3U;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b94-v6si541960plb.396.2018.11.07.04.54.13;
+        Wed, 07 Nov 2018 04:54:28 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727427AbeKGWXx (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:23:53 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37520 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbeKGWXx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:23:53 -0500
+Received: by mail-pl1-f195.google.com with SMTP id p6-v6so7830143pll.4
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 04:53:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ImsRjFHz81aAoZFUZoZ6p387TSHywmxyKWLF3SR1+so=;
+        b=bujUtv3UeD8gnEwCToMiX5dQ2N1VzWHnWjZbQrkKUdC2mUnsRT3KEiuEgCdB/PsRUW
+         I+Z7riyz1x1YG+FHn8ZtwCuAlr5K4A8XA7Ve2SNQnVsP0sU3UWAFNS4kMq2ykMj49lVt
+         j8Mqv/6uUHrfV/Bs1P0VhxGxoWMorVWlHsY90KYbmlBkQmKoPI9p2R2UymL696zs7bUf
+         CwufcWK9hywVIoRUaJwXTKcUOIJfR/p+8qA/bUrKWuPPji/4z/yVhGojz76t8VHSzFu1
+         T+8x7TXhtVBeylGET+mvx6a+aJnDdSmII2svr1D9PVnbB9IE5V0t3I7JP2S7N88Kg8aB
+         Flvw==
+X-Received: by 2002:a17:902:14e:: with SMTP id 72-v6mr69191plb.299.1541595216338;
+        Wed, 07 Nov 2018 04:53:36 -0800 (PST)
+Received: from localhost (14-202-194-140.static.tpgi.com.au. [14.202.194.140])
+        by smtp.gmail.com with ESMTPSA id x13-v6sm2141586pge.13.2018.11.07.04.53.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 04:53:35 -0800 (PST)
+Date: Wed, 7 Nov 2018 23:53:24 +1100
+From: Balbir Singh <bsingharora@gmail.com>
+To: Michal Hocko <mhocko@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Oscar Salvador <OSalvador@suse.com>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm, memory_hotplug: check zone_movable in
+ has_unmovable_pages
+Message-ID: <20181107125324.GD9042@350D>
+References: <20181106095524.14629-1-mhocko@kernel.org>
+ <20181106203518.GC9042@350D>
+ <20181107073548.GU27423@dhcp22.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107073548.GU27423@dhcp22.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnCkaF4OJbiXEXAA--.5306S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxAr15AF18Xw48GrWDWF4xXrb_yoWrAryrpF
+	WrGF1jkr4UWry2yrsFy3WqyryS9r48GrWUGrnrK34Yy3ZxGryagryxKrW8uFZ5urZ5Ga1x
+	ZFW5t3s7AF4UZa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW5JwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Cr1j6rxdMxvI42IY
+	6I8E87Iv6xkF7I0E14v26F4UJVW0owCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUQ6pP
+	UUUUU
+
+On Wed, Nov 07, 2018 at 08:35:48AM +0100, Michal Hocko wrote:
+> On Wed 07-11-18 07:35:18, Balbir Singh wrote:
+> > On Tue, Nov 06, 2018 at 10:55:24AM +0100, Michal Hocko wrote:
+> > > From: Michal Hocko <mhocko@suse.com>
+> > > 
+> > > Page state checks are racy. Under a heavy memory workload (e.g. stress
+> > > -m 200 -t 2h) it is quite easy to hit a race window when the page is
+> > > allocated but its state is not fully populated yet. A debugging patch to
+> > > dump the struct page state shows
+> > > : [  476.575516] has_unmovable_pages: pfn:0x10dfec00, found:0x1, count:0x0
+> > > : [  476.582103] page:ffffea0437fb0000 count:1 mapcount:1 mapping:ffff880e05239841 index:0x7f26e5000 compound_mapcount: 1
+> > > : [  476.592645] flags: 0x5fffffc0090034(uptodate|lru|active|head|swapbacked)
+> > > 
+> > > Note that the state has been checked for both PageLRU and PageSwapBacked
+> > > already. Closing this race completely would require some sort of retry
+> > > logic. This can be tricky and error prone (think of potential endless
+> > > or long taking loops).
+> > > 
+> > > Workaround this problem for movable zones at least. Such a zone should
+> > > only contain movable pages. 15c30bc09085 ("mm, memory_hotplug: make
+> > > has_unmovable_pages more robust") has told us that this is not strictly
+> > > true though. Bootmem pages should be marked reserved though so we can
+> > > move the original check after the PageReserved check. Pages from other
+> > > zones are still prone to races but we even do not pretend that memory
+> > > hotremove works for those so pre-mature failure doesn't hurt that much.
+> > > 
+> > > Reported-and-tested-by: Baoquan He <bhe@redhat.com>
+> > > Acked-by: Baoquan He <bhe@redhat.com>
+> > > Fixes: "mm, memory_hotplug: make has_unmovable_pages more robust")
+> > > Signed-off-by: Michal Hocko <mhocko@suse.com>
+> > > ---
+> > >
+> > > Hi,
+> > > this has been reported [1] and we have tried multiple things to address
+> > > the issue. The only reliable way was to reintroduce the movable zone
+> > > check into has_unmovable_pages. This time it should be safe also for
+> > > the bug originally fixed by 15c30bc09085.
+> > > 
+> > > [1] http://lkml.kernel.org/r/20181101091055.GA15166@MiWiFi-R3L-srv
+> > >  mm/page_alloc.c | 8 ++++++++
+> > >  1 file changed, 8 insertions(+)
+> > > 
+> > > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > > index 863d46da6586..c6d900ee4982 100644
+> > > --- a/mm/page_alloc.c
+> > > +++ b/mm/page_alloc.c
+> > > @@ -7788,6 +7788,14 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
+> > >  		if (PageReserved(page))
+> > >  			goto unmovable;
+> > >  
+> > > +		/*
+> > > +		 * If the zone is movable and we have ruled out all reserved
+> > > +		 * pages then it should be reasonably safe to assume the rest
+> > > +		 * is movable.
+> > > +		 */
+> > > +		if (zone_idx(zone) == ZONE_MOVABLE)
+> > > +			continue;
+> > > +
+> > >  		/*
+> > 
+> > 
+> > There is a WARN_ON() in case of failure at the end of the routine,
+> > is that triggered when we hit the bug? If we're adding this patch,
+> > the WARN_ON needs to go as well.
+> 
+> No the warning should stay in case we encounter reserved pages in zone
+> movable.
+>
+
+Fair enough!
+ 
+> > The check seems to be quite aggressive and in a loop that iterates
+> > pages, but has nothing to do with the page, did you mean to make
+> > the check
+> > 
+> > zone_idx(page_zone(page)) == ZONE_MOVABLE
+> 
+> Does it make any difference? Can we actually encounter a page from a
+> different zone here?
+> 
+
+Just to avoid page state related issues, do we want to go ahead
+with the migration if zone_idx(page_zone(page)) != ZONE_MOVABLE.
+
+> > it also skips all checks for pinned pages and other checks
+> 
+> Yes, this is intentional and the comment tries to explain why. I wish we
+> could be add a more specific checks for movable pages - e.g. detect long
+> term pins that would prevent migration - but we do not have any facility
+> for that. Please note that the worst case of a false positive is a
+> repeated migration failure and user has a way to break out of migration
+> by a signal.
+>
+
+Basically isolate_pages() will fail as opposed to hotplug failing upfront.
+The basic assertion this patch makes is that all ZONE_MOVABLE pages that
+are not reserved are hotpluggable.
+
+Balbir Singh.

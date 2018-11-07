@@ -1,0 +1,239 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 13:15:03 -0000
+Received: from icoremail.net (unknown [209.85.215.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX+_i4uJb1gpYAQ--.26636S3;
+	Wed, 07 Nov 2018 21:04:34 +0800 (CST)
+Received: from mail-pg1-f174.google.com (unknown [209.85.215.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnzkqv4eJbYHYXAA--.5448S3;
+	Wed, 07 Nov 2018 20:59:27 +0800 (CST)
+Received: by mail-pg1-f174.google.com with SMTP id z10so5423088pgp.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:59:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version:subject
+         :from:in-reply-to:date:cc:content-transfer-encoding:message-id
+         :references:to:sender:precedence:list-id;
+        bh=nKud3UATwc76gkx5/Pz33XLfjBqEZFTNvU/O8gvjEOQ=;
+        b=hadC78CZ6PiY6IB3pVfqJ2tNyB+ZKT2zq7/wJiyaR30vg6WMlc71RbJpMeU8E8luXc
+         zc0BlKI+TyWHEI8rJiDRjGrYUMSaktA5RsibfYgp4CEkblQ9AXmCyyfW+/pjZCbgQc2h
+         vRiR6tp3yqsbxR1kXQJFlDqvhYTWOD7PTzV105j0WK+ls20JjtYrn+60veW0/uVqW8ex
+         N8LU2AnWgVe4PaC0NoqOAmfXXPwW5S2TjRDpcRDmlB7WeKtNk8zIJklW1Jscp8XvvYJQ
+         4GIb3AwYIiIRaP0wVxDVsy3EZk1WMM+A+cFkuFNccAYh+/lgTUmCJiCYVN/tV39rEo4q
+         EGSg==
+X-Gm-Message-State: AGRZ1gLJJwB4c8YPEvtL3dWrEcc09+Q/AE/fFFkVsI732jG+0xkx1dJE
+	fJAmq/iLiIowgr6zYRUns0qSv5oLVYzwwCqWuc91Aw+mUYzSq2j7QA==
+X-Received: by 2002:a62:5e83:: with SMTP id s125-v6mr110568pfb.232.1541595567557;
+        Wed, 07 Nov 2018 04:59:27 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5211895pjt;
+        Wed, 7 Nov 2018 04:59:26 -0800 (PST)
+X-Google-Smtp-Source: AJdET5egs8Fqa/V8ZEmOPHOfXnvBCHOy+viuVaa1JvExdstg54NCfQM6qAGmPqIazizh07OLQHzS
+X-Received: by 2002:a17:902:59dd:: with SMTP id d29-v6mr103157plj.193.1541595566583;
+        Wed, 07 Nov 2018 04:59:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541595566; cv=none;
+        d=google.com; s=arc-20160816;
+        b=EnVUg+4Niyc8MFhqUA6Xh6etW3zT4tDnDfK1bZrbOYHqV/tDKMNKyFfbRZJ1WAQsnu
+         FBgP6poXJBxfhGtAl6nIV9os89kOffK6K7SlgonQ0hzqwY9EsrAo8SYm8pTxODp/DKgQ
+         ZcrRT72dMLvJkOiqAXv4nAZ9H5rt8BWCZUqilxAJf29/DWpuB5PtJNRJCEempidnPJDa
+         KQHv05Q56unGZzmn8Q0x7wYq+Fe1sAihU1Z6ifOOLJ8hX8CljK/1xuRUIcz/tqxY7M4W
+         2i8op7boRR05/ZHT50c4dxtDjoSSNxlwrEty9jdd3FbpSJ1zPwOYZ2L/DcPd/d9oLtA4
+         wbUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:to:references:message-id
+         :content-transfer-encoding:cc:date:in-reply-to:from:subject
+         :mime-version:dkim-signature;
+        bh=nKud3UATwc76gkx5/Pz33XLfjBqEZFTNvU/O8gvjEOQ=;
+        b=Sx0EzWvLej0Uael4qj4tTmpbylrtN4wM1mCTQCtMV/nFp5S6qwLidXvL/y5u1o1Vgd
+         KMSprlp94/vJASsbc3XP1VQsaonJaQJsDk6EtL5J/R5x2YAVniFvP6zO5yvrR7fw2uUU
+         nfjHfacdz9YlBMdxQwYGKunvEwcaRuft4W97HoZPbfaAhhmepfOiOofxUAI0lVsLm2zi
+         zn91ve3oY5m28PSVNG+fUqyNWKoOoExmgvSkPUxH2ZjuaBdW2e2Ofu79nasNSUsHG6xp
+         lCA4H8OJcu1qgf4R9RLUxQM4sWxyyoVfaEJwip/a4qGNZlZ4Aaq0ZpGZ41Aub/8JFdGS
+         Yggg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@oracle.com header.s=corp-2018-07-02 header.b=zBm7EwhQ;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=oracle.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id y19-v6si576275pll.117.2018.11.07.04.59.10;
+        Wed, 07 Nov 2018 04:59:26 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727244AbeKGW3W (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:29:22 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:49502 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbeKGW3W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:29:22 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.22/8.16.0.22) with SMTP id wA7CmdVe167337;
+        Wed, 7 Nov 2018 12:58:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=nKud3UATwc76gkx5/Pz33XLfjBqEZFTNvU/O8gvjEOQ=;
+ b=zBm7EwhQY6oTeA+kQSlM6G+js3byfTyZ5Fao4YFUdk5u64yxeBGCSJ3l+s+n6v5WZyjc
+ oKoVVcy3SqS1XDY/SVdEQKMz6SZz0BNRuv/JFLcbEwOI2cpevIueuE1++k+QKLO/5ozP
+ jDuYPhvWEjxSVCxzmN3BzH+0GyOolVWnGAckPYdwPzz2tkGREWyYkjVqd26E9HsvI7xk
+ f2aEpkziwlb1UBzH2JaXM8P/slOYYnLW4Wo7BABjeUFb1ntdn0zXFiXMImPXT+4xRG0X
+ MLLK844fuj3IHvTr8t7xi9dt7zDO3LTRT5sH4Yw+wvDqbXQpPyonBOU5DPRnq9VzXoCn zg== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by userp2120.oracle.com with ESMTP id 2nh4aqu667-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 07 Nov 2018 12:58:57 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id wA7CwtVu019637
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 7 Nov 2018 12:58:56 GMT
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id wA7Cwtvp026430;
+        Wed, 7 Nov 2018 12:58:55 GMT
+Received: from lirans-mbp.ravello.local (/213.57.127.2)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 07 Nov 2018 04:58:55 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: KMSAN: kernel-infoleak in kvm_vcpu_write_guest_page
+From: Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <9d2e26fb-1d2a-248f-5451-ee95d8a6c017@redhat.com>
+Date: Wed, 7 Nov 2018 14:58:52 +0200
+Cc: Alexander Potapenko <glider@google.com>,
+        syzbot+ded1696f6b50b615b630@syzkaller.appspotmail.com,
+        kvm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        rkrcmar@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5A114BC0-96E7-41AF-A975-EC3B87A5A60D@oracle.com>
+References: <0000000000005de8da057a092ba2@google.com>
+ <CAG_fn=Wmc+YU8BMcY_RXxAvVTpAMez5QUFyQSH3UsRg4Y-ZwMQ@mail.gmail.com>
+ <9d2e26fb-1d2a-248f-5451-ee95d8a6c017@redhat.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9069 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1807170000 definitions=main-1811070117
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnzkqv4eJbYHYXAA--.5448S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxZry3Ww4DuFWUGFy5CF1fXrb_yoW5Cr1fpr
+	yvganIkr10qr97Aws7KF1kWr4kC39FqFnrJry0gr13AF1YgF93JFs5t3y5ZrW8JrWkuF1S
+	v3WYqF1kZws8KrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmSb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6ry8MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCYIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMxvI42IY6I8E87Iv67AKxVWxJr0_GcWlcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
+	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBI
+	daVFxhVjvjDU0xZFpf9x07b5L0nUUUUU=
+
+
+
+> On 7 Nov 2018, at 14:47, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>=20
+> On 07/11/2018 13:10, Alexander Potapenko wrote:
+>> This appears to be a real bug in KVM.
+>> Please see a simplified reproducer attached.
+>=20
+> Thanks, I agree it's a reael bug.  The basic issue is that the
+> kvm_state->size member is too small (1040) in the KVM_SET_NESTED_STATE
+> ioctl, aka 0x4080aebf.
+>=20
+> One way to fix it would be to just change kmalloc to kzalloc when
+> allocating cached_vmcs12 and cached_shadow_vmcs12, but really the =
+ioctl
+> is wrong and should be rejected.  And the case where a shadow VMCS has
+> to be loaded is even more wrong, and we have to fix it anyway, so I
+> don't really like the idea of papering over the bug in the allocation.
+>=20
+> I'll test this patch and submit it formally:
+>=20
+> diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+> index c645f777b425..c546f0b1f3e0 100644
+> --- a/arch/x86/kvm/vmx.c
+> +++ b/arch/x86/kvm/vmx.c
+> @@ -14888,10 +14888,13 @@ static int vmx_set_nested_state(struct
+> kvm_vcpu *vcpu,
+> 	if (ret)
+> 		return ret;
+>=20
+> -	/* Empty 'VMXON' state is permitted */
+> -	if (kvm_state->size < sizeof(kvm_state) + sizeof(*vmcs12))
+> +	/* Empty 'VMXON' state is permitted.  A partial VMCS12 is not.  =
+*/
+> +	if (kvm_state->size =3D=3D sizeof(kvm_state))
+> 		return 0;
+>=20
+> +	if (kvm_state->size < sizeof(kvm_state) + VMCS12_SIZE)
+> +		return -EINVAL;
+> +
+
+I don=E2=80=99t think that this test is sufficient to fully resolve =
+issue.
+What if malicious userspace supplies valid size but pages containing =
+nested_state->vmcs12 is unmapped?
+This will result in vmx_set_nested_state() still calling =
+set_current_vmptr() but failing on copy_from_user()
+which still leaks cached_vmcs12 on next VMPTRLD of guest.
+
+Therefore, I think that the correct patch should be to change =
+vmx_set_nested_state() to
+first gather all relevant information from userspace and validate it,
+and only then start applying it to KVM=E2=80=99s internal vCPU state.
+
+> 	if (kvm_state->vmx.vmcs_pa !=3D -1ull) {
+> 		if (kvm_state->vmx.vmcs_pa =3D=3D =
+kvm_state->vmx.vmxon_pa ||
+> 		    !page_address_valid(vcpu, kvm_state->vmx.vmcs_pa))
+> @@ -14917,6 +14920,7 @@ static int vmx_set_nested_state(struct =
+kvm_vcpu
+> *vcpu,
+> 	}
+>=20
+> 	vmcs12 =3D get_vmcs12(vcpu);
+> +	BUILD_BUG_ON(sizeof(*vmcs12) > VMCS12_SIZE);
+
+Why put this BUILD_BUG_ON() specifically here?
+There are many places which assumes cached_vmcs12 is of size =
+VMCS12_SIZE.
+(Such as nested_release_vmcs12() and handle_vmptrld()).
+
+> 	if (copy_from_user(vmcs12, user_kvm_nested_state->data, =
+sizeof(*vmcs12)))
+> 		return -EFAULT;
+>=20
+> @@ -14932,7 +14936,7 @@ static int vmx_set_nested_state(struct =
+kvm_vcpu
+> *vcpu,
+> 	if (nested_cpu_has_shadow_vmcs(vmcs12) &&
+> 	    vmcs12->vmcs_link_pointer !=3D -1ull) {
+> 		struct vmcs12 *shadow_vmcs12 =3D =
+get_shadow_vmcs12(vcpu);
+> -		if (kvm_state->size < sizeof(kvm_state) + 2 * =
+sizeof(*vmcs12))
+> +		if (kvm_state->size < sizeof(kvm_state) + 2 * =
+VMCS12_SIZE)
+> 			return -EINVAL;
+>=20
+> 		if (copy_from_user(shadow_vmcs12,
+>=20
+> Paolo
+
+-Liran
+

@@ -1,0 +1,160 @@
+Return-Path: <xen-devel-bounces@lists.xenproject.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 13:15:06 -0000
+Received: from icoremail.net (unknown [209.85.214.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f+1q5OJbLRRYAQ--.25992S3;
+	Wed, 07 Nov 2018 21:11:07 +0800 (CST)
+Received: from mail-pl1-f178.google.com (unknown [209.85.214.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDHrEhn5OJb4YIXAA--.5553S3;
+	Wed, 07 Nov 2018 21:11:04 +0800 (CST)
+Received: by mail-pl1-f178.google.com with SMTP id t6-v6so7852351plo.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:11:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:subject:precedence:list-id
+         :list-unsubscribe:list-post:list-help:list-subscribe:cc
+         :content-transfer-encoding:errors-to:sender;
+        bh=Y9Pvw0C6eN+bbUA56RoKGmGWjpC4oTjhe6bxu8Cs4N4=;
+        b=ahJiDe6TbqT5VzslF8uJlJ1koe9iqFHElFxxH7wXvae7BiHqLH3NLGu2lmT6jEWx93
+         pewYGsiQgecjxXPB8rFM9iSF8dmIvwfwPgzOtPA8CXl3V2O7gjiyKnUNnsPUMpk5gvo0
+         HUYrhJGgfGXw6w8R6xkiVfjFraBmiBH/hLAaBIGWRqJOusvoaO1cecr1bj6bpALP3TYT
+         f8uPPhV+C4mt/Dlv2tCdxoWX3Gor7t912vJjCyDy9w+unjLBCqmGHGVheo3nQrYD+OSm
+         u3gbdLwrincYp/Rngp7glakXdRRNWhOLH+AQtq/HYdypCRf2jafIAAXsM2UZMTEo48py
+         QMRQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of xen-devel-bounces@lists.xenproject.org designates 192.237.175.120 as permitted sender) smtp.mailfrom=xen-devel-bounces@lists.xenproject.org
+X-Gm-Message-State: AGRZ1gKF3a/Fuwkn0PZlo7jwxWFGxe0D7wivvIC8RQT1sLYmcOTnCv1l
+	JMCYI4fd3xqCcq+0mg2om7ULEIGEjcIbAmZYT/rwclkDMi8zk/utng==
+X-Received: by 2002:a17:902:a5cc:: with SMTP id t12-v6mr166832plq.298.1541596263715;
+        Wed, 07 Nov 2018 05:11:03 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5226026pjt;
+        Wed, 7 Nov 2018 05:11:02 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cDauWpgfBzUA7H54WN5Y4l//hNs5YSU/h9snAEiJOS8eRo/UIuSO1LH4C/WI5c24Hp6VSe
+X-Received: by 2002:a25:e0c6:: with SMTP id x189-v6mr153119ybg.520.1541596262676;
+        Wed, 07 Nov 2018 05:11:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541596262; cv=none;
+        d=google.com; s=arc-20160816;
+        b=A8W2X4FENa4nlZzwbcjmbmvnniqhUKY2zlgxGLZggaxUjMAvd7NuDpUW0sRVNIS8S3
+         oraF5prrnN9YzUk7jE1bNVd6k2GXuIIK1ed4StZsFea2vnPttX6OVVQLldws2+0uQGgU
+         LSHrn047218/CnLy5l6ZLKU2K7yIyAHxJtIYz4KJ94sHw2f+4w/KMCmuwhc8LX42852z
+         NrdVlrKzPpW87+x5guzmSzYtr6ct59x9Ww3uajKJWJkFIkXeiiSRQP329bQaE3GSv3xf
+         ZfCG1f+ymz/o7BXE/rp3kfSFB1ftjxrxGJDtd0KN3LTsiQpV0dGQQ4OPiLgRfQgdwQ6O
+         yXBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=sender:errors-to:content-transfer-encoding:cc:list-subscribe
+         :list-help:list-post:list-unsubscribe:list-id:precedence:subject
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:to;
+        bh=Y9Pvw0C6eN+bbUA56RoKGmGWjpC4oTjhe6bxu8Cs4N4=;
+        b=gMl7BIIP9do0nXXvVCrNstwPbljM4jMPeQqVAUeahZv50p2grJsISDTbpWtMm6HR/5
+         N2EUFY2Es5zJIurrrdFRLHgA3DRhcKviCeBWl5Bt7v7Iud5oQsiqjQklkbTldvmG7oU2
+         AKc9lGXbd7W5HdFAJ+8GpggyS3/3aVUcX/WynwCw40QHGcmfJqafVFT24SXXDrro0BsX
+         bVjhnxlVLqO6iQ9PsS1Ob7dFCkQ6H8FK+v62SQxkDK+PlpvdVb6IS+ugypZPsgDPj6om
+         fIn1TdJ2bDNA8BwCA7/KGWVePlLUMjdMwu4Ba60zgA6bpuIr4f2pY0M0EISzXgyQM8/y
+         Nxyg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of xen-devel-bounces@lists.xenproject.org designates 192.237.175.120 as permitted sender) smtp.mailfrom=xen-devel-bounces@lists.xenproject.org
+Received: from lists.xenproject.org (lists.xenproject.org. [192.237.175.120])
+        by mx.google.com with ESMTPS id 12-v6si308263ywu.125.2018.11.07.05.10.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 05:11:02 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of xen-devel-bounces@lists.xenproject.org designates 192.237.175.120 as permitted sender) client-ip=192.237.175.120;
+Received: from localhost ([127.0.0.1] helo=lists.xenproject.org)
+	by lists.xenproject.org with esmtp (Exim 4.89)
+	(envelope-from <xen-devel-bounces@lists.xenproject.org>)
+	id 1gKNZW-0001E4-0O; Wed, 07 Nov 2018 13:08:38 +0000
+Received: from all-amaz-eas1.inumbo.com ([34.197.232.57]
+ helo=us1-amaz-eas2.inumbo.com)
+ by lists.xenproject.org with esmtp (Exim 4.89) (envelope-from
+ <srs0=seal=ns=arm.com=julien.grall@srs-us1.protection.inumbo.net>)
+ id 1gKNZT-0001Dz-R1
+ for xen-devel@lists.xenproject.org; Wed, 07 Nov 2018 13:08:35 +0000
+X-Inumbo-ID: 3b4dd262-e28e-11e8-a2a4-12d6303a7972
+Received: from foss.arm.com (unknown [217.140.101.70])
+ by us1-amaz-eas2.inumbo.com (Halon) with ESMTP
+ id 3b4dd262-e28e-11e8-a2a4-12d6303a7972;
+ Wed, 07 Nov 2018 13:08:34 +0000 (UTC)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+ by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9CE180D;
+ Wed,  7 Nov 2018 05:08:33 -0800 (PST)
+Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
+ by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 86C603F5CF;
+ Wed,  7 Nov 2018 05:08:31 -0800 (PST)
+To: Andrew Cooper <andrew.cooper3@citrix.com>, sstabellini@kernel.org,
+ xen-devel@lists.xenproject.org
+References: <20181106191454.22143-1-julien.grall@arm.com>
+ <20181106191454.22143-9-julien.grall@arm.com>
+ <479bb855-0bb7-dd30-a7a4-692b189cc7c5@citrix.com>
+From: Julien Grall <julien.grall@arm.com>
+Message-ID: <409e3d54-2ae6-155c-a6bb-cd8f8d80cc26@arm.com>
+Date: Wed, 7 Nov 2018 13:08:30 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <479bb855-0bb7-dd30-a7a4-692b189cc7c5@citrix.com>
+Content-Language: en-US
+Subject: Re: [Xen-devel] [PATCH 8/8] xen: Swich parameter in
+ get_page_from_gfn to use typesafe gfn
+X-BeenThere: xen-devel@lists.xenproject.org
+X-Mailman-Version: 2.1.23
+Precedence: list
+List-Id: Xen developer discussion <xen-devel.lists.xenproject.org>
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Cc: Jun Nakajima <jun.nakajima@intel.com>, Kevin Tian <kevin.tian@intel.com>,
+ Wei Liu <wei.liu2@citrix.com>,
+ Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+ Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+ George Dunlap <George.Dunlap@eu.citrix.com>,
+ Ian Jackson <ian.jackson@eu.citrix.com>, Tim Deegan <tim@xen.org>,
+ Paul Durrant <paul.durrant@citrix.com>, Jan Beulich <jbeulich@suse.com>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Brian Woods <brian.woods@amd.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+X-CM-TRANSID: AQAAfwDHrEhn5OJb4YIXAA--.5553S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrKF4rtr4fur1rWFWUJr45GFg_yoW3Gwb_ur
+	48Jr1xKr1UJr4Iqa17t3ZrtrW7Ga45KF1xtry7Jan7ZF1Sgw1DJrs2gFyUCFyDGFyUAw17
+	GrykJw15KF12kjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbtkYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAa7VCE64xvF2IEb7
+	IF0Fy264xvF2IEb7IF0Fy264kE64k0F2IE7I0Y6sxI4wAS0I0E0xvYzxvE52x082IY62kv
+	0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z2
+	80aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4xvF2IEb7IF
+	0Fy264kE64k0F24l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c
+	8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6ry8MxkI7II2jI8vz4vEwIxG
+	rwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F
+	4UMxvI42IY6I8E87Iv67AKxVW0oVCq3wCYIxAIcVC2z280aVCY1x0267AKxVW0oVCq3wCF
+	04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4
+	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
+	MI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r
+	4j6FyUMVCEFcxC0VAYjxAxZFUvcSsGvfC2KfnxnUUI43ZEXa7IUni2-UUUUUU==
+
+SGkgQW5kcmV3LAoKT24gMDYvMTEvMjAxOCAyMDoxMSwgQW5kcmV3IENvb3BlciB3cm90ZToKPiBU
+aGlzIGxvb2tzIGxpa2UgaXQgd291bGQgYmUgY2xlYW5lciBieSBub3Qgc3BsaXR0aW5nIG1mbiBv
+dXQgaW50byBhCj4gc2VwYXJhdGUgdmFyaWFibGUuCj4gCj4gcGFnZSA9IG1mbl90b19wYWdlKF9t
+Zm4oZ2ZuX3goZ2ZuKSkpOwo+IAo+IHJldHVybiBtZm5fdmFsaWQobWZuKSAmJiBnZXRfcGFnZShw
+YWdlLCBkKSA/IHBhZ2UgOiBOVUxMOwo+IAo+IFRoZSBvbmx5IHJlYXNvbiB0aGlzIGxvb2tzIG9k
+ZCBpcyBiZWNhdXNlIG9mIHRoZSBtZm4gPT4gZ2ZuIGVxdWFsaXR5LAo+IGJ1dCB3ZSBhcmUganVz
+dCBiZXNpZGUgYSBjb21tZW50IGV4cGxhaW5pbmcgdGhhdCB3ZSBhcmUgbm9uLXRyYW5zbGF0ZWQu
+CgpJIGludHJvZHVjZWQgdGhlIG1mbiB2YXJpYWJsZSB0byBhdm9pZCBkdXBsaWNhdGluZyBfbWZu
+KGdmbl94KGdmbikpIGluIHRoZSB0d28gCnBsYWNlcyB3aGVyZSBnZm4gd2FzIHVzZWQuCgpJIGFt
+IGhhcHB5IHRvIGR1cGxpY2F0ZWQgaWYgeW91IHByZWZlci4KCkNoZWVycywKCi0tIApKdWxpZW4g
+R3JhbGwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fClhl
+bi1kZXZlbCBtYWlsaW5nIGxpc3QKWGVuLWRldmVsQGxpc3RzLnhlbnByb2plY3Qub3JnCmh0dHBz
+Oi8vbGlzdHMueGVucHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby94ZW4tZGV2ZWw=

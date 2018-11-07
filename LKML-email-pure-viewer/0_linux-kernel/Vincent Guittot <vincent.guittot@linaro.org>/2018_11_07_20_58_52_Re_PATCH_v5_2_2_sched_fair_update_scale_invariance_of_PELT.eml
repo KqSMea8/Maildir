@@ -1,0 +1,228 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 13:15:02 -0000
+Received: from icoremail.net (unknown [209.85.214.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX9+_4eJbEQNYAQ--.26194S3;
+	Wed, 07 Nov 2018 20:59:44 +0800 (CST)
+Received: from mail-pl1-f178.google.com (unknown [209.85.214.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDXvEi+4eJbjXYXAA--.6343S3;
+	Wed, 07 Nov 2018 20:59:42 +0800 (CST)
+Received: by mail-pl1-f178.google.com with SMTP id s5-v6so7823559plq.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:59:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=UxMt6D8za7895WYIt/xdvKqS6zXb0+QwCyXDw3fGgU4=;
+        b=ldFiMxN7hG1s1BbpStm9usw64FJdTFIKcLD9r4ZMuJccMA0K2xRFqBhSWknAiHzrJU
+         7CeUChLPVQ8gzjm98Agc7DjESGCYapE+bUko7RUtQM9oXJtDDsvMvTdvKAHHn+M6F1R5
+         0C/lcwhV9EdGp/Ye2b7thRcBjI/jg5ZGk/9Nu/cw5KDhIyDR6pxSgoLEv65FZ2+V59i4
+         1R+p3X9VImAK89kLQhcpEvNkf+HHkhgbZWT2eGHXIHmDEy/h9EOrSzMlkKaYlGZXeqM5
+         +KSMcBSyFuhEhfW7T2MbdGmoWiJ0llW5TJUMtaZ7tKwmVniQfnklqhc+9JOdPMi5Hp8N
+         bLyw==
+X-Gm-Message-State: AGRZ1gIPxyVyCXn+tx28xsLZuBTG34QzEDa0CsnbuwP9JUWcWf/lK07b
+	Sz+IeDdjyxpqKA++ha7+bM89QBaBXCFr4GCcRdaXjE2LWwy2ZfftMQ==
+X-Received: by 2002:a17:902:166:: with SMTP id 93-v6mr134178plb.68.1541595582535;
+        Wed, 07 Nov 2018 04:59:42 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5212114pjt;
+        Wed, 7 Nov 2018 04:59:41 -0800 (PST)
+X-Google-Smtp-Source: AJdET5euFPgZ5g8pgjxM5HAVZkNDbUiBMH5iUNYBZrNNprTmO8QWZbcF5wN7WpgpXcIXPuTrn2FL
+X-Received: by 2002:a17:902:b90c:: with SMTP id bf12-v6mr109525plb.1.1541595581575;
+        Wed, 07 Nov 2018 04:59:41 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541595581; cv=none;
+        d=google.com; s=arc-20160816;
+        b=r3HpUdbTAGbhkg6u47qd+8qihjSxy1lO36DBzQNA7AfvOzFcmNopPfoxBK4ORLKT9O
+         o5iRx+YQJlJijhOMcuAmx6Ov5Y2oJKAkI7awVfzMwwJZb90xnnv+2H2InQQ4e24qxycV
+         /AJuf2ro9twh92bCaSOFZAZ0IuU7mFvjHXY4Z+eQEIKgt8MbBjwuA20QT+91pILu14SU
+         UP9FiKPHlF/XNj4mKGQzOrz84Zj4JgbysmhVG37N7GbOkn2K6EGuZKbdJzJrZl/BaHOG
+         B1sidQxQtoBplnHsP9a9sHKtIaU3OSUBSbVjPtPUNVmCAKovVH1M9g0HtKWPYxQkr7fV
+         vxsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=UxMt6D8za7895WYIt/xdvKqS6zXb0+QwCyXDw3fGgU4=;
+        b=noxIJm2NjNewtXtN5Yd1gqQubGCBswKYMaGZOK3qvC4qg43brfw8oW2zUlp5kqL2mK
+         LgxRfID7VcUVIqf17VnnZjzI9uYaKcGqa1gD5hvbF+DG71lof02b5YK69pR5W9uLlkyG
+         m4R35NG8mJuPPSVUmpUIj/e/Oia3MrjvsIjqJy/PmdkLncpKOJBK1RaLTpfDInafgErs
+         rXjveNSt0LlNS0h0ias+WB1KxjEEreMmVELLUzO651fKXk7jG1iMpHDTxNK3lHIHhEjg
+         UDI7cxBPYgNtmlCjMXSiKkO+d71DVB3mY6vV8faJb8VpEyDzX5k2UnTMlM0FKwnSbNkK
+         93Og==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@linaro.org header.s=google header.b=VDP2dxic;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=linaro.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id x2-v6si603926pln.202.2018.11.07.04.59.26;
+        Wed, 07 Nov 2018 04:59:41 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726762AbeKGW3W (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:29:22 -0500
+Received: from mail-it1-f195.google.com ([209.85.166.195]:36698 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbeKGW3W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:29:22 -0500
+Received: by mail-it1-f195.google.com with SMTP id w7-v6so22542698itd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 04:59:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UxMt6D8za7895WYIt/xdvKqS6zXb0+QwCyXDw3fGgU4=;
+        b=VDP2dxic9+6NzvO9+MUgHs8ghLRNGtArGfr7qLBWRgqg9uHODxGrSdZH69jFoCnIuD
+         rGPWW7jsquKW34610SG3YcY72z2X7plYbM4wWEpx4joVPlPrLCz9ufmJb+qgWy/yECLE
+         BGEtX0kaONUWGFCEqU+StqztasJiZMxBTV7ck=
+X-Received: by 2002:a24:f246:: with SMTP id j67-v6mr96052ith.114.1541595544092;
+ Wed, 07 Nov 2018 04:59:04 -0800 (PST)
+MIME-Version: 1.0
+References: <1540570303-6097-1-git-send-email-vincent.guittot@linaro.org>
+ <1540570303-6097-3-git-send-email-vincent.guittot@linaro.org>
+ <b89b6805-45c0-8462-b75b-b7da4a35c022@arm.com> <CAKfTPtBapA3JvbgUyESzE=2ZXOGLRLmZh7oi8N=H9PHubCCuNg@mail.gmail.com>
+ <28af1313-8153-624d-1ae9-1554bb2db474@arm.com>
+In-Reply-To: <28af1313-8153-624d-1ae9-1554bb2db474@arm.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Wed, 7 Nov 2018 13:58:52 +0100
+Message-ID: <CAKfTPtDQJYG1a+JDO_okHcbk9mxn+k+b_dwP5hTbUH1e00ZszA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] sched/fair: update scale invariance of PELT
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Paul Turner <pjt@google.com>, Ben Segall <bsegall@google.com>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        pkondeti@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDXvEi+4eJbjXYXAA--.6343S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxAF45Jry7XFyfur1fAw13urg_yoWrur1UpF
+	42q3W5KFZ8WF12kw1Iq39rXr4093yxGr4avryrXry093s0kw12k3yxKr4j9Fy8GrZ2vF12
+	vryFgF97CF1jv3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW5JwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Cr1j6rxdMxvI42IY
+	6I8E87Iv6xkF7I0E14v26F4UJVW0owCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUmtC7
+	UUUUU
+
+On Wed, 7 Nov 2018 at 11:47, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>
+> On 11/5/18 10:10 AM, Vincent Guittot wrote:
+> > On Fri, 2 Nov 2018 at 16:36, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+> >>
+> >> On 10/26/18 6:11 PM, Vincent Guittot wrote:
+>
+> [...]
+>
+> >> Thinking about this new approach on a big.LITTLE platform:
+> >>
+> >> CPU Capacities big: 1024 LITTLE: 512, performance CPUfreq governor
+> >>
+> >> A 50% (runtime/period) task on a big CPU will become an always running
+> >> task on the little CPU. The utilization signal of the task and the
+> >> cfs_rq of the little CPU converges to 1024.
+> >>
+> >> With contrib scaling the utilization signal of the 50% task converges to
+> >> 512 on the little CPU, even it is always running on it, and so does the
+> >> one of the cfs_rq.
+> >>
+> >> Two 25% tasks on a big CPU will become two 50% tasks on a little CPU.
+> >> The utilization signal of the tasks converges to 512 and the one of the
+> >> cfs_rq of the little CPU converges to 1024.
+> >>
+> >> With contrib scaling the utilization signal of the 25% tasks converges
+> >> to 256 on the little CPU, even they run each 50% on it, and the one of
+> >> the cfs_rq converges to 512.
+> >>
+> >> So what do we consider system-wide invariance? I thought that e.g. a 25%
+> >> task should have a utilization value of 256 no matter on which CPU it is
+> >> running?
+> >>
+> >> In both cases, the little CPU is not going idle whereas the big CPU does.
+> >
+> > IMO, the key point here is that there is no idle time. As soon as
+> > there is no idle time, you don't know if a task has enough compute
+> > capacity so you can't make difference between the 50% running task or
+> > an always running task on the little core.
+>
+> Agreed. My '2 25% tasks on a 512 cpu' was a special example in the sense
+> that the tasks would stay invariant since they are not restricted by the
+> cpu capacity yet. '2 35% tasks' would also have 256 utilization each
+> with contrib scaling so that's not invariant either.
+>
+> Could we say that in the overutilized case with contrib scaling each of
+> the n tasks get cpu_cap/n utilization where with time scaling they get
+> 1024/n utilization? Even though there is no value in this information
+> because of the over-utilized state.
+>
+> > That's also interesting to noticed that the task will reach the always
+> > running state after more than 600ms on little core with utilization
+> > starting from 0.
+> >
+> > Then considering the system-wide invariance, the task are not really
+> > invariant. If we take a 50% running task that run 40ms in a period of
+> > 80ms, the max utilization of the task will be 721 on the big core and
+> > 512 on the little core.
+>
+> Agreed, the utilization of the task on the big CPU oscillates between
+> 721 and 321 so the average is still ~512.
+>
+> > Then, if you take a 39ms running task instead, the utilization on the
+> > big core will reach 709 but it will be 507 on little core. So your
+> > utilization depends on the current capacity.
+>
+> OK, but the average should be ~ 507 on big as well. There is idle time
+
+I don't know about the average, the utilization varies between 709-292
+on big core and between 507-486 in little core
+
+> now even on the little CPU. But yeah, with longer period value, there
+> are quite big amplitudes.
+>
+> > With the new proposal, the max utilization will be 709 on big and
+> > little cores for the 39ms running task. For the 40ms running task, the
+> > utilization will be 721 on big core. then if the task moves on the
+> > little, it will reach the value 721 after 80ms,  then 900 after more
+> > than 160ms and 1000 after 320ms
+>
+> We consider max values here? In this case, agreed. So this is a reminder
+
+Yes, we consider max value as it's what is mainly used especially with
+util_est feature
+
+> that even if the average utilization of a task compared to the CPU
+> capacity would mark the system as non-overutilized (39ms/80ms on a 512
+> CPU), the utilization of that task looks different because of the
+> oscillation which is pretty noticeable with long periods.
+>
+> The important bit for EAS is that it only uses utilization in the
+> non-overutilized case. Here, utilization signals should look the same
+> between the two approaches, not considering tasks with long periods like
+> the 39/80ms example above.
+> There are also some advantages for EAS with time scaling: (1) faster
+> overutilization detection when a big task runs on a little CPU, (2)
+> higher (initial) task utilization value when this task migrates from
+> little to big CPU.
+>
+> We should run our EAS task placement tests with your time scaling patches.

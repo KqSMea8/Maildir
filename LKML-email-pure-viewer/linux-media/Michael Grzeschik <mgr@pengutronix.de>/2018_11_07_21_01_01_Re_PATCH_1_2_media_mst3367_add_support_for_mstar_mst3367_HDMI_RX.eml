@@ -1,0 +1,211 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 13:15:02 -0000
+Received: from icoremail.net (unknown [209.85.210.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f+0v4uJblAVYAQ--.25970S3;
+	Wed, 07 Nov 2018 21:01:36 +0800 (CST)
+Received: from mail-pf1-f182.google.com (unknown [209.85.210.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBnTEgr4uJbAngXAA--.5576S3;
+	Wed, 07 Nov 2018 21:01:31 +0800 (CST)
+Received: by mail-pf1-f182.google.com with SMTP id v68-v6so4089058pfk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:01:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=PBdFHAgVBsQOeAHqbtM0sQRnnVuYrDsFjMRn+lC9QlE=;
+        b=X7ikip63kj+7+AI2pwj+6njogZnsvPlZTt9t6Zr34HQxJTvpdEb0nz3Ynql2X2WzQX
+         utVSoJ59qDDZtS441bmUnZlNAkf46wrkAqIx6rOshi4pVLRwI36juFt4mQksFsOX8/YX
+         WPN77paQr0+JqrwdiLY5+2nUVvDAnYRVaPNEzEfYlkTpgeKzXZu/Pn7/Z0VCQOVCDOnG
+         DiVRpgMpI4e+DuuGlCmyWIPJi1l1EoJfMJzSz+oGsDFfFQhw9THYEbY9md6bgVMxeGN5
+         VxbIv3IlkY/EUWqBdhekyaGwLmfX6glLz1RyX0rHnuCOtfTAqZEnEf+7KnxhBanfD7cR
+         Z/LQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLNvwFATtFz2r1ux6AC6exYHFNPRSqrpO941eneVegpBmLy7Piw
+	J98c++9SOx0hnA+J1zUlTv20b89voQB0RNyBEPJRQcnNYcJ32bSzzA==
+X-Received: by 2002:a65:66ce:: with SMTP id c14mr96287pgw.450.1541595690786;
+        Wed, 07 Nov 2018 05:01:30 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5214351pjt;
+        Wed, 7 Nov 2018 05:01:29 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cdW2B/4Hj1iGrEFBN0gd49UWm7xzZyPd+uGs47uRiRXTXFqn6SxZHqtQlAiqTiBcveEDll
+X-Received: by 2002:a17:902:7409:: with SMTP id g9-v6mr98280pll.341.1541595689774;
+        Wed, 07 Nov 2018 05:01:29 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541595689; cv=none;
+        d=google.com; s=arc-20160816;
+        b=NJV/H4wHVU0tUwmvnJCw7IWYKNZUy7X7t1dkiVZHoYRoeeBsQDy8NhIJx1yJmYqi89
+         HxoWZVmBwH3B1EjcSPnoFuoK7u592+odw5S8OkmKhY7kyyU9gLs6/NQ+56B6Nje4xkTo
+         zWfZfjW6rodp4N27J4pVzfmzu+52AH6eDgr3RHdLK/kjHMUQshwzJbDsd+6BQnwESPWx
+         AtBrMFHfbxc+/PCR0k9m4XwOYSUFlqu+ZsHulFGJxntd1hhoaJl4WG54Bryl9Od+zX85
+         Ws0Q9l6izpSsxXGw5caE/OxQOMtMrq1D62xU+P8xamc+kVvSLAndziACozRTdSux2w9m
+         hTGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=PBdFHAgVBsQOeAHqbtM0sQRnnVuYrDsFjMRn+lC9QlE=;
+        b=K7qYVQGkFxedNAoa7EW6KYrXn4t+XrOZzkyP2garynA3vKCdFOvzinQTxVkZUqtFc6
+         UaujcXDNMH7tdjn7KDhDndjRrgNW81gX9FvYV96b7Zmy/29CEHIYnbEZBOgDutRY4vM6
+         fvY+bh5KynV9NkwUxtImT2UPSvp19xpA7X8BBOweiB+twzhXGGakttPDfoNvAgWosTIQ
+         rYTwEK5lnHSMyWetS5gN/rlXENiTjV/sNr/5NKTATuYKWGeKp9Oreopj7lFAFGzP/6mG
+         F/hgh9g8Y6axqiBSnhiFcPInZLRhu02K8B97gt6aHT1y4KNbcAZcUtKpGAoFokiVGSoe
+         6tDg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id g6-v6si523390plt.212.2018.11.07.05.01.13;
+        Wed, 07 Nov 2018 05:01:29 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727244AbeKGWbW (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:31:22 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55687 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbeKGWbW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:31:22 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <mgr@pengutronix.de>)
+        id 1gKNSB-0006ct-Oy; Wed, 07 Nov 2018 14:01:03 +0100
+Received: from mgr by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mgr@pengutronix.de>)
+        id 1gKNS9-0004Pe-RG; Wed, 07 Nov 2018 14:01:01 +0100
+Date: Wed, 7 Nov 2018 14:01:01 +0100
+From: Michael Grzeschik <mgr@pengutronix.de>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stoth@kernellabs.com, laurent.pinchart@ideasonboard.com,
+        kernel@pengutronix.de, mchehab@kernel.org, davem@davemloft.net
+Subject: Re: [PATCH 1/2] media: mst3367: add support for mstar mst3367 HDMI RX
+Message-ID: <20181107130101.a2geyss47gpfd6nc@pengutronix.de>
+References: <20181019105439.27796-1-m.grzeschik@pengutronix.de>
+ <20181019105439.27796-2-m.grzeschik@pengutronix.de>
+ <1539946939.3688.58.camel@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="52puqmqenwrgio5w"
+Content-Disposition: inline
+In-Reply-To: <1539946939.3688.58.camel@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-IRC: #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 13:58:31 up 147 days, 22:07, 120 users,  load average: 1.12, 0.48,
+ 0.24
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: mgr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBnTEgr4uJbAngXAA--.5576S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7CF1fXw1rGr1kJF13try7KFg_yoW8Cr4fpr
+	48JF95Ary8Gr4xXrsxKw12vFZ5X3Z7Ww13Gr9Iq3WvvFn8CF1aqr1Ivw4j93WkWF48Ww4a
+	qrn8G347uF4Yvr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmEb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lnx0Ee4C267I2x7
+	xF54xIwI0E7I0Y6sxI4wAS0I0E0xvYzxvE52x082IY62kv0487M2AExVA0xI801c8C04v7
+	Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aV
+	AFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UMx02cVCv0xWlc7CjxVAKzI0EY4vE52x0
+	82I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vEIxC_Xr4lc2IjII80xcxEwVAKI48JMx
+	vI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
+	cIIF0xvEx4A2jsIE14v26F4UJVW0owCYIxAIcVC2z280aVCY1x0267AKxVWxJr0_GcWl42
+	xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC
+	6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
+	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3
+	JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IUeajg7UUUUU==
+
+
+--52puqmqenwrgio5w
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Oct 19, 2018 at 01:02:19PM +0200, Lucas Stach wrote:
+> Am Freitag, den 19.10.2018, 12:54 +0200 schrieb Michael Grzeschik:
+> > > From: Steven Toth <stoth@kernellabs.com>
+> >=20
+> > This patch is based on the work of Steven Toth. He reverse engineered
+> > the driver by tracing the windows driver.
+> >=20
+> > https://github.com/stoth68000/hdcapm/
+> >=20
+> > > Signed-off-by: Steven Toth <stoth@kernellabs.com>
+> > > Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+> > ---
+> > =A0MAINTAINERS=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=
+=A0=A0=A06 +
+> > =A0drivers/media/i2c/Kconfig=A0=A0=A0|=A0=A0=A010 +
+> > =A0drivers/media/i2c/Makefile=A0=A0|=A0=A0=A0=A01 +
+> > =A0drivers/media/i2c/mst3367.c | 1104 +++++++++++++++++++++++++++++++++=
+++
+> > =A0include/media/i2c/mst3367.h |=A0=A0=A029 +
+> > =A05 files changed, 1150 insertions(+)
+> > =A0create mode 100644 drivers/media/i2c/mst3367.c
+> > =A0create mode 100644 include/media/i2c/mst3367.h
+> >=20
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 556f902b3766..9c69b7f9b2f9 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -9787,6 +9787,12 @@ L:	linux-mtd@lists.infradead.org
+> > > =A0S:	Maintained
+> > > =A0F:	drivers/mtd/devices/docg3*
+> > =A0
+> > +MT9M032 APTINA SENSOR DRIVER
+> > > > +M:	Michael Grzeschik <m.grzeschik@pengutronix.de>
+> > > +S:	Maintained
+> > > +F:	drivers/media/i2c/mst3367.c
+> > > +F:	include/media/i2c/mst3367.h
+>=20
+> Das sollte nicht in diesem Patch landen, oder?
+
+Yes, I will remove it from the patch and put this into a separate one.
+
+Are there any more suggestions for this series?
+
+Regards,
+Michael
+
+--=20
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--52puqmqenwrgio5w
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEElXvEUs6VPX6mDPT8C+njFXoeLGQFAlvi4gUACgkQC+njFXoe
+LGQucBAAnq8+lGHBzZnkWjFR0QCeBd3mmFzpXmUAULkHQfss6vSBZ/wZmmUlVNNE
+zc/0hX1UPfL3BS7Qa9g4olSFdv0mjNqkKA/IAPZwdKhS1l5cVOaM9KBO7+BFlnDs
+0NSTvqzncWm7b1nlO64uLWnl40K5ZD+Bd8nF/UKUzIG2BDd5yGdxNAcE8WEkWlp4
+y0GnhmFp0B30eByAqraLK0xcXbKYpiObgM35vu91P0mzQuNfgqQ/BVjpC6QFOpwD
+jaD1xxm7WQVkhKx5/vvXk9ugrVj5P0zwO5pr75lnX/FgLurBSuQmVyJlaTjhUgwn
+0j+TJN9QAs3CEs5XqYo5USpfRZSVuA5yKQA/W9yY4VA04UG9/+qyp2iocSZe802+
+PWUZsu46ZFDOJyhgsN5iFwjC671CwJV/9NYdJ2is2PdZNWm+yePgaIVTxgakMawf
+bMYOgKM1HpTQBWa/Gtgdc/GJ7JBdoSpyN7i0EIZGBLva7dQHc8tMHOjv0SyN1yOE
+evvY7feWDVWtR6mHSscWV1it/0GAn+oPkKtQjCzO3onEd4e6Q1aGsPeVGxP3Tlkf
+C7skqS78WxtuGi7DajnBOoMfebLBRg6z2iwMfUGYJcqnvGGPVHJu+tt8XFwWJTQk
+SBzUeV5+dRXG4NH1H44c6uny5vzQ8FbgjtblO53Nq45xbjWjXgU=
+=uH3G
+-----END PGP SIGNATURE-----
+
+--52puqmqenwrgio5w--

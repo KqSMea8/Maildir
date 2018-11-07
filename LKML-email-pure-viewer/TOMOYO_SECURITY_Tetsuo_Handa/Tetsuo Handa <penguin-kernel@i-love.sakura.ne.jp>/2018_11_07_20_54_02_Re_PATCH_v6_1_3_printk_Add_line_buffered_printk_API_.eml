@@ -1,0 +1,183 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 13:15:00 -0000
+Received: from icoremail.net (unknown [209.85.210.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn33yf4OJbWf1XAQ--.26311S3;
+	Wed, 07 Nov 2018 20:54:56 +0800 (CST)
+Received: from mail-pf1-f177.google.com (unknown [209.85.210.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHa0ee4OJbCnIXAA--.12317S3;
+	Wed, 07 Nov 2018 20:54:54 +0800 (CST)
+Received: by mail-pf1-f177.google.com with SMTP id e22-v6so7666523pfn.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 04:54:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding
+         :sender:precedence:list-id;
+        bh=745nDsj+ECZjphrqdKWBhuonsmDSENY7HakDmmtNomA=;
+        b=BxlLGjoQA/l4dRXCc2sJSVhm0+s6RklZsQzfTRbtpIcXWFARnYOsZ3LSYYI4NmcDXX
+         O3terpzW5OxQEzpoIpzCdnxtQxxg3DVe3s2WNTx4tuDHec46DrlPL2OztnTWwi5MX8m8
+         XUeT+FkAsUh8zTLOkYU92gMHCVAjqCzH0SqdjjNNOypNpU/TgJuuexxMis++dpDGm9/Y
+         S3ubl6rVe17CMDXxZQGYkTuWpkY/6hDnDcM/VumlXMDmSkePTP2y+OxDLfLBQUkuSsms
+         iOlF5rl+cPwcr5OS2NBWEMuQ6AFBT4MsH2vzNUuhrKsJTmqY2XD+jYZuV0RBEKrBUmAP
+         yo0w==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJtt+9K66aW1NDOyV0TjZ5AyqxKYi5CC6BgPd8Sq3ilduj6QSyq
+	ljKc27a4Qeo9gREvf8xUfp6Cv8YBq9pQLTdKAzySXlbi8tdpQjc=
+X-Received: by 2002:a65:66ce:: with SMTP id c14mr76872pgw.450.1541595294284;
+        Wed, 07 Nov 2018 04:54:54 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5207817pjt;
+        Wed, 7 Nov 2018 04:54:53 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fefbZOutCxOoCj8kABEceyOCW4zN4ZD7i8yJMlgNY0Mso3dZh6KECsKFjhOJS6wkKtEYpT
+X-Received: by 2002:a17:902:4583:: with SMTP id n3-v6mr96102pld.53.1541595293339;
+        Wed, 07 Nov 2018 04:54:53 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541595293; cv=none;
+        d=google.com; s=arc-20160816;
+        b=iz7VwhKb3Ghbni7z/34mz2DqvyGRv9yb1Sueb8pfi5+U/veHQ4xWKFy+f8imeGAGmc
+         9Oegx6/aMoBYuBMrBXwPS6LkWOUA+MR4R5wkY3h2e4Fx3Q3tx/vdT6AFg+T1mCvx1jdh
+         XfK2TE0mFIffJ2Goc4ZTlGzn4u0pCzbWNBtp+WMaxPMwvSDQ5fPvlCv4LclzYRHfrol1
+         yEk5c7/Agrs+0TYJS/MiMuI2Cu9svJGL0KKXPmMQYKY9+z+ZwfHu8Z5/vOQHwanwXg+U
+         EbLNWa2gpb1MEnmSbG67d3uFbmYDvbC3UxmS0BADW6ohZjp9kfFGnuEmpDLDqV3JjLOv
+         Hmqg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject;
+        bh=745nDsj+ECZjphrqdKWBhuonsmDSENY7HakDmmtNomA=;
+        b=0YEVZgcIZ43LZO6/rKNly/dnY1q5520Zm7TDPwl84W7m4V3pkeV0FsP6s2nDM3z7va
+         gkPNmZBhM+6zc8mI3Mk7syfsqanBglRyxkOaiu+jBT58JnMaRQMoR2cB65rwt8MlAqio
+         8HQdqm3mIOwmxRUwhSzmYHJ0JGU1UhtxCyETrHbk2Jyx3Qdj8+Pju4PscuVhCx8/Wx2y
+         hipB8wCpaOSQEFqSqsdbQ4OA1w6syz5tveuIOtW1V9858CEp3R6/FrQPvmVuG0p7yrbc
+         +Y/ASYJPAl+xQ3dBw+PabQc+gZyT8L3lht8KLz6lwC8MoeyztrA0tLE6ERLFxarCfQIw
+         D+7g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id f39-v6si553953plb.149.2018.11.07.04.54.38;
+        Wed, 07 Nov 2018 04:54:53 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727710AbeKGWY1 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:24:27 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:63707 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbeKGWY1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:24:27 -0500
+Received: from fsav104.sakura.ne.jp (fsav104.sakura.ne.jp [27.133.134.231])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id wA7CsAZB020176;
+        Wed, 7 Nov 2018 21:54:10 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav104.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav104.sakura.ne.jp);
+ Wed, 07 Nov 2018 21:54:10 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav104.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank060157065137.bbtec.net [60.157.65.137])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id wA7Cs3Ke020044
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Wed, 7 Nov 2018 21:54:09 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH v6 1/3] printk: Add line-buffered printk() API.
+To: Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexander Potapenko <glider@google.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>
+References: <1541165517-3557-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20181106143502.GA32748@tigerII.localdomain>
+ <20181107102154.pobr7yrl5il76be6@pathway.suse.cz>
+From: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <c4b4d3df-53c6-e938-122e-c172ba8b2500@i-love.sakura.ne.jp>
+Date: Wed, 7 Nov 2018 21:54:02 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20181107102154.pobr7yrl5il76be6@pathway.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHa0ee4OJbCnIXAA--.12317S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7WrW5ZF4kXFy7Ar4fCw1fXrb_yoW8uryUpF
+	yakr4xCr4kJF1rJwnF9anIvF1Sv3Z5X3y3Gan5Xw1UAw1DtrykXr1Dtrs0va9xCry2yFZx
+	ZFsakFyfWw18Z3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUQqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik2
+	6cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6ryUMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7
+	IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E
+	87Iv67AKxVWxJr0_GcWlcIIF0xvEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdMxAIw28IcxkI7V
+	AKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xAIw20E
+	Y4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IUOhFxUUUUUU==
+
+On 2018/11/07 19:21, Petr Mladek wrote:
+> On Tue 2018-11-06 23:35:02, Sergey Senozhatsky wrote:
+>>> Since we want to remove "struct cont" eventually, we will try to remove
+>>> both "implicit printk() users who are expecting KERN_CONT behavior" and
+>>> "explicit pr_cont()/printk(KERN_CONT) users". Therefore, converting to
+>>> this API is recommended.
+>>
+>> - The printk-fallback sounds like a hint that the existing 'cont' handling
+>>   better stay in the kernel. I don't see how the existing 'cont' is
+>>   significantly worse than
+>> 		bpr_warn(NULL, ...)->printk() // no 'cont' support
+>>   I don't see why would we want to do it, sorry. I don't see "it takes 16
+>>   printk-buffers to make a thing go right" as a sure thing.
+> 
+> I see it the following way:
+> 
+>    + mixed cont lines are very rare but they happen
+> 
+>    + 16 buffers are more than 1 so it could only be better [*]
+> 
+>    + the printk_buffer() code is self-contained and does not
+>      complicate the logic of the classic printk() code [**]
+> 
+> 
+> [*] A missing put_printk_buffer() might cause that we would get
+>     out of buffers. But the same problem is with locks,
+>     disabled preemption, disabled interrupts, seq_buffer,
+>     alloc/free. Such problems happen but they are rare.
+> 
+>     Also I do not expect that the same buffer would be shared
+>     between many functions. Therefore it should be easy
+>     to use it correctly.
+
+Since we can allocate printk() buffer upon dup_task_struct()
+and free it upon free_task_struct(), we can have enough printk()
+buffers for task context. Also, since total number of exceptional
+contexts (e.g. interrupts, oops) is finite, we can have enough
+printk() buffers for exceptional contexts.
+
+Is it possible to identify all locations which should use their own
+printk() buffers (e.g. interrupt handlers, oops handlers) ? If yes,
+despite Linus's objection, automatically switching printk() buffers
+(like memalloc_nofs_save()/memalloc_nofs_restore() instead of
+https://lkml.kernel.org/r/201709021512.DJG00503.JHOSOFFMFtVLOQ@I-love.SAKURA.ne.jp )
+will be easiest and least error prone.

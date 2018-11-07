@@ -1,0 +1,242 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (61.164.42.155:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 07 Nov 2018 13:15:05 -0000
+Received: from icoremail.net (unknown [209.85.214.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f90e5OJblxJYAQ--.26580S3;
+	Wed, 07 Nov 2018 21:09:52 +0800 (CST)
+Received: from mail-pl1-f176.google.com (unknown [209.85.214.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnDEgc5OJbyYAXAA--.5423S3;
+	Wed, 07 Nov 2018 21:09:48 +0800 (CST)
+Received: by mail-pl1-f176.google.com with SMTP id s5-v6so7834667plq.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:09:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :in-reply-to:references:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=LO8LVs4QnK5pY1XerlzRfE3ckOfZjyQ5f4s67TviexY=;
+        b=tYprLpAsKDCWZVDIX5nJG3hy3K9HirRJ+5psYobwrDb8MUybioiGsshH0UHJgLojJ2
+         CEBzjb9GVR4aIJal4xtprQIIgeYMJWcJcAvLSp6hlPhEG7jrwaIpIpP0XWPHoj24fXrz
+         23HJ1OMQ6teOf5kcUtIQuUGkJ1ob3WugnXOwE9YBBKPgVRwaVvPptzcfb/LEKQ2ZjSua
+         BchABaQrLzBmdqrWWnjL6vV3thZwPtodrRuLVO7ywPy7ySAcMwx78oHoHxk1vFS3hb+c
+         U+LuuYxt0YVbIt19/0TGf2yFeysZ8kF9ZGjsm8EVAS67EY7jVPz/dyA8PFfrcgfGl7IQ
+         BAXw==
+X-Gm-Message-State: AGRZ1gJ8tuMi54EQlWsoXY0Y6dtHfQiVsPBchZ1GN2SZvuQe50TIqdFd
+	nDQrO9fdHzWLRT35xA9kFxfkMgt5WEEUjST5vsiulR+P5yc1uLP52g==
+X-Received: by 2002:a17:902:758f:: with SMTP id j15-v6mr177169pll.160.1541596188063;
+        Wed, 07 Nov 2018 05:09:48 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5224501pjt;
+        Wed, 7 Nov 2018 05:09:46 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ds1w0otR+l8NvIgoEhk4O0ZvYYDB7WbI7zXHyXsX4yNc8vSGsfjydQXW/Gxuj9/Ck5fsiS
+X-Received: by 2002:a17:902:bc44:: with SMTP id t4-v6mr157599plz.300.1541596186526;
+        Wed, 07 Nov 2018 05:09:46 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541596186; cv=none;
+        d=google.com; s=arc-20160816;
+        b=KQSZXVeDvQ9aBTDSs9v9Vy289jjaxYTPc4UsSQF2eEPwL0pplYhjO3qYBPzxj97l8s
+         ue/rjQ2Gi4dnDGJBxZMJfdSZ+7wazyrn6qNxYM+qRo167Nf2Xt52ahN3Ugd/9D/DHKky
+         GgfohESeK/5EoWm8fB6n9M3/oiQqMP01yL+XDLMWUucnJQ7QcU8vWvOsWL2bs0bbeViS
+         y38lpcu4QcUbCp+MWytFuC0AEgA7V4C3zNVc2H6aWsvj2JpXfXVgrZ9jgE+++waHS/BQ
+         8oGv3rdP5ZJcnJffhwyvnLMSLB8AdLEbieUihEQt7QPfkqyIcLS+6Go8LGSpKXSrohdC
+         mxxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :references:in-reply-to:mime-version:dkim-signature;
+        bh=LO8LVs4QnK5pY1XerlzRfE3ckOfZjyQ5f4s67TviexY=;
+        b=UihhouoxS+UUJT4Atk7CQ4Ri3vhsp7HaDIKoDhRV+ZinY7NsEIvSBhvUpkJyyWwBYZ
+         GdSFEaL9akJSzf9aLft4mhFNV3PwWzlla6HpIAPw5yDN8ztkVO6SJGThfrehnv/DBPbf
+         axfdJ0Rx7SOItbsbRxRDMZtKcjpmhyaan4kZiw9pUj+2YfVnNuyWzgvUfE+w8RB3AVNj
+         PPR+Jm10do/JfS5Qzpr8kwRnxLPunVbyMLQ02osmDj/jBmddPUwHmW8X23WRaj52aK3H
+         D4Ghxup3J/qyxOXroDuvmN5xFYNNwoHaEJxW8ovV85RasfyGudn7XZzC5jotAUOmJFxV
+         t4+w==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=temperror (no key for signature) header.i=@szeredi.hu header.s=google header.b=NZfS58F3;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id cd9-v6si679567plb.231.2018.11.07.05.09.30;
+        Wed, 07 Nov 2018 05:09:46 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726887AbeKGWjo (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 17:39:44 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42994 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbeKGWjn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 17:39:43 -0500
+Received: by mail-io1-f68.google.com with SMTP id h19-v6so11814315iog.9
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 05:09:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=LO8LVs4QnK5pY1XerlzRfE3ckOfZjyQ5f4s67TviexY=;
+        b=NZfS58F3QTwytkXCvAhKkgYWvQNA0cK2SZVKZ05CmNyBOvxA0v6apYv1Q/5uuLQXSP
+         rAbjS9ZQB5W6I9KNdIACUNW/AnMhxp8waIi0wuJkI6WpBiIMfOsOkJ3/MEt8+ljrXhkc
+         nRDk1tDWrzsyU980kdAFBxxfZGcuo2DVym5hY=
+X-Received: by 2002:a6b:15c5:: with SMTP id 188-v6mr121993iov.246.1541596163708;
+ Wed, 07 Nov 2018 05:09:23 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a6b:ac42:0:0:0:0:0 with HTTP; Wed, 7 Nov 2018 05:09:23 -0800 (PST)
+X-Originating-IP: [212.96.48.140]
+In-Reply-To: <154149663862.17764.9649077325029198892.stgit@localhost.localdomain>
+References: <154149586524.17764.5252013294539109287.stgit@localhost.localdomain>
+ <154149663862.17764.9649077325029198892.stgit@localhost.localdomain>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Wed, 7 Nov 2018 14:09:23 +0100
+Message-ID: <CAJfpegtTP5E1XcDZf=BKJjMrwpYYaHyu1SFC_8nR-Vn-L6aJTA@mail.gmail.com>
+Subject: Re: [PATCH 2/6] fuse: Optimize request_end() by not taking fiq->waitq.lock
+To: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnDEgc5OJbyYAXAA--.5423S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxWr4furW3Xr1kXryDGw1rJFb_yoWrGw1kpr
+	WrGFy5KFZxXr47Wry7Ka4Uuw4Sqw18Cw43GryxCFyUCrsxXrZa9rn5KFy5JrnayrZ3Xr43
+	Z3y0y393ury5Xw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU90b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwCjxxvEa2IrMxkF7I
+	0Ew4C26cxK6c8Ij28IcwCY02Avz4vEIxC_Xr4lc2IjII80xcxEwVAKI48JMxvI42IY6xII
+	jxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4
+	A2jsIE14v26rxl6s0DMxvI42IY6I8E87Iv6xkF7I0E14v26rxl6s0DMxAIw28IcxkI7VAK
+	I48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIda
+	VFxhVjvjDU0xZFpf9x07bBNVkUUUUU=
+
+On Tue, Nov 6, 2018 at 10:30 AM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+> We take global fiq->waitq.lock every time, when we are
+> in this function, but interrupted requests are just small
+> subset of all requests. This patch optimizes request_end()
+> and makes it to take the lock when it's really needed.
+>
+> queue_interrupt() needs small change for that. After req
+> is linked to interrupt list, we do smp_mb() and check
+> for FR_FINISHED again. In case of FR_FINISHED bit has
+> appeared, we remove req and leave the function:
+>
+> CPU 0                                                CPU 1
+> queue_interrupt()                                    request_end()
+>
+>   spin_lock(&fiq->waitq.lock)
+>
+>
+>   list_add_tail(&req->intr_entry, &fiq->interrupts)    test_and_set_bit(FR_FINISHED, &req->flags)
+>   smp_mb()                                             <memory barrier implied test_and_set_bit()>
+>   if (test_bit(FR_FINISHED, &req->flags))              if (!list_empty(&req->intr_entry))
+>
+>     list_del_init(&req->intr_entry)                      spin_lock(&fiq->waitq.lock)
+>                                                          list_del_init(&req->intr_entry)
+>
+> Check the change is visible in perf report:
+>
+> 1)Firstly mount fusexmp_fh:
+>   $fuse/example/.libs/fusexmp_fh mnt
+>
+> 2)Run test doing
+>     futimes(fd, tv1);
+>     futimes(fd, tv2);
+>   in many threads endlessly.
+>
+> 3)perf record -g (all the system load)
+>
+> Without the patch in request_end() we spend 62.58% of do_write() time:
+> (= 12.58 / 20.10 * 100%)
+>
+>    55,22% entry_SYSCALL_64
+>      20,10% do_writev
+>       ...
+>           18,08% fuse_dev_do_write
+>            12,58% request_end
+>             10,08% __wake_up_common_lock
+>             1,97% queued_spin_lock_slowpath
+>            1,31% fuse_copy_args
+>            1,04% fuse_copy_one
+>            0,85% queued_spin_lock_slowpath
+>
+> With the patch, the perf report becomes better, and only 58.16%
+> of do_write() time we spend in request_end():
+>
+>    54,15% entry_SYSCALL_64
+>      18,24% do_writev
+>       ...
+>           16,25% fuse_dev_do_write
+>            10,61% request_end
+>             10,25% __wake_up_common_lock
+>            1,34% fuse_copy_args
+>            1,06% fuse_copy_one
+>            0,88% queued_spin_lock_slowpath
+>
+> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> ---
+>  fs/fuse/dev.c |   30 ++++++++++++++++++++++--------
+>  1 file changed, 22 insertions(+), 8 deletions(-)
+>
+> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+> index 7705f75c77a3..391498e680ec 100644
+> --- a/fs/fuse/dev.c
+> +++ b/fs/fuse/dev.c
+> @@ -427,10 +427,16 @@ static void request_end(struct fuse_conn *fc, struct fuse_req *req)
+>
+>         if (test_and_set_bit(FR_FINISHED, &req->flags))
+>                 goto put_request;
+> -
+> -       spin_lock(&fiq->waitq.lock);
+> -       list_del_init(&req->intr_entry);
+> -       spin_unlock(&fiq->waitq.lock);
+> +       /*
+> +        * test_and_set_bit() implies smp_mb() between bit
+> +        * changing and below intr_entry check. Pairs with
+> +        * smp_mb() from queue_interrupt().
+> +        */
+> +       if (!list_empty(&req->intr_entry)) {
+> +               spin_lock(&fiq->waitq.lock);
+> +               list_del_init(&req->intr_entry);
+> +               spin_unlock(&fiq->waitq.lock);
+> +       }
+>         WARN_ON(test_bit(FR_PENDING, &req->flags));
+>         WARN_ON(test_bit(FR_SENT, &req->flags));
+>         if (test_bit(FR_BACKGROUND, &req->flags)) {
+> @@ -470,13 +476,21 @@ static void queue_interrupt(struct fuse_iqueue *fiq, struct fuse_req *req)
+>  {
+>         bool kill = false;
+>
+> -       spin_lock(&fiq->waitq.lock);
+> -       if (test_bit(FR_FINISHED, &req->flags)) {
+> -               spin_unlock(&fiq->waitq.lock);
+> +       if (test_bit(FR_FINISHED, &req->flags))
+
+The only case this test would make sense if this was a performance
+sensitive path, which it's not.
+
+>                 return;
+> -       }
+> +       spin_lock(&fiq->waitq.lock);
+>         if (list_empty(&req->intr_entry)) {
+>                 list_add_tail(&req->intr_entry, &fiq->interrupts);
+> +               /*
+> +                * Pairs with smp_mb() implied by test_and_set_bit()
+> +                * from request_end().
+> +                */
+> +               smp_mb();
+> +               if (test_bit(FR_FINISHED, &req->flags)) {
+> +                       list_del_init(&req->intr_entry);
+> +                       spin_unlock(&fiq->waitq.lock);
+> +                       return;
+> +               }
+>                 wake_up_locked(&fiq->waitq);
+>                 kill = true;
+>         }
+>
