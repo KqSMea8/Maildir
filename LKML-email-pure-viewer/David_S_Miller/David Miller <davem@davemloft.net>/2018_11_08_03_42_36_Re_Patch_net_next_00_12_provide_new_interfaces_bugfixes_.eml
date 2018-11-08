@@ -1,0 +1,120 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:55 -0000
+Received: from icoremail.net (unknown [209.85.214.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f0FJQONbLUlaAQ--.26826S3;
+	Thu, 08 Nov 2018 03:43:07 +0800 (CST)
+Received: from mail-pl1-f176.google.com (unknown [209.85.214.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnAT1FQONbjA4ZAA--.725S3;
+	Thu, 08 Nov 2018 03:43:01 +0800 (CST)
+Received: by mail-pl1-f176.google.com with SMTP id c13-v6so8306444plz.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:43:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:message-id:to:cc:subject:from:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=uRRV5TyJFB5nI4Q4NNWTbOwWYjgAmgOnJKsSrts9XgI=;
+        b=IEaVQOjrrsSrtmjDyPO4qykfRn0WdeoTbqK1qcLM3IqLMvA0zosq1a1Avi+oTe6shN
+         PeN77cV/yJ13FV0ARDZKFupZ/tZ9Wu7R2G57leOpnsg97ns3EWpDTMNn1JycTAhObkAL
+         /b7f9Ui1+47OhYA4jIeH1zCcCXMgfgyNEp1WbVw1nWNP8+betdNVYytPCWcpMUfy5PDY
+         swcVVwTmYvP3ZzHdxr8PnCIdRQmCdK72IgU6q0Sj5h1a1k48wDaFuHugPRsO8hh4BbK+
+         UCLMN24f61OYnf+jEiS9en/hgxVLTo9dwCDmlskya42J8ZAJTs3faJzFDkRujiAv0IKi
+         fXgw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gL/+JPqvViz9UWZDPGRvdODcVoTVYuV761fAkRXkbkhW1/YWbxT
+	XkYCcadBlW2QeMXVFXxB7PI0xNY1iMXMsdZr8gWcMsPsKD2gHD78ZA==
+X-Received: by 2002:a17:902:758f:: with SMTP id j15-v6mr1624551pll.160.1541619781441;
+        Wed, 07 Nov 2018 11:43:01 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5663198pjt;
+        Wed, 7 Nov 2018 11:43:00 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fKfruWZ4xQUZLtz0vkUFUNSq7dZ+neRQNgW2tk/m+b05bH76buQP229nXWNm94ABfzmtEb
+X-Received: by 2002:a63:2447:: with SMTP id k68-v6mr1300502pgk.156.1541619780581;
+        Wed, 07 Nov 2018 11:43:00 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541619780; cv=none;
+        d=google.com; s=arc-20160816;
+        b=VyZoJ8N641F1K3EQdZpX427sBZXks+bzree9ydY3o6NIh5Lck+Rq26i9tS9rloEvfn
+         RashanqtR3KvhmhOApzRfGz6A0HPu/kKBR+6AM/AoA9/Cw51Xwz90LduRWlqY+SH9Vze
+         AwjDoWb6mwiJIpnsVCD24HtKshiXWxlkHcWt55J3mD4eCUaCBIZCKKbQdhjmAhci4P5q
+         ejAvg4yPNV0dbitCj4eXKEr0s2UXzImaOOf0Qx2kzjI0Ge6cot0pzGXWPo7wviOWm7Fc
+         QUNOWZT0wJGCnQzEiQad7PrPfSl1h9QJbpNaS7igs77rmnX+xSAm5+iY3cRxFxL52JtX
+         a3xA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:from:subject:cc:to:message-id:date;
+        bh=uRRV5TyJFB5nI4Q4NNWTbOwWYjgAmgOnJKsSrts9XgI=;
+        b=AC+zlgG+fXPh/mjYkqTdMDYS6dJB82e42E/5HUVQlH7dnY41j4f83EKsURtvxdTOjs
+         3LL+1Fdnxol6xX+oc9zWSMOarlajgJub3jKmNyEaEDnxF5ouV+N7GOtgxTeSQ43Mo0n+
+         iNpt0jYBdtB5X8usNJWdYoxX8GIhWkf+ZTELTMPlaQ9jnO3UTa+9a5+quzyurbU3cidE
+         joHs6bE1izRXHrSXVelf+7xiV8aMm6PoSmuazOvqiVatshwBpg53n9fKIfTWol2GmebS
+         LIo9yJEbeUyHs93cuD/dh0QU84DFiXhczVgtZkR45tDwLSyqxIrq05jSt0/j1LDrx9Di
+         MtoA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id s4-v6si1665180pfb.188.2018.11.07.11.42.44;
+        Wed, 07 Nov 2018 11:43:00 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726982AbeKHFOZ (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:14:25 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:43182 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726517AbeKHFOZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:14:25 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::cf9])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id CA4F31454D5CB;
+        Wed,  7 Nov 2018 11:42:36 -0800 (PST)
+Date: Wed, 07 Nov 2018 11:42:36 -0800 (PST)
+Message-Id: <20181107.114236.1065801099852434682.davem@davemloft.net>
+To: tanhuazhong@huawei.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
+        linuxarm@huawei.com
+Subject: Re: [Patch net-next 00/12] provide new interfaces & bugfixes &
+ code optimization
+From: David Miller <davem@davemloft.net>
+In-Reply-To: <1541563578-28973-1-git-send-email-tanhuazhong@huawei.com>
+References: <1541563578-28973-1-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 07 Nov 2018 11:42:37 -0800 (PST)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnAT1FQONbjA4ZAA--.725S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUYm7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY0x0Ix7I2
+	Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjx
+	CrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw2
+	0EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07jmSoXUUUUU=
+
+From: Huazhong Tan <tanhuazhong@huawei.com>
+Date: Wed, 7 Nov 2018 12:06:06 +0800
+
+> This patchset provides some reset interfaces for RAS & RoCE, also
+> some bugfixes and optimization related to reset.
+
+Series applied, thank you.

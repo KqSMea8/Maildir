@@ -1,0 +1,147 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:38 -0000
+Received: from icoremail.net (unknown [209.85.214.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX9PoVONbccVaAQ--.27256S3;
+	Thu, 08 Nov 2018 05:11:05 +0800 (CST)
+Received: from mail-pl1-f172.google.com (unknown [209.85.214.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBnSETmVONb_1IZAA--.1226S3;
+	Thu, 08 Nov 2018 05:11:02 +0800 (CST)
+Received: by mail-pl1-f172.google.com with SMTP id s5-v6so8409445plq.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 13:11:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:sender:precedence:list-id;
+        bh=/354RJktfWO3Xv0X4oRS/MwprSK52O+Iss7VIFmrPCA=;
+        b=hnuExRnl8r5TSG/zpZxdV30t5hoGXqFEd76Mk5Fb4ntX/bL6nW1fO1P3/y/+k9wDBm
+         9lkSqFEuszDBfg6jUstWU2LUjgP9xyoSFl1uMYYs6dBlGgR65HKVT4YT1Bfkm+SoH7u5
+         fmOtPXyeeNe30PWBJJgkrpBt78HeaD2VfOj7r84OBku+G7eFOUXjYARpbUp2Dj4mXY0f
+         cu3GbHct8lqf1yWojLEFZN1Qnzqx32hc+XNQ9Sm4B6Gr+5j3W4PjoyltvRfa9zAD9FQz
+         XatgycAA4QNN9ni7dfpHyiRTkiDAQ/1OMa/yBs8EaUm3gu0Qaxux5yQBjMP71cusZcJ2
+         ntFw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKfTv6XuG6V+2FNvoOWBBB7P97BgjjIc+UUE7xioYw8vDMJNDtO
+	ukucwli+LJXoWcPr7iVusFIpqbeU/Qjsw83PdS6rUFGf7VwoYgupWg==
+X-Received: by 2002:a17:902:b789:: with SMTP id e9-v6mr1879232pls.338.1541625061834;
+        Wed, 07 Nov 2018 13:11:01 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp8306pjt;
+        Wed, 7 Nov 2018 13:11:00 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fNR1XimfzdIUdzopoZ2hysm11sagDht1/ai1UkKOh321yS3ndzxGremzlw8G4RDXOlLeWB
+X-Received: by 2002:a17:902:e81:: with SMTP id 1-v6mr1893597plx.48.1541625060649;
+        Wed, 07 Nov 2018 13:11:00 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541625060; cv=none;
+        d=google.com; s=arc-20160816;
+        b=GmiHoHiIzk2KzmLDZW6FDS9UTW/+hxwH21XEaHiuMsYOIevzhDdHiqMLIurnB36Ep6
+         cmPxHQglZHlp4W85o69evV4Ed9VCe+b7e76LMw/WAfN21cOxmwc9zvl6UMgTRzMLhvtV
+         eUt47X1MuoVnj9389Sekj6L2WdfJsuZJUvEvlyk27ehMdg+Rt89B4Y8KHqdTE8Zpzrvc
+         /Qx2nw9T9kiSGt12btqhhXR2TY0xCZ+saHSVb3oFG6nM/9wkNUSWBNbcCL68J9BqD1QP
+         idep9YPLyqkIYUkdiDEraj2avnNx6SwLcYQUFRlJWG9w/i5awHXBARaK4TzDalClPAKJ
+         yJug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version;
+        bh=/354RJktfWO3Xv0X4oRS/MwprSK52O+Iss7VIFmrPCA=;
+        b=xZ3z2SuFbcQoyXj6ji25VLqi9CbVlfQDKWV6v1/B0TzUZjOOw70qCpDNMea933Jgf7
+         8zVstroh+FS77/h0UgjAQtE8CfMksVZOaG6opCsz1iwBevi8MYszq7g6RLhJNZlmOOOQ
+         IS2C39o1RfbWOZWYwwc6bpbgXTbmqWAZ5jPENWa/9JdyqDInlqSnHeEzBv9D6en7rRSS
+         MSoEiPRNqXKTQyPoyRb+A2xchu/U/gY7X0BzXgO5NFf5QmvyTxA9Veod/B+o/S4EDJF9
+         xlYPSRK0A3hCroQeoT+EoLliGsl78BJV1U+vUAFSSLFdC0MU9zcJDkUvnRhTN4PYqk8b
+         SOjg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id m14si610983pgd.326.2018.11.07.13.10.09;
+        Wed, 07 Nov 2018 13:11:00 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727295AbeKHGmK (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:42:10 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43570 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbeKHGmK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:42:10 -0500
+Received: by mail-qk1-f193.google.com with SMTP id r71so22943455qkr.10
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 13:10:00 -0800 (PST)
+X-Received: by 2002:a0c:f50c:: with SMTP id j12mr1864644qvm.149.1541624998627;
+ Wed, 07 Nov 2018 13:09:58 -0800 (PST)
+MIME-Version: 1.0
+References: <CAK8P3a3JcztCSYBuu5ZJXaV83VNLv_1v3v-EKMR+tC1oOsQesw@mail.gmail.com>
+ <mhng-3c26b2fb-0c11-42f2-9026-1113b200a7b2@palmer-si-x1c4> <CAEn-LTpQ5uTte2bBrEs3uLKtsckkKPUOP+jHw5k-DFAwGCS3WA@mail.gmail.com>
+In-Reply-To: <CAEn-LTpQ5uTte2bBrEs3uLKtsckkKPUOP+jHw5k-DFAwGCS3WA@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Wed, 7 Nov 2018 22:09:39 +0100
+Message-ID: <CAK8P3a30Dmq3vp-+=jvVu8VMe+GKc9dU=+ZF0rzhFiUq2NuJ_w@mail.gmail.com>
+Subject: Re: [PATCH] riscv: add asm/unistd.h UAPI header
+To: David Abdurachmanov <david.abdurachmanov@gmail.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBnSETmVONb_1IZAA--.1226S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWrKrWfAr1xKw4fGrW7KF4UArb_yoW8JryxpF
+	Z5Cas3tF4UKa129FnYyr45tF18t34xCrZ8Xas8WrWkZ3WfXFyFvrWYkw4avF40krn3A34a
+	vFWFqa47Ga9xZa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6F4lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r1I6r4UMxvI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUg_M3
+	DUUUU
+
+On Wed, Nov 7, 2018 at 7:30 PM David Abdurachmanov
+<david.abdurachmanov@gmail.com> wrote:
+> On Wed, Nov 7, 2018 at 1:08 AM Palmer Dabbelt <palmer@sifive.com> wrote:
+> > On Mon, 05 Nov 2018 12:56:15 PST (-0800), Arnd Bergmann wrote:
+
+> > The target is still the next glibc release (Feb 1st) for a stable RV32I ABI.
+> > That's progressing well, with one last blocking issue related to some of our
+> > floating-point emulation routines before we can submit the port.  This should
+> > give us ample time to line up the ABIs correctly so everything works.
+> >
+> > So I think the correct answer here is to drop __ARCH_WANT_STAT64 from RISC-V.
+> >
+>
+> Then if you agree I could do and send v2:
+>
+> +#ifdef __LP64__
+> +#define __ARCH_WANT_NEW_STAT
+> +#endif /* __LP64__ */
+
+Looks good to me.
+
+> Cannot use CONFIG_64BIT as in user space nothing defines it.
+> Alternatively I could
+> check for __riscv_xlen == 64.
+>
+> I found _LP64 and __LP64__ being used in kernel, incl. include/uapi/linux/rseq.h
+
+I think older gcc versions were less consistent about those macros, which
+is why I introduced __BITS_PER_LONG a long time ago. We now support
+gcc-4.6 as the minimum, so using __LP64__ is reliable, and on RISC-V
+we obviously have a much newer compiler anyway.
+
+        Arnd

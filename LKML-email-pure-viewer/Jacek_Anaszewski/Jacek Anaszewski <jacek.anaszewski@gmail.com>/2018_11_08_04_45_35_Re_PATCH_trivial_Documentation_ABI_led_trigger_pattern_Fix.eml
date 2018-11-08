@@ -1,0 +1,168 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:31 -0000
+Received: from icoremail.net (unknown [209.85.214.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_6c4T+Nb_p5aAQ--.27389S3;
+	Thu, 08 Nov 2018 04:46:49 +0800 (CST)
+Received: from mail-pl1-f174.google.com (unknown [209.85.214.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB38Ew2T+NbNj4ZAA--.1833S3;
+	Thu, 08 Nov 2018 04:46:46 +0800 (CST)
+Received: by mail-pl1-f174.google.com with SMTP id q19-v6so5398357pll.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:46:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding:sender:precedence
+         :list-id;
+        bh=kxxp7oTVnelFCu69L9l5id2ZBhf0fxKkX46WlsbSjcE=;
+        b=MoRo8YOENJVbjmfr5XRPQX5hj3P2AwEfxNPv1wQuR5D5uY7xPRFr0tKwD+JZ2MHlma
+         s3g9LTwVrzDU9HhJkJ/Y1AERqLxCHLRNzWwOPIz1AaLyJ6P+OgTKDCQJbIk8RUaAthdZ
+         HYaWq06fR/t6xcpFx7WuG/SsJK+jO88CczQfclim9Y4zAbRD8u7K2a0epM8+kbOOKmpG
+         Ke70g0o9vsmNYoXjhR7HQz3aVgzlM5Y7p1AIVPhbwOmXMqDJc6pErOqa958BZP6DIa8Y
+         May/lsAxDhcJTCOpe4/4wcNd1mmlfT/saP0hNjTesgujD3nHbfMGwdKn/Ll9+n5J+MNT
+         kamQ==
+X-Gm-Message-State: AGRZ1gJIz0dcGmb4qMdQVsCmxea4ljy4ZHe07RAD5a9LCn/HYjDf4Ybc
+	WRLxDuWzVuB0qNu3R4Mf6Pp2p5YfSh19QTWVO6hYs/lLQnlim0QZ5Q==
+X-Received: by 2002:a17:902:758f:: with SMTP id j15-v6mr1854507pll.160.1541623606553;
+        Wed, 07 Nov 2018 12:46:46 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5724900pjt;
+        Wed, 7 Nov 2018 12:46:45 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fTJwmcUpT+duQxFss1+uQbIEE3nXKvE9D5QPyXrrOcGrxWdjT0AlvaWRI7a7FwczAyEd6W
+X-Received: by 2002:a63:f65:: with SMTP id 37mr1511519pgp.238.1541623605907;
+        Wed, 07 Nov 2018 12:46:45 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541623605; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ZSYD+3sp95Vm3XLrlpu6+SPlLxC0vdCXGUCeHKBvFlfw5zn7d2XZg4Go3yPB+p5DUk
+         YxG75BkIoktljNyHCEp5f+oRqPWNJt7pzFZID2xIciFj297JPyoxjhscKAkEkdHcfXbu
+         myD2ojXo9ZGL2ua/hVJsvdHrJZhTTy01/h8Mx19ZeVYHHLgW+oXuA3CF+zAlFfiK7PHI
+         OsZoMbJXfMUVclTR665iG1g8/C4e8jS7K+ermMwhf5FzLVhqQ7KgZ/tkRs39IzFWmIFz
+         z7eRmEAt9YUWphN7l9tL+K928z3aincCU83HftFl3TWcOLfeoSkp9XSL/+7b/3U4oCmA
+         CIfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:dkim-signature;
+        bh=kxxp7oTVnelFCu69L9l5id2ZBhf0fxKkX46WlsbSjcE=;
+        b=ZyS1CJ4aBRKZVr7uJDqNjEmQBCCUee5/v0hEBYN83zRwaHvaD+//XhpGlYzWmCYuGm
+         Lqs4O4IoGxlX+Vxh74Atn1dmjxtQX2qzkv1Bpb5XWdwSLp2WHhU6ghQOTDcqJ9iFqfp1
+         CYR6dCPi1HwigLdbEeW/WI3X+fdxp77trzmWIOeeTp+uSNSxbUJwmra9GHu424COnuto
+         aosLCDGVArtONJn8dYwiJjhmA0FdXVMpbNjCJNbfN/jc99orlwaOVu9GZ/QLfhecQIXQ
+         cRBV2XvxvlW95W34huPMH2IbCR3e5g4K/tgPZ2+lR24N/YjP2dhReOzGp6+n3LcKvdla
+         BIAA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b="Wbs+hn/8";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id h190-v6si1820768pfb.206.2018.11.07.12.46.30;
+        Wed, 07 Nov 2018 12:46:45 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727468AbeKHGRp (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:17:45 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34770 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbeKHGRo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:17:44 -0500
+Received: by mail-lf1-f68.google.com with SMTP id p6so5466422lfc.1;
+        Wed, 07 Nov 2018 12:45:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kxxp7oTVnelFCu69L9l5id2ZBhf0fxKkX46WlsbSjcE=;
+        b=Wbs+hn/8mfHH0pcweFiXH7mvkXLly2wcUVRRJgSWPL0V2MleuxuhaINqJ/A1Ntg/X2
+         ZK+8qcikfTLfHDicEtmAqAnA8VYfRI4wNiSGq1p1ckmPDdAc9eBziMpogcLHvEuGE4mp
+         yrhXWiSQoO7w7QWnvryaI52aM6AHbwhbpMa+WfjIIS3CW9CILZ4tuGCAPfTeQYw2D6Xx
+         bhayW3s6w9suu0MHCp9aKGzfaK5iG3iNRT1IJqADDhgIR2dWM3Hj5TWRkd2LiG8Tzmww
+         6PH6CKEhDj66g4AeQK+yGSAOV3T3vvhqVSh4hQW/Qbcqh+n/iVHne9H8oR2LhXHoc7qh
+         qRQQ==
+X-Received: by 2002:ac2:4354:: with SMTP id o20mr1046925lfl.129.1541623537927;
+        Wed, 07 Nov 2018 12:45:37 -0800 (PST)
+Received: from [192.168.1.18] (dnl153.neoplus.adsl.tpnet.pl. [83.24.93.153])
+        by smtp.gmail.com with ESMTPSA id b20sm286775lfj.61.2018.11.07.12.45.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 12:45:37 -0800 (PST)
+Subject: Re: [PATCH trivial] Documentation: ABI: led-trigger-pattern: Fix
+ typos
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Jiri Kosina <trivial@kernel.org>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20181107134524.13989-1-geert+renesas@glider.be>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <58507e6b-a1a9-c1ff-e469-11611ba7e8ab@gmail.com>
+Date: Wed, 7 Nov 2018 21:45:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20181107134524.13989-1-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB38Ew2T+NbNj4ZAA--.1833S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF18tr1fuw1UZr17Kr45ZFb_yoW8Gry5p3
+	ySg3Zrtan3GrWrW34jyryjqa4xGr1IyF48C395trW0934Yv3W0yrWjgrn5uFyDuFW3uay3
+	ur1Iy34rZayIkaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmab7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAKzI0EY4vE52x082I5MxkFs20E
+	Y4vE44CYbxCE4x80FwCY02Avz4vEIxC_AwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280
+	aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7V
+	AKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j
+	6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF7vcSsG
+	vfC2KfnxnUUI43ZEXa7IU5ga93UUUUU==
+
+Hi Geert,
+
+On 11/07/2018 02:45 PM, Geert Uytterhoeven wrote:
+>   - Spelling s/brigntess/brightness/,
+>   - Double "use".
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  Documentation/ABI/testing/sysfs-class-led-trigger-pattern | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-led-trigger-pattern b/Documentation/ABI/testing/sysfs-class-led-trigger-pattern
+> index fb3d1e03b8819bb9..1e5d172e064624d9 100644
+> --- a/Documentation/ABI/testing/sysfs-class-led-trigger-pattern
+> +++ b/Documentation/ABI/testing/sysfs-class-led-trigger-pattern
+> @@ -37,8 +37,8 @@ Description:
+>  		  0-|   /             \/             \/
+>  		    +---0----1----2----3----4----5----6------------> time (s)
+>  
+> -		2. To make the LED go instantly from one brigntess value to another,
+> -		we should use use zero-time lengths (the brightness must be same as
+> +		2. To make the LED go instantly from one brightness value to another,
+> +		we should use zero-time lengths (the brightness must be same as
+>  		the previous tuple's). So the format should be:
+>  		"brightness_1 duration_1 brightness_1 0 brightness_2 duration_2
+>  		brightness_2 0 ...". For example:
+> 
+
+Thanks for the patch.
+
+Applied to the fixes-for-4.20-rc2 branch of linux-leds.git.
+
+-- 
+Best regards,
+Jacek Anaszewski

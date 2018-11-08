@@ -1,0 +1,167 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:15 -0000
+Received: from icoremail.net (unknown [209.85.215.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH3oFSeNbknZaAQ--.26871S3;
+	Thu, 08 Nov 2018 04:20:23 +0800 (CST)
+Received: from mail-pg1-f178.google.com (unknown [209.85.215.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH3zoASeNbbCoZAA--.915S3;
+	Thu, 08 Nov 2018 04:20:16 +0800 (CST)
+Received: by mail-pg1-f178.google.com with SMTP id w7so7768739pgp.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:20:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :to:cc:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding:subject
+         :sender:precedence:list-id;
+        bh=e8GLscr0lbrtBxoHjh30rdpafOz5FO4KRUSl2yGt4II=;
+        b=DvONfRzO63i2Gf9BIctFrk2aFKDlFVhl+7B9pNzlAbQFRBH3qdu0dpspMbgmlc3xHm
+         WGy+/nBbi4PSGSzXxXp8xVrVPbWSHT9Na+uGtSYOe7ES705X7qnfMOZBD4W9nIwiRncK
+         KEtu1WbmK1U7FUuDEFOeOzjPSTV4DTDEBW6vNfc1/CO8YTaRt5B3HNlURMzLeKTBoahk
+         mIxLTf9yK6Cwxqq0mJ4qudpp+8xZSCxd00T/YBu5maxy7/jknLv0JzHovOebChD0rqKX
+         jocw1cg4F0nYl5JX6iGTmkMTXNNB2zJpJOteVlNQ86QC6/ovjuKEuTG3MimRQ9QSAG8+
+         M60Q==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gL2Ug8AxbpSVynt0H0yCRfyAVDbWSzh1eu4n3gUU0/q4kBb6pfJ
+	YV7KZwvWnLznNK0x8gIK2DOS+jQ1IrrrE9XwH/zJhe99MhILXBMRPA==
+X-Received: by 2002:a62:3687:: with SMTP id d129-v6mr1736438pfa.56.1541622015813;
+        Wed, 07 Nov 2018 12:20:15 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5700774pjt;
+        Wed, 7 Nov 2018 12:20:15 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dA+lGYg90Rbe2MGN9L50ox9foUXdn0J0WvDo8r7PzQr0V/o5YquyURczz9yLXbFHv3DaP7
+X-Received: by 2002:a63:990a:: with SMTP id d10mr1430882pge.279.1541622015049;
+        Wed, 07 Nov 2018 12:20:15 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541622015; cv=none;
+        d=google.com; s=arc-20160816;
+        b=L5eHCZVGm09EoOXrTIbbCfCs/Te8G4AHmIc1fvQLqH/V1tu0xbdxIDUGAroPrjXLnj
+         zCby67cefvfmdCrJ7tbQ7/lk11YW0fOwvT8fjgVfGH4VJ4lVjWfuJHEIAMgKPVH0j2aX
+         QNuoEjKiIr4kdqt+pIL1NDfx/0CXPHGnUOLVUhoD6r6BlAlXiV8H4BkEzttU5WzI+M0e
+         vtMWRFMMDpiQ6QgnLUeJ6rXfZ4j0XvOEtmS28kiUOA/5R0JUKs1+NgQa8m/pQ9phPXnV
+         7TSDxyxVtxRBcZTaYXx9RdNHpxTv4vrS/rbokxpnJGq5Dehsw5eUMnWxc5UZE+razqzV
+         4xWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:subject:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to;
+        bh=e8GLscr0lbrtBxoHjh30rdpafOz5FO4KRUSl2yGt4II=;
+        b=d591hjBPi/W51atOLsuCCdAOdbHu3GJkTdH2etNor7hPcTyqochf3XBq42JKcXEsCq
+         16r2LuN9Xv/WV4a6s/8hvMNSNEa6tq00oncbnB4z9OqJLheKJg7wSH/lW3wYmk1LFLMc
+         yzy5WlupaHEfWa4fAE/99RpmNEnqog4IXjAikhotCYgKN1v9po0VtBtjXFsTTsf+bbX5
+         QgwnYi5f/TkvsNHok5f41Gxm9Nr6iZgBvJ0z+0MIynL8ChZDgLf1DpxeASszOHVHorGB
+         OCryWk4NzdmrLRBZuKfh6748INbbldVvSRMPTww8Fge/20q86h6kwnyi/0qpjgRs3//t
+         QbSA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 62-v6si1625246pla.217.2018.11.07.12.19.35;
+        Wed, 07 Nov 2018 12:20:15 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727031AbeKHFvY (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:51:24 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:49534 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726524AbeKHFvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:51:23 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1gKUI9-0005jQ-Sq; Wed, 07 Nov 2018 13:19:10 -0700
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>
+References: <20181107173859.24096-1-logang@deltatee.com>
+ <20181107173859.24096-3-logang@deltatee.com>
+ <20181107121207.62cb37cf58484b7cc80a8fd8@linux-foundation.org>
+From: Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <724be9bb-59b6-33f3-7b59-3ca644d59bf7@deltatee.com>
+Date: Wed, 7 Nov 2018 13:19:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20181107121207.62cb37cf58484b7cc80a8fd8@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: osalvador@suse.de, vbabka@suse.cz, mhocko@suse.com, arnd@arndb.de, hch@lst.de, aou@eecs.berkeley.edu, palmer@sifive.com, sbates@raithlin.com, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.1 (2015-04-28) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,MYRULES_FREE autolearn=ham autolearn_force=no version=3.4.1
+Subject: Re: [PATCH 2/2] mm/sparse: add common helper to mark all memblocks
+ present
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH3zoASeNbbCoZAA--.915S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Wr45Ww1kKr13WF1kAF45trb_yoWDCrg_Zw
+	4UKFWxK3ZrAF43Kr4ak345Aa93trWkA3WxWFnrZF9xZw45XayvgFZ2gwn7XrnIqF1DArnx
+	CrZ8XF1Utw4avjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUUxYxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqkYjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY02Av
+	z4vEIxC_AwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bQ
+	wIgUUUUU=
+
+
+
+On 2018-11-07 1:12 p.m., Andrew Morton wrote:
+>> +void __init memblocks_present(void)
+>> +{
+>> +	struct memblock_region *reg;
+>> +
+>> +	for_each_memblock(memory, reg) {
+>> +		memory_present(memblock_get_region_node(reg),
+>> +			       memblock_region_memory_base_pfn(reg),
+>> +			       memblock_region_memory_end_pfn(reg));
+>> +	}
+>> +}
+>> +
+> 
+> I don't like the name much.  To me, memblocks_present means "are
+> memblocks present" whereas this actually means "memblocks are present".
+> But whatever.  A little covering comment which describes what this
+> does and why it does it would be nice.
+
+The same argument can be made about the existing memory_present()
+function and I think it's worth keeping the naming consistent. I'll add
+a comment and resend shortly.
+
+> Acked-by: Andrew Morton <akpm@linux-foundation.org>
+> 
+> I can grab both patches and shall sneak them into 4.20-rcX, but feel
+> free to merge them into some git tree if you'd prefer.  If I see them
+> turn up in linux-next I shall drop my copy.
+
+Sounds good, thanks.
+
+Logan

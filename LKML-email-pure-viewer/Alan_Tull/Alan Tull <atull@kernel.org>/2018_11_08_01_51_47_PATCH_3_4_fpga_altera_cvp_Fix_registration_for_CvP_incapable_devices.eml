@@ -1,0 +1,161 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:25 -0000
+Received: from icoremail.net (unknown [209.85.210.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHHyaOJuNbubxZAQ--.27317S3;
+	Thu, 08 Nov 2018 01:53:19 +0800 (CST)
+Received: from mail-pf1-f175.google.com (unknown [209.85.210.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXekaKJuNbyLYYAA--.19S3;
+	Thu, 08 Nov 2018 01:53:14 +0800 (CST)
+Received: by mail-pf1-f175.google.com with SMTP id v9-v6so5711839pff.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:53:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:in-reply-to:references:sender:precedence:list-id;
+        bh=LDgGwhRUQFW8FRa1NYI5DY38t28NmW2T6jKOAye/KBY=;
+        b=RTYF+OkJwySaBdhaUIRmhPs3PiVwlgSI0bJdQl79zOq99Uco/dJdEqjE+K4fxTi504
+         yvPTZ3zCp9Bp9rTL1iVspe9uHvg8rTI4w9oR8R6Jk3v6R//kwyYTGP4ZTokBYNGKXYxH
+         5gzfM+qquQlrCcipXlDARkJwlhfjtq0WR6U1aj7hYdFGGyYaagGsuEooKxjobMaBtm8f
+         kWpDSbiy4ROK69RYWDG5wwwEpwWh+SanQUzGNhTDozY19Ez4YEK2IRDfPAGvGwTEF1pp
+         oLxLxqYN8MAW8QWUX/McSbWA4W/6CXsmPIw25tuTe8q04DisI3wO1G3t1tELBqdyggQh
+         DArQ==
+X-Gm-Message-State: AGRZ1gJQhRCE9oGSIf2yXeWR4NrlkIpXoDEDQ9Nj7Ak1faYMDAIGaRLc
+	Mcq6F01s++uybnoF80HMdU8cCOAc9Ftc/zNTSnJluXdlVqk5S915JA==
+X-Received: by 2002:a62:42dc:: with SMTP id h89-v6mr1216337pfd.0.1541613193967;
+        Wed, 07 Nov 2018 09:53:13 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5544926pjt;
+        Wed, 7 Nov 2018 09:53:13 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eFzNrUtmQ9CKj2PLueluAbm9lI9NelzpjtNZMWQEmaj8kqAsOIRQTZLplJ1fyqejXH4iEb
+X-Received: by 2002:a17:902:82ca:: with SMTP id u10-v6mr1134178plz.146.1541613193295;
+        Wed, 07 Nov 2018 09:53:13 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541613193; cv=none;
+        d=google.com; s=arc-20160816;
+        b=xR0EnPyNvrDCPPeRtsoNzmfu2JwLTvICulSYJk32eB/iu/z30Kb5euULK5dTKc520d
+         vJp9D7vxkf2y8P1U8GRiRCf4XSppyI5+W45hM7LY5eOslw9oaxGc2sbqzxLFak0nTyCp
+         7FqDttYp5izjB2Stgk7FpcnrvYpURVqU5wkFA1HELZVpzXRmuE3TCOSPdpFD7FfFZ1Sk
+         FijHTk2wj5xHlGAWylJQUmX1O9PwrB/6fQ4+emXGXGO5EpiNrVyJW5HFU8fqyGpZ0MMl
+         CeXr99DdXoAnnaBwK50/4uYrFYD6RMTcO3t9iS51m62tevzqHL5+B6EjgmBi6ChmZo2v
+         guwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from:dkim-signature;
+        bh=LDgGwhRUQFW8FRa1NYI5DY38t28NmW2T6jKOAye/KBY=;
+        b=deursB9IBRn7VHAibt8gyU0MWDs9WR76DFF3TwAKbG3GYJig+MTlM4xGQk5j6Q9qb3
+         oXKqJhywV07IcocDW40VyphOtdgjECN5UXAEv5D+9LJlc2igHGb2hOGs6wgI/Ie8H7aU
+         +1NJi5dbRjJzXVq0kjBAFKPm7ittBgk8tdp41Cqf8iqiloPQ4dV6AlAuVBb2ffRcszBD
+         1iwRrzGlB2whJJiiI5wUcrn674aWGBeJOSmnBalfKt3qDJnW/RyND8QlVfEg/rHnNNdp
+         iQGFTF0QY8UGPVCpDbhIp4ywwQg3y52WqvDCviP0TTuHN6aLsJVfsOR9AfszIxr8SnVa
+         6NFw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kernel.org header.s=default header.b=esSeKFV1;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id q201-v6si1594775pfq.14.2018.11.07.09.52.57;
+        Wed, 07 Nov 2018 09:53:13 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731629AbeKHDX2 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:23:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728131AbeKHDX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:23:27 -0500
+Received: from localhost.localdomain (rrcs-67-79-197-43.sw.biz.rr.com [67.79.197.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93ED520896;
+        Wed,  7 Nov 2018 17:51:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1541613120;
+        bh=PIIv7+iNiZqHWjN2mucAtpn8NZHG20kRZUawXYtAuNY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=esSeKFV1BH1uP2+WexUC5kql/5wWECnfOvh1xsr8S5QwgcjtLNZm9Y6c0gALDh97p
+         Oq/1rvsK6iddbVyuo9kebsm2KU6+GfA6o2mJLi7ySiEeplBKSEtRZvjOB7iyP2INMl
+         OuNcoP/QR6JpHD3/lF5Zauo2LZ8x2zvaO30eAsgM=
+From: Alan Tull <atull@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Moritz Fischer <mdf@kernel.org>, Alan Tull <atull@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org,
+        Andreas Puhm <puhm@oregano.at>,
+        Anatolij Gustschin <agust@denx.de>
+Subject: [PATCH 3/4] fpga: altera-cvp: Fix registration for CvP incapable devices
+Date: Wed,  7 Nov 2018 11:51:47 -0600
+Message-Id: <1541613108-29660-4-git-send-email-atull@kernel.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1541613108-29660-1-git-send-email-atull@kernel.org>
+References: <1541613108-29660-1-git-send-email-atull@kernel.org>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXekaKJuNbyLYYAA--.19S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7AF1xGF1ktr1kKw4fGFyrCrg_yoW8JFWUpF
+	srJ3W5C345JF42ga1qkrW5AF9Y9wsrCrW29rZruwn5Zw15JrWv9Fy8Jw1DZas8Wr95KFsr
+	Z398t3WYkrWUJw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPmb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
+	kI7VAKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80
+	FwCY02Avz4vEIxC_GwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr
+	1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4U
+	JwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcV
+	AKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
+	CIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZE
+	Xa7IU5OjjDUUUUU==
+
+From: Andreas Puhm <puhm@oregano.at>
+
+The probe function needs to verify the CvP enable bit in order to
+properly determine if FPGA Manager functionality can be safely
+enabled.
+
+Fixes: 34d1dc17ce97 ("fpga manager: Add Altera CvP driver")
+Signed-off-by: Andreas Puhm <puhm@oregano.at>
+Signed-off-by: Anatolij Gustschin <agust@denx.de>
+Reviewed-by: Moritz Fischer <mdf@kernel.org>
+Acked-by: Alan Tull <atull@kernel.org>
+---
+ drivers/fpga/altera-cvp.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
+index 144fa2a..7395085 100644
+--- a/drivers/fpga/altera-cvp.c
++++ b/drivers/fpga/altera-cvp.c
+@@ -403,6 +403,7 @@ static int altera_cvp_probe(struct pci_dev *pdev,
+ 	struct altera_cvp_conf *conf;
+ 	struct fpga_manager *mgr;
+ 	u16 cmd, val;
++	u32 regval;
+ 	int ret;
+ 
+ 	/*
+@@ -416,6 +417,14 @@ static int altera_cvp_probe(struct pci_dev *pdev,
+ 		return -ENODEV;
+ 	}
+ 
++	pci_read_config_dword(pdev, VSE_CVP_STATUS, &regval);
++	if (!(regval & VSE_CVP_STATUS_CVP_EN)) {
++		dev_err(&pdev->dev,
++			"CVP is disabled for this device: CVP_STATUS Reg 0x%x\n",
++			regval);
++		return -ENODEV;
++	}
++
+ 	conf = devm_kzalloc(&pdev->dev, sizeof(*conf), GFP_KERNEL);
+ 	if (!conf)
+ 		return -ENOMEM;
+-- 
+2.7.4

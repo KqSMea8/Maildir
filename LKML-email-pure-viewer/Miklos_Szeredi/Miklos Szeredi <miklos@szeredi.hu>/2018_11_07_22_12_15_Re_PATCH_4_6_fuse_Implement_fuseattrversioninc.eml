@@ -1,0 +1,255 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:06 -0000
+Received: from icoremail.net (unknown [209.85.210.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX_vo8uJbnGpYAQ--.26575S3;
+	Wed, 07 Nov 2018 22:12:57 +0800 (CST)
+Received: from mail-pf1-f172.google.com (unknown [209.85.210.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDHrEjl8uJbh8MXAA--.6043S3;
+	Wed, 07 Nov 2018 22:12:53 +0800 (CST)
+Received: by mail-pf1-f172.google.com with SMTP id p17-v6so7374239pfj.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:12:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :in-reply-to:references:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=TZGnFEmQgoGsHsuz6vt5dn/fNUdlCN38NGGqmcyYGNI=;
+        b=V9N2R/2kWpLmkHKIy2gjIErNqcKvla2YXL7/6pW2bfwmLqpAucXWd5ksPzwE+2whEz
+         27MTfsKuZJ9GAmCZXuyykPKFIaXXJiRnLam2ockoPnjWmDKHlyiKFw9u2YxSJ/QdSE7i
+         JF5ur1l6yhK4xlT3lC9V6dDFYeovqi5eJmvfRpSrmYtB4St+9GeMexgusvUFTCABnHTu
+         JBUEIVZbs6TjYXBDyW7uFx2IeHtS1vybmaROo1+Tk8sruBJxEs5aCgGJwkL8jrfOMjbw
+         HGEw/FeVMA4YgWHBvxIIvjXa/9wjZhul+d5lqVoHMkkNtzZXiu75E0XSa7v0m5Wrd6sM
+         v7bQ==
+X-Gm-Message-State: AGRZ1gLldVUSiLGGbq2fXoMSLfy/Y/eGS7yT1RwPWRIHvQXsi7rBQ3T/
+	VVQpxW3TOBg2IzKd2vlV1c+HYJxEIaDlXmrB0K5Jn7S/DrIh5twuUw==
+X-Received: by 2002:a63:40c2:: with SMTP id n185-v6mr329029pga.116.1541599973122;
+        Wed, 07 Nov 2018 06:12:53 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5295277pjt;
+        Wed, 7 Nov 2018 06:12:51 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cQSZ9MJbggCwDUjEFhW0/Hzs0hUYUdN5sl0OOqdwNloCytrnVmmYT03zTpgN0H5JL7gjBk
+X-Received: by 2002:a17:902:bd0b:: with SMTP id p11-v6mr378684pls.35.1541599971738;
+        Wed, 07 Nov 2018 06:12:51 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541599971; cv=none;
+        d=google.com; s=arc-20160816;
+        b=lqNeblsoHEhRQHqnHvy6XETnPqefMb6NO+xXL7w1KOhwifMshdUe2hRSco+jq/n46W
+         m9+5iWpIi2LasWqpDaw4t+PgQkdR4AB2vtKgm7zIGyVUJN1/Eunp+hsLH5QFdMWUcVNj
+         z8oP3vA7aaGrR2tScQ7mjson6nfHRe71fseWAOi7p0RizGR3pIS2B0FSGdmsAG8A58Z+
+         tDBoOv42YxdOwsT65Snc6vNI2GCXnKmjKyRRWCtzzUzUvN7wlIIPaknWLUaNyVk1rj2b
+         z1R9MmGT62qFxaYs96surY6yTffeOEK6QnN4K3EH4T1JnysyOwORPRAWOYSOhXYUSqu4
+         AyiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :references:in-reply-to:mime-version:dkim-signature;
+        bh=TZGnFEmQgoGsHsuz6vt5dn/fNUdlCN38NGGqmcyYGNI=;
+        b=uQuaGcKXboPFoYGjiOwAIMNgF5dsY73s7Jm6mkTggyV+Fe41WQiWTA8m5+Wla9x/PV
+         sdHyEhE8nk4EDinnRaSlcXwyhI3Na0yy7wqoPzqf0n/1VbYtpc/NhkHoGyNtX4y5YdV4
+         igUQqfH6rn569eAmTiJu1N+/+pIouZEizQmZfSv3oRTd3Iq3thaeL5e4sDYMDm9iN39D
+         8TipFxveshwFMsZ8Fb8Orvc/VB2Ho+N53nNKV22PO3PwhMXcz08svc2pGCY0j5EbQOdm
+         RVTdFZuv0ZUtP7QEb5gxj1hvS+7iTDxzcgeHkDFa8QQ3VnC3xzOYDDJ/ShSi0JyGrwUP
+         JqCA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=temperror (no key for signature) header.i=@szeredi.hu header.s=google header.b=hWIZfDVZ;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id s17si590566pgi.513.2018.11.07.06.12.35;
+        Wed, 07 Nov 2018 06:12:51 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727781AbeKGXmt (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:42:49 -0500
+Received: from mail-it1-f194.google.com ([209.85.166.194]:40430 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbeKGXmt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:42:49 -0500
+Received: by mail-it1-f194.google.com with SMTP id e11so19562492itl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 06:12:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=TZGnFEmQgoGsHsuz6vt5dn/fNUdlCN38NGGqmcyYGNI=;
+        b=hWIZfDVZq4sKtKt18Xd4PXWr88elFVcTyxXJWNzQUlUltnSnxK0uKTZYsKJAM9u1a4
+         w6fsLzCyS9CYCK6AXZ+HOqjMmTsYFAso0QT1GCv36/lLuBJBYXw+Jase1OQgKbIxRm9O
+         PGClADHhTgZvRiHeo7o/F+nKE77k1R67LE+C4=
+X-Received: by 2002:a24:fe88:: with SMTP id w130-v6mr291140ith.69.1541599936200;
+ Wed, 07 Nov 2018 06:12:16 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a6b:ac42:0:0:0:0:0 with HTTP; Wed, 7 Nov 2018 06:12:15 -0800 (PST)
+X-Originating-IP: [212.96.48.140]
+In-Reply-To: <154149743811.18189.2448546280541143340.stgit@localhost.localdomain>
+References: <154149673368.18189.14752124997476502777.stgit@localhost.localdomain>
+ <154149743811.18189.2448546280541143340.stgit@localhost.localdomain>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Wed, 7 Nov 2018 15:12:15 +0100
+Message-ID: <CAJfpegspUywVumOs-HcJVdm7CiGAHeNGfn4Kqg0dLup_5ufi8Q@mail.gmail.com>
+Subject: Re: [PATCH 4/6] fuse: Implement fuse_attr_version_inc()
+To: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDHrEjl8uJbh8MXAA--.6043S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxWrW3JF1Utr47tr4DAFyftFb_yoWruw4Dpr
+	1xKrW3Cw1Sqw47Wr10kr4DZw4Fv3WIgr48ZrWfJ3Wv9FnrX34ayry5tFWjyr48Zr4xXFZ0
+	9F4rG34fZrsrA3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4wCY1x
+	0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VW5XwCY0x0I
+	x7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804x
+	Wl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8V
+	AvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUQrHUDUUUU
+
+On Tue, Nov 6, 2018 at 10:43 AM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+> For cleanup purpose archive repeating pattern:
+>
+>         spin_lock(&fc->lock);
+>         fi->attr_version = ++fc->attr_version;
+>         spin_unlock(&fc->lock);
+>
+> into separate function.
+>
+> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> ---
+>  fs/fuse/dir.c    |    8 ++------
+>  fs/fuse/file.c   |   16 ++++------------
+>  fs/fuse/fuse_i.h |   11 +++++++++++
+>  fs/fuse/inode.c  |    4 +---
+>  4 files changed, 18 insertions(+), 21 deletions(-)
+>
+> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+> index 794b9f48fb8e..35f3b3d1e044 100644
+> --- a/fs/fuse/dir.c
+> +++ b/fs/fuse/dir.c
+> @@ -674,9 +674,7 @@ static int fuse_unlink(struct inode *dir, struct dentry *entry)
+>                 struct fuse_inode *fi = get_fuse_inode(inode);
+>
+>                 spin_lock(&fi->lock);
+> -               spin_lock(&fc->lock);
+> -               fi->attr_version = ++fc->attr_version;
+> -               spin_unlock(&fc->lock);
+> +               fi->attr_version = fuse_attr_version_inc_return(fc);
+>                 /*
+>                  * If i_nlink == 0 then unlink doesn't make sense, yet this can
+>                  * happen if userspace filesystem is careless.  It would be
+> @@ -830,9 +828,7 @@ static int fuse_link(struct dentry *entry, struct inode *newdir,
+>                 struct fuse_inode *fi = get_fuse_inode(inode);
+>
+>                 spin_lock(&fi->lock);
+> -               spin_lock(&fc->lock);
+> -               fi->attr_version = ++fc->attr_version;
+> -               spin_unlock(&fc->lock);
+> +               fi->attr_version = fuse_attr_version_inc_return(fc);
+>                 inc_nlink(inode);
+>                 spin_unlock(&fi->lock);
+>                 fuse_invalidate_attr(inode);
+> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> index 48e2889ba6a6..1164d3580c62 100644
+> --- a/fs/fuse/file.c
+> +++ b/fs/fuse/file.c
+> @@ -186,9 +186,7 @@ void fuse_finish_open(struct inode *inode, struct file *file)
+>                 struct fuse_inode *fi = get_fuse_inode(inode);
+>
+>                 spin_lock(&fi->lock);
+> -               spin_lock(&fc->lock);
+> -               fi->attr_version = ++fc->attr_version;
+> -               spin_unlock(&fc->lock);
+> +               fi->attr_version = fuse_attr_version_inc_return(fc);
+>                 i_size_write(inode, 0);
+>                 spin_unlock(&fi->lock);
+>                 fuse_invalidate_attr(inode);
+> @@ -604,9 +602,7 @@ static void fuse_aio_complete(struct fuse_io_priv *io, int err, ssize_t pos)
+>                         struct fuse_inode *fi = get_fuse_inode(inode);
+>
+>                         spin_lock(&fi->lock);
+> -                       spin_lock(&fc->lock);
+> -                       fi->attr_version = ++fc->attr_version;
+> -                       spin_unlock(&fc->lock);
+> +                       fi->attr_version = fuse_attr_version_inc_return(fc);
+>                         spin_unlock(&fi->lock);
+>                 }
+>
+> @@ -685,9 +681,7 @@ static void fuse_read_update_size(struct inode *inode, loff_t size,
+>         spin_lock(&fi->lock);
+>         if (attr_ver == fi->attr_version && size < inode->i_size &&
+>             !test_bit(FUSE_I_SIZE_UNSTABLE, &fi->state)) {
+> -               spin_lock(&fc->lock);
+> -               fi->attr_version = ++fc->attr_version;
+> -               spin_unlock(&fc->lock);
+> +               fi->attr_version = fuse_attr_version_inc_return(fc);
+>                 i_size_write(inode, size);
+>         }
+>         spin_unlock(&fi->lock);
+> @@ -1006,9 +1000,7 @@ bool fuse_write_update_size(struct inode *inode, loff_t pos)
+>         bool ret = false;
+>
+>         spin_lock(&fi->lock);
+> -       spin_lock(&fc->lock);
+> -       fi->attr_version = ++fc->attr_version;
+> -       spin_unlock(&fc->lock);
+> +       fi->attr_version = fuse_attr_version_inc_return(fc);
+>         if (pos > inode->i_size) {
+>                 i_size_write(inode, pos);
+>                 ret = true;
+> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> index 075da40499b8..f7442bcecbb0 100644
+> --- a/fs/fuse/fuse_i.h
+> +++ b/fs/fuse/fuse_i.h
+> @@ -775,6 +775,17 @@ static inline int invalid_nodeid(u64 nodeid)
+>         return !nodeid || nodeid == FUSE_ROOT_ID;
+>  }
+>
+> +static inline u64 fuse_attr_version_inc_return(struct fuse_conn *fc)
+> +{
+> +       u64 attr_version;
+> +
+> +       spin_lock(&fc->lock);
+> +       attr_version = ++fc->attr_version;
+> +       spin_unlock(&fc->lock);
+> +
+> +       return attr_version;
+> +}
+
+atomic64_t?
+
+And move this patch one up, 3/6 is complicated as is without having to
+add extra locking around fc->attr_version.
+
+
+
+> +
+>  /** Device operations */
+>  extern const struct file_operations fuse_dev_operations;
+>
+> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> index f62d45686b42..5f488b019cd9 100644
+> --- a/fs/fuse/inode.c
+> +++ b/fs/fuse/inode.c
+> @@ -167,9 +167,7 @@ void fuse_change_attributes_common(struct inode *inode, struct fuse_attr *attr,
+>
+>         lockdep_assert_held(&fi->lock);
+>
+> -       spin_lock(&fc->lock);
+> -       fi->attr_version = ++fc->attr_version;
+> -       spin_unlock(&fc->lock);
+> +       fi->attr_version = fuse_attr_version_inc_return(fc);
+>
+>         fi->i_time = attr_valid;
+>         WRITE_ONCE(fi->inval_mask, 0);
+>

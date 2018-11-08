@@ -1,0 +1,154 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:34 -0000
+Received: from icoremail.net (unknown [209.85.214.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3wz9LONbEt5ZAQ--.26797S3;
+	Thu, 08 Nov 2018 02:20:46 +0800 (CST)
+Received: from mail-pl1-f176.google.com (unknown [209.85.214.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3W0f6LONbys0YAA--.154S3;
+	Thu, 08 Nov 2018 02:20:42 +0800 (CST)
+Received: by mail-pl1-f176.google.com with SMTP id n4-v6so8231699plp.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:20:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=yU2KrwWqvz4in1dKksm5tvH+EBzJ37K3seXUKPOWgyM=;
+        b=mg6dkvxWXPrdajLJaFJd2zxpUQsaS4mSIGGuv84/rOdX/rN/fvVwseKITx7MkciYas
+         EFh0EFRUD/lj7hjYq9+0z0rBtRcPJM+hyYkd+FwBP2FCS4qPHTeomdmT9Ejuff8oJOMf
+         aYs4HQMOCI7DhDA6kYUyp3f6/iIZFenlT5SL1FiLTmsCNruuJwhUDsw6yJf8kjyK/vEW
+         cB0kxdURnAHl691tMldUCTaT0SfnLDwtbBXTdKD3v336VO/ImTAPjAcy/XqhkdBSZrYD
+         tH3MAy83f+tLIwyYC8On52cgZsNU4zd4fjhCWn9ccuxbB2RiXAxYDDwcCup4k2du/Uhj
+         HjBw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKngsPRzN329LIpruSUYBXhwA1pqtJuIyil7Si51e16AeBfScqY
+	Jpl7oyTl+DXaHR/jwaluz6TAruJbFMJBVCyCvzKAdfJsluxuf47ZAg==
+X-Received: by 2002:a17:902:bd4a:: with SMTP id b10-v6mr1218665plx.171.1541614842445;
+        Wed, 07 Nov 2018 10:20:42 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5576141pjt;
+        Wed, 7 Nov 2018 10:20:41 -0800 (PST)
+X-Google-Smtp-Source: AJdET5faqdw5DLFO1yN6sTyQxH3PmNsegvKRXbHV7oAOUpxGi+4lNaIwHAFks2udVoAS9vjnouhg
+X-Received: by 2002:a63:ed42:: with SMTP id m2mr1064979pgk.147.1541614841788;
+        Wed, 07 Nov 2018 10:20:41 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541614841; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Jz78PJXhztrqqavsQRHH18mb997ITyLmUaqC64+Nao0nDTwFfGPq0nEiEeMCge5KY1
+         ioCQJ8TijA7E6+kxttRREi7o+r6DXkH2Q42d+bp67k7aEEHdH8VBARsBgqZ1XD/T10Km
+         lJtkUj3q2U3uQIEFT/9kIdwa/AGNQThJ3EDkScyit6nFBIl5MUBSxueqsTBrix/y7LIn
+         2K3TrVV21eqm1zp4KeF+Aau9CMpbnNqwZ0mMUaE1J8aZo4U1b4yaLCAl/bkIvJsY36jP
+         GXCVg1M7k3utPzu22binrHcQWsW08Vaxsi6I+ygEC5qkC3NU8/7WEjWlMvHopSqWBAhQ
+         1Bgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=yU2KrwWqvz4in1dKksm5tvH+EBzJ37K3seXUKPOWgyM=;
+        b=XqoRFm4ZjNP3hR1ygmn9J98mRGHsnoWYVzPaQFfYSoLLwJvLmlDPfhMhLsfjOcM7+G
+         DK8Ab69W8kwpZ31mOF0r0zfhOzlAmftj44NFg+tA3NXZjwstdLLgJo5zpH5Nkj4rmiGa
+         ur3JtWqSM3HmPZzzqD4Ee88NjQ0b8Udh+hDGR/9Xv8GdkUx1x8AjR6wmxJUuZm4r6I7m
+         gGR774lw3hpPe3NcSE7IsZtXXIAbwq63ee5RSmKDkCXXMMOg4dEax67hXYFg2uX97pWs
+         LFhHJVOM8sslX9TJeyzUvwBalTH0MCbePduBPXfFVMPd42uBE3royZYfzSUUaoOu+I4E
+         jBlA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d9si1075836pgb.105.2018.11.07.10.20.25;
+        Wed, 07 Nov 2018 10:20:41 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728276AbeKHDvj (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:51:39 -0500
+Received: from leonov.paulk.fr ([185.233.101.22]:48980 "EHLO leonov.paulk.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727939AbeKHDvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:51:39 -0500
+Received: from gagarine.paulk.fr (gagarine [192.168.1.127])
+        by leonov.paulk.fr (Postfix) with ESMTPS id C2FDEBFA47;
+        Wed,  7 Nov 2018 19:20:04 +0100 (CET)
+Received: by gagarine.paulk.fr (Postfix, from userid 114)
+        id 39EE6C108D; Wed,  7 Nov 2018 19:20:04 +0100 (CET)
+X-Spam-Checker-Version: SpamAssassin 3.4.1 (2015-04-28) on gagarine.paulk.fr
+X-Spam-Level: 
+X-Spam-Status: No, score=0.0 required=5.0 tests=none autolearn=unavailable
+        autolearn_force=no version=3.4.1
+Received: from localhost.localdomain (collins [192.168.1.129])
+        by gagarine.paulk.fr (Postfix) with ESMTP id 0CF9AC106B;
+        Wed,  7 Nov 2018 19:17:58 +0100 (CET)
+From: Paul Kocialkowski <contact@paulk.fr>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com,
+        Mark Van den Borre <mark@fosdem.org>,
+        Gerry Demaret <gerry@fosdem.org>,
+        Luc Verhaegen <libv@skynet.be>,
+        Paul Kocialkowski <contact@paulk.fr>
+Subject: [PATCH v3 5/8] dt-bindings: Add bindings for the LeMaker BL035-RGB-002 LCD panel
+Date: Wed,  7 Nov 2018 19:18:40 +0100
+Message-Id: <20181107181843.27628-6-contact@paulk.fr>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107181843.27628-1-contact@paulk.fr>
+References: <20181107181843.27628-1-contact@paulk.fr>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3W0f6LONbys0YAA--.154S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7JFWDGw18KFWrWF45KFyfZwb_yoW8Jr1DpF
+	4rCF9rKrs7XFy3X3yaq3W8J3yrur1vyF4rJFsY9wn8Kws0qF1rtrsxKw1rZr1UJF4kZFW7
+	XFs5CFW2krW8A3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9qb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkI7II2jI8vz4vEwIxGrwCYIxAI
+	cVC0I7IYx2IY67AKxVWUCVW8JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMxvI42
+	IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK
+	82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JV
+	W3JbIYCTnIWIevJa73UjIFyTuYvjxUTVbkUUUUU
+
+This adds the device-tree bindings for the LeMaker BL035-RGB-002 3.5"
+QVGA TFT LCD panel, compatible with simple-panel.
+
+Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
+---
+ .../bindings/display/panel/lemaker,bl035-rgb-002.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/lemaker,bl035-rgb-002.txt
+
+diff --git a/Documentation/devicetree/bindings/display/panel/lemaker,bl035-rgb-002.txt b/Documentation/devicetree/bindings/display/panel/lemaker,bl035-rgb-002.txt
+new file mode 100644
+index 000000000000..74ee7ea6b493
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/lemaker,bl035-rgb-002.txt
+@@ -0,0 +1,12 @@
++LeMaker BL035-RGB-002 3.5" QVGA TFT LCD panel
++
++Required properties:
++- compatible: should be "lemaker,bl035-rgb-002"
++- power-supply: as specified in the base binding
++
++Optional properties:
++- backlight: as specified in the base binding
++- enable-gpios: as specified in the base binding
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+-- 
+2.19.1

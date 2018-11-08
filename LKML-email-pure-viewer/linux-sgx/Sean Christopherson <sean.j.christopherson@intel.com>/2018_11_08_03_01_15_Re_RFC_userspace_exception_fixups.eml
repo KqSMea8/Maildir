@@ -1,0 +1,269 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:49 -0000
+Received: from icoremail.net (unknown [209.85.214.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn36StNuNbcxJaAQ--.26892S3;
+	Thu, 08 Nov 2018 03:02:06 +0800 (CST)
+Received: from mail-pl1-f174.google.com (unknown [209.85.214.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXfkqrNuNbPe8YAA--.424S3;
+	Thu, 08 Nov 2018 03:02:03 +0800 (CST)
+Received: by mail-pl1-f174.google.com with SMTP id p16-v6so8276369plr.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:02:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=GrGH/5pfZjOmC/v1WrnYtbOhLe+kgoFXpQHe5lQQa6Q=;
+        b=IbrSGCG3I8AXPPJg1q3gEG6KccCYF0Qi5xIs5q+FPXxlR2nVqHG0B7jjDQiQ7BAOZz
+         Bou5scMQAqDq8zM80hC00ya9Mpe6eSYzyT90dAkkc0wY4/CAKGWaJZS8tkv0vyB9DSsT
+         kF+LkisB0Oh9jzPZiOWHtI6VYDxK8M6jhuvpLa8txf+EbK99oqNLjo61fTVV4e0v/s0x
+         XCPhpurvReQSJ8q9A6U8ss/IpA1/V0nx8+QK0fPMfca82JHxSw/B991zkem2ZnZPdLH1
+         n1IAUwbhpESgIuzIhwee4fmO764fCRPJM+cbru85RqH+tZWXMfVImvnVEgReV1MIlLPY
+         5Kjg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gJVZrEVXb2OgjoZwsBisSFA9qtLK8CdVpgOQ6d0Zf3WniZqTifQ
+	fldArs1IbOa8IkDwmKC1OmekvlxUWiBBDCLOzlQwE+nZoDspbn2CQg==
+X-Received: by 2002:a17:902:8e81:: with SMTP id bg1-v6mr1428389plb.192.1541617323153;
+        Wed, 07 Nov 2018 11:02:03 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5620695pjt;
+        Wed, 7 Nov 2018 11:02:01 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eBc1N1ZaO1mcPFoafUsJMTiOD67+8LXEn5633yWhHGGxM7ZlwXIqSob6YpeBOOwahCZOqB
+X-Received: by 2002:a17:902:b784:: with SMTP id e4-v6mr1374406pls.45.1541617321207;
+        Wed, 07 Nov 2018 11:02:01 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541617321; cv=none;
+        d=google.com; s=arc-20160816;
+        b=DIqtEF8daVu++3KnWJpk4oOdlcjpXiCGuucQ6wrLrTX2TslaLhEKTRqf1dpMQIEg7b
+         fPnz8VM//gHALliFfllJYYKkua85j/ZUKPtgjfdJkxdCCKtG0XhuVR4b47S6R82uKkjR
+         UO0e/qJ/Q376TI2VXTcVhBfYURHhr8E3eErWrxBpqCHGyDz8+M6TphmkH389CCbQpc+A
+         AgF9cJcdDzmSBbgDOcfyxO9WuluJZiapiC8Vra8ss3rGYL6WkkjopqD9XQCgB8pJ3oCh
+         BZiNj4b38GzkP91IAqrr2MRfIY7GmWyAPGgXpuvZpXbeW05EmflFLbeWspXvPUcfMX0q
+         mhJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=GrGH/5pfZjOmC/v1WrnYtbOhLe+kgoFXpQHe5lQQa6Q=;
+        b=ZFuJqqSLDT3v3meDdam7zHOuDGwWJPf6DX3SCpv1uzW0icI7hgsJuwBOjZ9wA5VR7F
+         y1ys8OJYi9wp8f3Igw2ZlTxdqu08SY3Xr53Fv4p1p8/cV+/0oxLgSinBgDKPZ8Z+x8h0
+         U8KKAkhGVVnP8GFjItM7in8qXGylcwFkxRHv0tRT8w9r187+SaDAT+PnwZlMW05cFsxt
+         SZpT5ZK/GV2SHLnmrqhWNyqny7PbrLVTQO9hH97tR2HE7EHcgwNz2dK/LEOKSGrd4fDk
+         NVnTUMXe1MLbI8S0/33hPDYjm5Kg4j70KsXIOSOfJse0nvDqNYhuGcB5orJ64+ZR7u9p
+         WKYA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id w1-v6si1577472plk.317.2018.11.07.11.01.45;
+        Wed, 07 Nov 2018 11:02:01 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1729776AbeKHEc4 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:32:56 -0500
+Received: from mga12.intel.com ([192.55.52.136]:2418 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725727AbeKHEc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:32:56 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 11:01:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,476,1534834800"; 
+   d="scan'208";a="106298502"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.154])
+  by orsmga001.jf.intel.com with ESMTP; 07 Nov 2018 11:01:15 -0800
+Date: Wed, 7 Nov 2018 11:01:15 -0800
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Hansen <dave.hansen@intel.com>, Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rich Felker <dalias@libc.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, nhorman@redhat.com,
+        npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>,
+        shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Carlos O'Donell <carlos@redhat.com>,
+        adhemerval.zanella@linaro.org
+Subject: Re: RFC: userspace exception fixups
+Message-ID: <20181107190114.GA26603@linux.intel.com>
+References: <209cf4a5-eda9-2495-539f-fed22252cf02@intel.com>
+ <9B76E95B-5745-412E-8007-7FAA7F83D6FB@amacapital.net>
+ <CALCETrV=iodOQhvXAyjs0TQNbCaFdkhrZqRHvWTnBfo2m0qXpA@mail.gmail.com>
+ <1541541565.8854.13.camel@intel.com>
+ <7FF4802E-FBC5-4E6D-A8F6-8A65114F18C7@amacapital.net>
+ <20181106233515.GB11101@linux.intel.com>
+ <CALCETrVySfV64YN7DWf3rsAxfiugJKsRJCNmEn-AKQ4dPYeG4Q@mail.gmail.com>
+ <20181107000235.GC11101@linux.intel.com>
+ <CALCETrV_sMOeQGRkxoA8KMxEizagB9bD-mB2T-ro3F6O6OX9Xw@mail.gmail.com>
+ <20181107153452.GB22972@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107153452.GB22972@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXfkqrNuNbPe8YAA--.424S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxuF4xZr1DCFWxCw4ftry7Jrb_yoWrWr1UpF
+	y5Ka48KFsrJF12yrn5Kws8Xw4Syw43Kr4Ygr90kr1ayasY9ryrZr10gr4Y9FWDuFW8Gw1a
+	yr4jg347W3Z0y3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_JFI_GrUvcSsGvfC2KfnxnUUI43ZEXa7IUob2
+	-5UUUUU==
+
+On Wed, Nov 07, 2018 at 07:34:52AM -0800, Sean Christopherson wrote:
+> On Tue, Nov 06, 2018 at 05:17:14PM -0800, Andy Lutomirski wrote:
+> > On Tue, Nov 6, 2018 at 4:02 PM Sean Christopherson
+> > <sean.j.christopherson@intel.com> wrote:
+> > >
+> > > On Tue, Nov 06, 2018 at 03:39:48PM -0800, Andy Lutomirski wrote:
+> > > > On Tue, Nov 6, 2018 at 3:35 PM Sean Christopherson
+> > > > <sean.j.christopherson@intel.com> wrote:
+> > > > >
+> > > > > Sorry if I'm beating a dead horse, but what if we only did fixup on ENCLU
+> > > > > with a specific (ignored) prefix pattern?  I.e. effectively make the magic
+> > > > > fixup opt-in, falling back to signals.  Jamming RIP to skip ENCLU isn't
+> > > > > that far off the architecture, e.g. EENTER stuffs RCX with the next RIP so
+> > > > > that the enclave can EEXIT to immediately after the EENTER location.
+> > > > >
+> > > >
+> > > > How does that even work, though?  On an AEX, RIP points to the ERESUME
+> > > > instruction, not the EENTER instruction, so if we skip it we just end
+> > > > up in lala land.
+> > >
+> > > Userspace would obviously need to be aware of the fixup behavior, but
+> > > it actually works out fairly nicely to have a separate path for ERESUME
+> > > fixup since a fault on EENTER is generally fatal, whereas as a fault on
+> > > ERESUME might be recoverable.
+> > >
+> > 
+> > Hmm.
+> > 
+> > >
+> > > do_eenter:
+> > >     mov     tcs, %rbx
+> > >     lea     async_exit, %rcx
+> > >     mov     $EENTER, %rax
+> > >     ENCLU
+> > 
+> > Or SOME_SILLY_PREFIX ENCLU?
+> 
+> Yeah, forgot to include that.
+> 
+> > >
+> > > /*
+> > >  * EEXIT or EENTER faulted.  In the latter case, %RAX already holds some
+> > >  * fault indicator, e.g. -EFAULT.
+> > >  */
+> > > eexit_or_eenter_fault:
+> > >     ret
+> > 
+> > But userspace wants to know whether it was a fault or not.  So I think
+> > we either need two landing pads or we need to hijack a flag bit (are
+> > there any known-zeroed flag bits after EEXIT?) to say whether it was a
+> > fault.  And, if it was a fault, we should give the vector, the
+> > sanitized error code, and possibly CR2.
+> 
+> As Jethro mentioned, RAX will always be 4 on a successful EEXIT, so we
+> can use RAX to indicate a fault.  That's what I was trying to imply with
+> EFAULT.  Here's the reg stuffing I use for the POC:
+> 
+> 	regs->ax = EFAULT;
+> 	regs->di = trapnr;
+> 	regs->si = error_code;
+> 	regs->dx = address;
+> 
+> 
+> Well-known RAX values also means the kernel fault handlers only need to
+> look for SOME_SILLY_PREFIX ENCLU if RAX==2 || RAX==3, i.e. the fault
+> occurred on EENTER or in an enclave (RAX is set to ERESUME's leaf as
+> part of the asynchronous enlcave exit flow).
+
+POC kernel code, 64-bit only.
+
+Limiting this to 64-bit isn't necessary, but it makes the code prettier
+and allows using REX as the magic prefix.  I like the idea of using REX
+because it seems least likely to be repurposed for yet another new
+feature.  I have no idea if 64-bit only will fly with the SDK folks.
+
+Going off comments in similar code related to UMIP, we'd need to figure
+out how to handle protection keys.
+
+
+/* REX with all bits set, ignored by ENCLU. */
+#define SGX_DO_ENCLU_FIXUP	0x4F
+
+#define SGX_ENCLU_OPCODE0	0x0F
+#define SGX_ENCLU_OPCODE1	0x01
+#define SGX_ENCLU_OPCODE2	0xD7
+
+/* ENCLU is a three-byte opcode, plus one byte for the magic prefix. */
+#define SGX_ENCLU_FIXUP_INSN_LEN	4
+
+static int sgx_detect_enclu(struct pt_regs *regs)
+{
+	unsigned char buf[SGX_ENCLU_FIXUP_INSN_LEN];
+
+	/* Look for EENTER or ERESUME in RAX, 64-bit mode only. */
+	if (!regs || (regs->ax != 2 && regs->ax != 3) || !user_64bit_mode(regs))
+		return 0;
+
+	if (copy_from_user(buf, (void __user *)(regs->ip), sizeof(buf)))
+		return 0;
+
+	if (buf[0] == SGX_DO_ENCLU_FIXUP &&
+	    buf[1] == SGX_ENCLU_OPCODE0 &&
+	    buf[2] == SGX_ENCLU_OPCODE1 &&
+	    buf[3] == SGX_ENCLU_OPCODE2)
+		return SGX_ENCLU_FIXUP_INSN_LEN;
+
+	return 0;
+}
+
+bool sgx_fixup_enclu_fault(struct pt_regs *regs, int trapnr,
+			   unsigned long error_code, unsigned long address)
+{
+	int insn_len;
+
+	insn_len = sgx_detect_enclu(regs);
+	if (!insn_len)
+		return false;
+
+	regs->ip += insn_len;
+	regs->ax = EFAULT;
+	regs->di = trapnr;
+	regs->si = error_code;
+	regs->dx = address;
+	return true;
+}

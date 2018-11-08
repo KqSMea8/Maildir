@@ -1,0 +1,156 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:48 -0000
+Received: from icoremail.net (unknown [209.85.210.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv9J9EONbBR5ZAQ--.26776S3;
+	Thu, 08 Nov 2018 00:19:11 +0800 (CST)
+Received: from mail-pf1-f180.google.com (unknown [209.85.210.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3WkZ9EONb+UUYAA--.14910S3;
+	Thu, 08 Nov 2018 00:19:09 +0800 (CST)
+Received: by mail-pf1-f180.google.com with SMTP id j13-v6so7888081pff.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:19:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=PlaGOIA5y0amjbVVpDH+1wHg6k2NhdPenVww8rvvdG0=;
+        b=GME4LTVqtWVIPicp30dekRuRB0JuITPpyYKbdOZbg/TAXWetOIlkR30GDAwY1Iorex
+         iFQn5nZSOo1fHfxbNnVDgSCCAT1g65KZcn0d2JENIONgCXoHk7m6gFzvfTrapDJK0+0J
+         rpa5nwIIdYCwVPwuBCUa4NWKlgkIe4C4cyHCvW9O2ZW3f8YApubcSCWsKtfrqkbf5sTH
+         v3Ckmo4N6OexHBzsqQ+8Ubs7tfRfuYkRnd979L7Sos2qRgzidf2GFELat0t63hYakjYD
+         K5+kPu2EDrhipT+B3l8kGFoKoI2nA+2fUHGZSnSAN0+Epe0G3/OMGMRt6jSVPU1ffFPO
+         LVTg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+X-Gm-Message-State: AGRZ1gIC8iuqxHqMzpPy20QYus1pG453VJM67/ETa/X9LcGwI83nekYK
+	T+ZifmOE2h2OhhnLgDtwI9By7AdbP+XTNvDIMRl/3Yq7bLx2tpBfRQ==
+X-Received: by 2002:aa7:8498:: with SMTP id u24-v6mr834840pfn.220.1541607549164;
+        Wed, 07 Nov 2018 08:19:09 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5440932pjt;
+        Wed, 7 Nov 2018 08:19:08 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dAGg3uQwnAJqMOhddMhrLS3oFsMGbr+w8ebfbXD1heRtU7guWOaDr8sDKVyR9DC6vOFVrD
+X-Received: by 2002:a62:2e04:: with SMTP id u4-v6mr833019pfu.229.1541607548412;
+        Wed, 07 Nov 2018 08:19:08 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541607548; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ki2fP89Iybunb1qhfZGTkjrHDaKPkvLfUJLIQPgnNNAQFrhiNjR50xd5tCMHbT0las
+         TQBXTuGhqEjLFHIsibvfH009gkCNSIFPuUPzOvFfKjyqgpxCR6i+OnXdioWwNa/mrXAm
+         qlTizm5+rby/MP3i+77xLAh5i5zC1iD8SkkMk0cbbWopmztncX6CdjAj7sAJRanwYKed
+         AKyRvT8SP/rrrIarnwHsx8OZBThER+k5kB9+uTlkaHNESSwcujd9zHq1H2qMR3TsWhn/
+         v8dFMNoTzm4EsXTlSLzFEeS5gJIwV9//rtyUJxmrSj2s8XVedatwwop7a7g4H0Ah5Hr5
+         oSpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :message-id:date:subject:cc:to:from;
+        bh=PlaGOIA5y0amjbVVpDH+1wHg6k2NhdPenVww8rvvdG0=;
+        b=GLYLW8LFzyO9yFKa0fXQ7SCcKQ9dChrQxCTt2T0CNKSWpo+8dZ8x6e2Pgozkk/7e2V
+         Ad9m9ZbfRWDESgE31LXOFleWaBtCqCI2LDnb04YhlV3Za+vYLh+H/s5BZNsLG1xBLO9Z
+         gn7MV7pR2ApkxvSINavuMOAYRSliKooM9GPnyiKSFFj/CENKjPhIQLEavaJud9BzpKtn
+         /6BcfHwHapT9uBqK4bXjpIaqVDJ88OKBONtcYn2HZOIGFZUa14rldJY4CQ9pXTYBJ2lv
+         kYyPYOlNcUNwXm0qkQD5tXePLIs1UJ1fC1e6p/1nMFLc8q/JnTyKWl+4sHkqXamQKblE
+         epVg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v9si931276pgo.23.2018.11.07.08.18.53;
+        Wed, 07 Nov 2018 08:19:08 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731287AbeKHBt3 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:49:29 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38252 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727312AbeKHBt3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:49:29 -0500
+Received: by mail-oi1-f196.google.com with SMTP id v83-v6so14267433oia.5;
+        Wed, 07 Nov 2018 08:18:27 -0800 (PST)
+X-Received: by 2002:aca:31c1:: with SMTP id x184-v6mr453140oix.213.1541607506397;
+        Wed, 07 Nov 2018 08:18:26 -0800 (PST)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id l6-v6sm381995oia.46.2018.11.07.08.18.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 08:18:25 -0800 (PST)
+From: Rob Herring <robh@kernel.org>
+To: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
+Subject: [PATCH] of/pdt: Remove unused of_pdt_build_more function ptr
+Date: Wed,  7 Nov 2018 10:18:24 -0600
+Message-Id: <20181107161824.30839-1-robh@kernel.org>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3WkZ9EONb+UUYAA--.14910S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF47Zr47KFW7uFWUKF4kWFg_yoW8GF4fpa
+	47C34SyFW8GrWUWr1vvryUAFyfK3WkCw48GFW7K3Wagrn093s7X3s8Gay3Crn8Aay8Aanx
+	ur1vq34UJFWUA3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9ab7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1le2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
+	0EwIxGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY0x0Ix7I2Y4AK64vIr41lcIIF
+	0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIx
+	AIcVC2z280aVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UMxAIw28I
+	cxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_Zr
+	UvcSsGvfC2KfnxnUUI43ZEXa7IUnd9N3UUUUU==
+
+There are no users of of_pdt_build_more since 2012, so remove it.
+
+Cc: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/of/pdt.c       | 5 -----
+ include/linux/of_pdt.h | 2 --
+ 2 files changed, 7 deletions(-)
+
+diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
+index 013e65de074a..4fc0fd96ed04 100644
+--- a/drivers/of/pdt.c
++++ b/drivers/of/pdt.c
+@@ -21,8 +21,6 @@
+ 
+ static struct of_pdt_ops *of_pdt_prom_ops __initdata;
+ 
+-void __initdata (*of_pdt_build_more)(struct device_node *dp);
+-
+ #if defined(CONFIG_SPARC)
+ unsigned int of_pdt_unique_id __initdata;
+ 
+@@ -208,9 +206,6 @@ static struct device_node * __init of_pdt_build_tree(struct device_node *parent,
+ 
+ 		dp->child = of_pdt_build_tree(dp, of_pdt_prom_ops->getchild(node));
+ 
+-		if (of_pdt_build_more)
+-			of_pdt_build_more(dp);
+-
+ 		node = of_pdt_prom_ops->getsibling(node);
+ 	}
+ 
+diff --git a/include/linux/of_pdt.h b/include/linux/of_pdt.h
+index d0b183ab65c6..89e4eb076a01 100644
+--- a/include/linux/of_pdt.h
++++ b/include/linux/of_pdt.h
+@@ -35,6 +35,4 @@ extern void *prom_early_alloc(unsigned long size);
+ /* for building the device tree */
+ extern void of_pdt_build_devicetree(phandle root_node, struct of_pdt_ops *ops);
+ 
+-extern void (*of_pdt_build_more)(struct device_node *dp);
+-
+ #endif /* _LINUX_OF_PDT_H */
+-- 
+2.19.1

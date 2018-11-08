@@ -1,0 +1,128 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:59 -0000
+Received: from icoremail.net (unknown [209.85.214.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_yesZuNb6ShbAQ--.27583S3;
+	Thu, 08 Nov 2018 06:26:53 +0800 (CST)
+Received: from mail-pl1-f178.google.com (unknown [209.85.214.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCngT2rZuNbp5EZAA--.1740S3;
+	Thu, 08 Nov 2018 06:26:51 +0800 (CST)
+Received: by mail-pl1-f178.google.com with SMTP id b5-v6so8512643pla.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:26:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=WWn4kDmA1mBrQYcnfYM91tMweCCZ/4+lkUKWRgNToro=;
+        b=Bo86BUi9ePyC2VdgDfEuTRPZxb1Ki6+u/MmeZk5c9Lp/ERZ9tBT/gshhOZfR1MRIsf
+         HgERV0cJ8eY0tLfKt6Oufz+8bqBH5Tywau0YtHLuO5UNhJU0pe+52/dPowdVvnO2JSyb
+         mF4pLy8+nR5v3AoEi98nbUILyv9zfXUEz8GN7S5yzbFRVZqRxhvIlikcgpCf9U4nc66o
+         EI830xOiPNCdutRhS7lSFy7E8Jl7dL0C53HHNYWgDgtHp+vJkxCiGJaFzdrKgm/cpGkq
+         3Ez1bchkH9wyNBxZ0h+FqtnBEAwPqxVBGDiknNbHsb9F53u2UmCA29M3dP2ClYBg9DKP
+         wkdg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIRmr1yOYhPl4GRcODroRHFJABAHHReuYaH2wYW6afCACfzCkN2
+	JsJc7NPl5fZh+M5S6wl4iPbCxOkXRZTpom6NETpSIa7ynERyGZYeuw==
+X-Received: by 2002:a17:902:6b4b:: with SMTP id g11-v6mr2121723plt.213.1541629610812;
+        Wed, 07 Nov 2018 14:26:50 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp76306pjt;
+        Wed, 7 Nov 2018 14:26:49 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dNz36JRLBt/fjdR8+wKlktYixSZTuKK34TmzvmscNQHe9EFVipsl5YCOdcc8EuHFV9eVxx
+X-Received: by 2002:a63:2c0e:: with SMTP id s14mr1842380pgs.132.1541629609612;
+        Wed, 07 Nov 2018 14:26:49 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541629609; cv=none;
+        d=google.com; s=arc-20160816;
+        b=gUtRAZvG72YP/VKzJ8vUVe5M0pZpYJYDZE/voErjLc4/JnhYv/Gicj5CeZiTGKBgPB
+         613nMhRtGl57SbimFiOx/a4t9UpWy2VqxzTneyfiYxjH2vhuYGB89naODIoRZtKM7OBZ
+         ugk3M9Tyw1pgQhAZgtwG0fWzvwMT7gzx7t1oLbWn7FBdAFU4pbCaYeHoufl4Ep3CFWvE
+         tI684tPIrCqWnDx7ZKv/PIm/UfvBMNLYkc47ZjjQgSZEIQUQIy8ypqdRZGZXxX+KVftN
+         CDthdqJWhf0ZKxEOqC+a3BrnXcRAXvihx376boilU68RkB57g+D/E2FII9U10SHoI+8W
+         LidA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :organization:references:in-reply-to:message-id:subject:cc:to:from
+         :date;
+        bh=WWn4kDmA1mBrQYcnfYM91tMweCCZ/4+lkUKWRgNToro=;
+        b=AjvEr0ZtfBjNazwteX8NTXR1Rd2lZhARYlH0Z0RqGjZN6G7HUkLXAlXbGctOj7l2mD
+         EYIFYHNrqWJnf0UcKxL3txpVzaC95a93H2wAyY7WRRYstYCJRkYxesMTuT9Js+/IJKUn
+         WdwxSHd9iKytAtDy1fo/XhkG5Gks5wIY6tEYMu7C5bZ3sQymO8kDR8dtKnEHxHtnIbVr
+         UB8FHBUq/R5Aycocb0Cu/5CrbHjzeEImQ+nQgJNIhj/aYTMS6nKWNND6ItH12gH5mxB8
+         AQxQNot96xiQ+1scIhepx476eanGZ0FgB0MOXDRDiLU0n3qp4CcXPYzee5rcLmRZpUNY
+         rDgQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id t6si1997387pgn.258.2018.11.07.14.26.34;
+        Wed, 07 Nov 2018 14:26:49 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727829AbeKHH6y (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:58:54 -0500
+Received: from ms.lwn.net ([45.79.88.28]:45802 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727605AbeKHH6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:58:53 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 2CA3D2ED;
+        Wed,  7 Nov 2018 22:26:28 +0000 (UTC)
+Date: Wed, 7 Nov 2018 15:26:27 -0700
+From: Jonathan Corbet <corbet@lwn.net>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Jason Baron <jbaron@akamai.com>
+Subject: Re: [PATCH] Documentation: dynamic_debug: fix a couple of typos
+Message-ID: <20181107152627.26756d97@lwn.net>
+In-Reply-To: <73dabf1e-e6a5-2c4e-9495-289953fa510f@infradead.org>
+References: <73dabf1e-e6a5-2c4e-9495-289953fa510f@infradead.org>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCngT2rZuNbp5EZAA--.1740S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUOb7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IY64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY
+	4VCF77xAMxkIecxEwVCI4VW3MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxV
+	W8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8
+	Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42
+	xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2Iq
+	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+	126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCbIYCTnIWIevJa73
+	UjIFyTuYvjxUqo5lUUUUU
+
+On Fri, 19 Oct 2018 16:55:34 -0700
+Randy Dunlap <rdunlap@infradead.org> wrote:
+
+> Fix a few "typos" in dynamic-debug-howto.rst.
+> 
+> s/dyndbg_query/ddebug_query/
+> s/sysfs/debugfs/
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Jason Baron <jbaron@akamai.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-doc@vger.kernel.org
+
+Applied, thanks.
+
+jon

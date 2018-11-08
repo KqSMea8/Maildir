@@ -1,0 +1,143 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:14 -0000
+Received: from icoremail.net (unknown [209.85.210.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3yRocuNbCm9bAQ--.27803S3;
+	Thu, 08 Nov 2018 07:16:58 +0800 (CST)
+Received: from mail-pf1-f179.google.com (unknown [209.85.210.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH5UBncuNbSbMZAA--.1990S3;
+	Thu, 08 Nov 2018 07:16:55 +0800 (CST)
+Received: by mail-pf1-f179.google.com with SMTP id b11-v6so8380716pfi.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 15:16:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=HvXYG2rx76F5+l99zDUGM+EHjToHIhYYk2OIAqnqtMI=;
+        b=IoKnJRS2/w1Oq7p6jvP1WOS6ir1YaUXbKADAlu7IUfafEryjW5Yw1ilbyByGyHDNmA
+         HP8zeg+FBGKilhG9IJgUmWJ8t39Fj+i8asmdN6jS3/BXXQgUqRebHR03XVb/JzNyjWO3
+         poZSIthmwcC0t9TfMvismh0YeuWBLosgdlpse/ETNAa26CR4KkTJJXFkidyHQiGW960l
+         oB9/dAqC84uui+rF8Hx35f64UKto+mqg/Hp8DbkKWQKLdF5q3YQ0YT0eN7A0fNvk0nWh
+         wOYZ0XXY4+QUbp5DqatHQOxodorBStvmehl+BaxYxXwseCL+QN8uOhqxZwGEx29z7lk2
+         eyWg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIW9s/PtvH5+Xe4YaXc1/gr3jkCQoy2kzVHXFNk/vJ33vWc7bxg
+	P7nVQACAywn4NOHkIa2iDHsWiU+eQ3/RnYPNtM34v6oFFeWgyrrNrA==
+X-Received: by 2002:a63:40c2:: with SMTP id n185-v6mr1929414pga.116.1541632615263;
+        Wed, 07 Nov 2018 15:16:55 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp117273pjt;
+        Wed, 7 Nov 2018 15:16:54 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f5HVm7+MpqKu+BYaxveunCpPOuk3QK4D4c8vj3luECPJvj5qoxANjkKkn8K8ZQGSkjooEN
+X-Received: by 2002:a62:e048:: with SMTP id f69-v6mr2235192pfh.208.1541632614398;
+        Wed, 07 Nov 2018 15:16:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541632614; cv=none;
+        d=google.com; s=arc-20160816;
+        b=r5aN0dFTJPx3P2VC8oYn6iBFmFnaMmcrr6xQ8UwgiWX1HwR7mDsLSGPf/fTXJ6L1b6
+         BAEIHArjF2bqqzc1KO7UfE8coVv1xZdD9chge8nEaUd32YqeT9immBK5XlOZ5Y23486s
+         yQ4qmnehwoDkptU6EOlgQD1PSF6x+WbnoArY2gkGbaodI/3ktYmECVIPd1diGsvrt7WX
+         bG8CDtcNWN6irT6ebjEEKxrZDQAb6xwwHDq9MJycHDqR65IW1bU0c3aKp86MeeScjhbj
+         N+6pdxOEh4/ojtdXeLXxsIHG7EbJlZUQ+9bBSriGqVwHMS+ITwFvX1Ec8afaOr19OtlP
+         IbXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:in-reply-to
+         :mime-version:user-agent:date:message-id:references:cc:to:subject
+         :from;
+        bh=HvXYG2rx76F5+l99zDUGM+EHjToHIhYYk2OIAqnqtMI=;
+        b=G4Fw1M7m3sMDT3PZNVjjUAr/gg1/WLPFY2v1HyxyXrkeMB8ftxCb6MfD6/vpKlWJjU
+         61mC5/Cp2eOW1XBJVXlk13gOqldHQxWTVSgLmYNzUzZqDxHAPjmz4nTYWNrykEbXgehq
+         uJ9ySWOF/+nZsIUE7toW4oe2T2UPwnfk2WDPuf40z274/fcVacJJ73lpSRFsMronZFqu
+         ho9rBAOrThyxgMkfHnuq5Y1PBCU4z1iwcAKs3Ihs1XrrePpf+Hqk7qc4ZPHWVYAXIXhj
+         7ycoXW7mzQHp4y4W8CfCYKyO7BKmOxAOUcA34UU62NTAtGAESlQmQNHhYD4tshOhXHU3
+         ootQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id f7si1922800pga.87.2018.11.07.15.16.39;
+        Wed, 07 Nov 2018 15:16:54 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728372AbeKHIso (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:48:44 -0500
+Received: from smtp4-g21.free.fr ([212.27.42.4]:5944 "EHLO smtp4-g21.free.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727370AbeKHIso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:48:44 -0500
+Received: from [192.168.1.42] (unknown [77.207.133.132])
+        (Authenticated sender: marc.w.gonzalez)
+        by smtp4-g21.free.fr (Postfix) with ESMTPSA id 16E1019F57E;
+        Thu,  8 Nov 2018 00:15:59 +0100 (CET)
+From: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: [PATCH v2 4/9] arm64: defconfig: Drop USB_ULPI_BUS and USB_CHIPIDEA_ULPI
+To: arm-soc <arm@kernel.org>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <898e79a6-092c-d013-d2bb-f6260e761379@free.fr>
+Message-ID: <7b7c52f5-a572-03dd-8bae-814cf6c4a5a6@free.fr>
+Date: Wed, 7 Nov 2018 23:40:00 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Firefox/52.0 SeaMonkey/2.49.4
+MIME-Version: 1.0
+In-Reply-To: <898e79a6-092c-d013-d2bb-f6260e761379@free.fr>
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH5UBncuNbSbMZAA--.1990S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWruFyfZr48Zr13tF15Aw1DWrg_yoWfKFc_Jr
+	47G34UAa1kZ3429F1Sqws5Wa4q93Wvqrn5Ww1UXF92qr42gr1avws8X3W8Gas8uayjkFW5
+	AayvyFy7Ar18tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbgkYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	02cVCv0xWlc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0264kExVAvwVAq07x20xylc7Ca8VAv
+	wVCFzxkY4VCF77xAMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5Jw
+	CYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1U
+	MxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64
+	kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
+	IYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuY
+	vjxU6xpnDUUUU
+
+Commit a930d8bd94d8 ("usb: chipidea: Always build ULPI code") made
+USB_CHIPIDEA select USB_ULPI_BUS, and removed USB_CHIPIDEA_ULPI.
+
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+---
+ arch/arm64/configs/defconfig | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 58741c07a6ef..6fe418d72337 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -528,7 +528,6 @@ CONFIG_USB_DWC2=y
+ CONFIG_USB_CHIPIDEA=y
+ CONFIG_USB_CHIPIDEA_UDC=y
+ CONFIG_USB_CHIPIDEA_HOST=y
+-CONFIG_USB_CHIPIDEA_ULPI=y
+ CONFIG_USB_ISP1760=y
+ CONFIG_USB_HSIC_USB3503=y
+ CONFIG_NOP_USB_XCEIV=y
+@@ -536,7 +535,6 @@ CONFIG_USB_ULPI=y
+ CONFIG_USB_GADGET=y
+ CONFIG_USB_RENESAS_USBHS_UDC=m
+ CONFIG_USB_RENESAS_USB3=m
+-CONFIG_USB_ULPI_BUS=y
+ CONFIG_MMC=y
+ CONFIG_MMC_BLOCK_MINORS=32
+ CONFIG_MMC_ARMMMCI=y
+-- 
+2.17.1

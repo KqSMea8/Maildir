@@ -1,0 +1,179 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:02 -0000
+Received: from icoremail.net (unknown [209.85.215.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_wuG7uJb7VFYAQ--.26453S3;
+	Wed, 07 Nov 2018 21:54:17 +0800 (CST)
+Received: from mail-pg1-f173.google.com (unknown [209.85.215.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBn4EyE7uJbXbIXAA--.13415S3;
+	Wed, 07 Nov 2018 21:54:13 +0800 (CST)
+Received: by mail-pg1-f173.google.com with SMTP id w7so7335387pgp.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:54:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:reply-to:sender:precedence
+         :list-id;
+        bh=o9iuBQapDxV52zxQbsQzi/VsgE/xd0cTm/Wla2jPft4=;
+        b=LgKEkTXORsfPvJ1yVJ3Ey/6p0xS+W7FIDIJg8TYzf/xPECVdTfIghPUzPtJG1P1psA
+         bCTFZ955ON1dR4p6Jj7MYT1bY/vYBHhrS2zzD3JBGVBseK7bRr7YUK1b3ju9PsDZ0Fnb
+         2/TcdsGFVbiX3kvBUCFDeMu1fZcigwt1H1gX1HTW1PppYRn9ma/oOrhVtq0oRen6fHGg
+         dI2uf7gIre6co97ymXI/Eayl5AMbIO/rOfjyMekk9HtBbz0OdG4JEpx3is/rpS2fTzlo
+         aZccSg0dBiBwzzx4+4BCY0iPnFOS6IKjIcSSTbn20HnAuS2Gkz01BUvnFjC4xP0XVceK
+         cwrw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=nxp.com
+X-Gm-Message-State: AGRZ1gK5HYiMbf6JPne+in4oXQ2fLycrt9tkOfHAniIfUg354HI27Tk/
+	b9kkInyAqgs/gLnLGpRSb69j6vyMJU6gTS+4zSnqsQdn0GLBcLSDBQ==
+X-Received: by 2002:a65:66ce:: with SMTP id c14mr253951pgw.450.1541598852797;
+        Wed, 07 Nov 2018 05:54:12 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5271968pjt;
+        Wed, 7 Nov 2018 05:54:12 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eKeKmME1k9vhjqIETeww40HDbHkdBGDNXSxkiuMevWAX2tJVpoy4NsGBDv2ylXjg90PSYs
+X-Received: by 2002:a65:430b:: with SMTP id j11-v6mr239892pgq.269.1541598852102;
+        Wed, 07 Nov 2018 05:54:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541598852; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Jo38dGUe5knmPeFcLUZ9QyWyyzlAi9+JIA9lJS6eHI5u8qiHLZhIdZ4A0jLjnsQLe3
+         Jb/Ap+BZWqU6ato0EVWve1ZEK6eL+37B0s8p4NYuEnhNZcF+ryMZVCvxEUzUNLbeLCsg
+         vs7KUi0QHmGY/fPXylvvvOUGxc7VUjpi55bzS3KSRAL3B5tKVq4q4ClgEIzaJckLKNOw
+         22ldNL1rywcqQ/LZ3nonQf6EMwUI8LaQjQm3Sk343MqpEj4WtdeaEvkZWLHtvYrbXMEy
+         eh1eBjzngi4fSy2AsMjKKctKWPHyF6PV/EduCdk5MV+8xQNaPHdFlPWKfcaH5s5Umn6o
+         4kIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:reply-to:message-id:date:subject:cc:to
+         :from;
+        bh=o9iuBQapDxV52zxQbsQzi/VsgE/xd0cTm/Wla2jPft4=;
+        b=BjrI13zPpscD1sz2IzM1l8jc0gqL1TafiwT3503Su6ImksLO818gcNcwg4uLuj5Avn
+         FTfH7hcqDLZ2EvwPql+WuihQufWbEWWdQBUxHf/yFIUWucu50b31hL2znWZa+3JrqgCf
+         d3kYePdsIVYSlftciCWueicCpBT4c6zqw9KWlYx5qHKAKkute32bJSL7b4uAFmwfzcl+
+         enbMQgowrCBwx4AIdQqpFIC7XZM90J/NFvspA++K8kmBjO4PIGMmr5o59OExD4zT+1xF
+         wDGKtHzqAJJeI+dGS9wiMZwUKjYBLusePx2SIOLPwmExdvwJ+qvrkU2jFk737tEX+qho
+         RuNQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=nxp.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id f4-v6si611926pgc.482.2018.11.07.05.53.56;
+        Wed, 07 Nov 2018 05:54:12 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727656AbeKGXYS (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:24:18 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:44424 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726411AbeKGXYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:24:18 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0138A1A0201;
+        Wed,  7 Nov 2018 14:53:48 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E9BDE1A01C4;
+        Wed,  7 Nov 2018 14:53:47 +0100 (CET)
+Received: from fsr-fed2164-101.ea.freescale.net (fsr-fed2164-101.ea.freescale.net [10.171.82.91])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id B280F20137;
+        Wed,  7 Nov 2018 14:53:47 +0100 (CET)
+From: Madalin Bucur <madalin.bucur@nxp.com>
+To: netdev@vger.kernel.org, davem@davemloft.net
+Cc: linux-kernel@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>
+Subject: [PATCH] dpaa_eth: add ethtool coalesce control
+Date: Wed,  7 Nov 2018 15:53:43 +0200
+Message-Id: <1541598823-22533-1-git-send-email-madalin.bucur@nxp.com>
+X-Mailer: git-send-email 2.1.0
+Reply-to: madalin.bucur@nxp.com
+X-Virus-Scanned: ClamAV using ClamSMTP
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBn4EyE7uJbXbIXAA--.13415S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww48Wr47tF1DAw1DZF45trb_yoW8ZrWrpF
+	WUJr9xArW8ZrWxWws3Xan5WFyYk3yxJr92ga4xG3yF9r4jqFy3AF1xKF47CF1q9rWfu343
+	Gayqq3W0gwnxJw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP2b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW5GwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IU5xk
+	u7UUUUU==
+
+Allow ethtool control of the DPAA QMan portal interrupt coalescing
+settings.
+
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+---
+ drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
+index 13d6e2272ece..548a7e8893d8 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
+@@ -529,6 +529,45 @@ static int dpaa_get_ts_info(struct net_device *net_dev,
+ 	return 0;
+ }
+ 
++static int dpaa_get_coalesce(struct net_device *dev,
++			     struct ethtool_coalesce *c)
++{
++	struct qman_portal *portal;
++	u32 period;
++	u8 thresh;
++
++	portal = qman_get_affine_portal(smp_processor_id());
++	qman_portal_get_iperiod(portal, &period);
++	qman_dqrr_get_ithresh(portal, &thresh);
++
++	c->rx_coalesce_usecs = period;
++	c->rx_max_coalesced_frames = thresh;
++	c->use_adaptive_rx_coalesce = false;
++
++	return 0;
++}
++
++static int dpaa_set_coalesce(struct net_device *dev,
++			     struct ethtool_coalesce *c)
++{
++	const cpumask_t *cpus = qman_affine_cpus();
++	struct qman_portal *portal;
++	u32 period;
++	u8 thresh;
++	int cpu;
++
++	period = c->rx_coalesce_usecs;
++	thresh = c->rx_max_coalesced_frames;
++
++	for_each_cpu(cpu, cpus) {
++		portal = qman_get_affine_portal(cpu);
++		qman_portal_set_iperiod(portal, period);
++		qman_dqrr_set_ithresh(portal, thresh);
++	}
++
++	return 0;
++}
++
+ const struct ethtool_ops dpaa_ethtool_ops = {
+ 	.get_drvinfo = dpaa_get_drvinfo,
+ 	.get_msglevel = dpaa_get_msglevel,
+@@ -545,4 +584,6 @@ const struct ethtool_ops dpaa_ethtool_ops = {
+ 	.get_rxnfc = dpaa_get_rxnfc,
+ 	.set_rxnfc = dpaa_set_rxnfc,
+ 	.get_ts_info = dpaa_get_ts_info,
++	.get_coalesce = dpaa_get_coalesce,
++	.set_coalesce = dpaa_set_coalesce,
+ };
+-- 
+2.1.0

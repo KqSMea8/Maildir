@@ -1,0 +1,199 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:47 -0000
+Received: from icoremail.net (unknown [209.85.215.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_6eeNeNbMg1aAQ--.27230S3;
+	Thu, 08 Nov 2018 02:57:34 +0800 (CST)
+Received: from mail-pg1-f180.google.com (unknown [209.85.215.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHLEibNeNb7esYAA--.1073S3;
+	Thu, 08 Nov 2018 02:57:31 +0800 (CST)
+Received: by mail-pg1-f180.google.com with SMTP id w3-v6so7684877pgs.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:57:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=T10zk169Vu2UzjfEPpQ0MWPBPxcsbXBzEtqR+juRvPM=;
+        b=qYoH/C+dkRPw+HRWABTCrNoPINCe9hdoJY7Rx1lMtMn8Y24YkqSh+zOR+bC0tZqFOS
+         beMfQK0+ERuav8iPu8BFSTqHr5JbWw/HDIAMO74FpDJvzdc7PNYuHI2AHuqi8S6WNrWe
+         neI5Am68fH7qg2gUCQx76d2mRg25hti9rvvortxko4lq0PVGDLTovOJ0DQf0tT353ewU
+         2NUq9v3Lnkydnd59S3hVbJ5OyPHrwx56cY6/6+X8HnVAFVaT7upkYRpp2wfxtTPVwmcj
+         c0fY3G7RY3IjrjRGueePec4G1tiM+V4bz4cCcMJ43axpT7iVIF0L+qToTl1B8++SXG9O
+         68OQ==
+X-Gm-Message-State: AGRZ1gIsC6TJyYY9NE9AiPoX7GzohENednUDvkf1EqmvvTLr7iQAnnNK
+	2V1UOGbpUs1w06y+RGznUpCBUaUiq2frGL+PLxdRTUlCDUC0NVI+Yw==
+X-Received: by 2002:a63:2315:: with SMTP id j21mr1170955pgj.297.1541617051588;
+        Wed, 07 Nov 2018 10:57:31 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5615586pjt;
+        Wed, 7 Nov 2018 10:57:30 -0800 (PST)
+X-Google-Smtp-Source: AJdET5emm8dvm3xqEcIFWusCJAcJomAnBPLQ1lR5wNCgeUStRn5y3x3VpV1SC2giIShEbKFd3jzo
+X-Received: by 2002:a63:396:: with SMTP id 144mr1214004pgd.68.1541617050623;
+        Wed, 07 Nov 2018 10:57:30 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541617050; cv=none;
+        d=google.com; s=arc-20160816;
+        b=t7YaaQGQ021LD/P27rIdfQ6P/pg0NtWdKjT6XCJGxZyXQOGhi/fOf1pamyHzFOC/ow
+         Il4h5m7DapjPOiiC+VzJqCgIrW37X7eVWMMP3S2L1vclVpmVGgY7KDdEL9L+x9v+uH90
+         7b9BPT+a8PaiaXDWkO61tw9xiZi3pyU7lasrISsQIdPoTfFUNf8/mAe0ecYQh5F5LCWL
+         TSEG2EALHDUgCYvTetnCyjtklQdMQX2txOPDOFoQj9IAIgH+W+YefWd+npjGzJA+tDrC
+         T1ILY4UyVCJ29wSslweK0qaK5vKNLe15ZEUuz87Le6gmOTrCSTovVBRQkc58WQm+Lwo+
+         A0aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=T10zk169Vu2UzjfEPpQ0MWPBPxcsbXBzEtqR+juRvPM=;
+        b=f0OvZ2q13zULJh4vUe/XNNTsL/gCeJQwFx84O+fh0Z+PlZsN4v1ZRZDjN98tyVMJ5N
+         OL3QGSojRel9x57jktA4Fh8oNew3iNs4ZlzQLpqrUuSuwsjmZWYbXqWPdx24GnRSrzxD
+         wDiQe2AdiMYCPWm9xmYyKr9lWqJGSvBBy0cAjC2wqmL4irfs0wq8tg54Xs4Xs2zvmZ4q
+         MpRIJCh8FEBRlnu/1kDhKDN+gnJQG/nmTDSfR0FdCkxwO/tMUlAFNn1aNR3VKyQCPcJ+
+         agPED0JNELrD1rAuGokhWsyLJahiQn8L2N3W5ceEfBeASwjk/V60gjVK0jd2j0Kl5FN1
+         BA+A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@baylibre-com.20150623.gappssmtp.com header.s=20150623 header.b=TgHjlORg;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id w126-v6si1322523pfw.257.2018.11.07.10.57.15;
+        Wed, 07 Nov 2018 10:57:30 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1729071AbeKHE1Z (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:27:25 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38642 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbeKHE1Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:27:25 -0500
+Received: by mail-wr1-f66.google.com with SMTP id d10-v6so18561604wrs.5
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 10:55:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=T10zk169Vu2UzjfEPpQ0MWPBPxcsbXBzEtqR+juRvPM=;
+        b=TgHjlORgWGpXLN6EPsofxHpSvYRh0atnOg2Tnslr9/HJ6rzRpULKbnmXjd8PH9vJsz
+         ADcX9HT2zPOnTB0zZFIPTNnhx9CdG39Pg9Rcc0ndI3JkSJH1/lsAeNJiU67WYwEOMbQa
+         rX2lPvKqRRy1dKVcYiCmfHk/IdhSSzev4AcStRSF/kEzhcStJdrJIdZoL1q6wuKyvyCM
+         1n7bMx7zOLCY07nvNDqdOnL47xf6aTi5mofVKdpQskeO0n8/N1Qdivh7ED9RqW/oGVD6
+         dIfq4aTc+w8RnKINUH4fbGdMYYTCM/hUMKXjPLPCY6oISfT2x8vRpoZ86i6zrd04gMO8
+         1Blw==
+X-Received: by 2002:a5d:6389:: with SMTP id p9-v6mr1268429wru.215.1541616944671;
+        Wed, 07 Nov 2018 10:55:44 -0800 (PST)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id t77-v6sm2932817wme.18.2018.11.07.10.55.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 10:55:43 -0800 (PST)
+Date: Wed, 7 Nov 2018 19:55:41 +0100
+From: LABBE Corentin <clabbe@baylibre.com>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] crypto: crypto_user_stat: made crypto_user_stat
+ optional
+Message-ID: <20181107185541.GB5133@Red>
+References: <1541422274-40060-1-git-send-email-clabbe@baylibre.com>
+ <1541422274-40060-2-git-send-email-clabbe@baylibre.com>
+ <20181106014126.GC28490@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181106014126.GC28490@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHLEibNeNb7esYAA--.1073S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7AF4fCr18KF4fAw4UJF15twb_yoW8uFyxpr
+	n8JFWfGFWDJr1DCr95Kr4rKrnYq3yxAr1akF4xWr1Yya1fAan5WrsrZFyDWF4xCF9rCF48
+	K392ka47urW8t37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP2b7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	GVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF7vcSsGvfC2KfnxnUUI43ZEXa7IU553
+	kJUUUUU==
+
+On Mon, Nov 05, 2018 at 05:41:27PM -0800, Eric Biggers wrote:
+> Hi Corentin,
+> 
+> On Mon, Nov 05, 2018 at 12:51:10PM +0000, Corentin Labbe wrote:
+> > Even if CRYPTO_STATS is set to n, some part of CRYPTO_STATS are
+> > compiled.
+> > This patch made all part of crypto_user_stat uncompiled in that case.
+> > 
+> > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> > ---
+> >  crypto/Makefile                      |  3 ++-
+> >  crypto/algapi.c                      |  2 ++
+> >  include/crypto/internal/cryptouser.h | 17 +++++++++++++++++
+> >  include/linux/crypto.h               |  2 ++
+> >  4 files changed, 23 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/crypto/Makefile b/crypto/Makefile
+> > index 5c207c76abf7..1e9e5960946a 100644
+> > --- a/crypto/Makefile
+> > +++ b/crypto/Makefile
+> > @@ -54,7 +54,8 @@ cryptomgr-y := algboss.o testmgr.o
+> >  
+> >  obj-$(CONFIG_CRYPTO_MANAGER2) += cryptomgr.o
+> >  obj-$(CONFIG_CRYPTO_USER) += crypto_user.o
+> > -crypto_user-y := crypto_user_base.o crypto_user_stat.o
+> > +crypto_user-y := crypto_user_base.o
+> > +crypto_user-$(CONFIG_CRYPTO_STATS) += crypto_user_stat.o
+> >  obj-$(CONFIG_CRYPTO_CMAC) += cmac.o
+> >  obj-$(CONFIG_CRYPTO_HMAC) += hmac.o
+> >  obj-$(CONFIG_CRYPTO_VMAC) += vmac.o
+> 
+> Doesn't CONFIG_CRYPTO_STATS also need to depend on CONFIG_CRYPTO_USER?
+> Currently you can enable it but without CRYPTO_USER the API won't be available.
+> 
+> config CRYPTO_STATS
+> 	bool "Crypto usage statistics for User-space"
+> 
+> should be:
+> 
+> config CRYPTO_STATS
+> 	bool "Crypto usage statistics for User-space"
+> 	depends on CRYPTO_USER
+> 
+> > diff --git a/include/linux/crypto.h b/include/linux/crypto.h
+> > index 3634ad6fe202..35de61d99cd5 100644
+> > --- a/include/linux/crypto.h
+> > +++ b/include/linux/crypto.h
+> > @@ -515,6 +515,7 @@ struct crypto_alg {
+> >  	
+> >  	struct module *cra_module;
+> >  
+> > +#ifdef CONFIG_CRYPTO_STATS
+> >  	union {
+> >  		atomic_t encrypt_cnt;
+> >  		atomic_t compress_cnt;
+> > @@ -552,6 +553,7 @@ struct crypto_alg {
+> >  		atomic_t compute_shared_secret_cnt;
+> >  	};
+> >  	atomic_t sign_cnt;
+> > +#endif
+> 
+> This is a long ifdef, so use:
+> 
+> #endif /* CONFIG_CRYPTO_STATS */
+> 
+> - Eric
+
+I will fix that
+Thanks

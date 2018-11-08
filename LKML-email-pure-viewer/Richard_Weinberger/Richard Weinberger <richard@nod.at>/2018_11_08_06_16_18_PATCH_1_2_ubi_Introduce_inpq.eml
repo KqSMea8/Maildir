@@ -1,0 +1,174 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:57 -0000
+Received: from icoremail.net (unknown [209.85.215.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH_pZZONbgBxbAQ--.27418S3;
+	Thu, 08 Nov 2018 06:16:58 +0800 (CST)
+Received: from mail-pg1-f182.google.com (unknown [209.85.215.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3nUlXZONbQYkZAA--.1568S3;
+	Thu, 08 Nov 2018 06:16:55 +0800 (CST)
+Received: by mail-pg1-f182.google.com with SMTP id y4so7467293pgc.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:16:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=CivlrTRYWQkZjJhp71LoS722gwVvCsHkXHyBLcj6XUQ=;
+        b=Uqew7+VfE2rcK8WTdKOGt1E6S3Dj1Ex76iGOMPqLQdIJ3cpux/bxwi5IDOWAZr9UQK
+         qnSIGMy/6q/tbjDV6AiyKbD8ymNHG3H2Rq1q8DFL6+QqSg5MMY9GeOjSYqJ42FBRPAon
+         QK4ylHdoMjYO+gz/7X8clKsXt70cZEKQjbs7N2kQftd+uVk80CrYDD3ggeCLcuaaR1ni
+         y7BZYkE4MPeo1WOdmbawsb+yL3Zs4RZCWCME//Jawfu04LL2VNw0Mw55p7VnyJHm6hyh
+         /VRbem51ysUyVsJzpQdtFxEwUuHpVQXzOHGLwCl+etms81NOppvqa+xnEj6SHcI5FCL9
+         e6lA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJOwKo7RHMBApOknLbgDQDtGU1AcOWCduIF5OsWSVi5i9NlZei1
+	X8iOLcyLCxENooiVF+f2Z4EP///byb5i7SQYvcISYuT0X9sGXgXTzw==
+X-Received: by 2002:a65:66ce:: with SMTP id c14mr1760351pgw.450.1541629015552;
+        Wed, 07 Nov 2018 14:16:55 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp68473pjt;
+        Wed, 7 Nov 2018 14:16:54 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eL1CzfkIqyIQUlMOowlkBx9DlLRoPN2z5/hvqO5YopyHRWI7j/Yn+owNvnNiVo6h1Jf++U
+X-Received: by 2002:a17:902:c5:: with SMTP id a63-v6mr2091578pla.201.1541629014792;
+        Wed, 07 Nov 2018 14:16:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541629014; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ko1FQgzy83AVx4VmydRvSBghO5VF75pTL4CylEDgUn5TSRKDnpjcx+5uw2Kcz6qXui
+         eyz1LLuB1Gw5BCrXVuM9BVfYvUoq37ixr6l9F7ENi+Iw0GbiSh8QJ6uG0m/v21B66IJW
+         lsziBaErB5AdZa+fkUF40sAeJMrvJ6tzKQcj68ooFhxkDgfVlvNnNoe6wvkz/6IajM1k
+         wMUoxaNqLQdhg7rUCbyl6htsGQ8LYuGqA6oTp75xz8GM47o/CP9Ua4FhdNORyh7sb1cp
+         3/mssTm6rbxqkkKJkoHWhOGT3s97oTCRbSk8uVoneaTcS1XrSwDT+Xs1etOHmBf8wDQw
+         AZbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :message-id:date:subject:cc:to:from;
+        bh=CivlrTRYWQkZjJhp71LoS722gwVvCsHkXHyBLcj6XUQ=;
+        b=eN/0BOcc6OzUtSrkb+A5URFebwSSyD5kfQPlFW9zfftt95Pl7KYRbXnm+v2MGebUXB
+         iP+iyFYDZ0m3qt8ExQvhVJ+PghZydmR/sbdlK4VtTKuWJhOMWL1JMfgP2JNk+1+Y0u42
+         7JdtWBPF8d3hkjIaskSeGPlYoYN9cgrlrgiNu0ULLiWgGq3nbZ5V5xxFIo+N26iKb9uE
+         x4R7Q7BzP4pwdI2VB64rw7AXKepXnETiZ9axOBnF44A7GfWYPcfVjP0X07dXvcYLPWJQ
+         BRJuchVIohLSME54pzA0pp+lbIEkNQU7NBbB/2ng1vjWnQvATH9qpR2P2c3s2sqmhpe3
+         Zv4g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v23-v6si1552112pgh.581.2018.11.07.14.16.38;
+        Wed, 07 Nov 2018 14:16:54 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727769AbeKHHsu (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:48:50 -0500
+Received: from lilium.sigma-star.at ([109.75.188.150]:38042 "EHLO
+        lilium.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727164AbeKHHsu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:48:50 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by lilium.sigma-star.at (Postfix) with ESMTP id 075B818011A7A;
+        Wed,  7 Nov 2018 23:16:26 +0100 (CET)
+From: Richard Weinberger <richard@nod.at>
+To: linux-mtd@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, thomas.roeder@harman.com,
+        juergen.lachmann@harman.com, Richard Weinberger <richard@nod.at>
+Subject: [PATCH 1/2] ubi: Introduce in_pq()
+Date: Wed,  7 Nov 2018 23:16:18 +0100
+Message-Id: <20181107221619.32498-1-richard@nod.at>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3nUlXZONbQYkZAA--.1568S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7urWrGF4rJFy8GrW8XryrJFb_yoW8AF1kpa
+	nrAry5uw48JFy7Cw4ftw4kGw4Y9rW8X3y3C3y7Kws5tr4UJrykJFySyr1FqrWxGFWxGF17
+	WF13trW8CF17Aw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6Fylc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07b0
+	gAwUUUUU=
+
+This function works like in_wl_tree() but checks whether an ubi_wl_entry
+is currently in the protection queue.
+We need this function to query the current state of an ubi_wl_entry.
+
+Signed-off-by: Richard Weinberger <richard@nod.at>
+---
+ drivers/mtd/ubi/wl.c | 30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/mtd/ubi/wl.c b/drivers/mtd/ubi/wl.c
+index 6f2ac865ff05..ca1b31385eb5 100644
+--- a/drivers/mtd/ubi/wl.c
++++ b/drivers/mtd/ubi/wl.c
+@@ -277,6 +277,27 @@ static int in_wl_tree(struct ubi_wl_entry *e, struct=
+ rb_root *root)
+ 	return 0;
+ }
+=20
++/**
++ * in_pq - check if a wear-leveling entry is present in the protection q=
+ueue.
++ * @ubi: UBI device description object
++ * @e: the wear-leveling entry to check
++ *
++ * This function returns non-zero if @e is in the protection queue and z=
+ero
++ * if it is not.
++ */
++static inline int in_pq(const struct ubi_device *ubi, struct ubi_wl_entr=
+y *e)
++{
++	struct ubi_wl_entry *p;
++	int i;
++
++	for (i =3D 0; i < UBI_PROT_QUEUE_LEN; ++i)
++		list_for_each_entry(p, &ubi->pq[i], u.list)
++			if (p =3D=3D e)
++				return 1;
++
++	return 0;
++}
++
+ /**
+  * prot_queue_add - add physical eraseblock to the protection queue.
+  * @ubi: UBI device description object
+@@ -1848,16 +1869,11 @@ static int self_check_in_wl_tree(const struct ubi=
+_device *ubi,
+ static int self_check_in_pq(const struct ubi_device *ubi,
+ 			    struct ubi_wl_entry *e)
+ {
+-	struct ubi_wl_entry *p;
+-	int i;
+-
+ 	if (!ubi_dbg_chk_gen(ubi))
+ 		return 0;
+=20
+-	for (i =3D 0; i < UBI_PROT_QUEUE_LEN; ++i)
+-		list_for_each_entry(p, &ubi->pq[i], u.list)
+-			if (p =3D=3D e)
+-				return 0;
++	if (in_pq(ubi, e))
++		return 0;
+=20
+ 	ubi_err(ubi, "self-check failed for PEB %d, EC %d, Protect queue",
+ 		e->pnum, e->ec);
+--=20
+2.19.1

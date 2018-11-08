@@ -1,0 +1,149 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:45 -0000
+Received: from icoremail.net (unknown [209.85.214.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXvwqfDuNblxJZAQ--.26750S3;
+	Thu, 08 Nov 2018 00:11:13 +0800 (CST)
+Received: from mail-pl1-f176.google.com (unknown [209.85.214.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwD33EidDuNbzz4YAA--.123S3;
+	Thu, 08 Nov 2018 00:11:09 +0800 (CST)
+Received: by mail-pl1-f176.google.com with SMTP id n4-v6so8071125plp.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:11:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=F93yraaBxR8bH1RUbZYCy9A7Acu2BwCuS5nwvWvfNCQ=;
+        b=J0KWlr5XvjM0NlChkQ7iFOmHafzaZjysa0MqyL9fTU7rk5esVF1owcignF9eSXxHEa
+         a3tdYuPls0ylH1XfDYjEJFpYXhJONnI7cCW6g/CztPVa94poTlIijsZkbkbNw/hr7Nme
+         JrRbX5yc7gLPj0/EDiCEN5T5ZS1nwrtzMj2kfjUTbRT7bokyeFfbj95xFdaVTHdNojP9
+         hI1xFew/ybAxlgQdIad/w/OlG/SjpYdtZFd/iNGSFs9vncnPW3Q2V4QoACXsAl+0IrvA
+         +a+x6CVp1K13CdUGIRTGU3Wsb3ZtLW9srBklC0yhYo2cREMGAlcP4udDEWb79wCoFPR+
+         3LDQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gL5xdRL2nvTm3jCtPrh9qRsknXlHOG4QMrwQM7lDu+6S8fCi2vO
+	/oNtnE5vaBiBUSJkBKlk7l8z+atDLjrB/Rh8GR9CQadRtVovYOCPeg==
+X-Received: by 2002:a17:902:a9:: with SMTP id a38-v6mr831749pla.7.1541607069206;
+        Wed, 07 Nov 2018 08:11:09 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5431062pjt;
+        Wed, 7 Nov 2018 08:11:08 -0800 (PST)
+X-Google-Smtp-Source: AJdET5e7cpFp8B2mi3HIapsqM6AOkF8law4AVtcQBvVfFOsToeLfKyvKDKGMraGtMEXwswlat2On
+X-Received: by 2002:a17:902:bd8d:: with SMTP id q13-v6mr822101pls.167.1541607068040;
+        Wed, 07 Nov 2018 08:11:08 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541607067; cv=none;
+        d=google.com; s=arc-20160816;
+        b=yFi7XjU06rodUzwoN25xPwYVdfaRfaCdClb2z2mEf28BHYnSMme7pnZQhRkDdKsRIy
+         iX6Ln3TpHd9QvocLg6DDu41mNW5QQj3jlXQ2Wi6QDcXosy/LuTAV7HkGp9BcVNj+sMs+
+         X1Ur0GPQQKuSPY3hZ5KSZ34fF7TRlO9NiAT5YCDjnEsNArEDccCkldZgAl5z0W6k+vFJ
+         pfm3VnsOu030WhcOKL8bKRAAPNVhLtJXiIpTNMHUMYIf6bz8rIn7qwE3f8q93asa78gB
+         JEIwRxOtkwEL97p+qQv9Z2o27Df0j0nxV9QuliFDPIV7tCdvT07hOhTwabk7btL+XkBY
+         Z89Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:date:cc:to:from:subject:message-id;
+        bh=F93yraaBxR8bH1RUbZYCy9A7Acu2BwCuS5nwvWvfNCQ=;
+        b=eGO4bg6Q092AUmnuhwnHvwInrlC30OgEp6vP+4spZ7J80UeydXqmpH8+w43FkctFjJ
+         TFLNDyqAJsK52FZqQDwMy8mk9POfiIm26mhZKdBRSi7Lo6VlD/2XhqZVHi3NFtl6vaFw
+         lraTSXPX341vdw8zF2EEdqJuYDGzcMhDY+jOFOB9BU2A385ngVnk2U7sFtmfQ7Yke7Lx
+         bCpFizFcJDxlaYUWz0P+twqs1/dBc0HroJXZpEBIR/8Wph9PHrzWQP9BuR+w08PpkED+
+         8ZzEmnnBLBU3nF856SbWKXsSFAa34D3AQ/J1gBrgjyvDqixrF6h+QZLf1suX11f4RxSW
+         7G1A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d69si989026pga.184.2018.11.07.08.10.52;
+        Wed, 07 Nov 2018 08:11:07 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731338AbeKHBlW (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:41:22 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33090 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727372AbeKHBlV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:41:21 -0500
+Received: by mail-pf1-f194.google.com with SMTP id v68-v6so4298713pfk.0;
+        Wed, 07 Nov 2018 08:10:22 -0800 (PST)
+X-Received: by 2002:a62:6bc8:: with SMTP id g191-v6mr847474pfc.134.1541607021238;
+        Wed, 07 Nov 2018 08:10:21 -0800 (PST)
+Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
+        by smtp.gmail.com with ESMTPSA id g21-v6sm1040349pgh.82.2018.11.07.08.10.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 08:10:20 -0800 (PST)
+Message-ID: <1541607019.196084.210.camel@acm.org>
+Subject: Re: [PATCH] block: respect virtual boundary mask in bvecs
+From: Bart Van Assche <bvanassche@acm.org>
+To: Sagi Grimberg <sagi@grimberg.me>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Jens Axboe <axboe@fb.com>
+Cc: Linux Block Layer Mailinglist <linux-block@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.de>,
+        Linux Kernel Mailinglist <linux-kernel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>
+Date: Wed, 07 Nov 2018 08:10:19 -0800
+In-Reply-To: <950a7996-e0f7-ff34-04da-47581a9496f0@grimberg.me>
+References: <20181105102301.9752-1-jthumshirn@suse.de>
+         <a97f3d77-d23b-b418-abce-2d93ed725bdb@acm.org>
+         <c15244a4-9085-5255-edea-b92a9ed1307c@suse.de>
+         <950a7996-e0f7-ff34-04da-47581a9496f0@grimberg.me>
+Content-Type: text/plain; charset="UTF-7"
+X-Mailer: Evolution 3.26.2-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwD33EidDuNbzz4YAA--.123S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWruw1xZF45ur4UZrWDCFy3Arb_yoWfGwb_ur
+	s5Cr18WanrGF42yrZYqrsYgFW7G34UX345AFs3JwnFv348Jay5JF92gr9a9a129ayFk3Zx
+	GryUKay8JrWvvjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUUxYxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbaxYjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc2IjII80xcxEwVAKI48JMxvI42IY
+	6xIIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0x
+	vEx4A2jsIE14v26r4j6F4UMxvI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJwCF04k20xvY
+	0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
+	67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYx
+	BIdaVFxhVjvjDU0xZFpf9x07bTjjgUUUUU=
+
+On Tue, 2018-11-06 at 19:30 -0800, Sagi Grimberg wrote:
++AD4 +AD4 +AD4 How about changing that expression into the following to make it easier
++AD4 +AD4 +AD4 for the compiler to optimize this code?
++AD4 +AD4 +AD4 
++AD4 +AD4 +AD4 (offset +AHw (bprv-+AD4-bv+AF8-offset +- bprv-+AD4-bv+AF8-len)) +ACY queue+AF8-virt+AF8-boundary(q)
++AD4 +AD4 
++AD4 +AD4 Uhm I have to admit I'm not really able to parse the above expression.
++AD4 +AD4 Sure GCC will do it but I think it's less readable (at least for me).
++AD4 +AD4 Let's see what other's think.
++AD4 
++AD4 I personally not a huge fan of decoding complicated expressions. But if
++AD4 others are fine with it then I am too...
+
+What I proposed is not a new pattern. It is a pattern that is already used
+elsewhere in the Linux kernel. A few examples:
+
+From dmabounce.c:
+
+		/+ACo Figure out if we need to bounce from the DMA mask. +ACo-/
+		if ((dma+AF8-addr +AHw (dma+AF8-addr +- size - 1)) +ACY +AH4-mask)
+			return 1+ADs
+
+From dma-direct.h:
+
+	if ((addr +AHw (addr +- size - 1)) +ACY +AH4-mask)
+		return 0+ADs
+
+Bart.

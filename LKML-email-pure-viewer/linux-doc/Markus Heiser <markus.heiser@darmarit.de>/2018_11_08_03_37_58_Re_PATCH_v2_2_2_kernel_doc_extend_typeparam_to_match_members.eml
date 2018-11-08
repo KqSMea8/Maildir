@@ -1,0 +1,156 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:54 -0000
+Received: from icoremail.net (unknown [209.85.214.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv_pZP+NbIkVaAQ--.27457S3;
+	Thu, 08 Nov 2018 03:39:05 +0800 (CST)
+Received: from mail-pl1-f172.google.com (unknown [209.85.214.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH3zpXP+NbLwoZAA--.678S3;
+	Thu, 08 Nov 2018 03:39:03 +0800 (CST)
+Received: by mail-pl1-f172.google.com with SMTP id o19-v6so8300434pll.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:39:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding
+         :sender:precedence:list-id;
+        bh=NqmlUJD2MtArk2Q6k4e6k8A6NrSPBwmqplVrSmE5+P4=;
+        b=VBlpd0qkzkRti1eIsDZ9pxmS8P3ARkbwIBLHZnmL5Fo8qUpJmFaXEsiN6i3QIl2hO7
+         nM0HiM8XF7Sm25w+or4jX1WA+6F6fd2aXIP+qq0bnCOm5UTwbxszfYmkl33mlLuqVBxM
+         f/N9DkiPsN9XzIQzvriWzs8vVIv3xEQ6RUQNzXbSCq091CiAF9QJXoG7oF0la2TLqAX2
+         gSvXFqHWxGNEaT/WV0HwRKVYHqLt0z/JMmhtslbkEC9yX9yo9BxIhnlRiEPPM/dTzLQs
+         aC3wLhegyHQqsDwCQrEpmKQuOVwRjQ6z/UylM0M8l722ABar2iIwszHoMghu1BqithFa
+         H+6Q==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJPTIdZ6uAB/FtpRUb+yGjy18B0ymMPD1QapPoXJ755JEeXWP2N
+	fWOwfSBTyQxvWgzmBZbIOK95VZmbJRjd8i8F/rvNm50KVYuPk5FcRg==
+X-Received: by 2002:a17:902:7082:: with SMTP id z2-v6mr1595111plk.78.1541619542972;
+        Wed, 07 Nov 2018 11:39:02 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5659521pjt;
+        Wed, 7 Nov 2018 11:39:01 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f9HbAyPYWmrFGCW6kyrRGrSsMB+KH2x1tr3zZXq5GvkxpsTU/ADG8TPtw6HxkGQzhw+p7a
+X-Received: by 2002:a63:b709:: with SMTP id t9-v6mr1270852pgf.366.1541619541947;
+        Wed, 07 Nov 2018 11:39:01 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541619541; cv=none;
+        d=google.com; s=arc-20160816;
+        b=CURiuUPILYlXLpHmaDCYeKdYa7u4FviumlhieHXmW9RpHlZDNBLRalhNVYCwjKQZUw
+         AU0DL5m+LfeavQPpa1ZLOusWC8+psqMm09lDMelj7766opBROa0ez9imxLALdIWKei8B
+         xzYWVDTlb6O5njfa+AhKNGeEwc3+l3Ajndxh3fNiy9ot3zuk24svTJkJMT37ErYZt1yI
+         pPhHGL4mI7ooGwhVfHlbSC94RWG/SVZFI+WwMxFV5UKI7GNHFPUD1CjDgxn+iPjaEAm0
+         R4uRcdvT95rbNNgh6PD2Y6Oeif23t5jfsehZIfh/1d2yk/tXfyXg3b8pCO5m8GbH6asy
+         s3Uw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject;
+        bh=NqmlUJD2MtArk2Q6k4e6k8A6NrSPBwmqplVrSmE5+P4=;
+        b=l64lxzIS7JLtyXSAUIuysf3SoWXyTrr5fNO/xS31EVoKzzjLSPncrRGIsact0xPH2U
+         EqbGf+G91/ZVNwVkWDOZ1Zz/F0DbllBtAOPdTHP8TsAth4df0S6zgv8ttQAtRl+xOkpS
+         G9Hf6DFarfHiGH9A3MkGw3kuMpjZWlhWMOVueBE27nAuT4j0Jw+34O3EkUxGyIPd5hc0
+         Y0LDPuKkDK46Q3222lyle3eAu2k8MSsWQwWBusqfyVmY9yFFSuzV6AuqXgB37Gg/Lxf3
+         w8I4mte9cjtsZm+m+eb+owytJ/AZrEgAoWxMu/4OqQvaBrBmP7C/zw1/wdXowfgV9AM5
+         1OGw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id c36-v6si1434488pgb.11.2018.11.07.11.38.46;
+        Wed, 07 Nov 2018 11:39:01 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728154AbeKHFJt (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:09:49 -0500
+Received: from smtp1-3.goneo.de ([85.220.129.32]:35929 "EHLO smtp1-3.goneo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725953AbeKHFJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:09:48 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by smtp1.goneo.de (Postfix) with ESMTP id AC1A2241024;
+        Wed,  7 Nov 2018 20:37:59 +0100 (CET)
+X-Virus-Scanned: by goneo
+X-Spam-Flag: NO
+X-Spam-Score: -2.774
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.774 tagged_above=-999 tests=[ALL_TRUSTED=-1,
+        AWL=0.126, BAYES_00=-1.9] autolearn=ham
+Received: from smtp1.goneo.de ([127.0.0.1])
+        by localhost (smtp1.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id a2I8XAhCMkzi; Wed,  7 Nov 2018 20:37:58 +0100 (CET)
+Received: from [192.168.1.127] (dyndsl-037-138-077-056.ewe-ip-backbone.de [37.138.77.56])
+        by smtp1.goneo.de (Postfix) with ESMTPSA id 594FC23F106;
+        Wed,  7 Nov 2018 20:37:58 +0100 (CET)
+Subject: Re: [PATCH v2 2/2] kernel-doc: extend $type_param to match members
+ referenced by pointer
+To: Mike Rapoport <rppt@linux.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1541609233-14182-1-git-send-email-rppt@linux.ibm.com>
+ <1541609233-14182-3-git-send-email-rppt@linux.ibm.com>
+From: Markus Heiser <markus.heiser@darmarit.de>
+Message-ID: <67c21f80-754f-1aa6-6722-bb90da5e5370@darmarit.de>
+Date: Wed, 7 Nov 2018 20:37:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <1541609233-14182-3-git-send-email-rppt@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH3zpXP+NbLwoZAA--.678S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7XFWrZrWUCryfJr1DGr4fuFg_yoWktrX_KF
+	srtryjg39Fkr4jyw48Gr4Sgrn5KanYqr9Yyr1rGr4DW3WDGFs5Ga4xJrn8tF9av3s3WFyS
+	v34YqrsakF1UXjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUb98YjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik2
+	6cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6rWlc2IjII80xcxEwVAKI48JMxvI42IY6xIIjx
+	v20xvE14v26r1I6r4UMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lcIIF0xvEx4A2
+	jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x
+	0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBI
+	daVFxhVjvjDU0xZFpf9x07bo5rcUUUUU=
+
+Am 07.11.18 um 17:47 schrieb Mike Rapoport:
+> Currently, function parameter description can match '@type.member'
+> expressions but fails to match '@type->member'.
+> Extend the $type_param regex to allow matching both
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>   scripts/kernel-doc | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+> index 24d3550..f9f1431 100755
+> --- a/scripts/kernel-doc
+> +++ b/scripts/kernel-doc
+> @@ -212,7 +212,7 @@ my $anon_struct_union = 0;
+>   my $type_constant = '\b``([^\`]+)``\b';
+>   my $type_constant2 = '\%([-_\w]+)';
+>   my $type_func = '(\w+)\(\)';
+> -my $type_param = '\@(\w*(\.\w+)*(\.\.\.)?)';
+> +my $type_param = '\@(\w*((\.\w+)|(->\w+))*(\.\.\.)?)';
+
+Thanks, works! FWIW: added [1] this to the linuxdoc project (a kernel-doc
+spinoff).  There we have a small frmaework for testing kernel-doc patches [2].
+Which found a few hundert usages of '->' pointers in the whole kernel sources.
+
+[1] https://github.com/return42/linuxdoc/commit/cce336ce0
+[2] https://github.com/return42/linuxdoc/blob/master/Makefile#L95
+
+-- Markus --

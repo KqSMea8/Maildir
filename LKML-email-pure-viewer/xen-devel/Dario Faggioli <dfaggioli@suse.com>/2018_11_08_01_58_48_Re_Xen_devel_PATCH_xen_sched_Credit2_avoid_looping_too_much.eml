@@ -1,0 +1,217 @@
+Return-Path: <xen-devel-bounces@lists.xenproject.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:26 -0000
+Received: from icoremail.net (unknown [209.85.215.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv+5hKONbL8ZZAQ--.27113S3;
+	Thu, 08 Nov 2018 02:01:06 +0800 (CST)
+Received: from mail-pg1-f181.google.com (unknown [209.85.215.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBnQj5aKONbQb0YAA--.41S3;
+	Thu, 08 Nov 2018 02:00:58 +0800 (CST)
+Received: by mail-pg1-f181.google.com with SMTP id w7so7615254pgp.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:00:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :message-id:from:to:date:in-reply-to:references:organization
+         :user-agent:mime-version:subject:precedence:list-id:list-unsubscribe
+         :list-post:list-help:list-subscribe:cc:errors-to:sender;
+        bh=AXcyloZQpML3mnVwIx3rQD17uu61N3HltG6vMLsfz7Q=;
+        b=KkQ2VHjmHubI5JUTMGkw31JBZnbOf9XLWiPg3lgz1hevDSVDW2NreZ9QBslUN/NoZG
+         gcJo3V46jvFs8Rv+JRDjS6NcMoDtm7iYUOJnOQcQXCdJ/8hK7Z9syFxRQELN5hL3e3M9
+         r7qP91Sc4CYTKKFK3gfzMrGBO52B62FEChAxfrleaXo/RdjqRzSp9r4sCAzDQ0u+TFcU
+         v2K6jZ24FehyVOcMKF9iTJUv2UEvMlT/bq2meUUXVYjsBwrxl88BnV4cojpwMmyeIULb
+         JciSRZC1KnG/hWUQBwitrFlU4L5AeLXddomTnUD1bI3yx/4cLq9yMGLeECYsj5ZOv5/B
+         czqw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of xen-devel-bounces@lists.xenproject.org designates 192.237.175.120 as permitted sender) smtp.mailfrom=xen-devel-bounces@lists.xenproject.org
+X-Gm-Message-State: AGRZ1gL/mb1296LNqjmNLBgM6gmNI2lc8Awth2l1IpXOerWpTrLiAG46
+	ENZu8FjCg2Ub9NIlph5Uiwj4by3CDq5++NOrUwx4hd4pEWPf9UTI0g==
+X-Received: by 2002:a62:c20b:: with SMTP id l11-v6mr1183775pfg.251.1541613658267;
+        Wed, 07 Nov 2018 10:00:58 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5553052pjt;
+        Wed, 7 Nov 2018 10:00:57 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dIuKybk/7vWjopLvQewfN8SnJcRtc6ZwztoXEDMxlufJqJKxRHXrgx9jlBHhXx4yLsrhy5
+X-Received: by 2002:a81:66c2:: with SMTP id a185-v6mr1210908ywc.19.1541613656936;
+        Wed, 07 Nov 2018 10:00:56 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541613656; cv=none;
+        d=google.com; s=arc-20160816;
+        b=vHhpHgySz0WC+7w3p7DMhJxqXEfEK1pfwT54lsS+JD6b7TWYVaUOImZ5o/3XXOccWH
+         a9RWTu1lWjolDPOLcXDqv+0we0gBiF6+Ei8CdtsuOwFg2xq5r8Ps/ng5IX58r5zC5+iP
+         qBgliDp6QQdovvMTeMQ2mXn/tDA+nZ4A+v8cpGoIeOr1sfoHKTFxHbYNLb55eMoHwv6r
+         EhUwNpANkM0P4WXbp/tXDiFBpeGDHB2b/72NRR3j5anaPwtqTt0xwC9u32NDFFZgmUTr
+         Iks5pluW4sGguc7agqY9XtfC02FXlYJYo9VJR5W/SjRDWShYyfswLiOdpNDjE0OoNGVd
+         IftQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=sender:errors-to:cc:list-subscribe:list-help:list-post
+         :list-unsubscribe:list-id:precedence:subject:mime-version:user-agent
+         :organization:references:in-reply-to:date:to:from:message-id;
+        bh=AXcyloZQpML3mnVwIx3rQD17uu61N3HltG6vMLsfz7Q=;
+        b=XsbRSGE5zZ/51nsrEbTKKVxgAUotV3CmTIFCaYjw6mh2cMI3eJuenyNJS0DE8VkqDL
+         VxK0WjzlckEb5nIWRxvPjxeKtJ5uWC9wU9X/+dOovp1oST8wsXUJI1R104ML0OhzUecL
+         rQ6T4+2GWRiQC+F9bnkl5a4aUd3QXJkeUgS3DwVj7BjNa0zR6kDsvkiGreFGBxPZIB4Z
+         iA+TdcSZ3Db1OTCuTL+nHsVK4xp/Srl8CyryY4H1ME5XabEhPIONF8800xoXJ9LXDvBg
+         WTzP+G/sKJkDC7r1gmFiahr6aBNROTLMY5ppjG7ivzVdZEtjd+QfGhPeo3QeO+S/ShwD
+         OAnw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of xen-devel-bounces@lists.xenproject.org designates 192.237.175.120 as permitted sender) smtp.mailfrom=xen-devel-bounces@lists.xenproject.org
+Received: from lists.xenproject.org (lists.xenproject.org. [192.237.175.120])
+        by mx.google.com with ESMTPS id b186-v6si819983ywf.379.2018.11.07.10.00.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 10:00:56 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of xen-devel-bounces@lists.xenproject.org designates 192.237.175.120 as permitted sender) client-ip=192.237.175.120;
+Received: from localhost ([127.0.0.1] helo=lists.xenproject.org)
+	by lists.xenproject.org with esmtp (Exim 4.89)
+	(envelope-from <xen-devel-bounces@lists.xenproject.org>)
+	id 1gKS6a-0001jQ-5r; Wed, 07 Nov 2018 17:59:04 +0000
+Received: from all-amaz-eas1.inumbo.com ([34.197.232.57]
+ helo=us1-amaz-eas2.inumbo.com)
+ by lists.xenproject.org with esmtp (Exim 4.89) (envelope-from
+ <srs0=3bvd=ns=suse.com=dfaggioli@srs-us1.protection.inumbo.net>)
+ id 1gKS6Y-0001id-GA
+ for xen-devel@lists.xenproject.org; Wed, 07 Nov 2018 17:59:02 +0000
+X-Inumbo-ID: ce1dcd86-e2b6-11e8-9ed5-12d6303a7972
+Received: from smtp.nue.novell.com (unknown [195.135.221.5])
+ by us1-amaz-eas2.inumbo.com (Halon) with ESMTPS
+ id ce1dcd86-e2b6-11e8-9ed5-12d6303a7972;
+ Wed, 07 Nov 2018 17:59:01 +0000 (UTC)
+Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
+ by smtp.nue.novell.com with ESMTP (TLS encrypted);
+ Wed, 07 Nov 2018 18:59:00 +0100
+Received: from [192.168.0.30] (nwb-a10-snat.microfocus.com [10.120.13.202])
+ by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted);
+ Wed, 07 Nov 2018 17:58:38 +0000
+Message-ID: <b39fcd273e09b82c9c65dbee68114203a347de3e.camel@suse.com>
+From: Dario Faggioli <dfaggioli@suse.com>
+To: xen-devel@lists.xenproject.org
+Date: Wed, 07 Nov 2018 18:58:48 +0100
+In-Reply-To: <153926567611.23011.10706214055586822546.stgit@wayrath>
+References: <153926567611.23011.10706214055586822546.stgit@wayrath>
+Organization: SUSE
+User-Agent: Evolution 3.30.1 
+Mime-Version: 1.0
+Subject: Re: [Xen-devel] [PATCH] xen: sched: Credit2: avoid looping too much
+ (over runqueues) during load balancing
+X-BeenThere: xen-devel@lists.xenproject.org
+X-Mailman-Version: 2.1.23
+Precedence: list
+List-Id: Xen developer discussion <xen-devel.lists.xenproject.org>
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Cc: George Dunlap <george.dunlap@citrix.com>
+Content-Type: multipart/mixed; boundary="===============7694788955899277836=="
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+X-CM-TRANSID: AQAAfwBnQj5aKONbQb0YAA--.41S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWrtw4rXFyDCr47Xr18Kw18AFb_yoW8Jr4fpr
+	Wftw17Cayqq3yrJw1ktFWjgrW3Jws5J343Xry8Jr4xCFs0yr1IqF9FgF48urW7X34kJwn0
+	qa1jgF93GFn8AFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUJYb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa7VASzI
+	0EjI02j7AqF2xKxVCjxxvEa2IrM2vj6VCEFcxC0VAYjxAxZF0EFcxC0VAYjxAxZF0Ew4CE
+	w7xC0VCjxxvEa2IrM2AIxVAIcxkEcVAq07x20xvEncxIr21le4C267I2x7xF54xIwI1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFcxC0VAYjxAxZF0Ew4
+	CEw7xC0wCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44l
+	c2xSY4AK6IIF6rylc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMx
+	vI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1l
+	cIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4
+	C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIx
+	kGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMVCEFcxC0VAYjxAxZFUv
+	cSsGvfC2KfnxnUUI43ZEXa7IU0yxRPUUUUU==
+
+
+--===============7694788955899277836==
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-QkAJpfqZ3HxS0xt/xwUq"
+
+
+--=-QkAJpfqZ3HxS0xt/xwUq
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, 2018-10-11 at 15:47 +0200, Dario Faggioli wrote:
+> For doing load balancing between runqueues, we check the load of each
+> runqueue, select the one more "distant" than our own load, and then
+> take
+> the proper runq lock and attempt vcpu migrations.
+>=20
+> If we fail to take such lock, we try again, and the idea was to give
+> up
+> and bail if, during the checking phase, we can't take the lock of any
+> runqueue (check the comment near to the 'goto retry;', in the middle
+> of
+> balance_load())
+>=20
+> However, the variable that controls the "give up and bail" part, is
+> not
+> reset upon retries. Therefore, provided we did manage to check the
+> load of
+> at least one runqueue during the first pass, if we can't get any runq
+> lock,
+> we don't bail, but we try again taking the lock of that same runqueue
+> (and that may even more than once).
+>=20
+> Signed-off-by: Dario Faggioli <dfaggioli@suse.com>
+> ---
+> Cc: George Dunlap <george.dunlap@citrix.com>
+>
+Ping?
+
+Thanks and Regards,
+Dario
+--=20
+<<This happens because I choose it to happen!>> (Raistlin Majere)
+-----------------------------------------------------------------
+Dario Faggioli, Ph.D, http://about.me/dario.faggioli
+Software Engineer @ SUSE https://www.suse.com/
+
+--=-QkAJpfqZ3HxS0xt/xwUq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEES5ssOj3Vhr0WPnOLFkJ4iaW4c+4FAlvjJ9gACgkQFkJ4iaW4
+c+6i3xAAuVp9fJvMYeaJDHCUNL4fjMfJI2lRsg5sl7U4AuOow3bo/6bmpb0KU1qN
+k6UayEpiSsHHf2039JtpXR6aIvQYw2xINmmBhU+AdXVm9WEdBPdThCqp5qxRfWTo
+zD2XaN+Moin6+1sVxZfXlWcFIOr6yHXXl99OJ6qXKcOfdEM8Jzkz2eliGKjnzwlS
+H+g+Sy/tQTzDmPwzUyXpoDrJyf6DGiYVu3Z7a6AHYqp0b7jOBrwW2Vlb7569VxBH
+dNF4dDXaj02HwpvNAPKADrigZugnP+3ohicjozshAS0f3TognufhAYwMmZOvcwmC
+DILPQKSFyEOHZKspz94W24ZOACAbf1siuiZDfuejPpcvPjtvy/aQt4/lLFJHmUFF
+3AMg6qlPBSWv1SPIZ3yYwwgg441xKPD7Ohv8J1gaODa9emLv7O8/bK61NV98yanq
+vlBp2of6vl6nlkRez/nlF/Cz3lSVBE/Sc7H2Y9JGhrCJEk9xQ4PoHGX7KVIa0PnP
+bglsfffpFzJA+LOhQ/f7+K8tWu7my9A8uCCFxOS9usj+BhJaiJl4EhfPOQth8xH9
+9J2ALHnVwiQzzzqAtOZgENjl/N//CfYl6v9nv4BUu3IG21aHB/FFJrwTFNi5Ichm
+8VmJzg2/exAsae0TcE8pXM/HtR37qiYJlYxBAJZmscGvEPW+iuE=
+=mKOE
+-----END PGP SIGNATURE-----
+
+--=-QkAJpfqZ3HxS0xt/xwUq--
+
+
+
+--===============7694788955899277836==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KWGVuLWRldmVs
+IG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMueGVucHJvamVjdC5vcmcKaHR0cHM6Ly9saXN0
+cy54ZW5wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL3hlbi1kZXZlbA==
+
+--===============7694788955899277836==--
+

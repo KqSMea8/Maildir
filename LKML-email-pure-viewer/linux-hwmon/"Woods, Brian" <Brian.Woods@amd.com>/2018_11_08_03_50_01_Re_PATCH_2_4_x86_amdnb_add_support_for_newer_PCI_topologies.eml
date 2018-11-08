@@ -1,0 +1,211 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:59 -0000
+Received: from icoremail.net (unknown [209.85.215.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgCHv+QlQuNbOlJaAQ--.26921S3;
+	Thu, 08 Nov 2018 03:51:01 +0800 (CST)
+Received: from mail-pg1-f170.google.com (unknown [209.85.215.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnAT0iQuNbChQZAA--.768S3;
+	Thu, 08 Nov 2018 03:50:58 +0800 (CST)
+Received: by mail-pg1-f170.google.com with SMTP id w3-v6so7743566pgs.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:50:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :thread-topic:thread-index:date:message-id:references:in-reply-to
+         :accept-language:content-language:spamdiagnosticoutput
+         :spamdiagnosticmetadata:content-id:content-transfer-encoding
+         :mime-version:sender:precedence:list-id;
+        bh=TBLgHP8Qg23wPrkT92c+y+QQN3nVUImta2nNQDclVNM=;
+        b=MYWChX+cVrpV0XW1hJQR76gpQwI+bx4rSz4GYI1ZzfmJ01RozloIlKRnNHXYuv8CJ7
+         gFAwjwVgT6S+GSvqsEwG8Eo1Xrw54eX1tLyXDvc9DZOlYCm31ExJGy6qIzDysDLQ0hge
+         2XiV63GKip2pQGnbzG/6GJg8PBVjbkNblz41DrgV6B63VwbfQKnI58oy7UA23X9ooLAU
+         cu0kCHtL3cRZhb7q1/utcWQcAYwWZyNGdM+GdsET5iEiZI7WvxAEz7Lb+zuR8i8SnbMY
+         rSUePFwCzDyUQJcK8KEv+m9qAHi/+MBWVAqL3xE6paixhfcjczLcETVbFEZ+JG6is4LK
+         YUmA==
+X-Gm-Message-State: AGRZ1gI0T+2ez8vLzjtVkwRkuaZBLTPjhVD52Lkgwfe3bYf81U2IrzN1
+	hvDOw6+FRjERnU5YDCw8IiLVmJf6kWRCCUxqEmsulyF13xBOPeHEbw==
+X-Received: by 2002:a62:1c53:: with SMTP id c80-v6mr1604766pfc.14.1541620257823;
+        Wed, 07 Nov 2018 11:50:57 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5670435pjt;
+        Wed, 7 Nov 2018 11:50:57 -0800 (PST)
+X-Google-Smtp-Source: AJdET5czlAuXC/BHDB1NTvtY6354+2/Afxlzhsel+gBRp4uq0NKeKPMRQwaK25DZb7iUiVnJnJ2j
+X-Received: by 2002:a62:4dc4:: with SMTP id a187-v6mr1596893pfb.92.1541620256970;
+        Wed, 07 Nov 2018 11:50:56 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620256; cv=none;
+        d=google.com; s=arc-20160816;
+        b=xOxmD/ru+1ubVvSUImQ4zez9AxdYdWrU46kAnfoLOPlNjVjxCi2F96L6AwKZCIfl/i
+         CP4NemFYBp8LohfOr0u71L3EOyGgNbXbJbyCX9nXi5Bifu3vDH1ffKM/ONCqAWdfcuVC
+         PL15D8fRFYXYZHsplFsBFI0QLKlVivN6H6sUEtXmACZdM7DoxbcwZdDqVB3nu7VdwFB7
+         FN2cUaUW7JnQRaX8c8m/utXf8o91QwneMwhGRJckRdwcfXh38IUKlrufhT5FGw+WEOlL
+         y4NMrCTWGkq/ERY4uCVlQJ6zc7fgE9uMO8W9oivnh96uvNVFV0ta4e36YhbnRNc2GohQ
+         CxDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:content-transfer-encoding
+         :content-id:spamdiagnosticmetadata:spamdiagnosticoutput
+         :content-language:accept-language:in-reply-to:references:message-id
+         :date:thread-index:thread-topic:subject:cc:to:from:dkim-signature;
+        bh=TBLgHP8Qg23wPrkT92c+y+QQN3nVUImta2nNQDclVNM=;
+        b=v46WBpEn84IcJ2PGQmxo1yMo+7D00yVF7iYmxyPWH5JV65LvFQJvhhRJqc+N7BNYSX
+         yVIvPdYzbo2BRbQ9UJUc0fBpP1nwH/ct8kDyuYUDvR/c30f4cbiTIjQdQzxoZLj7ZvZH
+         hGxI8DdQbR2Egm4IseQC2HvFfDFayOK3Vw+AjPtbFbIlqDMkyJEXTQ/hkgJLR5BGrfaa
+         2puXL5zVaPxZotfuIBBHWEGK0NAYBunHWA9FrdHGSnVmbydOR95jUH9EkDY7lAWbkwgS
+         ybVKrjU+TcZlMRVN6zZRAKOUOBucpLZp0WR0gsQM07FpgTUd6ZL5JHi+eliURulFCM9S
+         aDoQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@amdcloud.onmicrosoft.com header.s=selector1-amd-com header.b=Snw9eUhA;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id h37-v6si1290831pgh.537.2018.11.07.11.50.41;
+        Wed, 07 Nov 2018 11:50:56 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727071AbeKHFV4 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:21:56 -0500
+Received: from mail-dm3nam03on0070.outbound.protection.outlook.com ([104.47.41.70]:33301
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726362AbeKHFVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:21:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TBLgHP8Qg23wPrkT92c+y+QQN3nVUImta2nNQDclVNM=;
+ b=Snw9eUhABwxS3Yth4PUCbb+Bk0+DRSI9qdp0lWi+eAQ/88D5Nh3BGMz+ib0KbXE7HhJ+JzHYS515YzG8qFnsrk1+cxyKtsbUEPkXlIid6KyLs71b4Ju3iZ1iL5MQoiy/bIRdwstZq3q28FC5CM81Y6qiHwpD+3mFOcooemK0IA4=
+Received: from CY4PR12MB1768.namprd12.prod.outlook.com (10.175.63.10) by
+ CY4PR12MB1703.namprd12.prod.outlook.com (10.175.62.137) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1294.21; Wed, 7 Nov 2018 19:50:01 +0000
+Received: from CY4PR12MB1768.namprd12.prod.outlook.com
+ ([fe80::82f:4b8a:fd43:aab3]) by CY4PR12MB1768.namprd12.prod.outlook.com
+ ([fe80::82f:4b8a:fd43:aab3%8]) with mapi id 15.20.1294.034; Wed, 7 Nov 2018
+ 19:50:01 +0000
+From: "Woods, Brian" <Brian.Woods@amd.com>
+To: Borislav Petkov <bp@alien8.de>
+CC: Bjorn Helgaas <helgaas@kernel.org>,
+        "Woods, Brian" <Brian.Woods@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>, Pu Wen <puwen@hygon.cn>,
+        Jia Zhang <qianyue.zj@alibaba-inc.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 2/4] x86/amd_nb: add support for newer PCI topologies
+Thread-Topic: [PATCH 2/4] x86/amd_nb: add support for newer PCI topologies
+Thread-Index: AQHUctdtTs18UoG4rUKlKIFT94W0kqU9IkqagASZzYCAAAMiAIABjnMAgAAFC4CAABZFgIAApxAAgAByOsGAAD4qgA==
+Date: Wed, 7 Nov 2018 19:50:01 +0000
+Message-ID: <20181107194955.GA19346@amd.com>
+References: <20181102195925.GB160487@google.com>
+ <20181102232948.GC26770@zn.tnic> <20181105214537.GA19420@google.com>
+ <20181105215650.GG26868@zn.tnic> <20181106214256.GA65443@google.com>
+ <20181106220059.GA4139@zn.tnic> <20181106232040.GA85755@google.com>
+ <20181107091838.GA10835@zn.tnic> <20181107133856.GA238955@google.com>
+ <20181107160707.GA14169@zn.tnic>
+In-Reply-To: <20181107160707.GA14169@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN1PR12CA0056.namprd12.prod.outlook.com
+ (2603:10b6:802:20::27) To CY4PR12MB1768.namprd12.prod.outlook.com
+ (2603:10b6:903:122::10)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.77.1]
+x-ms-publictraffictype: Email
+x-microsoft-exchange-diagnostics: 1;CY4PR12MB1703;20:1UZOaMsVTrOo01BXBYOnOPZDbVad/sgqwKBKBRvONdBHgNwiJhq31itj6gwDYBm2X586RPo94MTntgw1mQ8FU1z9FyrKH3CLjgYyMc+OGcWefCTxhp9QyEtBlMkn50pYO2wf6n8zeb6+vkVc0KB1W+uYuxrCP8YooeBjifaGLJa6FP2h766KM27PD4L8GDWwW+bwZJvZou5wDeWTDf1w3tE+r2JH2ft3EwgjQzc/qLhx9FyJyE8pGB0migZp//r5
+x-ms-office365-filtering-correlation-id: 293c924a-2d00-45cd-823b-08d644ea344b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(7020095)(4652040)(8989299)(5600074)(711020)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:CY4PR12MB1703;
+x-ms-traffictypediagnostic: CY4PR12MB1703:
+x-microsoft-antispam-prvs: <CY4PR12MB17030A4789F7A3FAC0BFF522E5C40@CY4PR12MB1703.namprd12.prod.outlook.com>
+x-exchange-antispam-report-test: UriScan:;
+x-ms-exchange-senderadcheck: 1
+x-exchange-antispam-report-cfa-test: BCL:0;PCL:0;RULEID:(8211001083)(6040522)(2401047)(8121501046)(5005006)(93006095)(93001095)(10201501046)(3002001)(3231382)(944501410)(52105095)(6055026)(148016)(149066)(150057)(6041310)(20161123564045)(20161123560045)(20161123562045)(20161123558120)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(201708071742011)(7699051)(76991095);SRVR:CY4PR12MB1703;BCL:0;PCL:0;RULEID:;SRVR:CY4PR12MB1703;
+x-forefront-prvs: 08497C3D99
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(346002)(376002)(366004)(39860400002)(136003)(396003)(199004)(189003)(52314003)(8676002)(71200400001)(81166006)(81156014)(6486002)(6512007)(14454004)(52116002)(7736002)(76176011)(71190400001)(8936002)(186003)(1076002)(2906002)(229853002)(256004)(72206003)(102836004)(25786009)(386003)(6506007)(3846002)(6436002)(53936002)(2616005)(93886005)(6116002)(11346002)(305945005)(6246003)(7416002)(54906003)(316002)(33656002)(446003)(2900100001)(6916009)(26005)(97736004)(478600001)(4326008)(486006)(105586002)(66066001)(106356001)(476003)(5660300001)(86362001)(36756003)(68736007)(99286004)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1703;H:CY4PR12MB1768.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-microsoft-antispam-message-info: MUwJAPDK9womBLhVaYDopKUaxnH9qh0LZzi3RF/kgr5Y2afO1+LFIelg0s1qQNlpL5vEDAVvQH+omE7dwa+pNIpmMVJ0hTRFzC69DkbDBbJSUVhc+ua4jGgbJK3ARCw2WudCHyStD6FbVV2Dz+wgUCN9jbBWXXx5AXcUEK4UKk87nlwLGp1bqZA16LWa3WyEBT/JNcqjKlx8hdJaX5eq/LW/7Hx39aLvd1EmJUQpN2JsvJda5G0HKO7Ux8KpMavQdwHJYe/4bm42mLLfrLGhEjcLI0kXjvRNr9nVJu0Ota8tp8STIpLxn6K7Sr+A6xVYiL8up6I0+dkuevRew3E9Yxq8J+1mSP07thKX1D3Rltk=
+spamdiagnosticoutput: 1:99
+spamdiagnosticmetadata: NSPM
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7998EECAD1E2BA468FA787687FFC6F70@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 293c924a-2d00-45cd-823b-08d644ea344b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2018 19:50:01.4267
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1703
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnAT0iQuNbChQZAA--.768S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrWxWry3XF4fury3tFyrWFg_yoWfKFg_uw
+	4DAayvyw1DGrnxt3W3KFs5WrsrWan7J34kXFy8G3ykCa4rXF4Fgw1kGr9Yvr18JrW2vFn0
+	9rWUtayI9w4q9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbh8YjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4wCY1x
+	0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VWrMxkI7II2
+	jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E
+	14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x
+	804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE42
+	xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUy8sqDUUUU
+
+On Wed, Nov 07, 2018 at 05:07:07PM +0100, Borislav Petkov wrote:
+> Thanks for explaining.
+>=20
+> So I don't know about temp sensors - I'm talking about amd_nb which is
+> something... well, I explained already what it is in my previous mail so
+> I won't repeat myself.
+>=20
+> Anyway, if there is such a PNP ID device - and I believe I have stumbled
+> upon some blurb about it in the BKDGs - which says "this device
+> represents the PCI device IDs of a CPU" and if that can be used to
+> register amd_nb through it, then sure, I don't see why not.
+>=20
+> This way, when new CPU comes out and the same PNP ID device is present,
+> amd_nb would load, sure.
+>=20
+> Maybe Brian knows more on the subject...
+>=20
+> --=20
+> Regards/Gruss,
+>     Boris.
+>=20
+> Good mailing practices for 400: avoid top-posting and trim the reply.
+
+More on exactly what?
+
+If it's the PNP ID device, if you can let me know where in the BKDG you
+found it before so I can look for keywords etc?  Because I'd need to
+find those for k8 onwards so.
+
+--=20
+Brian Woods

@@ -1,0 +1,154 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:18 -0000
+Received: from icoremail.net (unknown [209.85.215.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3_jueeNbkpRbAQ--.27499S3;
+	Thu, 08 Nov 2018 07:49:02 +0800 (CST)
+Received: from mail-pg1-f169.google.com (unknown [209.85.215.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXekbreeNbNMoZAA--.2164S3;
+	Thu, 08 Nov 2018 07:48:59 +0800 (CST)
+Received: by mail-pg1-f169.google.com with SMTP id q5-v6so8010204pgv.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 15:48:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version:sender:precedence:list-id;
+        bh=3OS4WFngmv4Tw+TbrYI/ac9sqZ6bkUevtNVUQzByFpc=;
+        b=pbE4niissCkxJU+NACDDNcAw839cShYOOIm83R+bGF74QUAj6KWmhhwTgCEQxE2Zx4
+         p5yqOdqOXJxN9OEcjgyAv4fwu0W+ZhHGES2srFBdLJ1mrj2xLmfxpTXw9yKlRuPHIKCm
+         AiaU5ZsQ6DkL9zsFJ5Mb0uDOzHfnB9G2qYX576KCAKdNIAi+t0V7ca8rY/wfWcP5fHLf
+         U4OhnoOq7975NpW23gZufXJhmUAj71sDy5xzp+ewOURCyYt+cDNlZBXmXkWvCcrunYN7
+         M9rYbLEN5AwL8Do7Py/6DqtX0YmIohy2ifsFPRBFX30plL0PYkr4xHKmnPOz0+yDGLo2
+         Ruyw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIh16h3hndzXE/pL5fkRff6eu/bYByV4sk5rVmW8kTpTRbIJh0T
+	mDuqUxN/XVj3NqiLdCENWdwe+2gMGHY2Ecga/zm+AOXrnCAga9zLGw==
+X-Received: by 2002:a63:9402:: with SMTP id m2mr1890700pge.93.1541634539206;
+        Wed, 07 Nov 2018 15:48:59 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp142179pjt;
+        Wed, 7 Nov 2018 15:48:58 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cQIKpGcxFtDzUOEoQGpGooOa6vDlsgZKUqRoweCsv16FnpijO+dkA3TRFFDJt1rlrlbl/s
+X-Received: by 2002:a17:902:5602:: with SMTP id h2-v6mr2337631pli.159.1541634538158;
+        Wed, 07 Nov 2018 15:48:58 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541634538; cv=none;
+        d=google.com; s=arc-20160816;
+        b=BP4wyjvBJ7ZiE1Z3Y7c0/G2GoHXvLXHegdnMH2kWmUchVpEqJPeMPCObbYz9XB2lnc
+         62uORqtyVO/fckAT6KxrxuogDbmH8QtjkTxFlz/UWSRtkNu/x8y68yvNY1UX7dZczwyL
+         A0Oe3KJXAcuplodJi9PXnxo1HmqkL8NFlc/NoNlmtPG44If+7Os3Ljp6AjuWdlLsmIGZ
+         vUqJKsQRHIsdsUz4dFo3rWarjMXwd0K8ieZmsFULsx/TRuRu0QSJWLnmbihTBZfDPgnU
+         X0u4ZvVhJY83JHXgtQKhYshpzL4pQwwwlQ+54ryxXu0bMQ7MIRPQ7oGMpccE2lfLezXn
+         wB5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from;
+        bh=3OS4WFngmv4Tw+TbrYI/ac9sqZ6bkUevtNVUQzByFpc=;
+        b=gwJRVcODDd7YpOOHqMG2da6Grbf9vGUqsYxnBtA7hYpnMeUj3J/BuApRGWBANKZEaR
+         XnwfOsWNnm1fIrv9l5mz97Xgv1isd6g8eO2lnq45NnUju/xf67nQsam0fT8EEloFBkH0
+         7xAHVV9bQGsYlLMvL4K136f59D5xaPa9gZKx/PgE/ytQXTIwRU8+5fa51MpN1ZdzPpVc
+         MuSUVTrM4kHjCjbarODBf4zHlEmMooqDVdPce9QxIyo9bEA/JKVL0L7XIVp8Ii/KnQNw
+         TeLBhUHgN9s1564YJhc0XPLp8DDwOTmXHg5vyRYpnlWksmJRCi9EeUv2ylXpVOjgQuuQ
+         amEA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id p64-v6si1952274pga.163.2018.11.07.15.48.42;
+        Wed, 07 Nov 2018 15:48:58 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727950AbeKHJVV (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 04:21:21 -0500
+Received: from ozlabs.org ([203.11.71.1]:37023 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbeKHJVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 04:21:21 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.org (Postfix) with ESMTPSA id 42r35Y1Ttbz9s9G;
+        Thu,  8 Nov 2018 10:48:33 +1100 (AEDT)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        devicetree@vger.kernel.org, linux-fpga@vger.kernel.org,
+        nfont@linux.vnet.ibm.com,
+        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+Subject: Re: [PATCH v6 07/18] of: dynamic: change type of of_{at,de}tach_node() to void
+In-Reply-To: <6bc78502-7587-eb9c-237f-d3f031979d42@gmail.com>
+References: <1541431515-25197-1-git-send-email-frowand.list@gmail.com> <1541431515-25197-8-git-send-email-frowand.list@gmail.com> <87tvktqedf.fsf@concordia.ellerman.id.au> <6bc78502-7587-eb9c-237f-d3f031979d42@gmail.com>
+Date: Thu, 08 Nov 2018 10:48:33 +1100
+Message-ID: <87h8gsqwj2.fsf@concordia.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXekbreeNbNMoZAA--.2164S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF17ZF15uFWrtr1ftr4rGrg_yoW8Jw1Dpr
+	WfWas0kr4kua48Wr18tFyfCrWSyws3Gr4Yqw1DtayI93W5Gr48CFsrtw1Uua45GrWUGw1Y
+	vrW7W3Waqa4DXaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6FWlc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r1j6r1xMxvI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUgBOJ
+	UUUUU
+
+Frank Rowand <frowand.list@gmail.com> writes:
+> On 11/7/18 4:08 AM, Michael Ellerman wrote:
+>> frowand.list@gmail.com writes:
+>> 
+>>> From: Frank Rowand <frank.rowand@sony.com>
+>>>
+>>> of_attach_node() and of_detach_node() always return zero, so
+>>> their return value is meaningless.
+>> 
+>> But should they always return zero?
+>> 
+>> At least __of_attach_node_sysfs() can fail in several ways.
+>
+> Sigh.  And of_reconfig_notify() can fail.  And at one point in the
+> history the return value of of_reconfig_notify() was returned by
+> of_attach_node() if of_reconfig_notify() failed.
+>
+>> And there's also this in __of_detach_node() which should probably be
+>> returning an error:
+>> 
+>> 	if (WARN_ON(of_node_check_flag(np, OF_DETACHED)))
+>>         	return;
+>> 
+>> 
+>> Seems to me we should instead be fixing these to propagate errors,
+>> rather than hiding them?
+>
+> The history of how of_attach_node() stopped propagating errors is
+> a bit more complex than I want to dig into at the moment.  So I'll
+> drop this patch from the series and add investigating this onto
+> my todo list.  I suspect that the result of investigating will be
+> that error return values should not be ignored in of_attach_node()
+> and of_detach_node(), but should instead be propagated to the
+> callers, as you suggest.
+
+Thanks.
+
+cheers

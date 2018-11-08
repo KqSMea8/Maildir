@@ -1,0 +1,170 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:48 -0000
+Received: from icoremail.net (unknown [209.85.210.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f7WDXuNbdvxaAQ--.27127S3;
+	Thu, 08 Nov 2018 05:52:03 +0800 (CST)
+Received: from mail-pf1-f182.google.com (unknown [209.85.210.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnvzuBXuNb83QZAA--.1434S3;
+	Thu, 08 Nov 2018 05:52:01 +0800 (CST)
+Received: by mail-pf1-f182.google.com with SMTP id b11-v6so8287765pfi.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 13:52:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:dkim-signature
+         :dmarc-filter:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=OFBaThYZ9JkWOcYsk/TmGv9V+tz04csn7okfq6DKqC8=;
+        b=eU5aJtiwpSvxdwQTNjy3AciMa71uxyO4nXScHQXNU9y5RoEaLUlcngnsipg7ZGAiZr
+         87kIm0WtLq5zSZd+CzFXeQArJleh8lsRezQvz186efd/9x0ZmH/ubgggyooY1HfUfOGw
+         utQavzR0bhoX8wL4V1oHdSFQzXhjLk+zPqN6tf6YQmLJvPfxr2amh4CqXkjTGG7v4ohd
+         5cqIsNpCmotWtfeIzYs9uz52RBTP24V5yXIaVm3eAvxXBa7CENzrsDHaDmKq84yd8jYK
+         KuUVchn1i0srwd99M8b4iXVlIxzw+jX60chpnDYfZZhEwiXicD/1687zaiHofUm+/Rcq
+         IRMw==
+X-Gm-Message-State: AGRZ1gJR5vHgnmBvZmCXRMCnvXkW4bmq2Ux6QL65gkrKoSEgGEbwMHEd
+	Oj9Gs5uwosluFV99xDJ8LVHeq/KJktqooJsU4vlOnqXFHK+IJe1x5g==
+X-Received: by 2002:a62:35c2:: with SMTP id c185-v6mr1969422pfa.69.1541627521532;
+        Wed, 07 Nov 2018 13:52:01 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp45496pjt;
+        Wed, 7 Nov 2018 13:52:00 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f9ZRBqH2CLX/wbsCCrNPOKhKfIgy78WeMuUjH6pExA7EzPvRGzoCIvYzqhxRfrviY1tFgE
+X-Received: by 2002:a63:fa46:: with SMTP id g6mr1732236pgk.18.1541627520849;
+        Wed, 07 Nov 2018 13:52:00 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541627520; cv=none;
+        d=google.com; s=arc-20160816;
+        b=MoVoefvbMyazGMzh/YxS7jYdmbkoVt/3vHgr+IXg3b+5XRaBqJeHwpsPek2QNuSPco
+         jLBGdIyAkX4xFzMfwOhgHtM3c9vG5uRxmcbi3hP5OkFRc1+9Yor62m4hqOMtR0b2vmWn
+         mcZ14mo886u/mwCIjOdOC4qktJL3qq7AwvMbDfAnG13qL9o5OW5PV5jDol5zG8VyircY
+         ZoLpBXaG4/wM+/Fys0ELf8xKBSOHv7Q4X0oCXdF0s1C7Q3Y4vV0GBJx5EsqK9WE+CsrO
+         KCpDRjswYxHkxO9ES4BgAUe/IFCTms/0U17yynkymsCjY1386KabPdxfoEHmf65TC9hC
+         /JFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :message-id:date:subject:cc:to:from:dmarc-filter:dkim-signature
+         :dkim-signature;
+        bh=OFBaThYZ9JkWOcYsk/TmGv9V+tz04csn7okfq6DKqC8=;
+        b=VlFjz9mLJPz9ln9Xu0PuQJ3d2gcossBUl+2KZv/bOSZcdy+lzRcJoyKOHwwactFqwT
+         tNIF2rKqffN+fkJ6q6dgCmLUp3MhpQt2THX96oyN5itjKfGtpIMHz9J893+YXx1V+fjH
+         NO6BkHg3NCTknv7BoKg0/vkyGpctCIrJBu2sr4YUc5fVGZE56TQUbXwRe//CpBvxlVN8
+         XLChcqyL1Mwu5AUm5vKBMRTPV3d1G9XNjYYadzjX4vF9E2YOmTvivZxUAr/KqbKGBqzl
+         j5214SILlz94hLDhxXP1XPsukd6b59NY5jb9s6JviMKEBut1kddoxkzY81OMCMhGYh6s
+         3Lgg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@codeaurora.org header.s=default header.b=gAgVyIY6;
+       dkim=pass header.i=@codeaurora.org header.s=default header.b=lwmjj8Wj;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id k2-v6si1895603plt.254.2018.11.07.13.51.45;
+        Wed, 07 Nov 2018 13:52:00 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727527AbeKHHXh (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:23:37 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:52038 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbeKHHXh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:23:37 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1DD3960767; Wed,  7 Nov 2018 21:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1541627479;
+        bh=o/7CHat9NMNmeV0dZRqmp7qU5wrneKuZO7FjFc6Lvv4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gAgVyIY6kDmAc35vfiOestmDruLCcg7W5cac5646Lf1JuOrPMvDQ3EMIJZvtW3j6p
+         mj6mCFo1vuNP23VPLMvn4Z0gTmw+gzhQibZMviSmxnuGKSTVY3oZASyWac9+bP3rvd
+         sSfASfC8fU2ndqJPwsjJC1JpZ+3n1CyMMvSN5tU0=
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        pdx-caf-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        DKIM_INVALID,DKIM_SIGNED autolearn=no autolearn_force=no version=3.4.0
+Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1C1A8601D4;
+        Wed,  7 Nov 2018 21:51:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1541627478;
+        bh=o/7CHat9NMNmeV0dZRqmp7qU5wrneKuZO7FjFc6Lvv4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lwmjj8Wj9fBwjm5jvE9x9fNJAjz9h70KpXcPjBKCdCpQjN+XKD1eWzf1w0d+NRF8i
+         RHuqpHLWAi7c7d3aAVyWF41TAJHUz1ksvj+yu8V/Rqgg/NOdbV9cNgmXbZWp/UpYQ0
+         j1FaFW/mXnRAoxw9QGEMO3YM9qrkZMwLkLVepeXc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1C1A8601D4
+From: Lina Iyer <ilina@codeaurora.org>
+To: linux-arm-msm@vger.kernel.org, andy.gross@linaro.org,
+        bjorn.andersson@linaro.org
+Cc: rplsssn@codeaurora.org, linux-kernel@vger.kernel.org,
+        rnayak@codeaurora.org, devicetree@vger.kernel.org,
+        Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH RESEND v3 1/2] arm64: dts: msm: add PDC device bindings for sdm845
+Date: Wed,  7 Nov 2018 14:51:08 -0700
+Message-Id: <20181107215109.10720-1-ilina@codeaurora.org>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnvzuBXuNb83QZAA--.1434S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7GF1UGw43ur1DJFyxJrW8Zwb_yoWkGrc_Jw
+	1xWayrGFs3ZrZ7Kwn5Xan8CasIk3yUZrn5Xw1qqr1UGF98X3Z8Ja9rJa97Cr1fWw45KrZa
+	krZxZrs5Xr10kjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbfkYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkIecxEwVCI4VWxMxkI7II2jI8vz4vE
+	wIxGrwCYIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4U
+	JVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I
+	8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AK
+	xVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI
+	8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUDhF4DUUUU
+
+Add PDC interrupt controller device bindings for SDM845.
+
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+---
+Changes in v3:
+	- Fix PDC map, use GIC SPI port number for hwirq
+Changes in v2:
+	- Order by address
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index b72bdb0a31a5..09f26ae9f803 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1256,6 +1256,15 @@
+ 			#power-domain-cells = <1>;
+ 		};
+ 
++		pdc: interrupt-controller@b220000 {
++			compatible = "qcom,sdm845-pdc";
++			reg = <0xb220000 0x30000>;
++			qcom,pdc-ranges = <0 480 94>, <94 609 15>, <115 630 7>;
++			#interrupt-cells = <2>;
++			interrupt-parent = <&intc>;
++			interrupt-controller;
++		};
++
+ 		tsens0: thermal-sensor@c263000 {
+ 			compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+ 			reg = <0xc263000 0x1ff>, /* TM */
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project

@@ -1,0 +1,202 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:10 -0000
+Received: from icoremail.net (unknown [209.85.210.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3yS3+OJb+I1YAQ--.26744S3;
+	Wed, 07 Nov 2018 22:37:45 +0800 (CST)
+Received: from mail-pf1-f169.google.com (unknown [209.85.210.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnDEi2+OJbZtwXAA--.6071S3;
+	Wed, 07 Nov 2018 22:37:42 +0800 (CST)
+Received: by mail-pf1-f169.google.com with SMTP id v68-v6so4191013pfk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:37:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:sender:precedence:list-id;
+        bh=OtQpXLKVDU3hFhHXorBFshy4vyWhc9NzCNeAxKTvCio=;
+        b=rkHtcuF3EPbHpst9P4kRfZD9fFPPefvt/TTsDn2Pp6u8KY8dP77ymmpYx1fl+Rpdau
+         TuygS6M/U158SIW5WKi7JfZ5WVvnu+0LTT3cCMxdzGhO1tVr6K/TycpQFKeP5MgrYV0+
+         H81vAOtfd61CTnK0yNEpR8q/+zaCKe221rKHAP7NU4jLamMv/kh7CX02JQW8/IrwbJwd
+         iCeTWiEw1eJNqOxjxonCp5zuqkLjvjZ5wG08ELXMueOC87zrnTsQJL/6GHIFzFfno7lP
+         aCBsJWJmfmAxOEZixjZag23w67v9bO0cqDBGzjGJPuPSdtJMiqqdJTa2F58uIawPfTix
+         673w==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIwN/4C9jPS0RNbmlXexCnUXMSJlet5wek7bj430T10PTZ0IkW7
+	cLukwUVMXdvS1lJeLUUMyHVVZm9/EsR2x5FKw3Rz6V5fJdLKv59wBQ==
+X-Received: by 2002:a65:64d5:: with SMTP id t21-v6mr396925pgv.428.1541601461845;
+        Wed, 07 Nov 2018 06:37:41 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5324677pjt;
+        Wed, 7 Nov 2018 06:37:40 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fkukxDzv7S4NnUDkjW7EgFsSgNAZlpjoriiFpxECX0OiR/82n90qI/o5RZoneN+krGIeZ2
+X-Received: by 2002:a17:902:c7:: with SMTP id a65-v6mr484378pla.296.1541601460929;
+        Wed, 07 Nov 2018 06:37:40 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541601460; cv=none;
+        d=google.com; s=arc-20160816;
+        b=KB7Hy4LHY95g1Kq9EGgMgNfsw8btAyu4atcGPjpASUXNuDk7bQTVmIVxxkRdrRyaRl
+         MisymIID1SofEXoeXfVjeOUlj2pTzWZ8CUL3rjIXjysu+D1umfgP7ovco4fbA5x3s/vz
+         W6gIYR6hJmpbjEYHMGFQY3ccXkAEaxWTwW4R7W8F1DOtO9XprWVqgHerEZ4rO/Mi2fcZ
+         dLm8V/vFhUT9OPu02jBGWQA+HLFXmfidp6MG0JIT7CbKHqod6ECb09nSQHvfIGAGSYJ9
+         SPOCArjP8im8iqq4TVX2KvBLRW9JwKC1ANv/GvBsguwyzObc4qasPEWs4oUuxL+VMJ7v
+         XaKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version;
+        bh=OtQpXLKVDU3hFhHXorBFshy4vyWhc9NzCNeAxKTvCio=;
+        b=1JajHTPtWUF1V1jx8Nrs7ck3QnU428TIO9uQuKKSlsWTu50JrI/jsjTNyj5/Yaqwfr
+         XHSZptM1QonvR1IqqvmNvlDHk9F0oSUr+H4MUSYT1HWHZ5SW41eHR0Wqf9QrEEJi07DX
+         etTURZvFq/T/lwNar6pC9Czg3OZTMmHpQdnuUTOS0nWh/faKwt5HpVGVTLtJEuYbPVh6
+         pO6eVr5D4fqhGvQK5uyqEDpbUwF5z4u9TXIXNlKRTkiYCZRbFWoimjX+trd+oseFmHcm
+         Gwn4IzouVJbYQR3n81OUceQayJw/ED/ucai19v4qUI+IuvQRl1npLSkN3jLfc8UWwyy6
+         S9lQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id n31-v6si696521pgm.402.2018.11.07.06.37.25;
+        Wed, 07 Nov 2018 06:37:40 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727816AbeKHAHp (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:07:45 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40215 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbeKHAHp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:07:45 -0500
+Received: by mail-qk1-f194.google.com with SMTP id y16so19915043qki.7;
+        Wed, 07 Nov 2018 06:37:07 -0800 (PST)
+X-Received: by 2002:a37:324a:: with SMTP id y71mr434916qky.291.1541601426423;
+ Wed, 07 Nov 2018 06:37:06 -0800 (PST)
+MIME-Version: 1.0
+References: <20181107003250.5832-1-elder@linaro.org> <20181107003250.5832-5-elder@linaro.org>
+In-Reply-To: <20181107003250.5832-5-elder@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Wed, 7 Nov 2018 15:36:50 +0100
+Message-ID: <CAK8P3a3iKshE3yCG477AeZbKbLtpDwMhn5mfLySFRLOLmUv5AQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 04/12] soc: qcom: ipa: immediate commands
+To: Alex Elder <elder@linaro.org>
+Cc: David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Networking <netdev@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-soc@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syadagir@codeaurora.org, mjavid@codeaurora.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnDEi2+OJbZtwXAA--.6071S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxWr48GrWDCFyDtw4kuF1UGFg_yoW5Ar4xpr
+	y7GryUKrsFqF48Zr9ruw4xuF9a93sakFy7W348C34YyFnFgry0kF10kr4rZa43Aw15Ary8
+	XFsFvrW7GF4DZrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPYb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6ry5MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMxvI42IY6I8E87Iv67AKxVW0oVCq3wCYIxAIcVC2
+	z280aVCY1x0267AKxVW0oVCq3wCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij2
+	8IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
+	1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UYxBIdaVFxhVjvjDU0xZFpf9x07bn1vsU
+	UUUU=
+
+On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
+>
+> +/**
+> + * struct ipahal_context - HAL global context data
+> + * @empty_fltrt_tbl:   Empty table to be used for table initialization
+> + */
+> +static struct ipahal_context {
+> +       struct ipa_dma_mem empty_fltrt_tbl;
+> +} ipahal_ctx_struct;
+> +static struct ipahal_context *ipahal_ctx = &ipahal_ctx_struct;
+
+Remove the global variables here
+
+> +/* Immediate commands H/W structures */
+> +
+> +/* struct ipa_imm_cmd_hw_ip_fltrt_init - IP_V*_FILTER_INIT/IP_V*_ROUTING_INIT
+> + * command payload in H/W format.
+> + * Inits IPv4/v6 routing or filter block.
+> + * @hash_rules_addr: Addr in system mem where hashable flt/rt rules starts
+> + * @hash_rules_size: Size in bytes of the hashable tbl to cpy to local mem
+> + * @hash_local_addr: Addr in shared mem where hashable flt/rt tbl should
+> + *  be copied to
+> + * @nhash_rules_size: Size in bytes of the non-hashable tbl to cpy to local mem
+> + * @nhash_local_addr: Addr in shared mem where non-hashable flt/rt tbl should
+> + *  be copied to
+> + * @rsvd: reserved
+> + * @nhash_rules_addr: Addr in sys mem where non-hashable flt/rt tbl starts
+> + */
+> +struct ipa_imm_cmd_hw_ip_fltrt_init {
+> +       u64 hash_rules_addr;
+> +       u64 hash_rules_size     : 12,
+> +           hash_local_addr     : 16,
+> +           nhash_rules_size    : 12,
+> +           nhash_local_addr    : 16,
+> +           rsvd                : 8;
+> +       u64 nhash_rules_addr;
+> +};
+
+In hardware structures, you should not use bit fields, as the ordering
+of the bits is not well-defined in C. The only portable way to do this
+is to use shifts and masks unfortunately.
+
+> +struct ipa_imm_cmd_hw_hdr_init_local {
+> +       u64 hdr_table_addr;
+> +       u32 size_hdr_table      : 12,
+> +           hdr_addr            : 16,
+> +           rsvd                : 4;
+> +};
+
+I would also add a 'u32 pad' member at the end to make the padding
+explicit here, or mark the first member as '__aligned(4) __packed'
+if you want to avoid the padding.
+
+> +void *ipahal_dma_shared_mem_write_pyld(struct ipa_dma_mem *mem, u32 offset)
+> +{
+> +       struct ipa_imm_cmd_hw_dma_shared_mem *data;
+> +
+> +       ipa_assert(mem->size < 1 << 16);        /* size is 16 bits wide */
+> +       ipa_assert(offset < 1 << 16);           /* local_addr is 16 bits wide */
+> +
+> +       data = kzalloc(sizeof(*data), GFP_KERNEL);
+> +       if (!data)
+> +               return NULL;
+> +
+> +       data->size = mem->size;
+> +       data->local_addr = offset;
+> +       data->direction = 0;    /* 0 = write to IPA; 1 = read from IPA */
+> +       data->skip_pipeline_clear = 0;
+> +       data->pipeline_clear_options = IPAHAL_HPS_CLEAR;
+> +       data->system_addr = mem->phys;
+> +
+> +       return data;
+> +}
+
+The 'void *' return looks odd here, and also the dynamic allocation.
+It looks to me like all these functions could be better done the
+other way round, basically putting the
+ipa_imm_cmd_hw_dma_shared_mem etc structures on the stack
+of the caller. At least for this one, the dynamic allocation
+doesn't help at all because the caller is the same that
+frees it again after the command. I suspect the same is
+true for a lot of those commands.
+
+       Arnd

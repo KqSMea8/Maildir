@@ -1,0 +1,134 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:50 -0000
+Received: from icoremail.net (unknown [209.85.214.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv5p1OONbWR1aAQ--.27038S3;
+	Thu, 08 Nov 2018 03:09:43 +0800 (CST)
+Received: from mail-pl1-f182.google.com (unknown [209.85.214.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnvTlzOONb8fUYAA--.447S3;
+	Thu, 08 Nov 2018 03:09:39 +0800 (CST)
+Received: by mail-pl1-f182.google.com with SMTP id n4-v6so8289595plp.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:09:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=uRN91ZbCBAOCJszsLQvkCl+4ufByNRJk7q4qv3voVxU=;
+        b=mbAbKrE6iAJa0tJH0Q2j7+CrftiF/+97Rs1l7HFE292vNxMyUXTgMSMJRHFAameQNu
+         xUj/yIWrlPAzHQ0OKiPIcAondEJEUmAAzoXnSNP4U1WzzkCgFTHp2tFrC/S+SbR0S+Zg
+         9Rlq9xnBpzJz8TWKTggcgbcZSKGrK3jnzYPr1i10MJr0ltnoyabSIR5JMA/3d3k9e/+w
+         nns0c0BN7+jArVYdkNP+RTF2E9oWKh7lrbXZAnDg9UQ3jwMtSpjtWyj+T5AqLOzG2uoa
+         nBCiVmst6BCfyj7rrohELO06qkk3j5Ck2abeox1fqFTzjSvnMYYvUoZTPt+PPZqdXcRR
+         6SRg==
+X-Gm-Message-State: AGRZ1gJwzQ2s3KZZ5Xc6PIvkHKs3aOHYBqBAHD8xtWCN2OI2MFgg6GGz
+	kDchYyr2D+8jx4O7P76CnSi8k483dwWKG5/fhR50GMygvqbF1GawMw==
+X-Received: by 2002:a17:902:9698:: with SMTP id n24-v6mr1486872plp.9.1541617778742;
+        Wed, 07 Nov 2018 11:09:38 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5630248pjt;
+        Wed, 7 Nov 2018 11:09:37 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cQW4xpKelrCYwmbwMHCPsaQforo5Rrimcg2o9AHnbmpe8DQFv59OEPsRpaWs2L4KCX9Og/
+X-Received: by 2002:a17:902:7683:: with SMTP id m3-v6mr1491441pll.180.1541617777842;
+        Wed, 07 Nov 2018 11:09:37 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541617777; cv=none;
+        d=google.com; s=arc-20160816;
+        b=cVLSI1gSo6pAstEH7UndSCa1YT00Gy0bTYiofUc5bd1zaG5DAq/tnwmfw7srR0fqcy
+         5uGp9EGA5c6l8c35jEbl+dX2dlJnjDTbCFXO4CXAkdD8VEAmpj3/tzKD3nL7zw+6l1x1
+         gVqZtlKAfpQi0Of3r0TJhDtH5etGPKb9/tUgezRwemWRNhYfGQlhpEvmCwMEHiknD8Gf
+         eS5d2botpyuxNrFYZX0azsBiojDccsIVnsL/Ed0FEARkRyOdQZDYt2bNDI/ZZ1wowCze
+         oZ/jPbjw/v57CM/FvotQiBAG39chKAPkP/TE1dGKAtGngm1bQepfTT3aeYfCT8e2vJTp
+         PDfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=uRN91ZbCBAOCJszsLQvkCl+4ufByNRJk7q4qv3voVxU=;
+        b=0oaQFt283R9ixZHggT/Mc3zJ8Xi5/dyEfUUa+GuflytJ2JOaFmAdWNO5Hm3qGEMcwL
+         ZBo24qcKOddETy5Zxg8U+NAAO4KUddnH+Q1VOfKpp342M0ACw/Z68MfUyMHzN7Awap9k
+         sFfu77Q6xTi8rS0SPXgvnfauEkjoppX07x7veE6qKoVDHUp0Vsyga5ydAGO8gWTsyxBW
+         CBmApufc/GATS82tG61c8+lYrCmxF3XaAsqMpvbt5QW2AF/z61Ury7OMYcdkpnld5pTW
+         3CeIqOvIWAtS7I7JEf/hZ4Ju4cdJeQePn0bxz4XMh157MXNu6lTyiOSnlwld7ufulFh5
+         Re3g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b="X/T8JXuE";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id g70-v6si1536638pfd.86.2018.11.07.11.09.21;
+        Wed, 07 Nov 2018 11:09:37 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1729338AbeKHEkT (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:40:19 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45487 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbeKHEkT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:40:19 -0500
+Received: by mail-ot1-f66.google.com with SMTP id g10so15779147otl.12
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 11:08:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uRN91ZbCBAOCJszsLQvkCl+4ufByNRJk7q4qv3voVxU=;
+        b=X/T8JXuEYlTh/KrhQ1i6ohr1rkweju6mkXCEZ0dbcNyUtzX2G9y2OlZloqanHe63TR
+         GGAq0a/EPGr7ymtvo3XvGYtquESNfROK+SVM2zIymbKGIDh8YpcB+PJB7LWfoapQqyR7
+         Kzz4QSrK1yOTy+43WSaOfDajuRAdRies9QyMfQEptaNA1SU214YpmBGFBTVEsNArjxFe
+         No3lm0tcpzzUym5ESO2XCnAmxBmV2QRDz+tMkVZU9phH+KUh638NY3JUkTSa/krEKOwV
+         FPIXEEyYXUNj8+8eeA7rbWcSMFZNjPfarPAAH06AzHRTm5Jq0CnfBsJquJN9zI9x0beg
+         o2sg==
+X-Received: by 2002:a9d:7285:: with SMTP id t5mr966703otj.228.1541617718129;
+ Wed, 07 Nov 2018 11:08:38 -0800 (PST)
+MIME-Version: 1.0
+References: <20181105143730.6071-1-tiny.windzz@gmail.com>
+In-Reply-To: <20181105143730.6071-1-tiny.windzz@gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Wed, 7 Nov 2018 17:08:28 -0200
+Message-ID: <CAOMZO5C+TSGY4wJmZbMW7rVSp4RKcXLH90Em3D5LxZTP-W00Xw@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH] ASoC: fsl_ssi: Change to use
+ DEFINE_SHOW_ATTRIBUTE macro
+To: tiny.windzz@gmail.com
+Cc: timur@kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnvTlzOONb8fUYAA--.447S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUY97k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY0x0Ix7I2Y4AK
+	64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8
+	Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4
+	v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07jmSoXUUUUU=
+
+On Wed, Nov 7, 2018 at 4:57 PM Yangtao Li <tiny.windzz@gmail.com> wrote:
+>
+> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+
+Reviewed-by: Fabio Estevam <festevam@gmail.com>

@@ -1,0 +1,187 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:21 -0000
+Received: from icoremail.net (unknown [209.85.215.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX18OS+Nb6INaAQ--.27300S3;
+	Thu, 08 Nov 2018 04:29:03 +0800 (CST)
+Received: from mail-pg1-f172.google.com (unknown [209.85.215.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH3zoMS+NbBDEZAA--.968S3;
+	Thu, 08 Nov 2018 04:29:00 +0800 (CST)
+Received: by mail-pg1-f172.google.com with SMTP id i4-v6so7790797pgq.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:29:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=xvROqBdHYoY1NqkIAjyvQMyOFGFlrT59B+b3VWb/T1w=;
+        b=LBQChX4PjYigsuVsQAn7cGvAVIwWOga1D+ZXZ1yHyPF9nB5J7p3vz5QqipJ0ZrMyIl
+         FysaSzOayXSb5yngfukELHpKP8V6+X3hNS+Z9QikTZ2p+G3NkNH9mMoxLNDprT33zNi2
+         XftYzK1aOCSDc2wMjq5V4Cc42Ud4AHxBpV16RVodW70SCFoPwHCAC1Ykhee5elDPnoyH
+         uQmFlZfXZehWETf/++2osPLUZSR5mq2K2UqgRUa5NhArZoQLYQPMzygyUadAj2O8tZXJ
+         GEReiKdJmLqaalxVwLxMcdBnbkquyGToHJVE7NfOOsmNUHzD0zWUR0v8yxqE17SnPXfE
+         3Jrw==
+X-Gm-Message-State: AGRZ1gK26NBrIGq5JPem4Mv/0doppwzuHjh9c1tuUzgUjblBYj5w61nh
+	3Y0koypKfmJP7KWZKnNihMN0VF6Q0y84P4090AjuNEHaRoj75xt+vg==
+X-Received: by 2002:a63:1e17:: with SMTP id e23mr1461322pge.130.1541622539973;
+        Wed, 07 Nov 2018 12:28:59 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5708970pjt;
+        Wed, 7 Nov 2018 12:28:59 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fJ/6GyUyHCZQnW4+E0sCsY5pmU323u68u6xHdznOk2Ld/OTVPFDg+4f62PW+LfrJeryCD4
+X-Received: by 2002:a17:902:544:: with SMTP id 62-v6mr1636683plf.73.1541622538990;
+        Wed, 07 Nov 2018 12:28:58 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541622538; cv=none;
+        d=google.com; s=arc-20160816;
+        b=YW5Rodgc62cFk3GeG6woxj4ZgsRb1TPj2sjHGtwXf+WtomhcJSGUnwPKWE7c89sUdF
+         +MIUi7r6IEzOOJmlr4WjK7E+OVl78YTz/OFQHs7aJl+AOC4aSUJvRMBPTbS+zVS+41D6
+         I2hR/NRB/I/Lv+sh394RQKbdY+7/iqzrkQ0egrjbEoWa3Pl0noll1v9UY2dh5+8R7H8h
+         OyPBZwh7neqsvm1i+0MHzEsgFv1bKrQaLoEDFQsNvk+/oHfTbb1YNWJqq0UebClgeFlT
+         Hs4Nk+7hxmYzkghyIphDGH3r583HZKli+H2NhjcIxexxLD//CnTrcQP0WpWk/4yohUfz
+         jBrA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=xvROqBdHYoY1NqkIAjyvQMyOFGFlrT59B+b3VWb/T1w=;
+        b=FseCkVRUB9a+bY3ZGaDpPFuliAoCuBG2PDeFaAuCENXw8miaHv7y3OI3oCx1T3Urna
+         PU5JR0NycDueQXfYtzgXW8u3DPoI4lxceET1VFMw6KoXmz9bRGIsAu9XkVLP2gbFDvxJ
+         H1uPoxhFoitghoBVlQFtYOoEmjI8QhU0KN0W8bS9g+qh/E3ofaXp+rdRzWBinP/KTeXg
+         7u2Zu5dYL6+6Jib+SDrDvku5/LEkmciauxnMDNZsU+vX5kvk+0oc/7w0/H7AOSQXFBxU
+         C68na/tcJLrTwOpj0V/s21HOYOeXzpnKCepvyFZWGB0ScdhCnf1kx2q/8aldquBgG7Bc
+         h07A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kernel.org header.s=default header.b=AaTjr2cS;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id ca18-v6si1841426plb.261.2018.11.07.12.28.39;
+        Wed, 07 Nov 2018 12:28:58 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726927AbeKHGAS (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:00:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726624AbeKHGAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:00:18 -0500
+Received: from jouet.infradead.org (unknown [179.97.41.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB4242081D;
+        Wed,  7 Nov 2018 20:28:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1541622497;
+        bh=Xb+w8Ru1VzlB3mAQJxTy32XpmY/XzYTzj/W/SowOUbw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AaTjr2cSV7NzJvohZqaM71mtvtUHTeUXrckgti19hdl9umM5aA7AiddH6k95wZyYK
+         QaVojF0LMpXtVZ54ZhqdMtezhpBRE2mc/j/B4vdCEcL0oxmFQQesjSXUkvVRG+/APM
+         FvukyEYYgCqdEGKGT4yAPzVchyRRN/qIwJLvgkPg=
+Received: by jouet.infradead.org (Postfix, from userid 1000)
+        id 269B7142D3F; Wed,  7 Nov 2018 17:28:15 -0300 (-03)
+Date: Wed, 7 Nov 2018 17:28:15 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: David Miller <davem@davemloft.net>
+Cc: jolsa@redhat.com, linux-kernel@vger.kernel.org,
+        namhyung@kernel.org, jolsa@kernel.org
+Subject: Re: [PATCH RFC] hist lookups
+Message-ID: <20181107202815.GH18346@kernel.org>
+References: <20181106.221349.1296959035550004994.davem@davemloft.net>
+ <20181107083217.GA12870@krava>
+ <20181107194344.GA29732@krava>
+ <20181107.120154.1747291861102322855.davem@davemloft.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107.120154.1747291861102322855.davem@davemloft.net>
+X-Url: http://acmel.wordpress.com
+User-Agent: Mutt/1.9.2 (2017-12-15)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH3zoMS+NbBDEZAA--.968S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxuF48Xw48ur4DWr1rJr13urg_yoW5Jw4kpr
+	Wrt395Krn7t34Iv3sruw1xJw10yrn3Jrs8Crn3X39Fv3y5tFn7Zr4ayFn09rWrurs3Gw1a
+	qryYvr1kAFyDZFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBmb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwCjxxvEa2IrMx
+	kF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6F1lc2Ij
+	II80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMxvI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7Cj
+	xVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72
+	vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
+	CF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUQqYpDUUUU
+
+Em Wed, Nov 07, 2018 at 12:01:54PM -0800, David Miller escreveu:
+> From: Jiri Olsa <jolsa@redhat.com>
+> Date: Wed, 7 Nov 2018 20:43:44 +0100
+> 
+> > I pushed new version in my perf/fixes branch
+> 
+> Thanks, I'll check it out later today for sure!  This is pretty exciting
+> work.
+> 
+> Just some random thoughts as I've been thinking about this whole
+> situation a lot lately:
+> 
+> Something to consider might be consolidating all of the event rings
+> into one.  This would force perf to process all events in "system
+> order", ie. what order they actually occurred in the machine.
+
+Processing in "system order" is what we want, yeah.
+ 
+> Yes, this means more contention for the entities inside the kernel
+> queueing up the events, however the benefits are enormous.
+> 
+> Right now we go forwards and backwards in time as we move from one
+> event ring to another, as you know.
+> 
+> However, we have to reconcile with the need we have to separate "high
+> priority" (ie. cannot really lose) events like fork, mmap2, etc.  with
+> "low priority" ones such as IP samples.
+
+So perhaps we should tell the kernel that is ok to lose SAMPLEs but not
+the other events, and make userspace ask for PERF_RECORD_!SAMPLE in all
+ring buffers? Duplication wouldn't be that much of a problem?
+ 
+> Perhaps another way to think about this is to go to the one huge mmap
+> ring model, and do the prioritization internally in perf.
+> 
+> Actually, this opens up tons of possibilities in my mind.
+> 
+> Perf can queue to an internal high priority queue for fork and mmap2
+> events, and never drop them.  Whilst at the same time queueing low
+
+Right, or put that in all queues? Would that be too costly?
+
+> priority events like IP samples into a low priority queue and dropping
+> with whatever policy it wants when overloaded (f.e. drop older events
+> before newer ones).
+> 
+> I do not like the overwrite ring buffer mode that was implemented
+> because it enforeces an entire set of policy decisions upon the user.
+> Either the model works for you (which it currently does not for perf)
+> or you can't use it at all.
+> 
+> If the issue is that newer events are more interesting than old ones,
+> that is entirely perf's businness.  And it can implement this policy
+> %100 internally to itself.  No kernel changes were ever needed to do
+> this, as explained above.
+> 
+> Please, let's abandon this whole overwrite mode of the ring buffer.
+> The old one works perfectly fine, we just have to use it properly.
+> We should never have to shut off kernel side event queueing just
+> because we are processing the event ring on the user side.
+> 
+> Thanks.

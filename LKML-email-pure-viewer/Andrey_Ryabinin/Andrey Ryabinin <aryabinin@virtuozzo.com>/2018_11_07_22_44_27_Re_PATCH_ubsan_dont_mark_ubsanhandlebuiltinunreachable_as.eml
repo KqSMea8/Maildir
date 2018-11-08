@@ -1,0 +1,166 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:11 -0000
+Received: from icoremail.net (unknown [209.85.215.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv35n+uJbypdYAQ--.27047S3;
+	Wed, 07 Nov 2018 22:44:55 +0800 (CST)
+Received: from mail-pg1-f179.google.com (unknown [209.85.215.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwD320dm+uJbE+QXAA--.11389S3;
+	Wed, 07 Nov 2018 22:44:54 +0800 (CST)
+Received: by mail-pg1-f179.google.com with SMTP id z10so5530771pgp.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:44:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding
+         :sender:precedence:list-id;
+        bh=0iIx9CZ+ctDZ6cWjryWd/u0DSPMJwfTVDqeWwRI0nDw=;
+        b=bSoND2Tw3vXjw1vofOm4Ev/Zx/Eq+1gfjoG2mIdPmAvaxJeMnE7+5p+CqPKko5gJ7T
+         4dpplNwceYQrhBO/r3UAwdtzZHPQOpbkiBc2typqZO4/4k5qjnhma9VwR5kOz8iud1oY
+         9uEw4NTJTqW0Ps0E9iagxqAttKYFZ2jJLrhOWOCgbwx26vTUhI3GndE76V178kaQckWH
+         2P6oDFJNnDZcidHgV7PIMLzkA/4nnnEO8CiwbYG9g63j8O+p01szxTDye3wIm/YX99++
+         MZAdNGONiut2oYD/rK86u27sAKqRsnG+9yddG7xtwu5KntiBr4L2ldiUZl4zs4cSLlbq
+         Gf1g==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=virtuozzo.com
+X-Gm-Message-State: AGRZ1gLNEXWPsx8nPbhzYIvbnroR+aRBc0R70xuVbHJyP7Mfq2AK/36j
+	ernqvSzaKQ2bI50yc95YZyKW8KuXYjBwxHe9O/mDx3y744vsV47grw==
+X-Received: by 2002:a62:da54:: with SMTP id w20-v6mr502889pfl.106.1541601893940;
+        Wed, 07 Nov 2018 06:44:53 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5332996pjt;
+        Wed, 7 Nov 2018 06:44:53 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fYLw1vu8LagmDMibwNS3mLCJg4D2LhzJ+mCpqCkW2B/O27KR0mEYf/N+BlQCFbWK1X+8I7
+X-Received: by 2002:a62:704a:: with SMTP id l71-v6mr502038pfc.68.1541601893156;
+        Wed, 07 Nov 2018 06:44:53 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541601893; cv=none;
+        d=google.com; s=arc-20160816;
+        b=hiFf+xs9C16sAlV0gvRxF0qvxi9TUnnSLKHRIA/7D5MGfpa33bEjMuf+M95cXFXhcz
+         OIeNFhRzMhYiciGbrcePn6Ui38vC3HmSNnZsa312oirSGlrmlLXQMw6zd6XpmUIsKydE
+         glQ1mbVJj+hY7VdTvEEoriFlUfcXW4t8g8pqb5vTR8PMoBJFE6iPl0x8IQSXTWK6oHNk
+         LLARkVZswVfaY6foPgLhZMzVLxYtmCUOezTXT+YC31nfO3mCjSiv1uSc4OwLiUJRF1GQ
+         pD1LfDyOboZx4oryE7Hc0ti7g3DfKtDXL42al2tOJc9U7iH7Ub8yjf898hHvRlLfNTy+
+         8KCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject;
+        bh=0iIx9CZ+ctDZ6cWjryWd/u0DSPMJwfTVDqeWwRI0nDw=;
+        b=jWUJkTXZPtZ5f8W6HfWghPC7+9oHJ/IrvcnlnlbMPJBMzJupPcS5V9WZdLvPjQKKt8
+         jfArl15JD2tAROxgQmT/c0S9JrOJ9qdg5FbyIYC5BvADCA4oU3CASd6pz3XxPS+IGvgB
+         dnn6Hcmv8idiJu815nrQGNFBRklHhNp+g62O4quHZuGgnTUfOeRXH1QysoNL7Yc9HwxB
+         h8BWohTE79zfDE0kJsna/L49aYNHdcR3YKiboPQ9lsDDV0A3ahSpjEIbCfdm0Rxhy7LG
+         Kh9VFa++8cuMSq4QhM0Pd4mIUYte0G9Ov4E6zbYqTScSGd4cBS7d2t154ntBPwxAGyMq
+         cWew==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=virtuozzo.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id j5-v6si820309pfb.211.2018.11.07.06.44.37;
+        Wed, 07 Nov 2018 06:44:53 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727709AbeKHAPL (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:15:11 -0500
+Received: from relay.sw.ru ([185.231.240.75]:60230 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726670AbeKHAPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:15:11 -0500
+Received: from [172.16.25.12]
+        by relay.sw.ru with esmtp (Exim 4.90_1)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1gKP4G-0002v8-54; Wed, 07 Nov 2018 17:44:28 +0300
+Subject: Re: [PATCH] ubsan: don't mark __ubsan_handle_builtin_unreachable as
+ noreturn
+To: Olof Johansson <olof@lixom.net>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Nicolas Pitre <nico@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20180202154813.1625742-1-arnd@arndb.de>
+ <d77f9a8a-0bb2-50a3-68e3-b4f4173645bc@virtuozzo.com>
+ <CAK8P3a124Jdza9YbgOHECC2owpx_HmOuDMWtotxuC2-F9L9Cgg@mail.gmail.com>
+ <00813389-daf0-a97f-8642-cb4e7a62fa27@virtuozzo.com>
+ <CAOesGMi-vkYPDrL2drJ70zf3_xTMWrsfPoW68TkiRJCj8uWBLg@mail.gmail.com>
+From: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <cca8985f-8279-7bd8-3ebe-f2f79cd98b91@virtuozzo.com>
+Date: Wed, 7 Nov 2018 17:44:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <CAOesGMi-vkYPDrL2drJ70zf3_xTMWrsfPoW68TkiRJCj8uWBLg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwD320dm+uJbE+QXAA--.11389S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF1DArW7AF1UXryxAw4xJFb_yoW8XF4fpr
+	W8GFyjka1UtF42yFZ2kr4rXF12yw1DJr1jqwn8X3sFyas8twn3KrWkKa1Ykr1kGF17W3Wr
+	trWjqa47Wa4UArDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUm2b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik2
+	6cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6ry5MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7
+	IYx2IY67AKxVWUCVW8JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMxvI42IY6I8E
+	87Iv67AKxVW0oVCq3wCYIxAIcVC2z280aVCY1x0267AKxVW0oVCq3wCF04k20xvY0x0EwI
+	xGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
+	AFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r1I6r4UYxBIdaVF
+	xhVjvjDU0xZFpf9x07b0Xo7UUUUU=
+
+
+
+On 11/03/2018 12:27 AM, Olof Johansson wrote:
+> On Mon, Feb 5, 2018 at 2:31 AM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
+>>
+>> On 02/05/2018 01:15 PM, Arnd Bergmann wrote:
+>>> On Mon, Feb 5, 2018 at 10:02 AM, Andrey Ryabinin
+>>> <aryabinin@virtuozzo.com> wrote:
+>>>>
+>>>>
+>>>> On 02/02/2018 06:47 PM, Arnd Bergmann wrote:
+>>>>> gcc-8 complains about the prototype for this function:
+>>>>>
+>>>>> lib/ubsan.c:432:1: error: ignoring attribute 'noreturn' in declaration of a built-in function '__ubsan_handle_builtin_unreachable' because it conflicts with attribute 'const' [-Werror=attributes]
+>>>>>
+>>>>
+>>>> That's actually a bug in GCC. In GCC __ubsan_handle_builtin_unreachable declared
+>>>> with 'noreturn' and 'const' attributes:
+>>>>
+>>>> DEF_SANITIZER_BUILTIN(BUILT_IN_UBSAN_HANDLE_BUILTIN_UNREACHABLE,
+>>>>                       "__ubsan_handle_builtin_unreachable",
+>>>>                       BT_FN_VOID_PTR,
+>>>>                       ATTR_COLD_CONST_NORETURN_NOTHROW_LEAF_LIST)
+>>>>
+>>>>
+>>>> But const attribute doesn't make any sense for function that returns void or doesn't return at all.
+>>>> Given that gcc-8 has not released yet, it would be better to fix this bug there.
+>>>
+>>> Ok. Should I open a gcc bug, or will you take care of it?
+>>>
+>>
+>> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=84210
+> 
+> 8.2.0 still shows this, and there's been no movement on that bug. How
+> about we pick up this patch until it's been resolved?
+> 
+
+Sure, I'll add info about GCC bug in changelog and resend the patch.
+
+> 
+> -Olof
+> 

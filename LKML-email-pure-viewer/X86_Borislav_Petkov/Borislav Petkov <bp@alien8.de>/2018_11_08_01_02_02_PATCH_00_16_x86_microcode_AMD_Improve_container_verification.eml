@@ -1,0 +1,149 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:09 -0000
+Received: from icoremail.net (unknown [209.85.210.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHHybGHONb_mpZAQ--.27126S3;
+	Thu, 08 Nov 2018 01:11:37 +0800 (CST)
+Received: from mail-pf1-f180.google.com (unknown [209.85.210.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHKESSG+NbvnUYAA--.446S3;
+	Thu, 08 Nov 2018 01:06:26 +0800 (CST)
+Received: by mail-pf1-f180.google.com with SMTP id s9-v6so604152pfm.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:06:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=6Yf9YVTj4v/m/Ie89z3RKH1BOkIk9JJQSo7whGDeSmw=;
+        b=nD4nZojyiFASmBiYnd8fN3Q7QixYEclePip/Kzgffzr3yfOwTQgCkzFRi7+2WZAVuu
+         3XtdEvpfXD9FQIUIYWbQZri3u8RcGjR+lFqwxZloy3sMXC/kbx4Ul2XU+I6a5oyapTJ8
+         NCnSXPmC+io/6Txg6QVosOHGf2DbPRFAyRXbOkvPkLsshjBO5B/QyVnlfNK9VOztqkpM
+         n2nG4sj5byH8ewDc+z1BzZLG69sF0dsqRhrX1vq195+T0dAA1hqE6MPeXgFuEZSIiK0I
+         vb28TMudz3fOzqgTBBxtYjxDd/NpnvohYBlySf6hO3kU2ytNn/foGnAdWlcHQs+Fol7W
+         gorg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gL+Jz1FNXH4JXWYJDy1DEU8nUJKi7TrF2md1kIlZbUGMZnq3JEg
+	SzryYnByZXIosJKgu+dTxOO/iE8i2HycKzYPzYs6jsnLf9ShhMn/ZQ==
+X-Received: by 2002:a62:da54:: with SMTP id w20-v6mr1018481pfl.106.1541610385947;
+        Wed, 07 Nov 2018 09:06:25 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5492259pjt;
+        Wed, 7 Nov 2018 09:06:25 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fFXXXCmM2oOgWQm/x8qSih7TWlMsdy3mK4Yw4MYcoIVTiJCeBoTAxK8uktRsaPBA2YsIir
+X-Received: by 2002:a17:902:187:: with SMTP id b7-v6mr1033944plb.150.1541610385331;
+        Wed, 07 Nov 2018 09:06:25 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610385; cv=none;
+        d=google.com; s=arc-20160816;
+        b=0oSMxfW+7l2SM89+2ZkWghQxki2Kd6RoAGcRFzfp6p88wTrFczW7GHazUYnMCA9fUT
+         fC1oiYndSRA9FfNXtySXX6lhaaP/1wWOos6aELg3K/5NI88MPffRCx5ci0mOYJojmi07
+         EZNPMTJpxuoT5aYRN7zNIsLgMNiDSQvGKcmTJMkX9y/OtypWQagGCz+CQf13YIIh6WQl
+         pW4Tii+r9U1uaTyN7egcGvRzcNZIh9HiQLa+ng8dgOxRBjmPxRU5GpWTAaRHVXN/yxhR
+         q1OlCClhVyZNKzBP/lhzhLogtWRd7Q5XKsAIP8lCsyDcrI/icWT3UQcfXB8BXvWobICh
+         rQJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :message-id:date:subject:cc:to:from;
+        bh=6Yf9YVTj4v/m/Ie89z3RKH1BOkIk9JJQSo7whGDeSmw=;
+        b=UAOw0Z9BulL8CpiJXI67fYU8sKKe0cVgjm5vgrJPCWG64izst/fyNrB/mYqPK9dhE3
+         s5BDTux4R/oPWfYa6saUkHlfpmnJj/9l7424uK+WXhS+w9F4YPak8OPkXv+IFQ81wUux
+         Z6BBzkENYnY947/qRvsNddw6Luld1sIOQubj+NLp2N4HelRmKG3H+RWawBzcNZjWQ8VP
+         JGw7Q1OrjjILBr71nhdAZagUxSnjwzzGxe9P1muSfYdWPsskDFO9PEyo5X3zmi2ETcft
+         5VbvMNyDi5d5hsCkz9BmdyUx9TbuI5QjPdyAtyyQ7zv6g1bNzE+3+GKPyZtHRjfK64NC
+         d42Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id f7-v6si1147759plb.362.2018.11.07.09.06.09;
+        Wed, 07 Nov 2018 09:06:25 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728119AbeKHCdn (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:33:43 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:46454 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727870AbeKHCdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:33:43 -0500
+X-Virus-Scanned: Nedap ESD1 at mail.skyhub.de
+Received: from mail.skyhub.de ([127.0.0.1])
+        by localhost (blast.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id zGk3gUZMevgQ; Wed,  7 Nov 2018 18:02:29 +0100 (CET)
+Received: from zn.tnic (p200300EC2BCBE000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2bcb:e000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DC97A1EC0291;
+        Wed,  7 Nov 2018 18:02:28 +0100 (CET)
+From: Borislav Petkov <bp@alien8.de>
+To: X86 ML <x86@kernel.org>
+Cc: "Maciej S . Szmigiero" <mail@maciej.szmigiero.name>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH 00/16] x86/microcode/AMD: Improve container verification
+Date: Wed,  7 Nov 2018 18:02:02 +0100
+Message-Id: <20181107170218.7596-1-bp@alien8.de>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHKESSG+NbvnUYAA--.446S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7KF43WryDCw4fCFy5Kr4rXwb_yoW8Xr4xpF
+	s3Z3W3KrWkKry2vw4fXa1DJrn0kFy0kw1qqF93tw1kuF13J3Wqv3ZYkr45Ca47A3s5K3WI
+	qF4Dt347CF1jkrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9lb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
+	kI7VAKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkI7II2jI8vz4vEwIxGrwCY
+	IxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMx
+	vI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4I
+	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
+	WwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rV
+	WUCVW8JbIYCTnIWIevJa73UjIFyTuYvjxU-M5lUUUUU
+
+From: Borislav Petkov <bp@suse.de>
+
+Hi all,
+
+this is work which got started by Maciej a while ago. I have finally had
+the time to redo all the ideas properly, split it in self-contained,
+logical chunks and test it.
+
+Reveiew and comments are appreciated.
+
+Thx.
+
+Borislav Petkov (11):
+  x86/microcode/AMD: Move verify_patch_size() up in the file
+  x86/microcode/AMD: Clean up per-family patch size checks
+  x86/microcode/AMD: Cleanup verify_patch_size() more
+  x86/microcode/AMD: Concentrate patch verification
+  x86/microcode/AMD: Simplify patch family detection
+  x86/microcode/AMD: Move patch family check to verify_patch()
+  x86/microcode/AMD: Move chipset-specific check into verify_patch()
+  x86/microcode/AMD: Change verify_patch()'s return value
+  x86/microcode/AMD: Convert early parser to the new verification routines
+  x86/microcode/AMD: Fix container size's type
+  x86/microcode/AMD: Update copyright
+
+Maciej S. Szmigiero (5):
+  x86/microcode/AMD: Subtract SECTION_HDR_SIZE from file leftover length
+  x86/microcode/AMD: Add microcode container verification
+  x86/microcode/AMD: Check microcode container data in the late loader
+  x86/microcode/AMD: Convert CPU equivalence table variable into a struct
+  x86/microcode/AMD: Check the equivalence table size when scanning it
+
+ arch/x86/kernel/cpu/microcode/amd.c | 469 ++++++++++++++++++----------
+ 1 file changed, 307 insertions(+), 162 deletions(-)
+
+-- 
+2.19.1

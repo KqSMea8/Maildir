@@ -1,0 +1,268 @@
+Return-Path: <kvm-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:46 -0000
+Received: from icoremail.net (unknown [209.85.214.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv352W+NbuuxaAQ--.27888S3;
+	Thu, 08 Nov 2018 05:39:02 +0800 (CST)
+Received: from mail-pl1-f169.google.com (unknown [209.85.214.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnCkZzW+Nb8moZAA--.1399S3;
+	Thu, 08 Nov 2018 05:38:59 +0800 (CST)
+Received: by mail-pl1-f169.google.com with SMTP id w24-v6so8460995plq.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 13:38:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version:subject
+         :from:in-reply-to:date:cc:content-transfer-encoding:message-id
+         :references:to:sender:precedence:list-id;
+        bh=oqK/2uHi0ZxPSbYIzDSvKg5r/zT53xWXImFI1DbdWbw=;
+        b=ZoHhbE/4mzBudtN0ciucAWEXV9kG6KVMzObsscOEsS9alc5rhO3Ipda/YR/IUZdVjG
+         AT5or+AtmJv4pGoeUiVuWM8ZOIAG07MztWh1DhvZXwWtXWHzT/Qq3DQFAWDCSvxPxvk8
+         0AvHDLD0nWeBiP63WdignYZ7/w7nmsN2gWZENEc+paaCjEEWQ+O1EaGqC7gHJTrMjTi+
+         eCHcP46NN2jZlYSH5FMkICuQF2/W8pdv/MYl08g6gSVqkBP6LagKdWt5BtnauBoKjMuh
+         ASqDRUaJcrCF/SzHWrINgY5sNsUWgiffKrHRhclecwAFxp6+X6Ns6uUD6GKyHABeKU1G
+         4BFg==
+X-Gm-Message-State: AGRZ1gIJumOWZ9VSRQo0G2KSo6F5B0ClEK3o67NLr82+g5dpp2JwD95x
+	7pVYSLIKsKQ8RKNf9Q3bpulxLWwfirXNZ3m3U87A6i+Sjf/mwXHEyQ==
+X-Received: by 2002:a17:902:b789:: with SMTP id e9-v6mr1975355pls.338.1541626738834;
+        Wed, 07 Nov 2018 13:38:58 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp35132pjt;
+        Wed, 7 Nov 2018 13:38:57 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cGKL11VsG9cgBR3yfWEAj13Z5wLIE9wde9301CJ6Nd6Cgk1O2wTgobReCNhYoBVtgGS7dc
+X-Received: by 2002:a17:902:1347:: with SMTP id r7-v6mr1960438ple.238.1541626737189;
+        Wed, 07 Nov 2018 13:38:57 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541626737; cv=none;
+        d=google.com; s=arc-20160816;
+        b=FikTmBXU0zzx62quqIPCzAuQfJhKIBZeia4l22K0dAQdFVVtV8PChlNapvkTbpVqNn
+         5IR0rOB3bXpJzoEpLKdtGWges1wzIa23+T581QtHRlwqVK8h6f1FuB390g5E5PRAMclR
+         ngqNwk69huneLJgDGj/Pfw5OqKVb+5ipyqP7Gb3KEosSk3J/NZ/0mki2CqdCWVxUoGyk
+         M8TIWh8eaRwjFYU4qXfm9OSoM/ZZheUZHXCheWYIZiA4nqjMh9ScNV7FkccJFaiz3asE
+         usGEbxmU7+7VBvgWPACey0AbMrVDUTnnjJ8lTvUkkqSEvRlZKctzVX8QDa77zdYbsu4c
+         xH9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:to:references:message-id
+         :content-transfer-encoding:cc:date:in-reply-to:from:subject
+         :mime-version:dkim-signature;
+        bh=oqK/2uHi0ZxPSbYIzDSvKg5r/zT53xWXImFI1DbdWbw=;
+        b=SKPRdCnwL8tSB8p/SmFPZZH05BI4i7x2qqyEfsgnDwalu5fdqHIqd6MS1uAIbXoSgO
+         MALcQbZdX6l//EWdy34oyee/xpI64YKJO1m6Y0CwrogAEdfgZdxvRjKfxg8RABlFTYmI
+         sqFTw2tFfGIjQ83atEUuLKjRwT/zLDXJAVggZ1vvaZ1GvLcjH4kDsAfsESuk72fspE5x
+         KsAJIm7sk5FUOrve9fiibDZhNxke2j5NE12osVM8pzIPo1k0qZNrMZNvL1Q7foGN5EYG
+         27LZVByWP9yWTBhQS7C0sExxPYGuHqEq8zH8iMdky1OtFAY9k1i5Povxpb58fsSgKAzT
+         Thiw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@oracle.com header.s=corp-2018-07-02 header.b=rhM+9iex;
+       spf=pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=kvm-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=oracle.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id s7-v6si1784738plq.290.2018.11.07.13.38.37;
+        Wed, 07 Nov 2018 13:38:57 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727514AbeKHHKe (ORCPT <rfc822;fanshuming2011@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:10:34 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:35054 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727162AbeKHHKd (ORCPT <rfc822;kvm@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:10:33 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.22/8.16.0.22) with SMTP id wA7LTer3034116;
+        Wed, 7 Nov 2018 21:38:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=oqK/2uHi0ZxPSbYIzDSvKg5r/zT53xWXImFI1DbdWbw=;
+ b=rhM+9iexsDXk2htuyDbsXKUeozhOvIEa9iXkcvwXUnaUWVDBpXSNQ1E+DRQRc5qVR7z0
+ mmPaTkgqEywbnev5NDKHayASK3mffvVz/cBBOomLlL/qXDNI9PhcndKLdavRJRvlMJbI
+ e4qTVvNuiismIYKAv+LvI+c/yPDHo+YyMbBaskn1pyB+QSOib7zLx51CeG3onCDmYK5Q
+ SvbsItnmJYJxG/C2wL/e/svWtKKrOQ8av7V/qjP1zcC7Pk/j7JiVp+X8H2LCG9fAwWUM
+ UTTR5yylDbqp2Sr1GyaF53qB7qUbqAD6PFOh/DRGvmqw8l5Do4qc5mDr0BkzbOnHLQnW 8A== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by userp2120.oracle.com with ESMTP id 2nh4aqx10b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 07 Nov 2018 21:38:14 +0000
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id wA7LcDAM013172
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 7 Nov 2018 21:38:14 GMT
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id wA7LcD34013898;
+        Wed, 7 Nov 2018 21:38:13 GMT
+Received: from [192.168.14.112] (/79.178.245.51)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 07 Nov 2018 13:38:13 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH kvm-unit-tests] x86: nVMX: Test of IA32_TSC on VM-exit
+ MSR-store list
+From: Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <20181107212528.15022-1-jmattson@google.com>
+Date: Wed, 7 Nov 2018 23:38:10 +0200
+Cc: kvm@vger.kernel.org, Marc Orr <marcorr@google.com>,
+        Peter Shier <pshier@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9C0319A6-2371-4436-B90F-DE01D673F7AF@oracle.com>
+References: <20181107212528.15022-1-jmattson@google.com>
+To: Jim Mattson <jmattson@google.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9070 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1807170000 definitions=main-1811070192
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <kvm.vger.kernel.org>
+X-Mailing-List: kvm@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnCkZzW+Nb8moZAA--.1399S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxWFW5CryDZF4fZFWDWFW3KFg_yoWrJr43p3
+	ySyF1SgFW0vas7XFn3tFyjkFn5ZFWxKr4furZrAr1UCFnIq3W2vr1UKay0yFyru3y0v3Wr
+	Z3W09ry7G3yjyrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6F4lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xYxBIdaVFxhVjvjDU0xZFpf9x07bY
+	38nUUUUU=
+
+
+
+> On 7 Nov 2018, at 23:25, Jim Mattson <jmattson@google.com> wrote:
+>=20
+> When IA32_TSC is on the VM-exit MSR-store list, the value saved is not
+> subject to the "use TSC offsetting" VM-execution control for the
+> current VMCS.
+>=20
+> Prior to commit e79f245ddec17 ("X86/KVM: Properly update 'tsc_offset'
+> to represent the running guest"), kvm did not handle this situation
+> properly.
+>=20
+> Signed-off-by: Jim Mattson <jmattson@google.com>
+> Reviewed-by: Marc Orr <marcorr@google.com>
+> Reviewed-by: Peter Shier <pshier@google.com>
+> ---
+> x86/unittests.cfg |  6 ++++++
+> x86/vmx.h         |  1 +
+> x86/vmx_tests.c   | 45 +++++++++++++++++++++++++++++++++++++++++++++
+> 3 files changed, 52 insertions(+)
+>=20
+> diff --git a/x86/unittests.cfg b/x86/unittests.cfg
+> index 3b21a85..9448409 100644
+> --- a/x86/unittests.cfg
+> +++ b/x86/unittests.cfg
+> @@ -572,6 +572,12 @@ extra_params =3D -cpu host,+vmx -m 2560 -append =
+vmx_pending_event_hlt_test
+> arch =3D x86_64
+> groups =3D vmx
+>=20
+> +[vmx_store_tsc_test]
+> +file =3D vmx.flat
+> +extra_params =3D -cpu host,+vmx -m 2560 -append vmx_store_tsc_test
+> +arch =3D x86_64
+> +groups =3D vmx
+> +
+> [vmx_db_test]
+> file =3D vmx.flat
+> extra_params =3D -cpu host,+vmx -m 2560 -append vmx_db_test
+> diff --git a/x86/vmx.h b/x86/vmx.h
+> index ba47455..8a00f73 100644
+> --- a/x86/vmx.h
+> +++ b/x86/vmx.h
+> @@ -384,6 +384,7 @@ enum Ctrl_pin {
+>=20
+> enum Ctrl0 {
+> 	CPU_INTR_WINDOW		=3D 1ul << 2,
+> +	CPU_USE_TSC_OFFSET	=3D 1ul << 3,
+> 	CPU_HLT			=3D 1ul << 7,
+> 	CPU_INVLPG		=3D 1ul << 9,
+> 	CPU_MWAIT		=3D 1ul << 10,
+> diff --git a/x86/vmx_tests.c b/x86/vmx_tests.c
+> index b105b23..d223dea 100644
+> --- a/x86/vmx_tests.c
+> +++ b/x86/vmx_tests.c
+> @@ -5031,6 +5031,50 @@ static void vmx_pending_event_hlt_test(void)
+> 	vmx_pending_event_test_core(true);
+> }
+>=20
+> +#define GUEST_TSC_OFFSET (1u << 30)
+> +
+> +static u64 guest_tsc;
+> +
+> +static void vmx_store_tsc_test_guest(void)
+> +{
+> +	guest_tsc =3D rdtsc();
+> +}
+> +
+> +/*
+> + * This test ensures that when IA32_TSC is in the VM-exit MSR-store
+> + * list, the value saved is not subject to the TSC offset that is
+> + * applied to RDTSC/RDTSCP/RDMSR(IA32_TSC) in guest execution.
+> + */
+> +static void vmx_store_tsc_test(void)
+> +{
+> +	struct vmx_msr_entry msr_entry =3D { .index =3D MSR_IA32_TSC };
+> +	u64 low, high;
+> +
+> +	if (!(ctrl_cpu_rev[0].clr & CPU_USE_TSC_OFFSET)) {
+> +		printf("\t'Use TSC offsetting' not supported.\n=E2=80=9D);=
+
+
+Should you use report_skip() instead of printf()?
+
+> +		return;
+> +	}
+> +
+> +	test_set_guest(vmx_store_tsc_test_guest);
+> +
+> +	vmcs_set_bits(CPU_EXEC_CTRL0, CPU_USE_TSC_OFFSET);
+> +	vmcs_write(EXI_MSR_ST_CNT, 1);
+> +	vmcs_write(EXIT_MSR_ST_ADDR, virt_to_phys(&msr_entry));
+> +	vmcs_write(TSC_OFFSET, GUEST_TSC_OFFSET);
+> +
+> +	low =3D rdtsc();
+> +	enter_guest();
+> +	high =3D rdtsc();
+> +
+> +	report("RDTSC value in the guest (%lu) is in range [%lu, %lu]",
+> +	       low + GUEST_TSC_OFFSET <=3D guest_tsc &&
+> +	       guest_tsc <=3D high + GUEST_TSC_OFFSET,
+> +	       guest_tsc, low + GUEST_TSC_OFFSET, high + =
+GUEST_TSC_OFFSET);
+> +	report("IA32_TSC value saved in the VM-exit MSR-store list (%lu) =
+is in range [%lu, %lu]",
+> +	       low <=3D msr_entry.value && msr_entry.value <=3D high,
+> +	       msr_entry.value, low, high);
+> +}
+> +
+> static void vmx_db_test_guest(void)
+> {
+> 	/*
+> @@ -5835,6 +5879,7 @@ struct vmx_test vmx_tests[] =3D {
+> 	TEST(vmx_db_test),
+> 	TEST(vmx_pending_event_test),
+> 	TEST(vmx_pending_event_hlt_test),
+> +	TEST(vmx_store_tsc_test),
+> 	/* EPT access tests. */
+> 	TEST(ept_access_test_not_present),
+> 	TEST(ept_access_test_read_only),
+> --=20
+> 2.19.1.930.g4563a0d9d0-goog
+>=20
+
+Nicely done.
+Reviewed-by: Liran Alon <liran.alon@oracle.com>
+

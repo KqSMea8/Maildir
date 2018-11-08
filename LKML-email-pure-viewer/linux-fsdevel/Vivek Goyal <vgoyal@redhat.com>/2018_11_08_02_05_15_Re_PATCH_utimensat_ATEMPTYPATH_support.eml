@@ -1,0 +1,173 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:30 -0000
+Received: from icoremail.net (unknown [209.85.215.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f_mAKeNbkctZAQ--.26852S3;
+	Thu, 08 Nov 2018 02:05:53 +0800 (CST)
+Received: from mail-pg1-f180.google.com (unknown [209.85.215.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCnjEh7KeNbrcEYAA--.65S3;
+	Thu, 08 Nov 2018 02:05:48 +0800 (CST)
+Received: by mail-pg1-f180.google.com with SMTP id z10so5762735pgp.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:05:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=v5DCyuy7eeGENVcK2tIqz3yec3M+04f4v2gQLFHvQos=;
+        b=qmcc+GpVHjkPO79fI0d5dRivvuhHYvOjg+ZNIb518yCExLXX/9mSfIqUi47g6QK+4e
+         6kvYR6YXXN9vrkjaTVoJS45JAwSlcG89o9YrjiVaJYfXAyhNTOyK6S8WrE/7JbW4jRq9
+         4Ev91GmxZbRbRgb2HHntMekvg9Kz1PdfiatLLNxrh+MTWKgWXeLwbPdTgauz4TpyftdS
+         6avMGCB8rP2GpwXiB5ztADfZwsx7euowK08Qu2RzorS8JtUtr+T1LhOyy6kvLGrTT/ID
+         qlbisMOwwr1EwiyitmfVjPg62NZy7jtZF3d1sWDFUdjlMVBobpLyhFwVj83VgLNYHKdU
+         /3LQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+X-Gm-Message-State: AGRZ1gLM7Uq7uKMZom3oxZU5cxWtFB8wXd37b2iR1QamZFmY1e7c3Czo
+	RsP3KfgxM5txLqG8iGeRsiHWVL8sPdxNeRFvjnUco7Cfm3zNKM3wlA==
+X-Received: by 2002:a63:a91a:: with SMTP id u26mr986776pge.349.1541613947680;
+        Wed, 07 Nov 2018 10:05:47 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5559027pjt;
+        Wed, 7 Nov 2018 10:05:46 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cR1SemY/5WPNUqv2Tzu5U839HZ/Q9J/UvbzXW56Uya+Fxk8WpJuAW098d/OkLjhifnSF9Y
+X-Received: by 2002:a17:902:bc8c:: with SMTP id bb12-v6mr1122500plb.275.1541613946865;
+        Wed, 07 Nov 2018 10:05:46 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541613946; cv=none;
+        d=google.com; s=arc-20160816;
+        b=zzwtAkLGFULZUkEEHvSyuweN9ymMoBqv7XBCo9gFp6zBRsAXIUiaE9hZsI0jf+idha
+         NH5qG+DMTim0m7gbhdUon5zvBBVSrEBbQblUVPjKvjc4nvxibI9GIPYAI6aczgms9YWh
+         fLl7dbEt3wkL6fqCs1h2OoVNQFBVvrJXuTBFt303M817dcHDVbZ5dEUU25cXIzj9OYDj
+         WzYz5NDdouF0vzNM0cDYNm5bTpzWZMQnbgE9IBR7r9u83ZdLCOCALG7JQ+Kls4+tziQN
+         QoYPsNoBOlc0l8VTHhl7B2OUjLfPiCmeoEXkzMIluRjnkyzn8V/7a2kCZ+peo06kNSsQ
+         VPZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=v5DCyuy7eeGENVcK2tIqz3yec3M+04f4v2gQLFHvQos=;
+        b=QyXX6IIFcRtjiZtzequoQNW4gNczwhsQmgHmYFYOEUNRRIB3fkWw1eczMXaABFYQDv
+         XC4ZNxfENd/G5xSnwechU72UpG5Kw27VSHVwjD4/M9BW1Eq8gSkfAGtk6q60kfVKwl5w
+         zsKu0A3nHvrpGxK1HqTon9HyKKNbYLNWdk8qUI99g5RaWDbCOTPYxrCV7ogXaPJCKFwV
+         Vq+6Bk/ptqv9uEgiv8/qHcgXvNL6P4QkGUx/zUtq5YgOr2AFDe8sGu5JBmS+Ep/Ol+tY
+         /geYARtnzrmc8+NN52qy5TSmgziZeO7Kk+DCQZsLeywPMMdaFycmsxnBA696eQvCjyFR
+         PDrw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id j191si1100202pgd.249.2018.11.07.10.05.24;
+        Wed, 07 Nov 2018 10:05:46 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728067AbeKHDgq (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:36:46 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:33780 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727604AbeKHDgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:36:46 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id ECBF0307EA8F;
+        Wed,  7 Nov 2018 18:05:15 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.234])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A5B6C2654F;
+        Wed,  7 Nov 2018 18:05:15 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 3D2632239AE; Wed,  7 Nov 2018 13:05:15 -0500 (EST)
+Date: Wed, 7 Nov 2018 13:05:15 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+To: Miklos Szeredi <mszeredi@redhat.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] utimensat: AT_EMPTY_PATH support
+Message-ID: <20181107180515.GA28296@redhat.com>
+References: <20181107091552.17100-1-mszeredi@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107091552.17100-1-mszeredi@redhat.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 07 Nov 2018 18:05:16 +0000 (UTC)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCnjEh7KeNbrcEYAA--.65S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF1ktr4rXrW7AryDKFW8Crg_yoW8Xr4DpF
+	Z2y3WUWryqqryUZFs3CaykXFWUKr47CFy3XFWDK3WYyrs0q3ZrK3Z3KF4Yyrs8JFWxJry8
+	KF40k34UXw42vFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBvb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwCjxxvEa2IrMx
+	kF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6rylc2Ij
+	II80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7Cj
+	xVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72
+	vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
+	CF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bUnmiUUUUU=
+
+On Wed, Nov 07, 2018 at 10:15:52AM +0100, Miklos Szeredi wrote:
+> This makes it possible to use utimensat on an O_PATH file (including
+> symlinks).
+> 
+> It supersedes the nonstandard utimensat(fd, NULL, ...) form.
+> 
+> Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+
+Thanks for fixing this Miklos. It seems to work for me for following
+use case I have where I want to change time on symlink opened with O_PATH.
+
+symfd = open("foo-symlink.txt", O_PATH | O_NOFOLLOW);
+utimensat(fd, "", NULL, AT_EMPTY_PATH | AT_SYMLINK_NOFOLLOW);
+
+Thanks
+Vivek
+
+> ---
+>  fs/utimes.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/utimes.c b/fs/utimes.c
+> index bdcf2daf39c1..f9c7ebad19d7 100644
+> --- a/fs/utimes.c
+> +++ b/fs/utimes.c
+> @@ -97,13 +97,13 @@ long do_utimes(int dfd, const char __user *filename, struct timespec64 *times,
+>  		goto out;
+>  	}
+>  
+> -	if (flags & ~AT_SYMLINK_NOFOLLOW)
+> +	if (flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH))
+>  		goto out;
+>  
+>  	if (filename == NULL && dfd != AT_FDCWD) {
+>  		struct fd f;
+>  
+> -		if (flags & AT_SYMLINK_NOFOLLOW)
+> +		if (flags)
+>  			goto out;
+>  
+>  		f = fdget(dfd);
+> @@ -119,6 +119,8 @@ long do_utimes(int dfd, const char __user *filename, struct timespec64 *times,
+>  
+>  		if (!(flags & AT_SYMLINK_NOFOLLOW))
+>  			lookup_flags |= LOOKUP_FOLLOW;
+> +		if (flags & AT_EMPTY_PATH)
+> +			lookup_flags |= LOOKUP_EMPTY;
+>  retry:
+>  		error = user_path_at(dfd, filename, lookup_flags, &path);
+>  		if (error)
+> -- 
+> 2.14.3
+> 

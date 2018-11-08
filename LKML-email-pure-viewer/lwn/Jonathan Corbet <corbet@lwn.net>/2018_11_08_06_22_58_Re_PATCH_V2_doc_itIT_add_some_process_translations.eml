@@ -1,0 +1,141 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:58 -0000
+Received: from icoremail.net (unknown [209.85.210.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv5rdZeNbVyVbAQ--.27384S3;
+	Thu, 08 Nov 2018 06:23:26 +0800 (CST)
+Received: from mail-pf1-f179.google.com (unknown [209.85.210.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDXu0faZeNbC48ZAA--.1625S3;
+	Thu, 08 Nov 2018 06:23:22 +0800 (CST)
+Received: by mail-pf1-f179.google.com with SMTP id p17-v6so7941448pfj.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:23:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=+gr827BnFJ88i28j2KcdNCrwM7od+jQOKVMu28aDKno=;
+        b=cO+RLTIASlUFZxUCwgC77k4+/2Qu5SPt+1xAvhti2ErBr2VdXkygBMXOnHfaX6FoJL
+         x5H1ZtCrB45hWFm4f6aF2hD8Yus2gj58U8b465De7Oz5D028im6xa0LOi0CJuH1ry+6z
+         y4SP4KCsOp6CZ/qL11NgXQu5+8iLP6pSd8tG65AusD5vDrEIkz5WIWP9aX3TZmlqteME
+         KpIAQrMIPcihdulzpesnHO8GtQWG2AQ9Gz+jQevUXtqVsUlgEBtClH/7sr/JDyJbdS3r
+         EJ5c2g1dBoazBH4SmtqhOyQqYGBDh7H6ZuxwZ4xMeOgoQ4zBTLvQA4lI4TGcIfOgjP4s
+         jBtg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJu0L5Myv16qzAyq/61DX+8jj/6dFlnAflNifbOMqP49Qt7KATo
+	iqscY0YzrJb6bjGKJbcDpI61VpJwqqnRDDVpExaeGjOp7jb+7HOHug==
+X-Received: by 2002:a62:ab05:: with SMTP id p5-v6mr2087811pff.211.1541629402596;
+        Wed, 07 Nov 2018 14:23:22 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp73671pjt;
+        Wed, 7 Nov 2018 14:23:21 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fbrz6Ct/EcSCyktGJcVppy4PXvHiQYwblT6Sv+DT0ZYr7FEjaWT3rP38TN3fHTdYVqXCjJ
+X-Received: by 2002:a17:902:8486:: with SMTP id c6-v6mr2037022plo.119.1541629401771;
+        Wed, 07 Nov 2018 14:23:21 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541629401; cv=none;
+        d=google.com; s=arc-20160816;
+        b=LUDmkSzN673Ia2mqPUegLJTn8uJBI9i0g+wUQI6S1mhj00+pIn6DDfznuEOvGe8/NG
+         ppqiQfae9pDsM0SH2q/9RMr2KvGuHlBI4k7ARnDeLRyBdYW9CyMTpR3bdRqm0cPyEIkK
+         brWsbR08d2cUNmw9qjXnFtiRjpU8kNSbIyCSE4iptwSpu5VPCtC9iobeqRXY13D7uE76
+         mnW71JtV1ITWKVBgrpZQ8ZRq+1ITuWsj2lFl6eclzGR1+k/xkS8vk0sCyNoPNXn2fKT6
+         94ygtnGhAjWUSCFtZsUH9vWY/JZFz0h4fZhPPfvravveLl1nLZ+I9levm8g97WyYRxEy
+         bMXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :organization:references:in-reply-to:message-id:subject:cc:to:from
+         :date;
+        bh=+gr827BnFJ88i28j2KcdNCrwM7od+jQOKVMu28aDKno=;
+        b=wgKWGVcOB28n1gFNbx8Ya7y20mMOEuRUdFQES09FZf+Pmm9WXWriNWwNKfJXw/DdB2
+         JvxBL8GDA55+6ndfpOS2l9hEP/2kPKNfUzq0cdsSkUosiE0xGySN5pL465fT6LhORpcd
+         v/rRLKO6NuABXNEcL1X501rXp+ROwLzVKOe+3a6nfb37KXJbq0cyfwysfwfvhHWmcurk
+         41MgC2I1DHspUIEwE9Of6RAc9NN0MWcxmkRI9CWyi1hJY0phQFxBqGRDwLs+OVKnWFM7
+         3NdDkLuaXrp7nhOTeSdeDmKBDJUXEGrbgwaHvJps0vqT3NrbLMiplTNVmev+nAyRdulf
+         zPOA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b1-v6si1561123pgl.235.2018.11.07.14.23.06;
+        Wed, 07 Nov 2018 14:23:21 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727793AbeKHHzZ (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:55:25 -0500
+Received: from ms.lwn.net ([45.79.88.28]:45794 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726751AbeKHHzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:55:25 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id B8C262ED;
+        Wed,  7 Nov 2018 22:22:59 +0000 (UTC)
+Date: Wed, 7 Nov 2018 15:22:58 -0700
+From: Jonathan Corbet <corbet@lwn.net>
+To: Federico Vaga <federico.vaga@vaga.pv.it>
+Cc: Alessia Mantegazza <amantegazza@vaga.pv.it>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] doc:it_IT: add some process/* translations
+Message-ID: <20181107152258.48267a2a@lwn.net>
+In-Reply-To: <20181005185157.27819-1-federico.vaga@vaga.pv.it>
+References: <20181005185157.27819-1-federico.vaga@vaga.pv.it>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDXu0faZeNbC48ZAA--.1625S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrtrWDtw13ArW3CF4DGw45ZFb_yoW3JFX_Ca
+	yruFW5CrW8GwnrWa4xKrsIvrWvq3WUC3W09F90vFZIk395XwsrZr4kX3Zxur93K39avryk
+	uasrW39Y93yrujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbDAYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWU
+	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vE
+	IxC_ZwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2
+	z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52
+	x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
+	xGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bndbbU
+	UUUU=
+
+On Fri,  5 Oct 2018 20:51:57 +0200
+Federico Vaga <federico.vaga@vaga.pv.it> wrote:
+
+> This patch does not translate entirely the subfolder "process/"
+> but only part of it (to begin with).
+> 
+> In order to avoid broken links, I included empty documents
+> for those which are not yet translated.
+> 
+> In order to be able to refer to all documents in "process/",
+> I added a sphinx label to those which had not one.
+> 
+> Translated documents:
+> - howto
+> - 1.Intro
+> - clang-format
+> - coding-style
+> - kernel-driver-statement
+> - magic-number
+> - volatile-considered-harmful
+> - development-process
+
+So I'm (finally) ready to apply this, but it has conflicts against current
+docs-next.  Could I ask you, please, to send me a respin?
+
+Thanks,
+
+jon

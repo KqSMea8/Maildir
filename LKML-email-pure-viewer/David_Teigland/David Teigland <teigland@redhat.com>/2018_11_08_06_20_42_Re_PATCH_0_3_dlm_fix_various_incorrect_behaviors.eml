@@ -1,0 +1,139 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:58 -0000
+Received: from icoremail.net (unknown [209.85.214.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f9FYZeNbliFbAQ--.27172S3;
+	Thu, 08 Nov 2018 06:21:13 +0800 (CST)
+Received: from mail-pl1-f181.google.com (unknown [209.85.214.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHb0tWZeNbP40ZAA--.2375S3;
+	Thu, 08 Nov 2018 06:21:10 +0800 (CST)
+Received: by mail-pl1-f181.google.com with SMTP id w22-v6so5183086plk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:21:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=FPJysKedWB6E8NE0L3eUfIomS2nFARMapwVMB7inpEY=;
+        b=ZRh+px2kkIOA/Z1Ymx3JA0J5hjOInOYRhPtU7IeNEHldKhCGoV1DsmLk+XlTM6fpLo
+         Yc7vOFmtzkyquA9JzX+5yBavU2HYcBfdWNG7GhSoS2FW+rPzCR6e+qLdiw21Erz21YJW
+         mMmJfzj1tRLCTuo0xft0KVgtpr/7cJH5gI0TK1i8K3zTuuAdd6v+z9GcIgz5O/yYOZDo
+         VwKTAXWjojPjGoU0OZmBD0N4sdSkCjrpk2+iyDhLkCxba1M1XxAEzM67apHwg9lWaJCJ
+         vm5erBCu5BoJLQCKkK8mANYTTwzfmlyCLyJOh1W06q7WAodVtS3Wt+7bHPESYyX4FcQC
+         yUgA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+X-Gm-Message-State: AGRZ1gIjqauvG1sHwtapQhr2JVs3SWyXioWJ/k6WYRCfHibr6GL/I3m1
+	2SDophX2gi31VJ2UwMj8dRvaZc8zwCqpg5vmJIxbLEjtmWXkii6ACA==
+X-Received: by 2002:a17:902:758f:: with SMTP id j15-v6mr2178582pll.160.1541629269974;
+        Wed, 07 Nov 2018 14:21:09 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp71913pjt;
+        Wed, 7 Nov 2018 14:21:09 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fGqSJ+j26Tr80jgL27ntm00CekzdZ/PQ3soaq5HxDJ+LlEcjIXcHXhlXE/70aSu/+n60TH
+X-Received: by 2002:a65:65c9:: with SMTP id y9mr1828187pgv.438.1541629269157;
+        Wed, 07 Nov 2018 14:21:09 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541629269; cv=none;
+        d=google.com; s=arc-20160816;
+        b=oZ563oEPyNkofbl2Q28/T1EY+sKXgNIFIQg3TSUYn5ZWHz05hdIXeEQOmlreLvC8Uv
+         9X9uXbXS/ozcPvp6BBDPhhroxJwcfEgw2JpnpqZRH7xyird6jM/ltW0HFAmxadqEhwVL
+         3CxKqAJ50m5Lag0mlZbduiuySfxw4F9vn5FH8TYuikT/7DjkCH5rm7EtMDhav0U9C5ag
+         Vfk31QAjg/GDmmYHbB9PpDxb7Nk62LSvMrxV0drM0SRSZmVnXHkMr+dk15DCzhe0KtIb
+         m5fQQeddM6xcsW0xKgZd6ZXL7dehe35IZDFvhNMflKFI31lTmQ15kGVHw8rXpus5Uhvn
+         Gxgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=FPJysKedWB6E8NE0L3eUfIomS2nFARMapwVMB7inpEY=;
+        b=mZzI2TLWrmrvt3BAlVKCx+q3HTxavz3mElAepJpl4e0VktHNTpyYk1B0vQ6l4NytIC
+         agaMFgR2y7GtNDnTOH8hVAz35yaSvUIiFqNTi4nOGufEl3udIgoaFrUSbYLTMV0EhOlg
+         Fy7WVgtWDV52Rg7BXUnoqY6YVHm7RfpOimPZ0FOQsiOGASUEiHy+fgNg+JxHE3uh4qgp
+         oO8JE6ITvkZ+QP33kE1fjznIGdmRoSM25tvyxXJn3+vwGD6EFnAPuZsHisRIoiIY2Naf
+         tc7yCqVIqXdWgfbxUHReZqDwGRsXwZevBM9vgkar1CvpQCicI7WISsJ7wQFwqDA6+mhM
+         4hJw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b12-v6si1923817plr.175.2018.11.07.14.20.52;
+        Wed, 07 Nov 2018 14:21:09 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727694AbeKHHxN (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:53:13 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:41426 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727068AbeKHHxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:53:13 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0FDE9316468F;
+        Wed,  7 Nov 2018 22:20:49 +0000 (UTC)
+Received: from redhat.com (null.msp.redhat.com [10.15.80.136])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C1826887B;
+        Wed,  7 Nov 2018 22:20:45 +0000 (UTC)
+Date: Wed, 7 Nov 2018 16:20:42 -0600
+From: David Teigland <teigland@redhat.com>
+To: Tycho Andersen <tycho@tycho.ws>
+Cc: Christine Caulfield <ccaulfie@redhat.com>,
+        cluster-devel@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] dlm: fix various incorrect behaviors
+Message-ID: <20181107222042.GA24927@redhat.com>
+References: <20181102201822.12518-1-tycho@tycho.ws>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181102201822.12518-1-tycho@tycho.ws>
+User-Agent: Mutt/1.8.3 (2017-05-23)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 07 Nov 2018 22:20:49 +0000 (UTC)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHb0tWZeNbP40ZAA--.2375S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUYJ7k0a2IF6FyUM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IY64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc2xSY4AK6IIF6Fyl
+	c2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20x
+	vEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28Icw
+	CF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
+	3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIx
+	AIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUqU73DUUUU
+
+On Fri, Nov 02, 2018 at 02:18:19PM -0600, Tycho Andersen wrote:
+> Hi,
+> 
+> here's a series to fix some bugs I noticed in the DLM. The third patch
+> in the series and maybe the first should probably go to stable, assuming
+> everyone agrees they're indeed bugs.
+> 
+> Thanks,
+> 
+> Tycho
+> 
+> Tycho Andersen (3):
+>   dlm: fix invalid free
+>   dlm: don't allow zero length names
+>   dlm: don't leak kernel pointer to userspace
+> 
+>  fs/dlm/lockspace.c | 2 +-
+>  fs/dlm/member.c    | 5 +++--
+>  fs/dlm/user.c      | 2 +-
+>  3 files changed, 5 insertions(+), 4 deletions(-)
+
+I've pushed these to linux-dlm next.
+Dave

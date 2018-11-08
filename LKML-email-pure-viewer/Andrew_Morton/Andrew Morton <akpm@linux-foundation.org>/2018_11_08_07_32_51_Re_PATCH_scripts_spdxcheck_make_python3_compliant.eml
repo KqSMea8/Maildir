@@ -1,0 +1,132 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:17 -0000
+Received: from icoremail.net (unknown [209.85.214.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv_o+duNbIoFbAQ--.27819S3;
+	Thu, 08 Nov 2018 07:33:19 +0800 (CST)
+Received: from mail-pl1-f180.google.com (unknown [209.85.214.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHHTk7duNb870ZAA--.2056S3;
+	Thu, 08 Nov 2018 07:33:15 +0800 (CST)
+Received: by mail-pl1-f180.google.com with SMTP id p6-v6so8580570pll.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 15:33:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=A3lX2wmpyRuvMP9qR11Aek5Ul5nv9TtY4b2YkSSv4ac=;
+        b=NKVHETul9BPo5DLmHuU33n9gjLoiq9dwNjnsQ+AHGxkFC3/Rxphl+iUq5dwWkkQtt6
+         cb9FQgPFBpSUGl/EbH8j7j7Hc1wUF8TwDmkQVU2VLNBR5FtZfaqPpN5D4Z96hg9CpOPf
+         TFqsCv/39ZJKYxv33uZALP63/QQTdtAXHN/h+QMX9N+88OwO9qji9lZLCRLFF6YDfAL7
+         vsAKdCfexcSsy46hqF/0pqup8MHFl3OJ5lFQye5wMj+SrhU7TaWwLOelcl7psBDjEt0J
+         rR+/QjTwiEFry0swaxLEykpApVHq+v6udtqBs8CwApGALyRWYRg4/iKFAQa1DXE1i+ZO
+         kkfg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gL2dIsxQv0wJ5+DXu7NsUbpyXGT1u15AqgErm9He0dljFJ2ko05
+	ywmfr84RznIZ4aXJQ2mrixNJsvVFa8TX4Y0noD8+gtFpxa0nSt5k+Q==
+X-Received: by 2002:a17:902:166:: with SMTP id 93-v6mr2252666plb.68.1541633595316;
+        Wed, 07 Nov 2018 15:33:15 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp129960pjt;
+        Wed, 7 Nov 2018 15:33:14 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dnCjkV+Z3UoJlehJElN5Ua5PiYp5TaR1Wgixvyj7s3jbS8eRjyqAdzAVqg4nIfg4RsS3j7
+X-Received: by 2002:a17:902:a81:: with SMTP id 1-v6mr2316343plp.75.1541633594475;
+        Wed, 07 Nov 2018 15:33:14 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541633594; cv=none;
+        d=google.com; s=arc-20160816;
+        b=L7YHyXTnUm/k0WVf4ogiJ5Ecw6Q2LAFR15v8OeE9fte11nQNaHBBPd/gPnRHgFeE0X
+         /4jQXnJGmDpUJXHScgQFRcbvq43FVfDaqkfPNeJY+LarntMlNrX1T3P+bssbvbwB3uGj
+         Ls5f79400gHCWPdAHWAfJJU/8mVgUa1EnaKQE3uECZcmcTNk0uvjZwVEfCVOQcK+odC2
+         l1PXWBNFshlJJoAzNNGCRqfcp9McZsRRH9WoIEEwGTTEZMRe5UEAgZfuiap7K2v3YHTB
+         6WLjoey2oSIPW//zo/NbWQ7T6c/PZCRsXrDirq7MWaI4RmIPjd9+kh8NT3VjHnh1IOk2
+         ocQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:subject:cc:to:from:date;
+        bh=A3lX2wmpyRuvMP9qR11Aek5Ul5nv9TtY4b2YkSSv4ac=;
+        b=C6U59qSYs//t4RFU3667cpHZAweYBfo/+49IiqqenrmiVwa8m/aCQurXT7JsVz4r+7
+         h5ryQiuhl7+/hrcjwC9FYS/IlbrboxU+Vsa/CV+CG41O6hTeBobGK97yeYLSdkpP/1ub
+         iOIpRnr2H7Gf2FG8/yy+ITm1toKL6SlnAg6yKyCKHhJ73VBCnjiFW+n/ELfiKOGsiep6
+         fkdsUURPDQ3tRo3ZPwG2ZUYIHfnNZ5RgSfWipPuompJ9Ae9O4q2b9GyQ2xWmn73TBoLo
+         ROo6QeudHUdhFzUfKz4j3ilpvAORSETpSDdAXsMmxrFB5Fztq7M1Kc3ONNN65xarREt5
+         imPg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id c3-v6si2209335pll.3.2018.11.07.15.32.59;
+        Wed, 07 Nov 2018 15:33:14 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727773AbeKHJFe convert rfc822-to-8bit (ORCPT
+        <rfc822;wanghaifine@gmail.com> + 99 others);
+        Thu, 8 Nov 2018 04:05:34 -0500
+Received: from mail.linuxfoundation.org ([140.211.169.12]:50212 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbeKHJFe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 04:05:34 -0500
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 1475BA48;
+        Wed,  7 Nov 2018 23:32:52 +0000 (UTC)
+Date: Wed, 7 Nov 2018 15:32:51 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+        Joe Perches <joe@perches.com>, kernel@pengutronix.de,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scripts/spdxcheck: make python3 compliant
+Message-Id: <20181107153251.bac94150f8ebc8dbf53abe23@linux-foundation.org>
+In-Reply-To: <20181023070802.22558-1-u.kleine-koenig@pengutronix.de>
+References: <20181023070802.22558-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: Sylpheed 3.6.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8BIT
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHHTk7duNb870ZAA--.2056S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7GF4xGFWfWr1xKr43Kw18uFg_yoW3KFbEvr
+	s7tw4qvFyxZ3W7u3yrJF4v9FyFqa17CrWUAr9xAw1xZ34vkFs5uFWSvry8Ar13K3WftF1Y
+	kF92qF18Xr47AjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqkYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_uwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bY
+	4SrUUUUU=
+
+On Tue, 23 Oct 2018 09:08:02 +0200 Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote:
+
+> Without this change the following happens when using Python3 (3.6.6):
+> 
+> 	$ echo "GPL-2.0" | python3 scripts/spdxcheck.py -
+> 	FAIL: 'str' object has no attribute 'decode'
+> 	Traceback (most recent call last):
+> 	  File "scripts/spdxcheck.py", line 253, in <module>
+> 	    parser.parse_lines(sys.stdin, args.maxlines, '-')
+> 	  File "scripts/spdxcheck.py", line 171, in parse_lines
+> 	    line = line.decode(locale.getpreferredencoding(False), errors='ignore')
+> 	AttributeError: 'str' object has no attribute 'decode'
+> 
+> So as the line is already a string, there is no need to decode it and
+> the line can be dropped.
+
+I suppose people might want to run spdxcheck.py against (say) 4.19.x
+using python3.  So I'll add a cc:stable here, OK?

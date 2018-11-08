@@ -1,0 +1,172 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:41:25 -0000
+Received: from icoremail.net (unknown [209.85.215.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH34WhONbwNFbAQ--.27719S3;
+	Thu, 08 Nov 2018 08:32:23 +0800 (CST)
+Received: from mail-pg1-f171.google.com (unknown [209.85.215.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDXvEgUhONb3+0ZAA--.2404S3;
+	Thu, 08 Nov 2018 08:32:21 +0800 (CST)
+Received: by mail-pg1-f171.google.com with SMTP id z17-v6so8056530pgv.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 16:32:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding
+         :sender:precedence:list-id;
+        bh=3OUNS366Od0vqCd/D+F+aMpBvIK+uQeIYiuEmN7vrrk=;
+        b=Azjd8IKzab3Hsc8ZRSVQ0uyw3NiH9MMSm945BmeTNQ2nrmw6iTfexWF/Mci70w8Puo
+         n1N+Rt5RHtn0ZXcIuRXd62sj9cD+wIggwph3jbJfBdBO/2DZSFHJtmVJCCcCcgSG/E1y
+         G3SAGRXpW9HBHKNkVkHWXw7LpZhegazhr9NIQEjDEhd3xIsbTQT8vcUopRonxeuH9BgI
+         5ybi45BaBBCAjvC+xgW7aur+FPELE58tHquoi95FaZaBtmzdm6a41ucJCW0/aAsGko2I
+         PvZpQqnnN/2bMWdmdxjv/jtOoQplHx1Ek5VDQERpOO+bqqVCd53rtwbNj4Amby9lyQIA
+         nA7w==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gIKvPnM9X+jCgxierMBsUQjep7m2FqmwnhR754TPRq56xOCNcTX
+	iakU/GzPjgo2947NJ5Bmw7LdN5oOv89ZAhTw4hy7/IOBgoNgSEoInQ==
+X-Received: by 2002:a63:5816:: with SMTP id m22-v6mr2052212pgb.332.1541637140656;
+        Wed, 07 Nov 2018 16:32:20 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp175832pjt;
+        Wed, 7 Nov 2018 16:32:19 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fQd89osQgmhEWAnllMT3ZMRX2ZcqQV/K4ETqNrquxCG2PaUT16aguboxHWjswUQNi3/B49
+X-Received: by 2002:a17:902:5a4b:: with SMTP id f11-v6mr2536723plm.49.1541637139617;
+        Wed, 07 Nov 2018 16:32:19 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541637139; cv=none;
+        d=google.com; s=arc-20160816;
+        b=rcGjsqXtHKM9eDYzMN/OuPrsQqRYjAn0ntpdFxAyNOf+EEfFRgRHOi+7bItUdxOf+j
+         z3CFHz1N1Mz9yJO8fbvWFhj2HZBtKiLTGzBGZ1OzVg3Y4mtf+S3KNw2jG/YGHEtZdpd8
+         PIMiRCqjp4hp/1VmfNu0lxW08HtgCyVuIn29XjqMPcKLOF+3Kaz+crLtxz+ITrRDUoxM
+         Rv8NBATfOrsMJhn5FndjzGej8Pb8f2e7T7B/7prMN87cR0kMi/kUzqbCsEtDgImkoMFQ
+         Jr79g9gyGpsavw/TpnqcdwNf7DUHAEzapEmLmbw2EBKXCKs23dk4NWKCd9uCmE4t+6bh
+         9R9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject;
+        bh=3OUNS366Od0vqCd/D+F+aMpBvIK+uQeIYiuEmN7vrrk=;
+        b=MT4CaHOdPXwPjUydZYy8PD6JTeHIgjBA767QM29vK7ncIoINC8mLY3+zJeNMOvhhFE
+         SBOipt06R67dLlFeUnRwKIdakHxfp56T7D1+5aiwR8bcyeTDV5w8ikki0E7sH41Et7Cq
+         YqEsb8QogCmv6SCKEgtXfwkh12pXnpSf07gnOU0aprOH9ICRkFLi/CO1iI+YuWnB3nTd
+         /3Qvx0/4+ZhNJxJJlcSVAedQkb2SQQ+lDnw16b3m9YJzAHMtJ/4skxwy1HwyePXSL8pE
+         bgxyU8GXMK7ZXsj2p4lRhmgomAKonub0Rg9mD/I3QrsOvpKwD11za398GYz2GcqUuh11
+         zPJQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id i20-v6si2024265pgg.503.2018.11.07.16.32.01;
+        Wed, 07 Nov 2018 16:32:19 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728230AbeKHKEr (ORCPT <rfc822;yamahata.lkml@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 05:04:47 -0500
+Received: from mga11.intel.com ([192.55.52.93]:60048 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728076AbeKHKEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 05:04:47 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 16:31:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,477,1534834800"; 
+   d="scan'208";a="106370584"
+Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
+  by orsmga001.jf.intel.com with ESMTP; 07 Nov 2018 16:31:54 -0800
+Subject: Re: [RFC PATCH v1 1/2] x86/fpu: detect AVX task
+To: Tim Chen <tim.c.chen@linux.intel.com>,
+        Aubrey Li <aubrey.li@intel.com>, tglx@linutronix.de,
+        mingo@redhat.com, peterz@infradead.org, hpa@zytor.com
+Cc: ak@linux.intel.com, arjan@linux.intel.com,
+        linux-kernel@vger.kernel.org
+References: <1541528590-30296-1-git-send-email-aubrey.li@intel.com>
+ <cd83910a-7197-9c49-3b93-22d699d887c4@linux.intel.com>
+From: "Li, Aubrey" <aubrey.li@linux.intel.com>
+Message-ID: <216189f0-a411-8bba-99d2-c4661de0ff93@linux.intel.com>
+Date: Thu, 8 Nov 2018 08:31:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.1.1
+MIME-Version: 1.0
+In-Reply-To: <cd83910a-7197-9c49-3b93-22d699d887c4@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDXvEgUhONb3+0ZAA--.2404S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Xw4kGr48Cr48JFy5tw13Arb_yoW8JF1Up3
+	48Xr1aqw4kXrW3Aws7Jr40grnxCrZ3Gr4DKws7J34xJFn3Arn5C3sYgF4jkF1qkFs8GFyf
+	Z3WDuFy2gan0yFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmSb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAKzI0EY4vE52x082I5MxkFs20E
+	Y4vE44CYbxCE4x80FwCY02Avz4vEIxC_twCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI
+	8IcVAFwI0_JFI_Gr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCYIxAIcVC2z280
+	aVAFwI0_Cr1j6rxdMxvI42IY6I8E87Iv6xkF7I0E14v26F4UJVW0owCF04k20xvY0x0EwI
+	xGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
+	AFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UYxBI
+	daVFxhVjvjDU0xZFpf9x07bO0eQUUUUU=
+
+On 2018/11/8 1:41, Tim Chen wrote:
+> On 11/06/2018 10:23 AM, Aubrey Li wrote:
+> 
+>> +static inline void update_avx_state(struct avx_state *avx)
+>> +{
+>> +	/*
+>> +	 * Check if XGETBV with ECX = 1 supported. XGETBV with ECX = 1
+>> +	 * returns the logical-AND of XCR0 and XINUSE. XINUSE is a bitmap
+>> +	 * by which the processor tracks the status of various components.
+>> +	 */
+>> +	if (!use_xgetbv1()) {
+>> +		avx->state = 0;
+>> +		return;
+>> +	}
+>> +	/*
+>> +	 * XINUSE is dynamic to track component state because VZEROUPPER
+>> +	 * happens on every function end and reset the bitmap to the
+>> +	 * initial configuration.
+>> +	 *
+>> +	 * State decay is introduced to solve the race condition between
+>> +	 * context switch and a function end. State is aggressively set
+>> +	 * once it's detected but need to be cleared by decay 3 context
+>> +	 * switches
+>> +	 */
+>> +	if (xgetbv(XINUSE_STATE_BITMAP_INDEX) & XFEATURE_MASK_Hi16_ZMM) {
+>> +		avx->state = 1;
+>> +		avx->decay_count = AVX_STATE_DECAY_COUNT;
+>> +	} else {
+>> +		if (!avx->decay_count)
+> 
+> Seems like the check should be
+> 
+> 		if (avx->decay_count)
+> 
+> as we decrement the decay_count if it is non-zero.
+
+Right, thanks to point this out, will fix in v2 soon.
+
+Thanks,
+-Aubrey
+> 
+>> +			avx->decay_count--;
+>> +		else
+>> +			avx->state = 0;
+>> +	}
+>> +}
+> 
+> Tim
+> 

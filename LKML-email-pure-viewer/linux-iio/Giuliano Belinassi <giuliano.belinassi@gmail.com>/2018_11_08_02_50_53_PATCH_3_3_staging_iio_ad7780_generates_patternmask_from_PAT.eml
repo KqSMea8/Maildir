@@ -1,0 +1,184 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:45 -0000
+Received: from icoremail.net (unknown [209.85.214.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3_gxNONbDAZaAQ--.26993S3;
+	Thu, 08 Nov 2018 02:51:31 +0800 (CST)
+Received: from mail-pl1-f181.google.com (unknown [209.85.214.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHLEgvNONbnecYAA--.1035S3;
+	Thu, 08 Nov 2018 02:51:27 +0800 (CST)
+Received: by mail-pl1-f181.google.com with SMTP id b5-v6so8260162pla.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:51:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:date:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=fqVW9dmdIWiv8QzanvaPNs8+eLiSJsnKkzhg+ry8T9w=;
+        b=GHlLaND9mIC/KoMz0OLE0SIf+JsaI14I8lILqbBl8fDN6YOw5j3rsI3cByMTOpGom0
+         eAKwf6Isopwf1RY/Jv/jR3NWXTvrYiJwjfUK03+IVksdBKtWrIazGtCoqSOBP/Tf7/cu
+         EOfMbLtqgirspGCycB2YK/ed5ibdv1Mm1hKKARia1f1OTF7KVBbA38/6kYhAAqNHwL+m
+         nX3AG3/bMQGuBykuY8AZ5lTGsqR9z9w0WS4Jyl1eaBxhWL8YJF2xtlUGsqyoZi1FDikX
+         KdnaCAxk7YCTYO89DHRDlF8l0drvQfxEl7dZZqd9DeVe7OU69r/72LwjMOkXLqSNfues
+         SpSA==
+X-Gm-Message-State: AGRZ1gKjirKDn+SvZPRr28Nh4xHztVhBF4JMMjGYOA7E72OYdEbCGFvY
+	Jmb5Y7C23k9prj8rFQNZOYj1SJf97nvLdu44/uwk3FFq7ps1FmbNpA==
+X-Received: by 2002:a17:902:7882:: with SMTP id q2-v6mr1418475pll.188.1541616687386;
+        Wed, 07 Nov 2018 10:51:27 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5609811pjt;
+        Wed, 7 Nov 2018 10:51:26 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dYQ3G4UHWhZggYlNW7pDxPXXzxaij+LWapIzyYV/lY6YFUYRrJbv9OAruC+RgBcK8Ayn2/
+X-Received: by 2002:a17:902:4583:: with SMTP id n3-v6mr1360512pld.53.1541616686822;
+        Wed, 07 Nov 2018 10:51:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541616686; cv=none;
+        d=google.com; s=arc-20160816;
+        b=gDmFcKjIFKaRfXAXctGH5HduL6uRYjqDarktZAnumzySb3j5/eUQDb4tTD6oX1K2ra
+         ddWZFGPom5pbewA8T9R4RKyvnROnVbJ0zTjQclP7z9loc58Cyd0cGaCJAJrjH0PcK5h6
+         a557m7gJPvxKz5W4ZQQq5NSRx/ujtX1LZt6VCeT27g18B01YfRJhIYPZpwFt6BHlBkpK
+         qDrVFI3cQ5A6AYso8ynjHwmGLSlCpx65Ixs/vl58dRBO3fcKi7goqZVz6Gw/WlVhL1S8
+         uwzjiOJBtLOWlqqPI85wNeh5LQW0Wum/hbi/dYtdiK5DNo6njrOBPnXjvivjOEZNZYg0
+         ntsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:date:from:dkim-signature;
+        bh=fqVW9dmdIWiv8QzanvaPNs8+eLiSJsnKkzhg+ry8T9w=;
+        b=V+hc6eef6I80OI80RV38jaezRuZjY8VnQAEo0Pry8QioZuQ4JDqjmaWgoQWSuxo8iQ
+         FDIgu/t7W3bXAJ9BJ8W3WSivF+aT6oHfLlDk4XQe+E7i8eG7M6H5QEvpFA7DS31tL29W
+         wXJswARiaTWBK/7qTyxSJC2WDLSCl8VQtQz/1adC/79hlCHyC0KdgeaSwVmpO16Kcenz
+         YwNLQaS9Mq1KL0CRO2LrzdUrWZs8DrS54qfDhFkzcuihlJzceRUNJl+LxzUlpNWf/YMq
+         uY7HgjHA6R7X3fZRirCdrjoI4zfTgAstJ5ddBJLQT36lWSyg8mk6OhxsnFmcAFNXLAUL
+         nSvA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b="k/UpmasQ";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id j190-v6si1282940pgc.149.2018.11.07.10.51.10;
+        Wed, 07 Nov 2018 10:51:26 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1729684AbeKHEWi (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:22:38 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:37226 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbeKHEWi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:22:38 -0500
+Received: by mail-qk1-f193.google.com with SMTP id 131so22235479qkd.4;
+        Wed, 07 Nov 2018 10:50:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fqVW9dmdIWiv8QzanvaPNs8+eLiSJsnKkzhg+ry8T9w=;
+        b=k/UpmasQJt3v9ru8qQpWlhEKxShVDvfN9ee/0qWZakyPY/mQwhoKcd4vr/afkhoVsy
+         BJDfSEeyMFjdDE/LQsUuSmffAwRaQ2FYlnpMGGHPRH3vFRs1/A1yH6hNf/MMJExJJjyR
+         T7Wc0Grot0XmYStw5XZmo2QC89Wdsm3+N+9IQ4IzfzbxuNVImfCifMUVSNdhfZtLBVF1
+         /COnRvkSLuafcA3matR4wbK8jH3BUGlXkMqPqaHjTSMZSmlnmhVH60CvsTQX42Yc566Z
+         aM60zohn0xslAHivzTURHn1dvEslOMgiogTfNbepfjO3mV3z2GZQU8xHS+XFXbhhOsOg
+         QgJQ==
+X-Received: by 2002:ac8:528b:: with SMTP id s11mr1367442qtn.199.1541616659345;
+        Wed, 07 Nov 2018 10:50:59 -0800 (PST)
+Received: from smtp.gmail.com ([143.107.45.1])
+        by smtp.gmail.com with ESMTPSA id m61-v6sm818076qte.30.2018.11.07.10.50.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 10:50:58 -0800 (PST)
+From: Giuliano Belinassi <giuliano.belinassi@gmail.com>
+X-Google-Original-From: Giuliano Belinassi <giuliano.belinassi@usp.br>
+Date: Wed, 7 Nov 2018 16:50:53 -0200
+To: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+        knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
+        renatogeh@gmail.com
+Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: [PATCH 3/3] staging: iio: ad7780: generates pattern_mask from PAT
+ bits
+Message-ID: <f7925df556f37f48ae0b1707239aff5a108fea1d.1541615978.git.giuliano.belinassi@usp.br>
+References: <cover.1541615978.git.giuliano.belinassi@usp.br>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1541615978.git.giuliano.belinassi@usp.br>
+User-Agent: NeoMutt/20180716
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHLEgvNONbnecYAA--.1035S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7tFy8KF47Gr45Jw43CF4xCrg_yoW8XFy7pF
+	4Ut3yDurZ7tF43GFyDXwnrZa98Aas8KFZ5Gayqqw1Y9ryvvFn7XrZ8GFySkFnrJrWSyF1S
+	ya18JF4UW3WDAF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB0b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkIecxEwVCI4VW5MxkI7II2jI8vz4vE
+	wIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4U
+	JVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I
+	8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AK
+	xVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI
+	8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxU65EfDUUUU
+
+Previously, all pattern_masks in the chip_info table were hardcoded. Now they
+are generated using the PAT macros, as described in the datasheets.
+
+Signed-off-by: Giuliano Belinassi <giuliano.belinassi@usp.br>
+---
+ drivers/staging/iio/adc/ad7780.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/staging/iio/adc/ad7780.c b/drivers/staging/iio/adc/ad7780.c
+index 0a473aae52f2..fa9e047b5191 100644
+--- a/drivers/staging/iio/adc/ad7780.c
++++ b/drivers/staging/iio/adc/ad7780.c
+@@ -31,6 +31,8 @@
+ #define AD7780_PAT1	BIT(1)
+ #define AD7780_PAT0	BIT(0)
+ 
++#define AD7170_PAT2	BIT(2)
++
+ struct ad7780_chip_info {
+ 	struct iio_chan_spec	channel;
+ 	unsigned int		pattern_mask;
+@@ -137,25 +139,25 @@ static const struct ad7780_chip_info ad7780_chip_info_tbl[] = {
+ 	[ID_AD7170] = {
+ 		.channel = AD7780_CHANNEL(12, 24),
+ 		.pattern = 0x5,
+-		.pattern_mask = 0x7,
++		.pattern_mask = AD7780_PAT0 | AD7780_PAT1 | AD7170_PAT2,
+ 		.is_ad778x = false,
+ 	},
+ 	[ID_AD7171] = {
+ 		.channel = AD7780_CHANNEL(16, 24),
+ 		.pattern = 0x5,
+-		.pattern_mask = 0x7,
++		.pattern_mask = AD7780_PAT0 | AD7780_PAT1 | AD7170_PAT2,
+ 		.is_ad778x = false,
+ 	},
+ 	[ID_AD7780] = {
+ 		.channel = AD7780_CHANNEL(24, 32),
+ 		.pattern = 0x1,
+-		.pattern_mask = 0x3,
++		.pattern_mask = AD7780_PAT0 | AD7780_PAT1,
+ 		.is_ad778x = true,
+ 	},
+ 	[ID_AD7781] = {
+ 		.channel = AD7780_CHANNEL(20, 32),
+ 		.pattern = 0x1,
+-		.pattern_mask = 0x3,
++		.pattern_mask = AD7780_PAT0 | AD7780_PAT1,
+ 		.is_ad778x = true,
+ 	},
+ };
+-- 
+2.19.1

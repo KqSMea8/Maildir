@@ -1,0 +1,157 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:03 -0000
+Received: from icoremail.net (unknown [209.85.210.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3fyVYaONbOjJbAQ--.27445S3;
+	Thu, 08 Nov 2018 06:34:01 +0800 (CST)
+Received: from mail-pf1-f170.google.com (unknown [209.85.210.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwD32UVWaONbkJYZAA--.1671S3;
+	Thu, 08 Nov 2018 06:33:58 +0800 (CST)
+Received: by mail-pf1-f170.google.com with SMTP id g7-v6so6063460pfo.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:33:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=3CYnbqPAmqUfHKzmMcRqlFYTfeL9hdSDgbdLKoosjak=;
+        b=R3nWEHoD8YcyN60VSpLJzmlnXGXlUODpk0UpuzbwjPreGz3F/cUD8nyBwfES9NtOX+
+         JCggY1l6E8HENwi/HHmTj7yvDpe6mQUZxQXmthroP+/1CyqLN2GteiYDeTrpRNba6J6S
+         dZRoZJ/FWKYxjd/cf4nYbuSkrcrKS9kKqzEj6fzFUokknIRuTREvPlVos5ypLx2i2blF
+         wP7cgfOGZN8vpTwyNHf8TCT4zXA8Y5oU9bYTCpG3B9l87BtfmoMLgdcaIG4Kv6TtUgf4
+         OCpuyNs9z6upVYxvLJHSnVLAy1H+qy9B6CKLoC8z52veinYJIEHKJlu/bAQH0liJCqJ0
+         OtRA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+X-Gm-Message-State: AGRZ1gKlzcRi/dllB5hMG1xT7WZ71LFkbWmReE5Qh6d/bJCst7Wn53/N
+	0/ByDkPgW33Si1r9dxIG273xHXsXkZ1rTAi2V6QUGtZb/0gjIwlDDg==
+X-Received: by 2002:aa7:8498:: with SMTP id u24-v6mr2127846pfn.220.1541630038173;
+        Wed, 07 Nov 2018 14:33:58 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp82051pjt;
+        Wed, 7 Nov 2018 14:33:57 -0800 (PST)
+X-Google-Smtp-Source: AJdET5flTEoFtNaNeElZN4V+pPTrh4v4wIE5BT54iA2Z+jtVZ/6rBDlYXqTwdtlMVNfAigl/4oM8
+X-Received: by 2002:a63:b16:: with SMTP id 22mr1792061pgl.306.1541630037177;
+        Wed, 07 Nov 2018 14:33:57 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541630037; cv=none;
+        d=google.com; s=arc-20160816;
+        b=k8coxG5q3bizq8WkE+IfcsWOLJ/tRVmp+P1DajPnASmHiKQ2tqKiExV6eBTpq+3Y7k
+         5aTsdAWiwTIaKYXwj3uGqZjzPirv0F4Rsr6Oh2BZFrP0zlI+NgvGgBofpYyo/zOEydn/
+         +3tNwpkd0t5FLkJb+16cP1q7qrE3H5B9k+sObs/SoNa+QlPG1J7QohaPusVNiRTsed+0
+         Hz/+yeLhbLeMR1YSd1juNdEmWtMzIlWA7K1tbueUlrIIvfTRPr9cWyQEoLHeuMrgqc3W
+         vQkaxaT3fi+I7unzWucPA9Wd+8yqVb9ubh31xvfqVkIHWmHrHBINHPOAeeeTThrXHyNp
+         dMug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=3CYnbqPAmqUfHKzmMcRqlFYTfeL9hdSDgbdLKoosjak=;
+        b=Q2jQGOVRfs+WdTZbAE/crShIDm5A5PDTdzVVmIz/wwF5+T5RuCc/at9VyatDJylDuh
+         Ry8eleGnOFBw4kHkVj9SufQfcsSTuK3iCd5QSui81q8znniKLLdsngeMPmlhCdq5Ewfn
+         xd8nWH7ai0ZSEWbVrLS9OB54pUNmg44qMLMhHXE62+AqikTiSoJq3jXSAojAL03ARY0d
+         10lCAlaqqfppezmbBEfh8C/7/j3FGmJIxpxSLTRnQC3soPnVqVxkFW7att+gSiFIkas8
+         V2yCGj2Ijer9eTUgoQsD7y2BascEEV+P6Ndtnc3tIsnTaSkfNyDbsCZYnaA62ef4xuOd
+         bnug==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id r27si1625379pgl.494.2018.11.07.14.33.42;
+        Wed, 07 Nov 2018 14:33:57 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728118AbeKHIEW (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:04:22 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36721 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727591AbeKHIEV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:04:21 -0500
+Received: by mail-oi1-f194.google.com with SMTP id r127-v6so15293462oie.3;
+        Wed, 07 Nov 2018 14:31:54 -0800 (PST)
+X-Received: by 2002:aca:5596:: with SMTP id j144-v6mr1324611oib.54.1541629913931;
+        Wed, 07 Nov 2018 14:31:53 -0800 (PST)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id f9sm750959oth.17.2018.11.07.14.31.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 14:31:53 -0800 (PST)
+From: Rob Herring <robh@kernel.org>
+To: "David S. Miller" <davem@davemloft.net>
+Cc: Frank Rowand <frowand.list@gmail.com>,
+        linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org
+Subject: [PATCH 1/8] fs/openpromfs: use full_name instead of path_component_name
+Date: Wed,  7 Nov 2018 16:31:44 -0600
+Message-Id: <20181107223151.14991-2-robh@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107223151.14991-1-robh@kernel.org>
+References: <20181107223151.14991-1-robh@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwD32UVWaONbkJYZAA--.1671S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7WFyDJF45WFWxZw1xCrWfXwb_yoW8GFW8pF
+	Wvga98urs7Gw1YkF1Fyw4kZayUKr4v9r4UCF1ruw1ayrZ2q342qr48tF18CF1fta4rWrya
+	qF1qqa4UXa18ta7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPab7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW3MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI
+	42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExV
+	AvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
+	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrx
+	kI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxU
+	qcTmDUUUU
+
+In preparation to remove struct device_node.path_component_name, use
+full_name instead. kbasename is used so full_name can be used whether it
+is the full path or just the node's name and unit-address.
+
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: sparclinux@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ fs/openpromfs/inode.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/fs/openpromfs/inode.c b/fs/openpromfs/inode.c
+index 607092f367ad..3d8e9bcfe239 100644
+--- a/fs/openpromfs/inode.c
++++ b/fs/openpromfs/inode.c
+@@ -199,10 +199,11 @@ static struct dentry *openpromfs_lookup(struct inode *dir, struct dentry *dentry
+ 
+ 	child = dp->child;
+ 	while (child) {
+-		int n = strlen(child->path_component_name);
++		const char *node_name = kbasename(child->full_name);
++		int n = strlen(node_name);
+ 
+ 		if (len == n &&
+-		    !strncmp(child->path_component_name, name, len)) {
++		    !strncmp(node_name, name, len)) {
+ 			ent_type = op_inode_node;
+ 			ent_data.node = child;
+ 			ino = child->unique_id;
+@@ -293,8 +294,8 @@ static int openpromfs_readdir(struct file *file, struct dir_context *ctx)
+ 	}
+ 	while (child) {
+ 		if (!dir_emit(ctx,
+-			    child->path_component_name,
+-			    strlen(child->path_component_name),
++			    kbasename(child->full_name),
++			    strlen(kbasename(child->full_name)),
+ 			    child->unique_id, DT_DIR))
+ 			goto out;
+ 
+-- 
+2.19.1

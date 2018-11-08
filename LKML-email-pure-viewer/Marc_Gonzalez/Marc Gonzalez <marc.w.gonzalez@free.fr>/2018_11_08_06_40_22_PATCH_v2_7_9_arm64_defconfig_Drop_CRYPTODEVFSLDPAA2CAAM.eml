@@ -1,0 +1,133 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:15 -0000
+Received: from icoremail.net (unknown [209.85.215.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH7aKcuNbmG9bAQ--.27609S3;
+	Thu, 08 Nov 2018 07:17:31 +0800 (CST)
+Received: from mail-pg1-f172.google.com (unknown [209.85.215.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCnfTmIcuNbsLMZAA--.1962S3;
+	Thu, 08 Nov 2018 07:17:28 +0800 (CST)
+Received: by mail-pg1-f172.google.com with SMTP id 32-v6so7979640pgu.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 15:17:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=bNxiM4uTtrDecmFDjpCvbrrpF2TEcbdIynavCSW1Gmk=;
+        b=LexHIn3EFiEUDV+Xoa4Z9hoMacpAE1rZZio/RUi66nSb1w8g5GEFZZn3wykcwECZfu
+         2r1eyzb4NWqU7QWSlbUScauoHZM5ABPk4eWf6F6WgcpCfOoanTPlWsLBUz5Q2LuGWHQ8
+         Rkzu48FAv+gwNv0v5Qr4/vp13q6/TKLkOCfcPhavPIwDuBtPDTdpWyPY4X56aDSmwgIZ
+         geBDj3s2jZU14Y1x8PDfdacP6j/ElL2NRnF+hkOlVIHwG+aWQzKiBAEow0e95nALITf3
+         J+om4FE8eYipuW/unlOsPkkqwTAC4g4vy6tH8XoGqukkgbW9wTmyAXnHkskkwxzOq74W
+         S7gQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIWgkzunPF4JU4zC9taNSD5zqUhI+9e3UQKbm3S//eXIzrCH4LE
+	QsbBmocqjmLkC2521vP/z5oHZElr7akFSnUp8Y+7j3OvgJEsAskEiw==
+X-Received: by 2002:a62:3301:: with SMTP id z1-v6mr2196953pfz.85.1541632648598;
+        Wed, 07 Nov 2018 15:17:28 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp117725pjt;
+        Wed, 7 Nov 2018 15:17:27 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fJIDU7ARj3F/f1WXX+AEGqwRipFsboUm2bC4po/YRZLmWWLkx41yww6mFK83PFgdELpisu
+X-Received: by 2002:a62:682:: with SMTP id 124-v6mr2234259pfg.161.1541632647769;
+        Wed, 07 Nov 2018 15:17:27 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541632647; cv=none;
+        d=google.com; s=arc-20160816;
+        b=VLS3FV2MyqOQlJxEm7P4exvlA5xd05u20Hg4ykTEosnda4zIq9nlA09P06Jj+7v0JG
+         AvHm0Yt31RqE+rNysI585rKIcLjvHCbg3rfxc0HW0pvr2rCU1wEABrNBJuCYgol6bGba
+         cGnGrbtN7dLRYj33xOErYaDUWtXL3SiqOuWS9X5g+WTxt+nufqSx1GtfmwkrXwGnYK4G
+         304x/Bt/UEG5ahe7hxO2BYdhuoYwLY/3v4Vf+yMm9k6qxAYLnVlcQHdvewLPq7t7jvtH
+         2pfd5mcNSzgYnjw141p1/2I+BpZhFUb1/ItbBHhAkMKriNUpQsGlX8PBqMP9QFawPWL/
+         BrUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:in-reply-to
+         :mime-version:user-agent:date:message-id:references:cc:to:subject
+         :from;
+        bh=bNxiM4uTtrDecmFDjpCvbrrpF2TEcbdIynavCSW1Gmk=;
+        b=geMAswxpzTbSnJ29T/v26lQ4a/lL1lOTkslyzy7ZOwWVfqZwj2F5HseXyGUrCdHupr
+         RIzZ0LCyHGkCDaMp4pU/Zgnor15HwNlY+csIvPabb+Qc66ja9WthYDdmlp9D3DdRQ3GF
+         WMMsm5MXMqoVweF51a5QU1iT9hDOYyMpII9If8G6m9Kl6aq8+yd/kx0Ja0u8mBEukVWr
+         D7lP2HHPdTtzt99pK9CUSDayV8PpBHDSoAZgD1jCFyXv6Jsx9XdF2fUnMbF4Cq0J1GzN
+         KzgIIo9jkXXVNpl3GsMImD7wteL7d0kKIoSdpkZGkGUzSV3XdE8eZCEN8Skxswh83hXL
+         DANw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d33-v6si2108722pla.82.2018.11.07.15.17.13;
+        Wed, 07 Nov 2018 15:17:27 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728429AbeKHItG (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:49:06 -0500
+Received: from smtp4-g21.free.fr ([212.27.42.4]:8614 "EHLO smtp4-g21.free.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727370AbeKHItF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:49:05 -0500
+Received: from [192.168.1.42] (unknown [77.207.133.132])
+        (Authenticated sender: marc.w.gonzalez)
+        by smtp4-g21.free.fr (Postfix) with ESMTPSA id AB7F119F576;
+        Thu,  8 Nov 2018 00:16:20 +0100 (CET)
+From: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: [PATCH v2 7/9] arm64: defconfig: Drop CRYPTO_DEV_FSL_DPAA2_CAAM
+To: arm-soc <arm@kernel.org>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <898e79a6-092c-d013-d2bb-f6260e761379@free.fr>
+Message-ID: <a9127a79-ca84-6d39-8910-cc34db526534@free.fr>
+Date: Wed, 7 Nov 2018 23:40:22 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Firefox/52.0 SeaMonkey/2.49.4
+MIME-Version: 1.0
+In-Reply-To: <898e79a6-092c-d013-d2bb-f6260e761379@free.fr>
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCnfTmIcuNbsLMZAA--.1962S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7JrWrJF4UCw1fCryfXry3twb_yoWxZrg_tF
+	Wfuw48ur48Ar929r13XayrG3y09a40q3s5Jr17XFn3Xr42gF1fX395XF1rG3W5Za1j9rW3
+	Z395AF9xArnYyjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbvkYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	02cVCv0xWlc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0264kExVAvwVAq07x20xylc7Ca8VAv
+	wVCFzxkY4VCF77xAMxkIecxEwVCI4VWfMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2
+	IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv
+	67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64
+	vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
+	CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVWUCVW8JbIYCTnI
+	WIevJa73UjIFyTuYvjxUq-eODUUUU
+
+Commit e8342cc7954e ("enable CAAM crypto engine on QorIQ DPAA2 SoCs")
+enabled CRYPTO_DEV_FSL_DPAA2_CAAM, which depends on FSL_MC_DPIO,
+which is not set.
+
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+---
+ arch/arm64/configs/defconfig | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 8e181cca0a05..e4957df18f23 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -727,4 +727,3 @@ CONFIG_DEBUG_KERNEL=y
+ # CONFIG_DEBUG_PREEMPT is not set
+ # CONFIG_FTRACE is not set
+ CONFIG_MEMTEST=y
+-CONFIG_CRYPTO_DEV_FSL_DPAA2_CAAM=y
+-- 
+2.17.1

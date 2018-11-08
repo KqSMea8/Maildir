@@ -1,0 +1,189 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:10 -0000
+Received: from icoremail.net (unknown [209.85.215.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgA3cI5DReNbJ2BaAQ--.30338S3;
+	Thu, 08 Nov 2018 04:04:20 +0800 (CST)
+Received: from mail-pg1-f178.google.com (unknown [209.85.215.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHXztAReNb+xwZAA--.790S3;
+	Thu, 08 Nov 2018 04:04:16 +0800 (CST)
+Received: by mail-pg1-f178.google.com with SMTP id z17-v6so7779912pgv.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:04:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language:content-id
+         :content-transfer-encoding:mime-version:sender:precedence:list-id;
+        bh=8KHa4pA/1azNlE5S47AIfHQ7IMI3l6JhQdHwraIpYzg=;
+        b=lNTJaPTHr5mRi7aAMxNZ91nBCu899/TJzIpL0cycBqL+59DQzhpFJbswzjjRGX354K
+         3bybfbRHOcphE1CQq3TGUMKSSRgp+MJEFy9qujG1yjqmyGmUd8+y9VUmzPMUd7AbSyz2
+         xIU8QnRbk+cEIIOYDYwSznzmQ7f6nrsJkYoFCXzjQcPjDIrdPW4FEdOod08dNsCHIWP3
+         E7sZrfNTSi/OX6o81u2tIDQFVtZx5KIEDpzMkPAmcRJE/0KzgPNzXeyK7uGkxTpCcRaf
+         3tDuPQ13MMGuaYAGZBqulvofYBsTJ7c/shI4OXmcPWUaSQqC5w3vJoIhOJ/0x1BmupH/
+         WQew==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gKZrw8ulR6kPJbpEkBbXHamDSkvLU0j6OIVTy3FFeF5ZxWFSsvt
+	dqqXY4rFtSgW3G4vRZrYypa2chFyACjGZRSS96015HGD2VsWRkFYxQ==
+X-Received: by 2002:a63:40c2:: with SMTP id n185-v6mr1411005pga.116.1541621056125;
+        Wed, 07 Nov 2018 12:04:16 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5683529pjt;
+        Wed, 7 Nov 2018 12:04:15 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f9bhpPoPeGhcBbyke+l6OlWze+elJVWprc4KAQnDhx3XB7Xzk/gqZyy0Fjl1TjUCtnIvZA
+X-Received: by 2002:a65:5286:: with SMTP id y6mr1356815pgp.439.1541621055161;
+        Wed, 07 Nov 2018 12:04:15 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541621055; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Aqb5mf2pRD3468/U3lUOst7FD14l1k0lNEPcsIgxNwWkl2Jho63icMtkPKEdUJ1wpX
+         GbdEh5a2YoZrMvZgXWFZP3osjV+Q1dPUqWaoDcKk33BWv2HhFnhqGpEuQt4EYPZCuiAZ
+         I++JUb36bFu39kM2eY1NZsfuj/j54jvfVCGHVrJRKO8mhvChwx4FR5CYcv8m4yCUcIhs
+         y6WsaIG2lmpVpWnzXnj++o0K3ADQMoA//0FNWOtWm6+gFOShsCU+EZV9JIl9COR1mfqD
+         i19rMHBoWVJr5iOvDVYHr7gszYiz+yvnHAcIBCygLmX+XDW6pPmD4fei1UE2aWqDxcF8
+         e0Pg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:content-transfer-encoding
+         :content-id:content-language:accept-language:in-reply-to:references
+         :message-id:date:thread-index:thread-topic:subject:cc:to:from;
+        bh=8KHa4pA/1azNlE5S47AIfHQ7IMI3l6JhQdHwraIpYzg=;
+        b=YpaMtpk/LFJmOosNBvTpvciCEZ67D3GrMMr3N2qqEUO1yt9vV0dJWnI7Jynyw0OGaw
+         yiqcsldbLRjqeHW2EVu9SiHOJ6c4weICurGBcEkLddETh1BugXBQC+by5Z+zyBNCT4AM
+         qQACiN+Txv4TajWG6bKRu2xtZCKwgle3NSXFD0YqvTg5OuBdoC7oDLcegB4bDhpAe7/T
+         RxRM8fM4eni5kpbx50k10I7XnrAxi18KgCKhrPYB8pyNnc2vm1DgEu9HXXlHFET3Wlww
+         hYRFb7ZiMlnEqDs6mYOSjn7+ORQkyr5b2OCqXaIAebm8c/HpIe2X7FmjmgQKA/THq2qM
+         uJgg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id i9-v6si1465679pgd.17.2018.11.07.12.03.57;
+        Wed, 07 Nov 2018 12:04:15 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726817AbeKHFff (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:35:35 -0500
+Received: from mga11.intel.com ([192.55.52.93]:41719 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbeKHFff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:35:35 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 12:03:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,476,1534834800"; 
+   d="scan'208";a="90250945"
+Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
+  by orsmga008.jf.intel.com with ESMTP; 07 Nov 2018 12:03:41 -0800
+Received: from orsmsx114.amr.corp.intel.com (10.22.240.10) by
+ ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Wed, 7 Nov 2018 12:03:41 -0800
+Received: from orsmsx112.amr.corp.intel.com ([169.254.3.8]) by
+ ORSMSX114.amr.corp.intel.com ([169.254.8.128]) with mapi id 14.03.0415.000;
+ Wed, 7 Nov 2018 12:03:41 -0800
+From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To: "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "jeyu@kernel.org" <jeyu@kernel.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "jannh@google.com" <jannh@google.com>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "arjan@linux.intel.com" <arjan@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kristen@linux.intel.com" <kristen@linux.intel.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>
+Subject: Re: [PATCH v8 0/4] KASLR feature to randomize each loadable module
+Thread-Topic: [PATCH v8 0/4] KASLR feature to randomize each loadable module
+Thread-Index: AQHUcuJ6EQcoej8JQkCUFoYuD+myx6VDyRiAgAGBxYA=
+Date: Wed, 7 Nov 2018 20:03:40 +0000
+Message-ID: <84597c620c39ed17be11de759646f3ace3e236fa.camel@intel.com>
+References: <20181102192520.4522-1-rick.p.edgecombe@intel.com>
+         <20181106130459.7a2669604a2c274edbe25971@linux-foundation.org>
+In-Reply-To: <20181106130459.7a2669604a2c274edbe25971@linux-foundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.54.75.168]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7EA5D5F7B5010143BB315E15C2C67207@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHXztAReNb+xwZAA--.790S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr1UCFWDAr1DXFyxXw1UJrb_yoW8tw1fpF
+	WkXFy5tws5JF18Can7Z347WF45C3yfuF4rJ3W7K3yxAwsxXFy09FZYya4F9FW7WrZYq3Wj
+	grWjv34UG390vaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUdqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWlnx0E6VACY4
+	xI67k04243AVACY4xI67k04243AVAKzVAKj4xI6x02cVCv0xWle2I262IYc4CY6c8Ij28I
+	cVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx
+	0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACY4xI67k04243AVAKzVAK
+	j4xxMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkIecxEwVCI4VW7MxkI7II2jI8vz4
+	vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v2
+	6r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r
+	4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVA0820Y0xCF62I06xkIj41lx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y
+	0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_Zr1l6VACY4xI67k04243AbIYCTnIWI
+	evJa73UjIFyTuYvjxUPbo2DUUUU
+
+T24gVHVlLCAyMDE4LTExLTA2IGF0IDEzOjA0IC0wODAwLCBBbmRyZXcgTW9ydG9uIHdyb3RlOg0K
+PiBPbiBGcmksICAyIE5vdiAyMDE4IDEyOjI1OjE2IC0wNzAwIFJpY2sgRWRnZWNvbWJlIDxyaWNr
+LnAuZWRnZWNvbWJlQGludGVsLmNvbT4NCj4gd3JvdGU6DQo+IA0KPiA+IFRoaXMgaXMgVjggb2Yg
+dGhlICJLQVNMUiBmZWF0dXJlIHRvIHJhbmRvbWl6ZSBlYWNoIGxvYWRhYmxlIG1vZHVsZSINCj4g
+PiBwYXRjaHNldC4NCj4gPiBUaGUgcHVycG9zZSBpcyB0byBpbmNyZWFzZSB0aGUgcmFuZG9taXph
+dGlvbiBhbmQgYWxzbyB0byBtYWtlIHRoZSBtb2R1bGVzDQo+ID4gcmFuZG9taXplZCBpbiByZWxh
+dGlvbiB0byBlYWNoIG90aGVyIGluc3RlYWQgb2YganVzdCB0aGUgYmFzZSwgc28gdGhhdCBpZg0K
+PiA+IG9uZQ0KPiA+IG1vZHVsZSBsZWFrcyB0aGUgbG9jYXRpb24gb2YgdGhlIG90aGVycyBjYW4n
+dCBiZSBpbmZlcnJlZC4NCj4gDQo+IEknbSBub3Qgc2VlaW5nIGFueSBpbmZvIGhlcmUgd2hpY2gg
+ZXhwbGFpbnMgd2h5IHdlIHNob3VsZCBhZGQgdGhpcyB0bw0KPiBMaW51eC4NCj4gDQo+IFdoYXQg
+aXMgdGhlIGVuZC11c2VyIHZhbHVlPyAgV2hhdCBwcm9ibGVtcyBkb2VzIGl0IHNvbHZlPyAgQXJl
+IHRob3NlDQo+IHByb2JsZW1zIHJlYWwgb3IgdGhlb3JldGljYWw/ICBXaGF0IGFyZSB0aGUgZXhw
+bG9pdCBzY2VuYXJpb3MgYW5kIGhvdw0KPiByZWFsaXN0aWMgYXJlIHRoZXk/ICBldGNldGVyYSwg
+ZXRjZXRlcmEuICBIb3cgYXJlIHdlIHRvIGRlY2lkZSB0byBidXkNCj4gdGhpcyB0aGluZyBpZiB3
+ZSBhcmVuJ3QgZ2l2ZW4gYSBnbG9zc3kgYnJvY2h1cmU/DQpIaSBBbmRyZXcsDQoNClRoYW5rcyBm
+b3IgdGFraW5nIGEgbG9vayEgVGhlIGZpcnN0IHZlcnNpb24gaGFkIGEgcHJvcGVyIHdyaXRlIHVw
+LCBidXQgbm93IHRoZQ0KZGV0YWlscyBhcmUgc3ByZWFkIG91dCBvdmVyIDggdmVyc2lvbnMuIEkn
+bGwgc2VuZCBvdXQgYW5vdGhlciB2ZXJzaW9uIHdpdGggaXQNCmFsbCBpbiBvbmUgcGxhY2UuDQoN
+ClRoZSBzaG9ydCB2ZXJzaW9uIGlzIHRoYXQgdG9kYXkgdGhlIFJBTkRPTUlaRV9CQVNFIGZlYXR1
+cmUgcmFuZG9taXplcyB0aGUgYmFzZQ0KYWRkcmVzcyB3aGVyZSB0aGUgbW9kdWxlIGFsbG9jYXRp
+b25zIGJlZ2luIHdpdGggMTAgYml0cyBvZiBlbnRyb3B5LiBGcm9tIGhlcmUsDQphIGhpZ2hseSBk
+ZXRlcm1pbmlzdGljIGFsZ29yaXRobSBhbGxvY2F0ZXMgc3BhY2UgZm9yIHRoZSBtb2R1bGVzIGFz
+IHRoZXkgYXJlIA0KbG9hZGVkIGFuZCB1bi1sb2FkZWQuIElmIGFuIGF0dGFja2VyIGNhbiBwcmVk
+aWN0IHRoZSBvcmRlciBhbmQgaWRlbnRpdGllcyBmb3INCm1vZHVsZXMgdGhhdCB3aWxsIGJlIGxv
+YWRlZCwgdGhlbiBhIHNpbmdsZSB0ZXh0IGFkZHJlc3MgbGVhayBjYW4gZ2l2ZSB0aGUNCmF0dGFj
+a2VyIGFjY2VzcyB0byB0aGUgbG9jYXRpb25zIG9mIGFsbCB0aGUgbW9kdWxlcy4gDQoNClNvIHRo
+aXMgaXMgdHJ5aW5nIHRvIHByZXZlbnQgdGhlIHNhbWUgY2xhc3Mgb2YgYXR0YWNrcyBhcyB0aGUg
+ZXhpc3RpbmcgS0FTTFIsDQpsaWtlIGNvbnRyb2wgZmxvdyBtYW5pcHVsYXRpb24gYW5kIG5vdyBh
+bHNvIG1ha2luZyBpdCBoYXJkZXIvbG9uZ2VyIHRvIGZpbmQNCnNwZWN1bGF0aXZlIGV4ZWN1dGlv
+biBnYWRnZXRzLiBJdCBpbmNyZWFzZXMgdGhlIG51bWJlciBvZiBwb3NzaWJsZQ0KcG9zaXRpb25z
+IDEyOFgsIGFuZCB3aXRoIHRoYXQgYW1vdW50IG9mIHJhbmRvbW5lc3MgcGVyIG1vZHVsZSBpbnN0
+ZWFkIG9mIGZvciBhbGwNCm1vZHVsZXMuDQoNCj4gPiBUaGVyZSBpcyBhIHNtYWxsIGFsbG9jYXRp
+b24gcGVyZm9ybWFuY2UgZGVncmFkYXRpb24gdmVyc3VzIHY3IGFzIGENCj4gPiB0cmFkZSBvZmYs
+IGJ1dCBpdCBpcyBzdGlsbCBmYXN0ZXIgb24gYXZlcmFnZSB0aGFuIHRoZSBleGlzdGluZw0KPiA+
+IGFsZ29yaXRobSB1bnRpbCA+NzAwMCBtb2R1bGVzLg0KPiANCj4gbG9sLiAgSG93IGRpZCB5b3Ug
+dGVzdCA3MDAwIG1vZHVsZXM/ICBVc2luZyB0aGUgc2VsZnRlc3QgY29kZT8NCg0KWWVzLCB0aGlz
+IGlzIHdpdGggc2ltdWxhdGlvbnMgdXNpbmcgdGhlIGluY2x1ZGVkIGtzZWxmdGVzdCBjb2RlIHdp
+dGggc2l6ZXMNCmV4dHJhY3RlZCBmcm9tIHRoZSB4ODZfNjQgaW4tdHJlZSBtb2R1bGVzLiBTdXBw
+b3J0aW5nIDcwMDAga2VybmVsIG1vZHVsZXMgaXMgbm90DQp0aGUgaW50ZW50aW9uIHRob3VnaCwg
+aW5zdGVhZCBpdCdzIHRyeWluZyB0byBhY2NvbW1vZGF0ZSA3MDAwIGFsbG9jYXRpb25zIGluIHRo
+ZQ0KbW9kdWxlIHNwYWNlLiBTbyBhbHNvIGVCUEYgSklULCBjbGFzc2ljIEJQRiBzb2NrZXQgZmls
+dGVyIEpJVCwga3Byb2JlcywgZXRjLg0KDQo=

@@ -1,0 +1,167 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:53 -0000
+Received: from icoremail.net (unknown [209.85.210.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn36StFONbJzlZAQ--.26557S3;
+	Thu, 08 Nov 2018 00:37:02 +0800 (CST)
+Received: from mail-pf1-f176.google.com (unknown [209.85.210.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3mUV6E+NbwlIYAA--.204S3;
+	Thu, 08 Nov 2018 00:31:54 +0800 (CST)
+Received: by mail-pf1-f176.google.com with SMTP id u13-v6so7918858pfm.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:31:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=/T4ovBvlbtcqRU+YZfvumwzqXmAqLpSnGKepuykB5ug=;
+        b=ZW+HiRL/02xDkVzIk0vNbotfqsETqrT5VKinKRf4fz5jHNntFBGTDVLv7KzYzlJlmy
+         wIDuTKOIUKILV4+VdQx/RBZMqbNshJjPQ7rrAB85PPsvqEfQq5ZiRmYf6vf27S3FuXnn
+         SRi2jvdxd70KIK2wdvg3M8snsSaBFtR80n3GV6TZZWZYG4BxhB/sUBudSqE8FeQN3j4B
+         Jh7SazGXs0HB6y9QnnfS7ASll17dOo+ZCG4tCHrVPDRF2BzNNlnethb42ymCHMkmWE+4
+         CWgH0fYjDM57YGM3xPB/PCBuGJIC6o5WfxX/tMaVKtv1TLmtx/G9FDKoX4Yi1242IMUq
+         v4uw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLsQOhqBqS8CIVyOy68y4m5M9Ii0IUU7HI/xfLKy7H4TkwlAU1a
+	uLJzrhWyIo7Z5Kkd+lq2C/tMgtet5puHhfnHNBusfvRH342DJ+SUKg==
+X-Received: by 2002:a63:40c2:: with SMTP id n185-v6mr772140pga.116.1541608314510;
+        Wed, 07 Nov 2018 08:31:54 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5454985pjt;
+        Wed, 7 Nov 2018 08:31:53 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cMtv/oaIdaJ9KwXJC/O3T59/RIkdUeVdHC6vaxQiWjwtQGW32AcbgAPQ5phWJGZ4J5JEmn
+X-Received: by 2002:a63:f652:: with SMTP id u18-v6mr743795pgj.267.1541608313024;
+        Wed, 07 Nov 2018 08:31:53 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541608312; cv=none;
+        d=google.com; s=arc-20160816;
+        b=UfXlsCf/XCwjiXKjZIlcSqCESDIrpTdOmmrBUgg7TRT8wiNZ46AUzTwh/m8LZpoxtr
+         K/0yMOB93D4eQL2nr7pdudllsRBy7lrPu2WBdOt2+Bzz1xVuNJxmBsCfQ2fNyT0m8XLx
+         2jSwdd8v0d8th9TrpYa9qWe4ue/3/XoG8PYsXaBL1oCIx+VntSP2WB0yq5aQlHSdVkBM
+         Gh8DkE1aFLu6RsHIq7BXpk773IdWReM1Fozw1fwP09bLy8n0WX5cdr3OVaGNPrBHt+rH
+         g1UFxKWnoT/Qe+iqe+RZhqNGkGOAYsdg+JijuC89JlSKpMePdytXezYvzGx32tmwCO6W
+         b2Hw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:subject:cc:to:from:date;
+        bh=/T4ovBvlbtcqRU+YZfvumwzqXmAqLpSnGKepuykB5ug=;
+        b=f72owuyQYsUVvnjKBRc94prCYl0gPqr+765PvuMaQY4A7lJmk/bH9AvPA3V0+2DiIQ
+         TaeFCsbs5RidKpc0Yhv9HcMuqa2bu7JOPaNB0zTk99R84XTPbabLdfqDnLbwLqzQW2uh
+         t66aU/mTbs9lzt3Ci6pg0/6t6zxPyOigoQpz5VyI4CUoWQgAEUU2kPvhabu0WbZOw+br
+         kDdyHsLujw7QLWegWhuGUhKSvJbhi2PhB5m7TbDZ7R87MqBI5aX5j0+dvubczn5PTr5o
+         wRn1LljiKphw7KH2Av4H8wqHzIEFZ3kKRJJpEDn1KG5/2FbGYAINVbzheKPb2NybjIRd
+         dIKg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id w15-v6si1201987plk.269.2018.11.07.08.31.36;
+        Wed, 07 Nov 2018 08:31:52 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728062AbeKHCCO (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:02:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53038 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727312AbeKHCCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:02:14 -0500
+Received: from gandalf.local.home (cpe-66-24-56-78.stny.res.rr.com [66.24.56.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBA5D2086C;
+        Wed,  7 Nov 2018 16:31:07 +0000 (UTC)
+Date: Wed, 7 Nov 2018 11:31:06 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>, mingo@redhat.com,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        luca.abeni@santannapisa.it, claudio@evidence.eu.com,
+        bristot@redhat.com, linux-rt-users@vger.kernel.org,
+        mtk.manpages@gmail.com,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH] kernel/time/posix-cpu-timers: Remove useless call to
+ check_dl_overrun
+Message-ID: <20181107113106.475914e1@gandalf.local.home>
+In-Reply-To: <20181107150221.GJ9761@hirez.programming.kicks-ass.net>
+References: <20181107111032.32291-1-juri.lelli@redhat.com>
+        <20181107095627.13e9c187@gandalf.local.home>
+        <20181107150221.GJ9761@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3mUV6E+NbwlIYAA--.204S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4fKFWftFy8Xw4fZFW7XFb_yoW8Cr4fpF
+	W8u3Wa9r4kAr1jy3sFqrsYk34avr1kt3y3WF1DX3WFvrsakF1UtFyrt3W5uFWkJFn5Gw42
+	yrWIqry2vw1YqaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPab7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
+	Ij64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xA
+	MxkIecxEwVCI4VWUMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5Jw
+	CYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8JVWxJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr1l42xK82IYc2Ij64vIr41l42xK82IY64kExV
+	AvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
+	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrx
+	kI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVWUCVW8JbIYCTnIWIevJa73UjIFyTuYvjxU
+	qM7KUUUUU
+
+On Wed, 7 Nov 2018 16:02:21 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
+
+> On Wed, Nov 07, 2018 at 09:56:27AM -0500, Steven Rostedt wrote:
+> > On Wed,  7 Nov 2018 12:10:32 +0100
+> > Juri Lelli <juri.lelli@redhat.com> wrote:
+> >   
+> > > check_dl_overrun is used to send a SIGXCPU to users that asked to be
+> > > informed when SCHED_DEADLINE runtime overruns occur.
+> > > 
+> > > The function is called by check_thread_timers already, so the call in
+> > > check_process_timers is redundant/wrong (even though harmless).
+> > > 
+> > > Remove it.
+> > > 
+> > > Fixes: 34be39305a77 ("sched/deadline: Implement "runtime overrun signal" support")
+> > > Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+> > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > Cc: Luca Abeni <luca.abeni@santannapisa.it>
+> > > Cc: Claudio Scordino <claudio@evidence.eu.com>
+> > > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > > ---
+> > >  kernel/time/posix-cpu-timers.c | 3 ---
+> > >  1 file changed, 3 deletions(-)
+> > > 
+> > > diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+> > > index ce32cf741b25..8f0644af40be 100644
+> > > --- a/kernel/time/posix-cpu-timers.c
+> > > +++ b/kernel/time/posix-cpu-timers.c
+> > > @@ -917,9 +917,6 @@ static void check_process_timers(struct task_struct *tsk,
+> > >  	struct task_cputime cputime;
+> > >  	unsigned long soft;
+> > >  
+> > > -	if (dl_task(tsk))
+> > > -		check_dl_overrun(tsk);
+> > > -  
+> > 
+> > Hmm, I wonder if we should just move this check directly into
+> > run_posix_cpu_timers() directly. Why is it hidden in this call?  
+> 
+> It is not; it is duplicated in this call. The one in
+> check_thread_timeres() makes sense (it is a thread property).
+
+OK, in that case.
+
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve

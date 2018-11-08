@@ -1,0 +1,176 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:14 -0000
+Received: from icoremail.net (unknown [209.85.210.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn31w_SONbHHJaAQ--.27337S3;
+	Thu, 08 Nov 2018 04:17:04 +0800 (CST)
+Received: from mail-pf1-f180.google.com (unknown [209.85.210.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3kz88SONb3ycZAA--.864S3;
+	Thu, 08 Nov 2018 04:17:00 +0800 (CST)
+Received: by mail-pf1-f180.google.com with SMTP id u13-v6so8183713pfm.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:17:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:in-reply-to:references:sender:precedence:list-id;
+        bh=416eiwFkeOJKBgKw/6aUOwBCVOCx0Nx8xUrBJhRseNI=;
+        b=V2sIoAStTQV8eWplMP8x2mpFmAl47/ozmV1Fn7i7uTe+fYPI3bRKHmJLVUPb0fTUmO
+         KidwBp0772auCR/cRK1DCZe6ZL9PTup+FQjHTHsQQnOFfzM12ayrwYWuU1JM67BCLxCY
+         IVydNyJNBhiV8hd1KV6Kmfze9CA9TBQcoWz2fwwLZeftxXxnZFYNa65JrSKfb1FDX2b3
+         7kGqwRRjtEvLJlerKo4FRZ2JgfAyCE9q4xvrNXOktFelK8AP/GJOVsMBfVMIfrrm4P/y
+         6X1DMNgo1w7V9cj1eFbUjTpNzJHSZoXgob+1Qjs3e4PTbOIQhJ3Z86GIChIJGwA+jqrL
+         43Nw==
+X-Gm-Message-State: AGRZ1gLd/BMlbgPe76mf/xD1yTW+XudAOIIA7GBEADE62Xqs4JBawvkj
+	H1g73nGp8i4CJVTGiQTChNBcQ4K3on2gN+0snNiiTW8tuOZkaM1iMQ==
+X-Received: by 2002:a62:5e83:: with SMTP id s125-v6mr1668322pfb.232.1541621819658;
+        Wed, 07 Nov 2018 12:16:59 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5697307pjt;
+        Wed, 7 Nov 2018 12:16:59 -0800 (PST)
+X-Google-Smtp-Source: AJdET5e11ZICDRG57E5eEhs3lO/HRCncn7Z12pMXbtznVoXNUV60hrKa8R0YFiaqY66ZDVectm3a
+X-Received: by 2002:a65:4646:: with SMTP id k6mr1399888pgr.153.1541621819002;
+        Wed, 07 Nov 2018 12:16:59 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541621818; cv=none;
+        d=google.com; s=arc-20160816;
+        b=u8l/1JewtyC0WYtgzgDFbWIB9COqoWgPjZY73bBoi+lKVk1uZBlgRj4JlZJc1fj999
+         P7cerzT8Kxn+Qrzgk/00EsSiUAPkV/1vWFQNYlMyAG0RO4zoKoSUdfKFWvmEogp7vE2s
+         IYJtRpGNmPJQc+N9J6Dn2iyiveqMJqRi7Sei63LuMk3w+SsxJmcEOpabjjt5BYssiWcl
+         QAzriGyC2LiXoQhjf+blF57K7x05FJVzOjxG3NI6eC+eFftCHZFvhziuWGe13Lj7b1DJ
+         z8L4etba8VE410prB78DOjZqfL/U2shvVpxfuLhtauvvVLGMK2G2Qa343ZbYWYvYh1U7
+         Kn0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from:dkim-signature;
+        bh=416eiwFkeOJKBgKw/6aUOwBCVOCx0Nx8xUrBJhRseNI=;
+        b=FvAA32lTMZBETaH7eZYh3PaPANtdBDjDagRbsz23GXw/axUyVTUsZFLZPugYcKpnk9
+         QdPFX56LPd8rUhNBGjn4pI1f0EPGcue19c+3w7V3OwcrE+7JMG81D/wENPlmeCWeYLYd
+         zA9EnT6B07Q4ZMFxLuL1ZDigKMnFzWzVvmZfSD+WCqwgRgNFYBANm+wR5ErxRMw69uxg
+         nY/XeBsOERVKUt8k5tJDsEhrWwpNhrilgOYdFV6yseMwuxOgD1uzc4BZQtpqb6B6cGbb
+         KJM+0m/VzZWF15ZWNykIJkRLu5iqVMg0UYD521ToayDSr2q9Zj6yBttBnvEN2wVt6+bc
+         l+vw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=Mfa1cG7p;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id a62-v6si1639605pfb.266.2018.11.07.12.16.28;
+        Wed, 07 Nov 2018 12:16:58 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726957AbeKHFsQ (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:48:16 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38110 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbeKHFsP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:48:15 -0500
+Received: by mail-lf1-f68.google.com with SMTP id p86so12455105lfg.5;
+        Wed, 07 Nov 2018 12:16:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=416eiwFkeOJKBgKw/6aUOwBCVOCx0Nx8xUrBJhRseNI=;
+        b=Mfa1cG7pCFaa99gAqxdQv6n0eLTg78TX9wc0fbtN7nr7fO6utbXLfjqWviV65o7vDk
+         r3npqUYmltblj3PZD+/ZWLfqXZCPNwKfNWSJmtLQ3cVM3ExNuue7d6f1CMmEfYlyfxqh
+         PVH52ntT4A8skySgzd/qxCA705oqXP7GYQy8FUIkudOz1nb5+ccQALlfl/k91wJWAI01
+         9HZEGJO9qeIEZzV44YagSR4G3TMseMVbcxajLXrGlMv5PewyvX5Yh64NMdea6wp66VAn
+         v96mDdEzQvJ5JOSlrcgRCRI99bdlSS6ddzq2wAz+l2dBqXCJVg17lsGSpTRGH8qdxQXR
+         DWOQ==
+X-Received: by 2002:ac2:4188:: with SMTP id z8-v6mr1027273lfh.3.1541621777535;
+        Wed, 07 Nov 2018 12:16:17 -0800 (PST)
+Received: from z50.lan (93-181-165-181.internetia.net.pl. [93.181.165.181])
+        by smtp.gmail.com with ESMTPSA id c19sm285650lfg.86.2018.11.07.12.16.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 12:16:16 -0800 (PST)
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Subject: [PATCH 3/3] ARM: OMAP1: ams-delta: Move AMS_DELTA_LATCH2_NGPIO to the board file
+Date: Wed,  7 Nov 2018 21:17:46 +0100
+Message-Id: <20181107201746.14705-4-jmkrzyszt@gmail.com>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20181107201746.14705-1-jmkrzyszt@gmail.com>
+References: <20181107201746.14705-1-jmkrzyszt@gmail.com>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3kz88SONb3ycZAA--.864S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr4kurW7uw45Cr1xuw47CFg_yoW8Ar1Dpr
+	9FywnYgF4ru3WUGay7Xa18XrsrZ34qqw4Yy398Gw12gan2vrW0g3WrKan0k345X3sak3yF
+	kr1rCF1UZFs5ZwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9qb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkI7II2jI8vz4vEwIxGrwCYIxAI
+	cVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42
+	IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK
+	82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JV
+	W3JbIYCTnIWIevJa73UjIFyTuYvjxUTVbkUUUUU
+
+That symbol is not used outside the board file, there is no need to
+keep it in the board header.
+
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+---
+ arch/arm/mach-omap1/board-ams-delta.c | 6 ++++--
+ arch/arm/mach-omap1/board-ams-delta.h | 2 --
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/mach-omap1/board-ams-delta.c b/arch/arm/mach-omap1/board-ams-delta.c
+index a6986a83a916..1947bc63074e 100644
+--- a/arch/arm/mach-omap1/board-ams-delta.c
++++ b/arch/arm/mach-omap1/board-ams-delta.c
+@@ -204,11 +204,13 @@ static struct platform_device latch1_gpio_device = {
+ #define LATCH1_PIN_DOCKIT1		6
+ #define LATCH1_PIN_DOCKIT2		7
+ 
++#define LATCH2_NGPIO			16
++
+ static struct resource latch2_resources[] = {
+ 	[0] = {
+ 		.name	= "dat",
+ 		.start	= LATCH2_PHYS,
+-		.end	= LATCH2_PHYS + (AMS_DELTA_LATCH2_NGPIO - 1) / 8,
++		.end	= LATCH2_PHYS + (LATCH2_NGPIO - 1) / 8,
+ 		.flags	= IORESOURCE_MEM,
+ 	},
+ };
+@@ -217,7 +219,7 @@ static struct resource latch2_resources[] = {
+ 
+ static struct bgpio_pdata latch2_pdata = {
+ 	.label	= LATCH2_LABEL,
+-	.ngpio	= AMS_DELTA_LATCH2_NGPIO,
++	.ngpio	= LATCH2_NGPIO,
+ };
+ 
+ static struct platform_device latch2_gpio_device = {
+diff --git a/arch/arm/mach-omap1/board-ams-delta.h b/arch/arm/mach-omap1/board-ams-delta.h
+index 2c3aff824cf0..b5c4a373b905 100644
+--- a/arch/arm/mach-omap1/board-ams-delta.h
++++ b/arch/arm/mach-omap1/board-ams-delta.h
+@@ -37,8 +37,6 @@
+ #define AMS_DELTA_GPIO_PIN_CONFIG	11
+ #define AMS_DELTA_GPIO_PIN_NAND_RB	12
+ 
+-#define AMS_DELTA_LATCH2_NGPIO		16
+-
+ #endif /* CONFIG_MACH_AMS_DELTA */
+ 
+ #endif /* __ASM_ARCH_OMAP_AMS_DELTA_H */
+-- 
+2.16.4

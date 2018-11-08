@@ -1,0 +1,143 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:34 -0000
+Received: from icoremail.net (unknown [209.85.214.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv_rgUONb16laAQ--.27570S3;
+	Thu, 08 Nov 2018 04:53:53 +0800 (CST)
+Received: from mail-pl1-f175.google.com (unknown [209.85.214.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXekbeUONbMEQZAA--.1095S3;
+	Thu, 08 Nov 2018 04:53:51 +0800 (CST)
+Received: by mail-pl1-f175.google.com with SMTP id g59-v6so8398986plb.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:53:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=D6n5O5S+DVytGdYrIFEJuGtV+L+Hr9TmsvMUKDpTEXY=;
+        b=IfDHCiqrVTUiNjSKn44/PCEOACfL7ZcGtjb2OVeTTmp4apkqVbHkxZFT60xddFt9qb
+         GfV5GW+7p9hLXoZt9L7e3nMpRTjjBDbnbODGcmxZiVg+eTqXmt1VR5aycjXvQgXBEkJp
+         pDSu6EsrQBXPCbP5vwdzv9PGtoEaRsHRFnYHLBHYJ0EG09iAakpsYyE3cGsj17XleBEU
+         7ZeWON9GHIZJ9VD61e3rgK3hS9EsmnUogbP6fYs8p0FBJpz6nxQ+9i6XHNwKJi1IQAsO
+         chSMaFHRPwofYb23CtClYeshQz8h4xAWcx3sscE+FwvjAaSx/NhtHvkPgmaF/Vl9Ex0c
+         QZzg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gInM/ZhDEdlWF7JWYdP1nLK6KmPNEgGQOkaA8AaM/0G2RhRpDu0
+	FnD0RTsFZjkhjNb9ouk/6LBfUG62ZKySvavgc6hMBfHJv/6r9Cb4jw==
+X-Received: by 2002:a17:902:50e3:: with SMTP id c32-v6mr1794793plj.39.1541624030696;
+        Wed, 07 Nov 2018 12:53:50 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5730639pjt;
+        Wed, 7 Nov 2018 12:53:49 -0800 (PST)
+X-Google-Smtp-Source: AJdET5e179G+n9UDxiy81ta86e89XQ2hrZpIhXGow2JFiJbY+NJBLF4YqfGcdUjE/JbhpUvDprw8
+X-Received: by 2002:a17:902:74c9:: with SMTP id f9-v6mr1769339plt.144.1541624029741;
+        Wed, 07 Nov 2018 12:53:49 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541624029; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ElnlkUtW2TkCRZ0Il6JYD1SOeUUBDa+2bwmBQ2hOgih2t1a2npQOjfaoRSi0bYKSo4
+         rNKBhveNY+3xzswQAMucHEzVxeAAB9+xtgifRyEXEV+Zc3kmEpbVr3edaqbRDH1rxHCV
+         M64KjmCd1N5yS+PfsYjcd3pLDT88EKmPQqWRwhqRUmBR4hCyix6KwzQZkX7BRTGrDg+q
+         kcKdduMhnf+zP0ZSXg/3WQelm1mUO9n4EmJhLjcq9xwf3NO8KVThj1W3qq6+EBggSwqJ
+         lCzS3H7HGTbe7Ak5+8HTE9Gq6ZqNbxEdtAwuaUiZIFk1s515DUFNFlIBufmSZDWMQEZI
+         f8+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:in-reply-to
+         :mime-version:user-agent:date:message-id:references:cc:to:from
+         :subject;
+        bh=D6n5O5S+DVytGdYrIFEJuGtV+L+Hr9TmsvMUKDpTEXY=;
+        b=IabTivO3t0pg5NKP2W2qDljg165+NrqScRrI6/1VB9C64YP2DdtwH3HpUmmoPAXj22
+         v2vF35eRIDVUWw6ZU+MhIvY1h50n+Mx35PYkiD9qyO7SqJwcWUj+rFO1C7QW22+LCpMX
+         vpCl8WIcp81cPwiy9N07/DcwiKviVIVCS5CnIJ3vhZkDIuRwvN2ohv+4JyqpL/F7TaJm
+         WwF1MMJorzl6wqxHGQre56qQyndxaJkQ1P0ufen88is2gWl4zAPTB5XaxsXmdERActl3
+         SDIQ/vz8L6J1pmmGaVFr58C9n97GS2q+jyzio0KwZNldZ8z5H1gZQJ8N8gMugjgizEwV
+         ckig==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id q201-v6si2174962pfq.14.2018.11.07.12.53.33;
+        Wed, 07 Nov 2018 12:53:49 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727191AbeKHGYV (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:24:21 -0500
+Received: from smtp4-g21.free.fr ([212.27.42.4]:1588 "EHLO smtp4-g21.free.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726480AbeKHGYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:24:21 -0500
+Received: from [192.168.1.42] (unknown [77.207.133.132])
+        (Authenticated sender: marc.w.gonzalez)
+        by smtp4-g21.free.fr (Postfix) with ESMTPSA id 3891719F54D;
+        Wed,  7 Nov 2018 21:52:02 +0100 (CET)
+Subject: Re: [PATCH 5/9] arm64: defconfig: Replace PINCTRL_MT7622 with
+ PINCTRL_MTK_MOORE
+From: Marc Gonzalez <marc.w.gonzalez@free.fr>
+To: Ryder Lee <ryder.lee@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <8b49a92b-ca92-1fca-cd09-3bcd7a3dcbb9@free.fr>
+ <5889bd19-3717-9592-3473-bf11338007da@free.fr>
+Message-ID: <af87b13d-4551-7c82-6183-f9c31d93c653@free.fr>
+Date: Wed, 7 Nov 2018 21:51:58 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Firefox/52.0 SeaMonkey/2.49.4
+MIME-Version: 1.0
+In-Reply-To: <5889bd19-3717-9592-3473-bf11338007da@free.fr>
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXekbeUONbMEQZAA--.1095S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jw4Dtr4ruw1UAr1rtFyUAwb_yoWfJrX_Gr
+	Z7Gw48Xr4vyryjg343Zan5WrWq9ayYgr1fGF1DXrn8Jr42gFWfX3yDJas5K3Wrua1fKrW7
+	Za93Xas3ArnIyjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUb98YjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
+	JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAKzI0EY4vE52x082I5MxkFs20E
+	Y4vE44CYbxCE4x80FwCY02Avz4vEIxC_AwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280
+	aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7V
+	AKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j
+	6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBI
+	daVFxhVjvjDU0xZFpf9x07b0DGOUUUUU=
+
+[ Add interested parties ]
+
+On 07/11/2018 21:16, Marc Gonzalez wrote:
+
+> Commit e78d57b2f87c ("pinctrl: mediatek: add pinctrl-moore that implements
+> the generic pinctrl dt-bindings")
+> 
+> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> ---
+>  arch/arm64/configs/defconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 6fe418d72337..725b9471b21c 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -369,7 +369,7 @@ CONFIG_PINCTRL_MSM8994=y
+>  CONFIG_PINCTRL_MSM8996=y
+>  CONFIG_PINCTRL_QDF2XXX=y
+>  CONFIG_PINCTRL_QCOM_SPMI_PMIC=y
+> -CONFIG_PINCTRL_MT7622=y
+> +CONFIG_PINCTRL_MTK_MOORE=y
+>  CONFIG_GPIO_DWAPB=y
+>  CONFIG_GPIO_MB86S7X=y
+>  CONFIG_GPIO_PL061=y
+> 

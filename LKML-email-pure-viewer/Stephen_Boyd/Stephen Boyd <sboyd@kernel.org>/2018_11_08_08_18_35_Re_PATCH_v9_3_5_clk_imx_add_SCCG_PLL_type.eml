@@ -1,0 +1,170 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:20 -0000
+Received: from icoremail.net (unknown [209.85.215.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3__tAgeNbLsFbAQ--.27701S3;
+	Thu, 08 Nov 2018 08:20:17 +0800 (CST)
+Received: from mail-pg1-f170.google.com (unknown [209.85.215.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHXzs9geNbfOUZAA--.2444S3;
+	Thu, 08 Nov 2018 08:20:13 +0800 (CST)
+Received: by mail-pg1-f170.google.com with SMTP id r9-v6so8033477pgv.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 16:20:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :content-transfer-encoding:to:from:in-reply-to:cc:references
+         :message-id:user-agent:subject:date:sender:precedence:list-id;
+        bh=5EcHBJnt2DElKwb4wIMaw0nqYsASQVDi5jteDm87mc4=;
+        b=VY8v/LsueVi66K/whaY9VFlxef0Ex8Y39mX8O/+Hbh4NrvDy55A46TYVDRdtkTK5Dg
+         aQRo1EAFVzYrwWAIItYcMDGcoSzjkKxHLiE0SX3jRNXUeLHKMuRTeWoPLAXTqEysXUdz
+         RDpVekbJIgFpu57OcI8cJWfVbzRq/gzSJt/Gnbh6f/SL8OLe5vgJC/JMjASpzpsi7rNu
+         5GukEJYGxSVpfTth2Z6MVkQrHbVlwPEp9h61zozJcxIL+PmYMa0NuMWZ9pHx27VPLIso
+         ArKg2DKsWZffz+C5FsNI5sfbuDTeLGihF8n2jgM4VA9+tDU8Ic2xeG3xH70siceQNUO4
+         F46Q==
+X-Gm-Message-State: AGRZ1gIYMy2zdKaE9ONJAxn1GOF7exV5viSzfK3i+bB7FHgGTPejZwcW
+	+k4VBfBX+pgKgWaXdBofWEK1OO9M15PNrfRsBfDObGU4YVwKB95IOg==
+X-Received: by 2002:a62:22c3:: with SMTP id p64-v6mr2495460pfj.9.1541636413194;
+        Wed, 07 Nov 2018 16:20:13 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp166736pjt;
+        Wed, 7 Nov 2018 16:20:12 -0800 (PST)
+X-Google-Smtp-Source: AJdET5e/PLulGTbHsmdSxV+j1XDnQWxQbNpVKHQrUhSyk75Rmeggcz3T5jc61l/fUIjtRGBdYE8R
+X-Received: by 2002:a17:902:8c89:: with SMTP id t9-v6mr2453706plo.336.1541636412318;
+        Wed, 07 Nov 2018 16:20:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541636412; cv=none;
+        d=google.com; s=arc-20160816;
+        b=iZU0I3JsV2GXeZf0eMjqB2mWjTWOSwmKWvGh6OM1mz31izTH3XDEaWPoX60HM70UwV
+         /e6pkCUO07lbu4hTgnfZ0PG9wRP/NLGynmphevZRks1AH4+2XS7xw+eIBqhutiJ+Ysaz
+         m/64jBdCramKacnQB+J2CICDL1fIP/b2g9BqfuHY+sA8LH/oJ0fo4RIRr02taymkM1EO
+         FjtMzhppYg4i3gzWGbjPhIkxWuUFGrLbWSsPZlEOJNugFHec5+uDdn41DSwPvXM4EQtZ
+         hNQqZEuJKZpOXNcEN/QLaJgdAVfMlxHarxUAxJIZHFxGqsu+u0AKiREshxoPnxw4JFP9
+         vlhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:date:subject:user-agent:message-id
+         :references:cc:in-reply-to:from:to:content-transfer-encoding
+         :mime-version:dkim-signature;
+        bh=5EcHBJnt2DElKwb4wIMaw0nqYsASQVDi5jteDm87mc4=;
+        b=CvbH90FN3sJlYw+Ar1QEsQgbfl/7jW971PzQCGStusoM2WQCoZLujsiXFUrvhTeC1K
+         jISbBtDoPzUk/owVjWjuFMjGJP8Zu9ZWlLqxqgWTuo5B3TwQa1msGIcDQr3flUdJkEU5
+         ikaZp169wqJWLGCxbNfq694y5LBg0WMtKM7gnTn0kUQYe4lCzL8vwD6a62Ny9EZ6hWJ1
+         Q8KxYdGs5zumz3kfXrP3G0gT8XU7E9sCrefB9tYcSdM21YAi4DgFsV3D3WmN6MvFRkcv
+         RlRwpDSyH3RJrwRKHvAIEUPNvePh2W0Le/addSBKW542qNHKwZfdr+GtTkOPaEaei7je
+         JUNw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kernel.org header.s=default header.b=nEroMZfu;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 191si2217482pgd.228.2018.11.07.16.19.56;
+        Wed, 07 Nov 2018 16:20:12 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728234AbeKHJvY (ORCPT <rfc822;yamahata.lkml@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 04:51:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727859AbeKHJvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 04:51:24 -0500
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C221920857;
+        Thu,  8 Nov 2018 00:18:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1541636315;
+        bh=5EcHBJnt2DElKwb4wIMaw0nqYsASQVDi5jteDm87mc4=;
+        h=To:From:In-Reply-To:Cc:References:Subject:Date:From;
+        b=nEroMZfuZSgpoUXwCujGYKuNCrjidcqMdgOzS5vyoXWFJUm+lGzTjNBhUqbH8H82S
+         fYLigVB+kwLW7f/+VB3IIWdSUzYn4wQsoOxPdAbNXO8Ig64LvihzqY56ghGmHOpORN
+         uewn2xci3UCpF4aboNvZlQGnjeuubvj2uJnLCKO0=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+To: Abel Vesa <abel.vesa@nxp.com>
+From: Stephen Boyd <sboyd@kernel.org>
+In-Reply-To: <20181107202624.oya2runvbbwcilzu@fsr-ub1664-175>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "A.s. Dong" <aisheng.dong@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Rob Herring <robh@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, Abel Vesa <abelvesa@linux.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
+References: <1537785597-26499-1-git-send-email-abel.vesa@nxp.com>
+ <1537785597-26499-4-git-send-email-abel.vesa@nxp.com>
+ <153980615257.5275.13866740376184829057@swboyd.mtv.corp.google.com>
+ <20181107115444.gscxwud7e57nx3c7@fsr-ub1664-175>
+ <154161726247.88331.15629902810537417880@swboyd.mtv.corp.google.com>
+ <20181107202624.oya2runvbbwcilzu@fsr-ub1664-175>
+Message-ID: <154163631513.88331.1765456171211364913@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.7
+Subject: Re: [PATCH v9 3/5] clk: imx: add SCCG PLL type
+Date: Wed, 07 Nov 2018 16:18:35 -0800
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHXzs9geNbfOUZAA--.2444S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7GrykWr15tFyDGFy3ArWxtFb_yoW3AFXEgF
+	yUZr9rC3WDJF13Aw1ayrnYyFZrta13ZryUXrWvyrsFk34UuFZ8JrWDKF9YvayIq390kr9x
+	uwnFkr1SvryavjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbDxYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vE
+	IxC_twCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lcIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVWUJVW8JwCYIxAIcVC2z280aVAFwI0_Cr1j6rxdMxvI42IY6I8E
+	87Iv6xkF7I0E14v26F4UJVW0owCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij2
+	8IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr4
+	1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUgj-eUUUU
+	U
+
+Quoting Abel Vesa (2018-11-07 12:26:25)
+> On Wed, Nov 07, 2018 at 11:01:02AM -0800, Stephen Boyd wrote:
+> > =
+
+> > =
+
+> > What's the plan to clean it up?
+> =
+
+> So I'm doing this in our internal tree first to make sure I don't break t=
+he
+> other (newer) socs.
+> =
+
+> I already have a prototype in testing but it's a long way to upstream it.
+> =
+
+> Basically, I'm replacing all of this with a single, more like a composite,
+> more complex, clock type that does all the magic inside.
+> =
+
+> One of the problems is the fact that the bypasses can have the same sourc=
+es
+> and in my case, I'm implementing that as a list of parents name, but the
+> parent names list doesn't work with duplicates, so I have to find some ot=
+her
+> way to do it.
+> =
+
+> Once I have something clean and tested enough I'll send it upstream.
+
+Ok. Thanks for the info.

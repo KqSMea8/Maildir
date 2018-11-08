@@ -1,0 +1,175 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:38 -0000
+Received: from icoremail.net (unknown [209.85.210.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH37EVuNbbtNaAQ--.27412S3;
+	Thu, 08 Nov 2018 05:19:01 +0800 (CST)
+Received: from mail-pf1-f175.google.com (unknown [209.85.210.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBX0EzCVuNbA1oZAA--.1286S3;
+	Thu, 08 Nov 2018 05:18:59 +0800 (CST)
+Received: by mail-pf1-f175.google.com with SMTP id b11-v6so8251550pfi.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 13:18:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=4ihhgHrKEE1pacViDFlSsQzwqvPqE2E1R1WjQ3EseAE=;
+        b=sWMFedrvhCAqu643vOk40JCTODcxjUuX0eg7CKJLhoxLxu8cT5RGJQaBZmEcqBn5cM
+         co9+x4bqGy3twwpwQ2kK3VfuFPhLAbErxMo7Pue1ykY8jJi68cfoivb4eKLOyiAErJA6
+         jHT2I/kHP2An7J9idOzrJiyXIYBOlGfKpNXkLrey7Z4XR0hMxiGmVVDW1vkgLin5a8U/
+         qBQvDAiFtepHo2FZSZYfZ5rVDu+Z9imbK4VFzovXCRRbJr/38K2Z5ganP6b/7gkYT5aJ
+         LCgnGL6qNJdGQCCKeZ8igL0uH3ThFYm2TnRPmBpgY6WqoFSzNcSeZqffpv+GyZeMQhen
+         QcTQ==
+X-Gm-Message-State: AGRZ1gJ3QN7TsNC4iTQ19nWDzlOVIT3jFF/UFvDPK75NSZTHi0M8oUaE
+	DtypQ03DbnRbwCoVhxbHrBv3joSOH9Ko6RCMaBRDnO4/S2TwEGwIcA==
+X-Received: by 2002:a62:22c3:: with SMTP id p64-v6mr1952069pfj.9.1541625538620;
+        Wed, 07 Nov 2018 13:18:58 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp16439pjt;
+        Wed, 7 Nov 2018 13:18:57 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ezZI6z5lQlwpU/mWVRW8ZokJznOYWaiqXVong25VjTGBbjomgZJryljoRaZlPGHMQbmCgX
+X-Received: by 2002:a17:902:64:: with SMTP id 91-v6mr1903843pla.161.1541625537684;
+        Wed, 07 Nov 2018 13:18:57 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541625537; cv=none;
+        d=google.com; s=arc-20160816;
+        b=n51IjhHjzEhJP7cNC0l/Uk3+wpI9wT6ZQ+k22mV+wxpf1W2dbhv3BH+2oeBdkuxPEd
+         eDIchDAg+B2Xm2uDEqjwHAS0sV/mXm/fd6Gfq/io3dMxFB1gAzgtNnHC2kXYTL2Ng9kE
+         c/Kkubm9zT8AyxudeOmNWbW4IdMJu1XUNP8n6EzXllQi2KX39PG2Rg3KwUyJKWnxAroI
+         T1kUcny5eON8MvtXnyrRkETGpDppGek9qogNGG8RKKuKPQ0lfbuJi/cW78PRApyrWjcX
+         +Gd5ZAnQr6ol9/Qc8gknZIGrT3p8QS3f/oBo0LZeYBZ8uvkVqB0G7EVhYVmyrW+2Z91D
+         BHQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=4ihhgHrKEE1pacViDFlSsQzwqvPqE2E1R1WjQ3EseAE=;
+        b=n+0ZyFvCCnMKU0B4wIaPYHa5mb35N9osfHv0eywOFPIAAidCtFrjr+A0cX6IdyaPlC
+         uwuEcF8vHk+VGYjUODKiMWdkSfsUIavrmz6kkX6YsJPEzMWaAQj9KUgt0n0krLCpPLeJ
+         I/lWs+kog4EmaUS54CsAoSzj2hG9HcN++9dJ8xnG02pltPnbNMQQ3bZDOjwd8g/uE7Jm
+         4060ZAs6VUuo+GvsJT5dZJf55BVAKL3rb/JZehiDEpp4+cezV831WJ5V/eZ1HG4DheMM
+         qv14k/S6hO02Deb8mFyeDOIzS7GGjpHLZVwcezvKhXI+HNdmQ4A+C0XvBsY0mgb6lKh0
+         u4Gw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@chromium.org header.s=google header.b=RX4sUZGf;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=chromium.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id z16-v6si1400535pgu.525.2018.11.07.13.18.38;
+        Wed, 07 Nov 2018 13:18:57 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727316AbeKHGuo (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:50:44 -0500
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:43684 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbeKHGuo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:50:44 -0500
+Received: by mail-vk1-f196.google.com with SMTP id o130so1578152vke.10
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 13:18:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4ihhgHrKEE1pacViDFlSsQzwqvPqE2E1R1WjQ3EseAE=;
+        b=RX4sUZGfUL61yuG7JSexiOiBeR1R305fZSarM2oMqdfoyJzcFa3hZXPdiywZxhDeoC
+         qDKMD5lhaddRKPtE+o9uCrU+PwZIsch/256TpC0aE+cyWerJl7pkPDBNCBYHqrXNsyAP
+         +Cr+ckNPcEHFlgTF6virgzEbMAO8NwID9Tqeg=
+X-Received: by 2002:a1f:e3c7:: with SMTP id a190mr847244vkh.66.1541625512039;
+        Wed, 07 Nov 2018 13:18:32 -0800 (PST)
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
+        by smtp.gmail.com with ESMTPSA id x132sm483693vsc.34.2018.11.07.13.18.31
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 13:18:31 -0800 (PST)
+Received: by mail-ua1-f53.google.com with SMTP id d21so6409507uap.9
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 13:18:31 -0800 (PST)
+X-Received: by 2002:ab0:650e:: with SMTP id w14mr915588uam.83.1541625510833;
+ Wed, 07 Nov 2018 13:18:30 -0800 (PST)
+MIME-Version: 1.0
+References: <1541527838-4585-1-git-send-email-linux@roeck-us.net>
+ <20181106.192305.406697677@genki.is> <20181107022156.GA254567@google.com>
+ <alpine.DEB.2.21.999.1811061845161.5308@trent.utfs.org> <CA+ASDXPMMXCBN6PU8qzRm579sC9VBdwnxZdZwRdPY1cBUP8oGQ@mail.gmail.com>
+ <20181107184435.GA168339@google.com> <20181107.204358.257636196@genki.is>
+ <20181107205514.GB12273@roeck-us.net> <20181107.210731.330601031@genki.is>
+In-Reply-To: <20181107.210731.330601031@genki.is>
+From: Doug Anderson <dianders@chromium.org>
+Date: Wed, 7 Nov 2018 13:18:19 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=Wcxf7p1DyJdVEqODbc6TdTtbPiLszWCAS1xC6=4kkLbw@mail.gmail.com>
+Message-ID: <CAD=FV=Wcxf7p1DyJdVEqODbc6TdTtbPiLszWCAS1xC6=4kkLbw@mail.gmail.com>
+Subject: Re: [PATCH] Revert "scripts/setlocalversion: git: Make -dirty check
+ more robust"
+To: sky@genki.is
+Cc: Guenter Roeck <linux@roeck-us.net>,
+        Brian Norris <briannorris@chromium.org>, lists@nerdbynature.de,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBX0EzCVuNbA1oZAA--.1286S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7tFWfXw1UCFW8Aw48Cw1kGrg_yoW8Aryxpr
+	ZYg3W2yr1DXFWUWr97Zw10vrW8tr1rKFZ8KF98uryjkrn8Gr1avFySk34Uua47Zwn3A34Y
+	qa1Fv3yDC3yDuw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmSb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6F4lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r1j6r1xMxvI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWU
+	AwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
+	AFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UYxBI
+	daVFxhVjvjDU0xZFpf9x07bJnQbUUUUU=
+
+Hi,
+
+On Wed, Nov 7, 2018 at 1:07 PM Genki Sky <sky@genki.is> wrote:
+>
+> On Wed, 7 Nov 2018 12:55:14 -0800, Guenter Roeck <linux@roeck-us.net> wrote:
+> > I do not think it is a good idea to create a random file in the .git directory
+> > under any circumstance, and much less so if an output directory was specified,
+> > no matter if the path is read-only or not. I also still think that it is a
+> > bad idea to touch the source tree if an output directory was specified.
+> > It defeats the purpose of specifying an output directory.
+>
+> I was thinking of touching a pre-existing file like .git/config or
+> .git/description, which I was hoping would be harmless. But sounds
+> like that's still not desired?
+>
+> Okay, I guess one approach is to only refresh the index if $objtree ==
+> $srctree, by passing some flag to scripts/setlocalversion from
+> scripts/package/Makefile. Is that what you're thinking? Feels a little
+> strange, but it seems it'd satisfy everyone.
+
+From reading the thread it sounds like Guenter was not even super
+happy with that based on the principal that you wouldn't expect a
+kernel build to be doing write operations in your .git directory even
+if $objtree == $srctree
+
+
+> > Ubuntu 16.04 ships with git version 2.7.4.
+>
+> Okay. I guess --no-optional-locks is a no-go then.
+
+In theory you could wrap it.  If passing git with
+"--no-optional-locks" doesn't work you could fall back to the old
+code?  That would mean only people with newer git would get your new
+feature and everyone else would stick with the pre-existing behavior.
+
+It does seem like any things like this should be done atop Guenter's
+revert.  AKA: revert first to get things working the way that they
+were and then start talking about how to make it better.
+
+-Doug

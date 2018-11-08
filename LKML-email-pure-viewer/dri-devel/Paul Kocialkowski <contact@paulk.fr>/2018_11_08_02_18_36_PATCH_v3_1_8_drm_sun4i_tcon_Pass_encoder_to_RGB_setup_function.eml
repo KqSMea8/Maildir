@@ -1,0 +1,157 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:32 -0000
+Received: from icoremail.net (unknown [209.85.210.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3__ugLONbI9xZAQ--.27137S3;
+	Thu, 08 Nov 2018 02:19:12 +0800 (CST)
+Received: from mail-pf1-f169.google.com (unknown [209.85.210.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3kz+eLONbfMwYAA--.134S3;
+	Thu, 08 Nov 2018 02:19:10 +0800 (CST)
+Received: by mail-pf1-f169.google.com with SMTP id v9-v6so5743241pff.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:19:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=7NncYOAIuKCepIjiIqyMgh+jpIlw8XeYrhYo1BTLOwg=;
+        b=pyYT9MI2a/h/OFiYl4G1I45p4W1q17M5D6wCh1Zv6hbljMvt/ea8l8Xno9y4Wtxh6p
+         xuW64z94x0nOF35JM5lYwGirCSdF4cJpqOJQdqhrZFlRRAsw7W1aJY1kJx7+TNYcZEiS
+         mM1aFA9+miUsO7gRuoahIkL+x6IBI5CZfmn0Tl5HL9jf1wsHCpUbBqTjoieWCYx3F40R
+         jm77eZxLR4cH9somUBoVwkVnm3RzuIDtLJ/6dArvxTnEEZVl2OGlDF8Of2tfi9D25/m4
+         z1WyCguZ/OA/+QY8j0PP53P6jD8Utfx4vSM6UBmwt9P2xHo6hBAjFJqH5hUzrmI75L+z
+         VHIg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKx4bnYkmzf5r7uD1oG3Qa8IAF3a0eVloTzGoPmPIqc571Uf8CA
+	qD2gxpWuu4H0D1+h9DfHh9Mrr+957sGFx6B0xcUkV9lUIHVGhyDqHw==
+X-Received: by 2002:a63:1d10:: with SMTP id d16-v6mr1036821pgd.228.1541614749904;
+        Wed, 07 Nov 2018 10:19:09 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5574350pjt;
+        Wed, 7 Nov 2018 10:19:09 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eCqCaS0fgZiR526HNol2qPsIRzpFdItFuxXhqpKbapEqJEzdKffRHQP+sMzAgT69a6haMV
+X-Received: by 2002:a62:6383:: with SMTP id x125-v6mr1230479pfb.13.1541614749115;
+        Wed, 07 Nov 2018 10:19:09 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541614749; cv=none;
+        d=google.com; s=arc-20160816;
+        b=k7Yt1ACTiiUr8rogdpT3X/Gxpbn42JUorPrzvYJhspeDqHCLcWjEC36YZ1koKhFMzZ
+         kR0RVMgby4uH2mFGiLMnpy8IYTzyVOrVOdU6wyzMKsrLg+sfYMz1FzC/u1ZaM7aBu3Dq
+         qf97q94qt+RDhbgbU7tR/1RIKQhaX3wC9klqK2tSGFjqcBlWVgoegeYIbCk8iMKfWnxp
+         xI4O7EJLbeeTO4sUAUZoOePf809mCwJyiFLxXCE4G0DT2/2fG9TpDb7zBV7/c0iZ3qD2
+         vDiVYAG8c4p4sKBqrqRsSE384eivAN+LT1Er7zS+UYu0XJB6Y7BP2JsPlpsSiLDMLTX9
+         gU4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=7NncYOAIuKCepIjiIqyMgh+jpIlw8XeYrhYo1BTLOwg=;
+        b=n7CAY4e842z7rslKEPwt0c2pdYBDshvazl9IyoEMNZcH7MUzXnV8Xnq0HJPV0IrmpG
+         7/zTZ6hrmY0yvI/j5pQcvD+sSAeIrpkFClQVEqgk5SAwdCzxCcXzKzyua4Dd6HDTMj+R
+         xg1foi6oLJUmnucYzQVJjLI8iyp4qTHWJ9UxvnrW4smdjFrGG9R8ol9KqYRqJCAGmnPI
+         npZn5cMM0wS1vPi8OZMllErrbRx38iTskpB5smBF+fD0/SYSTXSTNt1cEAc87FCs+w11
+         UNtnsVmHmoH1ZK2Y9ytgX/fLae/D5wlPUlGNx/Up451LgNpQ1mPrjn/pPI0tskHArDHl
+         g7ng==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id x32-v6si1389829pld.70.2018.11.07.10.18.48;
+        Wed, 07 Nov 2018 10:19:09 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727953AbeKHDuE (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:50:04 -0500
+Received: from leonov.paulk.fr ([185.233.101.22]:48854 "EHLO leonov.paulk.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726363AbeKHDuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:50:04 -0500
+Received: from gagarine.paulk.fr (gagarine [192.168.1.127])
+        by leonov.paulk.fr (Postfix) with ESMTPS id D9534BFE1D;
+        Wed,  7 Nov 2018 19:18:29 +0100 (CET)
+Received: by gagarine.paulk.fr (Postfix, from userid 114)
+        id 097C2C1077; Wed,  7 Nov 2018 19:18:29 +0100 (CET)
+X-Spam-Checker-Version: SpamAssassin 3.4.1 (2015-04-28) on gagarine.paulk.fr
+X-Spam-Level: 
+X-Spam-Status: No, score=0.0 required=5.0 tests=none autolearn=unavailable
+        autolearn_force=no version=3.4.1
+Received: from localhost.localdomain (collins [192.168.1.129])
+        by gagarine.paulk.fr (Postfix) with ESMTP id BE084C1065;
+        Wed,  7 Nov 2018 19:17:56 +0100 (CET)
+From: Paul Kocialkowski <contact@paulk.fr>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com,
+        Mark Van den Borre <mark@fosdem.org>,
+        Gerry Demaret <gerry@fosdem.org>,
+        Luc Verhaegen <libv@skynet.be>,
+        Paul Kocialkowski <contact@paulk.fr>
+Subject: [PATCH v3 1/8] drm/sun4i: tcon: Pass encoder to RGB setup function
+Date: Wed,  7 Nov 2018 19:18:36 +0100
+Message-Id: <20181107181843.27628-2-contact@paulk.fr>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107181843.27628-1-contact@paulk.fr>
+References: <20181107181843.27628-1-contact@paulk.fr>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3kz+eLONbfMwYAA--.134S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7GF18tFW5KF48JFy8Xw1DKFg_yoWkZFg_Wr
+	4UuF12yrs8Xa9xAF42vr15JFy8tr18AF97X34xtayIy34DJ3ykZwn5Jw18Xr1jvFykWr18
+	twnrXwnayw1IgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbg8YjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW5MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI
+	42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExV
+	AvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
+	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrx
+	kI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U5wBMtUUUUU==
+
+Passing the encoder to the TCON RGB setup functions allows accessing the
+connector from the encoder directly instead of relying on the panel.
+
+Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
+---
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index f949287d926c..5e1f762fc3db 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -478,6 +478,7 @@ static void sun4i_tcon0_mode_set_lvds(struct sun4i_tcon *tcon,
+ }
+ 
+ static void sun4i_tcon0_mode_set_rgb(struct sun4i_tcon *tcon,
++				     const struct drm_encoder *encoder,
+ 				     const struct drm_display_mode *mode)
+ {
+ 	unsigned int bp, hsync, vsync;
+@@ -684,7 +685,7 @@ void sun4i_tcon_mode_set(struct sun4i_tcon *tcon,
+ 		sun4i_tcon0_mode_set_lvds(tcon, encoder, mode);
+ 		break;
+ 	case DRM_MODE_ENCODER_NONE:
+-		sun4i_tcon0_mode_set_rgb(tcon, mode);
++		sun4i_tcon0_mode_set_rgb(tcon, encoder, mode);
+ 		sun4i_tcon_set_mux(tcon, 0, encoder);
+ 		break;
+ 	case DRM_MODE_ENCODER_TVDAC:
+-- 
+2.19.1

@@ -1,0 +1,162 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:46 -0000
+Received: from icoremail.net (unknown [209.85.210.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn33zKNONbRQlaAQ--.27064S3;
+	Thu, 08 Nov 2018 02:54:03 +0800 (CST)
+Received: from mail-pf1-f178.google.com (unknown [209.85.210.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnAT3HNONbU+kYAA--.400S3;
+	Thu, 08 Nov 2018 02:53:59 +0800 (CST)
+Received: by mail-pf1-f178.google.com with SMTP id j13-v6so8074333pff.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:53:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :to:cc:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding:subject
+         :sender:precedence:list-id;
+        bh=x619O4TT23wXg8RMIV48BdXI+CUVatRJmhm8U6goQ00=;
+        b=PNJ1KpBy0yLna6adGoLh4wKsKh7DDImMpUk1EnW+3Xkz7KOKLMmOdcYoiL3YnjBykr
+         5d2abwUChNVLkzpysuGowKVWFEDQigp7ZVxvd/dyLTn2X28eIJ2AGzPubvHAh+atNfnO
+         wibnNoMiVJu/Zr9AapuM0dOqeP2r02waamzV6vFHakGH2YjnG6c/d5MvBkw7rXLfSETd
+         cSNoeAMQ2lXiM14a2p5jZvsPA89kA1LeOlw4M1p2O+7/oHKaZAVwipntWT7eM2yc9yjV
+         bQ43TtHB5kPtu7W3HXOVBMjvLmBHc0c3oiTwoRENzz6WrIPKq440CWe9CwgOY9wPTZ8t
+         mG6g==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJ6UewKakAIK6W+2tYku/Ptt0/3vKqfSL4Be8Np5bae1ap9kvSv
+	EIxt8QM06C3n0K5KFBnm7EM0ApqYJu3fIoh6cjLiwZx1hVIsC92K+g==
+X-Received: by 2002:a63:1d10:: with SMTP id d16-v6mr1142659pgd.228.1541616839208;
+        Wed, 07 Nov 2018 10:53:59 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5612161pjt;
+        Wed, 7 Nov 2018 10:53:58 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dl/Eg1DQyPOHam4Sf250fJRuAhb3Qp6gB7mAu75Vi2lqh9jfj23fhZCmbt+Ni12m0timbu
+X-Received: by 2002:a63:81c7:: with SMTP id t190mr1162631pgd.393.1541616838627;
+        Wed, 07 Nov 2018 10:53:58 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541616838; cv=none;
+        d=google.com; s=arc-20160816;
+        b=IqCsyasnE0txnSIKXdZbbhMchBrAe/tK9WseCL099QH/wyYYd3A8uKycPcBiHJySPV
+         HC+HoT57QvPj12BV4bFFtVt1bGj1/mjuBfbUobahE56ewxF/12eUYNkOQrAt51gttMmc
+         OgStv3TF0YQUwEAt/ktt5u2rrBhZTDggWEts8puNTSSl983v9MhxpPvOm+zAI3Gc073l
+         k8bF6iZkAIM2fY9a2HinXz9106huxSJVJIpOblvXpPIqpnrierzmM+xQgHfMRZNqxu6d
+         u3iWcTrI20MPXE4Qn1xamjO3tLURMD9+GjNcTKALhwgN5n3Bf9Qo5lVViwqfvb1TKfBE
+         Gtzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:subject:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to;
+        bh=x619O4TT23wXg8RMIV48BdXI+CUVatRJmhm8U6goQ00=;
+        b=eE8MqOscv1btKlT4vObd1aDhJZIDdb9STLnLAQWlxBETlNy3W0MbV6cgkTcUoqJNAx
+         8brs12MyhbBybj4glhP180rYaxPizpSCKGo4Bk3VzAeWkOfUfzO68EqbPMKGXV0Wqdvd
+         svN8H+XJfxDkmCLbVvAUjh92WWRnIpwkdcHvnCAm46WllZ+KceggF47Vl7NIq52ackNy
+         cjrK22cOCImVECPkSlrQO9KIC7jiRaaoZuA5RunIQG5lQl/jaM+y9h+Kn7lW5zTm2hoZ
+         j0BMw5pZ2uBgwTBjwT6LSt6+9fGd1CN3QC0toSS/s5FcwSqEaDKwIZLiUjhl0hGbU7M4
+         ykXg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id o185-v6si1303783pga.308.2018.11.07.10.53.42;
+        Wed, 07 Nov 2018 10:53:58 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1729494AbeKHEZN (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:25:13 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:48944 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726938AbeKHEZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:25:13 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1gKSwu-0004PD-ET; Wed, 07 Nov 2018 11:53:09 -0700
+To: Nadav Amit <namit@vmware.com>, Ingo Molnar <mingo@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20181003213100.189959-1-namit@vmware.com>
+ <20181003213100.189959-3-namit@vmware.com>
+ <89262174-6f15-6116-e67f-436f7c1bfe99@deltatee.com>
+ <6651971B-E3AB-4CDD-868C-2338593F7D83@vmware.com>
+ <d0812681-4a8f-8cc4-24ce-d02002ee34d2@deltatee.com>
+ <DC1EA50F-FAC3-4750-BCF7-0622D1FB4756@vmware.com>
+From: Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <a3902c4c-64b1-9c49-02fb-d5e4c9b04314@deltatee.com>
+Date: Wed, 7 Nov 2018 11:53:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <DC1EA50F-FAC3-4750-BCF7-0622D1FB4756@vmware.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, linux-kbuild@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de, michal.lkml@markovi.net, sam@ravnborg.org, x86@kernel.org, linux-kernel@vger.kernel.org, mingo@redhat.com, namit@vmware.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.1 (2015-04-28) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.1
+Subject: Re: [PATCH v9 02/10] Makefile: Prepare for using macros for inline
+ asm
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnAT3HNONbU+kYAA--.400S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7JrW3JFW7CF1Dury7JF15XFb_yoW3trX_ur
+	n7W3ZrCwnIk34xXr47Xr1fuFW7J3WjyryrXFW5Ww1vyryUJayDKan8KFn5Xr12qayqqwnx
+	ur1Fva1Iv3y3AjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUb98YjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik2
+	6cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6rylc2IjII80xcxEwVAKI48JMxvI42IY6xIIjx
+	v20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2
+	jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x
+	0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBI
+	daVFxhVjvjDU0xZFpf9x07b1miiUUUUU=
+
+
+
+On 2018-11-07 11:01 a.m., Nadav Amit wrote:
+> Ideas? Do people care about it?
+
+Just spit balling, but is there a reason we didn't just put the macros
+for inline assembly directly in the header? Something like this:
+
+asm(".macro ANNOTATE_UNREACHABLE counter:req\n\t"
+    "\\counter:\n\t"
+        ".pushsection .discard.unreachable\n\t"
+        ".long \\counter\\()b -.\n\t"
+        ".popsection\n\t"
+    ".endm\n");
+
+#define annotate_unreachable() ({                   \
+    asm volatile("ANNOTATE_UNREACHABLE counter=%c0" \
+                 : : "i" (__COUNTER__));            \
+})
+
+It does mean the macros won't be usable in non-inline assembly, without
+duplicating them, but do we care about that?
+
+I would have expected people compiling the kernel with distcc to be
+fairly common -- it certainly speeds up my kernel compiles quite
+significantly and thus saves me a lot of time.
+
+Logan

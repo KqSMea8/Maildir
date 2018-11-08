@@ -1,0 +1,173 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:57 -0000
+Received: from icoremail.net (unknown [209.85.214.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH_rRQeNbaFBaAQ--.27154S3;
+	Thu, 08 Nov 2018 03:49:38 +0800 (CST)
+Received: from mail-pl1-f177.google.com (unknown [209.85.214.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHHzvPQeNb3BIZAA--.703S3;
+	Thu, 08 Nov 2018 03:49:35 +0800 (CST)
+Received: by mail-pl1-f177.google.com with SMTP id b5-v6so8328116pla.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:49:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=IMOwV0eLMRNjZTTsSSV7yvaCC/DbSffirGuSOtDBf0s=;
+        b=eatXQBVUz57ZMwQRONDaaaBaXvDqnyEFw1It65CQDR38CBfQ+7Hv1NIvGUd70fsGw5
+         PiyHVhpSCActtUniS0uL63hCFkNePZgRonmHU7DW8E/0nBtRWZQe1+sGg/EE0wuOPuiy
+         RXp9MsMz1gvphzGMLXsIGDRAJy1s7NrlwA1+L73JphxyyHot6RYfMxF2Now3NoCWAXxT
+         lU0IP2+Y4cdiSm46VLmvvQ4Hif7mJv3nA4H5th1lXS4nXNyuxpSUnAgmGkzBnCb/V3uw
+         hyNzl8sMPuKi1OcFIuDZoDVGDU+jXThjAM9M58T3p7JIKgIoGrUNuS5vEpNPw9ybHNRN
+         wf6w==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJXjp8SedgZbfN02w+jBSyW2CkoeoGa0p1+QRKwLfh9EMEPbnKK
+	xD5IQMMe35RJekKgJXvqXSAJHc70vIeE4D1GGGZslwpQyP2nEcgvIg==
+X-Received: by 2002:a17:902:a5cc:: with SMTP id t12-v6mr1591265plq.298.1541620175515;
+        Wed, 07 Nov 2018 11:49:35 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5669106pjt;
+        Wed, 7 Nov 2018 11:49:34 -0800 (PST)
+X-Google-Smtp-Source: AJdET5clEm6OuhA53IcrSp7QxIoMBJgKduBrGu4kjG9xrONNry0FaJ6zxgBhB5XFeBTQpdYphLtV
+X-Received: by 2002:a17:902:a614:: with SMTP id u20-v6mr1586996plq.77.1541620174752;
+        Wed, 07 Nov 2018 11:49:34 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620174; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Qf0dMWOjwH67qkSl4imrkhnaKWS6DIpsadosn2AuZTKZ2rW8/X1Wh2aw8AAjABpAJV
+         fePi1AUuXPxenuQ1RTuv44HgU2GApE2RheAhvsa5IFJx1VopM2aap+h2690rvaySDntH
+         IXg70K/OT5ZSyGhDwOMvNEoRMZWTGQJJt2NIg3yr4dbX+m2/kklcQ1uAdvwvCVWDuKKV
+         v/n5jtfwuWOu5W9fq903YfJdqTT3iJtkc0FoigXgeFrSKNwL9t4wwE4MV1eL84c1/FB6
+         orGLfizxH6x0owWXagayt4Ss8pbYe7cm395V0cAXgldmXTkEWfa1yTNRJ69Ppcm1WIWG
+         YDXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :organization:references:in-reply-to:message-id:subject:cc:to:from
+         :date;
+        bh=IMOwV0eLMRNjZTTsSSV7yvaCC/DbSffirGuSOtDBf0s=;
+        b=bEg1S4Dev3xtJneWESOkrCD+38EjrJXK7eg+kouyf6wo4Hw+cfK+Gl3xHzZzK7rNuk
+         PaMoW8yx3fb4iSl1j/yrPg3RzA9RSF7Yt1XveCtpDS1/8wPj7HicJb21l41mYZdg2J1X
+         vlmYEn2X6u4vsGsI7xWNPnlGTC6oOJ80W7hLXcLmp3jqnICjtnJralfHmedPRTJdZRuw
+         oT0UAkLlPjGhCHBQPcdIAnoMCQhqX8nAJl0uSi4cZI/KrE+SG4GrrqE+Z4XSDAst++iB
+         sgzYePzbVs4XHo9h4QQmDsWNKA/P8s4KZCwecZbSLXczY3r7qQiTKzhU5iLYwExXNVx3
+         7GHw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id s11si1225696pgk.344.2018.11.07.11.49.18;
+        Wed, 07 Nov 2018 11:49:34 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726881AbeKHFUr (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:20:47 -0500
+Received: from ms.lwn.net ([45.79.88.28]:45270 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726495AbeKHFUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:20:47 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id E9C912ED;
+        Wed,  7 Nov 2018 19:48:56 +0000 (UTC)
+Date: Wed, 7 Nov 2018 12:48:55 -0700
+From: Jonathan Corbet <corbet@lwn.net>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch 0/2] Documentation/process: Add subsystem/tree handbook
+Message-ID: <20181107124855.328133e7@lwn.net>
+In-Reply-To: <20181107171010.421878737@linutronix.de>
+References: <20181107171010.421878737@linutronix.de>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHHzvPQeNb3BIZAA--.703S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7AF13Xr1rur4DCr4xKry7Awb_yoW8CFW7pa
+	yrKr17uF4kGa1xurn7Aw48Zr15Gwn3tFZ0vF98Cry3A345JF1fGF4Skws8ZFyUWrn3CFyj
+	yr47Kr1Yk3sYvrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bJ
+	ksgUUUUU=
+
+On Wed, 07 Nov 2018 18:10:10 +0100
+Thomas Gleixner <tglx@linutronix.de> wrote:
+
+> Mark recently suggested in one of the ksummit discussions to add subsystem
+> or tree specific maintainer handbooks to document subsystem/tree specific
+> development process information.
+> 
+> The following series adds the general section and the tip tree specific
+> handbook.
+
+So this is an idea that has gone around for a while; developers often get
+into trouble when wandering into an unfamiliar part of the kernel, so
+documenting the quaint local customs might help.  Assuming people actually
+read the documentation, of course.
+
+What's here seems generally good, but I do have an overall worry that we
+may want to consider:
+
+  - How much do we want to support and document subsystem-specific quirks
+    vs. promoting reasonable and consistent rules kernel-wide?
+
+There is a *lot* of stuff in the new tip manual.  Much of it, regarding
+coding style and the writing of changelogs, really seems like it should be
+global; if we need better documentation of that stuff, I'd really rather
+see that advice folded into the central documents.  Having two (or more)
+extensive coding-style documents doesn't seem like it's going to help us.
+
+The stuff that is truly specific to tip seems fairly minimal:
+
+  - what goes into tip
+  - the reverse fir tree thing
+  - tail comments, or the distaste thereabouts
+  - subject-line prefixes
+
+Having a tip-specific document that contains only those (plus whatever
+else I forgot to list) would, IMO, make it much more likely that readers
+would actually notice (and follow) the stuff that's specific to tip.
+
+See what I'm getting at here?  Am I totally out to lunch on this?
+
+Thanks,
+
+jon
+
+P.S. There is the separate issue of whether having subsystem-specific
+     coding-style rules is a good thing overall.  I think we should try to
+     be one big kernel project rather than 100 small ones, but perhaps
+     that's just me.

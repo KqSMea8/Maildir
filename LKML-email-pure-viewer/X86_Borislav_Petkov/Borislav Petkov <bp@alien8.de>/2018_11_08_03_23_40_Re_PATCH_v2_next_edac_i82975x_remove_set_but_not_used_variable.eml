@@ -1,0 +1,145 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:52 -0000
+Received: from icoremail.net (unknown [209.85.215.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_2PaO+Nbqi9aAQ--.26645S3;
+	Thu, 08 Nov 2018 03:24:11 +0800 (CST)
+Received: from mail-pg1-f174.google.com (unknown [209.85.215.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3X0vYO+NbOAAZAA--.634S3;
+	Thu, 08 Nov 2018 03:24:08 +0800 (CST)
+Received: by mail-pg1-f174.google.com with SMTP id w7so7708138pgp.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:24:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=1FQBDwgTosZkLsYeQWXZHfAlNfAPEFwelgvPKrfAL3Q=;
+        b=os0xNzti2ISp6T+LCn9YKJSTFOZ9RY1o3O5fntK9KSBPOKanQd8QSXIpCsYmoVvdaH
+         iXV0mT+B0DPzHeHFXdQlrex2uhxkrxHaIDlT9jq5PBuZN3mcrp7JIw+jUI79AEPB/Egy
+         ITS5Z99SFWJJTgGOzFA2jME21eSeW9c1hdNQR2JGByMC81SfdsJ1u62VGZO7lSBaoW32
+         qM/QEDJLxV/q8Q5k31wyMXotApqFjHS4TNXyRcnEveUcB5UfjvdL3uxC2op5k6b+BSEB
+         43JMFoOS7SW8q1iFrHxx09HgAiI+QNQvdDkfNbR4nwhvNkmxCO/rgtcUIk990UU39se6
+         rg2A==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gL7CyUjbaqabKBUmmNMveq6eZd6b5WlMCwGERb2tw4APEYIKuaD
+	SS6lXwU0LpV+Ad5IsAV0VOsJVBmztleE6opxP1Pj/dZ521sMaDY6Eg==
+X-Received: by 2002:a65:66ce:: with SMTP id c14mr1265816pgw.450.1541618648359;
+        Wed, 07 Nov 2018 11:24:08 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5644941pjt;
+        Wed, 7 Nov 2018 11:24:07 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dVII+M3g2rLfl/bqkcw8M66opHR59yv1pVCtvfxMKGeCuoKT6ggY6AZzJg0802Ke76dzSD
+X-Received: by 2002:a17:902:ab81:: with SMTP id f1-v6mr1521111plr.103.1541618647500;
+        Wed, 07 Nov 2018 11:24:07 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541618647; cv=none;
+        d=google.com; s=arc-20160816;
+        b=vSzrxpR8g2YDhqS3JBqtaBg4DUyc/R+N0SqmREuG/v3d/adRdkG5kSN5RLOqh1j2FS
+         6DHNYxC0tpbMg4f1zsE2l95t3XmmiJEm7gRnl8UAh1u9ipVltlDkdRFh6zrwnc34SAmI
+         qF0GjEmdi1yOcxJXrAid1ghRx0TJ3QY911c4Vek4slHFMxf7PZr0D3t9bQ81qJ3Xl9Sr
+         aA553Da4w5bcsqkeonq5B/LBlPhEj5RZVXeqYp0WN100xykCU+u68asFysFod6VrhDkX
+         u9nBNTGE2Ppm0pvqDPWK08+PM24x+wgw2pKOlxF8fEMxaqLAP7sKe0EkTvM86myIafso
+         /2CQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=1FQBDwgTosZkLsYeQWXZHfAlNfAPEFwelgvPKrfAL3Q=;
+        b=t4K2rk/+kAzA2vJ3AQquJekDKYZJ51aY/SIffARydDByDttEMKpwckzVaMl+DkJ7Xn
+         Ku/5/Djsp/yCY7Maya6XadRPgabEiSZZaHBlk3IehWliWpdPagQiSbvnpnlhY9B/jwX4
+         D6GC+gph6pwgAgUh6IA/ujaLwyOlDWOD0gydGaMwO9zfaYzdwYde7rLbuzsl24iS8unl
+         BsCMX7Js5TEK/94lYSEijybOzw31mKv4mpIm5LMfYbAV0yK4WxhaY8hioAFTjy20xHgr
+         Q15foyjq9Uk6QaGMi1dlirHqeAVjRXVGVODk1sIm07ufGq4Er6mm/cICMy9p2KScvGcN
+         sOKQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v18-v6si1587332pfa.3.2018.11.07.11.23.51;
+        Wed, 07 Nov 2018 11:24:07 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1729082AbeKHEzc (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:55:32 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:51644 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726453AbeKHEzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:55:32 -0500
+X-Virus-Scanned: Nedap ESD1 at mail.skyhub.de
+Received: from mail.skyhub.de ([127.0.0.1])
+        by localhost (blast.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id v_UkOSw5-qj7; Wed,  7 Nov 2018 20:23:47 +0100 (CET)
+Received: from zn.tnic (p200300EC2BCBE000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2bcb:e000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 807B01EC01A8;
+        Wed,  7 Nov 2018 20:23:47 +0100 (CET)
+Date: Wed, 7 Nov 2018 20:23:40 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: YueHaibing <yuehaibing@huawei.com>
+Cc: linux-edac@vger.kernel.org, ravi@jetztechnologies.com,
+        arvino55@gmail.com, mchehab@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 -next] edac: i82975x: remove set but not used variable
+ 'dtype'
+Message-ID: <20181107192340.GE14169@zn.tnic>
+References: <20181107022237.14048-1-yuehaibing@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20181107022237.14048-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3X0vYO+NbOAAZAA--.634S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrKF4kKrW7Wr15JF4fuw18uFg_yoW3urg_ZF
+	y0vF4kWrsrWF97XF12vFZ8A34DKw4YgF18CF1Iva9xKrya9ws5Xwn7KrW3Zry7WrZrGFs3
+	Kw45AryYyrnFyjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqxYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VWrMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY
+	6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IU5me
+	HDUUUUU==
+
+On Wed, Nov 07, 2018 at 10:22:37AM +0800, YueHaibing wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/edac/i82975x_edac.c:378:16: warning:
+>  variable 'dtype' set but not used [-Wunused-but-set-variable]
+> 
+> It never used since introduction in commit
+> 084a4fccef39 ("edac: move dimm properties to struct dimm_info")
+> 
+> Also remove function i82975x_dram_type and move the comment and the
+> assignment to the single called place.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+> v2: remove unnecessary function i82975x_dram_type
+> ---
+>  drivers/edac/i82975x_edac.c | 15 ++++-----------
+>  1 file changed, 4 insertions(+), 11 deletions(-)
+
+Applied, thanks.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.

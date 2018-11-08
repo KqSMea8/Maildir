@@ -1,0 +1,199 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:03 -0000
+Received: from icoremail.net (unknown [209.85.215.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX1+KQuNbi1RaAQ--.27240S3;
+	Thu, 08 Nov 2018 03:52:43 +0800 (CST)
+Received: from mail-pg1-f179.google.com (unknown [209.85.215.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXMj6HQuNbQRUZAA--.728S3;
+	Thu, 08 Nov 2018 03:52:39 +0800 (CST)
+Received: by mail-pg1-f179.google.com with SMTP id f8-v6so7762979pgq.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:52:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=AZSdsGQ7D1EbRwDKEoVt3OzY0h1qV+3ea0GemG8oVfc=;
+        b=tvf1bCGGLxhq7kKA/BMzLh+hcOc8ZqQQo0kZFDywMk9AVbq6lwy/BrcKOdI+XjLlRH
+         FYi2zysSTCwHbsL904swSi34is7yawvBCJuMGMCN+WaPD0S7Tqbl/B18NVuE0iSl+0e9
+         HA5Cb5iEsXl0telDKLiWIb3KN7zefUdoqNZW3xeR/R9MM6DVIIutX+96va/j477ox0ld
+         m1nD7PhIVYZZxIU+P2LCBdT1iyPceCZWl2dn3kKpB22VBaA/tw8txLRFTdICq/2y2pTp
+         9C3UlsDDMqHl8XeQ4Ttd5S84GpRoEEzv2DIlAi3RmecKNWfgdqLhxOD+FJJCLjQ0ubMf
+         F2dw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIG9XNboVt2bpeTPhVWeULmtBsfRQhvdwXbGcuK6okF67mtYcxn
+	/QTAU1cx5hNUUwxtIkwEREwznyuENsKbqY4HWqNHpICMJLfaUPDjTQ==
+X-Received: by 2002:a63:a91a:: with SMTP id u26mr1319943pge.349.1541620359014;
+        Wed, 07 Nov 2018 11:52:39 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5671994pjt;
+        Wed, 7 Nov 2018 11:52:38 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dFI2KQ6CNUCtn8vokeHPdIuT4c7opy1Cj/LgZyrVPi0/gqMEKuBC2Fahl+OU7exXEDcJn4
+X-Received: by 2002:a63:27c1:: with SMTP id n184-v6mr1353990pgn.334.1541620358268;
+        Wed, 07 Nov 2018 11:52:38 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620358; cv=none;
+        d=google.com; s=arc-20160816;
+        b=fiHKqhqp64BLMuDHYs+r+KAfGnxALot2PRPZpiM2OJUYhaAD9UcBITeLPtmNXCwf81
+         o+SH5jN2Vi02+B3yppzniHYpSCKIWUYdYb+svNMM3raW8f5CsnoC6Q4pyK0f2VnWNl3p
+         gj5UV0cAovqH68/8ZYyPZsliZuklU6G9KuTi/X6jFPnNUrQGpcyc2oen4ncIFTdBAK6E
+         2fC+zeK6fdn2nNBbF8SDAXIHYYxIvKM3vOM6iPr5nX8VM8HKHlM9KEZkaLDwxR6IeQwQ
+         nIXoitY34sPX5fQw402f3O/9ch9OQkb1mb98CWiTrYkZjaInJ9EzvUNV97+QdLPB7jOi
+         r81w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=AZSdsGQ7D1EbRwDKEoVt3OzY0h1qV+3ea0GemG8oVfc=;
+        b=pEaQ7AyAFvwldol9S9zacUPqurBh5NH6wQcq3a5WWu0KcJSQZlnCYSfBSoXMuNtWGi
+         n8SXCLb33vCK7RFL4GKeVCsEvXp4YkEuMW/zaiUtyHstza0QU3fTqKNk2NZ/fl+THFT6
+         XZwAXYijjw7ohCx1Gh/xziNCBFVLYwGuLsO0UyIvjNxYwslMQTtPEkwKiU936dQTQ0cE
+         gqs3nluqotEVjBFbgjCK33m+/L+r8RW9TkRwX0a/s83T9AflyTCu0ovpklQi/eyFRRCW
+         mMnM9+zWPxmT4vJFVhKUZG7QyR+MDFuKpDYMEqniiZZkOq+yakfiei7HvcSOw0uJLA+3
+         rTCA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id z21-v6si1496575plo.89.2018.11.07.11.52.23;
+        Wed, 07 Nov 2018 11:52:38 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727816AbeKHFVS (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:21:18 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:41948 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727579AbeKHFVS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:21:18 -0500
+Received: from localhost ([127.0.0.1] helo=bazinga.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1gKTpL-00070Q-QA; Wed, 07 Nov 2018 20:49:24 +0100
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 17/23] x86/fpu: Eager switch PKRU state
+Date: Wed,  7 Nov 2018 20:48:52 +0100
+Message-Id: <20181107194858.9380-18-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107194858.9380-1-bigeasy@linutronix.de>
+References: <20181107194858.9380-1-bigeasy@linutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXMj6HQuNbQRUZAA--.728S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxZFW5uFy8WFWDCFWrJFWrKrg_yoW5uryDpF
+	ZFyr1kGr45Ww13KFZrAr4DXrWkuF1DGF13AryDCas8Z3WYqFy5Jr1kKr9rZ3ykGayFgw1r
+	KF1ag3Z2y3W5AFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPSb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	UoOJ55UUUUU==
+
+From: Rik van Riel <riel@surriel.com>
+
+While most of a task's FPU state is only needed in user space, the
+protection keys need to be in place immediately after a context switch.
+
+The reason is that any access to userspace memory while running in
+kernel mode also need to abide by the memory permissions specified in
+the protection keys.
+
+The "eager switch" is a preparation for loading the FPU state on return
+to userland. Instead of decoupling PKRU state from xstate I update PKRU
+within xstate on write operations by the kernel.
+
+The read/write_pkru() is moved to another header file so it can easily
+accessed from pgtable.h and fpu/internal.h.
+
+Signed-off-by: Rik van Riel <riel@surriel.com>
+[bigeasy: save pkru to xstate, no cache]
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/x86/include/asm/fpu/internal.h | 13 +++++++++++--
+ arch/x86/include/asm/fpu/xstate.h   |  2 ++
+ arch/x86/kernel/fpu/xstate.c        |  2 +-
+ 3 files changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
+index 260cd4f4ba2bb..ed65e0642a1e1 100644
+--- a/arch/x86/include/asm/fpu/internal.h
++++ b/arch/x86/include/asm/fpu/internal.h
+@@ -561,8 +561,17 @@ switch_fpu_prepare(struct fpu *old_fpu, int cpu)
+  */
+ static inline void switch_fpu_finish(struct fpu *new_fpu, int cpu)
+ {
+-	if (static_cpu_has(X86_FEATURE_FPU))
+-		__fpregs_load_activate(new_fpu, cpu);
++	if (!static_cpu_has(X86_FEATURE_FPU))
++		return;
++
++	__fpregs_load_activate(new_fpu, cpu);
++
++	if (cpu_feature_enabled(X86_FEATURE_OSPKE)) {
++		struct pkru_state *pk;
++
++		pk = __raw_xsave_addr(&new_fpu->state.xsave, XFEATURE_PKRU);
++		__write_pkru(pk->pkru);
++	}
+ }
+ 
+ /*
+diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
+index fbe41f808e5d8..dd138f5eb5c66 100644
+--- a/arch/x86/include/asm/fpu/xstate.h
++++ b/arch/x86/include/asm/fpu/xstate.h
+@@ -5,6 +5,7 @@
+ #include <linux/types.h>
+ #include <asm/processor.h>
+ #include <linux/uaccess.h>
++#include <asm/user.h>
+ 
+ /* Bit 63 of XCR0 is reserved for future expansion */
+ #define XFEATURE_MASK_EXTEND	(~(XFEATURE_MASK_FPSSE | (1ULL << 63)))
+@@ -47,6 +48,7 @@ extern void __init update_regset_xstate_info(unsigned int size,
+ 
+ void fpu__xstate_clear_all_cpu_caps(void);
+ void *get_xsave_addr(struct xregs_state *xsave, int xfeature_nr);
++void *__raw_xsave_addr(struct xregs_state *xsave, int feature_nr);
+ const void *get_xsave_field_ptr(int xfeature_nr);
+ int using_compacted_format(void);
+ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int offset, unsigned int size);
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 375226055a413..5b33985d9f475 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -811,7 +811,7 @@ void fpu__resume_cpu(void)
+  *
+  * Note: does not work for compacted buffers.
+  */
+-static void *__raw_xsave_addr(struct xregs_state *xsave, int xfeature_nr)
++void *__raw_xsave_addr(struct xregs_state *xsave, int xfeature_nr)
+ {
+ 	if (!xfeature_enabled(xfeature_nr)) {
+ 		WARN_ON_FPU(1);
+-- 
+2.19.1

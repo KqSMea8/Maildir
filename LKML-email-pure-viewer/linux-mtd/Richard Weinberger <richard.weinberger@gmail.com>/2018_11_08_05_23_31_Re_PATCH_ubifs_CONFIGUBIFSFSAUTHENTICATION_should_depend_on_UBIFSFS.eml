@@ -1,0 +1,146 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:39 -0000
+Received: from icoremail.net (unknown [209.85.210.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX9P_V+NbctpaAQ--.27276S3;
+	Thu, 08 Nov 2018 05:24:17 +0800 (CST)
+Received: from mail-pf1-f179.google.com (unknown [209.85.210.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnvTn9V+NbJ14ZAA--.1287S3;
+	Thu, 08 Nov 2018 05:24:13 +0800 (CST)
+Received: by mail-pf1-f179.google.com with SMTP id g7-v6so5986971pfo.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 13:24:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=k1awO9QdJYRVfVNpZGuoVe2ArPOTahTprkf32MZf2Qw=;
+        b=YoR2QG+omzmzSknyWCegm+bKlBbGTp1+CQZv7J5X+wYlq75FtdwkgF6v/9YjVegQGQ
+         DSGIUJiEYEeDvtXeBxJxPv/nXwgm2RscBDg9bC639YhHtlPwiiOmhJo/gKHTvp6Y3ZIw
+         btO+zctcScCIu85cYso72ya1jNZSUAJKAa5mhTG6bImi8+bRrrVp7FgnHaHfiZRJyRLv
+         diEu+++WBW319WHo+zPJ8nPG3TuQiD3H8jn4nXkiXCvsM24MkYCOHyAM7SOG1Sft6UGl
+         cf2MZ9UraZkZFprfiBlOaudXcDq4ReBe/hzTlxWuhTAnjKpb97D84U1wSJmcLCkmMpgD
+         VsIQ==
+X-Gm-Message-State: AGRZ1gLbyVoa38yY7jwKTmJpC1PBen1JktJjGYN5OXf9TJ/4rS8d/i1g
+	F8usKbblg20ok1Ug+jMfaL4A0S1grXCDcc0hrJlPOCRXuDg34wduMA==
+X-Received: by 2002:a63:1d10:: with SMTP id d16-v6mr1582694pgd.228.1541625853140;
+        Wed, 07 Nov 2018 13:24:13 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp21492pjt;
+        Wed, 7 Nov 2018 13:24:12 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ewzl5fZqpPG0so1/bhTbKPfwFSekntlGggz98xwF22GEimMXEcsQY7wAX5QK3D8YzDmb/j
+X-Received: by 2002:a17:902:163:: with SMTP id 90-v6mr1942944plb.87.1541625852366;
+        Wed, 07 Nov 2018 13:24:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541625852; cv=none;
+        d=google.com; s=arc-20160816;
+        b=B2zBAm1dbu1qFbF1PFS0RLD7JzVei9w8ZCme9CkmytmyLCYShKKCaWVKCRnNvfeY65
+         iuHXhqr4vBz1W9qwOe7Uw+BfplC3c1JBHrK5Vh/06NOaG6gnhYIGaeOJbgSX4s1tTQyf
+         SUkdVfrj6Tv6gq9j9i1IuTT5TLdGMFin0E6GDmOW8mWnI2ZlQR2KGLkzOOHFxikrwUsB
+         KbWIfqoulr2b3RGXAD3l/PzJvkioy/eLAquSEIireHm4uOfGPH4JV5KsFkfrs8+FH8Y5
+         c+XlL1GuqrIyB+cmAqRfYkp7qqEtHntzQcbOajNk2216tAEnvMeGcTcy2q8zGuyJRaz2
+         30Zw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=k1awO9QdJYRVfVNpZGuoVe2ArPOTahTprkf32MZf2Qw=;
+        b=s3SbSrGWVeJFeYH2c222/oWoCuwXtvKz5kzr0PckDzsCnl9Szwl7+fcqe5G4DJBYNf
+         7hq7k86NjAeMfR8GjVKiEzpRbRAIz/ZkDMXxBxu0dKtC1LY3XRH1zF8J5QDi3Z2QuwnQ
+         yy00qIHhQgEIiu0SBNVvQmoqCA7YlsSb+wwzEC5cX7J11x4q+RJvs+KbyWr/Q/rGYb2o
+         5nSTbW+IUQ2RGqGjDjC2vIc3f7VEhxEMa52fwXQh/fZ4aVlK5wOgzBA0bsYEHOIewJ/f
+         cIPG0219OeAUMqSJwVinER20itb3A3VgZPUesgTXD2SG3rIx9GiIOqZRigwK7+Uqwyx+
+         vUbA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=cohkukXJ;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id h37-v6si1466290pgh.537.2018.11.07.13.23.55;
+        Wed, 07 Nov 2018 13:24:12 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727369AbeKHGz4 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:55:56 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33767 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbeKHGz4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:55:56 -0500
+Received: by mail-wr1-f65.google.com with SMTP id u9-v6so8623903wrr.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 13:23:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k1awO9QdJYRVfVNpZGuoVe2ArPOTahTprkf32MZf2Qw=;
+        b=cohkukXJnOdxiI2MPIA4Ig9i3E+jv5LjOJ0ffYtm2hY0DjXijiBIb5UIQ0zZwSTLNW
+         n2CmjJ4C3Pen61/y0CdpfpaG14Osj88dYzWnU8H7CPutn8DQaDFjI6hT3mtskw9Cl/Es
+         2nPq3ATxsU7cSBIrECxHvmfMbIzXFPHLGtMm7gKXF1+GS924TQ39Sx6Tkftuhz432mUr
+         ukFYUNfcZ1J3SqieqRryDKIYm03NTRSwDnejTH8VinpkV5ZDdFExNDnNck0Ro6R5qt4p
+         v73K0anfG2hBNjGrXd98yeMc7KzxZLqalllBJVAZIzY6H3IUoEFyPp9HuzC5g5K9khxp
+         rLiQ==
+X-Received: by 2002:adf:dcd1:: with SMTP id x17-v6mr1694353wrm.212.1541625822847;
+ Wed, 07 Nov 2018 13:23:42 -0800 (PST)
+MIME-Version: 1.0
+References: <20181105082540.21205-1-geert@linux-m68k.org> <20181107080733.ojderb7dkvwtpl2i@pengutronix.de>
+In-Reply-To: <20181107080733.ojderb7dkvwtpl2i@pengutronix.de>
+From: Richard Weinberger <richard.weinberger@gmail.com>
+Date: Wed, 7 Nov 2018 22:23:31 +0100
+Message-ID: <CAFLxGvy_Tg88bufFn7VXT-N64U_pem3ocPYbWSqiBsxAb_iSvw@mail.gmail.com>
+Subject: Re: [PATCH] ubifs: CONFIG_UBIFS_FS_AUTHENTICATION should depend on UBIFS_FS
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+        Richard Weinberger <richard@nod.at>,
+        "linux-mtd @ lists . infradead . org" <linux-mtd@lists.infradead.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Artem Bityutskiy <dedekind1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnvTn9V+NbJ14ZAA--.1287S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7JF4ftw48Cr1DZw17urWrAFb_yoW3XrcEga
+	18AryfCw4YgrZ29a43Xr4kWry0ka1vgr18Wrn8tFW5XFZrAFZrJ3Z7ArWrAwnrZF4DWwsx
+	KF9Y9r1ftry2qjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbSAYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY0x0Ix7I2
+	Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lcIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVWUJVW8JwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjx
+	CrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw2
+	0EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07jWQ6JUUUUU=
+
+On Wed, Nov 7, 2018 at 9:07 AM Sascha Hauer <s.hauer@pengutronix.de> wrote:
+>
+> On Mon, Nov 05, 2018 at 09:25:40AM +0100, Geert Uytterhoeven wrote:
+> > Instead of adding yet another dependency on UBIFS_FS, wrap the whole
+> > block of ubifs config options in a single "if UBIFS_FS".
+> >
+> > Fixes: d8a22773a12c6d78 ("ubifs: Enable authentication support")
+> > Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > ---
+> >  fs/ubifs/Kconfig | 15 +++++++--------
+> >  1 file changed, 7 insertions(+), 8 deletions(-)
+>
+> I would have sent a similar patch with taking the easier way out of just
+> adding another "depends on UBIFS_FS". This one is nicer though.
+>
+> Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
+
+Applied.
+
+-- 
+Thanks,
+//richard

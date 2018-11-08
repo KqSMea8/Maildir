@@ -1,0 +1,189 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:18 -0000
+Received: from icoremail.net (unknown [209.85.215.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH+73IeNbNI9ZAQ--.26875S3;
+	Thu, 08 Nov 2018 01:33:44 +0800 (CST)
+Received: from mail-pg1-f176.google.com (unknown [209.85.215.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3F0P1IeNbcY8YAA--.670S3;
+	Thu, 08 Nov 2018 01:33:41 +0800 (CST)
+Received: by mail-pg1-f176.google.com with SMTP id n10-v6so7590306pgv.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:33:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=EjPK04htkFwM+XtPQCTvkqIFD6XiX9zdo24MJaDCnhw=;
+        b=tPR+nlJkg1WBYFGRCMvQduzm+okdF1nWO9sNobl7dKYrCIq1DnUsJ7Y0PBHikN0sXz
+         pP+Q9nmpHz1AmAV33UKsEGHL1AxuRgc9CDWS1riHX72NEnWwmmXSDL9KsHDD4kcwH4J1
+         JlezBgdy/WxHkaCmWbZav2aGVjsL6Sntmej0skRE6BCGCDgMYWREJHLfdZmzVrIPfeoj
+         1hO3tqEEsp3Q4mFOsU6NqXi2SQ2uJwzT2VImmoZfQhVFjHW1vSBuKETq3Rdp3pMHlKdr
+         W3hpbgKyKIBAPUh/lpD8yj9DYwYsi8fx3JgG5V/72Y+cbAnqpdp/MjN1w5cUyr1z7wyP
+         N4kA==
+X-Gm-Message-State: AGRZ1gL3q9HX3rYwz498rF1B3NLwEPSA1hVVjBM7h3hDjNQL5yGus/qs
+	YcDgl3JduXyJnCNtHWbbYpjz+LhnPtCzIuBsEUtDvtXICqWKxs4jxw==
+X-Received: by 2002:a63:cd17:: with SMTP id i23mr920985pgg.13.1541612021407;
+        Wed, 07 Nov 2018 09:33:41 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5523647pjt;
+        Wed, 7 Nov 2018 09:33:40 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cfHXI8bc+6hOx1xHrHfIJ+ssFZA7QXlo+pxWQSG71TkxJGj8xYLiBGAfBYFtNvl6lXg7oy
+X-Received: by 2002:a63:101d:: with SMTP id f29mr955752pgl.38.1541612020632;
+        Wed, 07 Nov 2018 09:33:40 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541612020; cv=none;
+        d=google.com; s=arc-20160816;
+        b=g1yY9zu8tuh6y7oV/SLrtPdatkcKkQWyWSylDs/HHEiaNAlOpTKhVmkVizdfOYWDbs
+         h95gXm52Or/RybtLWkI8p9AIiOHMd5VrwwdCZiw1IPsyEP7EbiQ0bsMOgFY3ZbCdz0zx
+         z08DDA7dMBEy9bw9RBKaqf2aD8PcmnfG7pMi63UDFJmnaADmBDEQ3QOOvtnPB9B9VP/D
+         B+Ss912qLLmxbcdNbn9iyLapLJxY+iAWnKShOnXi2WGoi/BMNWkL8gDwm1PYWLnp8+6V
+         3l+ypJe8ChfSTHM9c7RyWY5LcnbWyKSQPbQaF0di0hY05fafniRf04vY/KYw259RCqql
+         VGPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=EjPK04htkFwM+XtPQCTvkqIFD6XiX9zdo24MJaDCnhw=;
+        b=v56mcR0FbRkEsBdkFGN4K5wcw4BCeqxx4c49hAF46UY/cpT2+mTymcraOQo+zl0k7O
+         /2UP3h/S6QfYYGWd0ZflclfXk4N00o00MDDinKknRGOgeXwJCggwRLlxah/4iy5q5+Yb
+         1HjYJO5AQH+azUn6jgiF/5ZdrnazISwi7yq4vtGuZYUIqmRBIuKIksLo6tKPHY/vNr7U
+         p+KC2ISpMxzg/yZwX+SMX8CgOPvzppSnYwwL3EEWriyYsN5N6lXB1nuAY7BoFM6SWgqa
+         ZMR8zNpUWVRRPwbEvNexw+dlsGC9uqiKdk//fNl3lHmtI0unu2uUJbo+3Mp5+ZA6pdV+
+         ptnQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@infradead.org header.s=bombadil.20170209 header.b=F9BTq7W5;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id f7-v6si1218697plb.362.2018.11.07.09.33.23;
+        Wed, 07 Nov 2018 09:33:40 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731387AbeKHDDH (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:03:07 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:39034 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbeKHDDG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:03:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=EjPK04htkFwM+XtPQCTvkqIFD6XiX9zdo24MJaDCnhw=; b=F9BTq7W5fqcHsl7EH5akGI85M
+        +MnhFKjFUbsTH1ASxlAQcQukVX0XLe3D8FKwIWF2eM9vR6MFOvE0S7mJL8CzvewITfLY7jkoDW5g3
+        SyQ4TJqaQYyHOeBIkMkqmvJmpj3nFp8vrPLqMfFZcKU9FnWjpeo4xvecNEYLihYTfNTBgp4OcOJgW
+        fVHz98J1QYSzknOt2NpHwet1eXfD3xrzqDxK4bR50v7m34mPC/dQCSzp82TUDSwgf26CVNUVPizs5
+        ETdjXAoT4ICv/jVzm3xvXT1C9Zp2KryrnbFXL79UwbfR5zxARZhyDc6v+CYmUGQmjg3VPFN0JeYAS
+        dpFk9CN5w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1gKRg7-0005s2-7P; Wed, 07 Nov 2018 17:31:43 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CFD8620284F96; Wed,  7 Nov 2018 18:31:40 +0100 (CET)
+Date: Wed, 7 Nov 2018 18:31:40 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Muchun Song <smuchun@gmail.com>
+Cc: mingo@kernel.org, linux-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] sched/rt: Introduce prio_{higher,lower}() helper for
+ comparing RT task prority
+Message-ID: <20181107173140.GK9761@hirez.programming.kicks-ass.net>
+References: <20181107161505.42769-1-smuchun@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107161505.42769-1-smuchun@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3F0P1IeNbcY8YAA--.670S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kw4kJFyfJF13WFWDXFyrJFb_yoW8uw4fpr
+	1fG3y3JF1ktFW7t3WfWF48uFyYqayktFy5Jrsavr48Aw1UXrnF9rn8ZrWIqF92vrW0kry3
+	tF4Fq345C3Wqvr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBGb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UMx02cVCv0x
+	Wlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vEIxC_GwCY
+	0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY
+	1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5Mx
+	CjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42
+	IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07b1XdbUUUUU=
+
+On Thu, Nov 08, 2018 at 12:15:05AM +0800, Muchun Song wrote:
+> We use a value to represent the priority of the RT task. But a smaller
+> value corresponds to a higher priority. If there are two RT task A and B,
+> their priorities are prio_a and prio_b, respectively. If prio_a is larger
+> than prio_b, which means that the priority of RT task A is lower than RT
+> task B. It may seem a bit strange.
+> 
+> In rt.c, there are many if condition of priority comparison. We need to
+> think carefully about which priority is higher because of this opposite
+> logic when read those code. So we introduce prio_{higher,lower}() helper
+> for comparing RT task prority, which can make code more readable.
+> 
+> Signed-off-by: Muchun Song <smuchun@gmail.com>
+> ---
+>  kernel/sched/rt.c | 68 ++++++++++++++++++++++++++++++++---------------
+>  1 file changed, 46 insertions(+), 22 deletions(-)
+> 
+> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> index 9aa3287ce301..adf0f653c963 100644
+> --- a/kernel/sched/rt.c
+> +++ b/kernel/sched/rt.c
+> @@ -101,6 +101,28 @@ void init_rt_rq(struct rt_rq *rt_rq)
+>  	raw_spin_lock_init(&rt_rq->rt_runtime_lock);
+>  }
+>  
+> +/**
+> + * prio_higher(a, b) returns true if the priority a
+> + * is higher than the priority b.
+> + */
+> +static inline bool prio_higher(int a, int b)
+> +{
+> +	return a < b;
+> +}
+> +
+> +#define prio_lower(a, b)	prio_higher(b, a)
+> +
+> +/**
+> + * prio_higher_eq(a, b) returns true if the priority a
+> + * is higher than or equal to the priority b.
+> + */
+> +static inline bool prio_higher_eq(int a, int b)
+> +{
+> +	return a <= b;
+> +}
+> +
+> +#define prio_lower_eq(a, b)	prio_higher_eq(b, a)
+
+I think you only need the less thing, because:
+
+static inline bool prio_lower(int a, int b)
+{
+	return a > b;
+}
+
+prio_higher(a,b) := prio_lower(b,a)
+prio_higher_eq(a,b) := !prio_lower(a,b)
+prio_lower_eq(a,b) := !prio_lower(b,a)
+
+Now, I'm not sure if that actually improves readability if you go around
+and directly substitute those identities instead of doing those defines.
+
+The other option is of course to flip the in-kernel priority range the
+right way up, but that's a much more difficult patch and will terminally
+confuse people for a while.

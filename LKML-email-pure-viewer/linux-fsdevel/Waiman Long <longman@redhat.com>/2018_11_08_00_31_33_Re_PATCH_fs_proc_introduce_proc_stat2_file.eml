@@ -1,0 +1,233 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:52 -0000
+Received: from icoremail.net (unknown [209.85.210.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX++jE+NbKDNZAQ--.27034S3;
+	Thu, 08 Nov 2018 00:32:37 +0800 (CST)
+Received: from mail-pf1-f169.google.com (unknown [209.85.210.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnx0OiE+NbUlMYAA--.188S3;
+	Thu, 08 Nov 2018 00:32:35 +0800 (CST)
+Received: by mail-pf1-f169.google.com with SMTP id j13-v6so7904542pff.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:32:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-transfer-encoding:content-language:sender:precedence
+         :list-id;
+        bh=j9VozWnl1kFUL21DN0/QzIKd0kCcBPUp09JfHVi581g=;
+        b=hfEaTT6mx/y4dRnQ9jDVy+fQOLme8g8WvMlpsKYt6vgLitCAns9J7byfZJKOoJ0dEd
+         dx4EYpk8L1tt8ghQo7d5/SxfRKhnca1tuYZzltbbeJ30kJuf3qO6SlAbFvgG79aj6rdi
+         rbT+i94g02Tux0Hu1Ld3JfYKeuLiE7DYUVBm93kuyAlF0DIOwDS5wwlFlYn/jv6SRxdZ
+         rDtjqdkHuEibv5fwGoyaR905eRSTH8ElryGH8mbF54FpSxas/JadBMFfc/S+ilSEhHP5
+         0WqYfVgrJgpe26DjcIKJOyeKpQSoUXW89a7QYuvUeJrtKO9DinRc5JViUpUNpF3qZ6jZ
+         RSNA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+X-Gm-Message-State: AGRZ1gKZ59fAZroBqH7ywAbHD2RRodE/WlcH2K3cy9p7yo/zxllLXLXv
+	8T8vmrcYRPsLETSEcdcSHjBBhHgHzrYQ/br0lSbs2PFZZxRibX2dMg==
+X-Received: by 2002:a63:2c0e:: with SMTP id s14mr784387pgs.132.1541608354622;
+        Wed, 07 Nov 2018 08:32:34 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5455742pjt;
+        Wed, 7 Nov 2018 08:32:33 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dGWRSuneXjS8MQqXZIsxZlKnt7x83Xf+60cM75CGVVeudV1sBiB7Wf0eKFqL6k55pDIo5q
+X-Received: by 2002:a17:902:925:: with SMTP id 34-v6mr884722plm.243.1541608353742;
+        Wed, 07 Nov 2018 08:32:33 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541608353; cv=none;
+        d=google.com; s=arc-20160816;
+        b=pEa5AgwHIFBur3/jmgyte9g5wyG8Rz26mV0HtugZVHfOkNGWoLZ9BEdjuHLRbWM5PK
+         qLcWAIa9NJ4mQjNOc6uQRyaq6D9wSCkTFUqb6/fJRdd9cgoPrxSTOVa2GBvGIoN+hU5B
+         cCwugD8EMV0SwemTqCxE03A4DwrFvChVe5GXOHZJUxZzlTSvQT0qBO0FzDnwFQA5c9wY
+         IF8BURCU4mLxt6/43cAdrK5XtED7qAGZuiID9Kb6qJmgI2upP2k9Lxpo5RTTwLkHI+Vk
+         TKdw35yFVwcuxMSHscnOexZ70TFIP4KYPeRdkLgUXSDvspTXVOtovTWB61p8zaLpI6F7
+         AHWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-language
+         :content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:organization:autocrypt:openpgp:from:references:cc:to
+         :subject;
+        bh=j9VozWnl1kFUL21DN0/QzIKd0kCcBPUp09JfHVi581g=;
+        b=r0pWs6dp5ZKZ8RVPAPy3PUzgMVjBxYmsP/HH7TGj2xMwhRI/hNq0spCHboUbeJ0yJY
+         rzOfk7viH+rG+HSupeHs/PL9RZ54T6pPnbtI+MCSQ+1IxsjMuDDnqq2TpzhYIvL7VfWq
+         WGbsfmRzW3JoKDBa9eRQV58DodhMuWtRyTWxE46KcrGoe/aPvqXNwpJdQWw/ztstb+79
+         hIGmC5Ti03Hibqu6K+ebkc0ErUCQEVRiVJPrlHtEOGC+7kgeZRkjJmfAW0PlQkfTMdCX
+         D03Ofd2wBqd5WdxsPBr4W660g6gXy9GdWnpJHJMOnBNuyh7IOnqK27C+Mh9iurY2x7Ea
+         OL/Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id m3-v6si946869pgr.32.2018.11.07.08.32.17;
+        Wed, 07 Nov 2018 08:32:33 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731340AbeKHCCl (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:02:41 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:60608 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727312AbeKHCCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:02:40 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2CBDD3D3;
+        Wed,  7 Nov 2018 16:31:35 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-55.bos.redhat.com [10.18.17.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 07DFE648DF;
+        Wed,  7 Nov 2018 16:31:33 +0000 (UTC)
+Subject: Re: [PATCH] fs/proc: introduce /proc/stat2 file
+To: Davidlohr Bueso <dave@stgolabs.net>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc: Daniel Colascione <dancol@google.com>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dbueso@suse.de>
+References: <20181029192521.23059-1-dave@stgolabs.net>
+ <CAKOZuevx9beEB-KWz0gRNaJQLfzu0cu7nuMYaB5ZT1O_ooQYAA@mail.gmail.com>
+ <20181106154840.3b448356214afa63dc8cb28c@linux-foundation.org>
+ <20181107033234.djng6kas4tjkevln@linux-r8p5>
+From: Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <04dc1bc2-8abb-c18b-ffc8-0e96bf9858a0@redhat.com>
+Date: Wed, 7 Nov 2018 11:31:33 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20181107033234.djng6kas4tjkevln@linux-r8p5>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 07 Nov 2018 16:31:35 +0000 (UTC)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnx0OiE+NbUlMYAA--.188S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxJryrZF43Xw17GF1fur45Jrb_yoW8ZF43pa
+	yrCa1qkFsrJ345Cw12qwsrKF18KF4SqFW5t34Fg342yF98Wrnagr4rKryF9F92k39Yg3sF
+	vFWa9a43Z3yYyFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUQmb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64
+	vIr41l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY
+	1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6r1lc2IjII80xcxEwVAKI48JMxvI42IY6x
+	IIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvE
+	x4A2jsIE14v26r4j6F4UMxvI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJwCF04k20xvY0x
+	0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVCF04k2
+	6cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUqxsqDUUUU
+
+On 11/06/2018 10:32 PM, Davidlohr Bueso wrote:
+> On Tue, 06 Nov 2018, Andrew Morton wrote:
+>
+>> It would be interesting to know precisely which stat fields the
+>> database-which-shall-not-be-named is looking for.  Then we could cook
+>> up a very whizzy way of getting at the info.
+>
+> The ctxt field, afaik. In any case they have been able to work around
+> the bottleneck. I'm not sure if that is the case for Waiman, however.
+>
+
+In my case, the customers just complain about the slowdown in reading
+/proc/stat on some platforms vs. the others because some had many more
+interrupt lines than the others. They didn't specifically call out what
+they were looking at.
+
+>>
+>> A downside of the stat2 approach is that applications will need to be
+>> rebuilt.  And hopefully when people do this, they'll open
+>> "/etc/my-app-name/symlink-to-proc-stat" (or use per-application config)
+>> so they won't need a rebuild when we add /proc/stat3!
+>>
+>> A /proc/change-how-stat-works tunable would avoid the need to rebuild
+>> applications.  But if a system still has some applications which want
+>> the irq info then that doesn't work.
+>>
+>> It's all very sad, really.
+>>
+>> btw,
+>>
+>>> +The stat2 file acts as a performance alternative to /proc/stat for
+>>> workloads
+>>> +and systems that care and are under heavy irq load. In order to to
+>>> be completely
+>>> +compatible, /proc/stat and /proc/stat2 are identical with the
+>>> exception that the
+>>> +later will show 0 for any (hard)irq-related fields. This refers
+>>> particularly
+>>
+>> "latter"
+>>
+>>> +to the "intr" line and 'irq' column for that aggregate in the cpu
+>>> line.
+>>
+>> btw2, please quantify "poor performance".  That helps us determine how
+>> much we care about all of this!
+>
+> Up to a quarter of a second is what was reported as being spent every
+> time
+> /proc/stat is used. This is with 1k cores and 4k interrupts.
+>
+> Thanks,
+> Davidlohr
+
+Yes, the time spent will scale more or less linearly with the # of cores
+and # of interrupts.
+
+Thanks,
+Longman

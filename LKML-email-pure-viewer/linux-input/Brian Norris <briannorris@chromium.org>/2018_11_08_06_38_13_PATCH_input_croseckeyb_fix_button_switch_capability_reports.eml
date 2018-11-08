@@ -1,0 +1,168 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:09 -0000
+Received: from icoremail.net (unknown [209.85.214.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgA3cI4xb+NbGV1bAQ--.30659S3;
+	Thu, 08 Nov 2018 07:03:14 +0800 (CST)
+Received: from mail-pl1-f179.google.com (unknown [209.85.214.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCnjUkub+NbLaoZAA--.206S3;
+	Thu, 08 Nov 2018 07:03:10 +0800 (CST)
+Received: by mail-pl1-f179.google.com with SMTP id n4-v6so8556977plp.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 15:03:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:mime-version:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=hErWVvVfq+l1Lhw6i7dkgVe6YlWD+RYolV83NWx0t70=;
+        b=PuVzWW8qYQtjLDPVP4uf40/nKRm3xTf5YnRAPyrSHjiRpdxpebh7RbRthroR10sOm2
+         fpbWWFRJGl41iM1bKej5+z76e2ihWEJrrIyX53Y/sMrWPa1vDy4F+PWJFXulk2LaClXr
+         ZCJnuO27LRh8x251YDuHj7tH4Mva/W6LX1DMk2OqDKlRi+4ldUZA546MM87Ck1xUhJX5
+         V/iYR0qOcBrnxSL8r6YnA66IYh7MOmgzwjzvOKVBIbgB7XX/vdvJWsfpfQZTPC0pguhP
+         CCy6edIiuBAMWYTmgf1HL3fYbiMwYlIFjZyq8UGezeIiysGT15cX1i5WALEfTmrYb79D
+         Lhlw==
+X-Gm-Message-State: AGRZ1gK0J24tQcjN3bLeDJjYd+yTLzfNFOYCMzdbofDW+AJ12nJJJ2Js
+	tERvGJZfEZ0glsVUGfSC489zqU+t1KWZ26bgkVimJVTpQMIzFhtOSg==
+X-Received: by 2002:a17:902:9698:: with SMTP id n24-v6mr2262094plp.9.1541631789982;
+        Wed, 07 Nov 2018 15:03:09 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp105123pjt;
+        Wed, 7 Nov 2018 15:03:09 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dsq8hIZ58FcWVjCB3TbM0JRU8NSjFLK5kZdL1mg136dkO8s8vvwTBQLUzeCRT/5zLbgZMe
+X-Received: by 2002:a63:5765:: with SMTP id h37mr1865305pgm.423.1541631789165;
+        Wed, 07 Nov 2018 15:03:09 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541631789; cv=none;
+        d=google.com; s=arc-20160816;
+        b=tPlg8tLt+cGSEbxXtl6evahJ9P56YHFIsBf+SBMpS1CgTRkp3nabvZthgfmlS5XzHu
+         4Aw5SRhY4asAivn2OJf5upKBv0/hAsDKi19FIRO32sz4U1IANV4x8o5ojQuBdEq5ANvR
+         MpERg+GvqsVxRw1b5jxTisNEB2WI+amEJDOZLZG2KnSs6Aev+mOSRqlcBDcpdEgLsA8B
+         gWcLN+DRNg3BLjWDUl1R6cszpswY3WfdvWEWFWs918Sdg4Pxhv031rKXXWvl22DZsl9P
+         MW+Bw7EdcJEj/bTi2sMVtNfQ54rtITQBVxAJt9IvXjoCaO3I7I/P0V8UEDiZlzM7AB+q
+         DfGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :message-id:date:subject:cc:to:from:dkim-signature;
+        bh=hErWVvVfq+l1Lhw6i7dkgVe6YlWD+RYolV83NWx0t70=;
+        b=HbFFcBz+EfX3G6r6oMZKBrFutYFXPrEeIh8FTNOEcROLesrKwWn905qVDxSCYq32ZC
+         INFhrSOoUSOEZxRIR2dMnHPY5+3FoK7Rmt0960GAiDjPE6dTy9eEiEMPyAPmupyEu5hj
+         M8RoHJuCCQoUXVCYQemjyDtLHJeDb2Rz9r5dmMi3O34VS0M6G9EONVYx+eqSgRn/U8ch
+         nqS67UZEzj/wCU+Te6Hv2uJDHmaZ5KHpk8p1pI4sxD7wMzVab3XV7obPE5NVQddGBkHs
+         g2unxEbOqK5Fo7NsHT100F+WUwC34uLvjATS1JfXM0cw5GbVyuKVsdneoSEwE0vFNXzD
+         k6DQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@chromium.org header.s=google header.b=VKZaGcot;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=chromium.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id a4-v6si2118861pfo.97.2018.11.07.15.02.53;
+        Wed, 07 Nov 2018 15:03:09 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728248AbeKHId0 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:33:26 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34952 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727744AbeKHId0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:33:26 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 32-v6so7962362pgu.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 15:00:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hErWVvVfq+l1Lhw6i7dkgVe6YlWD+RYolV83NWx0t70=;
+        b=VKZaGcotsoGjvMj3TTBlz4HOcEtdPNnWZgeUM3aWlowfVqaTmhi9siniUiaW1p+8rb
+         nogd0jDNBS1Oyq0kfvToYf7x8Q7UaId0TmSOLB+KhgIhHk2VKeONqLrb6AMvEsRuyV1z
+         UdxVfZ4G3DYdQBb8pXufEvCCOXLllwOReh/7o=
+X-Received: by 2002:a62:ce8e:: with SMTP id y136-v6mr2188499pfg.201.1541631652192;
+        Wed, 07 Nov 2018 15:00:52 -0800 (PST)
+Received: from smtp.gmail.com ([2620:15c:202:1:299d:6b87:5478:d28a])
+        by smtp.gmail.com with ESMTPSA id d126-v6sm1802327pgc.32.2018.11.07.15.00.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 15:00:50 -0800 (PST)
+From: Brian Norris <briannorris@chromium.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.co.uk>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        Doug Anderson <dianders@chromium.org>
+Subject: [PATCH] input: cros_ec_keyb: fix button/switch capability reports
+Date: Wed,  7 Nov 2018 14:38:13 -0800
+Message-Id: <20181107223813.178462-1-briannorris@chromium.org>
+X-Mailer: git-send-email 2.19.1.930.g4563a0d9d0-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCnjUkub+NbLaoZAA--.206S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr17GF48ur1fWFyUWryUJrb_yoW8ZFWxpF
+	1fGw12k3ykta1UAw1Fyw1j934Fyr48trW3tr13Wr98A3Z5WFyYkrWvya9Ik3ZYyF17W3sx
+	JrZrX395WayUuFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPab7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6FWlc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r1I6r4UMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxU
+	HHKuDUUUU
+
+The cros_ec_keyb_bs array lists buttons and switches together, expecting
+that its users will match the appropriate type and bit fields. But
+cros_ec_keyb_register_bs() only checks the 'bit' field, which causes
+misreported input capabilities in some cases. For example, tablets
+(e.g., Scarlet -- a.k.a. Acer Chromebook Tab 10) were reporting a SW_LID
+capability, because EC_MKBP_POWER_BUTTON and EC_MKBP_LID_OPEN happen to
+share the same bit.
+
+(This has comedic effect on a tablet, in which a power-management daemon
+then thinks this "lid" is closed, and so puts the system to sleep as
+soon as it boots!)
+
+To fix this, check both the 'ev_type' and 'bit' fields before reporting
+the capability.
+
+Tested with a lid (Kevin / Samsung Chromebook Plus) and without a lid
+(Scarlet / Acer Chromebook Tab 10).
+
+This error got introduced when porting the feature from the downstream
+Chromium OS kernel to be upstreamed.
+
+Fixes: cdd7950e7aa4 ("input: cros_ec_keyb: Add non-matrix buttons and switches")
+Cc: <stable@vger.kernel.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+---
+ drivers/input/keyboard/cros_ec_keyb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/input/keyboard/cros_ec_keyb.c b/drivers/input/keyboard/cros_ec_keyb.c
+index 81be6f781f0b..d56001181598 100644
+--- a/drivers/input/keyboard/cros_ec_keyb.c
++++ b/drivers/input/keyboard/cros_ec_keyb.c
+@@ -493,7 +493,8 @@ static int cros_ec_keyb_register_bs(struct cros_ec_keyb *ckdev)
+ 	for (i = 0; i < ARRAY_SIZE(cros_ec_keyb_bs); i++) {
+ 		const struct cros_ec_bs_map *map = &cros_ec_keyb_bs[i];
+ 
+-		if (buttons & BIT(map->bit))
++		if ((map->ev_type == EV_KEY && (buttons & BIT(map->bit))) ||
++		    (map->ev_type == EV_SW && (switches & BIT(map->bit))))
+ 			input_set_capability(idev, map->ev_type, map->code);
+ 	}
+ 
+-- 
+2.19.1.930.g4563a0d9d0-goog

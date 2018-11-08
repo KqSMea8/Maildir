@@ -1,0 +1,165 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:31 -0000
+Received: from icoremail.net (unknown [209.85.210.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXvwpDK+NbZdNZAQ--.27078S3;
+	Thu, 08 Nov 2018 02:13:24 +0800 (CST)
+Received: from mail-pf1-f179.google.com (unknown [209.85.210.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXNkI_K+Nb88cYAA--.130S3;
+	Thu, 08 Nov 2018 02:13:20 +0800 (CST)
+Received: by mail-pf1-f179.google.com with SMTP id u10-v6so2288590pfn.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:13:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding:sender:precedence
+         :list-id;
+        bh=WJulaHyZTW+3D3nyyBUhImJNKnq+eB6poijbUDSXIco=;
+        b=sGetbtSy+TYqOd6T2t5TboU5M09qjpcbNRKhoeJCD6E6OPtE1an+K7NGsa+XrsSa7D
+         BN4zjQQJ6pgWB9ZMgfoUOkFc74Y3KDOj4p/EuN/XqfpNjqrDAthXb6xnLSJ/qcVzxe0j
+         SBSscvUshf3pVFWJHiYvBzA0NH0CnHGGHvPqjF5YG/rE2ZD7CiTt94o9gBGarIW8wBYu
+         ErEXlJ4S6YKSj/O5usYr306aYdSGeMN0hCdaCf8pLiXbONzmnJCAmTUkuTACurhAV4v6
+         XZLWhIDM9ZsMrLhWS4J4pUKTaRo73XbPP7vgEpSB8VezZEGr+s0PxDF2/fo4vkI3Gv/B
+         HC6g==
+X-Gm-Message-State: AGRZ1gLp67/z5hswrThwfXPmiFA66xFfvqdVZnRQmRDKrPXQZ1ZZtqu2
+	7cMSk92qEN3odamb97k5qN45kgs2O8mRSK42z7V+QawkNho+JdRHsg==
+X-Received: by 2002:a63:40c2:: with SMTP id n185-v6mr1062838pga.116.1541614399620;
+        Wed, 07 Nov 2018 10:13:19 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5567696pjt;
+        Wed, 7 Nov 2018 10:13:18 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cpTsJf7UhVuOP0QODqmG+d+y+J7s4cHcIbtEvCefp1S4mGrxltuFUulG2g15uSyvOe+HNw
+X-Received: by 2002:a17:902:a587:: with SMTP id az7-v6mr1257185plb.151.1541614398810;
+        Wed, 07 Nov 2018 10:13:18 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541614398; cv=none;
+        d=google.com; s=arc-20160816;
+        b=EUtUlOupjcSMAd0t/89tlBD9vsehnjFs8CCCZJFZEwD2U5HlATUMenJpUB4nnsJ+K+
+         Mk6L1QK0AtvgXRva49K3/cNT7bnzldEOG0LoM8u+17g0kiI6PJnsL2xbgE9c/QZWoq6q
+         /kuRggUYw+akjpeS2LLN+az5paHrKk82omZwT8IoRH0SZeeIianuntv7FFUr7f6tgd3X
+         LecZT45CuaQ2wKqmXhmOaBU10RYPRTUaTR4Zp3ZpVM2exOBXVkHFeUZur4Oofaf39DCg
+         0YP9WVVsOYsew91na3JXZ7YwkTwKHzvr3RqJJJAcPmEC5BH0YTSzwWLm3dO93rz6kiwD
+         J8OA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:dkim-signature;
+        bh=WJulaHyZTW+3D3nyyBUhImJNKnq+eB6poijbUDSXIco=;
+        b=HDYE4wodSW+VRq+aX/XZd6ifRcGymzH10mcD5LLniplKqQFVuG4oW4bnynN7tecyZS
+         P1RkGeGbYP/Ofz70lReO0HhP+9l/Z3TB4wgoTRqm++tBIm15Kx0nOyvYz7k1G3WH4iNf
+         wfi/JQx/nUy1aZgaP8D8E5Kh8963Ky4oXQV6g6eCoEPrrcO183eslnsszJv3lOxRIhHI
+         seOhXcqwEH7dbLvPZRFzdGYOrF4vvnM0IGotxqdoRPo/eUPnefZkI6avkL4Fd5B6uv+n
+         /hpidqRDhJm9qvxfp2MegYclLtHiKDg8oJPV2mT8nsTJJd0Y8wUIxgLhBNvh7XAjA5Lq
+         nVlw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=glNTkWrI;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id r36-v6si1053818pgl.257.2018.11.07.10.13.02;
+        Wed, 07 Nov 2018 10:13:18 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728000AbeKHDoW (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:44:22 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34307 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727656AbeKHDoV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:44:21 -0500
+Received: by mail-pl1-f196.google.com with SMTP id f12-v6so7030127plo.1;
+        Wed, 07 Nov 2018 10:12:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WJulaHyZTW+3D3nyyBUhImJNKnq+eB6poijbUDSXIco=;
+        b=glNTkWrI+TIs8RzbgQiNkFYj9ozMXd8KeAcw2gP1IgvDLBAMTp30kkKKIxFzuzcwSs
+         rRAmqPLFFm6zGOAqcXllGgLYiBxtxS4dhoRlv2860a3w0ioo5P5MnB+EQ3s3Ml4YMgU9
+         Ko+enxSQy9MSe6na822bvFojY1a1K9PW+3/DWdtuXxyO9hBZ51A61uqe8vAq5am0yOmz
+         h++J+lRZcWwE/xo2ztoLjHpFR1hG4TIQ494T+KRyvu14Ccql0yPgbKjSIjIBPdcChCoN
+         /+XiOVsvUKxWdbWzyDPiKq7I9zGjq68U3DhSic9a5TMAB8LMU7kdcErhE3KEktS7WyNh
+         a9Xg==
+X-Received: by 2002:a17:902:3a3:: with SMTP id d32-v6mr1240048pld.304.1541614368588;
+        Wed, 07 Nov 2018 10:12:48 -0800 (PST)
+Received: from ?IPv6:2601:282:800:fd80:b9ef:3cc7:d955:8635? ([2601:282:800:fd80:b9ef:3cc7:d955:8635])
+        by smtp.googlemail.com with ESMTPSA id c127-v6sm1401935pfa.31.2018.11.07.10.12.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 10:12:47 -0800 (PST)
+Subject: Re: [RFC perf,bpf 5/5] perf util: generate bpf_prog_info_event for
+ short living bpf programs
+To: Alexei Starovoitov <ast@fb.com>, David Ahern <dsahern@gmail.com>,
+        David Miller <davem@davemloft.net>
+Cc: Song Liu <songliubraving@fb.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "acme@kernel.org" <acme@kernel.org>
+References: <b984776a-ce69-ab16-ed87-1cea89c9d79a@gmail.com>
+ <6C5A9FBD-F50D-444C-9038-E9557EC850D2@fb.com>
+ <27fc8327-3390-ba5a-6063-89c9e7165e7b@fb.com>
+ <20181106.153647.1701013551426767213.davem@davemloft.net>
+ <39fe6abc-5c3e-bac3-0c0b-cf68bea23ab0@fb.com>
+ <0a05a14c-3a79-e894-ae48-cbe1df4feb91@gmail.com>
+ <82745121-339e-2751-c9db-d1fca02d0b33@fb.com>
+ <7d0b100b-a64b-0d30-8ec0-2689ef44423d@gmail.com>
+ <edda462f-a32c-bc25-94c8-8d06a47bd480@fb.com>
+From: David Ahern <dsahern@gmail.com>
+Message-ID: <c1355a46-77b7-f340-855e-6237b223e43a@gmail.com>
+Date: Wed, 7 Nov 2018 11:12:45 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <edda462f-a32c-bc25-94c8-8d06a47bd480@fb.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXNkI_K+Nb88cYAA--.130S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7JF4xWrWUGFW7WF4DtFyUtrb_yoW3Krc_Z3
+	97XF1kCw4qgr1rtF1UCrZ5Gr9xCay5C345ta4Fgw13u3s7AFWkuFsY9FWSvryUJa4UAry2
+	krn0qryYvwnI9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUb98YjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik2
+	6cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6rylc2IjII80xcxEwVAKI48JMxvI42IY6xIIjx
+	v20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2
+	jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x
+	0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBI
+	daVFxhVjvjDU0xZFpf9x07b13kZUUUUU=
+
+On 11/6/18 6:09 PM, Alexei Starovoitov wrote:
+> On 11/6/18 4:44 PM, David Ahern wrote:
+>>
+>> So one use case is profiling bpf programs. I was also considering the
+>> auditing discussion from some weeks ago which I thought the events are
+>> also targeting.
+> 
+> yes. there should be separate mode for 're: audit discussion' where
+> only bpf events are collected. This patch set doesn't add that to
+> perf user space side.
+> The kernel side is common though. It can be used for bpf load/unload
+> only and for different use case in this set. Which is making
+> bpf program appear in normal 'perf report'.
+
+It would be good for perf-script to work in the next version. Users
+should be able to dump the event from the kernel and the synthesized
+events. Should be trivial to add and allows a review of both
+perspectives -- profiling and monitoring events.

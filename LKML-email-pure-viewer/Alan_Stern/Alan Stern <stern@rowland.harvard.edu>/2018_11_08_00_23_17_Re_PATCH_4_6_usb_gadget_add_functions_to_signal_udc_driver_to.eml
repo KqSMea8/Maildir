@@ -1,0 +1,277 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:49 -0000
+Received: from icoremail.net (unknown [209.85.215.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3fyWOEeNb1yVZAQ--.26716S3;
+	Thu, 08 Nov 2018 00:23:42 +0800 (CST)
+Received: from mail-pg1-f180.google.com (unknown [209.85.215.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHL0uNEeNbmEoYAA--.115S3;
+	Thu, 08 Nov 2018 00:23:41 +0800 (CST)
+Received: by mail-pg1-f180.google.com with SMTP id 32-v6so7527440pgu.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:23:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:in-reply-to:message-id:mime-version:sender
+         :precedence:list-id;
+        bh=DIp5EDiDmPEzN86rOnvfl1y/vo1fMhzgnyjZ+O6D2co=;
+        b=crsn4g0/grAzVPg6pLUuAaUiowVSLPKHMiixbOf02lPwOhdeNXn0KWfrE/A6/uuwV9
+         q4PNp8DGKoN4HHrPMyl6LOHE+5XPnVvLbwZAl0GWwrY7rCNhuVNTr6+ViVEWUXUx1l8v
+         ST4Ckls1iDBvakVdsZDTWUgC4WRBYBgb13PpR5AYvhFPjyIYlIZO5t0rjnCwWgIEHYbR
+         c6DBlVktOyh9wRoPc0mljg6djCME2jfH1IcNVxFp2M98b74aUKSHx39F95Ry7AoIBb6t
+         6acOB35K+n1pY0LxZ0q+DBdjNplSP/avD5mRxGCG4855V9+kRbVFZlGkWHNCvN+3vU/b
+         8Zew==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKXQgSubLaqnMQXFzvAsGjUpebZZCdMgMBwyRxkKOJoy0h52ujY
+	KuRhTp5Cov3mkCcs6vMu2b9pOvKLnrBhUb3TWf5QYd1JHF4YIKBLcQ==
+X-Received: by 2002:a63:3c44:: with SMTP id i4mr730203pgn.286.1541607820908;
+        Wed, 07 Nov 2018 08:23:40 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5445910pjt;
+        Wed, 7 Nov 2018 08:23:39 -0800 (PST)
+X-Google-Smtp-Source: AJdET5djPa7kUtUantQk9TUC3zhF1jRafTExv8LjOJy+ezMEJYDMcSd0m/L3JRZKpOP4clripL2o
+X-Received: by 2002:a63:be4d:: with SMTP id g13mr741986pgo.378.1541607819708;
+        Wed, 07 Nov 2018 08:23:39 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541607819; cv=none;
+        d=google.com; s=arc-20160816;
+        b=p1oJ9XF/2kPb7Vlw2fD/3te6se4TIbcBtA3f4B2FmnssXICbzHuy54Dt59TPByLQCl
+         pYfx3xP6Q80ow9EnTnthgUmgD6c2quZoLNmdg3r1prC/6kVL+xmYWMQWDuWfhF0uzCm1
+         eJ0IU35HpywJGsxJszm/T3+cPj9JFWRyTvadU0SYU50poI44w8iOVXauJcB15RsKXUf0
+         0ciWAWol/W3mgwmvS24FP/h4pp56beIqB230H/GYRaxrV2etydWK1sUTtpHo8ZWkvB+6
+         NcgM7q0LS2L+bFu1oRjEBSZNjuK7okJ3zXPPpfYMCZyJTSzrflmnv0nGoDpcQM0onEMt
+         BQ2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:message-id:in-reply-to
+         :subject:cc:to:from:date;
+        bh=DIp5EDiDmPEzN86rOnvfl1y/vo1fMhzgnyjZ+O6D2co=;
+        b=aO2JChielk1TNBrd7hj35nsSBU3wYxMstLEDO689aUgw9vEdMrfDHa8xPf8Kcq4zOq
+         ZUJYV6WlQX6Jt11X47HJLZTn/aFCRQpzE74jGitj02qbdyiPvhkpowCMne2J62+pbyXf
+         ZKYAH1cyh7npKAfMEj3lDWPVjTokctFnI5vRYOv735Mm43pOhq1QA05f1TNGQFx1TWRG
+         61ucGWpnOJ/v/4r0/3ornty2xlGpUmviWhLNYRyzRnajTT0i6SbM8nv6gZyooSM1h01a
+         giN5Ti5drQw5snjgg6WiuqE7Zpx0jBjbXsDhly0yvw4e9R0+W/4kn/TuLbGB/PfGtf45
+         oCGg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d2-v6si935352pgo.299.2018.11.07.08.23.24;
+        Wed, 07 Nov 2018 08:23:39 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731340AbeKHByW (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:54:22 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:47664 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727546AbeKHByV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:54:21 -0500
+Received: (qmail 3368 invoked by uid 2102); 7 Nov 2018 11:23:17 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 7 Nov 2018 11:23:17 -0500
+Date: Wed, 7 Nov 2018 11:23:17 -0500 (EST)
+From: Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To: Felipe Balbi <balbi@kernel.org>
+cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Paul Elder <paul.elder@ideasonboard.com>,
+        Bin Liu <b-liu@ti.com>, <kieran.bingham@ideasonboard.com>,
+        <gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rogerq@ti.com>
+Subject: Re: [PATCH 4/6] usb: gadget: add functions to signal udc driver to
+ delay status stage
+In-Reply-To: <87r2fxtlrj.fsf@linux.intel.com>
+Message-ID: <Pine.LNX.4.44L0.1811071049370.1542-100000@iolanthe.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHL0uNEeNbmEoYAA--.115S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3Xw48JFy7Xw4fAr13Wr15urg_yoWxZrW3pa
+	y5Ka1a9rs5Jr4FyF1jyw4UCr1akw4fAFy7Jr95tr4UArs8J34vyFZxKryrZa4DA3yvqw12
+	yF4jvrZxWan0vFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1le2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6r1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4j6F4UMxvI42IY
+	6I8E87Iv6xkF7I0E14v26r4j6r4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUHc4S
+	DUUUU
+
+On Wed, 7 Nov 2018, Felipe Balbi wrote:
+
+> Hi,
+> 
+> Alan Stern <stern@rowland.harvard.edu> writes:
+> >> Alan Stern <stern@rowland.harvard.edu> writes:
+> >> > There's a similar race at the hardware level.  What happens if the
+> >> > controller receives a new SETUP packet and concurrently the driver is
+> >> > setting up the controller registers for a response to an earlier
+> >> > SETUP?  I don't know how real controllers handle this.
+> >> 
+> >> That's HW implementation detail. DWC3, for instance, will ignore the
+> >> TRBs and return me the status "setup packet pending". Then I just start
+> >> a new SETUP TRB.
+> >
+> > You mean the UDC hardware sets a "setup pending" flag in some register,
+> > and then ignores any attempts to do anything with ep0 until the driver
+> > clears this flag?
+> 
+> Yes, except that the "flag" is a status on the TRB itself (TRB is dwc3's
+> DMA transfer descriptor).
+
+Hmmm.  So there must be a mechanism for the driver to tell the hardware 
+that the endpoint's ring should start up again, right?  (I'm assuming 
+the controller stops the ring when the SETUP is received, to avoid 
+taking invalid actions for TRBs that are now out of date.)
+
+
+> >> > Another thing we should do is give function drivers a way to send a
+> >> > STALL response for the status stage.  Currently there's no way to do
+> >> > it, if a data stage is present.
+> >> 
+> >> Status stage can only be stalled if host tries to move data on the wrong
+> >> direction.
+> >
+> > The USB-2 spec disagrees.  See Table 8-7 in section 8.5.3.1 and the
+> > following paragraphs.  (Although, I can't see why a function would ever
+> > fail to complete the command sequence for a control-IN transfer after
+> > the data had already been sent.)
+> 
+> I can't see how we could ever STALL after returning the data requested
+> by the host. Seems like that wasn't well thought out.
+
+Yes, it doesn't make a lot of sense.  However, STALLing the status
+stage of a control-OUT transfer does make sense, so we should be able
+to do it.  The obvious approach is to call ep0's set_halt() method
+instead of submitting an explicit status request.
+
+
+> > Checking the length isn't enough.  A data stage can have 0 length.
+> 
+> apologies, I meant wLength, like so:
+> 
+> 	len = le16_to_cpu(ctrl->wLength);
+> 	if (!len) {
+> 		dwc->three_stage_setup = false;
+> 		dwc->ep0_expect_in = false;
+> 		dwc->ep0_next_event = DWC3_EP0_NRDY_STATUS;
+> 	} else {
+> 		dwc->three_stage_setup = true;
+> 		dwc->ep0_expect_in = !!(ctrl->bRequestType & USB_DIR_IN);
+> 		dwc->ep0_next_event = DWC3_EP0_NRDY_DATA;
+> 	}
+
+Presumably you invert the value of ep0_expect_in and set ep0_next_event
+to DWC3_EP0_NRDY_STATUS when the next (data-stage) request is submitted
+for ep0.  Okay.
+
+> special return values would be rendered uncessary if there's agreement
+> that status stage is always explicit. Why would need
+> USB_GADGET_DELAYED_STATUS if every case returns that?
+
+Agreed.
+
+> >> > There's also the fact that requests can specify a completion handler, but only 
+> >> > the data stage request would see its completion handler called (unless we 
+> >> > require UDCs to call completion requests at the completion of the status 
+> >> > stage, but I'm not sure that all UDCs can report the event to the driver, and 
+> >> > that would likely be useless as nobody needs that feature).
+> >> 
+> >> you still wanna know if the host actually processed your status
+> >> stage. udc-core can (and should) provide a generic status stage
+> >> completion function which, at a minimum, aids with some tracepoints.
+> >
+> > Helping with tracepoints is fine.  However, I don't think function 
+> > drivers really need to know whether the status stage was processed by 
+> > the host.  Can you point out any examples where such information would 
+> > be useful?
+> 
+> If you know your STATUS stage completed, you have a guarantee that your
+> previous control transfer is complete. It's a very clear signal that you
+> should prepare for more control transfers.
+
+That doesn't seem to make sense, because in reality you don't have
+this guarantee.  Consider the following scenario: The host starts a
+control-IN transfer.  You send the data-stage request succesfully and
+then submit the status-stage request.  That request will complete
+before the host receives the ACK for its 0-length status OUT
+transaction.  In fact, the host may never receive that ACK and so the
+transfer may never complete.
+
+Besides, you don't need a signal (clear or otherwise) to prepare for
+more control transfers.  You should start preparing as soon as the
+status-stage request has been submitted.  At that point, what else is
+there for you to do?
+
+For that matter, you should be prepared to receive a new setup callback 
+at any time.  The host doesn't have to wait for an old control transfer 
+to complete before starting a new one.
+
+I just don't see any value in knowing the completion code of a
+status-stage request.
+
+> >> > To simplify function drivers, do you think the above proposal of adding a flag 
+> >> > to the (data stage) request to request an automatic transition to the status 
+> >> > stage is a good idea ? We could even possibly invert the logic and transition 
+> >> 
+> >> no, I don't think so. Making the status phase always explicit is far
+> >> better. UDCs won't have to check flags, or act on magic return
+> >> values. It just won't do anything until a request is queued.
+> >
+> > I don't agree.  This would be a simple test in a localized area (the 
+> > completion callback for control requests).  It could even be 
+> > implemented by a library routine; the UDC driver would simply have to 
+> > call this routine immediately after invoking the callback.
+> 
+> I don't follow what you mean here.
+
+Suppose we have a core library routine like this:
+
+void usb_gadget_control_complete(struct usb_gadget *gadget,
+		unsigned int no_implicit_status, int status)
+{
+	struct usb_request *req;
+
+	if (no_implicit_status || status != 0)
+		return;
+
+	/* Send an implicit status-stage request for ep0 */
+	req = usb_ep_alloc_request(gadget->ep0, GFP_ATOMIC);
+	if (req) {
+		req->length = 0;
+		req->no_implicit_status = 1;
+		req->complete = /* req's deallocation routine */
+		usb_ep_queue(gadget->ep0, req, GFP_ATOMIC);
+	}
+}
+
+Then all a UDC driver would need to do is call 
+usb_gadget_control_complete() after invoking a control request's 
+completion handler.  The no_implicit_status and status arguments would 
+be taken from the request that was just completed.
+
+With this one call added to each UDC, all the existing function drivers
+would work correctly.  Even though they don't explicitly queue
+status-stage requests, the new routine will do so for them,
+transparently.  Function drivers that want to handle their own
+status-stage requests explicitly will merely have to set the
+req->no_implicit_status bit.
+
+(We might or might not need to watch out for 0-length control-OUT 
+transfers.  Function drivers _do_ queue status-stage requests for 
+those.)
+
+Alan Stern

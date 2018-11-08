@@ -1,0 +1,161 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:54 -0000
+Received: from icoremail.net (unknown [209.85.215.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3wg3FeNbyjxZAQ--.27183S3;
+	Thu, 08 Nov 2018 00:39:23 +0800 (CST)
+Received: from mail-pg1-f181.google.com (unknown [209.85.215.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH70o2FeNbWlsYAA--.332S3;
+	Thu, 08 Nov 2018 00:39:18 +0800 (CST)
+Received: by mail-pg1-f181.google.com with SMTP id c10-v6so7541038pgq.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:39:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=oxAyYKk4ZUdTcgphyhxBz3Mw8M/Glz83iSK7x/ZcXHo=;
+        b=glc+6Vdt/vyx95GeuEL74I94l7vZ1p1phLpNQ7V40kai3Rork+1D1IDicudPlIINO9
+         TekOICaHpnjH6csRYoCNUm/X76lK2U0WqgfjH40Ns4+x0Z75mhLIWQqZscLwmJrZhM6D
+         Uj06NKDLZugoMb5toiob4a62a2f6xlCqGeWenMXXBCjNmdwl6jC/QNrKHSV2m451Ljg7
+         RXNIrVJYO+fUOMhJKSzG8EZph3Q5foAtL/YvHE6zEaImR5OnibYzn2/NG6DsTtaNrBDY
+         URWZepJJUmX2LR+awGWmS0VZytLTbwqBgAGBX9MqLWzLtJkEJLROQjOqGjp0C5uIx6xk
+         pSkA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+X-Gm-Message-State: AGRZ1gIkk1p4G/jXNWDdJMv9B6v3OjK7WpqsyJZjQqHQFx1LCLEXjoHW
+	maOJC4kmpA1nVkmsKYTmoZKkMz8E/s1wBabKucuVLEoQvrHRWNIGSA==
+X-Received: by 2002:a62:1c53:: with SMTP id c80-v6mr928008pfc.14.1541608757954;
+        Wed, 07 Nov 2018 08:39:17 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5463005pjt;
+        Wed, 7 Nov 2018 08:39:17 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dzoKcjFY6u2bp+eD5vwPr2s3Zk7GC8g15pz8ccsrspmiqJCd5NpIuIzibojWmSWIruULet
+X-Received: by 2002:a63:4745:: with SMTP id w5mr768478pgk.377.1541608757167;
+        Wed, 07 Nov 2018 08:39:17 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541608757; cv=none;
+        d=google.com; s=arc-20160816;
+        b=T0TAF7FMw0K+4TL0+d3liQW89amNPAg2Y0TVEst9kChr82om4d0ryByv2VwUTSzPyq
+         5i06gHMVXbQ3HysY1vUlfVqBfx5uAEWo9FHwTZZ67aWy3EQB1HuESD+36iTsT0ipRS7a
+         cs/f9cqmSXmRYjJ7kn/KruM9I/iFM6FGoUML9aSzhF/kVQ3VMHVn3BLPHhX4kbd95iaj
+         7vpT6rYp/GYFgq3U8KmM4SeOJrk2YaPqFFsdrHj5nS4ILoUCbwx8y0BNf8lBmqK74epM
+         F49YZeHFzkwg2QKQYX0bPgO+W7hJYoyy8jOyWco4pfuSXqzPeAKrlQlT8hLQC0CjwqGh
+         qSlg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=oxAyYKk4ZUdTcgphyhxBz3Mw8M/Glz83iSK7x/ZcXHo=;
+        b=zKKXrv0n3oEfglm5FVjhTi/T5Xhl9tfz1ir/K4NPfnAOkS1M/NCOjfdWFoKWP1kJr8
+         lJeJQ95HrTtXOVXImDzlV3VMqBJOsNMnoyeQiHLoeTKIZhjA5ES+oDMDzion4029nhdT
+         HDnEjQI4vrrYn5tTuHhGdjD/CrbsZ53b7ExD3id0iDTcqCt8bFZ4IE5LFEhNEcwagPQF
+         o97tk/Mu1IZ0Ym5UPPA5mNb5t0WQOZlSGjMgjNCxpAgb0mtqamPltwa0SzJa1UQsvCpb
+         08rryvaUMJZHRqXF/weFcaanUq3IDt8QgGnwS49RQ/F9KIFIPMpMuKFuo0WIjFlAEDxt
+         wWNw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id u12-v6si1073968plz.196.2018.11.07.08.39.01;
+        Wed, 07 Nov 2018 08:39:17 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731136AbeKHCJz (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:09:55 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41692 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727312AbeKHCJz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:09:55 -0500
+Received: by mail-wr1-f67.google.com with SMTP id x12-v6so18101554wrw.8
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 08:38:47 -0800 (PST)
+X-Received: by 2002:a5d:69ce:: with SMTP id s14-v6mr954531wrw.177.1541608726500;
+        Wed, 07 Nov 2018 08:38:46 -0800 (PST)
+Received: from localhost.localdomain ([151.35.177.55])
+        by smtp.gmail.com with ESMTPSA id 137-v6sm2122692wmo.43.2018.11.07.08.38.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 08:38:45 -0800 (PST)
+Date: Wed, 7 Nov 2018 17:38:41 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: lizefan@huawei.com, linux-kernel@vger.kernel.org,
+        luca.abeni@santannapisa.it, claudio@evidence.eu.com,
+        tommaso.cucinotta@santannapisa.it, bristot@redhat.com,
+        mathieu.poirier@linaro.org, cgroups@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
+        longman@redhat.com
+Subject: Re: [PATCH v5 3/5] cgroup/cpuset: make callback_lock raw
+Message-ID: <20181107163841.GA18091@localhost.localdomain>
+References: <20180903142801.20046-1-juri.lelli@redhat.com>
+ <20180903142801.20046-4-juri.lelli@redhat.com>
+ <20180925143416.GD25664@localhost.localdomain>
+ <20181107155330.GA2509588@devbig004.ftw2.facebook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107155330.GA2509588@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH70o2FeNbWlsYAA--.332S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrKw13Kw4rXF1xGrWkCFW3Wrg_yoWDtFX_u3
+	4kJF4xC3yUGr429r43Jrn8ZrsIgF97Gry7GFWFyr1xA34DZr9rXanxGas3X3WxWa10yFZr
+	ua98Zayvv3ZrWjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbq8YjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VWUMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8JVWxJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8JVW8Jr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCbIYCTnIWIevJa73UjIFyTuYvjxUqM7K
+	UUUUU
+
+Hi,
+
+On 07/11/18 07:53, Tejun Heo wrote:
+> Hello,
+> 
+> On Tue, Sep 25, 2018 at 04:34:16PM +0200, Juri Lelli wrote:
+> > It would be great if you could please have a look at the proposed change
+> > below (and the rest of the set of course :-).
+> 
+> Yeah, looks good to me.  Please feel free to add
+> 
+>  Acked-by: Tejun Heo <tj@kernel.org>
+
+Thanks!
+
+> > Another bit that I'd be more comfortable after hearing your word on it
+> > is this one (discussed over 5/5):
+> > 
+> > https://lore.kernel.org/lkml/20180925130750.GA25664@localhost.localdomain/
+> 
+> Can you please loop Waiman Long <longman@redhat.com> into discussion?
+> He's working on cgroup2 cpuset support which might collide.
+
+Sure, I've been originally working on this on top of his series, but
+didn't try with latest version. Hopefully the two series don't generate
+too much collisions. I'll try to find some time soon to check again.
+
+In the meantime, Waiman Long, how do you feel about it? :-)
+
+Thread starts at (you if missed it)
+
+https://lore.kernel.org/lkml/20180903142801.20046-1-juri.lelli@redhat.com/
+
+Best,
+
+- Juri

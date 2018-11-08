@@ -1,0 +1,234 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:27 -0000
+Received: from icoremail.net (unknown [209.85.210.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX1_ETuNbN5xaAQ--.27334S3;
+	Thu, 08 Nov 2018 04:44:53 +0800 (CST)
+Received: from mail-pf1-f170.google.com (unknown [209.85.210.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3W0fBTuNbHD0ZAA--.1003S3;
+	Thu, 08 Nov 2018 04:44:49 +0800 (CST)
+Received: by mail-pf1-f170.google.com with SMTP id u10-v6so2461270pfn.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:44:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:message-id:cc:reply-to:in-reply-to:references:to:subject
+         :git-commit-id:robot-id:robot-unsubscribe:mime-version
+         :content-transfer-encoding:content-disposition:sender:precedence
+         :list-id;
+        bh=UCqE2QHIGfiG2eRcV3h5pyoUYwqF0ThTzZyPJT7Uq1M=;
+        b=KyfATTuz2G32NHC9+4smaXM36ocO1lFfxWvWZ8lCLbPIVIVjGw/610rHvkFl1O+s7Q
+         o+Vmloooe/a3vQLU1dQO2bPY+Vd5vEux8sIo9qpMvjRBWt3JkAiMhPUu+oCD5zBQm3Rb
+         xf9tHdWoV3vx03y7v/pPih4ERXJTCCHFnrpVhuJ2YmX36nSmekMASQK/2Wh7Jt0l2iWH
+         m85eNt2j+Dt1IRNYktQBaMNiBgJzc0IYFEmhV3S1v+pHIC9mK4uylVQPwvsH920YjOmR
+         IMa0NXo1UJ4lMvUhHiOM2Kgc9APp7vxd2VveWCe3xql7B7L36KbJ4vb/zeG6gMymDlMN
+         YXQg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLhTx+LIZn1v24aoVRorEECozYOuVpuTN323WLWTVccUR0n0Myt
+	GQ5oP7Zi9wVjMXJ1dzHDNrHDKJYtARSUmKM8jZItrzNCI3ycSNXCZA==
+X-Received: by 2002:a62:c20b:: with SMTP id l11-v6mr1809143pfg.251.1541623488808;
+        Wed, 07 Nov 2018 12:44:48 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5723211pjt;
+        Wed, 7 Nov 2018 12:44:47 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cKUfKaeM9UIlVemcOC6Od1QdZ/2c9ARrluWbNJly5N2eV9P5v7iHKxMQphehBXSxPMd23X
+X-Received: by 2002:a63:2b01:: with SMTP id r1mr1499326pgr.432.1541623487836;
+        Wed, 07 Nov 2018 12:44:47 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541623487; cv=none;
+        d=google.com; s=arc-20160816;
+        b=LSYps+1YETD1YmfNnVTR9YJaA8JHJTSLPk69n4cfKTHXu8h7m6hXB1HS0ZaJivJjb3
+         5R19VgqJkTmhmdULmfyOISVFJkEAZqdYbJtq0sGh2c4VOQ2bNZjg+gssXznESDR2yOmj
+         hGWcB49gjc+YhwJNDFt3dE1FG54N3Z+9zLfDJEFp9QFyxqlI2Owl8vCgchnJc5Bk5Jsb
+         241BX+RrFYSxWmItNpPYMl2A5yffXO16XEnC+ZHPbUUxyj73uEJwCmQrgl9+O/1+sBJu
+         zI90kuzVGNWx2OSa5kL5QwC+FfY4b5wYGTmxhV+hX+jNvzC6MpNGq/c3yvxgETpk8XJp
+         NORg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-disposition
+         :content-transfer-encoding:mime-version:robot-unsubscribe:robot-id
+         :git-commit-id:subject:to:references:in-reply-to:reply-to:cc
+         :message-id:from:date;
+        bh=UCqE2QHIGfiG2eRcV3h5pyoUYwqF0ThTzZyPJT7Uq1M=;
+        b=KTbzLAZFe0uQP4VMmuObSL8v6Rxeo5OrMrkrKSgmvTsdPSaJ6Y+yU+M9VWR4AGxTHA
+         CX8Y6wJbbRqWICQIgH1XjCh63e8hDpTWQXSeWgiaSyusLFUrbLY8LqykOIHcEE3BIaOp
+         eDY22Enn7FEwI2E6SQV4oB0SDgsAHex7h3Qq34c1j2pUVUSbli/vTpevIMyUyMQFNcKj
+         Nvvg/2lnO3vMhz2Bj8M9mhRoHjBPTlaSfpTe/tUA8Oi9mZ9JDGp53sfQqYci5BrAhdSc
+         YfipkU8uy+cxeF69nxToI3qNAcclE2o+QSlOc+7+zNnCSef3cewn6pjyXwCSftf8nCjN
+         ovvQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id c41-v6si1699288plj.194.2018.11.07.12.44.31;
+        Wed, 07 Nov 2018 12:44:47 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727078AbeKHGQO (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:16:14 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:43379 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726517AbeKHGQO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:16:14 -0500
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id wA7Kgurb1606004
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 7 Nov 2018 12:42:56 -0800
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id wA7KgrGp1605994;
+        Wed, 7 Nov 2018 12:42:53 -0800
+Date: Wed, 7 Nov 2018 12:42:53 -0800
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From: "tip-bot for Woods, Brian" <tipbot@zytor.com>
+Message-ID: <tip-dedf7dce4cec5c0abe69f4fa6938d5100398220b@git.kernel.org>
+Cc: bp@suse.de, puwen@hygon.cn, linux@roeck-us.net,
+        bhelgaas@google.com, clemens@ladisch.de, x86@kernel.org,
+        linux-hwmon@vger.kernel.org, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, qianyue.zj@alibaba-inc.com,
+        jdelvare@suse.com, linux-pci@vger.kernel.org, brian.woods@amd.com,
+        tglx@linutronix.de, hpa@zytor.com, Brian.Woods@amd.com,
+        mingo@redhat.com
+Reply-To: linux@roeck-us.net, bhelgaas@google.com, bp@suse.de,
+          puwen@hygon.cn, clemens@ladisch.de, mingo@kernel.org,
+          linux-hwmon@vger.kernel.org, x86@kernel.org,
+          qianyue.zj@alibaba-inc.com, linux-kernel@vger.kernel.org,
+          tglx@linutronix.de, brian.woods@amd.com,
+          linux-pci@vger.kernel.org, jdelvare@suse.com, hpa@zytor.com,
+          mingo@redhat.com, Brian.Woods@amd.com
+In-Reply-To: <20181106200754.60722-2-brian.woods@amd.com>
+References: <20181106200754.60722-2-brian.woods@amd.com>
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/amd-nb] hwmon/k10temp, x86/amd_nb: Consolidate shared
+ device IDs
+Git-Commit-ID: dedf7dce4cec5c0abe69f4fa6938d5100398220b
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+X-Spam-Status: No, score=1.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        DATE_IN_FUTURE_96_Q,URIBL_SBL,URIBL_SBL_A autolearn=no
+        autolearn_force=no version=3.4.2
+X-Spam-Level: *
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on terminus.zytor.com
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3W0fBTuNbHD0ZAA--.1003S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxGFW8JF4rWw1xAw1kGw1ftFb_yoW5Kr1DpF
+	1qyFykKr45JFy7A3WDKr1kury2van5C34akF9xW3yYvFy7tw4rXFn8Zr43Ar12qF4qq3y5
+	XasrGa10g3WDXaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6F1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bn
+	FALUUUUU=
+
+Commit-ID:  dedf7dce4cec5c0abe69f4fa6938d5100398220b
+Gitweb:     https://git.kernel.org/tip/dedf7dce4cec5c0abe69f4fa6938d5100398220b
+Author:     Woods, Brian <Brian.Woods@amd.com>
+AuthorDate: Tue, 6 Nov 2018 20:08:14 +0000
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Wed, 7 Nov 2018 21:28:04 +0100
+
+hwmon/k10temp, x86/amd_nb: Consolidate shared device IDs
+
+Consolidate shared PCI_DEVICE_IDs that were scattered through k10temp
+and amd_nb, and move them into pci_ids.
+
+Signed-off-by: Brian Woods <brian.woods@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+CC: Bjorn Helgaas <bhelgaas@google.com>
+CC: Clemens Ladisch <clemens@ladisch.de>
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Jean Delvare <jdelvare@suse.com>
+CC: Jia Zhang <qianyue.zj@alibaba-inc.com>
+CC: <linux-hwmon@vger.kernel.org>
+CC: <linux-pci@vger.kernel.org>
+CC: Pu Wen <puwen@hygon.cn>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: x86-ml <x86@kernel.org>
+Link: http://lkml.kernel.org/r/20181106200754.60722-2-brian.woods@amd.com
+---
+ arch/x86/kernel/amd_nb.c | 3 +--
+ drivers/hwmon/k10temp.c  | 9 +--------
+ include/linux/pci_ids.h  | 2 ++
+ 3 files changed, 4 insertions(+), 10 deletions(-)
+
+diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+index a6eca647bc76..19d489ee2b1e 100644
+--- a/arch/x86/kernel/amd_nb.c
++++ b/arch/x86/kernel/amd_nb.c
+@@ -11,13 +11,12 @@
+ #include <linux/errno.h>
+ #include <linux/export.h>
+ #include <linux/spinlock.h>
++#include <linux/pci_ids.h>
+ #include <asm/amd_nb.h>
+ 
+ #define PCI_DEVICE_ID_AMD_17H_ROOT	0x1450
+ #define PCI_DEVICE_ID_AMD_17H_M10H_ROOT	0x15d0
+-#define PCI_DEVICE_ID_AMD_17H_DF_F3	0x1463
+ #define PCI_DEVICE_ID_AMD_17H_DF_F4	0x1464
+-#define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3 0x15eb
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
+ 
+ /* Protect the PCI config register pairs used for SMN and DF indirect access. */
+diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
+index 2cef0c37ff6f..bc6871c8dd4e 100644
+--- a/drivers/hwmon/k10temp.c
++++ b/drivers/hwmon/k10temp.c
+@@ -23,6 +23,7 @@
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
++#include <linux/pci_ids.h>
+ #include <asm/amd_nb.h>
+ #include <asm/processor.h>
+ 
+@@ -41,14 +42,6 @@ static DEFINE_MUTEX(nb_smu_ind_mutex);
+ #define PCI_DEVICE_ID_AMD_15H_M70H_NB_F3	0x15b3
+ #endif
+ 
+-#ifndef PCI_DEVICE_ID_AMD_17H_DF_F3
+-#define PCI_DEVICE_ID_AMD_17H_DF_F3	0x1463
+-#endif
+-
+-#ifndef PCI_DEVICE_ID_AMD_17H_M10H_DF_F3
+-#define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3	0x15eb
+-#endif
+-
+ /* CPUID function 0x80000001, ebx */
+ #define CPUID_PKGTYPE_MASK	0xf0000000
+ #define CPUID_PKGTYPE_F		0x00000000
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 69f0abe1ba1a..78d5cd29778a 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -545,6 +545,8 @@
+ #define PCI_DEVICE_ID_AMD_16H_NB_F4	0x1534
+ #define PCI_DEVICE_ID_AMD_16H_M30H_NB_F3 0x1583
+ #define PCI_DEVICE_ID_AMD_16H_M30H_NB_F4 0x1584
++#define PCI_DEVICE_ID_AMD_17H_DF_F3	0x1463
++#define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3 0x15eb
+ #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
+ #define PCI_DEVICE_ID_AMD_LANCE		0x2000
+ #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001

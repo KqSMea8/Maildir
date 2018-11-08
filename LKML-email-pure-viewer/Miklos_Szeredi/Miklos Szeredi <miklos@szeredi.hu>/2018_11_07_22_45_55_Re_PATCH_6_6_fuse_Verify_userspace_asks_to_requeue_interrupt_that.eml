@@ -1,0 +1,182 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:13 -0000
+Received: from icoremail.net (unknown [209.85.210.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX_vF+uJbvZlYAQ--.26634S3;
+	Wed, 07 Nov 2018 22:46:30 +0800 (CST)
+Received: from mail-pf1-f172.google.com (unknown [209.85.210.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXeUXE+uJbsuUXAA--.6316S3;
+	Wed, 07 Nov 2018 22:46:28 +0800 (CST)
+Received: by mail-pf1-f172.google.com with SMTP id u13-v6so7793491pfm.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:46:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :in-reply-to:references:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=5HtoEEObkIbud56Wa3SqTaoQbCyHLlq31Jxs9qh14aI=;
+        b=rijHhFBwZ1sC4SkrJ3WA3LjFfxibSDMsUvKJ14kQShi9Osa8M83yC1EdqBVPgKNYFt
+         cJBZGaWygloxNm4B6bQT6vDJnTAH+DmaNFqrxquGm4W+rPL3O+fMAxl/VVHEzVja2rDc
+         ul5OaNcYXXpxWFXHqtDIi5d8GNVfaG50YcT0yMKGzJmaaxagP9kGp4S+R/sM48QvYiLh
+         bvpGsu7VaBhMiiQrsvmiFImrW5vocwwqMEXkR3OOIUksqNZI9xaXZ4ofVbdmCnWF0ZcI
+         xWm5TwHycTMgcvArkkzVbaxGdjC/L7n1stDU1dmPG7Zl35ENLiNn+TcPulrvkoBwCZE8
+         rO+w==
+X-Gm-Message-State: AGRZ1gKfdST7hrj3I+IvItJtFaQ6OJUM0CJViRprjbtwAP+oTuzHyVz2
+	10Bn26YtN6rZecfwYWRODsDvXE3frtMNP+dXyx5UgwbTiYP5+x2QLQ==
+X-Received: by 2002:a62:42dc:: with SMTP id h89-v6mr535200pfd.0.1541601988513;
+        Wed, 07 Nov 2018 06:46:28 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5334777pjt;
+        Wed, 7 Nov 2018 06:46:27 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fPyo+2Gel3VORS9lyrfGM2et5uFSgW2w/ypo2Ip+LgeWJAcDcgI2BklVjeUA4ouRpU9mXR
+X-Received: by 2002:a17:902:ac8f:: with SMTP id h15-v6mr519479plr.46.1541601987697;
+        Wed, 07 Nov 2018 06:46:27 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541601987; cv=none;
+        d=google.com; s=arc-20160816;
+        b=wBehCaI81A2WYFu5gs98Y+Cji3c67j/ocUBrLhFGXadhaSelz1lu1xs5nXafyJ5Lgf
+         yhZ1BN/HjaaBUKsQb514Vom3mMavBePzteF7KHvFAQ/AIb/9mcLOT0ktvCm/xGBDFUjn
+         qWfg4F/LqgNjpW2hBRQJT46gU0fgQYMRbALhLnC+ORygyCrnZntf9GUkcXelm4aG/6k2
+         qxZYMvVDfBie+jdSWkOrv4iFnslG0geNtlEsT5ex19vLm/czacS/2pVvLNX8aWBUmU8z
+         LoQ+YW+Hy4vCsQJ7KqkNpD61hh2bNcE53CZBpsdViOZZBD6FciuaX6gowcPeU8y9SC9G
+         e0aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :references:in-reply-to:mime-version:dkim-signature;
+        bh=5HtoEEObkIbud56Wa3SqTaoQbCyHLlq31Jxs9qh14aI=;
+        b=NaYgb4ifmWYMcIYnianAhHHz0/38c8W8q3ZHsB8AneIP40UwvFAxC1xxa9vdmQzMrW
+         bDq+DPDBOe1acNE2vP5GpdzjJn+TtVkdpC8N1hEub4wWWg2y/ONTH6DzrSrRc/2gtRr8
+         Ujac8IqROr2AofUgKFFYhpQe1SzdZudQA3GMDz/a2sja0d5zGcPiqC9IZICXeQ8ztXNX
+         5G0fgFklTyZueSqUoKjkVSeY8gnpMqYpnPhtrn+PHQ6psnqOomdhQlZS1u32Ac+I4CyU
+         2f1ddkdRHlTJ3EtcV6sx3ThRYQ/gyqpgpICF22M/TjaQSK+vsTgl/pR9fAU5DK0cuaYY
+         w+Fg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=temperror (no key for signature) header.i=@szeredi.hu header.s=google header.b=ljTooiTT;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id o1-v6si821612plk.304.2018.11.07.06.46.12;
+        Wed, 07 Nov 2018 06:46:27 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731095AbeKHAQg (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:16:36 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34744 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727709AbeKHAQg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:16:36 -0500
+Received: by mail-io1-f65.google.com with SMTP id d80-v6so12078851iof.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 06:45:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=5HtoEEObkIbud56Wa3SqTaoQbCyHLlq31Jxs9qh14aI=;
+        b=ljTooiTTEcSfTTWoun1kg/asmDKrlz9HLUytOVsRRHKm+qhrNSQUK4V8VYPGr4izth
+         sZu9kW57euF4mGEB8uBYR6ZgmdPdD5Ev6rgaZpYoKpyRyYgCeMxf2h6NB1giax3iOM+y
+         MBhTMpQ1br4y7nQ6ck1eLBZuymiP0cCwHQL0w=
+X-Received: by 2002:a5e:8b42:: with SMTP id z2-v6mr377479iom.144.1541601956953;
+ Wed, 07 Nov 2018 06:45:56 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a6b:ac42:0:0:0:0:0 with HTTP; Wed, 7 Nov 2018 06:45:55 -0800 (PST)
+X-Originating-IP: [212.96.48.140]
+In-Reply-To: <6f27b5a5-0092-b23f-b28e-341ae093a241@virtuozzo.com>
+References: <154149586524.17764.5252013294539109287.stgit@localhost.localdomain>
+ <154149666097.17764.12092615786683141764.stgit@localhost.localdomain>
+ <CAJfpeguDTsG7vEAhH=CHp43vJak70VzR8YH8K6=vZAUXCZZeEQ@mail.gmail.com> <6f27b5a5-0092-b23f-b28e-341ae093a241@virtuozzo.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Wed, 7 Nov 2018 15:45:55 +0100
+Message-ID: <CAJfpegtbwfioa0gv4j1SoRu3X8vX3kZUQC=QJo=dcfOD2OjKzw@mail.gmail.com>
+Subject: Re: [PATCH 6/6] fuse: Verify userspace asks to requeue interrupt that
+ we really sent
+To: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXeUXE+uJbsuUXAA--.6316S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7ur13Jr1ktF1fJr4DtFW5Wrg_yoW8Kr4kpF
+	4ayFs09w4qqrWUK397X3W8Cr1xXanaga43Grn3Jr1fZw4Yqr1avrnrW3yUG3s7Xrs3Wr1Y
+	kr4q9393Wa45XaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4wCY1x
+	0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VW5XwCY0x0I
+	x7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804x
+	Wl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUCVW8JbIYCTnIWIevJa73UjIFyTuYvjxUQWv3DUUUU
+
+On Wed, Nov 7, 2018 at 3:25 PM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+> On 07.11.2018 16:55, Miklos Szeredi wrote:
+>> On Tue, Nov 6, 2018 at 10:31 AM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>>> When queue_interrupt() is called from fuse_dev_do_write(),
+>>> it came from userspace directly. Userspace may pass any
+>>> request id, even the request's we have not interrupted
+>>> (or even background's request). This patch adds sanity
+>>> check to make kernel safe against that.
+>>
+>> Okay, I understand this far.
+>>
+>>> The problem is real interrupt may be queued and requeued
+>>> by two tasks on two cpus. This case, the requeuer has not
+>>> guarantees it sees FR_INTERRUPTED bit on its cpu (since
+>>> we know nothing about the way userspace manages requests
+>>> between its threads and whether it uses smp barriers).
+>>
+>> This sounds like BS. There's an explicit  smp_mb__after_atomic()
+>> after the set_bit(FR_INTERRUPTED,...).  Which means FR_INTERRUPTED is
+>> going to be visible on all CPU's after this, no need to fool around
+>> with setting FR_INTERRUPTED again, etc...
+>
+> Hm, but how does it make the bit visible on all CPUS?
+>
+> The problem is that smp_mb_xxx() barrier on a cpu has a sense
+> only in pair with the appropriate barrier on the second cpu.
+> There is no guarantee for visibility, if second cpu does not
+> have a barrier:
+>
+>   CPU 1                  CPU2                        CPU3                       CPU4                        CPU5
+>
+>   set FR_INTERRUPTED     set FR_SENT
+>   <smp mb>               <smp mb>
+>   test FR_SENT (== 0)    test FR_INTERRUPTED (==1)
+>                          list_add[&req->intr_entry]  read[req by intr_entry]
+>                                                      <place to insert a barrier>
+>                                                      goto userspace
+>                                                      write in userspace buffer
+>                                                                                 read from userspace buffer
+>                                                                                 write to userspace buffer
+>                                                                                                              read from userspace buffer
+>                                                                                                              enter kernel
+>                                                                                                              <place to insert a barrier>
+>                                                                                                              test FR_INTERRUPTED <- Not visible
+>
+> The sequence:
+>
+> set_bit(FR_INTERRUPTED, ...)
+> smp_mb__after_atomic();
+> test_bit(FR_SENT, &req->flags)
+>
+> just guarantees the expected order on CPU2, which uses <smp mb>,
+> but CPU5 does not have any guarantees.
+
+What you are missing is that there are other things that synchronize
+memory access besides the memory barrier.  In your example the
+ordering will be guaranteed by the fiq->waitq.lock in
+queue_interrupt() on CPU2: the set_bit() cannot move past the one-way
+barrier provided by the spin_unlock().
+
+Thanks,
+Miklos

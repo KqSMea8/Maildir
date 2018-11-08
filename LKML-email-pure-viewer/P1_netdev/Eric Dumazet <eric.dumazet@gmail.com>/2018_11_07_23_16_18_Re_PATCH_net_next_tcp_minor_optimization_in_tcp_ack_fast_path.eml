@@ -1,0 +1,167 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:28 -0000
+Received: from icoremail.net (unknown [209.85.215.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_4_gAeNbPMRYAQ--.58440S3;
+	Wed, 07 Nov 2018 23:16:49 +0800 (CST)
+Received: from mail-pg1-f172.google.com (unknown [209.85.215.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXfkrfAeNbdwQYAA--.13497S3;
+	Wed, 07 Nov 2018 23:16:47 +0800 (CST)
+Received: by mail-pg1-f172.google.com with SMTP id i4-v6so7437617pgq.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:16:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding:sender:precedence
+         :list-id;
+        bh=s3uQNLZ0xnXl8aHoNxOz/s0JQbfR9Ehd2ASnbJ1VF0Q=;
+        b=MnSUtsD1hH3kiX0hosoYDXfvwEOhtbTde5oeZ+adVB3GGBMW1dtjDOK7IYVmpCKumS
+         79e/Lfs439eGH9zV7tEZoxWsqsx44d/mKscMjKxJ5tzR6vUw99I9e1MFeNYqW9ruRb/0
+         LFGu2Rd/xOz6nkscUi6Zp3CbUygglVZFtSixVuT6gCSu0O0IGQobnxRorK2o9B+5xrAW
+         MbUaQW1sWSpZO1wW+iIWSd0L4vXtMHcQejD6nl14d0K0RscHpuqTuPc4O/Nq4kT2o7f6
+         4H+Lsprm4nuzdjZeUG8NBJAoi9PX3gCm0wospNzgIBFak3hNyH/v/zimDMQ8bDmjFGXZ
+         900w==
+X-Gm-Message-State: AGRZ1gJsvlQlxQVDyfH8BIrbqfWp3HMHWH3yVifKx7ulEXEhGQHdVBpJ
+	D4TJheDUHL7hne8oawqp+i8qRaij7Swle2cEXI1V1h80wXV6lRvF+w==
+X-Received: by 2002:a63:1d10:: with SMTP id d16-v6mr512033pgd.228.1541603806834;
+        Wed, 07 Nov 2018 07:16:46 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5369643pjt;
+        Wed, 7 Nov 2018 07:16:46 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cxWXoE/T3ahWDmelikFUD8d39t+PCQfdxcezLLARifUZZby+9P/9V8Lg3zgq+euLbAwJ8Y
+X-Received: by 2002:a62:c60a:: with SMTP id m10-v6mr612081pfg.15.1541603806129;
+        Wed, 07 Nov 2018 07:16:46 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541603806; cv=none;
+        d=google.com; s=arc-20160816;
+        b=QVW/dWiW0xYib7QiyV2bCCkCG/Uh8+m6+3NlTaYQZ7D84hrRtRBesC7QqLZu9S8cM6
+         6FVsXP1CxhNxS98qoO51zvPSJfm6WHTDdtYiU+Wb73qHsEvEOfyjqcRXwDDu3HVjrJuL
+         0ghkZza/KN0AX31Qpj8ga954OVf8GLE4dR7Rvqpt9rQQKc4O5FrejfzZop/l4qFtsEpL
+         FFGjLVXaGtBx1AihsyWwsjOeDowzAxESrNy+OpF+7JeaIfX4e2t2gEE7HXJV2egg2iiA
+         JAtKpLUxHKy3KiqQ5VrqzdqGZVG/f6RQbsjmU19gtV6RzFMExQSqJrReHTcEIhnJ/xAN
+         L2lA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:dkim-signature;
+        bh=s3uQNLZ0xnXl8aHoNxOz/s0JQbfR9Ehd2ASnbJ1VF0Q=;
+        b=F6Xl33Ws9Ldb5yF5G2Sr5lrcS0Enro3uWC5rSbs7Nt6Mf+YXk66hCKH3xJ5VHjI2jr
+         g3rndmMZ/NTlhHtSYRFuw37vn66vODFV/cd8v2LkjAk2Mkpw/P3ikVjNP5sIrLcz504W
+         I7A351vnL5RisYv41XbIM0oea/Dl1cUoAW/L8x2MKiNX5aQKzqYOqt4N1h49mf7XSr4J
+         8zxJiB0Zem+p4znHxkvIbDbW0f2wJUEq2GSvMnTNo3QCkSyowq9znQ0R5kEtv326KSSO
+         Rer8DgHUHNpHPgB3YmgRblYihpV/WiQjOq2dyY/lOCQMkPZ2C+ruHT+7B7K6Ob9KJQmG
+         AeZg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=ENYXm2rW;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id cf14-v6si889629plb.422.2018.11.07.07.16.30;
+        Wed, 07 Nov 2018 07:16:46 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728092AbeKHArI (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:47:08 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37205 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbeKHArI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:47:08 -0500
+Received: by mail-pg1-f194.google.com with SMTP id c10-v6so7445877pgq.4;
+        Wed, 07 Nov 2018 07:16:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=s3uQNLZ0xnXl8aHoNxOz/s0JQbfR9Ehd2ASnbJ1VF0Q=;
+        b=ENYXm2rWOWTSdV3CIfo1EuhzzEREub2s7M+wYx9HXMihpf1Phut1+p8muL6w3p0jKo
+         8gMQGJsWawX6HVbIUMUoetiV9UXsEtYJTLEt6Ay9Eh4tPL+hcwBEdr2aAx83TWuPpKrd
+         +TZ+0oOfmjUfqCCaFZaiJTLBsDj0851F4O7Hfutoma8Scym/tIgB9+WAcSt6W6XKKcpa
+         wrK2mAUQlu1D3Eg4sZ//Sz3U/+j1MF2jHdXYMVz8M9qVeOg47JvPqt28VLRJDsLSsem6
+         SB+4QhANYPs7Dx9wQ9T0hDKwt4qEJtugc+zSNo63rK9Dm7iMEKgDPVzL2uFGhl54UWga
+         n9sw==
+X-Received: by 2002:a63:c0f:: with SMTP id b15mr525573pgl.314.1541603780431;
+        Wed, 07 Nov 2018 07:16:20 -0800 (PST)
+Received: from [192.168.86.235] (c-67-180-167-114.hsd1.ca.comcast.net. [67.180.167.114])
+        by smtp.gmail.com with ESMTPSA id e65-v6sm1067595pfa.90.2018.11.07.07.16.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 07:16:19 -0800 (PST)
+Subject: Re: [PATCH net-next] tcp: minor optimization in tcp ack fast path
+ processing
+To: Yafang Shao <laoar.shao@gmail.com>, davem@davemloft.net,
+        edumazet@google.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joe Perches <joe@perches.com>
+References: <1541589617-1607-1-git-send-email-laoar.shao@gmail.com>
+ <1541589617-1607-2-git-send-email-laoar.shao@gmail.com>
+From: Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <560b2828-cb1b-5ab5-f98b-b042a7e483f8@gmail.com>
+Date: Wed, 7 Nov 2018 07:16:18 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <1541589617-1607-2-git-send-email-laoar.shao@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXfkrfAeNbdwQYAA--.13497S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrtr4DXFyfXrWUuryDAFWrZrb_yoWkXwc_uF
+	Z3W39xGws3XrW09F1DZr4fCws3K3yfZFyfKr1SkayUJw18XFs3u3ykCr13Aryvg3y8WrZr
+	Wr1vqFyrury3ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbv8YjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAKzI0EY4vE52x082I5MxkFs20E
+	Y4vE44CYbxCE4x80FwCY02Avz4vEIxC_XrWlc2IjII80xcxEwVAKI48JMxvI42IY6xIIjx
+	v20xvE14v26ryj6F1UMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2
+	jsIE14v26rxl6s0DMxvI42IY6I8E87Iv6xkF7I0E14v26rxl6s0DMxAIw28IcxkI7VAKI4
+	8JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4U
+	MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
+	AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IU5kb1UUUUUU==
+
+
+
+On 11/07/2018 03:20 AM, Yafang Shao wrote:
+> Bitwise operation is a little faster.
+
+
+> So I replace after() with (flag & FLAG_SND_UNA_ADVANCED) as this flag is
+> already set before.
+> 
+> Cc: Joe Perches <joe@perches.com>
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> ---
+>  net/ipv4/tcp_input.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> index 2868ef2..0167015 100644
+> --- a/net/ipv4/tcp_input.c
+> +++ b/net/ipv4/tcp_input.c
+> @@ -3610,7 +3610,7 @@ static int tcp_ack(struct sock *sk, const struct sk_buff *skb, int flag)
+>  	if (flag & FLAG_UPDATE_TS_RECENT)
+>  		tcp_replace_ts_recent(tp, TCP_SKB_CB(skb)->seq);
+>  
+> -	if (!(flag & FLAG_SLOWPATH) && after(ack, prior_snd_una)) {
+> +	if (!(flag & FLAG_SLOWPATH) && (flag & FLAG_SND_UNA_ADVANCED)) {
+>  		/* Window is constant, pure forward advance.
+>  		 * No more checks are required.
+>  		 * Note, we use the fact that SND.UNA>=SND.WL2.
+> 
+
+What about reducing this to a single conditional jump ?
+
+if ((flag & (FLAG_SLOWPATH | FLAG_SND_UNA_ADVANCED)) == FLAG_SND_UNA_ADVANCED)  {

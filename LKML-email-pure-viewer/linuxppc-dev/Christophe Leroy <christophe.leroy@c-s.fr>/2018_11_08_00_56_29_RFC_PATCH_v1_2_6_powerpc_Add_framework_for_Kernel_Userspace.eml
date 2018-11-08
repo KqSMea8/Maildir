@@ -1,0 +1,192 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:01 -0000
+Received: from icoremail.net (unknown [209.85.210.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_6fYGuNbz11ZAQ--.26926S3;
+	Thu, 08 Nov 2018 01:03:21 +0800 (CST)
+Received: from mail-pf1-f178.google.com (unknown [209.85.210.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHKkakGeNb42wYAA--.361S3;
+	Thu, 08 Nov 2018 00:58:12 +0800 (CST)
+Received: by mail-pf1-f178.google.com with SMTP id e22-v6so7940603pfn.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:58:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :message-id:in-reply-to:references:from:subject:to:cc:date:sender
+         :precedence:list-id;
+        bh=IIgwVnHK7nnZ7abDpYKYp19/1rWcb5V1EvulcQC5jIU=;
+        b=t2hOOZUbZEC8edhB0XpV7su35BWhfRhPgadylbHHF1gg99IODRCakXaj4xDo6T+et+
+         AnwOKbahjQmjfdRSYcK+9GYlTEU9R/wXSjk9cAI6X3fK/lZMUb2baV4Zah0s/g5/71dS
+         ixN00IZx9hgaUnAQPOcROIJjbWICmsxKJ3XXB52HHKmx3q+9C3CapnK9wxARww98T9J3
+         juWqOIftHOSbt+1EMkQah/mYcii8oc1mAMMihwz3QGRJEGgnavNrQ4410SkKrE1JzEyu
+         npjmo7KBtQYRZv5KTU5/Uo0Zr8xf4O9tTJrFGCfqhX1ItVpJpiXGvbhprgrmci32APXf
+         gVdw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLj83XePk2HgQIzxnfw9PzNCSm1gzbH0HHi6e29SEYCZOBtT04m
+	E+O0E/MLqhKbBzarXuRV0YviMhod8HygafVooVJnZUmu9As7e7sTeQ==
+X-Received: by 2002:a63:1e17:: with SMTP id e23mr828418pge.130.1541609892132;
+        Wed, 07 Nov 2018 08:58:12 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5482109pjt;
+        Wed, 7 Nov 2018 08:58:11 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fgFClhzFINpIPNEiHqQ5Fm0X1e8CRlkkETdNQLdOgti1REY7kdn/qVDBP3pUyv8dv7B0zr
+X-Received: by 2002:a17:902:3e3:: with SMTP id d90-v6mr993401pld.118.1541609891557;
+        Wed, 07 Nov 2018 08:58:11 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541609891; cv=none;
+        d=google.com; s=arc-20160816;
+        b=uF5K9nnfjYVeywu8ER5pP4xtUP1ssTC98gVs8sV0EOEZqHZO8phJu5gnSmYMbRhc6/
+         2k8GAH2lN0Sk0j4ORFA+m728C0YWQx7B+tJqGLDYYIt9mUu79GDEuACQlQ3DOAmYSHS5
+         ZclHbDh+atzazTlDCSpQ1+yBHUCVgFAKPPXVZ1eRHpyFQjGCdL+gvNOkI3gJTKRSAYlS
+         mjKyAq9tEBuYmYsbNU/zCWt3htuUnp7cVvQURxY1su1QS7g7YhFU2JGJnjyj66dODWMu
+         6febcO/IPsBMaQl+2I669Nl3H901AcamCKxKmn5esIETPxG+OANMIztTb2EHDmI2Jlaq
+         WCcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:date:cc:to:subject:from:references
+         :in-reply-to:message-id;
+        bh=IIgwVnHK7nnZ7abDpYKYp19/1rWcb5V1EvulcQC5jIU=;
+        b=JKNv/USgs4wMgv57EIIAn8F7KbJTp7v/rezYhFSygyvvF3RFptQJDHS0uuEgJJxl8H
+         vV017DTsHotKnn8o2nbRnnjLhfAzqqqNW3ulaRdtgwGuGHDGv/W67CDJXl12CF9QdNhw
+         4q7NJL271o7yXvYds06/cvTy+/t/BOnnNb/YBC0JmLodyr2JIaKJTSNCj8aGd5pOsBHF
+         yYU3Vp1rOKJkdLVfm0bUCOtHKzqUgm72zUcYsRIFgsjnLkcy06jeZBoIK1Snf5M04esU
+         kv3OnvCPWL6dgC8+Lq0e4a7SSFnKtITuWdifzVTiK3psObijDMsixqz61edaKSwlP8X6
+         wDXA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 84-v6si1115350pfq.180.2018.11.07.08.57.56;
+        Wed, 07 Nov 2018 08:58:11 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731383AbeKHC1n (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:27:43 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:31362 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727699AbeKHC1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:27:42 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 42qsy36b00z9tvqp;
+        Wed,  7 Nov 2018 17:56:27 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id Wo8dxnek3jUP; Wed,  7 Nov 2018 17:56:27 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 42qsy35ypCz9tvqG;
+        Wed,  7 Nov 2018 17:56:27 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E578C8B81E;
+        Wed,  7 Nov 2018 17:56:29 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id acCZl8H1qinV; Wed,  7 Nov 2018 17:56:29 +0100 (CET)
+Received: from po14163vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.2])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5B4898B815;
+        Wed,  7 Nov 2018 17:56:29 +0100 (CET)
+Received: by po14163vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 526C66995E; Wed,  7 Nov 2018 16:56:29 +0000 (UTC)
+Message-Id: <eae47d2c694537abe3769a18828d5c93f6bcf1ce.1541568127.git.christophe.leroy@c-s.fr>
+In-Reply-To: <ab8fcb458e1a6ad86382767b3ce7f7cc0d5b7121.1541568127.git.christophe.leroy@c-s.fr>
+References: <ab8fcb458e1a6ad86382767b3ce7f7cc0d5b7121.1541568127.git.christophe.leroy@c-s.fr>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [RFC PATCH v1 2/6] powerpc: Add framework for Kernel Userspace
+ Protection
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, ruscur@russell.cc
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date: Wed,  7 Nov 2018 16:56:29 +0000 (UTC)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHKkakGeNb42wYAA--.361S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cr4fKFy3Aw4rGr1fZFyxKrg_yoW8urWkp3
+	WvyFn7Gw1Yg340yFWIyF18ury7t3Z2kF13tw4DGa95AFnFqr97JFnYvrnrZryUJr4DGF1F
+	9a13Kw13tanrG3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBvb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4w
+	CY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VW8MxkI
+	7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJVW8Jr1lcIIF0xvEx4A2jsIEc7Cj
+	xVAFwI0_Gr0_Gr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnV
+	CjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
+	AIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07b10PfUUUUU=
+
+This patch adds a skeleton for Kernel Userspace Protection
+functionnalities like Kernel Userspace Access Protection and
+Kernel Userspace Execution Prevention
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/include/asm/mmu.h | 2 ++
+ arch/powerpc/kernel/setup_64.c | 1 +
+ arch/powerpc/mm/init-common.c  | 4 ++++
+ arch/powerpc/mm/init_32.c      | 2 ++
+ 4 files changed, 9 insertions(+)
+
+diff --git a/arch/powerpc/include/asm/mmu.h b/arch/powerpc/include/asm/mmu.h
+index eb20eb3b8fb0..39c51dcba8f4 100644
+--- a/arch/powerpc/include/asm/mmu.h
++++ b/arch/powerpc/include/asm/mmu.h
+@@ -268,6 +268,8 @@ static inline u16 get_mm_addr_key(struct mm_struct *mm, unsigned long address)
+ }
+ #endif /* CONFIG_PPC_MEM_KEYS */
+ 
++void setup_kup(void);
++
+ #endif /* !__ASSEMBLY__ */
+ 
+ /* The kernel use the constants below to index in the page sizes array.
+diff --git a/arch/powerpc/kernel/setup_64.c b/arch/powerpc/kernel/setup_64.c
+index 2a51e4cc8246..4e21b10ff38d 100644
+--- a/arch/powerpc/kernel/setup_64.c
++++ b/arch/powerpc/kernel/setup_64.c
+@@ -372,6 +372,7 @@ void __init early_setup(unsigned long dt_ptr)
+ 	 */
+ 	btext_map();
+ #endif /* CONFIG_PPC_EARLY_DEBUG_BOOTX */
++	setup_kup();
+ }
+ 
+ #ifdef CONFIG_SMP
+diff --git a/arch/powerpc/mm/init-common.c b/arch/powerpc/mm/init-common.c
+index 2b656e67f2ea..e469814e8290 100644
+--- a/arch/powerpc/mm/init-common.c
++++ b/arch/powerpc/mm/init-common.c
+@@ -25,6 +25,10 @@
+ #include <asm/pgalloc.h>
+ #include <asm/pgtable.h>
+ 
++void setup_kup(void)
++{
++}
++
+ static void pgd_ctor(void *addr)
+ {
+ 	memset(addr, 0, PGD_TABLE_SIZE);
+diff --git a/arch/powerpc/mm/init_32.c b/arch/powerpc/mm/init_32.c
+index 3e59e5d64b01..4012ee6f0754 100644
+--- a/arch/powerpc/mm/init_32.c
++++ b/arch/powerpc/mm/init_32.c
+@@ -182,6 +182,8 @@ void __init MMU_init(void)
+ 	btext_unmap();
+ #endif
+ 
++	setup_kup();
++
+ 	/* Shortly after that, the entire linear mapping will be available */
+ 	memblock_set_current_limit(lowmem_end_addr);
+ }
+-- 
+2.13.3

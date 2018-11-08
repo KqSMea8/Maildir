@@ -1,0 +1,165 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:10 -0000
+Received: from icoremail.net (unknown [209.85.214.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv_oH+eJbq49YAQ--.26793S3;
+	Wed, 07 Nov 2018 22:39:04 +0800 (CST)
+Received: from mail-pl1-f180.google.com (unknown [209.85.214.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHLUkH+eJbBN4XAA--.6986S3;
+	Wed, 07 Nov 2018 22:39:03 +0800 (CST)
+Received: by mail-pl1-f180.google.com with SMTP id g59-v6so7944762plb.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:39:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=5EMoNRbZS8byhlrVIzHaCrrEp8U6CBXdopWKhlpWhlg=;
+        b=CF2w4MUBxaKa4KnTi7pco0OZZfc6bkK2LMb/ZIMheF8WWkWKqDgG5/8WkIJeFGbO7I
+         cFUN8jZlpg4K4o0mA/udfyDOTUWpVoDD9RwHzxU2k6s4dYsBRYltsEtR6du4WCib6AIR
+         f6aJxxKcr9zzavWRXLvkP27KrxH9OQUr1ce+rWSLW59LUW4zHZiUmHhDYvgegHCCrKV9
+         qcFLkjOVKFPMBS6XJ1zZBxbyFBSyZ+z7+jyCFrShFrtjmjml7ssK79oHG3Ync4z2U6QI
+         XyG253n6CrwDZ3TShWRD2s0DHDDvC4GvNpPt9HTpg6ptyWpnXZ4INQkJEjCjsf0pIsdZ
+         97gw==
+X-Gm-Message-State: AGRZ1gJ+lfukvJMHoZBetT49/xLG57vCrTJmPBQ4OdNhu4fgFsSGe4/v
+	HIJtlTkSM+N2bDAt7k+EsjX42dVJK+5fA8X45jF5WX2AZzgGxZ6jkg==
+X-Received: by 2002:a17:902:a9:: with SMTP id a38-v6mr483604pla.7.1541601542935;
+        Wed, 07 Nov 2018 06:39:02 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5326330pjt;
+        Wed, 7 Nov 2018 06:39:02 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dsOfwojK+5D/JGgyzQrlnOnypG8Cg7ZNGQ7KkQSQ4ppXSRsjw35SZ2xmDYCQgtZKHvuMl0
+X-Received: by 2002:a17:902:4643:: with SMTP id o61-v6mr460296pld.43.1541601542027;
+        Wed, 07 Nov 2018 06:39:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541601542; cv=none;
+        d=google.com; s=arc-20160816;
+        b=t7Xh0HquCSmAreWWz4c+JNoKYmjOfoXJokMISeNBN6XScWkubcdZoB1IUPsyOfCWB8
+         nngRxyfES/5azYk/92AGHfrQG+/fyXgyhaSWO5Jl8D1vEdpHV4Ks24ZIFPhgyo9YtYVw
+         Z1JU5XVIfys/NPqMdNYemydEnMmEND2LOXwIEzOXOclUjXYWeIWU6y3fPBYZTBceXNZN
+         kNtfo0jsUsP82dkIYPrFAslbb3jSokDobFrCSnoZJtpUvTprVGRNUAT2+4pjPj1MNoG1
+         6PQosJofCoRe65xC+qYKHOSE5nlodaycDXITZ4uf+qLYhhy6xwblLaKvzemObH941Da3
+         xnfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=5EMoNRbZS8byhlrVIzHaCrrEp8U6CBXdopWKhlpWhlg=;
+        b=H4eWT6+0lEg+D1Rje7puK430LM+I1P9w/pdx+lHTDD5c6QBN/rYNSZg3Dk4BPMfrMq
+         bkojmVfLFekXIz6evADdnsfzTy+IhqLCzlUZtpBWZEIpDV+Agbbmes7tZk8ogMbayxL8
+         O9JsB71FCAlNm1NYH96kF/fj3+Qbjde9qvAKNNZmfGl3QWp2Mc/AKGNAsis3JojDWxZg
+         vWT3C/2oi9/RveOh4oOsW9aCaYMzaY5iGD7fyWqY6ZZx6vKb9VmB/i+YInKo7X0Gk8Nx
+         FryLH6kWdl0+PwUcKE6pQbbgHiz0+VHWA7zojAXZIXVQ1/Wozh9r334+gU7TPwjsG6Fr
+         oIKA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kernel.org header.s=default header.b=Oz38I4dX;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id ba2-v6si822702plb.88.2018.11.07.06.38.46;
+        Wed, 07 Nov 2018 06:39:01 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730894AbeKHAId (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:08:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36108 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726752AbeKHAIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:08:32 -0500
+Received: from linux-8ccs (charybdis-ext.suse.de [195.135.221.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27C902081D;
+        Wed,  7 Nov 2018 14:37:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1541601475;
+        bh=Uhhz85+fb48saS+inscMZIOvBce3D0inWWQwMnEk9Uw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Oz38I4dXDsZp9Rd+qW0pxoSTyPG21fVOoti71yRJpne68Y2JV6eBxPsl2aAbB5tgE
+         Xkj8LUbvYV9H3fDnQxNvh1STUrLxdvnXzSTXXBu3oBhOFKCwRyoW8lgsu9i+2cKiVy
+         GQihRh1Px5gQrp9hkc38YLOhYHom2FaskMyS7CgU=
+Date: Wed, 7 Nov 2018 15:37:51 +0100
+From: Jessica Yu <jeyu@kernel.org>
+To: Ke Wu <mikewu@google.com>
+Cc: dhowells@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] modsign: use all trusted keys to verify module
+ signature
+Message-ID: <20181107143750.GA26862@linux-8ccs>
+References: <20181022222614.41016-1-mikewu@google.com>
+ <20181106232130.33932-1-mikewu@google.com>
+ <CANRnR9QkiiNNxSBzLUeFHw--xPGVEd5E0RfqNTgj4ji8LmVz7g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CANRnR9QkiiNNxSBzLUeFHw--xPGVEd5E0RfqNTgj4ji8LmVz7g@mail.gmail.com>
+X-OS: Linux linux-8ccs 4.12.14-lp150.12.22-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHLUkH+eJbBN4XAA--.6986S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7JF1DtFWUuryrtw15CF15Jwb_yoW8JrW7pr
+	Z5XF1rJ3yFqF93GF1kAwn0qry8K393Kry2gFnFyF1fGFnxX3WkXF1Dtr1Y9F1fXrW5Gr48
+	KF42vasIgwn8G3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBEb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6ry5MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMxvI42IY6I8E87Iv67AKxVW0oVCq3wCYIxAIcVC2
+	z280aVCY1x0267AKxVW0oVCq3wCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij2
+	8IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr4
+	1lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bbD73UUUUU
+	=
+
++++ Ke Wu [06/11/18 15:23 -0800]:
+>Thanks for the comment! I switched to use
+>VERIFY_USE_SECONDARY_KEYRING, please take a look.
+
+Patch has been queued on modules-next. Thanks!
+
+Jessica
+
+>On Tue, Nov 6, 2018 at 3:21 PM Ke Wu <mikewu@google.com> wrote:
+>>
+>> Make mod_verify_sig to use all trusted keys. This allows keys in
+>> secondary_trusted_keys to be used to verify PKCS#7 signature on a
+>> kernel module.
+>>
+>> Signed-off-by: Ke Wu <mikewu@google.com>
+>> ---
+>> Changelog since v1:
+>> - Use VERIFY_USE_SECONDARY_KEYRING rather than (void *)1UL
+>>
+>>  kernel/module_signing.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/module_signing.c b/kernel/module_signing.c
+>> index f2075ce8e4b3..6b9a926fd86b 100644
+>> --- a/kernel/module_signing.c
+>> +++ b/kernel/module_signing.c
+>> @@ -83,6 +83,7 @@ int mod_verify_sig(const void *mod, struct load_info *info)
+>>         }
+>>
+>>         return verify_pkcs7_signature(mod, modlen, mod + modlen, sig_len,
+>> -                                     NULL, VERIFYING_MODULE_SIGNATURE,
+>> +                                     VERIFY_USE_SECONDARY_KEYRING,
+>> +                                     VERIFYING_MODULE_SIGNATURE,
+>>                                       NULL, NULL);
+>>  }
+>> --
+>> 2.19.1.930.g4563a0d9d0-goog
+>>
+>
+>
+>-- 
+>Ke Wu | Software Engineer | mikewu@google.com | Google Inc.

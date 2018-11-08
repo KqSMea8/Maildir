@@ -1,0 +1,217 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:21 -0000
+Received: from icoremail.net (unknown [209.85.215.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3_jf_uJbKrFYAQ--.26485S3;
+	Wed, 07 Nov 2018 23:04:00 +0800 (CST)
+Received: from mail-pg1-f175.google.com (unknown [209.85.215.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH7Uje_uJbWvcXAA--.11123S3;
+	Wed, 07 Nov 2018 23:03:59 +0800 (CST)
+Received: by mail-pg1-f175.google.com with SMTP id c10-v6so7431936pgq.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:03:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :thread-topic:thread-index:date:message-id:references:in-reply-to
+         :accept-language:content-language:spamdiagnosticoutput
+         :spamdiagnosticmetadata:content-id:content-transfer-encoding
+         :mime-version:sender:precedence:list-id;
+        bh=aG9WbN7nkDNBemQhG1bQE1xkjMq8l1srsu8/h7OQUtg=;
+        b=IKvKWq7TlhChXltrkCoBfzhZkqx0ifDHZcSmiT15GkThp4x6jBreQ5b+s57x99eXEG
+         08fXIQbPqyYq713Ig3Ke5aoTAr647u7JThPEL1T7V4QrGrT+lldPFIRObCLUoelMdqU5
+         irs39X4f8IE0ssxrfsa0lPss3NRhrmtenhZohW5vj/h1/01fMajRgbV29TfIzd59kgGb
+         g6UlYCuno+6FfyYLMJ1lmWorhuMyrHrNjbUtpz5BE/+tKojY6O5+fdSZgJZO2CguTVWf
+         C+rdtBEjL2e84XrKPCW11Gn0TgTOsmW9tkc6fddMs7KkCZ+MjraCelaP5LaDtoA5lhyY
+         dWVw==
+X-Gm-Message-State: AGRZ1gJ7TgHP2qleuGlAprwkpuHj50bVenVOnr7WTaE6rzSdtwwtX/6Z
+	l7/H4FPt4gbN8TM9z1O4HmigURxPxv8Sq/dA5/bkp+BWtpR/4ydUDg==
+X-Received: by 2002:a63:460a:: with SMTP id t10-v6mr467178pga.197.1541603038649;
+        Wed, 07 Nov 2018 07:03:58 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5354003pjt;
+        Wed, 7 Nov 2018 07:03:58 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dalfugzOsDj5sco01VI/LoFTjXYIfexoT5r9unSnDSLyglzkzT5SfbGMl0Gwrrx4qjSX3n
+X-Received: by 2002:a17:902:bcc4:: with SMTP id o4-v6mr575771pls.13.1541603037986;
+        Wed, 07 Nov 2018 07:03:57 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541603037; cv=none;
+        d=google.com; s=arc-20160816;
+        b=gIFc0SBgzLY432n2SGPQQJoc66IN/v0EMU5QYzl3oFDmbvjkp53ptU/VjmtHqYj1zb
+         ModTyvICdinbyhH0lis3vMADV6jvOSatemypzaFDA3TqB5K24XexHXhYKuuQw0U6J1Xp
+         gB1d6iRjrot+h58UGO8TGLc0KDvBIZrbJdJCkyoHadTzC2EwavYv9XQBtNrHltQRHf3x
+         DUNS1nNvwGtuEXAmGSWd275/k7xUqmy3M2nr6b+Yb6+quBbAA91pthULHb/IVH32QU06
+         uR/E/SBM1mT2DnFWLHV2DWxaUV0O+mTwnkARpVoHFZdXotUgGXtrcRswH/ZDt/edagtW
+         oVWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:content-transfer-encoding
+         :content-id:spamdiagnosticmetadata:spamdiagnosticoutput
+         :content-language:accept-language:in-reply-to:references:message-id
+         :date:thread-index:thread-topic:subject:cc:to:from:dkim-signature;
+        bh=aG9WbN7nkDNBemQhG1bQE1xkjMq8l1srsu8/h7OQUtg=;
+        b=fsEdoi+/Nd37qmOLluXuJYcGO2lo4jbiLCJjsgSgmecjljKHs7zK5Gx4rsNtjOUiNj
+         X/3PJC3Sbw/ON6bghMVFmiD6zI5BG4+I18pwDNg6cwQ1kWy5vKm3TYthC7u43wpwHpah
+         npVW4IXOiwZUPR0mwnA9nGvlhgy11fBspA8fxzs45Jz9ikQRAXHEXnxcQpQgX3mFy5mf
+         dpwO1nqjFnJiXQxGGv3LQoCKryMW5/4TYA5kHF8lq0QUJHDmSRP3h6X+6hJHA9xyibVU
+         7vXJLGkCaNYZ9VrGP1wfPpHyS/b36baEN2tlHW0UHqzg3CBKu+zJ8YFLQsn+1n38mmLa
+         RGUg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@microchiptechnology.onmicrosoft.com header.s=selector1-microchiptechnology-onmicrosoft-com header.b=LkuZ6lbt;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id c7-v6si865606pfc.153.2018.11.07.07.03.41;
+        Wed, 07 Nov 2018 07:03:57 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730896AbeKHAeM (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:34:12 -0500
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:56810 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727866AbeKHAeM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:34:12 -0500
+X-IronPort-AV: E=Sophos;i="5.54,475,1534834800"; 
+   d="scan'208";a="22490415"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 07 Nov 2018 08:03:20 -0700
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.106) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Wed, 7 Nov 2018 08:03:19 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aG9WbN7nkDNBemQhG1bQE1xkjMq8l1srsu8/h7OQUtg=;
+ b=LkuZ6lbt2lWVqpgJe8fIOGw9QGU3t8rTH/lAWXPB5gouIu2g5lmPP/vLDMiIcB9chAVjPoah93dmpcBmJNyenumaBilbGYpVxIxpKcRvHW+CTGpJSCGY5/ZKcggaX9zFZ1UgYUrX8mHmIBv+SaA3jFDXI3iQ/JQpTq6+8Y2PoBc=
+Received: from BLUPR11MB0740.namprd11.prod.outlook.com (10.163.216.18) by
+ BLUPR11MB0612.namprd11.prod.outlook.com (10.163.125.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1294.27; Wed, 7 Nov 2018 15:03:17 +0000
+Received: from BLUPR11MB0740.namprd11.prod.outlook.com
+ ([fe80::2dca:81f7:b419:fdf2]) by BLUPR11MB0740.namprd11.prod.outlook.com
+ ([fe80::2dca:81f7:b419:fdf2%3]) with mapi id 15.20.1294.034; Wed, 7 Nov 2018
+ 15:03:17 +0000
+From: <Claudiu.Beznea@microchip.com>
+To: <broonie@kernel.org>
+CC: <lgirdwood@gmail.com>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH 1/2] regulator: act8945: Implement PM functionalities
+Thread-Topic: [PATCH 1/2] regulator: act8945: Implement PM functionalities
+Thread-Index: AQHUbUe3aB7PxIHxB0GWg8NpuJvvnA==
+Date: Wed, 7 Nov 2018 15:03:17 +0000
+Message-ID: <b17eeca5-e517-393e-d9a9-bfb4121c5857@microchip.com>
+References: <1540570753-16370-1-git-send-email-claudiu.beznea@microchip.com>
+ <1540570753-16370-2-git-send-email-claudiu.beznea@microchip.com>
+ <20181107145349.GA6809@sirena.org.uk>
+In-Reply-To: <20181107145349.GA6809@sirena.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1P18901CA0022.EURP189.PROD.OUTLOOK.COM
+ (2603:10a6:801::32) To BLUPR11MB0740.namprd11.prod.outlook.com
+ (2a01:111:e400:594c::18)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-microsoft-exchange-diagnostics: 1;BLUPR11MB0612;6:E4smit7P6Tq29bnfVmVYbQkCNea/SjYH8ABwxFveq4XlhVP88nkDsXpYh/PMCdoBMysaiIJAEfG6XEaWBaEA3V7d+22IE7bea9ODGXzh8HetoMr0Z9hKfQUaruUD9YTzO8Q7EC5Kc+vZhSWh2dGmZcG78bitxEepLEyP98rjVBbkIGa8CPX+vw4noVlRTJigUD203Tjd9wP8s6XvZwJGQj3RXADnAOB3d1W/QcziLIcC3Y1QDTf5wT/CAz1F1Je5zyKbTTvocjJiIW0JBnM4he/xHBJLchJLLk5o9G3xc8BHMmQ2l4MxoMCn29YS1VEIHyFfsxT8ywPRwdpbwriU93HpOKLUSZLjSTLVaq/QVZGQ7hEwO0wGEmCrLXGps4obKmxuc6q+ap24n1xEccN5xSZ3VoUkibTSKP+cBUkK/Dqu7bo4p2i/QAq1bLaovQPY5C6YBmEe8IyueMrf0Q6J6g==;5:lRxHrCQr0ehXzemv6xwLAvvN8MRR63i44GhE5i/8BsQaIte0HT12lbB7KMl1m7knyn2vlaufbrId9STrUIzuZ31GiIEmHJJ4rXjCUurmzWlR3exuzMbSVZfAr9IepN9Mw2DFrXWlm2awKhNb0e7i3QRjRsSwMa68zfTHTIN7LOs=;7:a4/F3x/y181I5u6QNK+/PMF000kMcOESgzTPCLySa+jVIKN+pmsiSgc3NuugdP4C/8CWiWrIMcdDNHcWfqpxZIXaqyZIB3Xe66OeW1Ns3En/i+AgjXpibZ7sDpRAa/Zy2ig7jZt1lNpMsqP74BwFFw==
+x-ms-office365-filtering-correlation-id: 1afe31ee-4efe-4ffb-fdf8-08d644c2263c
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(7020095)(4652040)(8989299)(5600074)(711020)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:BLUPR11MB0612;
+x-ms-traffictypediagnostic: BLUPR11MB0612:
+x-microsoft-antispam-prvs: <BLUPR11MB06122A845821866E4255A17887C40@BLUPR11MB0612.namprd11.prod.outlook.com>
+x-exchange-antispam-report-test: UriScan:;
+x-ms-exchange-senderadcheck: 1
+x-exchange-antispam-report-cfa-test: BCL:0;PCL:0;RULEID:(6040522)(2401047)(5005006)(8121501046)(3231382)(944501410)(52105095)(3002001)(10201501046)(93006095)(93001095)(148016)(149066)(150057)(6041310)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(20161123562045)(20161123564045)(20161123558120)(20161123560045)(201708071742011)(7699051)(76991095);SRVR:BLUPR11MB0612;BCL:0;PCL:0;RULEID:;SRVR:BLUPR11MB0612;
+x-forefront-prvs: 08497C3D99
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(346002)(376002)(136003)(39860400002)(189003)(199004)(68736007)(97736004)(5660300001)(14444005)(11346002)(446003)(2616005)(72206003)(71190400001)(71200400001)(2900100001)(2906002)(476003)(486006)(256004)(478600001)(31696002)(25786009)(86362001)(7736002)(305945005)(4326008)(66066001)(316002)(54906003)(76176011)(8676002)(99286004)(81156014)(81166006)(6512007)(53546011)(6506007)(386003)(52116002)(8936002)(53936002)(6486002)(229853002)(6246003)(3846002)(6116002)(31686004)(14454004)(106356001)(105586002)(102836004)(186003)(6436002)(6916009)(36756003)(39060400002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BLUPR11MB0612;H:BLUPR11MB0740.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-microsoft-antispam-message-info: NBTbNxaOB6atwXfmgDz5uYJjm+0gLQEqcDt9SQJwPptEGLJ0IkPADEvuwgoNfq0YZqAwKy9kfguMI2YQaBjdXbi1TN+GFXZGgmIl61jFV7woSLoekn+MaE41N1LTz59BM4b0pdB5vwKZErcE9f1HMyUxll3yUK6lhIOvm2J5jAOti0H/WCiGmm14+WB0gEpeDMspq5HY0IcQxeEoR4F3k4j6uCuKPDGt9XmkOk2Kaw6hDWOgt6DbT2O2if3UzhdNlSIuh0cun7ykf+967hRBgGoi68KUxJOmJjsslOkC7ncHV19yV7R723vGeHG0xWRcoJi54w5LxUb2Li68r8szV9u6cbK+bVKgt2hbp9W/CqY=
+spamdiagnosticoutput: 1:99
+spamdiagnosticmetadata: NSPM
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <D9FAE817086E4342B007D8321A94E347@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1afe31ee-4efe-4ffb-fdf8-08d644c2263c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2018 15:03:17.7410
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLUPR11MB0612
+X-OriginatorOrg: microchip.com
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH7Uje_uJbWvcXAA--.11123S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cr15ZFW5urW7AryrJr1kXwb_yoW8Gr1Up3
+	4FqFsFkws2qFn0yF10qr1UJF4Svr13Xry3A343J3Wqkas0gr4xKFyFy34Ykas8uwnYgF4U
+	Za1jvryfCrsavFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPYb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lw4CEc2x0rVAKj4
+	xxMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_XrWlc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26rxl6s0DMxvI42IY
+	6I8E87Iv6xkF7I0E14v26rxl6s0DMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52
+	x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwI
+	xGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bY-BNU
+	UUUU=
+
+
+
+On 07.11.2018 16:53, Mark Brown wrote:
+> On Fri, Oct 26, 2018 at 04:19:48PM +0000, Claudiu.Beznea@microchip.com wr=
+ote:
+>=20
+>> +static unsigned int act8945a_of_map_mode(unsigned int mode)
+>> +{
+>> +	if (mode =3D=3D ACT8945A_DCDC_MODE_POWER_SAVING)
+>> +		return REGULATOR_MODE_STANDBY;
+>> +
+>> +	return REGULATOR_MODE_NORMAL;
+>> +}
+>=20
+> This should error out if it gets an unknown value rather than silently
+> mapping it to normal - we don't know what the user intended to set here.
+> There should also be some binding documentation updates saying what the
+> values that can be set are.
+
+Sure, I will update it on next version.
+
+>=20
+>> +static void act8945a_pmic_shutdown(struct platform_device *pdev)
+>> +{
+>> +	struct act8945a_pmic *act8945a =3D platform_get_drvdata(pdev);
+>> +	struct regmap *regmap =3D act8945a->regmap;
+>> +
+>> +	/*
+>> +	 * Ask the PMIC to shutdown everything on the next PWRHLD transition.
+>> +	 */
+>> +	regmap_write(regmap, ACT8945A_SYS_CTRL, 0x0);
+>>  }
+>> =20
+>=20
+> This shutdown function appears to be independant of the mode setting and
+> would be better split out as a separate patch (you could have one patch
+> adding the regmap stuff, one for this and one for the mode setting).
+> It makes review a lot simpler if each patch does a minimal set of
+> changes.
+
+Ok, I will split them in next version.
+
+Thank you,
+Claudiu Beznea
+
+>=20

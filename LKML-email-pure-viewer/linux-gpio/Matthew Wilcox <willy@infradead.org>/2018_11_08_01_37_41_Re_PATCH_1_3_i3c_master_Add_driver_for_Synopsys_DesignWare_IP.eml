@@ -1,0 +1,163 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:20 -0000
+Received: from icoremail.net (unknown [209.85.210.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f_kFI+NbZZhZAQ--.26732S3;
+	Thu, 08 Nov 2018 01:38:14 +0800 (CST)
+Received: from mail-pf1-f181.google.com (unknown [209.85.210.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHwEwCI+NbSpcYAA--.0S3;
+	Thu, 08 Nov 2018 01:38:10 +0800 (CST)
+Received: by mail-pf1-f181.google.com with SMTP id p17-v6so7618224pfj.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:38:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=r87jmaN8ctFgUY9lX7Zf/fake4MJC90U+GCI1S//zqA=;
+        b=koysEQkeYP5n72Xs/kIYBu8OvvsBq8fZmvEp5LAgZvssVkSE96pfQZzsSzT0o8tk6W
+         1DXq/FY40+ktFR3OJDqFb4X1Oz9yQkTFHeiJrq72tXTRvabtwqao+AZBWyhF+BJstD30
+         RCk7U+dHDrnsTU07l+u4S2TgCCJSm5cQYYwpnyUMM7eBH4STFwxozAZULY5MoIT35UxQ
+         JYKzy7PHwk4B3AZQ6UlaMFNCGsttLf+MwlCOCOvQql8I1UTEElvfmpfqJDuUmTir37xD
+         HGh09veLITet0J5kz8a5gFAZy5QietQ5UJ6y7MfjrwDbf9BujfK4iCp77esJOl5MG+gD
+         T3mQ==
+X-Gm-Message-State: AGRZ1gKe749ctvzkJz4O7yCIrwkso1yTb0BZ/6tDbx+EtpK6KvrC2nGJ
+	9gfcpnESbpYfwr0/kpzrroccxnv7e3/o7EJxDAkJheaSPPvWEJxOpQ==
+X-Received: by 2002:a62:d084:: with SMTP id p126-v6mr1145432pfg.147.1541612290167;
+        Wed, 07 Nov 2018 09:38:10 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5528711pjt;
+        Wed, 7 Nov 2018 09:38:09 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fXC+qXD2fixZ5/fVpUKPXyxD9AehhMw/PmWyvqeOHMHsHLQg+PoHsIpa8p1uXH7Cq+bbNE
+X-Received: by 2002:a62:9316:: with SMTP id b22-v6mr1119750pfe.193.1541612289478;
+        Wed, 07 Nov 2018 09:38:09 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541612289; cv=none;
+        d=google.com; s=arc-20160816;
+        b=R6xE5mcrgpkv7ieOarvW+KeXDAPFtIpGTZ934Y90Hf2vrfVnzzeQ8GLkC0IgwKZaIK
+         O8gi8pjpvPnfIiTRFry60NFPzmAEs70ah0duep3nD5bCIHTqiwo8sElEdHn1SUqoDRwo
+         nNG3bV5yjBEe0RaTkw9QHY5Hikcpxj77ElNTrt5SxR69wWxPl8W1o/LXfsNTKKVkFfsX
+         3AsT2zEj8/ZYuwk/ulw8Yq6XsWrSR45/J8uL8GI/MofpPbsaw5QQevfTnrLhgwEB92QU
+         E6OVMDsvKZIEJCsNMntYdk26wnFoBVakhrkvTuTdSwq1OlaRk7gLBOVgXm31ZewV0wbx
+         La5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=r87jmaN8ctFgUY9lX7Zf/fake4MJC90U+GCI1S//zqA=;
+        b=THp88dTQRT79+USyWKWZQtGtRaxIa+UD0hq1Z6fshMV942uJWgVNrjYtKy6oym3lBE
+         EH9OV++CricVuEy3+C33TYqavipiIh7p3B+GlyzEUYTfBrP7/3iYsLd/cWjKU5dsK529
+         jKRgLv1Kp8TIZLlk5mh/7kILT8cVYd7z9vqb5o3DVoNA/r+BjGsZ9YtdC3LZyqUF0mDF
+         mTsZgQar9vrSuUCz5jszCtX7te1OdePtdf/FmG/ZmAf6TwmNQkZzPlKGs3ObY6QfkAR4
+         gTUxJ3JDaL8PMgpWImV2KwSO+hf8BKq4yVz7a8CnWWCr7HIsHZEHTCr3cJo4CjobwJMk
+         tCog==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@infradead.org header.s=bombadil.20170209 header.b=MRBkBt8i;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id y73si1033260pgd.478.2018.11.07.09.37.52;
+        Wed, 07 Nov 2018 09:38:09 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731555AbeKHDJH (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:09:07 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:46608 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbeKHDJH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:09:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=r87jmaN8ctFgUY9lX7Zf/fake4MJC90U+GCI1S//zqA=; b=MRBkBt8iQLXGeugt/6sOvA3A7
+        RGeyjEqZZeIlXJCbn3o71u6XFBi6bkUM4WTf9Yfwz/+nYEk0JAjs4QCw3aIBrxZJAGd0HizCmP4o4
+        id/YhiqyFPxiJSfSx/lrdeQ/xgHEAVYsWqqHiT6gvLKngVzO1hU/yM9Eg8uWKHt9HghW249j6ZfEU
+        QlHWIcuMfCbbK1gMfHyEzyLpAqiuDpchkMOYPUH4qzDA+g5nYtNw7FlT9SCm0xGegRDbSF8npSkwW
+        FdGsQ4X2G6S0KD/c8B6icDSNmMJCvPGMFnPXSPeUAiCZkk5gvSeuDRKOB8wBCzeygZ81TUggHZckN
+        TjF5wkrTQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1gKRlt-0000Cu-5x; Wed, 07 Nov 2018 17:37:41 +0000
+Date: Wed, 7 Nov 2018 09:37:41 -0800
+From: Matthew Wilcox <willy@infradead.org>
+To: vitor <vitor.soares@synopsys.com>
+Cc: boris.brezillon@bootlin.com, wsa@the-dreams.de,
+        linux-i2c@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org, gregkh@linuxfoundation.org,
+        arnd@arndb.de, psroka@cadence.com, agolec@cadence.com,
+        adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com,
+        alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com,
+        rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com,
+        robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com,
+        ijc+devicetree@hellion.org.uk, galak@codeaurora.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        geert@linux-m68k.org, linus.walleij@linaro.org,
+        Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org,
+        nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se,
+        mshettel@codeaurora.org, swboyd@chromium.org,
+        joao.pinto@synopsys.com, luis.oliveira@synopsys.com,
+        manuel.abreu@synopsys.com, gustavo.pimentel@synopsys.com
+Subject: Re: [PATCH 1/3] i3c: master: Add driver for Synopsys DesignWare IP
+Message-ID: <20181107173741.GL3074@bombadil.infradead.org>
+References: <1540807618-13246-1-git-send-email-soares@synopsys.com>
+ <1540807618-13246-2-git-send-email-soares@synopsys.com>
+ <20181107170553.GJ3074@bombadil.infradead.org>
+ <d2540ea9-edbd-3b36-0647-54919a9dfa2d@synopsys.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d2540ea9-edbd-3b36-0647-54919a9dfa2d@synopsys.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHwEwCI+NbSpcYAA--.0S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrtry8Jr4fWr17AFWxuF1ftFb_yoWfCFbE9w
+	45WanrCw4UAFW7Ga4aqr45Cr1xCw4vvFyDCF1vg34kuFyrAFZ7GFnrCrWj9an5Xr45JFnr
+	Was8Xrn3Ca4a9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbyxYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwCjxxvEa2IrMx
+	kF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6r4lc2Ij
+	II80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7Cj
+	xVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72
+	vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Wrv_Gr
+	1UMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIF
+	yTuYvjxUDpnQUUUUU
+
+On Wed, Nov 07, 2018 at 05:30:22PM +0000, vitor wrote:
+> Hi Matthew,
+> 
+> 
+> On 07/11/18 17:05, Matthew Wilcox wrote:
+> > On Mon, Oct 29, 2018 at 10:06:56AM +0000, Vitor soares wrote:
+> > > Add driver for Synopsys DesignWare I3C master IP
+> > The so-called "data sheet" (actually just an advertising brochure)
+> 
+> The datasheet is there to download.
+
+Really?  I went to the link in your message, filled out the stupid
+information box that your company has now decided to start spamming
+me with, and I got a 2-page brochure telling me how wonderful it was.
+It's *called* a datasheet.  Even right there in its name: dwc_mipi_i3c_ds.pdf
+It's not a data sheet.
+
+> Right now the driver does not support DMA interface which will be added
+> later as the other missed I3C features.
+> 
+> What do you suggest to avoid this misunderstanding?
+
+A big missing feature like that is probably worth mentioning in a comment.
+eg: TODO: DMA support.

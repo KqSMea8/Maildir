@@ -1,0 +1,160 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:21 -0000
+Received: from icoremail.net (unknown [209.85.210.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHHyZWS+NbpYVaAQ--.27534S3;
+	Thu, 08 Nov 2018 04:30:14 +0800 (CST)
+Received: from mail-pf1-f171.google.com (unknown [209.85.210.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3FUFTS+NbRzIZAA--.971S3;
+	Thu, 08 Nov 2018 04:30:11 +0800 (CST)
+Received: by mail-pf1-f171.google.com with SMTP id p17-v6so7817351pfj.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:30:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=Fi6rg5sJt5xG5xvFNKqpcnG1I36JVOhGiMRCBuxHBpw=;
+        b=IcWXeueQ1t+coJzSwZhHkeDXkPV3RiYhIcXAcbBJfLLeHgfVRnfcff+3GswQNRWeOm
+         sYtHHzVHAsdqvVbvskNIZpR1EZP16hVkhDo53h268AkNa99B7M/ZZ4e8DIDnpHocu7tO
+         Fa5J1lzPDf2Soq+bodoLTYe7k7VUQ0iC4EdCkVqAEySBYFRoDmLUG/URsoY1XOJ4X6fo
+         3KGYxPHzzT10PUQpcRTlJ9EvRx8rA6HTUNBmDUvqfdPYQFibdr8WfWmsGtO+1ElqgCDn
+         hwrHALYp4sCHTdl6gQTpkvqL7FJcJxEiii6zAeHjh3Tvekk02fATEIwFrxAwosEVmXZ3
+         pGhg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+X-Gm-Message-State: AGRZ1gLWdvbS22MA1jvc/mgBBXvwYJtm9T8FE+0z/NGADIBTJY3S9cHJ
+	IXfwKQezFqdTRt8sl7Y/8hkfZPQL0n2t/zcbmtAfD19x1vCu7MYwIA==
+X-Received: by 2002:aa7:87d0:: with SMTP id i16-v6mr1747417pfo.20.1541622610813;
+        Wed, 07 Nov 2018 12:30:10 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5710023pjt;
+        Wed, 7 Nov 2018 12:30:10 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eSn2IrIlLtpCjl56Lps3BF1NuWDzpXniHSj10YOr7cLAmg+7ZqDP+CdbgYlauzQv/8nzwL
+X-Received: by 2002:a17:902:147:: with SMTP id 65-v6mr1773777plb.140.1541622610063;
+        Wed, 07 Nov 2018 12:30:10 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541622610; cv=none;
+        d=google.com; s=arc-20160816;
+        b=eRzweOH4vEx9/qvWtHJZKZ5K4cyknP9eIsTHCH9sCpEDQLDt5Eu7L4IobbsLz3Juxa
+         I0mjMyv0k4JTVXnqGNlsA5hhQbD+QJyhRTSo8zZ177YbZ8hahUsprvXBI6nOEFEOB1VW
+         CMGb0/lf7hGd1h62ejLTa9deG/SJhZmVYwln5fbqfeOximOz5BTFbOO1GofiNA8Mwt32
+         oQhOmikfGXD+b0/kH5RO0LjdrXlZ6nUDCvKLgN6kfN/NUyuNwmpReeAU4NYU0yP6bFrN
+         agQ95NCGOt7PQZl5owA/L39iPn8Xt0NZHCQrmoBqrWJjs7T8iGsOPTj2Fg/NmKL5iXT9
+         wnnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=Fi6rg5sJt5xG5xvFNKqpcnG1I36JVOhGiMRCBuxHBpw=;
+        b=dCOEQ3lt1jzwZef7KtByyDt00UMCLhHxcxXJh0PQi915er1x5tGW5jjwWGaz/sAkMg
+         S8+/OUJtuik23s11X9cReLZHSyQXft98JBNDGBBgcs3gjwRZO6IEevPHV7DElrO+tkaN
+         AJWjAhhuYm+2iJMfujz1PtLufJVaQ/YZnm/VRFmfUh5XeEgYSw2Y9Huz4/wQUCAEpk+7
+         2YPQHpEPQeqCLjzEH5b0yTlKLZfXGapQ4KQuryeQSq9EaG4ZBFZ69D1RAf5LwpdMt0wG
+         OPh1v3oAryBjqXCUVxVZw6VWL0HiX1P3+SJit5wuxUL3MD0K/MUTy2Q/qois4ia586wP
+         J9Fg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id h3-v6si1672222pfd.228.2018.11.07.12.29.53;
+        Wed, 07 Nov 2018 12:30:10 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726595AbeKHGBo (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:01:44 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:60000 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbeKHGBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:01:44 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 97236307DAA9;
+        Wed,  7 Nov 2018 20:29:44 +0000 (UTC)
+Received: from treble (ovpn-121-72.rdu2.redhat.com [10.10.121.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1390060851;
+        Wed,  7 Nov 2018 20:29:43 +0000 (UTC)
+Date: Wed, 7 Nov 2018 14:29:42 -0600
+From: Josh Poimboeuf <jpoimboe@redhat.com>
+To: Artem Savkov <asavkov@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] objtool: fix .cold. functions parent symbols search
+Message-ID: <20181107202942.s24ej5mnh4b3mflw@treble>
+References: <20181107140559.28504-1-asavkov@redhat.com>
+ <20181107170856.usgyzckfirem5qh7@treble>
+ <20181107184246.GC11183@shodan.usersys.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20181107184246.GC11183@shodan.usersys.redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 07 Nov 2018 20:29:44 +0000 (UTC)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3FUFTS+NbRzIZAA--.971S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7tFyfGr1UCr43Kw4rZrWDArb_yoW8XF1fp3
+	yaka47Crs5JrWUAw17Jan5KryYgws3Xr4UGrn0va4kZws8JFnaga90yw1UKayv93yfAa4Y
+	qF40va95Za4qvaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPab7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6F1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxU
+	gJDGUUUUU
+
+On Wed, Nov 07, 2018 at 07:42:46PM +0100, Artem Savkov wrote:
+> On Wed, Nov 07, 2018 at 11:08:56AM -0600, Josh Poimboeuf wrote:
+> > On Wed, Nov 07, 2018 at 03:05:59PM +0100, Artem Savkov wrote:
+> > > The way it is currently done it is possible for read_symbols() to find the
+> > > same symbol as parent for ".cold" functions.
+> > 
+> > I seem to remember having this discussion for kpatch-build, but I forget
+> > the details.  Can you explain how this can happen (and also add that
+> > detail to the commit message)?
+> 
+> find_symbol_by_name() traverses the same lists as read_symbols and when
+> we change sym->name in place without copying it it changes in the list
+> as well. So if child function is before parent in sec->symbol_list the
+> same function will be returned as "parent".
+
+Ah, I see.
+
+> It is hard for me to put it into words worthy to be included into
+> commit message.
+
+The above description made sense to me, so it sounds like you're on the
+right path :-)
+
+> > I haven't seen any bug reports, is it purely theoretical?
+> 
+> No, 4.20-rc1 (actually anything after 4a60aa05a063 "objtool: Support
+> per-function rodata sections", before that add_switch_table() doesn't
+> seem to be called for those .cold. funcs) fails to build for mewith
+> KCFLAGS="-ffunction-sections -fdata-sections" because objtool is
+> segfaulting.
+
+If you only see it triggered with -ffunction-sections, that would be
+another useful nugget for the commit log.
+
+Also, if it's fixing a regression, be sure to add the 'Fixes' tag.
+
+Thanks!
+
+-- 
+Josh

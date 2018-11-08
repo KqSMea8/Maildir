@@ -1,0 +1,227 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:30 -0000
+Received: from icoremail.net (unknown [209.85.214.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv94KT+Nb+p1aAQ--.27370S3;
+	Thu, 08 Nov 2018 04:46:04 +0800 (CST)
+Received: from mail-pl1-f176.google.com (unknown [209.85.214.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCnfTkIT+Nbzj0ZAA--.1011S3;
+	Thu, 08 Nov 2018 04:46:00 +0800 (CST)
+Received: by mail-pl1-f176.google.com with SMTP id n4-v6so8401917plp.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:46:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:message-id:cc:reply-to:in-reply-to:references:to:subject
+         :git-commit-id:robot-id:robot-unsubscribe:mime-version
+         :content-transfer-encoding:content-disposition:sender:precedence
+         :list-id;
+        bh=01LZZMheHccACyA421KksfCU+qv+5V6n/gcWw3gg1BY=;
+        b=FKMmk89pbRhns9NaBUybG32Nbg80R/Ok492aaNBnLOJkJmFIVdSTm9foKrHJMEH+Y5
+         aXTV0voRilFQTXo56GsIpUKjbAyrfwldVQlNZCAL/s7cpl5aPyRrqInwR3Q738VX7V39
+         uveNR+GM2W+qCxs+9Uu0+sEPCoQ8Bvzv41ZMobWd70RNOlLmwVNe+/5Rb1eZ48gsWNvK
+         48Wq8q9+BCzXWmURmyXUIjcgAaPwq7WlIaK87g0Oa/WvrmTVXdExfAuiwD4tO7WOfvLU
+         Wg6Vcut7EWhXDD1bEIkQA594vU8BhtpZWc3hTFbG0KEBGFkirIoXghha/r1IrznWJYeC
+         M7mw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKN8xN937rKfXqV58DEZcKjcz2NAaiXNShw9AQ15DH6gO2QdxkF
+	RHQyITh2AzBmohulttnI5QzvTODdEznGLA7rRb/XuoojsLByxcBzcw==
+X-Received: by 2002:a17:902:166:: with SMTP id 93-v6mr1757653plb.68.1541623559877;
+        Wed, 07 Nov 2018 12:45:59 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5724275pjt;
+        Wed, 7 Nov 2018 12:45:59 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cAZAyNm6L1uT0G/3tRYRheYSGVgaSUU52zwNA1YG/wF4cF7JYePCHcp1HGbFp4Qg5S3nO6
+X-Received: by 2002:a62:d703:: with SMTP id b3-v6mr1827097pfh.90.1541623559046;
+        Wed, 07 Nov 2018 12:45:59 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541623559; cv=none;
+        d=google.com; s=arc-20160816;
+        b=1FVRvBmvjqZ1+TonB2q8kOMq5qvmqWa7DDjAHHR/XE1xBdMn/tYNfddtjqlKgOCjRK
+         G8sNEsG4oSRP+RpEzihpboDIJU7l8yBHCg/D/xYPTJNQm/VUV//2vmhaA9RbReOl7aCg
+         1Rjt5CStbDZEBrogoS/hAE60LEpMKximgVWCFqrlrFEEuo8iaYwQa+s04YttkZDKt/z9
+         6rHaxAx8BJbgukgq6P+JtLprrJxJoQ3paRMHxFOV++lOeNKWsRuFG/QNzDb72Og3tZpr
+         Q+RIos8kojMiXlQYv67g9lUcUezElulAD5G2giNMBmodHzJKi6vDhfSyFd7hVyGw4exI
+         hoZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-disposition
+         :content-transfer-encoding:mime-version:robot-unsubscribe:robot-id
+         :git-commit-id:subject:to:references:in-reply-to:reply-to:cc
+         :message-id:from:date;
+        bh=01LZZMheHccACyA421KksfCU+qv+5V6n/gcWw3gg1BY=;
+        b=ilG20PWdLynvbw3mBcVrOo3xxkSYja6Ba4Z2qgE3U08svQnf0sp4Rheyc3BC1JNodS
+         sVViMAgfYX6Pb51oO/KZNUysP4iMsd0piUhNmcrBlUPisGCiptfYoswmVCFZg3gONab4
+         xbKbOMjnFDX6zipzU097vFg64HvLG5xTgBYInvtiplp6nwEmToc71lFp+Wo29ZDTWm/P
+         OYt1/vaYhW49hMz8MyNQ4eVJ7CHm+7YFD9+hC5xFUURwcK9Zdb82g1T5TVvvB+Z5AU3M
+         dDKc77Guka7DpbY7rcA31JZSqmQ8spFCbVFWXHQ9P12KP8A0RD27Piu2fsxgtWas/SNv
+         mfAA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b7-v6si1540999pgn.553.2018.11.07.12.45.44;
+        Wed, 07 Nov 2018 12:45:59 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727308AbeKHGRM (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:17:12 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:46581 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbeKHGRM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:17:12 -0500
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id wA7Ki3Gx1606366
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 7 Nov 2018 12:44:03 -0800
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id wA7Ki37i1606360;
+        Wed, 7 Nov 2018 12:44:03 -0800
+Date: Wed, 7 Nov 2018 12:44:03 -0800
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From: "tip-bot for Woods, Brian" <tipbot@zytor.com>
+Message-ID: <tip-be3518a16ef270e3b030a6ae96055f83f51bd3dd@git.kernel.org>
+Cc: mingo@kernel.org, x86@kernel.org, tglx@linutronix.de,
+        linux-pci@vger.kernel.org, mingo@redhat.com, puwen@hygon.cn,
+        bp@suse.de, linux-hwmon@vger.kernel.org, jdelvare@suse.com,
+        brian.woods@amd.com, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        clemens@ladisch.de, linux@roeck-us.net, bhelgaas@google.com,
+        qianyue.zj@alibaba-inc.com, Brian.Woods@amd.com
+Reply-To: puwen@hygon.cn, tglx@linutronix.de, mingo@redhat.com,
+          linux-pci@vger.kernel.org, mingo@kernel.org, x86@kernel.org,
+          jdelvare@suse.com, linux-hwmon@vger.kernel.org, bp@suse.de,
+          brian.woods@amd.com, hpa@zytor.com, bhelgaas@google.com,
+          linux@roeck-us.net, linux-kernel@vger.kernel.org,
+          clemens@ladisch.de, qianyue.zj@alibaba-inc.com,
+          Brian.Woods@amd.com
+In-Reply-To: <20181106200754.60722-4-brian.woods@amd.com>
+References: <20181106200754.60722-4-brian.woods@amd.com>
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/amd-nb] x86/amd_nb: Add PCI device IDs for family 17h,
+ model 30h
+Git-Commit-ID: be3518a16ef270e3b030a6ae96055f83f51bd3dd
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+X-Spam-Status: No, score=1.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        DATE_IN_FUTURE_96_Q,URIBL_SBL,URIBL_SBL_A autolearn=no
+        autolearn_force=no version=3.4.2
+X-Spam-Level: *
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on terminus.zytor.com
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCnfTkIT+Nbzj0ZAA--.1011S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxWrW8Wr1fXr1xXr1xZry7Wrg_yoWrGFW3pr
+	4Yvr1kKrW5JryUA3WvgF1kWr9rAa4kC34akF9xtrWftFyUJa1rWFnxZr43Ar1agF1DX3yU
+	XF9xGay8Ww1DtwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9ab7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE
+	2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcV
+	C2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28I
+	cxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_Zr
+	UvcSsGvfC2KfnxnUUI43ZEXa7IUnvAp5UUUUU==
+
+Commit-ID:  be3518a16ef270e3b030a6ae96055f83f51bd3dd
+Gitweb:     https://git.kernel.org/tip/be3518a16ef270e3b030a6ae96055f83f51bd3dd
+Author:     Woods, Brian <Brian.Woods@amd.com>
+AuthorDate: Tue, 6 Nov 2018 20:08:18 +0000
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Wed, 7 Nov 2018 21:36:09 +0100
+
+x86/amd_nb: Add PCI device IDs for family 17h, model 30h
+
+Add the PCI device IDs for family 17h model 30h, since they are needed
+for accessing various registers via the data fabric/SMN interface.
+
+Signed-off-by: Brian Woods <brian.woods@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+CC: Bjorn Helgaas <bhelgaas@google.com>
+CC: Clemens Ladisch <clemens@ladisch.de>
+CC: Guenter Roeck <linux@roeck-us.net>
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Jean Delvare <jdelvare@suse.com>
+CC: Jia Zhang <qianyue.zj@alibaba-inc.com>
+CC: <linux-hwmon@vger.kernel.org>
+CC: <linux-pci@vger.kernel.org>
+CC: Pu Wen <puwen@hygon.cn>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: x86-ml <x86@kernel.org>
+Link: http://lkml.kernel.org/r/20181106200754.60722-4-brian.woods@amd.com
+---
+ arch/x86/kernel/amd_nb.c | 6 ++++++
+ include/linux/pci_ids.h  | 1 +
+ 2 files changed, 7 insertions(+)
+
+diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+index cc34266e3c62..cc51275c8759 100644
+--- a/arch/x86/kernel/amd_nb.c
++++ b/arch/x86/kernel/amd_nb.c
+@@ -16,8 +16,10 @@
+ 
+ #define PCI_DEVICE_ID_AMD_17H_ROOT	0x1450
+ #define PCI_DEVICE_ID_AMD_17H_M10H_ROOT	0x15d0
++#define PCI_DEVICE_ID_AMD_17H_M30H_ROOT	0x1480
+ #define PCI_DEVICE_ID_AMD_17H_DF_F4	0x1464
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
++#define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
+ 
+ /* Protect the PCI config register pairs used for SMN and DF indirect access. */
+ static DEFINE_MUTEX(smn_mutex);
+@@ -27,9 +29,11 @@ static u32 *flush_words;
+ static const struct pci_device_id amd_root_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_ROOT) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_ROOT) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_ROOT) },
+ 	{}
+ };
+ 
++
+ #define PCI_DEVICE_ID_AMD_CNB17H_F4     0x1704
+ 
+ const struct pci_device_id amd_nb_misc_ids[] = {
+@@ -43,6 +47,7 @@ const struct pci_device_id amd_nb_misc_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_16H_M30H_NB_F3) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_DF_F3) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F3) },
+ 	{}
+ };
+@@ -56,6 +61,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_16H_M30H_NB_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_DF_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F4) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
+ 	{}
+ };
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 78d5cd29778a..349276fbd269 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -547,6 +547,7 @@
+ #define PCI_DEVICE_ID_AMD_16H_M30H_NB_F4 0x1584
+ #define PCI_DEVICE_ID_AMD_17H_DF_F3	0x1463
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3 0x15eb
++#define PCI_DEVICE_ID_AMD_17H_M30H_DF_F3 0x1493
+ #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
+ #define PCI_DEVICE_ID_AMD_LANCE		0x2000
+ #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001

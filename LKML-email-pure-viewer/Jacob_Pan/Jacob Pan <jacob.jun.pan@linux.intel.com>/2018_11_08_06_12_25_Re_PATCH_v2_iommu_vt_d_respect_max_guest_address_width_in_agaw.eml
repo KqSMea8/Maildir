@@ -1,0 +1,140 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:54 -0000
+Received: from icoremail.net (unknown [209.85.210.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv5r+YuNbcxNbAQ--.27348S3;
+	Thu, 08 Nov 2018 06:11:10 +0800 (CST)
+Received: from mail-pf1-f171.google.com (unknown [209.85.210.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHHTn4YuNbsIMZAA--.1586S3;
+	Thu, 08 Nov 2018 06:11:04 +0800 (CST)
+Received: by mail-pf1-f171.google.com with SMTP id y18-v6so5913000pfn.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:11:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=/bq/zFDoLrD2nSPzNp3u3zgoNg+QlFjLB4n+0WsEK2I=;
+        b=pth9Fm9fKkiXbYod4Qp55iyogKY/rjwD8nT/ndxy4b5kmUMu6Q1gp1Amb0DBlKNcCH
+         RmOPGKCYjR34RjpYwiI4qaIGb17Gvv2BLKBiRmnPfARp6XU8UKuPoFtwee/5uDoAoNTj
+         sn/B7NvfHnOpMMIuJmuWxVetkDXy7a5Q//BsUPqOyJHvP0SUdAb5Ey5HETaH2U8xxF/j
+         g2GjCqK4794S7P49AzGKZoniqHESQlIaJH6bJfcSi3Q6F1/YD9s7Gn1Jn04tXkhWHXF3
+         vTGbasG3zRhjQ0mJsRIlDkixYk3gUReSByOshtu8lOWbultiOcBPzNRYPhosDdS0IM8m
+         eOXQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gIAlQp5sG8rSFrXmaFdRUu6rHNcojsPSDd+E4hCsuCQd+TtvWXR
+	CmHORx9MBLNnHN52g4m5v3rM8O+G6VWVmHzx15zu+rdCDjJHAbT9+A==
+X-Received: by 2002:a63:4044:: with SMTP id n65mr1723361pga.90.1541628663658;
+        Wed, 07 Nov 2018 14:11:03 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp63188pjt;
+        Wed, 7 Nov 2018 14:11:02 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ehhj+b9A/quyOG0YkjgP9Pv5Clcls14kOOmC6vbnKgMnBn58Pmp55uF+alXzV9oyFl2kvE
+X-Received: by 2002:a65:6684:: with SMTP id b4mr1744214pgw.55.1541628662560;
+        Wed, 07 Nov 2018 14:11:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541628662; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ti0qVrzqF3usZ15Rn/Hun4lKqWIoscf3Qqr742pdwE/GJIWUQmuR6krn4u+mCbh7ek
+         fHkVfY7CQyzlH/9WACpkb2Lk4QRYrRMgE/PBsXOdkigsimXEl1/LxzK5U2oUfStJCJbA
+         phadtt9tsOHPUzggC5WJkVN1bcsDEqNto3OcgA5J3S/FXurhgxfMpGSBb+MIB+ROZOeR
+         vO5XaWxOAznq7doG27rdI7Gz2wARV7M/LBARWv5V7p2Pdg7Fb/7xGeXHGkuWrYAfNLrH
+         H2ohbmfTHaXztOvLY9R88AudD+SBahKpQB5TutTP4ViLEkhZWeRIg6+fli6wZsiQtQqX
+         KmfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :organization:references:in-reply-to:message-id:subject:cc:to:from
+         :date;
+        bh=/bq/zFDoLrD2nSPzNp3u3zgoNg+QlFjLB4n+0WsEK2I=;
+        b=FgnsKjCtBJlUXsSVvkdHAEAnfivXjH/XO56P04fHP/sku5vxpA1rdWvJwU8axeETLs
+         QKm8Znw8Q90zdVGk5WlDV8BfLQzgTMQT9nCBB9FZQT4b2U1tJK9yW27+JsQgNwcmdFcM
+         Kxw42RHnxZPXoFRtE9OvxQVs3bcIOMVoz0ibTLK0tuQG8sGJd3f/Jt8jL94LZ8irYJKM
+         MH4poD06jfK3bb1mgto0FLF9CY/eiwxpyd67Awk7e4+AE1gG9A1y73sHNhF8LCJIHcQe
+         PkiYHlT24jfzLv/ZCDnUQXrAK60FkL5wLQuvneqNUxdsrNsYnn8Kl1+1LQK2kBxo1hgb
+         q3jg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id o22-v6si1925765pfk.50.2018.11.07.14.10.45;
+        Wed, 07 Nov 2018 14:11:02 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727694AbeKHHm5 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:42:57 -0500
+Received: from mga12.intel.com ([192.55.52.136]:15550 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726653AbeKHHm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:42:56 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 14:10:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,477,1534834800"; 
+   d="scan'208";a="106774744"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga002.jf.intel.com with ESMTP; 07 Nov 2018 14:10:34 -0800
+Date: Wed, 7 Nov 2018 14:12:25 -0800
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "Mehta, Sohil" <sohil.mehta@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2] iommu/vt-d: respect max guest address width in agaw
+Message-ID: <20181107141225.2339ca4f@jacob-builder>
+In-Reply-To: <20181107160428.awgpvo73mp3lbdro@8bytes.org>
+References: <1541544435-52624-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20181107160428.awgpvo73mp3lbdro@8bytes.org>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHHTn4YuNbsIMZAA--.1586S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUOn7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCF
+	zxkY4VCF77xAMxkIecxEwVCI4VW3MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67
+	AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AK
+	xVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr4
+	1l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l
+	x2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14
+	v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IU5cXo7UUUUU==
+
+On Wed, 7 Nov 2018 17:04:28 +0100
+Joerg Roedel <joro@8bytes.org> wrote:
+
+> On Tue, Nov 06, 2018 at 02:47:15PM -0800, Jacob Pan wrote:
+> >  drivers/iommu/intel-iommu.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)  
+> 
+> Applied, thanks.
+
+Hi Joerg,
+We have found some issues with this patch on some platforms. Please
+disregard this patch.
+
+The intent of this patch was to fix some IOMMU with max address of 48
+but SAGAW of both 48 and 57 bits. Need to do more investigation in the
+page table level calculation and context address width setup. Sorry
+about that.
+
+Jacob

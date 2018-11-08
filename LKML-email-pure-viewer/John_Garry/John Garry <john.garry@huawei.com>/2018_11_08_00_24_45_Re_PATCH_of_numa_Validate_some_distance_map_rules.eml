@@ -1,0 +1,223 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:50 -0000
+Received: from icoremail.net (unknown [209.85.210.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv+77EeNbzShZAQ--.26831S3;
+	Thu, 08 Nov 2018 00:25:31 +0800 (CST)
+Received: from mail-pf1-f177.google.com (unknown [209.85.210.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH7Uj5EeNbTUwYAA--.11530S3;
+	Thu, 08 Nov 2018 00:25:29 +0800 (CST)
+Received: by mail-pf1-f177.google.com with SMTP id u13-v6so7910925pfm.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:25:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=SOLhYTqu2Nnq4NMIFJts5ipe8cPTGpVwyJVcJQHXybU=;
+        b=YIRN/iy9f5vsGLX06/zIuSXfLKYknY0tGdb+s09D5rLtS0wUhItoZ6GX6pVJ3RDznV
+         dWsneg/V4hip6aS7d2sDBIja1ETO2gaIf2ub8rsab0CrLFd46MMxze+uhhlP2mhZAzlc
+         R1qfpUqjT3JashzivEe9CNuEbEjMbLLCDBc/DTVBh5hAYoskaXK/TF/EFv2W1d70xlf7
+         2N9oYFrLvRgEFSPpft6RKdKlKUIlPX0ZskYO8+LZVaMzdbgWkul/BvtdYvN13DVAlE2f
+         TF3wNy9clmnesMARcBcqCJz0v9yX5xTFmLYV44sQsJHRIfbV0uZLg+cwhnAMVac4v14q
+         x1aQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJI5nW+t/Vb+RYtdl4cv/CnRTdBgOoPt0osQmwNIJj1KqN5CMAj
+	eUosgsOSjD8TCk/+fxo0PK46r0HHFBZgeyUmgAF1mucWZxcfeR2EzA==
+X-Received: by 2002:a62:da54:: with SMTP id w20-v6mr876772pfl.106.1541607928834;
+        Wed, 07 Nov 2018 08:25:28 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5447850pjt;
+        Wed, 7 Nov 2018 08:25:27 -0800 (PST)
+X-Google-Smtp-Source: AJdET5exFfVx8yH6469+MNnlZH0PzpKtbeq76SpV9TCoKxxhPHgFZ+er3DKGfzzzVpE54tyt4Z/4
+X-Received: by 2002:a17:902:70c9:: with SMTP id l9-v6mr807583plt.329.1541607927753;
+        Wed, 07 Nov 2018 08:25:27 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541607927; cv=none;
+        d=google.com; s=arc-20160816;
+        b=NEGV8HeXvFyMUpMCIm/12zoo0xjT5eypRWaQA67BCDsGkb6O0SeEEEyY/ocjQxslaV
+         dHMfOyfBxHMSUa4DKY1EHDPuyL0wZ9ls3OwW2IxV+MkMdcRCCdM76yRBrYq263A8WEPE
+         XeK5ahIl9CuiSkjhNgVH/kbSM2tOGxDbW0vyYAgwbHETXFFQVU25xq4seK+2HJSLYul7
+         Ft5KPWKl+F/HQP7J2SWRS5Kbj1pc3pSFaWte7QvQBZ6gKuLtWRazkVOzseamg1AvIyDC
+         ABNNOLB/ShdSrx2LJWoDH7QLcn0pI/SbgbzeFnSOU7CTizTcnCsbw2psjp3yyGzd4/HR
+         IN/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:in-reply-to
+         :mime-version:user-agent:date:message-id:from:cc:references:to
+         :subject;
+        bh=SOLhYTqu2Nnq4NMIFJts5ipe8cPTGpVwyJVcJQHXybU=;
+        b=k4BHewRtMVx6FP5o3R2LMWDf6tPDp+xxQ3+1BnRTxowh/Xq4I2Olcs1e14lC/5hlKr
+         hdJoz6spnfj8ogUFeaBYjC1i7pdP/VGc05qe6ObgNSE929qiKbxMw4baKy7LM0LnUx2t
+         DsrDx2+hBZteIuTq2FeSG93ZnT24+WXC2yTMqN07YzIfbWiCplEYmulQOfozFRy76r6q
+         x5XE+8VKwiz/RHYnvMmgdhK0bre6xaex7LeFP8mz5CaT0A2YDFwFXqgxHr1oy+0V6Qvo
+         e7DcwYbAHPMWLnziznSpzSg4PsRqSvf8XzU0e/sZKHhfpEUwL4xgkoLaHfsXcpFkZiU6
+         uW9A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b4-v6si1105803plz.105.2018.11.07.08.25.12;
+        Wed, 07 Nov 2018 08:25:27 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731324AbeKHB4F (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:56:05 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:47602 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727372AbeKHB4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:56:05 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8D64912FE9D66;
+        Thu,  8 Nov 2018 00:24:58 +0800 (CST)
+Received: from [127.0.0.1] (10.202.226.41) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.408.0; Thu, 8 Nov 2018
+ 00:24:50 +0800
+Subject: Re: [PATCH] of, numa: Validate some distance map rules
+To: Rob Herring <robh@kernel.org>, Will Deacon <will.deacon@arm.com>
+References: <1541507973-149965-1-git-send-email-john.garry@huawei.com>
+ <20181107154430.GA9996@brain-police> <20181107155552.GB18618@bogus>
+CC: <frowand.list@gmail.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        <anshuman.khandual@arm.com>, <peterz@infradead.org>
+From: John Garry <john.garry@huawei.com>
+Message-ID: <5b81e832-4ad0-13f2-1857-0764d175c61b@huawei.com>
+Date: Wed, 7 Nov 2018 16:24:45 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
+MIME-Version: 1.0
+In-Reply-To: <20181107155552.GB18618@bogus>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.41]
+X-CFilter-Loop: Reflected
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH7Uj5EeNbTUwYAA--.11530S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxCw48XF45tryxJFW7GFWrAFb_yoW5Kw47pF
+	WUKF15G3WDAr1Fk3y0qa10grn8trWIqrZxXr1fK3yq9r90kFs3trWftrW3u3W3Ar1kJFyj
+	vw4UKF9xAw40q3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcV
+	AKI48JMx02cVCv0xWlc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0264kExVAvwVAq07x20xyl
+	c7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VWUMxkI7II2jI8vz4vEwIxGrwCYIxAIcV
+	C0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY
+	6I8E87Iv67AKxVW8JVWxJwCYIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr1l42xK82IYc2
+	Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIY
+	CTnIWIevJa73UjIFyTuYvjxUQHanDUUUU
+
+On 07/11/2018 15:55, Rob Herring wrote:
+> On Wed, Nov 07, 2018 at 03:44:31PM +0000, Will Deacon wrote:
+>> Hi John,
+>>
+>> On Tue, Nov 06, 2018 at 08:39:33PM +0800, John Garry wrote:
+>>> Currently the NUMA distance map parsing does not validate the distance
+>>> table for the distance-matrix rules 1-2 in [1].
+>>>
+>>> However the arch NUMA code may enforce some of these rules, but not all.
+>>> Such is the case for the arm64 port, which does not enforce the rule that
+>>> the distance between separates nodes cannot equal LOCAL_DISTANCE.
+>>>
+>>> The patch adds the following rules validation:
+>>> - distance of node to self equals LOCAL_DISTANCE
+>>> - distance of separate nodes > LOCAL_DISTANCE
+>>>
+>>> A note on dealing with symmetrical distances between nodes:
+>>>
+>>> Validating symmetrical distances between nodes is difficult. If it were
+>>> mandated in the bindings that every distance must be recorded in the
+>>> table, validating symmetrical distances would be straightforward. However,
+>>> it isn't.
+>>>
+>>> In addition to this, it is also possible to record [b, a] distance only
+>>> (and not [a, b]). So, when processing the table for [b, a], we cannot
+>>> assert that current distance of [a, b] != [b, a] as invalid, as [a, b]
+>>> distance may not be present in the table and current distance would be
+>>> default at REMOTE_DISTANCE.
+>>>
+>>> As such, we maintain the policy that we overwrite distance [a, b] = [b, a]
+>>> for b > a. This policy is different to kernel ACPI SLIT validation, which
+>>> allows non-symmetrical distances (ACPI spec SLIT rules allow it). However,
+>>> the debug message is dropped as it may be misleading (for a distance which
+>>> is later overwritten).
+>>>
+>>> Some final notes on semantics:
+>>>
+>>> - It is implied that it is the responsibility of the arch NUMA code to
+>>>   reset the NUMA distance map for an error in distance map parsing.
+>>>
+>>> - It is the responsibility of the FW NUMA topology parsing (whether OF or
+>>>   ACPI) to enforce NUMA distance rules, and not arch NUMA code.
+>>>
+>>> [1] Documents/devicetree/bindings/numa.txt
+>>>
+>>> Signed-off-by: John Garry <john.garry@huawei.com>
+>>
+>> Is it worth mentioning that the lack of this check was leading to a kernel
+>> crash with a malformed DT entry?
+
+Yeah, I was thinking in hindsight that I should have mentioned the 
+yet-unresolved crash we avoid.
+
+>
+> So should be marked for stable too?
+
+Probably. So this patch is masking a crash I have observed, which may be 
+good enough reason on its own.
+
+In addition, I would still say that failing to validate the distance map 
+falls into the "oh, that's not good" category of stable rules.
+
+>
+>>
+>>> diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+>>> index 35c64a4295e0..fe6b13608e51 100644
+>>> --- a/drivers/of/of_numa.c
+>>> +++ b/drivers/of/of_numa.c
+>>> @@ -104,9 +104,14 @@ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
+>>>  		distance = of_read_number(matrix, 1);
+>>>  		matrix++;
+>>>
+>>> +		if ((nodea == nodeb && distance != LOCAL_DISTANCE) ||
+>>> +		    (nodea != nodeb && distance <= LOCAL_DISTANCE)) {
+>>> +			pr_err("Invalid distance[node%d -> node%d] = %d\n",
+>>> +			       nodea, nodeb, distance);
+>>> +			return -EINVAL;
+>>> +		}
+>>> +
+>>>  		numa_set_distance(nodea, nodeb, distance);
+>>> -		pr_debug("distance[node%d -> node%d] = %d\n",
+>>> -			 nodea, nodeb, distance);
+>>
+>> Looks good to me, although I'm not sure which tree this should go through.
+>>
+>> Acked-by: Will Deacon <will.deacon@arm.com>
+>
+
+Thanks Will.
+
+> I'll take it. Please resend with the comment Will asked for.
+>
+
+OK, I'll repost an updated version.
+
+> Rob
+>
+
+Cheers,
+john
+
+> .
+>
+

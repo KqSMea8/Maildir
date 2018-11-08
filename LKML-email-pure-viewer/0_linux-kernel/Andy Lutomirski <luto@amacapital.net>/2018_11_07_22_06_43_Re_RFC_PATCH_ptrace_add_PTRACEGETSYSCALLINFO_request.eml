@@ -1,0 +1,212 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:05 -0000
+Received: from icoremail.net (unknown [209.85.210.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH8K98eJbLmRYAQ--.26523S3;
+	Wed, 07 Nov 2018 22:08:00 +0800 (CST)
+Received: from mail-pf1-f173.google.com (unknown [209.85.210.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHLUm68eJb1r4XAA--.6729S3;
+	Wed, 07 Nov 2018 22:07:54 +0800 (CST)
+Received: by mail-pf1-f173.google.com with SMTP id g7-v6so5477086pfo.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:07:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version:subject
+         :from:in-reply-to:date:cc:content-transfer-encoding:message-id
+         :references:to:sender:precedence:list-id;
+        bh=Cq44L2Lzc2SYuidGokBvhmfP9O2TQxHES7y8bZuOJVw=;
+        b=bvu7wUrSob5gJqsRKrRPjI9H/w/bj1zThYaSF5QrFV0z9aOrFjX3e86AFmT6RalYBf
+         DxfvCT8/yA/ga3oLfhi0HdzUO5Y06GFubJrrO27wnaKviTk9IMDIYHPJPelr7D31f1gS
+         jH9KJx2BKHaPj0zDtEV0zBX7yEBx+0V+0SipIrFVfkvzU8LyLBWgJX1E0MayRiiB80Pj
+         t0y642AA9qFWuybPS15cVYUgT6I/SyhtS7Zb+ZwVFPIt7n+olNq6PWvnzOUobQq+qg0v
+         DauppjtAJzdVSolB4NPspG8gfyOlBAOkIrpYM+jpYkmMRafZuQ2APirXjbQ806wAQvie
+         PEZQ==
+X-Gm-Message-State: AGRZ1gIoVjhfVInSWNKDWEkZdqJ1UIDUTGU9eaWG/JquUXg3gxnguHnh
+	lgWsysoe0ZHflLYtatBy8CxTwUrE2lkVaidQH3xn0WGPcn8kqmfXog==
+X-Received: by 2002:a63:3c44:: with SMTP id i4mr300840pgn.286.1541599674483;
+        Wed, 07 Nov 2018 06:07:54 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5288321pjt;
+        Wed, 7 Nov 2018 06:07:53 -0800 (PST)
+X-Google-Smtp-Source: AJdET5en3x9iGWtaTdKzDusC+S4JNOwZb77h4qAtC0kOOwwUPeglUPjAUHkzi8tHxgoeNvRITgLf
+X-Received: by 2002:a62:682:: with SMTP id 124-v6mr331173pfg.161.1541599673472;
+        Wed, 07 Nov 2018 06:07:53 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541599673; cv=none;
+        d=google.com; s=arc-20160816;
+        b=qHGTDhBGjQ/qRsoeLwihKdZXTfWXrvBbyXsEkKkAu2fpNTuW+L055G2RKtrJAPycEB
+         gQgXrLrYeyDwL9u7Eo2Bq5ImR827YLkHdeAo2q9k3b85ydIZe+iGZtVZ07GuUGnVpLx+
+         jhs9PvGjeSL7mB3M0cpDDAFFpTi2FOTAdKjBrJJ1o3SNP2naUPxAlvN7wTy19hks2prr
+         NSxtOCF3Dmq+/7Pxip5EJx80Ke8xApTjsgIccXDHirjKWW+Uf8v/XmG3QYF+DL1HBl3w
+         D8jQErV5ewiFPGpctMiG2ZJkpAZ86jsBQZcrhXLdZYEf5tTmOS+8pSUmc1AHqtO46DLs
+         2f1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:to:references:message-id
+         :content-transfer-encoding:cc:date:in-reply-to:from:subject
+         :mime-version:dkim-signature;
+        bh=Cq44L2Lzc2SYuidGokBvhmfP9O2TQxHES7y8bZuOJVw=;
+        b=n7NQ8trSarAvV6kpad1lXzo8xzR5M/ROYKhKwQpCNLeCUxXf3+gaFU96OpsUe5lKiU
+         M0aY/DxiG48/HIHX+2nxtnrP2z0baQrWVUklIBlIfPLT36SBFeK6bJxtcE18WlEfuAB5
+         I4gupDzTOt2gzSBnemcrsiB6VvG7m2cWdZZTXXvhBmb37P+DQdfjtAVTgRFJmuyHnODY
+         Ly4CRjdRwi40OTEn3u2QD/XOosIXBlwDFGLU2UTb/e4+oEscLVDr3RGJ6YndNKqym0cx
+         O6ygVq4CJGDWzRc8ScocPQEY1nBaWxo+b/W1kntytWsV27I6cKwDTNZN1EsN4251Sg4o
+         oiBA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@amacapital-net.20150623.gappssmtp.com header.s=20150623 header.b=NdXVteev;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id f91-v6si750390plf.324.2018.11.07.06.07.37;
+        Wed, 07 Nov 2018 06:07:53 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727806AbeKGXhS (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:37:18 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40732 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbeKGXhS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:37:18 -0500
+Received: by mail-pl1-f196.google.com with SMTP id q19-v6so4915892pll.7
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 06:06:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Cq44L2Lzc2SYuidGokBvhmfP9O2TQxHES7y8bZuOJVw=;
+        b=NdXVteevIYUltfBgsXPByN6Fss6IKTjzMseZhfv/LwZShwtTXbkapQIyZGKHd1kG7E
+         M5QCsRQhaDpiEXnnwtAzIAxZQkTf1fOsji9DTrSkBJW6jShlTCtAB4jtHhB60cofBkMQ
+         UZPskeuMLR56g1gGUbsUwJzCVOVuKV96CbgoBPPoYYuSjm+wXOouo6Q7kxeqbHGWDWFI
+         /QvNGYsOsrhdvSMHPqnjiozTCzRPfnBmBq1sDEzLlH1hRPPW8RfrzjkEFHF6jsddaVvU
+         37KUCmIoXIZFhN8tJwIwMEQFUpMVJo2Z46r++kKtgrCI7NasF3IPBdUJNuRUno/bEPgO
+         iFEA==
+X-Received: by 2002:a17:902:7613:: with SMTP id k19-v6mr372065pll.98.1541599606057;
+        Wed, 07 Nov 2018 06:06:46 -0800 (PST)
+Received: from [192.168.0.178] (c-71-202-137-17.hsd1.ca.comcast.net. [71.202.137.17])
+        by smtp.gmail.com with ESMTPSA id p82-v6sm1069206pfa.47.2018.11.07.06.06.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 06:06:45 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC PATCH] ptrace: add PTRACE_GET_SYSCALL_INFO request
+From: Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16A404)
+In-Reply-To: <20181107112100.GA20419@redhat.com>
+Date: Wed, 7 Nov 2018 06:06:43 -0800
+Cc: Elvira Khabirova <lineprinter@altlinux.org>, rostedt@goodmis.org,
+        mingo@redhat.com, linux-kernel@vger.kernel.org, ldv@altlinux.org,
+        esyr@redhat.com, luto@kernel.org, strace-devel@lists.strace.io
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <3BDB914D-12F3-4703-A033-EBE02226EC45@amacapital.net>
+References: <20181107042751.3b519062@akathisia> <20181107112100.GA20419@redhat.com>
+To: Oleg Nesterov <oleg@redhat.com>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHLUm68eJb1r4XAA--.6729S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxJw47Gr15Kr13WFWUAr1rtFb_yoW5Gw1DpF
+	W5tFsrKr48J342yryS9w4UZFyIyry8JryDG3sYya1FyF95tr15tr1IgayqyF43Cw1kW3yx
+	Zr4vkryfC3ZrXaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW5XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IUOdK
+	s5UUUUU==
+
+
+
+> On Nov 7, 2018, at 3:21 AM, Oleg Nesterov <oleg@redhat.com> wrote:
+>=20
+>> On 11/07, Elvira Khabirova wrote:
+>>=20
+>> In short, if a 64-bit task performs a syscall through int 0x80, its trace=
+r
+>> has no reliable means to find out that the syscall was, in fact,
+>> a compat syscall, and misidentifies it.
+>> * Syscall-enter-stop and syscall-exit-stop look the same for the tracer.
+>=20
+> Yes, this was discussed many times...
+>=20
+> So perhaps it makes sense to encode compat/is_enter in ->ptrace_message,
+> debugger can use PTRACE_GETEVENTMSG to get this info.
+
+As I said before, I strongly object to the use of =E2=80=9Ccompat=E2=80=9D h=
+ere.  Compat meant =E2=80=9Cnot the kernel=E2=80=99s native syscall API =E2=80=
+=94 uses the 32-bit structure format instead=E2=80=9D.  This does not have a=
+ sensible meaning to user code, especially in the case where the tracer is 3=
+2-bit.
+
+>=20
+>> Secondly, ptracers also have to support a lot of arch-specific code for
+>> obtaining information about the tracee. For some architectures, this
+>> requires a ptrace(PTRACE_PEEKUSER, ...) invocation for every syscall
+>> argument and return value.
+>=20
+> I am not sure about this change... I won't really argue, but imo this
+> needs a separate patch.
+
+Why?  Having a single struct that the tracer can read to get the full state i=
+s extremely helpful.
+
+Also, we really want it to work for seccomp events as well as PTRACE_SYSCALL=
+, and the event info trick doesn=E2=80=99t make sense for seccomp events.
+
+>=20
+>> +#define PT_IN_SYSCALL_STOP    0x00000004    /* task is in a syscall-stop=
+ */
+> ...
+>> -static inline int ptrace_report_syscall(struct pt_regs *regs)
+>> +static inline int ptrace_report_syscall(struct pt_regs *regs,
+>> +                    unsigned long message)
+>> {
+>>    int ptrace =3D current->ptrace;
+>>=20
+>>    if (!(ptrace & PT_PTRACED))
+>>        return 0;
+>> +    current->ptrace |=3D PT_IN_SYSCALL_STOP;
+>>=20
+>> +    current->ptrace_message =3D message;
+>>    ptrace_notify(SIGTRAP | ((ptrace & PT_TRACESYSGOOD) ? 0x80 : 0));
+>>=20
+>>    /*
+>> @@ -76,6 +79,7 @@ static inline int ptrace_report_syscall(struct pt_regs *=
+regs)
+>>        current->exit_code =3D 0;
+>>    }
+>>=20
+>> +    current->ptrace &=3D ~PT_IN_SYSCALL_STOP;
+>>    return fatal_signal_pending(current);
+> ...
+>=20
+>> +    case PTRACE_GET_SYSCALL_INFO:
+>> +        if (child->ptrace & PT_IN_SYSCALL_STOP)
+>> +            ret =3D ptrace_get_syscall(child, datavp);
+>> +        break;
+>=20
+> Why? If debugger uses PTRACE_O_TRACESYSGOOD it can know if the tracee repo=
+rted
+> syscall entry/exit or not. PTRACE_GET_SYSCALL_INFO is pointless if not, bu=
+t
+> nothing bad can happen.
+>=20
+>=20
+
+I think it=E2=80=99s considerably nicer to the user to avoid reporting garba=
+ge if the user misused the API.  (And Elvira got this right in the patch =E2=
+=80=94 I just missed it.)
+
+>=20

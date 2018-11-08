@@ -1,0 +1,178 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:43 -0000
+Received: from icoremail.net (unknown [209.85.214.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH94+WeNbReFaAQ--.27044S3;
+	Thu, 08 Nov 2018 05:29:35 +0800 (CST)
+Received: from mail-pl1-f178.google.com (unknown [209.85.214.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBnSEQ5WeNbIWIZAA--.1345S3;
+	Thu, 08 Nov 2018 05:29:29 +0800 (CST)
+Received: by mail-pl1-f178.google.com with SMTP id w22-v6so5123972plk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 13:29:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:message-id:cc:reply-to:in-reply-to:references:to:subject
+         :git-commit-id:robot-id:robot-unsubscribe:mime-version
+         :content-transfer-encoding:content-disposition:sender:precedence
+         :list-id;
+        bh=izbRlBMMSTEzL/sQiya/Veym4/kqIneisJ7AZxOYbc8=;
+        b=unDbF4NwmHTPXBTndEKXkAyP7zy6nmMfgermgr02rt8ye7oBNFz8qmP2shL6l89eLE
+         M0g4i2NmlB3P/JycBbPNs9ArJmzJa/OpDd7GZPsdfLIzZwWUjxQI3j/a9RBvJlHvLQzl
+         Axs5GLDLDcLTo3Qv/tXVyEeBSTcv3VeLrL17iKhoMelvAa/Kg9kD0DMBS5j6N/vYEkwG
+         vUh6nugJxgw8A4IQlqIjlxgLNwt1f7zosCE+HkekMS+qf/fPaRrYix7tbu2QfKO9u+og
+         SOq2pcKVJ5E+nF+npJ2o/TkglmYMDdTpp0iKl5glC3daSWL6cqHlfjZxF9l/u+1n9h3x
+         SoPQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJ127AB06ObIAQVCJsjRmGwMsEHr+qQgq5nMs3vQCHrq6ojEBnP
+	pZ3K/gETK1y3bzlZNfvFZzFlALwACPv3Bvdeix5xZq0TWLHA92npyg==
+X-Received: by 2002:a17:902:8e81:: with SMTP id bg1-v6mr1948829plb.192.1541626168872;
+        Wed, 07 Nov 2018 13:29:28 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp26401pjt;
+        Wed, 7 Nov 2018 13:29:27 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dEkLxLU+56kSIQ+zlGyEgPsxi87aYcKj/BGdoqLhMFBP07Lf0D7gIuqYPlGc9NtVYc3w5q
+X-Received: by 2002:a62:6d07:: with SMTP id i7-v6mr1209162pfc.146.1541626167889;
+        Wed, 07 Nov 2018 13:29:27 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541626167; cv=none;
+        d=google.com; s=arc-20160816;
+        b=NBHRsCNRwIhh0znFIYUfYnJpZXdTxsxlTpCILxJHrMh6SXRGRpN6Rs81Ns3XeJcQ+l
+         Mt9+kSEg588aN2FDa349GWUrQAdpWI0ugzK5wQsyHXRDU029Nog8VX2a3MZ80OH9cDcS
+         HSLuIDqNUedkedanOxqq420GX2LoX11snu9t/2BSrV6tf3GQZnMuOm6Nan7yLf8FF7ot
+         mg2xGoxBcYGxh/RbWjjhbAaGuXhS5yXIIJIkKNa2z5gR0nox2PgNe+Tyk7Z2KNyO+Q1f
+         7BUi3DuX02FL6PjXG56lQeMxgDRCfSq2Y9S9p1NnH+pOkMhbVz7ZwxSs9RMQfzsxDi9I
+         iMkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-disposition
+         :content-transfer-encoding:mime-version:robot-unsubscribe:robot-id
+         :git-commit-id:subject:to:references:in-reply-to:reply-to:cc
+         :message-id:from:date;
+        bh=izbRlBMMSTEzL/sQiya/Veym4/kqIneisJ7AZxOYbc8=;
+        b=xP15sDzY91KITZdsnUnn5xvkym49PSN+IwSOnuK/BfEu1OEk+8fCYW6xpj9jnQky9x
+         8k7lCQCenN8tTdjVyj5U9oD7FfExJPpXgk8NsoNq43utt6wEg3oNQafU81Velx7UCWgj
+         3zkgTyDcHYoVLl6ABCBN4r1eDREV8aND9927lzCDuE7OdPSIaosyJtMLrzCuGI+G8UJ8
+         z58scRQVX8t6t4yhDANL9e+wd4orEk5PTPrL/tMkHlOb+tmLMYG+MewUSt4VRsSb7v/S
+         PCfsCQn2xyVgeG4oDB1GpDl/uzB34GzUeeCGclTsUzofOKVo8OJ1BkqoYtLKoGK7f5V4
+         W2nQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 62-v6si1854435pfk.287.2018.11.07.13.29.09;
+        Wed, 07 Nov 2018 13:29:27 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727597AbeKHHAj (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:00:39 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:54739 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbeKHHAj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:00:39 -0500
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id wA7LRsMW1620791
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 7 Nov 2018 13:27:54 -0800
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id wA7LRs311620788;
+        Wed, 7 Nov 2018 13:27:54 -0800
+Date: Wed, 7 Nov 2018 13:27:54 -0800
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From: tip-bot for Janakarajan Natarajan <tipbot@zytor.com>
+Message-ID: <tip-08e823c2c5899ef2de3aa1727233f1f19e8c1cc1@git.kernel.org>
+Cc: tglx@linutronix.de, mingo@kernel.org, bp@suse.de, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, dwmw@amazon.co.uk,
+        r.marek@assembler.cz, Janakarajan.Natarajan@amd.com,
+        fenghua.yu@intel.com, konrad.wilk@oracle.com, x86@kernel.org
+Reply-To: tglx@linutronix.de, bp@suse.de, mingo@kernel.org, hpa@zytor.com,
+          linux-kernel@vger.kernel.org, mingo@redhat.com,
+          r.marek@assembler.cz, dwmw@amazon.co.uk,
+          Janakarajan.Natarajan@amd.com, fenghua.yu@intel.com,
+          konrad.wilk@oracle.com, x86@kernel.org
+In-Reply-To: <1541624211-32196-1-git-send-email-Janakarajan.Natarajan@amd.com>
+References: <1541624211-32196-1-git-send-email-Janakarajan.Natarajan@amd.com>
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/cpu] x86/cpufeatures: Add WBNOINVD feature definition
+Git-Commit-ID: 08e823c2c5899ef2de3aa1727233f1f19e8c1cc1
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+X-Spam-Status: No, score=-0.0 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        DATE_IN_FUTURE_96_Q autolearn=no autolearn_force=no version=3.4.2
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on terminus.zytor.com
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBnSEQ5WeNbIWIZAA--.1345S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7uFyUXr1DCw4UGry3uw13CFg_yoW8uw4Dpa
+	9FkF4ktrs8Wr4kCw1xJr4Yyr4fWF9xGw15WrWUurs8Xa43K3s7tFnYyayUCFZ8Xayv9345
+	uFn0g3s2qF1UuFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6F4lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bY
+	AwsUUUUU=
+
+Commit-ID:  08e823c2c5899ef2de3aa1727233f1f19e8c1cc1
+Gitweb:     https://git.kernel.org/tip/08e823c2c5899ef2de3aa1727233f1f19e8c1cc1
+Author:     Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+AuthorDate: Wed, 7 Nov 2018 20:59:07 +0000
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Wed, 7 Nov 2018 22:21:03 +0100
+
+x86/cpufeatures: Add WBNOINVD feature definition
+
+Add a new cpufeature definition for the WBNOINVD instruction.
+
+The WBNOINVD instruction writes all modified cache lines in all levels of
+the cache associated with a processor to main memory while retaining the
+cached values.
+
+Both AMD and Intel support this instruction.
+
+Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+CC: David Woodhouse <dwmw@amazon.co.uk>
+CC: Fenghua Yu <fenghua.yu@intel.com>
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+CC: Rudolf Marek <r.marek@assembler.cz>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: x86-ml <x86@kernel.org>
+Link: http://lkml.kernel.org/r/1541624211-32196-1-git-send-email-Janakarajan.Natarajan@amd.com
+---
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 28c4a502b419..39a48f06d39d 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -281,6 +281,7 @@
+ #define X86_FEATURE_CLZERO		(13*32+ 0) /* CLZERO instruction */
+ #define X86_FEATURE_IRPERF		(13*32+ 1) /* Instructions Retired Count */
+ #define X86_FEATURE_XSAVEERPTR		(13*32+ 2) /* Always save/restore FP error pointers */
++#define X86_FEATURE_WBNOINVD		(13*32+ 9) /* WBNOINVD instruction */
+ #define X86_FEATURE_AMD_IBPB		(13*32+12) /* "" Indirect Branch Prediction Barrier */
+ #define X86_FEATURE_AMD_IBRS		(13*32+14) /* "" Indirect Branch Restricted Speculation */
+ #define X86_FEATURE_AMD_STIBP		(13*32+15) /* "" Single Thread Indirect Branch Predictors */

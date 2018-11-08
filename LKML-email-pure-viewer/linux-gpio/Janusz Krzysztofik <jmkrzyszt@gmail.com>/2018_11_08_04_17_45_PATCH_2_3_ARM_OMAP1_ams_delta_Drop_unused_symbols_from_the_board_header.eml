@@ -1,0 +1,151 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:14 -0000
+Received: from icoremail.net (unknown [209.85.215.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX+8ySONb13FaAQ--.27517S3;
+	Thu, 08 Nov 2018 04:16:51 +0800 (CST)
+Received: from mail-pg1-f173.google.com (unknown [209.85.215.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3kz8wSONbuycZAA--.862S3;
+	Thu, 08 Nov 2018 04:16:48 +0800 (CST)
+Received: by mail-pg1-f173.google.com with SMTP id w7so7765056pgp.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:16:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:in-reply-to:references:sender:precedence:list-id;
+        bh=0Ca/oaZHdOkqaq3mknp73TodAa8FD7n+xhH62XjZakk=;
+        b=j7ElQJUQsa++iba+GXihal1XOJh0iAm7NSLgOOxNv3K8GlEm0Y5FVb0UZURsTQdBUb
+         +cbQRQz7cEYZbl0qP3I6cskQigrxhmwV4mCyqn3ao1NTP4Uwo6nfHUia6M6qBotM/FyS
+         SAR2L6P2jM7I1IO2yFYgtgznC6DYnejiNDLnoOwlIayW/WW8l8FjFNF+lL32mLjVtX7S
+         kwtoflWqficBhheqBEVFQ95ZEJTSPiXfcgiKoCDkpYAJLmDpWsfImA69BupI3JmwaIM/
+         6GHAttZojCp6utY/3DQI/TNXGPEYdEAEu/eUK9cee7g/EIupv+6vHZmvwGZ6/t0nE7Dy
+         c92A==
+X-Gm-Message-State: AGRZ1gLnro6Tm0Bf7EIYHFb7gNTRpQ2zGEfLIOI5wn5fN3xGchuvDz/n
+	a2H2BM7rQUUZ7/TT1tjiZEic6BEs/heUMSOLA4MuHDwip5rHDU8ksg==
+X-Received: by 2002:a62:1c53:: with SMTP id c80-v6mr1701165pfc.14.1541621808551;
+        Wed, 07 Nov 2018 12:16:48 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5697118pjt;
+        Wed, 7 Nov 2018 12:16:48 -0800 (PST)
+X-Google-Smtp-Source: AJdET5frUD2MFM6yz04NFssYg5ihUd+GVuJy4U1KOMgEOT0I57Wuocrh5zlxLoIc/dfg/A0/E6mj
+X-Received: by 2002:a62:6881:: with SMTP id d123-v6mr1578569pfc.195.1541621808013;
+        Wed, 07 Nov 2018 12:16:48 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541621807; cv=none;
+        d=google.com; s=arc-20160816;
+        b=NyZthgdv3b4zrwiVCBlfiOIBHRO8Z7BSHfCaKldF5iWRO7bcLegqGaaMzfStST3TC6
+         tKaDjq16cEGIzVJN2uvIMhZaJtbwlajiBnMpc6g4Ojt/ELrXe4qIO9mbR0+o527+jgJX
+         l0sCve25Ktgpr+4VpcdV4CeahRFO0PQkAipAWzpAB/Y6N79iTIgJ8SXzRmLZhm0EDzfe
+         i5XARvhllozZRzMoT2HyRCENMBYmJ3kcO2EqV7Wld09R5nv2I6h6EaK3pmwAv6ldJEXC
+         LSGYvbHRG0ZXaMXZdoHQ55TDvFzFj8vdorM8XmX6FEiERESIoav8+2ovt+oQ9kUVgiYj
+         RBHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from:dkim-signature;
+        bh=0Ca/oaZHdOkqaq3mknp73TodAa8FD7n+xhH62XjZakk=;
+        b=KDOM9VfztBH5yRkOXDDSmCSeGkvSLp1c6r6Z7N0rKiwHG6oUWfxhnx+V8i9gU+Ubdp
+         qyTONnpwTUQ3MMUSUC1RX0ipCl/x0+ulQ1aJ6cozB8fdgdsI1Gu0isglvxaHd26D/ued
+         P1r28HAiK9iBfw3sJsEQIItAwlyBiWQ/WZNA5i/gVdHc/EWV56M33hTh8FNMDr9go2na
+         WecgAp/d+dUGO9ORSswWRyiseXoRvo+XNDt/VQFYfrXey+GWHdjEhKwSBkj39wPGcZvH
+         A+bnxA4eOAPApCs8/Xaigt23WnUcGGIkXwd+FJbhX/HMLGGs3S/njezq75XfC9xCOSAT
+         e/ZA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=QakvFgC0;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b124-v6si1731015pfg.90.2018.11.07.12.16.33;
+        Wed, 07 Nov 2018 12:16:47 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726920AbeKHFsP (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:48:15 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36952 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbeKHFsO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:48:14 -0500
+Received: by mail-lf1-f66.google.com with SMTP id p17so12428969lfh.4;
+        Wed, 07 Nov 2018 12:16:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=0Ca/oaZHdOkqaq3mknp73TodAa8FD7n+xhH62XjZakk=;
+        b=QakvFgC0pyMYjsPmym9LP3PUl8Ma8Ys5jf4fDIoi25mTQtQgiHBHmicNWI4L32PneO
+         LODuHwStrnuf2HO8A/U/0tvdn3h2/hdFztFWxKuPDQupKqdOhig0+eEqewmbRzLZhuvd
+         TOOn5sb21cBM3QQbDXu1ui91X/oVHcxgUyElz5ft3dz28Ub2zxD3rFRsT2K7oAd581wT
+         HbSODLbXPBmys09kNq1G9dl7drlFm6dAjLpYxLfNooPTRx290BDWZbJ4pAT0yohvYGGV
+         8EkRkKAxgkWoYSKSS/EIaj0R1XIsmP7YP/mhdrnh3lltLeP/KYC0mkb8N3udOd3N1pho
+         ceVA==
+X-Received: by 2002:a19:df41:: with SMTP id q1mr1020009lfj.25.1541621775918;
+        Wed, 07 Nov 2018 12:16:15 -0800 (PST)
+Received: from z50.lan (93-181-165-181.internetia.net.pl. [93.181.165.181])
+        by smtp.gmail.com with ESMTPSA id c19sm285650lfg.86.2018.11.07.12.16.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 12:16:15 -0800 (PST)
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Subject: [PATCH 2/3] ARM: OMAP1: ams-delta: Drop unused symbols from the board header
+Date: Wed,  7 Nov 2018 21:17:45 +0100
+Message-Id: <20181107201746.14705-3-jmkrzyszt@gmail.com>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20181107201746.14705-1-jmkrzyszt@gmail.com>
+References: <20181107201746.14705-1-jmkrzyszt@gmail.com>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3kz8wSONbuycZAA--.862S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrZr1DWw1ktr18tF1UWF4xtFb_yoWDJrb_tF
+	12yaykJrZ3CF1Syr4Ykw4rK3yYqw15Krnru3s5GFnIkw4agrs8ZrWkG3s2yr1YqayfKrZ3
+	A3yxAw1ag3y5tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqAYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW7MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI
+	42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExV
+	AvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
+	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrx
+	kI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCbIYCTnIWIevJa73UjIFyTuYvjxU
+	D_gAUUUUU
+
+Those bitmap symbols defining pins of latch2 register, used with
+read()/write() calls before the latch was converted to a GPIO device,
+have been obsoleted by integer symbols defined inside the board file.
+
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+---
+ arch/arm/mach-omap1/board-ams-delta.h | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/arch/arm/mach-omap1/board-ams-delta.h b/arch/arm/mach-omap1/board-ams-delta.h
+index 06e4c64a47f8..2c3aff824cf0 100644
+--- a/arch/arm/mach-omap1/board-ams-delta.h
++++ b/arch/arm/mach-omap1/board-ams-delta.h
+@@ -28,10 +28,6 @@
+ 
+ #if defined (CONFIG_MACH_AMS_DELTA)
+ 
+-#define AMD_DELTA_LATCH2_SCARD_RSTIN	0x0400
+-#define AMD_DELTA_LATCH2_SCARD_CMDVCC	0x0800
+-#define AMS_DELTA_LATCH2_MODEM_CODEC	0x2000
+-
+ #define AMS_DELTA_GPIO_PIN_KEYBRD_DATA	0
+ #define AMS_DELTA_GPIO_PIN_KEYBRD_CLK	1
+ #define AMS_DELTA_GPIO_PIN_MODEM_IRQ	2
+-- 
+2.16.4

@@ -1,0 +1,203 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:40 -0000
+Received: from icoremail.net (unknown [209.85.210.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv_plCuNbTvhYAQ--.26950S3;
+	Wed, 07 Nov 2018 23:53:10 +0800 (CST)
+Received: from mail-pf1-f169.google.com (unknown [209.85.210.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXdUFiCuNbdysYAA--.25S3;
+	Wed, 07 Nov 2018 23:53:06 +0800 (CST)
+Received: by mail-pf1-f169.google.com with SMTP id u13-v6so7870791pfm.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:53:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:message-id:cc:reply-to:in-reply-to:references:to:subject
+         :git-commit-id:robot-id:robot-unsubscribe:mime-version
+         :content-transfer-encoding:content-disposition:sender:precedence
+         :list-id;
+        bh=TMIGwQaG3uBeosKKF5o6IA+VImCBVCgoq6gFje7qKbU=;
+        b=l8YPd3NPSvFCVRvzN0M3LqEsNEe99wXyH/t+wNu+CHrX3a1zHJeo5fV+N2u5d5Jjij
+         kg0+8Y34s83zmC6Be1X6K5WGg9tJ5zwrHvq4Ii46U59KEtGc49N4kSrzkk8pP4Drky1M
+         5qpkGMg+ZqxFDL7cj9Dl6QUdU0aUkYsUXa7EQ+fTzkk+SineaH64Pw4wz/vTHSuGbFOY
+         Ex62zMgluqIHmr++YITQrahDCMhUqKe2pMCMZGeBXNT68kmZ4ysJCK1TKjiMeRyYHcA4
+         awKdDsDdZmlhT2/YMiIOeI30gc0c6c3IixcnSWNlLwis/8aR4HFwSSpAJuXUKcvXmtb2
+         QiuQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIynQqZU7oDheVdsLuAr6pZAUCyYmf0M/UwooDrvKJcd9V04SMF
+	F8x5r9iAmBgNQYkZtBtlYkyAl38ZZBuJWcdtRmm7o4UCE+izEe8EcA==
+X-Received: by 2002:a63:4044:: with SMTP id n65mr628142pga.90.1541605986609;
+        Wed, 07 Nov 2018 07:53:06 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5409445pjt;
+        Wed, 7 Nov 2018 07:53:05 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cHN3HH2bSPNJDE0IUigWJgDfiM/mMXyW82fnpF8cico/8bMrlKSPDUuv6K536qAegrFu4S
+X-Received: by 2002:a65:40c5:: with SMTP id u5mr624985pgp.46.1541605985774;
+        Wed, 07 Nov 2018 07:53:05 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541605985; cv=none;
+        d=google.com; s=arc-20160816;
+        b=w/zdDD1/q6t+LnAgctbswQP8CiC01qsL9GftmBpWorsr0VOrgIDsuLtoa8pR3uJTlX
+         0bTqGP1ZrxR/75s1McsEemAyiYYGbea916l0X2QhIIsn0RaGc67cJADeuzbTGb1Yt9Yi
+         BXeIsB/TE6Mnayk2FohPXBnQekx0i13GlejxZp32yYsrgelkYPUyzTGBB5WdRVMt2LMF
+         pHivW/RfdQlTZSr4JQ9vZjlJe1JLZYgAQOXJtUnpz7ibYoWcFcOmIb0f+WMXHaC78Z5k
+         ZSqNzFXlOv3R+rwyB8u411IlZbqtj0PXl4xAlHMM9xg59gSJRCQTbFI/IFzdFvZafcjq
+         zdmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-disposition
+         :content-transfer-encoding:mime-version:robot-unsubscribe:robot-id
+         :git-commit-id:subject:to:references:in-reply-to:reply-to:cc
+         :message-id:from:date;
+        bh=TMIGwQaG3uBeosKKF5o6IA+VImCBVCgoq6gFje7qKbU=;
+        b=vnnMoGV1FIAQ44TJvh4xPGmE/ay/abHfYhvNwxSOSu4Fu7ZiTokgF2r9R/4vBoZTTj
+         zHs41xnSzr2/gAxrbYmLcChEdG11yzgpJ8ta8EtdYCjkOiDkGvIS8R3BQmSSKtwv593u
+         YJv8ET2pSQ3os9GM7ilMN6gZ+VLAryf0jcvYN+KB3dbf9rTwepMcWTche+Bsuc+/0BIc
+         sG+9wy81ZtsZk54DEgPq49OO/Rqv5D9wgZgWgGKNlguAuhTs31P7jtsD20eIIvm3/UIg
+         1dzeRixBoH5RinliZntRXMGQ36ou7eqW8KkLEb58OVatWZhZf0dP2QTUCSJYIacCClPm
+         GZqw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id i2si789919pgl.153.2018.11.07.07.52.49;
+        Wed, 07 Nov 2018 07:53:05 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731146AbeKHBXS (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:23:18 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:51131 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727604AbeKHBXS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:23:18 -0500
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id wA7Fpsrj1468338
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 7 Nov 2018 07:51:54 -0800
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id wA7FprO11468333;
+        Wed, 7 Nov 2018 07:51:53 -0800
+Date: Wed, 7 Nov 2018 07:51:53 -0800
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From: tip-bot for Borislav Petkov <tipbot@zytor.com>
+Message-ID: <tip-f26621e60b35369bca9228bc936dc723b3e421af@git.kernel.org>
+Cc: hpa@zytor.com, linux-kernel@vger.kernel.org, peterz@infradead.org,
+        bp@suse.de, tglx@linutronix.de, torvalds@linux-foundation.org,
+        mingo@kernel.org
+Reply-To: bp@suse.de, tglx@linutronix.de, torvalds@linux-foundation.org,
+          mingo@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org,
+          peterz@infradead.org
+In-Reply-To: <20181105093307.GA12445@zn.tnic>
+References: <20181105093307.GA12445@zn.tnic>
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip:core/urgent] resource/docs: Complete kernel-doc style function
+ documentation
+Git-Commit-ID: f26621e60b35369bca9228bc936dc723b3e421af
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+X-Spam-Status: No, score=-0.0 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        DATE_IN_FUTURE_96_Q autolearn=no autolearn_force=no version=3.4.2
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on terminus.zytor.com
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXdUFiCuNbdysYAA--.25S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxGryDXFW8WFW3XF43ZF4fKrg_yoW5Cr1Dpr
+	yxCws8Gr4DXr1IqwsxKr18CFZ3u3Z2kr43tw4fJry3JayUJryjqFy7ZryfZFyUGryv9rWU
+	tF4jy348KFWDAa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPYb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6ryrMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW0oVCq3wCYIxAI
+	cVC2z280aVCY1x0267AKxVW0oVCq3wCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bO5r7U
+	UUUU=
+
+Commit-ID:  f26621e60b35369bca9228bc936dc723b3e421af
+Gitweb:     https://git.kernel.org/tip/f26621e60b35369bca9228bc936dc723b3e421af
+Author:     Borislav Petkov <bp@suse.de>
+AuthorDate: Mon, 5 Nov 2018 10:33:07 +0100
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Wed, 7 Nov 2018 16:47:47 +0100
+
+resource/docs: Complete kernel-doc style function documentation
+
+Add the missing kernel-doc style function parameters documentation.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: akpm@linux-foundation.org
+Cc: linux-tip-commits@vger.kernel.org
+Cc: rdunlap@infradead.org
+Fixes: b69c2e20f6e4 ("resource: Clean it up a bit")
+Link: http://lkml.kernel.org/r/20181105093307.GA12445@zn.tnic
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/resource.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 17bcb189d530..b0fbf685c77a 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -318,17 +318,24 @@ int release_resource(struct resource *old)
+ 
+ EXPORT_SYMBOL(release_resource);
+ 
+-/*
+- * Finds the lowest iomem resource that covers part of [start..end].  The
+- * caller must specify start, end, flags, and desc (which may be
++/**
++ * Finds the lowest iomem resource that covers part of [@start..@end].  The
++ * caller must specify @start, @end, @flags, and @desc (which may be
+  * IORES_DESC_NONE).
+  *
+- * If a resource is found, returns 0 and *res is overwritten with the part
+- * of the resource that's within [start..end]; if none is found, returns
+- * -1. Returns -EINVAL for other invalid parameters.
++ * If a resource is found, returns 0 and @*res is overwritten with the part
++ * of the resource that's within [@start..@end]; if none is found, returns
++ * -1 or -EINVAL for other invalid parameters.
+  *
+  * This function walks the whole tree and not just first level children
+  * unless @first_lvl is true.
++ *
++ * @start:	start address of the resource searched for
++ * @end:	end address of same resource
++ * @flags:	flags which the resource must have
++ * @desc:	descriptor the resource must have
++ * @first_lvl:	walk only the first level children, if set
++ * @res:	return ptr, if resource found
+  */
+ static int find_next_iomem_res(resource_size_t start, resource_size_t end,
+ 			       unsigned long flags, unsigned long desc,
+@@ -390,9 +397,7 @@ static int __walk_iomem_res_desc(resource_size_t start, resource_size_t end,
+ }
+ 
+ /**
+- * walk_iomem_res_desc - walk through iomem resources
+- *
+- * Walks through iomem resources and calls @func() with matching resource
++ * Walks through iomem resources and calls func() with matching resource
+  * ranges. This walks through whole tree and not just first level children.
+  * All the memory ranges which overlap start,end and also match flags and
+  * desc are valid candidates.

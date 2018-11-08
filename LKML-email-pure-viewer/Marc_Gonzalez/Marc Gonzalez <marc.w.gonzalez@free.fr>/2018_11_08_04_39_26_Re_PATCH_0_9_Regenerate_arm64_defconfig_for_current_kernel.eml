@@ -1,0 +1,145 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:25 -0000
+Received: from icoremail.net (unknown [209.85.215.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f_mrTeNbGZRaAQ--.27067S3;
+	Thu, 08 Nov 2018 04:40:13 +0800 (CST)
+Received: from mail-pg1-f182.google.com (unknown [209.85.215.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3FECqTeNbQToZAA--.1029S3;
+	Thu, 08 Nov 2018 04:40:10 +0800 (CST)
+Received: by mail-pg1-f182.google.com with SMTP id n10-v6so7796212pgv.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:40:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=EsoqeJmLcGUm0hDYazcNLnoa5iuLaia5uPjKeOEL2tk=;
+        b=HYVcf9T3N2n5p3lg0P0BjJ2d114b6+Dq95mkrm6EB/rI++qFUVRQvMVFG7vEWpWSwZ
+         fWDYeGMaUgAURVEUyCn7OK3xLxssT0alts+fFADWDYv2JhzyiHhnpI0Zuw6kyw0zBTub
+         GtbTXyPu4iAUh7zReQglLR80mxxUPIuXyRVqos66aCGrM/HbK09eeJbDsiYJKkpKHPe9
+         Ny7QjZZJyT+mT+G2AAU3HWtGpSWLm9C1DfjXeYyOC/RxrQ6NQ1W/wHVn+GzKHvoCW+Ur
+         QxSU3/yVnWgJlSD+UCgPPl1xVNYp+WYkDOHOrgCYoRDkR2ucfC6TfA8vrdK0NyVCG7ur
+         GUtQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJfePcutGZh15P1jtLue1jlwTgKlNBJjJ1oAygSxjLVbKJj89dA
+	tr+RwFoe7hvTge/YtoZ+NPSU7D9gTQhoBmG/AHZjCc0njMdEqoaXQg==
+X-Received: by 2002:a63:a91a:: with SMTP id u26mr1468120pge.349.1541623210515;
+        Wed, 07 Nov 2018 12:40:10 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5719111pjt;
+        Wed, 7 Nov 2018 12:40:09 -0800 (PST)
+X-Google-Smtp-Source: AJdET5egBodLCjtYkziFfdAfdowo8meXfKKPpadWvNglX458vhuJxVBoSX5HkrCxgPTyr3VbW6w1
+X-Received: by 2002:a17:902:703:: with SMTP id 3-v6mr1824804pli.38.1541623209382;
+        Wed, 07 Nov 2018 12:40:09 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541623209; cv=none;
+        d=google.com; s=arc-20160816;
+        b=vElY69CuuH0i78qqHtNciLJ+tP/CzWg8XphDUem3XkHrzAxqw+LYEO9zz75A/VX9tj
+         TcMP4Jg2+gMmuR1p4YeXfemlOQLc4G+eG0CO5XuzyQQhegfsoGJ+UvHhfg+4Ud3alMqc
+         5j4halkirqL8U4eXL/u7LkfbYdkbTa6eIcW1nzo5SU4+b9oeTJlJi806BNflIFjYBvZu
+         clAXeBCdrwHNZr0LcNiiLRodqnjDtRnGK4Gpi1CLVIAwaFJqRazeRI/gA6KOS8cZJQV3
+         qo5I2lFB1X4dtz6rg8ePv/ZxMBHsPwssqnqC6DQk9uRjsoCITZWZOzyeycj2/RG6V7m6
+         VeRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:in-reply-to
+         :mime-version:user-agent:date:message-id:references:cc:to:from
+         :subject;
+        bh=EsoqeJmLcGUm0hDYazcNLnoa5iuLaia5uPjKeOEL2tk=;
+        b=HVT5ZqM1aOa4GoUrQhtsQ+V47D7NFeTG9WGSxEOgux4k0NYQLdkMetsYEQrmL83TZb
+         sOowD9zYHZXu81X7rAe9fciV+NbDwplYKCzhKR7VVjumnsPlywJFbxAwSKC1vhjcUWod
+         3ZFl8aHKW8M/lmmrFU/42MZ9tn+UP9ltH3RH7oE6LRNkjegd3NFy1mL2irkz/U7TS9pC
+         Ujy50ro7fnmcH7d2L9s1yIY4EKGlJ7skBkvH5k+OP0tKq/QDkcm/HcZS4B+vEAhsDfV1
+         WdE9yMD4aYhOzLteLpO0mUXI3fz4vxHSJ8K5icPZ8ebiD7MCKZ6ElyvWmrwz7tzxg2uI
+         pjvg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b7-v6si1540999pgn.553.2018.11.07.12.39.54;
+        Wed, 07 Nov 2018 12:40:09 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726958AbeKHGLo (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:11:44 -0500
+Received: from smtp4-g21.free.fr ([212.27.42.4]:27818 "EHLO smtp4-g21.free.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726480AbeKHGLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:11:44 -0500
+Received: from [192.168.1.42] (unknown [77.207.133.132])
+        (Authenticated sender: marc.w.gonzalez)
+        by smtp4-g21.free.fr (Postfix) with ESMTPSA id B8B0A19F5A3;
+        Wed,  7 Nov 2018 21:39:29 +0100 (CET)
+Subject: Re: [PATCH 0/9] Regenerate arm64 defconfig for current kernel
+From: Marc Gonzalez <marc.w.gonzalez@free.fr>
+To: arm-soc <arm@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <8b49a92b-ca92-1fca-cd09-3bcd7a3dcbb9@free.fr>
+Message-ID: <6eb79d2e-1857-39b5-90f5-29bc13bce16a@free.fr>
+Date: Wed, 7 Nov 2018 21:39:26 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Firefox/52.0 SeaMonkey/2.49.4
+MIME-Version: 1.0
+In-Reply-To: <8b49a92b-ca92-1fca-cd09-3bcd7a3dcbb9@free.fr>
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3FECqTeNbQToZAA--.1029S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jr15uF17ZFWDCF13Jr4ktFb_yoWkZFg_JF
+	y8Ka4kXw4UAFWIgas8Za1kJrWjga1UW348JF42yws7Gr12qw17Xws8X3yrWF1xXa18uFn0
+	vrZ5Zw1kJrnrujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbvAYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAKzI0EY4vE52x082I5MxkFs20E
+	Y4vE44CYbxCE4x80FwCY02Avz4vEIxC_AwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI
+	8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280
+	aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7V
+	AKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j
+	6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsG
+	vfC2KfnxnUUI43ZEXa7IU5f73DUUUUU==
+
+Arnd, Olof,
+
+The following patch series was sent to arm@kernel.org
+but the messages bounced because the SMTP server is
+currently blacklisted. Can you get the patches through
+the LAKML mailing list?
+
+Regards.
+
+On 07/11/2018 21:12, Marc Gonzalez wrote:
+
+> Hello ARM maintainers,
+> 
+> The set of Kconfig options slowly changes with every kernel version.
+> This patch series regenerates the arm64 defconfig for v4.20
+> No functional change intended, except adding PINCTRL_MTK_MOORE to
+> keep PINCTRL_MT7622.
+> 
+> Marc Gonzalez (9):
+>   arm64: defconfig: Regenerate for v4.20
+>   arm64: defconfig: Drop ARM_BIG_LITTLE_CPUFREQ
+>   arm64: defconfig: Drop NF_CONNTRACK_IPV{4,6}
+>   arm64: defconfig: Drop USB_ULPI_BUS and USB_CHIPIDEA_ULPI
+>   arm64: defconfig: Replace PINCTRL_MT7622 with PINCTRL_MTK_MOORE
+>   arm64: defconfig: Drop redundant SND_SOC_ROCKCHIP_I2S
+>   arm64: defconfig: Drop CRYPTO_DEV_FSL_DPAA2_CAAM
+>   arm64: defconfig: Change SCSI_UFS_HISI=m
+>   arm64: defconfig: Drop redundant sound codec options
+> 
+>  arch/arm64/configs/defconfig | 105 +++++++++++++++--------------------
+>  1 file changed, 46 insertions(+), 59 deletions(-)

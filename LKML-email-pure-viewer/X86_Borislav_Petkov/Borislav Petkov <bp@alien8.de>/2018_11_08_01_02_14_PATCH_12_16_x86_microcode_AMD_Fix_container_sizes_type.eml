@@ -1,0 +1,179 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:02 -0000
+Received: from icoremail.net (unknown [209.85.214.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3fyXsGuNbZF5ZAQ--.26793S3;
+	Thu, 08 Nov 2018 01:03:41 +0800 (CST)
+Received: from mail-pl1-f178.google.com (unknown [209.85.214.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXOETqGuNb8nIYAA--.345S3;
+	Thu, 08 Nov 2018 01:03:38 +0800 (CST)
+Received: by mail-pl1-f178.google.com with SMTP id p16-v6so8130579plr.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:03:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=KL8wmbVxrRbLD33D4vbakahDVrYlj5Zv0FCtgeNwcm0=;
+        b=KHN1LOpT/J/9HnaUgQvarkYDPW0V4KfjN68HVzD06FtOhWa3rU6RVQTarLpQyDwBhL
+         uiG6EmToKKycVwB6TxqScNrtQE8hISGs3ix2SstnwF0zWAPaWFMhB4W/NPKhMyU//at5
+         FmzD7TzXETHkO/HIikDQSDVjd7UGTya/J8M9lZwr3aRpziRUHlrkAzpXocYKNS61Av+w
+         cxehQ3hRkmWgFLlEKAEsVTyBUTwiTKxcIOkMbzom08rPj5gm1FcwPFLALWgTZ6LUAtW1
+         x75FYTGM2veczGW//FSS0dTnISo8aucPIaacbvIM+NUIVAgQRwiKf1EPNcj6EiAbt23A
+         gJBQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIc2ioed8AWuxATJ+1jDDp6TbmQKYKvcW+/Mzd73JI6H2NJxxRb
+	hqG94o0urzvRJ0Vc4YxwdiUl6arLQeWKDJAfwH976gKjV4joeUJJ4A==
+X-Received: by 2002:a17:902:8e81:: with SMTP id bg1-v6mr1016232plb.192.1541610217975;
+        Wed, 07 Nov 2018 09:03:37 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5488615pjt;
+        Wed, 7 Nov 2018 09:03:37 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cZCQHxWmjfxxAF7L6SipZcdJygxrVHrnE11pBwTI07NBEc/oO+JbKD9YZP/1fGOeaxNeMV
+X-Received: by 2002:a63:a441:: with SMTP id c1-v6mr849673pgp.49.1541610217226;
+        Wed, 07 Nov 2018 09:03:37 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610217; cv=none;
+        d=google.com; s=arc-20160816;
+        b=QT9dQpjbxCLdQ1N4Ccujfj/MJw/78KN+d9HzcYK3adrTK2CUvm118TzM2JRKTIEGZz
+         NeOP4l6Zwt5vEnmsUSyJrOArrt5egy+lto80xv7TPCV8Hc3AeQvTUNfm3zolJqyfBZyH
+         5LiXkZ9nzQUxooJnMoL4u6T7jt6c4oagcKIk9sFX0ofaJvrt+sEItoJI9VDd0UPRuV1S
+         HZ1iJIFft1DLk9vcfR/U0P6LTYiCv7yk+HKtjjBfxsnpUyX1/pL5ncgs66+ckCCzX4cS
+         Ec1q426kj9YeFaWhdjbMgUumoMK4gFxjMLeg1CYVIUFlr1zmuECLwqC3OY8r0stnlkKM
+         kRqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=KL8wmbVxrRbLD33D4vbakahDVrYlj5Zv0FCtgeNwcm0=;
+        b=jeI5iubFjC6vqi/yN7pv116XjnhKmaPKEMHXfczFQdQ7+nE8vC9Nm7JzTudNpN+NXJ
+         ZJpvXAP/eu0hFazL+7C/r1HJbJLKiW41i8bbIPBunyji4aaxJAlvh2q5klUiXlMEwsvz
+         3BrCpyRu1PCRLy+Emd0MBeUIl88/wbiCO68q6IUmUS517NelHOPt19YoD2Lex0yfBDib
+         Lt3Q+L7yp76PvUY4cm6Un49ntZQPnPx+Vkrbl/yJ8ZjQ9xPdZwBINVwugqBbwlIhCz54
+         gJkUAFWyDhZ10vdZMaKGlNkYtabLduL+bBTj78mCfwmncGf1nnTOMQQMXhWP9k8KvAjQ
+         HVdw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id h37-v6si1023020pgl.370.2018.11.07.09.03.21;
+        Wed, 07 Nov 2018 09:03:37 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731559AbeKHCdy (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:33:54 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:46566 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728180AbeKHCdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:33:53 -0500
+X-Virus-Scanned: Nedap ESD1 at mail.skyhub.de
+Received: from mail.skyhub.de ([127.0.0.1])
+        by localhost (blast.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 0d0fTUa_rWSW; Wed,  7 Nov 2018 18:02:39 +0100 (CET)
+Received: from zn.tnic (p200300EC2BCBE000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2bcb:e000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 730761EC0ADD;
+        Wed,  7 Nov 2018 18:02:39 +0100 (CET)
+From: Borislav Petkov <bp@alien8.de>
+To: X86 ML <x86@kernel.org>
+Cc: "Maciej S . Szmigiero" <mail@maciej.szmigiero.name>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH 12/16] x86/microcode/AMD: Fix container size's type
+Date: Wed,  7 Nov 2018 18:02:14 +0100
+Message-Id: <20181107170218.7596-13-bp@alien8.de>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107170218.7596-1-bp@alien8.de>
+References: <20181107170218.7596-1-bp@alien8.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXOETqGuNb8nIYAA--.345S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7ur4xZr47ZFyDtrWDXFWkZwb_yoW8ZFyDpr
+	W7Aw4rGF4UWrn3AF4xKr4Ikw45uFWkJr9Fy34rC3Z7tas3JFnFqF40ka40yrWrX3s5uw17
+	Gr4Dtw43JF4kArJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPSb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
+	Ij64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xA
+	MxkIecxEwVCI4VW8MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5Jw
+	CYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJVW8Jr1l
+	cIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U5773DUUUUU==
+
+From: Borislav Petkov <bp@suse.de>
+
+Make it size_t everywhere as this is what we get from cpio.
+
+Based on a patch by Maciej S. Szmigiero <mail@maciej.szmigiero.name>.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ arch/x86/kernel/cpu/microcode/amd.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+index 5775dc996df3..1f9a4b41218e 100644
+--- a/arch/x86/kernel/cpu/microcode/amd.c
++++ b/arch/x86/kernel/cpu/microcode/amd.c
+@@ -186,8 +186,7 @@ __verify_patch_section(const u8 *buf, size_t buf_size, u32 *sh_psize, bool early
+  * exceed the per-family maximum). @sh_psize is the size read from the section
+  * header.
+  */
+-static unsigned int
+-__verify_patch_size(u8 family, u32 sh_psize, unsigned int buf_size)
++static unsigned int __verify_patch_size(u8 family, u32 sh_psize, size_t buf_size)
+ {
+ 	u32 max_size;
+ 
+@@ -285,10 +284,10 @@ verify_patch(u8 family, const u8 *buf, size_t buf_size, u32 *patch_size, bool ea
+  * Returns the amount of bytes consumed while scanning. @desc contains all the
+  * data we're going to use in later stages of the application.
+  */
+-static ssize_t parse_container(u8 *ucode, ssize_t size, struct cont_desc *desc)
++static size_t parse_container(u8 *ucode, size_t size, struct cont_desc *desc)
+ {
+ 	struct equiv_cpu_entry *eq;
+-	ssize_t orig_size = size;
++	size_t orig_size = size;
+ 	u32 *hdr = (u32 *)ucode;
+ 	u16 eq_id;
+ 	u8 *buf;
+@@ -366,15 +365,17 @@ static ssize_t parse_container(u8 *ucode, ssize_t size, struct cont_desc *desc)
+  */
+ static void scan_containers(u8 *ucode, size_t size, struct cont_desc *desc)
+ {
+-	ssize_t rem = size;
+-
+-	while (rem >= 0) {
+-		ssize_t s = parse_container(ucode, rem, desc);
++	while (size >= 0) {
++		size_t s = parse_container(ucode, size, desc);
+ 		if (!s)
+ 			return;
+ 
+-		ucode += s;
+-		rem   -= s;
++		/* catch wraparound */
++		if (size >= s) {
++			ucode += s;
++			size  -= s;
++		} else
++			return;
+ 	}
+ }
+ 
+-- 
+2.19.1

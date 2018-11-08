@@ -1,0 +1,213 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:46 -0000
+Received: from icoremail.net (unknown [209.85.214.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX9N5D+NbJRdZAQ--.26670S3;
+	Thu, 08 Nov 2018 00:14:50 +0800 (CST)
+Received: from mail-pl1-f172.google.com (unknown [209.85.214.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAXkEx4D+NbOEIYAA--.87S3;
+	Thu, 08 Nov 2018 00:14:48 +0800 (CST)
+Received: by mail-pl1-f172.google.com with SMTP id s5-v6so8051748plq.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:14:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:sender:precedence:list-id;
+        bh=Lox9KQgZnOoEyjfEFNSeuDDi1nxxX0S1XCxKVJQw29s=;
+        b=eh97vm/kvgSNEH8H36ygTo5Kih9FlbgVF1wK+GXfmCC8EY+qeqtA1mvfG43Kox3cJq
+         9wHFZnWIR5vKQ4B1uIZfVGZhKuzYsq97lowlZzwgnU+BHOWaEoXUhcCGjGi0dLcDreCm
+         DmrlrMfS6BOLl175wiJ6s32LYg46V4aJheLDJVQx3JT5OL96cM7CEGqJpG/rCG3izTHH
+         MY1qUSgtz98Ze2n/jKbNRiRghdv1+7BtijKHHv3chT4YaZO8tYicIBQyQUHOIRgBQBXg
+         ki89z1FNzPysiW0zoIhHNIkbsLwhCaa4apPOZPBX8fDejDVsx9yLJN/pUXTjdPQE8NRA
+         3nvg==
+X-Gm-Message-State: AGRZ1gKJ5Wch8ITgxGR/JfiaQ6CFgM+RG7N/isaznKc0T73Y5LZy9+7b
+	+tZPBa9XRnkBB1VDRIgP+eir9r1ZtzMs3LlksU2iASSh9dvXzwJJEw==
+X-Received: by 2002:a17:902:8e81:: with SMTP id bg1-v6mr851216plb.192.1541607288047;
+        Wed, 07 Nov 2018 08:14:48 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5435813pjt;
+        Wed, 7 Nov 2018 08:14:47 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cJKkgtr/j2k8W7IxQQOupCAzW/bjDrrKfupvk92H2/0gyyxOkEEom5gPeQ6gnwxhYLGUfy
+X-Received: by 2002:a17:902:2ec1:: with SMTP id r59-v6mr835828plb.61.1541607287317;
+        Wed, 07 Nov 2018 08:14:47 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541607287; cv=none;
+        d=google.com; s=arc-20160816;
+        b=mOpEmVqYBnmq4w05OilS3Q7Gm7fqBZwE9tHflW/uzQmI/tWQ8I4+it7TMTOgNCsXv1
+         3UHRNNmLrZInsn7L99qdMw6COYNYa/vs4U4HthQSXTbEvclgWkgsU4QLHiE7fQejisCw
+         t9pfUefc8lMX9mhEOEcbPiIlat5Va5/lDy+XqtufJSqxRxB/8ozG5eAu2OUPZl0Q/0Af
+         3j8KG/jBMCu3TYYuzbbWp9wWt/3qi4/MTLzRJ5yluavcnxUGh9eB3IOOlCeq8voY9mHe
+         dFhp4FuzFve519cj6mfXCKX8NYEr47fvNqdNAG4LpzO2Pboa6LmgOtb4GI/oQHvUUTN0
+         B3PQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:date:subject:cc:to:from
+         :dkim-signature;
+        bh=Lox9KQgZnOoEyjfEFNSeuDDi1nxxX0S1XCxKVJQw29s=;
+        b=zadZzEn4dIyctEcHLcuUvWV1V9dQQI/3ZavLVRzan2Hse74/4Lcm616LHbOfX9GrXO
+         SstSBtaRhd0L7BDjdieRyi/FmlwMKv0vld/jNo0P0EH48dtSKHR1ZWzyI6qXS9U6y+W0
+         sBGGYye+Vx+rX0w0UvZNOx7L/tE03axOO/6dHa6hvZuiwkUk89o1QHnYjgVvQdY7fhng
+         /c9527k9VUzVrWhgRlOnRf2muyZJiht25j0hrZ874LjBtM9X9z/VRhpdmXVhW9XYCuCR
+         XvfXKJ31Jloe6DL4VnkjSQ2uJrf70FtnieIp3+oeW9AWeKur0/Bod42jYC29cjrwriZA
+         44oA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=mu++ttjR;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id e68-v6si1120319plb.172.2018.11.07.08.14.31;
+        Wed, 07 Nov 2018 08:14:47 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731397AbeKHBow (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:44:52 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39595 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbeKHBow (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:44:52 -0500
+Received: by mail-pl1-f196.google.com with SMTP id b5-v6so8066165pla.6;
+        Wed, 07 Nov 2018 08:13:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Lox9KQgZnOoEyjfEFNSeuDDi1nxxX0S1XCxKVJQw29s=;
+        b=mu++ttjRXA4YWXwtlwfHfB0LX7lkVZUY39HZvN3ojHtMm2mBh+YwvDdJVgvAqJDbut
+         yH/z68Qa7uNGgn8doQegnsdetIbb2PXWo/9yBT46pmsSKE4FQGHUORp5RuEnTT+h80B2
+         zENtYfJGbPjedXCl50Hfc7imchMGM4wHfbai6fva+yDL+RFkoFLoXs0z813A/8gDhToP
+         Ga5a0claT0l7PXHL6OnzZii+BzcbpM9aoMrMiLVUF87Ym+HB2Ia917vNqkmlMkF29zB1
+         Ysc3+OrjjtLoRi46blWhjg2UjXiQY+ioyK1lbgFyrCOTlXyh3e7dlJJ/SveM+Q80QINH
+         TDZg==
+X-Received: by 2002:a17:902:8210:: with SMTP id x16-v6mr835162pln.129.1541607231093;
+        Wed, 07 Nov 2018 08:13:51 -0800 (PST)
+Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
+        by smtp.gmail.com with ESMTPSA id w10-v6sm1199407pfg.1.2018.11.07.08.13.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 08:13:50 -0800 (PST)
+From: Yangtao Li <tiny.windzz@gmail.com>
+To: kgene@kernel.org, krzk@kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH] cpufreq: s3c24xx: Change to use DEFINE_SHOW_ATTRIBUTE macro
+Date: Wed,  7 Nov 2018 11:13:46 -0500
+Message-Id: <20181107161346.9887-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.0
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAXkEx4D+NbOEIYAA--.87S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZFWDJryrtr4fJr18ArWrZrb_yoW8Kw1Dpa
+	95u3y7Ar48tFZrGFnxtF4Dua4fu3Z3t3y7ur92g34Fy3W8WFyYqF47uFWSvrZ8Kry8G3WI
+	qw4Y9ry7Wa1jkrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1le2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
+	0EwIxGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44l
+	c2xSY4AK6IIF6r1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMx
+	vI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4j6F4UMxvI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07be
+	l1kUUUUU=
+
+Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+---
+ drivers/cpufreq/s3c24xx-cpufreq-debugfs.c | 46 +++--------------------
+ 1 file changed, 6 insertions(+), 40 deletions(-)
+
+diff --git a/drivers/cpufreq/s3c24xx-cpufreq-debugfs.c b/drivers/cpufreq/s3c24xx-cpufreq-debugfs.c
+index 4d976e8dbb2f..0df87b6480fe 100644
+--- a/drivers/cpufreq/s3c24xx-cpufreq-debugfs.c
++++ b/drivers/cpufreq/s3c24xx-cpufreq-debugfs.c
+@@ -63,18 +63,7 @@ static int board_show(struct seq_file *seq, void *p)
+ 	return 0;
+ }
+ 
+-static int fops_board_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, board_show, NULL);
+-}
+-
+-static const struct file_operations fops_board = {
+-	.open		= fops_board_open,
+-	.read		= seq_read,
+-	.llseek		= seq_lseek,
+-	.release	= single_release,
+-	.owner		= THIS_MODULE,
+-};
++DEFINE_SHOW_ATTRIBUTE(board);
+ 
+ static int info_show(struct seq_file *seq, void *p)
+ {
+@@ -105,18 +94,7 @@ static int info_show(struct seq_file *seq, void *p)
+ 	return 0;
+ }
+ 
+-static int fops_info_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, info_show, NULL);
+-}
+-
+-static const struct file_operations fops_info = {
+-	.open		= fops_info_open,
+-	.read		= seq_read,
+-	.llseek		= seq_lseek,
+-	.release	= single_release,
+-	.owner		= THIS_MODULE,
+-};
++DEFINE_SHOW_ATTRIBUTE(info);
+ 
+ static int io_show(struct seq_file *seq, void *p)
+ {
+@@ -162,19 +140,7 @@ static int io_show(struct seq_file *seq, void *p)
+ 	return 0;
+ }
+ 
+-static int fops_io_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, io_show, NULL);
+-}
+-
+-static const struct file_operations fops_io = {
+-	.open		= fops_io_open,
+-	.read		= seq_read,
+-	.llseek		= seq_lseek,
+-	.release	= single_release,
+-	.owner		= THIS_MODULE,
+-};
+-
++DEFINE_SHOW_ATTRIBUTE(io);
+ 
+ static int __init s3c_freq_debugfs_init(void)
+ {
+@@ -185,13 +151,13 @@ static int __init s3c_freq_debugfs_init(void)
+ 	}
+ 
+ 	dbgfs_file_io = debugfs_create_file("io-timing", S_IRUGO, dbgfs_root,
+-					    NULL, &fops_io);
++					    NULL, &io_fops);
+ 
+ 	dbgfs_file_info = debugfs_create_file("info", S_IRUGO, dbgfs_root,
+-					      NULL, &fops_info);
++					      NULL, &info_fops);
+ 
+ 	dbgfs_file_board = debugfs_create_file("board", S_IRUGO, dbgfs_root,
+-					       NULL, &fops_board);
++					       NULL, &board_fops);
+ 
+ 	return 0;
+ }
+-- 
+2.17.0

@@ -1,0 +1,214 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:06 -0000
+Received: from icoremail.net (unknown [209.85.210.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgA3cI61QuNbjVVaAQ--.30322S3;
+	Thu, 08 Nov 2018 03:53:25 +0800 (CST)
+Received: from mail-pf1-f173.google.com (unknown [209.85.210.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCngj6zQuNbwRUZAA--.814S3;
+	Thu, 08 Nov 2018 03:53:23 +0800 (CST)
+Received: by mail-pf1-f173.google.com with SMTP id p17-v6so7774704pfj.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:53:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=EFOC/WNQ+6oDgfYr5EvJZo8lPZ6peEyqvXRuw5P3Qi4=;
+        b=bjHuQmjX0Nde07EJjWH5/qf0lLFoMnjvzz+ref4lHgrggvwwDgxk/USrB1Hc69cObt
+         F9Rrt62OIc9k5NxElfEdLzEIgkoqhHGiPJkrUR0FExVoDFrmDYYsX5bs6Ea8eXunxnYE
+         h3004rm84cu1r0YIv1jCY4xyXLzFF+7RQS8NOMsUMaL5foBDeFtOEtD8WSIF8R6e3IpA
+         9z/iZ6SnFYgcfDl1Oda4SdWRsGUCK3m5TNAcezbdoTppKBVvby2hX87PgDtXSfFnfdYo
+         nzJ8L+YhwhTMN3kN3H0y8r/JY4Nqx8vCZuSAmUGVEvqywIb1QjVRGA64A3MJH4RkkrEi
+         /Yrw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gL8Wh7BAgO62ExLiK+93TDyc74i7yEPXeCmTa+u+EmDm3ZYSkdK
+	UE7Qnl4sZRQoz+EUamWNLxMgtABfZFSUuwqvYy+E3ap2lHMHmzzG8Q==
+X-Received: by 2002:a62:5e83:: with SMTP id s125-v6mr1579007pfb.232.1541620403009;
+        Wed, 07 Nov 2018 11:53:23 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5672710pjt;
+        Wed, 7 Nov 2018 11:53:22 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ex8fThqpfKu0EzNnz3gbmbfjrf9AD+d2Rkg3TJAiYaQJxH8THJaBDYB9gTYdXR2y92uATP
+X-Received: by 2002:a62:9109:: with SMTP id l9-v6mr1619264pfe.154.1541620402010;
+        Wed, 07 Nov 2018 11:53:22 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620401; cv=none;
+        d=google.com; s=arc-20160816;
+        b=tcr6R5pc88ZKkrb071iX2AkdCgo5gIrbUmn8Y3bOMD4OtqXZxkSL0xx+ZUup2NaoBZ
+         y5swzCCB2w6TQ6UaZ6DULxO2frOglSxavAh4vS5dRmhxSDA5wSq6BiMBUOpm5ec/J6I1
+         1uIpI0wOQeGC9/HrELiC0MuvP4GJOzZIoOEILVOy2A7dok+O19Zofu0ZGvpLBlLwOIsR
+         DoszzgIyTM10cqQ3AZr9vJB19SQYg4P8H65zUD6SAVIcJWsWzmOT06r2yhsC4zHJqPSa
+         wtp2gWGuGa0veq9DAjLhXMJE4agRoQiI7XjwCA1QFt4rzxSsCE3vK3l6t+pxX8ENW/L0
+         FDKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :message-id:date:subject:cc:to:from;
+        bh=EFOC/WNQ+6oDgfYr5EvJZo8lPZ6peEyqvXRuw5P3Qi4=;
+        b=Bo5M3uR6to2i2nyX/JAvUb4q2Zi9fzF0nga14xym9BJujsUpYXOef7HzYTzg8bXD3c
+         VfO5Fy6yRRVTFobnwaqTAP8Sau6RP9tV5HewWBbAQYWeX9Bj7JZqugjrk1iFzUzvPy+T
+         D8BicCh6fHO6m3s1ET0cmLZVqB/ZwZ8IEmbJBFvyyJJ064fCTSAsDaZmkzM9CxpT8bjI
+         hl7bQbzd9tglm3RpJP13ysqfjmb1nNQawtU6N2Fge5qlgGIHWOZ1tX3OKDf/cX1UcmLx
+         KcUuR3g4A8SRO5SYesuAHg+6i8M21FAPVqKWN/G2rnFTKY4/KS56+4g+brHLU+XgNzk5
+         RB7g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id c134-v6si1657461pfb.139.2018.11.07.11.53.05;
+        Wed, 07 Nov 2018 11:53:21 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727245AbeKHFXx (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:23:53 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:41829 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbeKHFVC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:21:02 -0500
+Received: from localhost ([127.0.0.1] helo=bazinga.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1gKTp3-00070Q-Ut; Wed, 07 Nov 2018 20:49:06 +0100
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: [PATCH v4] x86: load FPU registers on return to userland
+Date: Wed,  7 Nov 2018 20:48:35 +0100
+Message-Id: <20181107194858.9380-1-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCngj6zQuNbwRUZAA--.814S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxWr4Utw47JrWUtr4UuFy5XFb_yoWrKFW8pr
+	ZIyr93Gr4kW3s3ZrsxAr1kuF95uwnakr1UX34DW3s5J34Yqw12qrn7tws2q3yDJFWrAw1F
+	qFWUuF409FykAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
+	0EwIxGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44l
+	c2xSY4AK6IIF6rWlc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMx
+	vI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1l
+	cIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4
+	C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r1I6r4UYxBIdaVFxhVjvjDU0xZFpf9x
+	07bJEfOUUUUU=
+
+This is a refurbished series originally started by by Rik van Riel. The
+goal is load the FPU registers on return to userland and not on every
+context switch. By this optimisation we can:
+- avoid loading the registers if the task stays in kernel and does
+  not return to userland
+- make kernel_fpu_begin() cheaper: it only saves the registers on the
+  first invocation. The second invocation does not need save them again.
+
+To access the FPU registers in kernel we need:
+- disable preemption to avoid that the scheduler switches tasks. By
+  doing so it would set TIF_NEED_FPU_LOAD and the FPU registers would be
+  not valid.
+- disable BH because the softirq might use kernel_fpu_begin() and then
+  set TIF_NEED_FPU_LOAD instead loading the FPU registers on completion.
+
+v3…v4:
+It has been suggested to remove the `initialized' member of the struct
+fpu because it should not required be needed with lazy-FPU-restore and
+would make the review easier. This is the first part of the series, the
+second is basically the rebase of the v3 queue. As a result, the
+diffstat became negative (which wasn't the case in previous version) :)
+I tried to incorporate all the review comments that came up, some of
+them were "outdated" after the removal of the `initialized' member. I'm
+sorry should I missed any.
+
+v1…v3:
+v2 was never posted. I followed the idea to completely decouple PKRU
+from xstate. This didn't quite work and made a few things complicated. 
+One obvious required fixup is copy_fpstate_to_sigframe() where the PKRU
+state needs to be fiddled into xstate. This required another
+xfeatures_mask so that the sanity checks were performed and
+xstate_offsets would be computed. Additionally ptrace also reads/sets
+xstate in order to get/set the register and PKRU is one of them. So this
+would need some fiddle, too.
+In v3 I dropped that decouple idea. I also learned that the wrpkru
+instruction is not privileged and so caching it in kernel does not work.
+Instead I keep PKRU in xstate area and load it at context switch time
+while the remaining registers are deferred (until return to userland).
+The offset of PKRU within xstate is enumerated at boot time so why not
+use it.
+
+Rik van Riel (5):
+  x86/fpu: Add (__)make_fpregs_active helpers
+  x86/fpu: Eager switch PKRU state
+  x86/fpu: Always store the registers in copy_fpstate_to_sigframe()
+  x86/fpu: Prepare copy_fpstate_to_sigframe() for TIF_NEED_FPU_LOAD
+  x86/fpu: Defer FPU state load until return to userspace
+
+Sebastian Andrzej Siewior (18):
+  x86/fpu: Use ULL for shift in xfeature_uncompacted_offset()
+  x86/fpu: Remove fpu->initialized usage in __fpu__restore_sig()
+  x86/fpu: Remove fpu__restore()
+  x86/entry/32: Remove asm/math_emu.h include
+  x86/fpu: Remove preempt_disable() in fpu__clear()
+  x86/fpu: Always init the `state' in fpu__clear()
+  x86/fpu: Remove fpu->initialized usage in copy_fpstate_to_sigframe()
+  x86/fpu: Remove fpu->initialized
+  x86/fpu: Remove user_fpu_begin()
+  x86/entry: Remove _TIF_ALLWORK_MASK
+  x86/fpu: Make __raw_xsave_addr() use feature number instead of mask
+  x86/fpu: Make get_xsave_field_ptr() and get_xsave_addr() use feature
+    number instead of mask
+  x86/pkeys: Make init_pkru_value static
+  x86/fpu: Only write PKRU if it is different from current
+  x86/pkeys: Don't check if PKRU is zero before writting it
+  x86/entry: Add TIF_NEED_FPU_LOAD
+  x86/fpu: Update xstate's PKRU value on write_pkru()
+  x86/fpu: Don't restore the FPU state directly from userland in
+    __fpu__restore_sig()
+
+ Documentation/preempt-locking.txt    |   1 -
+ arch/x86/entry/common.c              |   8 ++
+ arch/x86/ia32/ia32_signal.c          |  17 +--
+ arch/x86/include/asm/fpu/api.h       |  25 ++++
+ arch/x86/include/asm/fpu/internal.h  | 149 ++++++----------------
+ arch/x86/include/asm/fpu/signal.h    |   2 +-
+ arch/x86/include/asm/fpu/types.h     |   9 --
+ arch/x86/include/asm/fpu/xstate.h    |   6 +-
+ arch/x86/include/asm/pgtable.h       |  19 ++-
+ arch/x86/include/asm/special_insns.h |  13 +-
+ arch/x86/include/asm/thread_info.h   |  10 +-
+ arch/x86/include/asm/trace/fpu.h     |   8 +-
+ arch/x86/kernel/fpu/core.c           | 181 +++++++++++++--------------
+ arch/x86/kernel/fpu/init.c           |   2 -
+ arch/x86/kernel/fpu/regset.c         |  24 +---
+ arch/x86/kernel/fpu/signal.c         | 133 +++++++++-----------
+ arch/x86/kernel/fpu/xstate.c         |  45 ++++---
+ arch/x86/kernel/process.c            |   2 +-
+ arch/x86/kernel/process_32.c         |  14 +--
+ arch/x86/kernel/process_64.c         |  11 +-
+ arch/x86/kernel/signal.c             |  17 ++-
+ arch/x86/kernel/traps.c              |   2 +-
+ arch/x86/kvm/x86.c                   |  47 ++++---
+ arch/x86/math-emu/fpu_entry.c        |   3 -
+ arch/x86/mm/mpx.c                    |   6 +-
+ arch/x86/mm/pkeys.c                  |  15 +--
+ 26 files changed, 343 insertions(+), 426 deletions(-)
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/bigeasy/staging.git x86_fpu_rtu_v4
+
+Sebastian

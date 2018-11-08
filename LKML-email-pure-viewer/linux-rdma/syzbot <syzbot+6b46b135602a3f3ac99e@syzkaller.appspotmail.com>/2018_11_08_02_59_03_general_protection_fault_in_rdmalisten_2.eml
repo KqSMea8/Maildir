@@ -1,0 +1,268 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:48 -0000
+Received: from icoremail.net (unknown [209.85.215.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH+YqNuNbyA9aAQ--.26834S3;
+	Thu, 08 Nov 2018 02:59:55 +0800 (CST)
+Received: from mail-pg1-f175.google.com (unknown [209.85.215.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3DTkoNuNbhu0YAA--.462S3;
+	Thu, 08 Nov 2018 02:59:52 +0800 (CST)
+Received: by mail-pg1-f175.google.com with SMTP id z10so5821977pgp.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:59:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :mime-version:date:message-id:subject:from:to:sender:precedence
+         :list-id;
+        bh=ssRO9LbeYI8juIi5fycqJEfprJWrukQMnDUOcgTPXOA=;
+        b=qbR9xhT8QRGbiM85G1B3cnerhTOTR+Ht1hfcF9TM4YfYunvVfzyMA/mosQSiqNfqfl
+         lBg3wnGOGKY9daqWxK6jFNpISpb43BGgOptH5LtXgYO0slyJ4/I5oHUIgApbo+kQ4dG4
+         KLyEScs1WMfJN4u2uEr4Tji+B8YrLGsOwIbsZrLr4IeYYkovhNIopzOySBldKiK9oe23
+         lxgDZQWdZXDLo2w+ExrbPHoXibhafVhVrUABpieYNRycaU+k6dJ1o5bhzRphqtNa52wI
+         hBbBbl+bYvxKzd9mZ8YBCQVING21++mFw8XH/zT2iJCB3+lfpLblQWeFWs5rXTHfYkgf
+         sm2Q==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=appspotmail.com
+X-Gm-Message-State: AGRZ1gKoP5d3VYmDcPrWunfQY/oqQI9MXYnyDTXg1LYugTCS7WN+yx6g
+	NXZxfJpcqOw3mYvXXrpWr2p1OG912lkWrE/cAaNvqzPDFTS4BiSitQ==
+X-Received: by 2002:a63:460a:: with SMTP id t10-v6mr1185649pga.197.1541617191526;
+        Wed, 07 Nov 2018 10:59:51 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5617818pjt;
+        Wed, 7 Nov 2018 10:59:50 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dtEuoHCxzLTT7EgLD/N26FjnmN9M8lfrjp7NRsT6MQ6iBr+tNiknU5knADlKEc+VErgS8t
+X-Received: by 2002:a17:902:b701:: with SMTP id d1-v6mr1341799pls.29.1541617190598;
+        Wed, 07 Nov 2018 10:59:50 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541617190; cv=none;
+        d=google.com; s=arc-20160816;
+        b=piIpv1VpJ1obAxVSTJEawLEGgPgBoJnzScF6WWGwJxNjLvnEMHOEUMDIL//EM8fIAF
+         dfvQLHbjJx9+O72UmoUeGhZITi3quavyCnfE6sIdIsaDN+iHrSajErf6RFnV0FCRaHDX
+         rTby99VO2AP6Lte62f93XpLjEU2tX5l/1qGM+PI/oYvf9T8+5+R5Z4sk+9oxS2CZQh1S
+         cKMAWT8qUvRSxAoFk8Auhcbmun48LpFr9l0JwYC2qDmQq8pl7WfgwgjYrBb1BvNKiJ6L
+         w5PM4yWX9Jy72N4HneL8/+gpRN6N1lqkxqz4yC7Sv5tq65caSgmfeVQxeT/I9g7EkwA+
+         r6NA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:to:from:subject:message-id:date
+         :mime-version;
+        bh=ssRO9LbeYI8juIi5fycqJEfprJWrukQMnDUOcgTPXOA=;
+        b=k/S1maUL6OtAlW+KJNf+wrD3xpmwtcq+8hb9a1kyKP83AzYpq23JmukoNsp2HnXNtE
+         rCB+IlAHYoMUPPfgyxT/8FGMD28Bsl4D5qOp8GS5RTFrgnnTVxXNU9AXQxvE0xly18SO
+         NsQVS68Nh+77KXvg2SIS4R5k/R/YiAy5ZiVcdM5GwaF8l4vIe/yNpt1aNrRbtam3zeZH
+         JpwVpjbJHEX5KA1U3kh/gnwPs6zKTY0Z4G4B/JXxpe7bDCv/0r55hIXTZyui+DWQBsuC
+         5K5GEKELzO/wh6SiHk3HFgAGTx0PLe1w0kIWFMj8EPJsLvT/WpXHqX3F1ZLi913SoBA6
+         3tPQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=appspotmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 33-v6si1235638pld.296.2018.11.07.10.59.36;
+        Wed, 07 Nov 2018 10:59:50 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1729956AbeKHEao (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:30:44 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:43780 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbeKHEan (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:30:43 -0500
+Received: by mail-io1-f71.google.com with SMTP id d12-v6so20406970iof.10
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 10:59:03 -0800 (PST)
+MIME-Version: 1.0
+X-Received: by 2002:a24:6908:: with SMTP id e8-v6mr1038854itc.7.1541617143602;
+ Wed, 07 Nov 2018 10:59:03 -0800 (PST)
+Date: Wed, 07 Nov 2018 10:59:03 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000396c09057a17b6fd@google.com>
+Subject: general protection fault in rdma_listen (2)
+From: syzbot <syzbot+6b46b135602a3f3ac99e@syzkaller.appspotmail.com>
+To: danielj@mellanox.com, dledford@redhat.com, jgg@ziepe.ca,
+        leon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, parav@mellanox.com,
+        swise@opengridcomputing.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3DTkoNuNbhu0YAA--.462S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3AFy3ArW8CFW7uF4DJrWrKrg_yoWfJFy7pr
+	W5XF1UKrW8tr48Ja1DJFyUZr4jyFnrA3WDZr4jq340k3W3Ar13Jr1jy3yDJF1UJr4fXaya
+	qa1DAr18Kr1UGaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmqb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAac4AC6c804V
+	ACYs8I8VAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca
+	8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VW5MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7
+	IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E
+	87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2
+	Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIY
+	CTnIWIevJa73UjIFyTuYvjxUy-tIUUUUU
+
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    8053e5b93eca Merge tag 'trace-v4.20-rc1' of git://git.kern..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1539246d400000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8f559fee2fc3375a
+dashboard link: https://syzkaller.appspot.com/bug?extid=6b46b135602a3f3ac99e
+compiler:       gcc (GCC) 8.0.1 20180413 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6b46b135602a3f3ac99e@syzkaller.appspotmail.com
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 10185 Comm: syz-executor1 Not tainted 4.20.0-rc1+ #101
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:cma_bind_listen drivers/infiniband/core/cma.c:3355 [inline]
+RIP: 0010:rdma_listen+0x357/0x990 drivers/infiniband/core/cma.c:3469
+Code: 4c 8b ab c8 01 00 00 31 f6 48 c7 c7 a0 dc d9 89 e8 ae e9 25 02 48 b8  
+00 00 00 00 00 fc ff df 49 8d 7d 08 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
+85 64 05 00 00 48 b8 00 00 00 00 00 fc ff df 4d 8b
+RSP: 0018:ffff8801871df970 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff8801bc114200 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: 0000000000000004 RDI: 0000000000000008
+RBP: ffff8801871dfa10 R08: fffffbfff13b3b9d R09: fffffbfff13b3b9c
+R10: ffff8801871df960 R11: ffffffff89d9dce3 R12: 1ffff10030e3bf31
+R13: 0000000000000000 R14: 00000000000003ff R15: ffff8801bca00a40
+FS:  00007f99bde19700(0000) GS:ffff8801daf00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffcd3fbba88 CR3: 00000001bed0c000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  ucma_listen+0x1a4/0x260 drivers/infiniband/core/ucma.c:1100
+  ucma_write+0x365/0x460 drivers/infiniband/core/ucma.c:1689
+  __vfs_write+0x119/0x9f0 fs/read_write.c:485
+  vfs_write+0x1fc/0x560 fs/read_write.c:549
+  ksys_write+0x101/0x260 fs/read_write.c:598
+  __do_sys_write fs/read_write.c:610 [inline]
+  __se_sys_write fs/read_write.c:607 [inline]
+  __x64_sys_write+0x73/0xb0 fs/read_write.c:607
+  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x457569
+Code: fd b3 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b3 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f99bde18c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000457569
+RDX: 0000000000000010 RSI: 0000000020000140 RDI: 0000000000000005
+RBP: 000000000072bfa0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f99bde196d4
+R13: 00000000004c5637 R14: 00000000004d9130 R15: 00000000ffffffff
+Modules linked in:
+kobject: 'loop4' (00000000b75a0f1d): kobject_uevent_env
+kobject: 'loop4' (00000000b75a0f1d): fill_kobj_path: path  
+= '/devices/virtual/block/loop4'
+kobject: 'loop5' (000000003fdcc2a7): kobject_uevent_env
+kobject: 'loop5' (000000003fdcc2a7): fill_kobj_path: path  
+= '/devices/virtual/block/loop5'
+---[ end trace 4cb66db176b8dee1 ]---
+hfs: can't find a HFS filesystem on dev loop5
+RIP: 0010:cma_bind_listen drivers/infiniband/core/cma.c:3355 [inline]
+RIP: 0010:rdma_listen+0x357/0x990 drivers/infiniband/core/cma.c:3469
+kobject: 'loop0' (00000000d690b7fc): kobject_uevent_env
+kobject: 'loop0' (00000000d690b7fc): fill_kobj_path: path  
+= '/devices/virtual/block/loop0'
+kobject: 'loop4' (00000000b75a0f1d): kobject_uevent_env
+kobject: 'loop4' (00000000b75a0f1d): fill_kobj_path: path  
+= '/devices/virtual/block/loop4'
+kobject: 'loop5' (000000003fdcc2a7): kobject_uevent_env
+kobject: 'loop5' (000000003fdcc2a7): fill_kobj_path: path  
+= '/devices/virtual/block/loop5'
+kobject: 'loop2' (000000006d980c29): kobject_uevent_env
+kobject: 'loop2' (000000006d980c29): fill_kobj_path: path  
+= '/devices/virtual/block/loop2'
+Code: 4c 8b ab c8 01 00 00 31 f6 48 c7 c7 a0 dc d9 89 e8 ae e9 25 02 48 b8  
+00 00 00 00 00 fc ff df 49 8d 7d 08 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
+85 64 05 00 00 48 b8 00 00 00 00 00 fc ff df 4d 8b
+kobject: 'loop4' (00000000b75a0f1d): kobject_uevent_env
+RSP: 0018:ffff8801871df970 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff8801bc114200 RCX: 0000000000000000
+kobject: 'loop4' (00000000b75a0f1d): fill_kobj_path: path  
+= '/devices/virtual/block/loop4'
+RDX: 0000000000000001 RSI: 0000000000000004 RDI: 0000000000000008
+RBP: ffff8801871dfa10 R08: fffffbfff13b3b9d R09: fffffbfff13b3b9c
+kobject: 'loop0' (00000000d690b7fc): kobject_uevent_env
+kobject: 'loop0' (00000000d690b7fc): fill_kobj_path: path  
+= '/devices/virtual/block/loop0'
+kobject: 'loop3' (000000003dffde6d): kobject_uevent_env
+kobject: 'loop3' (000000003dffde6d): fill_kobj_path: path  
+= '/devices/virtual/block/loop3'
+kobject: 'loop5' (000000003fdcc2a7): kobject_uevent_env
+kobject: 'loop5' (000000003fdcc2a7): fill_kobj_path: path  
+= '/devices/virtual/block/loop5'
+kobject: 'loop5' (000000003fdcc2a7): kobject_uevent_env
+hfs: can't find a HFS filesystem on dev loop3
+kobject: 'loop5' (000000003fdcc2a7): kobject_uevent_env
+kobject: 'loop5' (000000003fdcc2a7): fill_kobj_path: path  
+= '/devices/virtual/block/loop5'
+kobject: 'loop0' (00000000d690b7fc): kobject_uevent_env
+kobject: 'loop5' (000000003fdcc2a7): fill_kobj_path: path  
+= '/devices/virtual/block/loop5'
+kobject: 'loop0' (00000000d690b7fc): fill_kobj_path: path  
+= '/devices/virtual/block/loop0'
+kobject: 'loop2' (000000006d980c29): kobject_uevent_env
+kobject: 'loop4' (00000000b75a0f1d): kobject_uevent_env
+kobject: 'loop2' (000000006d980c29): fill_kobj_path: path  
+= '/devices/virtual/block/loop2'
+kobject: 'loop4' (00000000b75a0f1d): fill_kobj_path: path  
+= '/devices/virtual/block/loop4'
+hfs: can't find a HFS filesystem on dev loop5
+kobject: 'loop3' (000000003dffde6d): kobject_uevent_env
+R10: ffff8801871df960 R11: ffffffff89d9dce3 R12: 1ffff10030e3bf31
+kobject: 'loop3' (000000003dffde6d): fill_kobj_path: path  
+= '/devices/virtual/block/loop3'
+R13: 0000000000000000 R14: 00000000000003ff R15: ffff8801bca00a40
+kobject: 'loop3' (000000003dffde6d): kobject_uevent_env
+hfs: can't find a HFS filesystem on dev loop2
+kobject: 'loop3' (000000003dffde6d): fill_kobj_path: path  
+= '/devices/virtual/block/loop3'
+kobject: 'loop5' (000000003fdcc2a7): kobject_uevent_env
+FS:  00007f99bde19700(0000) GS:ffff8801daf00000(0000) knlGS:0000000000000000
+kobject: 'loop0' (00000000d690b7fc): kobject_uevent_env
+kobject: 'loop5' (000000003fdcc2a7): fill_kobj_path: path  
+= '/devices/virtual/block/loop5'
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+kobject: 'loop2' (000000006d980c29): kobject_uevent_env
+kobject: 'loop0' (00000000d690b7fc): fill_kobj_path: path  
+= '/devices/virtual/block/loop0'
+kobject: 'loop2' (000000006d980c29): fill_kobj_path: path  
+= '/devices/virtual/block/loop2'
+CR2: 00000000004c4d0a CR3: 00000001bed0c000 CR4: 00000000001406e0
+kobject: 'loop3' (000000003dffde6d): kobject_uevent_env
+kobject: 'loop3' (000000003dffde6d): fill_kobj_path: path  
+= '/devices/virtual/block/loop3'
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+kobject: 'loop5' (000000003fdcc2a7): kobject_uevent_env
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+kobject: 'loop5' (000000003fdcc2a7): fill_kobj_path: path  
+= '/devices/virtual/block/loop5'
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with  
+syzbot.

@@ -1,0 +1,189 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:07 -0000
+Received: from icoremail.net (unknown [209.85.215.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3__uTHONbAmlZAQ--.26920S3;
+	Thu, 08 Nov 2018 01:10:44 +0800 (CST)
+Received: from mail-pg1-f179.google.com (unknown [209.85.215.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXNUGQHONb1HkYAA--.493S3;
+	Thu, 08 Nov 2018 01:10:40 +0800 (CST)
+Received: by mail-pg1-f179.google.com with SMTP id n10-v6so7562847pgv.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:10:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=Ur1zHs5j5I97jd1gtpC55K2Jg0dZgeUGDsJH3RpLhtw=;
+        b=fRGp8q8JYnn/ubgKALDpz2MAHVMCRb4Wk7xRks4KDdpWU8zWxvPW/e38k+Ik+7mR22
+         HpN3TpIFHCWhYsyIPjWFPlHmC5ym7tumY9Ula2T7o94LSrDiCCp2hw6VrfyMakrppCm9
+         75VLRHLs5K+pJ03QSnCfRxUXB9Lz09g1+jCYEeAmIxyf6kb8BmyH6HiH0ymhDRNWJ2jr
+         wu36gcCBTgaXzAxZ6RrygYGk9saIHqOueraopuM7A5VorShwTzR7qVqFonoCkUZDSwFU
+         ERspZQgbGdbB3tqNKta7pwYfo/GuXCPL7Y7l0ztWW6JYHTefa4PMRf1DKrtCWQydYHoM
+         1gKw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gKeQrCEgXUkiV6zuc/s+3LXdh75eCeFTQ9/BbwzrJzxHMRODJ+c
+	aMTpFHPF/F1Q4x/HJQJLwiH7ZMrutuI+KE8y5YDI2oSSQPNhqcsTyw==
+X-Received: by 2002:a62:42dc:: with SMTP id h89-v6mr1074090pfd.0.1541610639839;
+        Wed, 07 Nov 2018 09:10:39 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5497433pjt;
+        Wed, 7 Nov 2018 09:10:39 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eUz9xEhmmKEX5NfI/kOTmJoiX2O3UDoJfINhDD3stUz7qqYYhvG1pNXe4OtF9q0EZqJmrT
+X-Received: by 2002:a62:5547:: with SMTP id j68-v6mr1018515pfb.166.1541610639033;
+        Wed, 07 Nov 2018 09:10:39 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610639; cv=none;
+        d=google.com; s=arc-20160816;
+        b=TTU28qol2GpcUaSsvBg9T0eikSzT3I04ZDBip0bqzfR7tNaLBEY4jNpf6i1tcZSNuA
+         Q6f1phYLF6b1geVkEyCwt2W8yCvIKkDu/sFR2yfi3wFwYMIljRpjjj/XSCbVwkA5LQ0x
+         fzT7z0C8MARtI7ki7aIx1DWqizxzKcoUYSTApCC9BQx5Apd5EqHS/EhV1wjjzdadvcF3
+         oolp3hzpxElFhSUzFeuhNKUZii9oE/TFCenoGld/KFkUWMgsvN+41a8TlH6w/l77Rc0L
+         SotjiIymnMmMB2CpDQgNZbthoJ0vkxRIox2BU9JRQ8tEQq1oNGCI+ucmgMQQxmGZAI0g
+         tt2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:autocrypt:openpgp:from:references:cc:to:subject;
+        bh=Ur1zHs5j5I97jd1gtpC55K2Jg0dZgeUGDsJH3RpLhtw=;
+        b=YavdyeYTUBKY+8u5ZBHJrEmIW2fbA8G6kQTTRT2DUswG+iyglWLKc08Nyym38ymScN
+         5HADH3kz6J1hnQiCQhMOXXVsSEroaFVJLf4779zs73j4RRoEPK6+RCVdWNnAuqhthjyy
+         PGfP0QzhUcmlMfgRXdWooyZcjPEUTwhRNtZ9MCab3ceJdvxBAgFA7AVYnsTDlDvEadfa
+         n5awCOaJ8rRu5KwDaU61hQD9myR8uuMH+Y68xrJ6tCEghWp1ruIDJEzWQNywWrPkdil6
+         5cQUo8pR7kTNQoSf/HPePC0ts1C0WKP6KJrJmexg7D7P030agFr80eifPz98nRg3qRMA
+         y6Mg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id p126si330626pgp.529.2018.11.07.09.10.22;
+        Wed, 07 Nov 2018 09:10:39 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731474AbeKHCky (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:40:54 -0500
+Received: from mga01.intel.com ([192.55.52.88]:17090 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727941AbeKHCkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:40:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 09:09:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,476,1534834800"; 
+   d="scan'208";a="87426771"
+Received: from unknown (HELO [10.7.201.15]) ([10.7.201.15])
+  by orsmga007.jf.intel.com with ESMTP; 07 Nov 2018 09:09:37 -0800
+Subject: Re: [PATCH v15 23/23] x86/sgx: Driver documentation
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-sgx@vger.kernel.org, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        mark.shanahan@intel.com, andriy.shevchenko@linux.intel.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20181102231320.29164-1-jarkko.sakkinen@linux.intel.com>
+ <20181102231320.29164-24-jarkko.sakkinen@linux.intel.com>
+ <154ded23-fd1d-f324-4e0a-9de8eddcda6d@intel.com>
+ <20181106054911.GA15575@linux.intel.com>
+ <e7b4c432-7005-308c-4da0-a80e0d294244@intel.com>
+ <20181107163019.GA11509@linux.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <914dd171-b48a-12d9-eb77-3c40c8b210cb@intel.com>
+Date: Wed, 7 Nov 2018 09:09:37 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20181107163019.GA11509@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXNUGQHONb1HkYAA--.493S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUOa7k0a2IF6FyUM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvEwIxGrwCjxxvEa2IrMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAK
+	zI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vEIxC_GwCY0x0Ix7I2Y4
+	AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Cr0_Gr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r
+	4j6r4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+	v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVCF04k26cxK
+	x2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bbD73UUUUU=
+
+On 11/7/18 8:30 AM, Jarkko Sakkinen wrote:
+>> Does this code run when I type "make kselftest"?  If not, I think we
+>> should rectify that.
+> No, it doesn't. It is just my backup for the non-SDK user space code
+> that I've made that I will use to fork my user space SGX projects in
+> the future.
+> 
+> I can work-out a selftest (and provide a new patch in the series) but
+> I'm still wondering what the enclave should do. I would suggest that
+> we start with an enclave that does just EEXIT and nothing else.
+
+Yeah, that's a start.  But, a good selftest would include things like
+faults and error conditions.

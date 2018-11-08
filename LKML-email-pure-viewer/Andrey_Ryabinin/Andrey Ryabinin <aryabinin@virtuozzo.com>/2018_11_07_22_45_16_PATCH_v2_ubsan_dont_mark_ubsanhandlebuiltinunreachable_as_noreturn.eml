@@ -1,0 +1,145 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:13 -0000
+Received: from icoremail.net (unknown [209.85.215.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f+29+uJbmZlYAQ--.26159S3;
+	Wed, 07 Nov 2018 22:46:22 +0800 (CST)
+Received: from mail-pg1-f176.google.com (unknown [209.85.215.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH7Ee8+uJbk+UXAA--.13429S3;
+	Wed, 07 Nov 2018 22:46:20 +0800 (CST)
+Received: by mail-pg1-f176.google.com with SMTP id z17-v6so7418421pgv.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:46:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references:sender
+         :precedence:list-id;
+        bh=VEQJbeNAhChQDOVcoIUZaMmGCWJx6urZxmaRIYOVsZg=;
+        b=GlPdRPMXPCULcwCIqe/UEYlGWEeSPvZl59Bm/C6gcmJKcv+RvfzJmDTVDTvES0qjSV
+         BFn+rKL0M1v4BMvw+OMCHI3Px8sXHQfywVbQSvQUImIyj6z9KDIzOPPLyJR6oHjTk91r
+         Fk/VGjsb2fLOApqsKP/lkYuaJCCM5EKF1NMg24T2qvQVNoOGwshBOGm66mtDomPw03Ru
+         GtWI6foNhi6N4ovo0Lk1iAk62vuOTzxSJMVxbPp5uaUjuF1yCDDduuKQSABV65o191I6
+         Jlq0YB1QCUzfgplXTy9Ni7GBlhoJY8In+0jovpnnhHtBaAveMSVNwpFNe/cRz42pGjRX
+         DcAA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=virtuozzo.com
+X-Gm-Message-State: AGRZ1gJljEIj1CNNE4lbpf1mRdc9VAqO4RZGForOEDYyAeLgBhFzezMv
+	in+X9DaF9K1cjuiIuMizdwdLICufxmvZ+ceflb/C5BzBroYIEZUldQ==
+X-Received: by 2002:a65:66ce:: with SMTP id c14mr416159pgw.450.1541601980219;
+        Wed, 07 Nov 2018 06:46:20 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5334603pjt;
+        Wed, 7 Nov 2018 06:46:19 -0800 (PST)
+X-Google-Smtp-Source: AJdET5c36OIBB6PFgAf8H9QoQqupXTxqSHWZrBpXXi9RrqYNHNj8fw/uVj1K1loVK0GHNs8YROE3
+X-Received: by 2002:a17:902:3e3:: with SMTP id d90-v6mr517965pld.118.1541601979533;
+        Wed, 07 Nov 2018 06:46:19 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541601979; cv=none;
+        d=google.com; s=arc-20160816;
+        b=gAPCatWJYAN/iSqhOVGCl7gLTMGTTDQc4aCppczLlGh1zglR1Z/kkv7FrUzHBmxFwL
+         3Tfp4VmWR6tBLz2DKT6hNT2UrO6IyhhG5tAyVHx6yckouKkRkuhYoYkIKBKgWDZqzN5h
+         erpG00D91pPohDnzvqM9gUXVKgyvFHlKYhMx8rlFtMAwm7H03h59ghpp6V2/yX5dUJpM
+         DvFWQ5tnOY5WbBaqJWzhEKbmlcA9po73ftvKRbCs7QuSaZlH4Pbzd9A7+xsMpgM0YGEL
+         xoYp6XiDazsh9YhHZFJqjqq8iBG6zU2bIlfnz5eaxf3KyXTHpPKT0etSbD/6oZQswA3y
+         gKmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from;
+        bh=VEQJbeNAhChQDOVcoIUZaMmGCWJx6urZxmaRIYOVsZg=;
+        b=QjsHnqzZ1TErwxt7HAtXatrkb9fHcwc0DXC0Efw/Oi0/R6Z7EV2s5acoKaAFSREfHx
+         iQ0gjECrb/9/aBX1amIidBHC2hNUK8AJjDyHaxpCi6VNcJuVacUKGGKGKjcZLKA2LUHo
+         7eaf+iD8lJKIB6E0fIUeyrqwm1z3nnqEpKiyICtOUA/2lqJkGf7B/ciKxOQ4Q5Tt9LmH
+         U4ARf/mBhEKCgveehiBksOvlCGQlgD+INoGTXAiZmdiiqFW4iPchDrbj9MIrzfavCYMD
+         NtLnFcDO+q/epDcklOi+rUGtq8aK8dFcX6BcCNQslj1OLrxH/w3keV8o/pzJ7n0LhNC9
+         S92g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=virtuozzo.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v18-v6si878632pfa.3.2018.11.07.06.46.03;
+        Wed, 07 Nov 2018 06:46:19 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731066AbeKHAQA (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:16:00 -0500
+Received: from relay.sw.ru ([185.231.240.75]:60268 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726635AbeKHAP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:15:59 -0500
+Received: from [172.16.25.12] (helo=i7.sw.ru)
+        by relay.sw.ru with esmtp (Exim 4.90_1)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1gKP54-0002vy-SE; Wed, 07 Nov 2018 17:45:19 +0300
+From: Andrey Ryabinin <aryabinin@virtuozzo.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Subject: [PATCH v2] ubsan: don't mark __ubsan_handle_builtin_unreachable as noreturn
+Date: Wed,  7 Nov 2018 17:45:16 +0300
+Message-Id: <20181107144516.4587-1-aryabinin@virtuozzo.com>
+X-Mailer: git-send-email 2.18.1
+In-Reply-To: <CAOesGMi-vkYPDrL2drJ70zf3_xTMWrsfPoW68TkiRJCj8uWBLg@mail.gmail.com>
+References: <CAOesGMi-vkYPDrL2drJ70zf3_xTMWrsfPoW68TkiRJCj8uWBLg@mail.gmail.com>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH7Ee8+uJbk+UXAA--.13429S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7WrWxJryxAryDKF15WF48WFg_yoW8Gr4xpF
+	Z7KryjkrW8tw4agFWUAFWrX3WayayDGwnrtr43J34qy34DGasaqayDKwn0gF15KFyruF15
+	JF4Yq3WUuFyxAFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW5XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVWUCVW8JbIYCTnIWIevJa73UjIFyTuYvjxUqLZ2
+	UUUUU
+
+From: Arnd Bergmann <arnd@arndb.de>
+
+gcc-8 complains about the prototype for this function:
+
+lib/ubsan.c:432:1: error: ignoring attribute 'noreturn' in declaration of a built-in function '__ubsan_handle_builtin_unreachable' because it conflicts with attribute 'const' [-Werror=attributes]
+
+This is actually a GCC's bug. In GCC internals
+__ubsan_handle_builtin_unreachable() declared with both 'noreturn' and
+'const' attributes instead of only 'noreturn':
+   https://gcc.gnu.org/bugzilla/show_bug.cgi?id=84210
+
+Workaround this by removing the noreturn attribute.
+
+[aryabinin: Add information about GCC bug in changelog]
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+---
+ lib/ubsan.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/lib/ubsan.c b/lib/ubsan.c
+index 59fee96c29a0..e4162f59a81c 100644
+--- a/lib/ubsan.c
++++ b/lib/ubsan.c
+@@ -427,8 +427,7 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
+ EXPORT_SYMBOL(__ubsan_handle_shift_out_of_bounds);
+ 
+ 
+-void __noreturn
+-__ubsan_handle_builtin_unreachable(struct unreachable_data *data)
++void __ubsan_handle_builtin_unreachable(struct unreachable_data *data)
+ {
+ 	unsigned long flags;
+ 
+-- 
+2.18.1

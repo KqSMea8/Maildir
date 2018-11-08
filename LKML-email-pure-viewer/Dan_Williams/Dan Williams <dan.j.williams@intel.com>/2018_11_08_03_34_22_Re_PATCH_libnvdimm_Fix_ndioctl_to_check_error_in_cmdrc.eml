@@ -1,0 +1,149 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:53 -0000
+Received: from icoremail.net (unknown [209.85.215.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_5tiPuNbuj5aAQ--.26672S3;
+	Thu, 08 Nov 2018 03:34:59 +0800 (CST)
+Received: from mail-pg1-f175.google.com (unknown [209.85.215.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBnS0dgPuNbXAcZAA--.605S3;
+	Thu, 08 Nov 2018 03:34:56 +0800 (CST)
+Received: by mail-pg1-f175.google.com with SMTP id 70so2161294pgh.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:34:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=rNRFqy2e53r3+iZ5AdP9DFE+PFMWD5guz89RGBZhZBA=;
+        b=JzXIWrWEVDlP27q7WQ58j2Kjo7tncIIKMUAKqQWxIBQvIjzvoXEgcCaF55hadSP0yP
+         dehlzyuC5taG16SqxMPWY05OEWesqXegjtG4mLcraq7gtWr8MJ3NbGMgmaisA+OMQcBO
+         w43tvt+1AzCYZmSQcTHUKNTpo35AxLa/3p7KOi4+FgaMUZk01KnewiLdJ5AS/5f+H/p1
+         MxvE+1yN14+s/9AGrexIE1/kJJKVGkpiAfOPNIDg9OaCPF5t6mKYUVOtgCxnUspNkOB1
+         pY2rmBGIXGaS1MaYxrFI9OGBHWDyRhAcXfUrAJUUGbfh501LRqTt9RTIdLY2kouiL9hB
+         ftJg==
+X-Gm-Message-State: AGRZ1gLgSLVvl6s37v/iBqrYwi+LfHvLM+k/eQaqjDPCjmb0ABtx8a4K
+	wnuswfG+9u331SoYOVkvE7ER5LE/QulAhejH0IqBYtJpzCcNgNOsVg==
+X-Received: by 2002:a63:cd17:: with SMTP id i23mr1294001pgg.13.1541619296281;
+        Wed, 07 Nov 2018 11:34:56 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5655667pjt;
+        Wed, 7 Nov 2018 11:34:55 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ekLGWEITH5TiEnxcVjv1ucYIsXLjT6jA3Qtwy9eUkiYuYLnl9W7VxTtMa2rKog/qFlYn/f
+X-Received: by 2002:a62:4784:: with SMTP id p4-v6mr1499700pfi.257.1541619295212;
+        Wed, 07 Nov 2018 11:34:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541619295; cv=none;
+        d=google.com; s=arc-20160816;
+        b=qoi/ApPd04wyssm23IfcYE+6/mRq3N5weR2M0IGAuSHEccfYmw5hI+7bMT3y45qUsG
+         xpm0a1/pFqW+kthJRaiWBi3iWnwFZYzRd8ZwQESkiRPXRJYoxs5epwVrIM6y1arb2twl
+         LzLH92Ux1flqLD9YgmUJj/WSdZv2iOEDF03RW1CaUJBoVsXNsIbNYgjfy6AtU3tBHGqw
+         TMi53VtNnltC/Jd/leP5XuEQ3LUe7wCzE3lD0Lbs274ShyuAnbwMNZOub17XnulTBTTe
+         rFOn43I6wpO0qzv25HE1V+HuHtFrvTUi7wK8rubXv8ujZuaKEWa4GaYlwtGzBZj8+mGo
+         s/Rw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=rNRFqy2e53r3+iZ5AdP9DFE+PFMWD5guz89RGBZhZBA=;
+        b=ulHeqHF1wWCvy3gOOJ3a3gHsewItkSp80X9yyzNtRwgmMevN4LAI36s3dxriZSZ2n2
+         W/lOTK+Gbj06bjkesSAr+Y+2eZ2OkRo3SPHkKBYWGRMqkrQQs+l+REMF6UbJYxZ1vKds
+         sM4yX5K4WLDljD6Lh0O8058Yj7pzDq1PNQPN2ODryUrJrSVX7yfkIBxol9aflAj9j156
+         JxKPgJHMNjK8FVSti+bYXuINLsPE3m0K14cb1brpJo8g3ZAs4U/fM5hXQ10ZVA4iOof2
+         djhFIdToNZh5iC33NrOKmb6JYJQXwt40ZwhdG/7CsehG1Q5mVsjd0M0zdaXVY9wcXG0X
+         GO2A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@intel-com.20150623.gappssmtp.com header.s=20150623 header.b="e3Bw94/e";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id w13-v6si1179452pgj.229.2018.11.07.11.34.39;
+        Wed, 07 Nov 2018 11:34:55 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726806AbeKHFGU (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:06:20 -0500
+Received: from mail-ot1-f44.google.com ([209.85.210.44]:40067 "EHLO
+        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726337AbeKHFGU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:06:20 -0500
+Received: by mail-ot1-f44.google.com with SMTP id s5so1924147oth.7
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 11:34:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rNRFqy2e53r3+iZ5AdP9DFE+PFMWD5guz89RGBZhZBA=;
+        b=e3Bw94/eqs/7TyWmAxEfOChsYWwOvUNcbYGY7rWLm+6Mw8Un4fSnl/FgZnyZd8WkT/
+         FSah9yxXjjeIjHWwZKsxPLCVrp4LOMVUrJl25hRahV/aFad6RDsWt2FY/ctOlmMmwydu
+         m49skXtpTE2Fk1MLhW6UcbUTnzICcqEEall6QwO69IZSsglmUZJs78PIabLkjqpvMjj+
+         aUmCTMR52s3pXCzf/mGtkpuYkuLwnqLOl3GvXhhpsPMFGh/j5khS1vUrPXleHEV8aEnc
+         XIqDQ9ZuRnHj7Q0DfGt51Vz67Bj1vJBy61F9JAz9S8S2mIkfCS5/c27rbHKjAa7im1oJ
+         ndJQ==
+X-Received: by 2002:a9d:f07:: with SMTP id 7mr939783ott.353.1541619273769;
+ Wed, 07 Nov 2018 11:34:33 -0800 (PST)
+MIME-Version: 1.0
+References: <20181107185241.26982-1-toshi.kani@hpe.com>
+In-Reply-To: <20181107185241.26982-1-toshi.kani@hpe.com>
+From: Dan Williams <dan.j.williams@intel.com>
+Date: Wed, 7 Nov 2018 11:34:22 -0800
+Message-ID: <CAPcyv4hE49JiFdaM_L0+KPQayZ0qRYokNRPxD5YuwCCp4fzkqQ@mail.gmail.com>
+Subject: Re: [PATCH] libnvdimm: Fix __nd_ioctl() to check error in cmd_rc
+To: Toshi Kani <toshi.kani@hpe.com>
+Cc: Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Elliott, Robert (Persistent Memory)" <elliott@hpe.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBnS0dgPuNbXAcZAA--.605S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xw1kCF4UuF1xJw17uF48WFg_yoWDuFg_XF
+	ykK348Ww15CFWvqa1Utw4YvF47Aa4kurykZFZYqFnrK34rAryfWFs2yry3XrW3GFyUtFyU
+	ua93ur42y3sxZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqxYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VWrMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY
+	6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IU5_3
+	kJUUUUU==
+
+On Wed, Nov 7, 2018 at 10:52 AM Toshi Kani <toshi.kani@hpe.com> wrote:
+>
+> ndctl zero-labels completes with a large number of zeroed nmems when
+> it fails to do zeroing on a protected NVDIMM.
+>
+>   # ndctl zero-labels nmem1
+>   zeroed 65504 nmems
+>
+> When an ACPI call completes with error, xlat_status() called from
+> acpi_nfit_ctl() sets error to *cmd_rc.  __nd_ioctl(), however, does
+> not check this error and returns with success.
+>
+> Fix __nd_ioctl() to check this error in cmd_rc.
+
+So this arrangement is by design and the bug is in the ndctl utility.
+
+A successful return code from the ioctl means that the command was
+successfully submitted to firmware. It's then up to userspace to parse
+if there was a command specific error returned in the response
+payload. Automatically returning cmd_rc removes the ability for
+userspace tooling to do its own command specific error handling. With
+this change userspace could no longer be sure if the failure is in the
+submission or the execution of the command, or determine if the
+command response payload is valid.

@@ -1,0 +1,120 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:37 -0000
+Received: from icoremail.net (unknown [209.85.214.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_6evL+Nb4OxZAQ--.27191S3;
+	Thu, 08 Nov 2018 02:32:16 +0800 (CST)
+Received: from mail-pl1-f174.google.com (unknown [209.85.214.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3FECrL+NbItcYAA--.236S3;
+	Thu, 08 Nov 2018 02:32:12 +0800 (CST)
+Received: by mail-pl1-f174.google.com with SMTP id s5-v6so8221945plq.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:32:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding
+         :sender:precedence:list-id;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=PSEiiZ/LBlvEWxqEYzOVEQUZ7wx6EB4LDUwLRiy3DX0t3j+VRSNMZ6Q6CrVZ66J7SM
+         Z33tBYzktzw0XGzVGykGGbNAgS3cwPsV77v8eMlZe3k+FHyhAnOkxmbcpxyr4nh/zrHF
+         EFIob+6l+WlS/CxCNKrb5YtMosWUuUL9IEk9laxuuMYdS5wd5Cqf4ENcJZh0py5pyh3E
+         mRbNLU+d4AM1S/RT2In4Ew+LL64UVMuC83Z+w5gB6MrxZS0MRsVahH3jwBbRXLdmfkiB
+         5oPW93kirqlFd8dgSmvzvpH7KLYlJ2Uo7dcB1DBgqBNw5446Hj8ht3m3v/JU62VFCh3K
+         UAcA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gL/ur11w+lXa1dhrxiab4l5fjI04R+qEqD1Ylo8deQzJctJx+F0
+	oaW/RnqMuakw+jbojD/WF2CGbvXcVRWqc0DkfkOxeXaAN+UKtyiL+A==
+X-Received: by 2002:a17:902:b789:: with SMTP id e9-v6mr1313785pls.338.1541615531808;
+        Wed, 07 Nov 2018 10:32:11 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5588650pjt;
+        Wed, 7 Nov 2018 10:32:11 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eiR7KvOvTdhX/gOeJAVCz9YTRq62Xq61CTuQ/6GrZg/vClOvwRnWeXZOBDhb1/g+/GXDu6
+X-Received: by 2002:a17:902:15c5:: with SMTP id a5-v6mr1314017plh.136.1541615531041;
+        Wed, 07 Nov 2018 10:32:11 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541615531; cv=none;
+        d=google.com; s=arc-20160816;
+        b=WVCuX4pv4pPkENhtVCc5NTBU20V5e+xdfYYN4wUB0z4wdUlpEtImgF9bieJy8Xs0aJ
+         Eu9AXQ3PUb1OTSbjzD+gEgoXbjP1iI2Q2QI5a8LNJIkw/tLxnF5ibTNRlOpLZAKVSYa8
+         Ls+8baH8R/qCt6D7lMWKNpfXY9N1gU/zCxcip2qEgFipw/4qtfbehFBI+f7GaUy1bPAH
+         iNTyPY3Pq/MjtCJv7Q9FpeTpeK5zPSF7Q1EHml9jVyWc0td6JoccSXtPzPsAeYANmNNO
+         LTB8mATaXx0xxaaeqrIsMfqYLDOd66Uq/pjikKeP+aws17kjtaDHH81jmSREwwWfXnXr
+         tRdw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=edR8CrrZ/dDRe99uf3AHuPQvRtgN9qxqBR7RgIP1bEc5YUILUcNix9wIqTgc1kJqpP
+         A2MWGCFZPpFONFW7pxi/DmbKHdOb7R5VtnVa/PMDXuQCE9j9prswWfCSBASJv64fdUJo
+         4oq8FLd7Vz1VMPwiiG+RzoUhe2xrGZHP3iFTOaPYXiqYvozxb5fRMYO16rGWTHOA74mX
+         Vl93ugySLDXnaHz1QPGXE9S1ErLkC8ImXes8rUrTNDekuUl6IohElf9/7gIGegqM8Qjm
+         6pQLaWeRbM6c9Xw3uMqEqtlp/OxkmA9PPxOVjyrlFUu6/mrXhNZ/FfPUmwa/nGsvb7W4
+         KHvw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id bh4-v6si1317529plb.386.2018.11.07.10.31.54;
+        Wed, 07 Nov 2018 10:32:11 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728203AbeKHEDL (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:03:11 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37580 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbeKHEDL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:03:11 -0500
+Received: by mail-oi1-f195.google.com with SMTP id w66-v6so14669833oiw.4;
+        Wed, 07 Nov 2018 10:31:35 -0800 (PST)
+X-Received: by 2002:aca:f244:: with SMTP id q65-v6mr770122oih.64.1541615494841;
+        Wed, 07 Nov 2018 10:31:34 -0800 (PST)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id c58sm1044014otd.34.2018.11.07.10.31.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 10:31:34 -0800 (PST)
+Subject: Re: [PATCH v2] block: respect virtual boundary mask in bvecs
+To: Johannes Thumshirn <jthumshirn@suse.de>, Jens Axboe <axboe@fb.com>
+Cc: Linux Block Layer Mailinglist <linux-block@vger.kernel.org>,
+        Linux Kernel Mailinglist <linux-kernel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>, Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>
+References: <20181107135814.15727-1-jthumshirn@suse.de>
+From: Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <6b6d391b-3451-96f2-c995-92a32566922f@grimberg.me>
+Date: Wed, 7 Nov 2018 10:31:32 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20181107135814.15727-1-jthumshirn@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3FECrL+NbItcYAA--.236S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUO-7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IY64vIr41l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C2
+	6cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6rylc2IjII80xcxEwV
+	AKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_
+	Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
+	1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+	v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVCF04k26cxK
+	x2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUDjQ6DUUUU
+
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>

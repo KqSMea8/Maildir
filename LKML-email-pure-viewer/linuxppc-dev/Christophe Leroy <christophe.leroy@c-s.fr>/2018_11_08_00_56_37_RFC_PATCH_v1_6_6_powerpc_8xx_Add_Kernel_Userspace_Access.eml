@@ -1,0 +1,321 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:01 -0000
+Received: from icoremail.net (unknown [209.85.210.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3wyUGuNbGFxZAQ--.26538S3;
+	Thu, 08 Nov 2018 01:02:14 +0800 (CST)
+Received: from mail-pf1-f179.google.com (unknown [209.85.210.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXd0NhGeNbnmsYAA--.389S3;
+	Thu, 08 Nov 2018 00:57:05 +0800 (CST)
+Received: by mail-pf1-f179.google.com with SMTP id s9-v6so592099pfm.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:57:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :message-id:in-reply-to:references:from:subject:to:cc:date:sender
+         :precedence:list-id;
+        bh=Ef7E1Cup/r5NX9pZ2+aKpsstLvXr3NswBsKfXqUcMb8=;
+        b=Id9al8kKkiAWnbcE4R0FHPiZADemJYIryk86Owj5nLfr7gQVLmqpX9By3KdTtxp+N4
+         FUzyg6/JuWWkfuPviQkrCyJaUswNby3F+DCHN6Q50O5nZtsRRuR5YbTMdz1qt2lWbmkD
+         6igKSC4CrJpvOgzZOKvwuPHazOBGKqfr6cScYbmfODpmophaCgVPgfteBLhIZSOAWGmi
+         fyrOqeMWfLTp8AxFBwmvdxNEQ8hp5n2WKQMMzmOGOljR5hD6I23rtWiOE5BkYs8KtBQY
+         S1Ohhn4np7M8oprU3D0Qz9I/3G5G1mGrLgl/+/MB7dKS0mGobl8Wv9ZTmBZEoEeH3OM8
+         9h6g==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJQksHnPnkGkiTWqBB0/UKSxi8sA9pZW1VHDIqJpMCdojhqaU5c
+	IR0YNCRVlRfHxh8WWiMShQTEn44mW7nBInpkZqrMoJA/XmJrMb1VEg==
+X-Received: by 2002:a62:22c3:: with SMTP id p64-v6mr992050pfj.9.1541609824975;
+        Wed, 07 Nov 2018 08:57:04 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5480974pjt;
+        Wed, 7 Nov 2018 08:57:03 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eDbaWOumz5K0Lpwu2JCGbuxiAxzVXT6q1urIC/XG0sdtqvvr7Tr0XlgqJIrCJpUpZzzNfN
+X-Received: by 2002:a17:902:9043:: with SMTP id w3-v6mr970359plz.32.1541609823358;
+        Wed, 07 Nov 2018 08:57:03 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541609823; cv=none;
+        d=google.com; s=arc-20160816;
+        b=OefbcgXtIO5Zs6Svt+NvxlW3kvQFtIGiCJJWpXK7sZuPQpBPRkzLGjvFL9kIk4Kgdk
+         NeQ02D8jHOyHRRSLd2Wt0QUh/DRYRhnHCH3rjXrSpyDbJNMzLHkH07X3dglFl7IM7Ikn
+         3aq0Uqf6nw5kTYvkAueHWg5zjysE+jlZ7fWTw2g6iS/0aKeC46EHOv3BubuksCuCEK0X
+         dZPonLuQ9o+/+J+/zKCUxsJFLaFFSeqTpnZlVdHo+jKsDAPAaPdxheSSriqe2cMKmRaH
+         8R5tRCLI5iTWKLPCg8QMQmISQBnJWZSGkCa3t5l9m6yYTk+6KNscOC5w4mP3/xc8Pp4L
+         ckhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:date:cc:to:subject:from:references
+         :in-reply-to:message-id;
+        bh=Ef7E1Cup/r5NX9pZ2+aKpsstLvXr3NswBsKfXqUcMb8=;
+        b=ZM/pmEzp+HTrbVPcyWdoNdK10Xf5rexNbH8QQspQGRoSmBL9kA273vwvA1SyrQI7S0
+         zVCRhC7C+ci9ncKPdwj2RLfyFYwO7fmVhWO5ma8TjxckkGQsbI0Yky/TzCeeoEWvR9P2
+         esPkR6EGSTWNcEXfW1GHrd0Ixaxe8pnvKE6CI34BaaKjoFiE2t4jaiFvq5lZ/oRIL4CM
+         ubgsanA9rQcFd3SkKalszjRhGJ4+IlAkw/7f9/3dPG5RgXGCvJ1/Bh1swmLySn5VtAxW
+         0y/95FThniHwPTDs/Y4LCc/MqC4GsbYd/hNUvB89YHp0F1Pu7q7+IlOkKXrqnJfPCWnv
+         u0ng==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b13-v6si1007429pgd.509.2018.11.07.08.56.48;
+        Wed, 07 Nov 2018 08:57:03 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731463AbeKHC1v (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:27:51 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:20887 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731435AbeKHC1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:27:50 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 42qsyD152Zz9tvrr;
+        Wed,  7 Nov 2018 17:56:36 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id ZeQfATJmZgrI; Wed,  7 Nov 2018 17:56:36 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 42qsyD0XmTz9tvrh;
+        Wed,  7 Nov 2018 17:56:36 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E53898B815;
+        Wed,  7 Nov 2018 17:56:37 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Ou_tpWEU-AH5; Wed,  7 Nov 2018 17:56:37 +0100 (CET)
+Received: from po14163vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.2])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AFAF38B814;
+        Wed,  7 Nov 2018 17:56:37 +0100 (CET)
+Received: by po14163vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 7254C6995E; Wed,  7 Nov 2018 16:56:37 +0000 (UTC)
+Message-Id: <e3f3fb1ad020202e13b0e1267ef0e17d7da7b2a4.1541568128.git.christophe.leroy@c-s.fr>
+In-Reply-To: <ab8fcb458e1a6ad86382767b3ce7f7cc0d5b7121.1541568127.git.christophe.leroy@c-s.fr>
+References: <ab8fcb458e1a6ad86382767b3ce7f7cc0d5b7121.1541568127.git.christophe.leroy@c-s.fr>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [RFC PATCH v1 6/6] powerpc/8xx: Add Kernel Userspace Access
+ Protection
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, ruscur@russell.cc
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date: Wed,  7 Nov 2018 16:56:37 +0000 (UTC)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXd0NhGeNbnmsYAA--.389S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxtFWUCF1DtFyDAFy7ZF1fZwb_yoWxJr4fpa
+	4vyan3Ka109ayftay3t3Z7WF4ftwn7CryYywsrC398A3W7XryDArsayrnrXr4jqr1DZ3WF
+	vFWfWr1Y9rnrCaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Gb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4w
+	CY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI7II2jI8vz4vEwIxG
+	rwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F
+	4UMxvI42IY6I8E87Iv67AKxVWxJVW8Jr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
+	MxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026x
+	CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
+	JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj4
+	0_Jr0_JF7vcSsGvfC2KfnxnUUI43ZEXa7IUOUhL5UUUUU==
+
+This patch adds Kernel Userspace Access Protection on the 8xx.
+
+When a page is RO or RW, it is set RO or RW for Key 0 and NA
+for Key 1.
+
+Up to now, the User group is defined with Key 0 for both User and
+Supervisor.
+
+By changing the group to Key 0 for User and Key 1 for Supervisor,
+this patch prevents the Kernel from being able to access user data.
+
+At exception entry, the kernel saves SPRN_MD_AP in the regs struct,
+and reapply the protection. At exception exit it restore SPRN_MD_AP
+with the value it had on exception entry.
+
+For the time being, the unused mq field of pt_regs struct is used for
+that.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/include/asm/mmu-8xx.h           |  7 +++++++
+ arch/powerpc/include/asm/nohash/32/pte-8xx.h | 23 +++++++++++++++++++++++
+ arch/powerpc/kernel/asm-offsets.c            |  1 +
+ arch/powerpc/kernel/entry_32.S               | 19 +++++++++++++++++++
+ arch/powerpc/kernel/process.c                |  2 +-
+ arch/powerpc/mm/8xx_mmu.c                    | 10 ++++++++++
+ arch/powerpc/platforms/Kconfig.cputype       |  1 +
+ 7 files changed, 62 insertions(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/include/asm/mmu-8xx.h b/arch/powerpc/include/asm/mmu-8xx.h
+index 53dbf0788fce..bab8568def50 100644
+--- a/arch/powerpc/include/asm/mmu-8xx.h
++++ b/arch/powerpc/include/asm/mmu-8xx.h
+@@ -1,6 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef _ASM_POWERPC_MMU_8XX_H_
+ #define _ASM_POWERPC_MMU_8XX_H_
++
+ /*
+  * PPC8xx support
+  */
+@@ -120,6 +121,12 @@
+  */
+ #define MD_APG_INIT	0x44444444
+ 
++/*
++ * 0 => No user => 01 (all accesses performed according to page definition)
++ * 1 => User => 10 (all accesses performed according to swaped page definition)
++ */
++#define MD_APG_KUAP	0x66666666
++
+ /* The effective page number register.  When read, contains the information
+  * about the last instruction TLB miss.  When MD_RPN is written, bits in
+  * this register are used to create the TLB entry.
+diff --git a/arch/powerpc/include/asm/nohash/32/pte-8xx.h b/arch/powerpc/include/asm/nohash/32/pte-8xx.h
+index 6bfe041ef59d..f1ec7cf949d5 100644
+--- a/arch/powerpc/include/asm/nohash/32/pte-8xx.h
++++ b/arch/powerpc/include/asm/nohash/32/pte-8xx.h
+@@ -135,6 +135,29 @@ static inline pte_t pte_mkhuge(pte_t pte)
+ }
+ 
+ #define pte_mkhuge pte_mkhuge
++
++#ifdef CONFIG_PPC_KUAP
++static inline void lock_user_wr_access(void)
++{
++	mtspr(SPRN_MD_AP, MD_APG_KUAP);
++}
++
++static inline void unlock_user_wr_access(void)
++{
++	mtspr(SPRN_MD_AP, MD_APG_INIT);
++}
++
++static inline void lock_user_rd_access(void)
++{
++	mtspr(SPRN_MD_AP, MD_APG_KUAP);
++}
++
++static inline void unlock_user_rd_access(void)
++{
++	mtspr(SPRN_MD_AP, MD_APG_INIT);
++}
++#endif
++
+ #endif
+ 
+ #endif /* __KERNEL__ */
+diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
+index 9ffc72ded73a..da2f5d011ddb 100644
+--- a/arch/powerpc/kernel/asm-offsets.c
++++ b/arch/powerpc/kernel/asm-offsets.c
+@@ -320,6 +320,7 @@ int main(void)
+ 	 */
+ 	STACK_PT_REGS_OFFSET(_DEAR, dar);
+ 	STACK_PT_REGS_OFFSET(_ESR, dsisr);
++	STACK_PT_REGS_OFFSET(_MQ, mq);
+ #else /* CONFIG_PPC64 */
+ 	STACK_PT_REGS_OFFSET(SOFTE, softe);
+ 	STACK_PT_REGS_OFFSET(_PPR, ppr);
+diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
+index 77decded1175..7fd9dc16dd48 100644
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -155,6 +155,13 @@ transfer_to_handler:
+ 	mfspr	r2,SPRN_XER
+ 	stw	r12,_CTR(r11)
+ 	stw	r2,_XER(r11)
++#ifdef CONFIG_PPC_KUAP
++	mfspr	r2, SPRN_MD_AP
++	stw	r2, _MQ(r11)
++	lis	r2, MD_APG_KUAP@h
++	ori	r2, r2, MD_APG_KUAP@l
++	mtspr	SPRN_MD_AP, r2
++#endif
+ 	mfspr	r12,SPRN_SPRG_THREAD
+ 	addi	r2,r12,-THREAD
+ 	tovirt(r2,r2)			/* set r2 to current */
+@@ -447,6 +454,10 @@ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRED_STWCX)
+ 	mtlr	r4
+ 	mtcr	r5
+ 	lwz	r7,_NIP(r1)
++#ifdef CONFIG_PPC_KUAP
++	lwz	r2, _MQ(r1)
++	mtspr	SPRN_MD_AP, r2
++#endif
+ 	lwz	r2,GPR2(r1)
+ 	lwz	r1,GPR1(r1)
+ #if defined(CONFIG_PPC_8xx) && defined(CONFIG_PERF_EVENTS)
+@@ -745,6 +756,10 @@ fast_exception_return:
+ 	mtcr	r10
+ 	lwz	r10,_LINK(r11)
+ 	mtlr	r10
++#ifdef CONFIG_PPC_KUAP
++	lwz	r10, _MQ(r11)
++	mtspr	SPRN_MD_AP, r10
++#endif
+ 	REST_GPR(10, r11)
+ #if defined(CONFIG_PPC_8xx) && defined(CONFIG_PERF_EVENTS)
+ 	mtspr	SPRN_NRI, r0
+@@ -997,6 +1012,10 @@ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRED_STWCX)
+ 	.globl exc_exit_restart
+ exc_exit_restart:
+ 	lwz	r12,_NIP(r1)
++#ifdef CONFIG_PPC_KUAP
++	lwz	r10, _MQ(r1)
++	mtspr	SPRN_MD_AP, r10
++#endif
+ #if defined(CONFIG_PPC_8xx) && defined(CONFIG_PERF_EVENTS)
+ 	mtspr	SPRN_NRI, r0
+ #endif
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index 96f34730010f..bbec29bda4cb 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -1768,7 +1768,7 @@ void start_thread(struct pt_regs *regs, unsigned long start, unsigned long sp)
+ 	regs->trap &= ~1UL;
+ 
+ #ifdef CONFIG_PPC32
+-	regs->mq = 0;
++	regs->mq = MD_APG_KUAP;
+ 	regs->nip = start;
+ 	regs->msr = MSR_USER;
+ #else
+diff --git a/arch/powerpc/mm/8xx_mmu.c b/arch/powerpc/mm/8xx_mmu.c
+index 597d3bd2d9b5..acea296d4c76 100644
+--- a/arch/powerpc/mm/8xx_mmu.c
++++ b/arch/powerpc/mm/8xx_mmu.c
+@@ -204,3 +204,13 @@ void setup_kuep(bool disabled)
+ 
+ 	mtspr(SPRN_MI_AP, MI_APG_KUEP);
+ }
++
++void setup_kuap(bool disabled)
++{
++	pr_warn("Activating Kernel Userspace Access Protection\n");
++
++	if (disabled)
++		pr_warn("KUAP cannot be disabled yet on 8xx when compiled in\n");
++
++	mtspr(SPRN_MD_AP, MD_APG_KUAP);
++}
+diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
+index d1757cedf60b..a20669a9ec13 100644
+--- a/arch/powerpc/platforms/Kconfig.cputype
++++ b/arch/powerpc/platforms/Kconfig.cputype
+@@ -34,6 +34,7 @@ config PPC_8xx
+ 	select FSL_SOC
+ 	select SYS_SUPPORTS_HUGETLBFS
+ 	select PPC_HAVE_KUEP
++	select PPC_HAVE_KUAP
+ 
+ config 40x
+ 	bool "AMCC 40x"
+-- 
+2.13.3

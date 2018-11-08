@@ -1,0 +1,217 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:47 -0000
+Received: from icoremail.net (unknown [209.85.210.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3fyUMNuNbGg9aAQ--.27093S3;
+	Thu, 08 Nov 2018 02:59:25 +0800 (CST)
+Received: from mail-pf1-f173.google.com (unknown [209.85.210.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHL0sKNuNbO+0YAA--.970S3;
+	Thu, 08 Nov 2018 02:59:22 +0800 (CST)
+Received: by mail-pf1-f173.google.com with SMTP id v68-v6so4501163pfk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:59:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=Bvz4tB1LNY/gc/mjCYlvIM7t6UGBtFaayf4QdhN8Rjc=;
+        b=q0hzAVKRwq4DgPNEBpR6WnOR4AFFjocM0+oIdG0jFqR6jHZxWepUFJB67tZknA/DcX
+         kgJWMvF5ry0aoivvNdWcJLHGWV3lLXqF+SY+0RE1idkxrMYRSoFaL0H1CruhWTirU0Yi
+         T/UFiWmMyjnj0n/Y4NJ+poZ3H4wJarNJvhsWILHLvv6j+yXOMtEENgD7iz37aiCutBl7
+         P8JelOeMkOBACNfvSvztcW1f+qBD4E6bRrqmYXphqQFIBybQgb8datOhZMmNIE8yZ1mE
+         E/Lb6JhR+tFO95WOSs4slG/sHfVoQ+0csEO0jO8prLmuUfDNIk92F6YvjUE01PRzE81V
+         9Q3A==
+X-Gm-Message-State: AGRZ1gL5htW1RCtl5HW/gBeKY49DxdaR2z95PNtTIg3m6DGWDswWn3y+
+	hfDOt47CviN+nSYLTFRDAMAr0ztNnr/1gcYkRcApI/SlWMSAZFo6dw==
+X-Received: by 2002:a62:c184:: with SMTP id i126-v6mr1412617pfg.53.1541617161952;
+        Wed, 07 Nov 2018 10:59:21 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5617358pjt;
+        Wed, 7 Nov 2018 10:59:21 -0800 (PST)
+X-Google-Smtp-Source: AJdET5clP7yLPcdpe7lEcxg1ETL4O0jFuApGVpHMyiSoveCukhQ4JAWfnsZAxfTJ65/7DZQDT3e3
+X-Received: by 2002:a17:902:28a8:: with SMTP id f37-v6mr1429804plb.264.1541617161046;
+        Wed, 07 Nov 2018 10:59:21 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541617161; cv=none;
+        d=google.com; s=arc-20160816;
+        b=EcvujeIRcDz1i9VuXszYRPT/phOnWwzp81mPkarwQxajSTv5BUtPtJD86bWRw1x59F
+         KMlL8WWwUpPj2BmkQmpFe4fHKQ92KRbMu67LDOkG1/+o1uqeGFyPfMQ6osJojlfP+CCf
+         4vBcZFbJgq0j8K5D+5OwuE2ApZaZzhQVGnHnwS5YSJmi+2PdwVDVPslgBOhjMtgY777n
+         HNY4rqEgnWaRSawH3Ljrlbmk5ypczzRwe3SkpDhfMKFiSy+Z8PcAu5K9saDkBJlSpG3v
+         9WBDL4DcHC5BPhOstdMhZsfnd/f46Kx0q90z+NUgACpDSFwQn0dBEeXvXTYtjAmX0CcB
+         Bp9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=Bvz4tB1LNY/gc/mjCYlvIM7t6UGBtFaayf4QdhN8Rjc=;
+        b=HX4o/l+WZiIzLxXA/zisRjuwzhCnPYoujj/JvcsWeqFe6GG96qGHcnRvo6XBdL95aq
+         sPwpzdevSD4vXhpeGGff6DVY/6Va7Z+zKtNZvxPFIS0zgrNxjPtkCbBhJp1BCVtEYix/
+         MD4ALor/XGjCRNg45pbvo/YeSK+kA5FfK7LoFrbMceU+iP9GLp3OzaBxOmc9mz9j8aRp
+         TbobB5KXMhmS21NcOuldEUxFb/gBwPy4+hVmM89FViK+FYqkgDUyLFYAn5RJA0p7/P8J
+         GjwWARECCVuw38GWI4o9xDWqwlYxJpNqnQf5iJ6RulYufLs9T2V7FiESWhFjOlEoORW9
+         Qr5A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@baylibre-com.20150623.gappssmtp.com header.s=20150623 header.b=iaW6txQe;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id z70-v6si1408269pfi.165.2018.11.07.10.59.05;
+        Wed, 07 Nov 2018 10:59:21 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1729488AbeKHEaY (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:30:24 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45160 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbeKHEaY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:30:24 -0500
+Received: by mail-wr1-f67.google.com with SMTP id k15-v6so15582379wre.12
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 10:58:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Bvz4tB1LNY/gc/mjCYlvIM7t6UGBtFaayf4QdhN8Rjc=;
+        b=iaW6txQeDuffTLORs44F6bMvZqmeYv2VJt1/SC6lfHm3rNiQfQR9OUZ1wgImwx3s27
+         SzuAkC0hfOrBvsyGiaImclcRYA6jhLLr5dgOCUHJdUnK4s0PWHmPIYgOlI8L18uIXKdW
+         ORJUxEuvjt1UVf13QQCQYrjJK5M83ew4FSEBShV+ruM6m7h6MhtxNql5lf7zcbFfBkQB
+         38K/3pjjy28McxgsVQ55NIwDolmBsnX9RE8XGGbzzyfREfBcvt/VOOQbHSsauP/70N15
+         /OLhJwMaMetps+pkseFGTMLJUjlKubDesi1uOmd6icJyl5GvN5p/gvsA42QtpUHTbd+g
+         orjw==
+X-Received: by 2002:adf:dcd1:: with SMTP id x17-v6mr1334145wrm.212.1541617123692;
+        Wed, 07 Nov 2018 10:58:43 -0800 (PST)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id u8-v6sm1797881wrr.33.2018.11.07.10.58.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 10:58:42 -0800 (PST)
+Date: Wed, 7 Nov 2018 19:58:40 +0100
+From: LABBE Corentin <clabbe@baylibre.com>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] crypto: crypto_user_stat: convert all stats from u32
+ to u64
+Message-ID: <20181107185840.GC5133@Red>
+References: <1541422274-40060-1-git-send-email-clabbe@baylibre.com>
+ <1541422274-40060-3-git-send-email-clabbe@baylibre.com>
+ <20181106014242.GD28490@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181106014242.GD28490@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHL0sKNuNbO+0YAA--.970S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxZrWDGF48trWxCr4fCF4fuFg_yoW5ZrWDpF
+	s8AFW3JrW5Jry3CrykuFWSqryrX392vF15Gr4F9r18CwsIkr1rJay7ZFy8CryUAF97Gryr
+	KrZ2y34Uur45GrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP2b7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IU5zc
+	_3UUUUU==
+
+On Mon, Nov 05, 2018 at 05:42:42PM -0800, Eric Biggers wrote:
+> Hi Corentin,
+> 
+> On Mon, Nov 05, 2018 at 12:51:11PM +0000, Corentin Labbe wrote:
+> > All the 32-bit fields need to be 64-bit.  In some cases, UINT32_MAX crypto
+> > operations can be done in seconds.
+> > 
+> > Reported-by: Eric Biggers <ebiggers@kernel.org>
+> > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> > ---
+> >  crypto/algapi.c                 |  10 +--
+> >  crypto/crypto_user_stat.c       | 114 +++++++++++++++-----------------
+> >  include/crypto/acompress.h      |   8 +--
+> >  include/crypto/aead.h           |   8 +--
+> >  include/crypto/akcipher.h       |  16 ++---
+> >  include/crypto/hash.h           |   6 +-
+> >  include/crypto/kpp.h            |  12 ++--
+> >  include/crypto/rng.h            |   8 +--
+> >  include/crypto/skcipher.h       |   8 +--
+> >  include/linux/crypto.h          |  46 ++++++-------
+> >  include/uapi/linux/cryptouser.h |  38 +++++------
+> >  11 files changed, 133 insertions(+), 141 deletions(-)
+> > 
+> > diff --git a/crypto/algapi.c b/crypto/algapi.c
+> > index f5396c88e8cd..42fe316f80ee 100644
+> > --- a/crypto/algapi.c
+> > +++ b/crypto/algapi.c
+> > @@ -259,13 +259,13 @@ static struct crypto_larval *__crypto_register_alg(struct crypto_alg *alg)
+> >  	list_add(&larval->alg.cra_list, &crypto_alg_list);
+> >  
+> >  #ifdef CONFIG_CRYPTO_STATS
+> > -	atomic_set(&alg->encrypt_cnt, 0);
+> > -	atomic_set(&alg->decrypt_cnt, 0);
+> > +	atomic64_set(&alg->encrypt_cnt, 0);
+> > +	atomic64_set(&alg->decrypt_cnt, 0);
+> >  	atomic64_set(&alg->encrypt_tlen, 0);
+> >  	atomic64_set(&alg->decrypt_tlen, 0);
+> > -	atomic_set(&alg->verify_cnt, 0);
+> > -	atomic_set(&alg->cipher_err_cnt, 0);
+> > -	atomic_set(&alg->sign_cnt, 0);
+> > +	atomic64_set(&alg->verify_cnt, 0);
+> > +	atomic64_set(&alg->cipher_err_cnt, 0);
+> > +	atomic64_set(&alg->sign_cnt, 0);
+> >  #endif
+> >  
+> >  out:
+> > diff --git a/crypto/crypto_user_stat.c b/crypto/crypto_user_stat.c
+> > index a6fb2e6f618d..352569f378a0 100644
+> > --- a/crypto/crypto_user_stat.c
+> > +++ b/crypto/crypto_user_stat.c
+> > @@ -35,22 +35,21 @@ static int crypto_report_aead(struct sk_buff *skb, struct crypto_alg *alg)
+> >  {
+> >  	struct crypto_stat raead;
+> >  	u64 v64;
+> > -	u32 v32;
+> >  
+> >  	memset(&raead, 0, sizeof(raead));
+> >  
+> >  	strscpy(raead.type, "aead", sizeof(raead.type));
+> >  
+> > -	v32 = atomic_read(&alg->encrypt_cnt);
+> > -	raead.stat_encrypt_cnt = v32;
+> > +	v64 = atomic64_read(&alg->encrypt_cnt);
+> > +	raead.stat_encrypt_cnt = v64;
+> >  	v64 = atomic64_read(&alg->encrypt_tlen);
+> >  	raead.stat_encrypt_tlen = v64;
+> > -	v32 = atomic_read(&alg->decrypt_cnt);
+> > -	raead.stat_decrypt_cnt = v32;
+> > +	v64 = atomic64_read(&alg->decrypt_cnt);
+> > +	raead.stat_decrypt_cnt = v64;
+> >  	v64 = atomic64_read(&alg->decrypt_tlen);
+> >  	raead.stat_decrypt_tlen = v64;
+> > -	v32 = atomic_read(&alg->aead_err_cnt);
+> > -	raead.stat_aead_err_cnt = v32;
+> > +	v64 = atomic64_read(&alg->aead_err_cnt);
+> > +	raead.stat_aead_err_cnt = v64;
+> >  
+> >  	return nla_put(skb, CRYPTOCFGA_STAT_AEAD, sizeof(raead), &raead);
+> >  }
+> 
+> Why not assign the result of atomic64_read() directly?
+> I don't see the point of the 'v64' variable.
+> 
+
+Yes it will be more compact and easier to read
+
+Thanks

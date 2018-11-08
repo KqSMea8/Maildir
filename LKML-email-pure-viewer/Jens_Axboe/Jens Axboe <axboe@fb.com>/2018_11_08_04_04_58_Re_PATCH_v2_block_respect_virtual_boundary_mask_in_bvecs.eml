@@ -1,0 +1,201 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:12 -0000
+Received: from icoremail.net (unknown [209.85.210.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX9+2ReNbT2JaAQ--.27082S3;
+	Thu, 08 Nov 2018 04:06:15 +0800 (CST)
+Received: from mail-pf1-f171.google.com (unknown [209.85.210.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXbDiyReNbah4ZAA--.785S3;
+	Thu, 08 Nov 2018 04:06:10 +0800 (CST)
+Received: by mail-pf1-f171.google.com with SMTP id d13-v6so1000590pfo.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:06:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:dkim-signature:from
+         :to:cc:subject:thread-topic:thread-index:date:message-id:references
+         :in-reply-to:accept-language:content-language:spamdiagnosticoutput
+         :spamdiagnosticmetadata:content-id:content-transfer-encoding
+         :mime-version:sender:precedence:list-id;
+        bh=fqvS7NtsxJFm5xfS5H0lRXf0c6B5f0iPJsj8130O+p4=;
+        b=pTuhGpPz4HE/PU6dzXWCUsdbmkbDFjt3pWYXnu2IRTNnnvkhQfaAlJgR5gSFIIaXE+
+         NdlEvURfbcbn/cSKhkv/7tYWB2q29ifiNYeSlkhXEtU225+PDnryk39s/0qtw5vhuhu5
+         NHqhNlf/JhVGoFG0kxl3zXqKhA4shLU19PFhdemF9PaEmnH8UvdqcSHUAfzQKV8y2ayh
+         4p5+nQ1DFFK4LJ7NoaRPVPXH99eBL9TMEXDtI7PSU/hUX7eXXLUh9MpWWEvo405JMHRn
+         io56FYzY4OQSh4BExno3h2DCfFRXNzmmcp93PfkimpfB7Lce72XD4TsqSDpsK/CJiIFd
+         i7fQ==
+X-Gm-Message-State: AGRZ1gJ83A5/hZwd7amPGwNf8K1en306O2RsRdmLbdPdd5iw2SIXJAuc
+	CM+762gN92VXqCN72E/UiQ5OsRIGlKa/uP46MKFH+ovtvrXB9eQ/3g==
+X-Received: by 2002:a65:64d5:: with SMTP id t21-v6mr1421157pgv.428.1541621170539;
+        Wed, 07 Nov 2018 12:06:10 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5685924pjt;
+        Wed, 7 Nov 2018 12:06:09 -0800 (PST)
+X-Google-Smtp-Source: AJdET5enJ92DjNZ2AEmJJOL5foPbYqsJwQCYmBQyeepr9M//cmUbB5GnqumvM0Eumg3siEAH0dGn
+X-Received: by 2002:a17:902:223:: with SMTP id 32-v6mr1675962plc.112.1541621169836;
+        Wed, 07 Nov 2018 12:06:09 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541621169; cv=none;
+        d=google.com; s=arc-20160816;
+        b=A1jR61R4jel0/HZ10tqgm+I7kRjB0cANQ48zlcW6XCqnLqhOGtsyXMsiMx7A33GfMI
+         +lw2OfNHaZnkZhGGoZCcc+VCJyxHonIioF/9bZKM8IagF88kd6jItI5PalwK4xOd6kmd
+         fRhvZop9U87eIA0PnbKOyL4UiP06ho9dffl3CfDevcA8HNHNCjNV5+UHmhu9IYlqcfCo
+         57/8fOpnKAw/erAC+IQY3hu/0FEuXPZQvz2bUUzuX0h3Kg+530u2uDgvNWfBDLZOOOgO
+         7eXUSkz3GOO0v4g29EtFaBvVPJ30z5sX0vzo+ggEo4Oue8YlM4rDWNfzhPSJNZastJPS
+         StBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:content-transfer-encoding
+         :content-id:spamdiagnosticmetadata:spamdiagnosticoutput
+         :content-language:accept-language:in-reply-to:references:message-id
+         :date:thread-index:thread-topic:subject:cc:to:from:dkim-signature
+         :dkim-signature;
+        bh=fqvS7NtsxJFm5xfS5H0lRXf0c6B5f0iPJsj8130O+p4=;
+        b=zjqBjtCcoBDXSyIZAgS2+hLd7AIznsHmPVcWU6lTI9xsTpPcp8rsy497ygrQHiZklY
+         ZXDMEwLB5D1aPwDyeuVom3uil48h8kOX3QGmENgJ6KSIWQWsW5M+pFG9zF8UYwVEyVHy
+         RxkrrRMGZNz8/IZPGqbq+0c07LVNBUCUKd37PQUvYcaIcckp5gEYJ4nfShtKxe4KtsEv
+         FrJb3Ny8ozLf1eXf2T/CrLsbjEZOXw4KpCcEpbdPi38j19CWNK4r9D4qIfusjxyxNBY2
+         d05FnxO6S1+3LN1mFNlQTx2OMP/77p2aAoF8UHw8TLREveIkSWZUutRpZDVQRh+wzEpu
+         k4DQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@fb.com header.s=facebook header.b=IM5VNyR0;
+       dkim=pass header.i=@fb.onmicrosoft.com header.s=selector1-fb-com header.b=E2xGWc0H;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=fb.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id h65-v6si1744274pfc.62.2018.11.07.12.05.54;
+        Wed, 07 Nov 2018 12:06:09 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727001AbeKHFhH (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:37:07 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:33876 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725953AbeKHFhG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:37:06 -0500
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id wA7K4xc5027776;
+        Wed, 7 Nov 2018 12:05:00 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=fqvS7NtsxJFm5xfS5H0lRXf0c6B5f0iPJsj8130O+p4=;
+ b=IM5VNyR0cBWG+gQkH8uNxvw2Zjn/pLdJ3mRu+TXFgQfmneNqp07FhAPZa1mtneH4uF1w
+ WTqvafMibntwaJsgjR7UJ8fFmAh0WQGgnrcYI5CFA3wq4uS8L2tOXn4pIx+Phh+W4vKs
+ g2V1fLVqKT1Ng2I0VFWJ2BL5nj5t13OOljQ= 
+Received: from mail.thefacebook.com ([199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2nm5d6ga9k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 07 Nov 2018 12:05:00 -0800
+Received: from prn-hub05.TheFacebook.com (2620:10d:c081:35::129) by
+ prn-hub05.TheFacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1531.3; Wed, 7 Nov 2018 12:04:59 -0800
+Received: from PRN-CHUB11.TheFacebook.com (2620:10d:c081:35::20) by
+ prn-hub05.TheFacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
+ (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1531.3
+ via Frontend Transport; Wed, 7 Nov 2018 12:04:59 -0800
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.21) with Microsoft SMTP Server (TLS)
+ id 14.3.319.2; Wed, 7 Nov 2018 12:04:59 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fqvS7NtsxJFm5xfS5H0lRXf0c6B5f0iPJsj8130O+p4=;
+ b=E2xGWc0H35tnGItujeHRSBfD9M2Lu/FjrHa8Cv/aTn+9EosyWpNZOUwECK/FhsoQzWX5oY9HHUSbLKFJ0MoEwGLvutEOhJc1Ar1TI0ne40Czh8x1b7VXEj/J6pqbk2uHNbtaChaxDSUdkOEEwo6PUjGjVz0cIiNwAw3W0eXXPGk=
+Received: from CY4PR15MB1463.namprd15.prod.outlook.com (10.172.161.20) by
+ CY4PR15MB1672.namprd15.prod.outlook.com (10.175.120.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1294.32; Wed, 7 Nov 2018 20:04:58 +0000
+Received: from CY4PR15MB1463.namprd15.prod.outlook.com
+ ([fe80::89c4:c15d:7a24:b9e2]) by CY4PR15MB1463.namprd15.prod.outlook.com
+ ([fe80::89c4:c15d:7a24:b9e2%3]) with mapi id 15.20.1294.034; Wed, 7 Nov 2018
+ 20:04:58 +0000
+From: Jens Axboe <axboe@fb.com>
+To: Johannes Thumshirn <jthumshirn@suse.de>
+CC: Linux Block Layer Mailinglist <linux-block@vger.kernel.org>,
+        "Linux Kernel Mailinglist" <linux-kernel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>, Sagi Grimberg <sagi@grimberg.me>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: Re: [PATCH v2] block: respect virtual boundary mask in bvecs
+Thread-Topic: [PATCH v2] block: respect virtual boundary mask in bvecs
+Thread-Index: AQHUdqHz9/xlIwSBikG/w8X19B8jBKVEvQMA
+Date: Wed, 7 Nov 2018 20:04:58 +0000
+Message-ID: <b557400b-4ef9-481f-ac0b-b80545e84a2f@fb.com>
+References: <20181107135814.15727-1-jthumshirn@suse.de>
+In-Reply-To: <20181107135814.15727-1-jthumshirn@suse.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: DM5PR07CA0107.namprd07.prod.outlook.com
+ (2603:10b6:4:ae::36) To CY4PR15MB1463.namprd15.prod.outlook.com
+ (2603:10b6:903:fe::20)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::1:ed44]
+x-ms-publictraffictype: Email
+x-microsoft-exchange-diagnostics: 1;CY4PR15MB1672;20:D0eCVckpukBitvRAOC/+9tdZN58pjJS+3TmUdULzBLf/4A9ofNxctFA1ONjq1YbyNKJDzMCA7I3TLgu84SWd23RQo2N/6k39EIunnzlpA66GOz8IJ9F7xvDE0gASqGFKfIQAQknoxmrfzeuWpnP/5pCHroT1wuPGsHoscMTc6oY=
+x-ms-office365-filtering-correlation-id: c458cd40-a82f-4730-695e-08d644ec4aa9
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(7020095)(4652040)(8989299)(5600074)(711020)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:CY4PR15MB1672;
+x-ms-traffictypediagnostic: CY4PR15MB1672:
+x-microsoft-antispam-prvs: <CY4PR15MB1672EE394D2569D2664C1856C0C40@CY4PR15MB1672.namprd15.prod.outlook.com>
+x-exchange-antispam-report-test: UriScan:;
+x-ms-exchange-senderadcheck: 1
+x-exchange-antispam-report-cfa-test: BCL:0;PCL:0;RULEID:(8211001083)(6040522)(2401047)(5005006)(8121501046)(3231382)(11241501184)(944501410)(52105095)(3002001)(10201501046)(93006095)(93001095)(148016)(149066)(150057)(6041310)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(20161123560045)(20161123564045)(20161123558120)(20161123562045)(201708071742011)(7699051)(76991095);SRVR:CY4PR15MB1672;BCL:0;PCL:0;RULEID:;SRVR:CY4PR15MB1672;
+x-forefront-prvs: 08497C3D99
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(376002)(366004)(396003)(39860400002)(189003)(199004)(8676002)(102836004)(478600001)(99286004)(4326008)(31686004)(8936002)(2900100001)(25786009)(7736002)(2906002)(76176011)(6506007)(305945005)(71190400001)(386003)(5660300001)(97736004)(6916009)(71200400001)(6116002)(81166006)(81156014)(14454004)(52116002)(186003)(2616005)(476003)(446003)(486006)(11346002)(68736007)(6246003)(53546011)(14444005)(106356001)(46003)(36756003)(105586002)(6486002)(6436002)(229853002)(256004)(6512007)(31696002)(53936002)(54906003)(86362001)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR15MB1672;H:CY4PR15MB1463.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-microsoft-antispam-message-info: NC/SBQabeJGuDAD5HKfsLOAuZxwabd9C3wZjbpiitFJoxc8vg1jvIsI8RPW2rourTfizp1FA1FfYPFHJgK8jjWFViCGK07HygnlMeP/wewfWmpOiDpMWS63WrqzUCofKUlXhK1xxpfaAnenurIt2E6g1yHvS7pUdEOUHmUmzSSZyxl40l63tC+dnBdQGADwibtBhR7wfIaVPhgQucv5lExMo+olebqEwyQxZ8qdjIEYsmTN80GM/lpX+mln15ZbvSFkCPGiSDAOLfTsSPrFW4dajgjMh0de3Z8CxXw7uFXOAGdSVFjYgHhYqLlQIn6obYNN7s7ugUuXSwOVUQKosrZicLk3PDYiEmlb9yZU7OBM=
+spamdiagnosticoutput: 1:99
+spamdiagnosticmetadata: NSPM
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5D8E629754CC8A43ACEDD122F4D94BF5@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: c458cd40-a82f-4730-695e-08d644ec4aa9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2018 20:04:58.1646
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1672
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2018-11-07_16:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXbDiyReNbah4ZAA--.785S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUoT7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+	1j6rxdM2vj6VCEFcxC0VAYjxAxZF0EFcxC0VAYjxAxZF0Ew4CEw7xC0VCjxxvEa2IrM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lFcxC
+	0VAYjxAxZF0Ew4CEw7xC0wCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6x
+	AEc7vF6xCjj44lc2xSY4AK6IIF6F1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE
+	14v26ryj6F1UMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14
+	v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxG
+	rwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+	wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUMs0EzxkveV
+	Av7VAKzI0EYx03AwCE64xvF2IEb7IF0Fy7YxBIdaVFxhVjvjDU0xZFpf9x07jEoGQUUUUU
+	=
+
+T24gMTEvNy8xOCA2OjU4IEFNLCBKb2hhbm5lcyBUaHVtc2hpcm4gd3JvdGU6DQo+IFdpdGggZHJp
+dmVycyB0aGF0IGFyZSBzZXR0dGluZyBhIHZpcnR1YWwgYm91bmRhcnkgY29uc3RyYWluLCB3ZSBh
+cmUNCj4gc2VlaW5nIGEgbG90IG9mIGJpbyBzcGxpdHRpbmcgYW5kIHNtYWxsZXIgSS9PcyBiZWlu
+ZyBzdWJtaXR0ZWQgdG8gdGhlDQo+IGRyaXZlci4NCj4gDQo+IFRoaXMgaGFwcGVucyBiZWNhdXNl
+IHRoZSBiaW8gZ2FwIGRldGVjdGlvbiBjb2RlIGRvZXMgbm90IGFjY291bnQgY2FzZXMNCj4gd2hl
+cmUgUEFHRV9TSVpFIC0gMSBpcyBiaWdnZXIgdGhhbiBxdWV1ZV92aXJ0X2JvdW5kYXJ5KCkgYW5k
+IHRodXMgd2lsbA0KPiBzcGxpdCB0aGUgYmlvIHVubmVjZXNzYXJpbHkuDQoNClRoYW5rcywgYXBw
+bGllZC4NCg0KLS0gDQpKZW5zIEF4Ym9lDQoNCg==

@@ -1,0 +1,254 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:03 -0000
+Received: from icoremail.net (unknown [209.85.215.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH95iG+NbxmBZAQ--.26501S3;
+	Thu, 08 Nov 2018 01:05:40 +0800 (CST)
+Received: from mail-pg1-f172.google.com (unknown [209.85.215.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDHqERcG+Nb4XQYAA--.420S3;
+	Thu, 08 Nov 2018 01:05:32 +0800 (CST)
+Received: by mail-pg1-f172.google.com with SMTP id i4-v6so7563152pgq.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:05:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :mime-version:sender:precedence:list-id;
+        bh=fiz5l7afMHXBGc6MneMiwMBA1PkuL945APYx9Hgof9s=;
+        b=HEJpFhhe1T7x5fGp2j77rkyUVvmtmyljXhFgTC2DTkqvNe5vXwSUcsQ0d5OxRIo9CV
+         RAVnyj+ozieTwNWkUnHAdPLOOhjE7+quAM8XEyNTd7ecJfr1Zkhf9aUD5YmvU0URje2Y
+         NKRleth5Slq4EuvTHlx7pEbY8WcxTRGopuO+iJdYr+aRGWPUMS+JZHEtLa0pmgVeVRVE
+         uMm/iUTvDX2EWeeuZAp0mHjcJ+PGMoovCGJEltjQI1LJBkNIwh/rIe6fmoqV2InXdUYd
+         UYMEGd5ShvnKcdI8BQhTB0onI16upCuewNh+Y0Fg51OMA/0g+vzKjs2vQf83wEW8YsKc
+         6Wpw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gK1oaJYW4fuX0tR+ZXyyhz1y9b2qZ96h9+ZWd8GECn0C6RLPIx6
+	sT2Tg+PQaTk9pbbPISaeDOJCn99+yFPzAmYYALklMmcLmQ8F1m708g==
+X-Received: by 2002:a63:9402:: with SMTP id m2mr813172pge.93.1541610332380;
+        Wed, 07 Nov 2018 09:05:32 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5491149pjt;
+        Wed, 7 Nov 2018 09:05:31 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dT9T3kMvFr5NgvKNt/7rHB/6gbctRkZ49SIr4dA+grL9vEki4eYUJ2FlWE0H4HL0TBgDpl
+X-Received: by 2002:a62:7597:: with SMTP id q145-v6mr1001986pfc.254.1541610331247;
+        Wed, 07 Nov 2018 09:05:31 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610331; cv=none;
+        d=google.com; s=arc-20160816;
+        b=T7hoLV9XMjQeTGs+tWggoB38SvzZQpW830M0+taGX/mrXGH1kGd0wGgSU8DLgcLQv4
+         dc1MtMM1S/HGsLxkzLMcVtkJ7XqOaGBVt1n7C2AxgnXzHGch6Avw4f9DItpCZ02hwmM0
+         RMk00jiMMFZhozGd+AyWJJukWwcdM4dgeSHCd1eGUE7CtCO7WccHMuOnaE3+m8yaYZlX
+         yZR4GOrOq7kiETl8A8d84TF0PA7GSvuhCRtxb9iCoSTIdPZO45cAChVKhwpw1p544tbJ
+         DCH9GA34mVgmMQq9NbUZda/kFj7XZHAVx237rW3fEobQX3wXKe2FjfRsxw9KKLRAr/6C
+         pL4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:content-language
+         :accept-language:in-reply-to:references:message-id:date:thread-index
+         :thread-topic:subject:cc:to:from;
+        bh=fiz5l7afMHXBGc6MneMiwMBA1PkuL945APYx9Hgof9s=;
+        b=kTl9UARmIjcOr6hOoEWks5n6ntQn9Rn0E+mWWkKJIq0LMRIlilG+1ldM0sCC8/Wh/k
+         q4W63xPakYDBqsevvFPoks8WulFCLPKDwgTqYoIeRAqQ3rOfjQOKxF/U/1474dnPC+XF
+         8bvSGDl1zmXVMgByztWRLtzXXOADMOv0ZqxXZRISwh6LLTaY1Dt2xTbRwe5yp7H14vht
+         w3OIenQREY79/UpQDpPXAvHGUFR1SKmdaR06+I9CLOp4qmbkkYqn2rrM3TmJMTFYRRT2
+         QuZCfTH1AVghL2psmdhyo5N3ho09gqErOL71QNceJF9+gxZf0dy+89cP8IE7c7iN6Y0L
+         XjSw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b8si1027428pgi.575.2018.11.07.09.05.13;
+        Wed, 07 Nov 2018 09:05:31 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731545AbeKHCgO (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:36:14 -0500
+Received: from mga17.intel.com ([192.55.52.151]:2265 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727757AbeKHCgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:36:14 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 09:04:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,476,1534834800"; 
+   d="p7s'?scan'208";a="90207281"
+Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
+  by orsmga008.jf.intel.com with ESMTP; 07 Nov 2018 09:04:59 -0800
+Received: from orsmsx105.amr.corp.intel.com ([169.254.2.237]) by
+ ORSMSX110.amr.corp.intel.com ([169.254.10.166]) with mapi id 14.03.0415.000;
+ Wed, 7 Nov 2018 09:04:58 -0800
+From: "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "mr.nuke.me@gmail.com" <mr.nuke.me@gmail.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+CC: "alex_gagniuc@dellteam.com" <alex_gagniuc@dellteam.com>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        "shyam_iyer@dell.com" <shyam_iyer@dell.com>,
+        "austin_bolen@dell.com" <austin_bolen@dell.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI/MSI: Don't touch MSI bits when the PCI device is
+ disconnected
+Thread-Topic: [PATCH v2] PCI/MSI: Don't touch MSI bits when the PCI device
+ is disconnected
+Thread-Index: AQHUT50UGu8tYuYbD0+KJZJsxJImXKVCtycAgAKntoA=
+Date: Wed, 7 Nov 2018 17:04:58 +0000
+Message-ID: <1541610289.3026.0.camel@intel.com>
+References: <20180918221501.13112-1-mr.nuke.me@gmail.com>
+         <3c949cf2-bb7f-6b67-f2cb-9f4859b56cfb@gmail.com>
+In-Reply-To: <3c949cf2-bb7f-6b67-f2cb-9f4859b56cfb@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.255.0.238]
+Content-Type: multipart/signed; micalg=sha-1;
+        protocol="application/x-pkcs7-signature"; boundary="=-jUZI81DQxyaou+6qtAeI"
+MIME-Version: 1.0
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDHqERcG+Nb4XQYAA--.420S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZFy5GF1fXF4ktF13CF4Durg_yoW8WFWxpF
+	W8Ga1FkFWkJw4UWwsFva1UZF13tFs7JFWxtryrGw129a9Fy3ZYqF15KF1fW3W3ArW7uFnI
+	vr1jqw1kWan8AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUQEb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2vj62AExV
+	A0xI801c8C04v26x02cVCv0xWle2I262IYc4CY6c8Ij28IcVAaY2xG8wASzI0EjI02j7Aq
+	F2xKxwAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4
+	A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwCjxxvEa2IrMxkF7I0Ew4C26cxK
+	6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6r4lc2IjII80xcxEwVAKI4
+	8JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1lcIIF0xvEx4A2jsIE14v26F4j6r4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
+	1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E
+	4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
+	WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0
+	rVW8JVW3JwCE64xvF2IEb7IF0Fy7YxBIdaVFxhVjvjDU0xZFpf9x07jXHUDUUUUU=
+
+--=-jUZI81DQxyaou+6qtAeI
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+I found the same issue:
+https://patchwork.ozlabs.org/patch/989272/
+
+Tested-by: Jon Derrick <jonathan.derrick@intel.com>
+
+On Mon, 2018-11-05 at 18:32 -0600, Alex G. wrote:
+> ping
+>=20
+> On 09/18/2018 05:15 PM, Alexandru Gagniuc wrote:
+> > When a PCI device is gone, we don't want to send IO to it if we can
+> > avoid it. We expose functionality via the irq_chip structure. As
+> > users of that structure may not know about the underlying PCI
+> > device,
+> > it's our responsibility to guard against removed devices.
+> >=20
+> > .irq_write_msi_msg() is already guarded inside
+> > __pci_write_msi_msg().
+> > .irq_mask/unmask() are not. Guard them for completeness.
+> >=20
+> > For example, surprise removal of a PCIe device triggers teardown.
+> > This
+> > touches the irq_chips ops some point to disable the interrupts. I/O
+> > generated here can crash the system on firmware-first machines.
+> > Not triggering the IO in the first place greatly reduces the
+> > possibility of the problem occurring.
+> >=20
+> > Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> > ---
+> >   drivers/pci/msi.c | 3 +++
+> >   1 file changed, 3 insertions(+)
+> >=20
+> > diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> > index f2ef896464b3..f31058fd2260 100644
+> > --- a/drivers/pci/msi.c
+> > +++ b/drivers/pci/msi.c
+> > @@ -227,6 +227,9 @@ static void msi_set_mask_bit(struct irq_data
+> > *data, u32 flag)
+> >   {
+> >   	struct msi_desc *desc =3D irq_data_get_msi_desc(data);
+> >  =20
+> > +	if (pci_dev_is_disconnected(msi_desc_to_pci_dev(desc)))
+> > +		return;
+> > +
+> >   	if (desc->msi_attrib.is_msix) {
+> >   		msix_mask_irq(desc, flag);
+> >   		readl(desc->mask_base);		/* Flush
+> > write to device */
+> >=20
+--=-jUZI81DQxyaou+6qtAeI
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+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
+PNauajAtxgRKfqfSMb+IcL/VXiPtVZOxVq+CTZeDJkaEmn/79vg8OYxpR+YhFF+tGlKf/Zc4id1P
+AgMBAAGjggI3MIICMzAdBgNVHQ4EFgQU4oawcWXM1cPGdwGcIszDfjORVZAwHwYDVR0jBBgwFoAU
+HmkqtNwo/kcYTiELP7ysES/wmPUwZQYDVR0fBF4wXDBaoFigVoZUaHR0cDovL3d3dy5pbnRlbC5j
+b20vcmVwb3NpdG9yeS9DUkwvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIwSXNzdWluZyUyMENB
+JTIwNEEuY3JsMIGfBggrBgEFBQcBAQSBkjCBjzBpBggrBgEFBQcwAoZdaHR0cDovL3d3dy5pbnRl
+bC5jb20vcmVwb3NpdG9yeS9jZXJ0aWZpY2F0ZXMvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIw
+SXNzdWluZyUyMENBJTIwNEEuY3J0MCIGCCsGAQUFBzABhhZodHRwOi8vb2NzcC5pbnRlbC5jb20v
+MAsGA1UdDwQEAwIHgDA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiGw4x1hJnlUYP9gSiFjp9T
+gpHACWeB3r05lfBDAgFkAgEJMB8GA1UdJQQYMBYGCCsGAQUFBwMEBgorBgEEAYI3CgMMMCkGCSsG
+AQQBgjcVCgQcMBowCgYIKwYBBQUHAwQwDAYKKwYBBAGCNwoDDDBRBgNVHREESjBIoCoGCisGAQQB
+gjcUAgOgHAwaam9uYXRoYW4uZGVycmlja0BpbnRlbC5jb22BGmpvbmF0aGFuLmRlcnJpY2tAaW50
+ZWwuY29tMA0GCSqGSIb3DQEBBQUAA4IBAQBxGkHe05DNpYel4b9WbbyQqD1G6y6YA6C93TjKULZi
+p8+gO1LL096ixD44+frVm3jtXMikoadRHQJmBJdzsCywNE1KgtrYF0k4zRWr7a28nyfGgQe4UHHD
+7ARyZFeGd7AKSQ1y4/LU57I2Aw2HKx9/PXavv1JXjjO2/bqTfnZDJTQmOQ0nvlO3/gvbbABxZHqz
+NtfHZsQWS7s+Elk2xGUQ0Po2pMCQoaPo9R96mm+84UP9q3OvSqMoaZwfzoUeAx2wGJYl0h3S+ABr
+CPVfCgq9qnmVCn5DyHWE3V/BRjJCoILLBLxAxnmSdH4pF6wJ6pYRLEw9qoyNhpzGUIJU/Lk1MYIC
+FzCCAhMCAQEwgZAweTELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRQwEgYDVQQHEwtTYW50YSBD
+bGFyYTEaMBgGA1UEChMRSW50ZWwgQ29ycG9yYXRpb24xKzApBgNVBAMTIkludGVsIEV4dGVybmFs
+IEJhc2ljIElzc3VpbmcgQ0EgNEECEzMAAMamAkocC+WQNPgAAAAAxqYwCQYFKw4DAhoFAKBdMBgG
+CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE4MTEwNzE3MDQ0OVowIwYJ
+KoZIhvcNAQkEMRYEFJpp4/BL03eaUAG6IEboXOE6i51/MA0GCSqGSIb3DQEBAQUABIIBAJ9l5Y/d
+XQclwYYy2sfvSKh6Y1gytzeyp8uEZmAK/dA3gHxNDXnLYvFkO50QznahhnkCDGtkhPlYU4Lj1ZCN
+Mh84Xr1FviEEGCLb09A38oRERufyeTvs0FB7EKfOr3S+QJywxbAaMNZGN7vdg/r5dSETojy3DLcX
+VgTh/wYgU9C8za9PboIKx69INqerMenauE77t3C/Cj3jkWp5WPhc5QIQO31enT+ODIzrnVVJZKOP
+mnNW/gmcj4GdHiavlHHyS6Zh2Iwv1ziwBSL8yfGGkRAy7YBtA0cDE4DC6pT8XjAZSasruzaNcGFK
+Qn/K2qRgwnKxFzV5sw9cGYDPg8U0lyEAAAAAAAA=
+
+
+--=-jUZI81DQxyaou+6qtAeI--

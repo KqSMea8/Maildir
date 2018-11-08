@@ -1,0 +1,242 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:35 -0000
+Received: from icoremail.net (unknown [209.85.214.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn33w4LeNbMN9ZAQ--.27019S3;
+	Thu, 08 Nov 2018 02:21:45 +0800 (CST)
+Received: from mail-pl1-f176.google.com (unknown [209.85.214.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXN0M2LeNbnM4YAA--.710S3;
+	Thu, 08 Nov 2018 02:21:42 +0800 (CST)
+Received: by mail-pl1-f176.google.com with SMTP id b5-v6so8224936pla.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:21:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=rPBZfIwZcAWygkcXNSobarpwSTCu+er4ayKHWIqvW3U=;
+        b=G79s+0NFA2cz1EfwaHL1tHBMOI86e0fw/PAoCE79grHd9iGMTxnWToPDvwWIpXnGfC
+         jDSEzHcGCqnOH7WSKEPkX4oDDz0/fn+6lH/YEp4tmW9RFUOaHT9izknUWQqsLZuIRDUg
+         r7s1UW9JRg0DWFiaayjRYtI/DiaUoND7LvwW4HjTV6zWLbQqkSN+AfmVvTbJOyrK7Kus
+         /m34YrgeVNy/zhZNV58IxrBaeaEKKk/at8xyFiGdWUoErctnwNbgacLZsw4oPjpTDqio
+         UstJoRoytDIV/LweWG0kHd4Wr5whtHginKeVZY27LwrYVT0tmvM+Hlof+BJuPezrn6kX
+         bSNg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKyjwrNRHifFWuhmN1xMp8yj1aRNsni/iRlfhuhgjjaXwjYk3a+
+	ZWcdbuaOXuwWr6sjTvu1nlyXgZfMwEJn/VQyilp4s7Z0RNwYsaIjjQ==
+X-Received: by 2002:a17:902:a5cc:: with SMTP id t12-v6mr1274114plq.298.1541614901990;
+        Wed, 07 Nov 2018 10:21:41 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5577252pjt;
+        Wed, 7 Nov 2018 10:21:41 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eg9Jt5DmNncvRPA6Lh4GYcFpsvLPUzqg6ZtKaPNG8bcRwLBjVa11hfWKOAQ3yOp25x2uLs
+X-Received: by 2002:a63:88c7:: with SMTP id l190mr1062964pgd.110.1541614901178;
+        Wed, 07 Nov 2018 10:21:41 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541614901; cv=none;
+        d=google.com; s=arc-20160816;
+        b=uX7WFsNfboNv2xIjWcSNRjEe72SzcsBQVPJi0yycxDechM/aXi+ZVez18VGEckOIJo
+         vOnN3An2LJDdshf7XslNi9XK98lB1E89Xnf8KvyT8yqOliEXf5wwScvrBY7qZiQGAd6r
+         ZLQxi59KalaLLU2PMRIJPjI9kW6ySTEaDQYBs3bzt4daYQezi4dklTeXTO7BL+e8q9zG
+         MWPBnUHPNij0pQG+5QpCuiBQoSXnvzQmtkN+eF9rq4LZzNBa+HHgM+2zBTUMelprya7U
+         mUdijtRNcUk9U9da9yTU0lNUYXSCAe/X+wZn4jG/ZUAILAldEeoFJdPmLWyQZ7xr/td7
+         4toQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=rPBZfIwZcAWygkcXNSobarpwSTCu+er4ayKHWIqvW3U=;
+        b=fFAS/bpa7uwrgedwM4RH9vIy10Rg7NfQBlwP40H/Ck6lZamp55qGJvWqCil/PBmHT1
+         g1RdYAGJph9CjaVr5OPlSGu2x4z966jlGbca/aMMJM8KDRK8inDSUYmhrISdEk978AzL
+         MecEHKArrJ2zIXXtyFf3+z5biDSyjeRw16oxSaRMThSqYzLs/N9TRJOTORONhYQ6aU/K
+         Rf3YzypjC2vktWFuN+gP/h7L0Qcu8Zycrthwf5wMEpSOb7a1QKSLrR1Yn7h2dk2MeKa8
+         4Gfy3oGtneqA5OIP14Ma/R6GUc420WPPP6EWwZJ/FJ2hyjeVQJtZfQdHmc9rheyssPND
+         d6bg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id u9si1204565pgu.570.2018.11.07.10.21.25;
+        Wed, 07 Nov 2018 10:21:41 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728793AbeKHDwR (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:52:17 -0500
+Received: from leonov.paulk.fr ([185.233.101.22]:49030 "EHLO leonov.paulk.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728026AbeKHDwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:52:17 -0500
+Received: from gagarine.paulk.fr (gagarine [192.168.1.127])
+        by leonov.paulk.fr (Postfix) with ESMTPS id 8EDF6BFCAE;
+        Wed,  7 Nov 2018 19:20:41 +0100 (CET)
+Received: by gagarine.paulk.fr (Postfix, from userid 114)
+        id BFA04C1096; Wed,  7 Nov 2018 19:20:40 +0100 (CET)
+X-Spam-Checker-Version: SpamAssassin 3.4.1 (2015-04-28) on gagarine.paulk.fr
+X-Spam-Level: 
+X-Spam-Status: No, score=0.0 required=5.0 tests=none autolearn=unavailable
+        autolearn_force=no version=3.4.1
+Received: from localhost.localdomain (collins [192.168.1.129])
+        by gagarine.paulk.fr (Postfix) with ESMTP id 05746C1070;
+        Wed,  7 Nov 2018 19:17:59 +0100 (CET)
+From: Paul Kocialkowski <contact@paulk.fr>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com,
+        Mark Van den Borre <mark@fosdem.org>,
+        Gerry Demaret <gerry@fosdem.org>,
+        Luc Verhaegen <libv@skynet.be>,
+        Paul Kocialkowski <contact@paulk.fr>
+Subject: [PATCH NOT FOR MERGE v3 8/8] ARM: dts: sun7i-a20-bananapi: Add bindings for the LeMaker 3.5" LCD
+Date: Wed,  7 Nov 2018 19:18:43 +0100
+Message-Id: <20181107181843.27628-9-contact@paulk.fr>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107181843.27628-1-contact@paulk.fr>
+References: <20181107181843.27628-1-contact@paulk.fr>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXN0M2LeNbnM4YAA--.710S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxury3Xr1rCr4rGFW7Kr1kAFb_yoW5XF1xpF
+	yDCFZakrWkur1rtwsI9ryIkF1rWa1kAF93Cw129FWxAr47Wa4qvr1Fg3Z5tr1UXF47Zw4a
+	vrZ3Zry2qrnFgw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB2b7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	GVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkIecxEwVCI4VW5MxkI7II2jI8v
+	z4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804x
+	Wl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCbIYCTnIWIevJa73UjIFyTuYvjxUh1CJDUUUU
+
+This adds the backlight panel, power, pwm and tcon0 device-tree bindings
+required for supporting the 3.5" LCD from LeMaker on the BananaPi M1.
+
+The brightness levels are adjusted with a gamma curve using a 1.8 power,
+with indices from 0 to 100 and values ranging from 0 to 255, such as:
+level = (index / 100)^1.8 * 255
+
+Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
+---
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts | 71 ++++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+index 70dfc4ac0bb5..ac6c3e988203 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+@@ -48,6 +48,7 @@
+ 
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/pwm/pwm.h>
+ 
+ / {
+ 	model = "LeMaker Banana Pi";
+@@ -63,6 +64,57 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm 0 50000 0>;
++		/* This table uses a gamma curve with a 1.8 power. */
++		brightness-levels = <  0   1   1   1   1   1   2   2
++				       3   3   4   5   6   6   7   8
++				       9  11  12  13  14  15  17  18
++				      20  21  23  24  26  27  29  31
++				      33  35  37  39  41  43  45  47
++				      49  51  54  56  58  61  63  66
++				      68  71  73  76  79  81  84  87
++				      90  93  96  99 102 105 108 111
++				     114 117 121 124 127 131 134 138
++				     141 145 148 152 156 159 163 167
++				     171 175 178 182 186 190 194 198
++				     203 207 211 215 219 224 228 233
++				     237 241 246 250 255>;
++		default-brightness-level = <50>;
++		enable-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
++	};
++
++	panel: panel {
++		compatible = "lemaker,bl035-rgb-002";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		power-supply = <&panel_power>;
++		backlight = <&backlight>;
++
++		port@0 {
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			panel_input: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&tcon0_out_panel>;
++			};
++		};
++	};
++
++	panel_power: panel_power {
++		compatible = "regulator-fixed";
++		regulator-name = "panel-power";
++		regulator-min-microvolt = <10400000>;
++		regulator-max-microvolt = <10400000>;
++		gpio = <&pio 7 12 GPIO_ACTIVE_HIGH>; /* PH12 */
++		enable-active-high;
++		regulator-boot-on;
++	};
++
+ 	hdmi-connector {
+ 		compatible = "hdmi-connector";
+ 		type = "a";
+@@ -275,6 +327,12 @@
+ 	};
+ };
+ 
++&pwm {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm0_pins_a>;
++	status = "okay";
++};
++
+ #include "axp209.dtsi"
+ 
+ &reg_dcdc2 {
+@@ -322,6 +380,19 @@
+ 	status = "okay";
+ };
+ 
++&tcon0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&lcd0_rgb888_pins>;
++	status = "okay";
++};
++
++&tcon0_out {
++	tcon0_out_panel: endpoint@0 {
++		reg = <0>;
++		remote-endpoint = <&panel_input>;
++	};
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
+-- 
+2.19.1

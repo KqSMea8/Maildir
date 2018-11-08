@@ -1,0 +1,176 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:41:26 -0000
+Received: from icoremail.net (unknown [209.85.214.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f0FlheNbntpbAQ--.27268S3;
+	Thu, 08 Nov 2018 08:37:58 +0800 (CST)
+Received: from mail-pl1-f182.google.com (unknown [209.85.214.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3FEBgheNbkPEZAA--.2508S3;
+	Thu, 08 Nov 2018 08:37:52 +0800 (CST)
+Received: by mail-pl1-f182.google.com with SMTP id b5-v6so8655857pla.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 16:37:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:in-reply-to:references:mime-version:sender
+         :precedence:list-id;
+        bh=tT50KvJHWX/wM6sIaVy16THQS6jau54XvAS0g/Hlkcg=;
+        b=ugDVhAr0m0ZWjj1NSQuVue5K8Gsr5/U529eHFANZtXs8fJPVazBroF2FlLQTz9ATej
+         74dGTEm1jN2zGJXZSPbwR2VuL4sCXB5oxeNxcSlWkpHuNGjevsI1/tY/0q9OA84CEM/W
+         bXOBsto2NeocP8ZAYsGywIgyTnGw86MH8vflWt2hHO979zJS5YTf1g8E7EXAqF3G8aYY
+         SZb6EzX04/fRk+D9pyuxmQmTwkdmQiOWcpkMDEvPqNbWSu8E8hHtu5BsD0UrgKperCWh
+         4ExxoYNTsi8+4K6ZZuugvMXDwtmVC0X2J+GQ8bzjRK7vGdDQDcK4W+5Tipnk5YRXMKGz
+         c17A==
+X-Gm-Message-State: AGRZ1gK6egdr9fVK7O3Byi9Ei6+Td7S5AxIYnzojctJ0kCIPVieQwGFJ
+	zLyDj2H1dzEPJghRwzgL+Rz38scjgR7XXuyoleKhc6k5U8ioy5Wgrg==
+X-Received: by 2002:a17:902:b598:: with SMTP id a24-v6mr2459422pls.231.1541637472375;
+        Wed, 07 Nov 2018 16:37:52 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp179991pjt;
+        Wed, 7 Nov 2018 16:37:51 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eqL3hpJD1yoJf2wVjCh+oyM+ufLohvSDPXOcGGygTqU4NlIrEM0sYu5Ag+53TtrAYF2mXD
+X-Received: by 2002:a62:c60a:: with SMTP id m10-v6mr2510707pfg.15.1541637471629;
+        Wed, 07 Nov 2018 16:37:51 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541637471; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Qfn+JQh8vusF842vtTY4rhVi+pD7cPLR3Gik2b9yVazX5wpaacBc1qIreMqR9L8asP
+         Fou049Hk0u5g0R064YLR7KdtCFTary9a95+xp9BW8UfZ/NxWlAQkWvqpaG6GsDRL0T0j
+         Ckv624zP4fjtPQupXNPJReP3YQgFQvUH3x+DKC7ePmwqS8rxKCE8DfzAoh+jhJYCCslE
+         qAfLhmyVbqJceNitMeGOygQUxB0ciITHvhGHNHHQeFFrAfCsknfXjSAIcxu7CaqebPot
+         6fJCqc1yg0W2xg4CITOODXQ5kbkAr+JF47XJjcLZDkAIFJUkmRKresCgZRvbtqL54TxG
+         KS7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:dkim-signature;
+        bh=tT50KvJHWX/wM6sIaVy16THQS6jau54XvAS0g/Hlkcg=;
+        b=KsdagAqQ1I0jEWOj7esTvM9pV+f2ubGG96qKEuSSVlORGUilXoCOovZmgjah7RpkWK
+         du9/QZ6uFr1j5Gqh+FQkiViGZgW4EICo3ul2k2zqvq+78azVuZXGM13L3O2dohKYrrms
+         ljGzQA9a9IlTOVPRiM6pPUtFq2+f0ohdVt4C/2+5/dB2d2utHp/1B1URBUGIRVS8cFzl
+         c3EcmnokYLe66MvfT8cVviboGo7Y2bJOreQxa+FvDm4dL36v91ekVSWa5BC4Wm6pMYka
+         LIcn4ydEprdrWEprAtXIZYl03u0Ccwx7rnxrUHiQRA38dffavu/r5GxoINuO+37sw7SW
+         GGTA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@ti.com header.s=ti-com-17Q1 header.b=pLw2Ka4U;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=QUARANTINE sp=NONE dis=NONE) header.from=ti.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id c10-v6si2303820pla.138.2018.11.07.16.37.36;
+        Wed, 07 Nov 2018 16:37:51 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728410AbeKHKKV (ORCPT <rfc822;yamahata.lkml@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 05:10:21 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48134 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727816AbeKHKKT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 05:10:19 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id wA80aLAQ109501;
+        Wed, 7 Nov 2018 18:36:21 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1541637381;
+        bh=tT50KvJHWX/wM6sIaVy16THQS6jau54XvAS0g/Hlkcg=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=pLw2Ka4U9jzdNZnNTAYqd9NCSK1tyms1odGpmxxchtIDb2JH+Y4zFIjp49QQ653xN
+         jIoXlLVZJn6fwpY/XnCIKjVv6SEWrQAuZodvNcgS8Bs/N4ixw8np5q7AkJKtTJ7BOM
+         jg/Ac9yDyxlDvDUoufnVZkr1lWfi3GvB+3ATIjt4=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id wA80aLqA029274
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 7 Nov 2018 18:36:21 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1466.3; Wed, 7 Nov
+ 2018 18:36:20 -0600
+Received: from dflp33.itg.ti.com (10.64.6.16) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1466.3 via Frontend Transport;
+ Wed, 7 Nov 2018 18:36:20 -0600
+Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id wA80aKEh009565;
+        Wed, 7 Nov 2018 18:36:20 -0600
+Received: from localhost (uda0226610.dhcp.ti.com [128.247.59.147])
+        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id wA80aKx13164;
+        Wed, 7 Nov 2018 18:36:20 -0600 (CST)
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+To: "David S. Miller" <davem@davemloft.net>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+CC: <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Tony Lindgren <tony@atomide.com>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Antoine Tenart <antoine.tenart@free-electrons.com>,
+        Quentin Schulz <quentin.schulz@bootlin.com>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Carlo Caione <carlo@caione.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH 5/5] phy: core: clean up unused ethernet specific phy modes
+Date: Wed, 7 Nov 2018 18:36:17 -0600
+Message-ID: <20181108003617.10334-6-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.10.5
+In-Reply-To: <20181108003617.10334-1-grygorii.strashko@ti.com>
+References: <20181108003617.10334-1-grygorii.strashko@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3FEBgheNbkPEZAA--.2508S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jr4xAr4fuFykJw48Cw18AFb_yoW3Xrg_Cw
+	1fJw10qwn7X3Wjyw1xtr92kr45t393tFsYgrnYqr98Kr4DJFn8Kwn8G34jyrWUWw4fXF9x
+	X3W5u3WIqF4FqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbaxYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0
+	I7IYx2IY67AKxVWUCVW8JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMxvI42IY6I
+	8E87Iv67AKxVWxJr0_GcWlcIIF0xvEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdMxAIw28IcxkI
+	7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r
+	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+	b7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYx
+	BIdaVFxhVjvjDU0xZFpf9x07jpnQUUUUUU=
+
+After recent changes PHY_MODE_SGMII, PHY_MODE_2500SGMII, PHY_MODE_QSGMII,
+PHY_MODE_10GKR are not used anymore and can be removed from enum phy_mode.
+Hence - remove them.
+
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ include/linux/phy/phy.h | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index 02c9ef0..79da05a 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -35,10 +35,6 @@ enum phy_mode {
+ 	PHY_MODE_USB_DEVICE_HS,
+ 	PHY_MODE_USB_DEVICE_SS,
+ 	PHY_MODE_USB_OTG,
+-	PHY_MODE_SGMII,
+-	PHY_MODE_2500SGMII,
+-	PHY_MODE_QSGMII,
+-	PHY_MODE_10GKR,
+ 	PHY_MODE_UFS_HS_A,
+ 	PHY_MODE_UFS_HS_B,
+ 	PHY_MODE_PCIE,
+-- 
+2.10.5

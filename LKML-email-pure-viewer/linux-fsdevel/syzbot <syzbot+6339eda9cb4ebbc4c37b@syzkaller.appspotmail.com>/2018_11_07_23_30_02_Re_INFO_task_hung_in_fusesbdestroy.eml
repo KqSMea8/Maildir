@@ -1,0 +1,126 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:32 -0000
+Received: from icoremail.net (unknown [209.85.214.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH8IYBeNbb9dYAQ--.26687S3;
+	Wed, 07 Nov 2018 23:30:34 +0800 (CST)
+Received: from mail-pl1-f176.google.com (unknown [209.85.214.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnDEgXBeNbhBEYAA--.6490S3;
+	Wed, 07 Nov 2018 23:30:31 +0800 (CST)
+Received: by mail-pl1-f176.google.com with SMTP id w22-v6so4689963plk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:30:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :mime-version:date:in-reply-to:message-id:subject:from:to:sender
+         :precedence:list-id;
+        bh=GuD7afXlqFPeVmZ6ponVM0hAcTmfrQhiEYmv1LNCctg=;
+        b=Sqn831nfkSf+Fblal30prKoLyiiuz1DX5hPFF7wM1L5uOXE14nK3Zu7dwu8BRudoQd
+         UXru8kY4C7D1uunCPWib1XtnFBMjijioJIp/y6zTcEJeSbLopGSmgYne78FjQWUFQWxf
+         NYC1jAh4YpqHO38oE9YB7dsr1i5YqviS5j7f3JnUItYHWJNhI7ZZGSb3zSlb0nK9lchg
+         pCxei66WYIauPbJgQVndDguPWEjbCIAgxYrAzUeP55CI3CXk+SSWHqTsYdLbnLEc8v0r
+         J/uUARrjI9Rb4/MWtaAlmMe5Hcg/DgRFCGBKhwHOwDP70mg9mQhjk2k2DmmVJf8i5bw0
+         gQ/w==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=appspotmail.com
+X-Gm-Message-State: AGRZ1gKXqqYDo4W6OvEb1o5Lkt5m1CoS/V6hFqzOn1IvKTsDtINpT7EK
+	MhpomFudhw1bbJI/6Fe6YR84GCz4JZQkUhaBEEh99jl4To7KT3SBZw==
+X-Received: by 2002:a17:902:9698:: with SMTP id n24-v6mr689830plp.9.1541604631403;
+        Wed, 07 Nov 2018 07:30:31 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5385005pjt;
+        Wed, 7 Nov 2018 07:30:30 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f4vSGjmsbhDQiaOoGoc4AANh5HxemAa0MgWehrw7pOnBJj7ySPFSm3UwTKE2Flf8TX8j7s
+X-Received: by 2002:a17:902:b7cc:: with SMTP id v12-v6mr638455plz.278.1541604630213;
+        Wed, 07 Nov 2018 07:30:30 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541604630; cv=none;
+        d=google.com; s=arc-20160816;
+        b=UwpP7dZBR4IMTG3zz2fjc1o07KR4rAN8fHp8yWw6+RoZg3eoq8WHYMEUWiysoLOpZW
+         YqT6NAqoq6cahNRiQZS1fkp1NU7L3Yk2fiEOXsd9YG2XavJV+n3sSyY0RG7UjRx213Tg
+         eKNM/6HgqpHKE7yKzsL3d0e31kuUmDtszndv1oHFNPBXNUVJSo4XLOSgyAkbltpzdDNu
+         UHyewnhe5IqHgK2TDQPl7kRcOlFdMHqM4lwPZTSb28yHK5+xJ1O21ffIpow9BlMynqmS
+         IVtiNNIrkRXjx2MmVCDHMynuvv7QSouJKdkmhRmKYFRRQKczazhAWgyiodgR/R+Z5hPN
+         SkWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:to:from:subject:message-id:in-reply-to
+         :date:mime-version;
+        bh=GuD7afXlqFPeVmZ6ponVM0hAcTmfrQhiEYmv1LNCctg=;
+        b=A59HvR0o1Lo8FGqSaNgaJ0j68m8rrnMOJ+XGtbM+PmSkylnH0rDnfukjHwsPN2SdG1
+         p3fpe/wvNJ0ZJOL0XAjdu4m0v64DW7zfSGaOGyNqkecU61F0i20hHm6shMyIJO6vTL1h
+         t9CgTMO9gwQlhox//7yKqvz8rpFkgO9cBjCG6lvHIMtjJpTMeHVO1zlpO7EdX4uAGuBj
+         P0y6WCkJ3esRmCi3q1aKZBoN7MxaTOhgeSvwk4j6dTIur9ks5uFaawjlKG1Himdu5Hrd
+         8zNyHpP7swIHlQUCn7BaHIPeIhJGe2CXadcvNrK4x8+Xd1L4m10SrDDGlhJd7Ox22ZGd
+         6uAQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=appspotmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v184si765201pgd.295.2018.11.07.07.30.08;
+        Wed, 07 Nov 2018 07:30:30 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727991AbeKHBAx (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:00:53 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:49365 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727203AbeKHBAx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:00:53 -0500
+Received: by mail-io1-f69.google.com with SMTP id v23-v6so19601974ioh.16
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 07:30:02 -0800 (PST)
+MIME-Version: 1.0
+X-Received: by 2002:a24:9ec3:: with SMTP id p186-v6mr384821itd.11.1541604602624;
+ Wed, 07 Nov 2018 07:30:02 -0800 (PST)
+Date: Wed, 07 Nov 2018 07:30:02 -0800
+In-Reply-To: <CAJfpegu3wunM+=psdDSsr1pQ23MJyKCSnz6LapHDg8nnFa+ASg@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b944c3057a14cad7@google.com>
+Subject: Re: INFO: task hung in fuse_sb_destroy
+From: syzbot <syzbot+6339eda9cb4ebbc4c37b@syzkaller.appspotmail.com>
+To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        miklos@szeredi.hu, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnDEgXBeNbhBEYAA--.6490S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUYA7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2vYz4IE57IF64xv32x264vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCjxxvEa2IrMxkF7I0Ew4C26cxK
+	6c8Ij28IcwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07
+	x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
+	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI4
+	8JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IU58pnJUU
+	UUU==
+
+Hello,
+
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
+
+Reported-and-tested-by:  
+syzbot+6339eda9cb4ebbc4c37b@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         59fc453b21f7 Merge branch 'akpm' (patches from Andrew)
+git tree:        
+git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ea045471e4c756e8
+compiler:       gcc (GCC) 8.0.1 20180413 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15b6042b400000
+
+Note: testing is done by a robot and is best-effort only.

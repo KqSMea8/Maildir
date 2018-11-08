@@ -1,0 +1,209 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:20 -0000
+Received: from icoremail.net (unknown [209.85.214.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3whX_uJbMK5YAQ--.26971S3;
+	Wed, 07 Nov 2018 23:01:44 +0800 (CST)
+Received: from mail-pl1-f182.google.com (unknown [209.85.214.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHAE1U_uJbuvQXAA--.13809S3;
+	Wed, 07 Nov 2018 23:01:40 +0800 (CST)
+Received: by mail-pl1-f182.google.com with SMTP id c13-v6so7962533plz.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:01:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :in-reply-to:message-id:date:sender:precedence:list-id;
+        bh=FhYOWeXTPN3rKw/TRtfoZ1HT5XTN3j2Jq+SpJrsZtpM=;
+        b=IMsdFUa9ni5Itt0zCy2whpu8HoCPP0OXrczmE6fvSPUd9uufyrN+fv9vuMmNyXGLIP
+         IOzN8e20fIxa1fi9RVhAYyvH6iUHPnGU8WftdGqT2XyquoR/ezfh+gs6csuBWkEfitL7
+         yOrIANXaGk3xHyYUMbTjcp9lROdyO6bvsk+XZf8oeiVdwYhbeilvsEJYC/hkUeNkB13M
+         o8dlBDJA0LOcT+7knSmSBWcJCc7Qb80LuLxZr1nXPJb2knRniVcmt1myas6KOthkVFRW
+         DACRPO3V1mTGlaIcCFngDzU7LJiOFmn+zt99ficVKMMN6MZ29WOHsi058TOFAbhIdfpC
+         4ffQ==
+X-Gm-Message-State: AGRZ1gKlVGBrnubikyQT26t1EemIXMa7gz22H42A26hZ3HUeV37MNfys
+	R9js6rB6coonggTH48Mbp0di+EPxgQHT7ILIxCkwi09qPvcWeoLA2w==
+X-Received: by 2002:a17:902:9698:: with SMTP id n24-v6mr574535plp.9.1541602900559;
+        Wed, 07 Nov 2018 07:01:40 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5351026pjt;
+        Wed, 7 Nov 2018 07:01:39 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eh+epIX05PZ3FX0tP+/s4DmzWQRuwfxoTC+LDm+CL4v2DHyjblQZucbNqzCmLcSXBJcjC+
+X-Received: by 2002:a17:902:31a4:: with SMTP id x33-v6mr548017plb.105.1541602899672;
+        Wed, 07 Nov 2018 07:01:39 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541602899; cv=none;
+        d=google.com; s=arc-20160816;
+        b=NIZFgLg8g5DvEbUekm47SdG7B63d4jz+5mHhcWGZdVOLDpLKS1siWvp+jpvGJnczV9
+         LlpXvHJFoqZYBbCfkU5a4h73p1EQAgOShcmChklRMhstEBWGMr8Rqg+mdjeTkTHj+6DP
+         HPMOhiVmqBD/f/vg3kiStdagaYxmAAAORwqm1qBvaZgQp+thBGTaatNsosaQev9BYGdN
+         QP+FJGZ0HSsD/+f+QzXQBIzWdExKN67mLYddMU4QN0FAY100vJZMi0PSame/urjYEzfG
+         nNCn2j58x6H+nzDR2PoI0u6APkucdtsi9YSFdHQYTQKwF3FlJuRB3qcNE4zDhB5BAxqn
+         BB0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:date:message-id:in-reply-to:subject:cc:to
+         :from:dkim-signature;
+        bh=FhYOWeXTPN3rKw/TRtfoZ1HT5XTN3j2Jq+SpJrsZtpM=;
+        b=GSPhfoAbm+D1xeiexsLCJH4fyizV2hFsTT4ILVrVWqUdy39OKRPtxZF4GeMkN6JoK0
+         9eUVv7EeOYwfFx4MUca83LubvOBpYhFF05WIljt4tFYj8OnNt+qQ8V0ldlMRJmtOXEQW
+         bIoK3lGd2W82QDFbskynILCAw86i7QqZFLhJ9gpCG8p2o9A2OmCo6I3+oFrwQegF6rwL
+         Xl2luB9cXGHn5IOHv/exWtMi7Y2fDYPrzuZR1990H6Ct+DBhvl3Vb57A9br9NOYL/XlD
+         FSuJ/TUzWC3RqlaJMSx1uocUVFgAZnN4wmS08uJU9WDgkUmNw2vjlELqOlSc2DPfz7fd
+         mx3g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@sirena.org.uk header.s=20170815-heliosphere header.b=IepAuI2A;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b131si774831pga.51.2018.11.07.07.01.22;
+        Wed, 07 Nov 2018 07:01:39 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727955AbeKHAb5 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:31:57 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40220 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbeKHAb4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:31:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=FhYOWeXTPN3rKw/TRtfoZ1HT5XTN3j2Jq+SpJrsZtpM=; b=IepAuI2AsRzd
+        t3nszoxflyIbp2JIQvhZR5R0n68XqbTUMrwoSTrZiqX2sixw6U6TV3B0m+b6Pw0DxlrapQwdpxn5j
+        o1VXEXioywm2XP2Q+RtG9fGvT6qkZ/mRSArSfFYrMnkwoI4rC1UDlkLISGbZTrgjZsRHzkIuDsp3i
+        g1ALU=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1gKPKQ-0006b0-MG; Wed, 07 Nov 2018 15:01:10 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 657B71124E14; Wed,  7 Nov 2018 15:01:10 +0000 (GMT)
+From: Mark Brown <broonie@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regulator: bd718x7: Remove double indirection for bd718xx_pmic_inits.rdatas" to the regulator tree
+In-Reply-To: 
+Message-Id: <20181107150110.657B71124E14@debutante.sirena.org.uk>
+Date: Wed,  7 Nov 2018 15:01:10 +0000 (GMT)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHAE1U_uJbuvQXAA--.13809S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxWr4rZr47Kr45CFW7uw17Jrb_yoW5Kr47pF
+	sxZrnrCr40yFWIyws7G3W2ya43XrWfAasIkay0qw4ftr1Yg3W2qrn0yrWFyF1xtr1kGr12
+	yryqvr18CF4UZFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4wCY1x
+	0264kExVAvwVAq07x20xylc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26ryj
+	6F1UMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26rxl6s
+	0DMxvI42IY6I8E87Iv6xkF7I0E14v26rxl6s0DMxAIw28IcxkI7VAKI48JMxAIw28IcVAK
+	zI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
+	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCI
+	c40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IUYuVbPUUUUU==
+
+The patch
+
+   regulator: bd718x7: Remove double indirection for bd718xx_pmic_inits.rdatas
+
+has been applied to the regulator tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From de226ebda96cafa981b9c0fef56888931668b671 Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Sun, 28 Oct 2018 17:09:22 +0100
+Subject: [PATCH] regulator: bd718x7: Remove double indirection for
+ bd718xx_pmic_inits.rdatas
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+With gcc 4.1:
+
+    drivers/regulator/bd718x7-regulator.c: In function ‘bd718xx_probe’:
+    drivers/regulator/bd718x7-regulator.c:1020: warning: initialization from incompatible pointer type
+    drivers/regulator/bd718x7-regulator.c:1024: warning: initialization from incompatible pointer type
+
+Apparently this old compiler can't handle the obscure double
+indirection.
+
+However, there is no need for a double indirection.  Just store a
+pointer to the array instead, like other drivers tend to do.
+
+Fixes: 494edd266b945f36 ("regulator/mfd: Support ROHM BD71847 power management IC")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/bd718x7-regulator.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/regulator/bd718x7-regulator.c b/drivers/regulator/bd718x7-regulator.c
+index 3a47e0372e77..fff5bc4faa2c 100644
+--- a/drivers/regulator/bd718x7-regulator.c
++++ b/drivers/regulator/bd718x7-regulator.c
+@@ -1007,7 +1007,7 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
+ };
+ 
+ struct bd718xx_pmic_inits {
+-	const struct bd718xx_regulator_data (*r_datas)[];
++	const struct bd718xx_regulator_data *r_datas;
+ 	unsigned int r_amount;
+ };
+ 
+@@ -1017,11 +1017,11 @@ static int bd718xx_probe(struct platform_device *pdev)
+ 	struct regulator_config config = { 0 };
+ 	struct bd718xx_pmic_inits pmic_regulators[] = {
+ 		[BD718XX_TYPE_BD71837] = {
+-			.r_datas = &bd71837_regulators,
++			.r_datas = bd71837_regulators,
+ 			.r_amount = ARRAY_SIZE(bd71837_regulators),
+ 		},
+ 		[BD718XX_TYPE_BD71847] = {
+-			.r_datas = &bd71847_regulators,
++			.r_datas = bd71847_regulators,
+ 			.r_amount = ARRAY_SIZE(bd71847_regulators),
+ 		},
+ 	};
+@@ -1059,7 +1059,7 @@ static int bd718xx_probe(struct platform_device *pdev)
+ 		struct regulator_dev *rdev;
+ 		const struct bd718xx_regulator_data *r;
+ 
+-		r = &(*pmic_regulators[mfd->chip_type].r_datas)[i];
++		r = &pmic_regulators[mfd->chip_type].r_datas[i];
+ 		desc = &r->desc;
+ 
+ 		config.dev = pdev->dev.parent;
+-- 
+2.19.0.rc2

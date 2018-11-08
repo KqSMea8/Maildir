@@ -1,0 +1,204 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:45 -0000
+Received: from icoremail.net (unknown [209.85.215.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f_mHWuNbc+haAQ--.27161S3;
+	Thu, 08 Nov 2018 05:35:04 +0800 (CST)
+Received: from mail-pg1-f181.google.com (unknown [209.85.215.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3FECFWuNbBGgZAA--.1399S3;
+	Thu, 08 Nov 2018 05:35:01 +0800 (CST)
+Received: by mail-pg1-f181.google.com with SMTP id i4-v6so7860988pgq.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 13:35:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=16ApPQ8AwTmX9go89cMkc3+BKd4KA+hucRuXbPMEU6U=;
+        b=AjlGTcTK3hJaRrTnzfyc9ALziu+6JjRw8L34EupESe6NTqbsy4cQhSC2nMOpshRUZg
+         iAoja9XHIIx8nkBaAjrUr+NQW2V6y7EBLdMU5y/baTpSQ13H43OcRoqlG4z+NHI8fNVm
+         M2VvZA3H5TUY+AAQcjtJQS8fim0291cFBJ6zQhNSayX2T1xDHzr37qoXmqAr5R3gWCZM
+         +bcy6/G7YSISFP3j3TWevVnhi2Ucd4OKtROS0eS1DxJnLgLoq/U6+aCoH/t0VgzzpZaw
+         lgShOF9/7TrAxTSffR4+EsL4J5RxikwvyaOjWzHaV4ODsR6ZWsZaUrVlNbIrPSN9YPvZ
+         2JfQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJPstfeS2q2GKPKiVC8xbDPzY5+JKMW0gscLXOmuxHTtMjrk33G
+	M5AYQaJWZW8PtXQQdAwokyeRvW2QS8/3DjHSYX7Uy28VjQRtlWjzjA==
+X-Received: by 2002:a62:5e83:: with SMTP id s125-v6mr1930756pfb.232.1541626501587;
+        Wed, 07 Nov 2018 13:35:01 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp31870pjt;
+        Wed, 7 Nov 2018 13:35:00 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fCwY84MrRQwGy6P0rmyeJwtj39v5PFfZlhy99GWdMWtdooc6I9Byzg1Dzh02a3JSUBPiZA
+X-Received: by 2002:a63:2d46:: with SMTP id t67mr1708375pgt.140.1541626500786;
+        Wed, 07 Nov 2018 13:35:00 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541626500; cv=none;
+        d=google.com; s=arc-20160816;
+        b=zsJCMxBMZre3Rjxa9WVas1wFK9fOcU8T9+ItKEtjhUdYpOoRlfYfIh5Gnn5KkxaKYS
+         v+uVx+mnrWPsKAyytf0PF+tg5S45r17UMtfWm7cqoybxZgKpbO9ecGiNTSrpLMB0PR6C
+         zRevs3gLzf7d4GLMxXc8ab77AMGI/W/Ho+3+E5LcboayGiP+rwA6OuAdanswr00eHDSd
+         nmt0Vu2ZIHEdHjt0AGDd5d7WV/sNX3rpaKcobQA7jZj1PgKTfGOHScYKMdbBOoMZVu0A
+         7WG2tog4uROF3z7Q/OSUDVbtM+wpxgc90XzG0vKtbhBv0N+10AInsJkDX/pkfALwsAbs
+         5vHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:autocrypt:openpgp:from:references:cc:to:subject;
+        bh=16ApPQ8AwTmX9go89cMkc3+BKd4KA+hucRuXbPMEU6U=;
+        b=0RFQyy0sxWAm8KTMYeq6LyuujMeaJvpPX9zCvasU3zp86IOWKmO2Viey7FmZqwktar
+         jGu1o2vRb5H+gZgN+lPyeYylyreJlNErXMm1rsTGD3KzNvH+s1zM346AqiOu+umjKPPi
+         aVcmnnYWax65iNl1js0isosUiRQ2p6rqppkRGu6kjDA6sYMQ9Os5rEJSO0Tc/YXvR6rh
+         OlqyANzLChxDg3hElbY5y1rnjTnlM7gIj4/+EXecDPajAY3O8XSu0N8pNjm9d0sLNJOF
+         z7BSGl/w4rpc4GKqPW6cK4OuMA/CzsKiVatqss9fVMAGrAGffBhqqwa4zfCRo+FWyzbB
+         2jcg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id q20si1683621pgl.268.2018.11.07.13.34.45;
+        Wed, 07 Nov 2018 13:35:00 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727667AbeKHHGV (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:06:21 -0500
+Received: from p3plsmtpa11-08.prod.phx3.secureserver.net ([68.178.252.109]:35007
+        "EHLO p3plsmtpa11-08.prod.phx3.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727162AbeKHHGV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:06:21 -0500
+Received: from [10.13.137.180] ([66.187.233.202])
+        by :SMTPAUTH: with ESMTPSA
+        id KVSfgymtq2ievKVSfg6e60; Wed, 07 Nov 2018 14:34:06 -0700
+Subject: Re: multiplexing /dev/console to all console= entries
+To: Jiri Slaby <jslaby@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org
+References: <46b26403-395b-6a3c-ea6e-c3c811fdc400@dustymabe.com>
+ <955a0492-bab0-59d3-d01d-bea096c6e40f@suse.cz>
+From: Dusty Mabe <dusty@dustymabe.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dusty@dustymabe.com; prefer-encrypt=mutual; keydata=
+ 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
+ Kty3FMtMZAdKH0x1RSq0iXM=
+Message-ID: <81094a73-c277-99cd-190b-37c25db5f7ab@dustymabe.com>
+Date: Wed, 7 Nov 2018 16:34:05 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <955a0492-bab0-59d3-d01d-bea096c6e40f@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfL/UnXKPBTLaAm8RZWRstRpI/yfWb5XexbzTt8c53JSKY3+o6L7SMsWj74vlqdux3MNQJGWYNc1HnwSQbCdh09goZUYcICH759oDg6NK7Kp/jywYq4C/
+ 8UnlzFrPGwqdEdyg01uhLrQvg08q11B47+mD29Cet17Si7vSxmIDxFiSy1G0Ptbx8sR+k1ewvHLf8xJOZS8XCz9ZvVkkA62OxlIUr8zTR5bqyy2WwoD6bt6s
+ 9WTVARyzlp6onHeaIUo/yg==
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3FECFWuNbBGgZAA--.1399S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrZrykZw43Gw45Ar4fGw1UGFg_yoWDWwc_C3
+	4jvFyDJ3yjvws5Z3Z8Gr4UWrWDGr47Cw1DXry3Kr1Sk345WrnIyFZIv34S9w15tF4rXF13
+	Cr97Zr17XF12gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbvkYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	02cVCv0xWlc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0264kExVAvwVAq07x20xylc7Ca8VAv
+	wVCFzxkY4VCF77xAMxkIecxEwVCI4VWxMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2
+	IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv
+	67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64
+	vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
+	CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnI
+	WIevJa73UjIFyTuYvjxUgjXHDUUUU
+
+
+
+On 11/7/18 4:03 AM, Jiri Slaby wrote:
+> On 05. 11. 18, 2:45, Dusty Mabe wrote:
+>> If a patch were submitted to enable this type of behavior would such a
+>> patch be acceptable? Maybe it could be a compile time option and also
+>> have a kernel arg option to enable/disable it.
+> 
+> Hi,
+> 
+> it might kill the system on some setups where people specify more serial
+> (or similarly slow consoles). Output to some console is so slow that the
+> system does nothing else than writing to the consoles. What might work
+> as the first step to check it out is adding a flag to the console=
+> option which would mark a console as a /dev/console device too and
+> multiplex only those specified by the user. Then let's see how it goes
+> with userspace logging out in the wild...
+> 
+
+Thanks Jiri!
+
+I think that seems reasonable. Do you have a good idea of what you'd like it
+to look like? Some options
+
+- console=ttyS0,primary
+- console=ttyS0,mux
+- console=ttyS0+
+- consolex=ttyS0
+
+These are ideas. Bad ones, probably. But just throwing out ideas. 
+
+Dusty

@@ -1,0 +1,220 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:57 -0000
+Received: from icoremail.net (unknown [209.85.214.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv_oaZONbEBtbAQ--.27715S3;
+	Thu, 08 Nov 2018 06:15:55 +0800 (CST)
+Received: from mail-pl1-f178.google.com (unknown [209.85.214.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCngT0ZZONbWogZAA--.1683S3;
+	Thu, 08 Nov 2018 06:15:53 +0800 (CST)
+Received: by mail-pl1-f178.google.com with SMTP id w24-v6so8503214plq.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:15:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:openpgp:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding
+         :sender:precedence:list-id;
+        bh=mfDO39p8xSTyBe2RIBKrkDdDPe9VRX7ePPYvAvL1qz8=;
+        b=IqwUHCOF7YHBCtfMrx3naHoUJdqxboti+ykxmDDxWe8XT9WuNC6WgOczytwdH4Jiz3
+         nfyVEtaUNj3VJMF+MvnArM9poycSvq+7MPw2lhaK876d4xQZd7a1fJ9ECtgbWaaFhbU+
+         pCq/XCMm6EHnsa0D3dBtiGsMm0iVkeKpuvv4qdCHFBvHUrz7wzWCLiH8xKgWbC+TBAN6
+         58c8MB2yE6tU/6K1SvEJI+045X8wbfLV+qEJIojIz2b/26U+TzNI+5rLffzLSIUqstWY
+         xyo5DDxArjVI32GYuEiJXWWwgVYv3y9SOwaK8GotgcKEhdJLWO+fkZdvVbUSOAWyWfqH
+         Grow==
+X-Gm-Message-State: AGRZ1gJZdRJUsl4zk15jA9G2A2KSwdoHpLT0+7pqLTf1lJjq2dRZ4XvU
+	PJxQLpaGNg61/Pz8v2oUMLJrKPumlqcC3kMkoE1cZAXScsfDjHqPAg==
+X-Received: by 2002:a17:902:50e3:: with SMTP id c32-v6mr2070548plj.39.1541628952977;
+        Wed, 07 Nov 2018 14:15:52 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp67508pjt;
+        Wed, 7 Nov 2018 14:15:52 -0800 (PST)
+X-Google-Smtp-Source: AJdET5c4ehje8ulJevxKwPm//GYIkqMXSk0EWmyM6X5Rr4fFtulm6tfx80hqjZK/lHER1VIaf5SO
+X-Received: by 2002:a17:902:b498:: with SMTP id y24-v6mr2133032plr.179.1541628952073;
+        Wed, 07 Nov 2018 14:15:52 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541628952; cv=none;
+        d=google.com; s=arc-20160816;
+        b=dgDsCLxcvrlSUm7MZwr1HxYGBUmp+cv92sbzyvEd1UTIfifDDje08QtPVf+euzBbnw
+         ez0wpz3DJF7u9zWUeXwoBSSxIL5BJyKTCnovSuvwxZ70MfbAnUq+DLIr8Y4o03/c51Il
+         ds3WKryAWwNybZtsQ2ZKyEjzecPiKhFpG/+lCy+zB5jpoqet04w35ylF8GwZyESJWnYY
+         q28EwKYrhFAX5H2+zbFn5bceg5LViTbF0t77nt8yDV6f0fb3XwYQjxbcofj+D0E1k1ZE
+         LE5DdPWjYrmDdAgJ1ooZoW6WSXhASQlb7TDzNwAHvcn1DxEXky8cP6MSNL8m5Hx24+LR
+         reuA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:autocrypt:openpgp:from:references:cc:to:subject
+         :dkim-signature;
+        bh=mfDO39p8xSTyBe2RIBKrkDdDPe9VRX7ePPYvAvL1qz8=;
+        b=dBLCMpfhdJr5UBa3aU+3g9S1rle9++amFXzGMTnwltG5evhIsffN68wShL5+nZMWW2
+         b7QjFDVEYtVWgnkelYYd1UdJLlWP1S+qo/Uf0HAvyellTImPnWbitn9Z7gSyDKv5pctt
+         uaPBWHIfQ4cuJZ12tJEMrBaEUg4vD03betbX08GjR/Jy0cYESDrSMorHKO4r6Mpi9618
+         xXsWi41T1Vg2Uef6yY6rDJx8TT5AjQ2EKaP7r5LO+PUlA4TlTC9nbWjSJP7OaqzWQhnO
+         uU7mS9ylH8qM5I+ZtvAIX9nVUzViN+YU+MQ70ogCmpw7GfJoI9B+vU2Wd5Fu2NA4zDzG
+         yY8A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=VLB+LatE;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id m75-v6si1786920pga.481.2018.11.07.14.15.36;
+        Wed, 07 Nov 2018 14:15:52 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728006AbeKHHrw (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:47:52 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33855 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727127AbeKHHrw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:47:52 -0500
+Received: by mail-pf1-f193.google.com with SMTP id y18-v6so5917836pfn.1;
+        Wed, 07 Nov 2018 14:15:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mfDO39p8xSTyBe2RIBKrkDdDPe9VRX7ePPYvAvL1qz8=;
+        b=VLB+LatE1wTbMFBAX2/Q7ypExPyGk7WkEeIfnqTzFTaoLHfiWdgtHLWcBlUmN9luGI
+         oo53GH+0y8bhmSJrkhcGUq3xaDeoHC980Oly8DPfpMQDaeydxbnxYttu5f2EIV1drgqJ
+         G7iTg0XAZhmI41QhP+4eKmf8SYiW+HPRMH/BZrlVNupL57ry3JI/AbRG+dl3UhGWadF0
+         eAO/FZJu2DYnihtMPmoxaYwa2+iTTTgNn960NVlaD+ecxIcijosR8yVsc+vQQUqVh/Wp
+         r4KhPLdrfNfsjysYYEItN1oFH01haIc70BZp8iYbYCUnP7zA+/QehMLmTaqm2jhIXW2M
+         J5Fg==
+X-Received: by 2002:a63:6cc7:: with SMTP id h190-v6mr1731425pgc.216.1541628927374;
+        Wed, 07 Nov 2018 14:15:27 -0800 (PST)
+Received: from [10.69.78.41] ([192.19.223.250])
+        by smtp.gmail.com with ESMTPSA id 11-v6sm1868925pfr.55.2018.11.07.14.15.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 14:15:26 -0800 (PST)
+Subject: Re: [PATCH v5 0/3] Stingray thermal driver support
+To: Srinath Mannam <srinath.mannam@broadcom.com>,
+        daniel.lezcano@linaro.org, Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com
+References: <1539702680-3746-1-git-send-email-srinath.mannam@broadcom.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNKEZsb3JpYW4gRmFpbmVsbGkgPGZhaW5lbGxpQGJyb2FkY29tLmNvbT7CwQcEEAECALEF
+ AlPAG9YXCgABv0jL/n0t8VEFmtDa8j7qERo7AN0gFAAAAAAAFgABa2V5LXVzYWdlLW1hc2tA
+ cGdwLmNvbY4wFIAAAAAAIAAHcHJlZmVycmVkLWVtYWlsLWVuY29kaW5nQHBncC5jb21wZ3Bt
+ aW1lCAsJCAcDAgEKAhkBBReAAAAAGRhsZGFwOi8va2V5cy5icm9hZGNvbS5jb20FGwMAAAAD
+ FgIBBR4BAAAABBUICQoACgkQgTG1xCm8ZqD+Dgf9HhhzqvJYIPomNeg+ll7/TbzWb871E+HQ
+ TaufJQFQwLEbgdFSZO2uj4UqfDpCyTwtHTVMJogWt3pCAE1sadeIY8OlT6918ofKIl8AiHj2
+ BlfL7ASZ5wzkRMt/4TZoinq9O1tPEynb5G6PdZTV3UQtmSGnpt2EOu7KtRJsnThBiXoOO9TJ
+ Asg4vXJ0ZM1y/MPhQlZbPCHQZFe1gaVWBPLGnLyWyeprqgSLWHaGqrUhlfK1sLuJK1bjYDCI
+ NetK0pS4cA4ZJgogr5FrtV64R19zLl02mt/Yj7rAmjC3ZBuwVi3V35kD8Kd4d9QM2apsiILV
+ bzGbtVCSUgvxI+1SsJEm3c7ATQRTwBvBAQgArGvvWip77T4xgJztZp9YRylAcVTC9gtx0Gg6
+ eYk/EPANGm9TkuGpI++T/Il2H2TjFQNC7eubWohbYj0+6Tmf8nP+VmyobDxPXcMrK7x4xy9o
+ D+Kub2Vf0SXbsM8fL/SqzGbFWZSm73L1L4GZoxvYIz0i7LExYSX2u5YVLaMBaH9HwKt2cvr7
+ MuTrRHtcbOZImoXT29g2UnoF1uwxYNeRhZY/lRvVkkY0lDipPuDwg3SpfHMtCybPq1uAswQd
+ gEbHzRsEXwCR1OF3pIuGt4I3tSEhH/k1caqi0BlqjbGUOkku44xC2gf1ZU267FBBkdV3yJ/7
+ KnrJEnkMCYhS3kII9wARAQABwsGBBBgBAgErBQJTwBvCBRsMAAAAwF0gBBkBCAAGBQJTwBvB
+ AAoJEJNgBqiYLw9VDRUIAJaTef6hsUAESnlGDpC+ymL2RZdzAJx9lXjU4hhaFcyhznuyyMJq
+ d3mehmLxsqDRvHDiqyD71w2Bnc838MVZw0pwBPdnb/h9Ocmp0lL/9hwSGWvy4az5lYVyoA9u
+ 14UIzh0YNGu6jr0isd/LJAbHXqwJwWWs3y8PTrpEp68V6lv+aXt5gR03lJEAvIR1Awp4JJ/e
+ Z5y12gQISp0X8xal9YhhDWER92YLYrO2b6Hc2S31lAupzfCw8lmZsP1PRz1GmF/KmDD9J9N/
+ b8IehhWQqrBQjMjn2K2XkvN75HnAMHKFYfHZR3ZHtK52ZP1crV7THtbtrnPXVDq+vO4QPmdC
+ +SEACgkQgTG1xCm8ZqC6BwgAl3kRh7oozpjpG8jpO8en5CBtTl3G+OpKJK9qbQyzdCsuJ0K1
+ qe1wZPZbP/Y+VtmqSgnExBzjStt9drjFBK8liPQZalp2sMlS9S7csSy6cMLF1auZubAZEqpm
+ tpXagbtgR12YOo57Reb83F5KhtwwiWdoTpXRTx/nM0cHtjjrImONhP8OzVMmjem/B68NY++/
+ qt0F5XTsP2zjd+tRLrFh3W4XEcLt1lhYmNmbJR/l6+vVbWAKDAtcbQ8SL2feqbPWV6VDyVKh
+ ya/EEq0xtf84qEB+4/+IjCdOzDD3kDZJo+JBkDnU3LBXw4WCw3QhOXY+VnhOn2EcREN7qdAK
+ w0j9Sw==
+Message-ID: <b6e02875-784f-4908-a985-5ee7e3df3ac6@gmail.com>
+Date: Wed, 7 Nov 2018 14:15:23 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
+MIME-Version: 1.0
+In-Reply-To: <1539702680-3746-1-git-send-email-srinath.mannam@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCngT0ZZONbWogZAA--.1683S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7KFW7Gr4UJrykCr4fGryUJrb_yoW8AF43pa
+	ykWr98AFs7Jr1xta13Ca1UuFZ0yanayFW7Gr1fWwn0qrW5CFyfJFyrKrW3ZFWkGr1rGFy2
+	kF1UKw13Crn8ArJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmab7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAKzI0EY4vE52x082I5MxkFs20E
+	Y4vE44CYbxCE4x80FwCY02Avz4vEIxC_ZwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280
+	aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7V
+	AKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j
+	6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_JFI_GrUvcSsG
+	vfC2KfnxnUUI43ZEXa7IU5khLUUUUUU==
+
+
+
+On 10/16/2018 8:11 AM, Srinath Mannam wrote:
+> These patches adds the stingray thermal driver and its
+> corresponding DT nodes with documentation.
+
+Can we get feedback from the thermal maintains whether this is
+acceptable or not?
+
+> 
+> Changes from v4
+>   - Addressed Rob Herring comments on DT parameters and
+>     thermal driver architecture.
+>   - Removed brcm,max-crit-temp DT parameter
+>   - Changed driver to thermal sensor registration model.
+>   - Added trip DT properties.
+> 
+> Changes from v3
+>   - Addressed Daniel lezcano comments.
+>   - Elaborated commit description of thermal driver patch.
+>   - Added brcm,max-crit-temp DT parameter.
+> 
+> Changes from v2:
+>   - All stingray TMON DT nodes are combine together into single.
+>     Temperature registers are combined into one mem resource.
+>     brcm,tmon-mask parameter has available TMONs mask value.
+>   - All available TMONs are initialized together in single
+>     instance of driver probe call.
+> 
+> Changes from v1:
+>   - Fixed auto build sparce warning.
+> 
+> Pramod Kumar (3):
+>   dt-bindings: thermal: Add binding document for SR thermal
+>   thermal: broadcom: Add Stingray thermal driver
+>   arm64: dts: stingray: Add Stingray Thermal DT support.
+> 
+>  .../bindings/thermal/brcm,sr-thermal.txt           | 105 ++++++++++++++++
+>  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  89 +++++++++++++
+>  drivers/thermal/Kconfig                            |   3 +-
+>  drivers/thermal/broadcom/Kconfig                   |   9 ++
+>  drivers/thermal/broadcom/Makefile                  |   1 +
+>  drivers/thermal/broadcom/sr-thermal.c              | 138 +++++++++++++++++++++
+>  6 files changed, 344 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>  create mode 100644 drivers/thermal/broadcom/sr-thermal.c
+> 
+
+-- 
+Florian

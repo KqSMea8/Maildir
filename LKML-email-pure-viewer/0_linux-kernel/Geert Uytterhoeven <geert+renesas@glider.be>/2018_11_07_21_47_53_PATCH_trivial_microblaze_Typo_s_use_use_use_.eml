@@ -1,0 +1,130 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:00 -0000
+Received: from icoremail.net (unknown [209.85.214.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_ycm7eJbuUtYAQ--.26548S3;
+	Wed, 07 Nov 2018 21:48:23 +0800 (CST)
+Received: from mail-pl1-f173.google.com (unknown [209.85.214.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwD32UUl7eJbyKwXAA--.117S3;
+	Wed, 07 Nov 2018 21:48:21 +0800 (CST)
+Received: by mail-pl1-f173.google.com with SMTP id q19-v6so4894920pll.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:48:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:sender:precedence:list-id;
+        bh=CHyplmA47GJWMlv0IzpJ0WKii8nyNDOt6cYHmSUb/3s=;
+        b=XukkfXn+N30PFRZbw+eqHKN2d1cvSPYuSEr319Sa9NDpAjGgtkKsTmC/csnATR1qO3
+         n7XFCG9MxAgaUD8Z2WvwzOuph5uxWAUrMBQbFcbbC+LzewXaGkhf7zv7Z+bvSd8pYDhZ
+         HvtZy0dOkad95u5vweemeh7/gDmFJ4TKjI0oFsPleGeSfsMl4pwz9zFXqQxiSMiIEGf9
+         bC3ZOJf81Dri3dXIQBk50T9cGqL22ccqwm2vdFvpIfLd1sac8aAFjaPixJE536pkJThV
+         zIDay/V+rCj6cwCPugEWXLuqlTCcz+xhS2Kf++H1Hx4DhbPW71zPz81A7Yt0/Hp8O0zr
+         KrBA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJkWf1dwRuhjsi6ZNQ5G/A9itLr2+TlH1AvhI4PlwWzKJ91pyTt
+	jQRBMmppdSMUdjQJegDqve0vhs0UKk5bs/NRWvboJ+uS8Mc6OVLLJg==
+X-Received: by 2002:a17:902:50e3:: with SMTP id c32-v6mr292024plj.39.1541598501480;
+        Wed, 07 Nov 2018 05:48:21 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5266288pjt;
+        Wed, 7 Nov 2018 05:48:20 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d8fJ60zwybH494gO8+OD5mryMI/QXhvMzPjl8TNiP8DogUQAOzVsFh8YeHRFDVCn3SUWQK
+X-Received: by 2002:a17:902:d907:: with SMTP id c7-v6mr300594plz.198.1541598500962;
+        Wed, 07 Nov 2018 05:48:20 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541598500; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Fe9J1gkhgHDzJ5NDtKIsSoUKR9blEiSazDRT8h4cnew+QFZL1dYemfF81/qe9R9OfW
+         0cFwmeHcsKtrZQrJzHh8+8cD7l+eVv1Mgd5tbqwocvfF5VB4zFBoYL5Vjakf3uZ88QcK
+         z6mW31SyVwxpjnQ6iW2B4Xb1zCe+OSKCZ9Zpu5eTLbPD7FfNTsV0KetCc1OIb6r8KdEG
+         pYDYH/LDZdIU0WBscHeQzzl1jDRzTlPgz4049LsFUZomwUQoCWOAn5/Yu0PFA2f/1H3T
+         bmZ+5nAtOkhVsoQniBLiB7ZRH1m4Oesq8mMYe6f4xYrrVS97Njv1Nou9UPYeWN2lWLh0
+         k/Zw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:date:subject:cc:to:from;
+        bh=CHyplmA47GJWMlv0IzpJ0WKii8nyNDOt6cYHmSUb/3s=;
+        b=sayQ05rbvEgCRkd9FIAu9qjqtXYW6QqIVvPKngD9WkTf1UjcHLvKInLrdWAU9GNQGn
+         +L7iy7BBAtSFD8Cb+OuU6ksCktrvSx6Acleu4woWuT+8+l7URLjQ2ztMx3D0oXsVraOf
+         m4UfA23RO5HlnohBv1/v6p5Dy0urESjbvQ5eTasb9fiLxM60AhyH/Hz+QyHmxnxoanGR
+         FZ6IjjHivt7Hj4xkTOd/RQzrOXIi9YzzaVU9dT9ibKYIKTt9jFoQondpnxRxfXoiywrr
+         ozlf15BiimasrMA46l2Sjd7U5Vr9ytzVCpfPGUj9jFTacHj1jPjDZ4TW0AbUEf5y08gz
+         roiw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id c68-v6si617862pfa.267.2018.11.07.05.48.03;
+        Wed, 07 Nov 2018 05:48:20 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727698AbeKGXSX (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:18:23 -0500
+Received: from laurent.telenet-ops.be ([195.130.137.89]:42866 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbeKGXSW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:18:22 -0500
+Received: from ramsan.of.borg ([84.194.111.163])
+        by laurent.telenet-ops.be with bizsmtp
+        id x1nu1y00b3XaVaC011nu5s; Wed, 07 Nov 2018 14:47:54 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtp (Exim 4.86_2)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1gKOBW-0005Do-Fl; Wed, 07 Nov 2018 14:47:54 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1gKOBW-0003jo-EH; Wed, 07 Nov 2018 14:47:54 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Michal Simek <monstr@monstr.eu>, Jiri Kosina <trivial@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH trivial] microblaze: Typo s/use use/use/
+Date: Wed,  7 Nov 2018 14:47:53 +0100
+Message-Id: <20181107134753.14327-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwD32UUl7eJbyKwXAA--.117S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWruF1fJr1fXw17CFykuw45Jrb_yoWfCrcEv3
+	WxWw4fG340qrsF9F1UGws5try3Kw1kG395Ww1DXw43KFyDCr4ava95uryUXr45uF1q9FWS
+	yrZ3WF18uw1xGjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbq8YjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW5GwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUqKFA
+	DUUUU
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/microblaze/include/asm/pgtable.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/microblaze/include/asm/pgtable.h b/arch/microblaze/include/asm/pgtable.h
+index f64ebb9c9a413535..bdfb2b3182b04c3b 100644
+--- a/arch/microblaze/include/asm/pgtable.h
++++ b/arch/microblaze/include/asm/pgtable.h
+@@ -200,7 +200,7 @@ static inline pte_t pte_mkspecial(pte_t pte)	{ return pte; }
+  * is cleared in the TLB miss handler before the TLB entry is loaded.
+  * - All other bits of the PTE are loaded into TLBLO without
+  *  * modification, leaving us only the bits 20, 21, 24, 25, 26, 30 for
+- * software PTE bits.  We actually use use bits 21, 24, 25, and
++ * software PTE bits.  We actually use bits 21, 24, 25, and
+  * 30 respectively for the software bits: ACCESSED, DIRTY, RW, and
+  * PRESENT.
+  */
+-- 
+2.17.1

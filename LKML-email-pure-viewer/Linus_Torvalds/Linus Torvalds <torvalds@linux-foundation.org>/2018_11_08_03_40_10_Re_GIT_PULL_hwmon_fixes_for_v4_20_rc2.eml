@@ -1,0 +1,133 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:55 -0000
+Received: from icoremail.net (unknown [209.85.210.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv0LNP+NbDkdaAQ--.26756S3;
+	Thu, 08 Nov 2018 03:41:02 +0800 (CST)
+Received: from mail-pf1-f178.google.com (unknown [209.85.210.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHHzvJP+NbVQwZAA--.658S3;
+	Thu, 08 Nov 2018 03:40:57 +0800 (CST)
+Received: by mail-pf1-f178.google.com with SMTP id d13-v6so971612pfo.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:40:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=4ogO04l67QrtAJ/O6VzeozkfRVw3EdlHoB1F4zuJ9fY=;
+        b=SjLFj8DeqjwvIbGRaLFGNHRzIPtA+U9mJyjawFCpTOoy8YhtMSBq+Ayi3lxSCa9aMu
+         9bQfa9vuec78hfN/8AwAohhRMnBn+kFSUC8urjwdSJWX4vcV7u2dnDrg7VZkozyk1s0F
+         zG85CxUffmBhc2mu7W1es1Rzpa2X1jAQjONsp5bzzlWzPgzWvPhhlyq1+rtoPDXJyRB1
+         wWq1Lfx2dE6K3OfSICyuheDEJMD1wQvTC3E04lM3/zpibpTHil7S38Wc2uUK2o6IiPUy
+         pKAYUUV7o07/M0Jm9RV0L17twUfomFaKr18uMyd43WoCcxgnNDsOGmyehRx/XGK7ZhJU
+         I5Qg==
+X-Gm-Message-State: AGRZ1gIG2IhiwzOkl61H1YddCVGcxio4c1wocfuEaIHSxcuuikPsLGAA
+	fS0k+7+2iBhFWKEUrTQF/U/uOCPSM1ATtLpC6+bXJ1g5ccrv/Bga4w==
+X-Received: by 2002:a62:42dc:: with SMTP id h89-v6mr1638165pfd.0.1541619657430;
+        Wed, 07 Nov 2018 11:40:57 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5661386pjt;
+        Wed, 7 Nov 2018 11:40:56 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eIYVmMrSdRnZMS/mqEJxV+fAQaNiFt5DuLTO3EYhahgaxE3XVE69noe9K9QEFxoLcyKt4c
+X-Received: by 2002:aa7:8498:: with SMTP id u24-v6mr1556031pfn.220.1541619656846;
+        Wed, 07 Nov 2018 11:40:56 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541619656; cv=none;
+        d=google.com; s=arc-20160816;
+        b=aKOxTEnwAWBi7Rp5mTjdQA5Tw61mP56kTmOO/CR7VZkhL/WBN0pMBYCItKpb9bUPpQ
+         G48pmAFcaoft4DA2tdLnd4dUyCwqTDJoyV+liJYRQ5hAEDzhKbx2q2387frp9BMAmgCN
+         LU+Ly0eQ5r0yMepjy2+DDj/2lUcvURE67Crzu9QZs/R8XHm453ymb2RODPah5Lvtx7ks
+         eN9L+lE/MLnxKCvfwdvwmif6th+S3Hqfoy1sTT5i/noJNQFo4sIeCrz8Qt2Wv71jSSG5
+         SLSCtC2c+C4w7vVUDlhTqLVcWAczfzNnEfUC9My4XqPkC0RPla/+jYx8YgzUiRkcch+Z
+         lhCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=4ogO04l67QrtAJ/O6VzeozkfRVw3EdlHoB1F4zuJ9fY=;
+        b=I6aR4Zs8zC9qVW4yps7B+W4Y3bHZtQZna9SB/aRKRnoypkhX4j5YCPX7fVdaBy+y5Q
+         XarFm+Q3TSZMTrmGimZeGuGMo7fwhYC6TSmMw0V9inWAmaaMNNdOUuHHBTA4Mexvr441
+         PqTDSEmioON9r5u4rNAuxPqeVciRsxVu5/JUIk6RTO2ubVyZGwSujgzZZWd+KW8j1kW2
+         s0lrOzqd56itigCs+maRY01nhsfKzr88Z0g0CiLOQ4nkokgQKkj7kleJTMNoFFHacUeM
+         D/ye0YbamdBovhVIgRTmMlfJ6+Xch96zwmD+Ufzm0MFU+jbsygNIhn/849uOAhmnJSDH
+         cGEw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@linux-foundation.org header.s=google header.b=J3AL4yUT;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b18-v6si1543262pls.32.2018.11.07.11.40.40;
+        Wed, 07 Nov 2018 11:40:56 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726847AbeKHFMS (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:12:18 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34599 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbeKHFMS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:12:18 -0500
+Received: by mail-lj1-f195.google.com with SMTP id u6-v6so15858869ljd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 11:40:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4ogO04l67QrtAJ/O6VzeozkfRVw3EdlHoB1F4zuJ9fY=;
+        b=J3AL4yUTHWuTSpvInmSCNMmjbPsV/Bf6wPlZDnv2jDlyAmvZF/QC/3/g1BMZqKAItq
+         0p9YC8nyBEkz4UIlF1PeMdhFLPL27fiFqNi/fzy9Q5WwlZ9HOB4kqKmRQa81BFlNnxIH
+         kGWnaaV5TTP0b0w8pqyVSZkvdsgISTf7Ms6qs=
+X-Received: by 2002:a2e:8546:: with SMTP id u6-v6mr969517ljj.95.1541619628318;
+        Wed, 07 Nov 2018 11:40:28 -0800 (PST)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id f15-v6sm331019lfc.9.2018.11.07.11.40.27
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 11:40:27 -0800 (PST)
+Received: by mail-lj1-f181.google.com with SMTP id u6-v6so15858761ljd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 11:40:27 -0800 (PST)
+X-Received: by 2002:a2e:95c6:: with SMTP id y6-v6mr951285ljh.59.1541619626780;
+ Wed, 07 Nov 2018 11:40:26 -0800 (PST)
+MIME-Version: 1.0
+References: <1541616529-6076-1-git-send-email-linux@roeck-us.net>
+In-Reply-To: <1541616529-6076-1-git-send-email-linux@roeck-us.net>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 7 Nov 2018 11:40:10 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjz-QUo1h=PW5DuNaRoatUrvrCX0Qc5=7rtro1VXzkDvw@mail.gmail.com>
+Message-ID: <CAHk-=wjz-QUo1h=PW5DuNaRoatUrvrCX0Qc5=7rtro1VXzkDvw@mail.gmail.com>
+Subject: Re: [GIT PULL] hwmon fixes for v4.20-rc2
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHHzvJP+NbVQwZAA--.658S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUO07k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAE
+	c7vF6xCjj44lc2xSY4AK6IIF6rWlc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14
+	v26r1I6r4UMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIE14v2
+	6r4UJVWxJr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrw
+	CF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC2
+	0s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI
+	0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIev
+	Ja73UjIFyTuYvjxUgkhLUUUUU
+
+On Wed, Nov 7, 2018 at 10:48 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> - Remove bogus __init annotations in ibmpowernv driver
+> - Fix double-free in error handling of __hwmon_device_register()
+
+Pulled,
+
+             Linus

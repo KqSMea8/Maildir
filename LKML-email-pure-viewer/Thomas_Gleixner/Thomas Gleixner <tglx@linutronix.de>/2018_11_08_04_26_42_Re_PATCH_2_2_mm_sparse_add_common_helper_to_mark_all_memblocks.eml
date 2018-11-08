@@ -1,0 +1,155 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:21 -0000
+Received: from icoremail.net (unknown [209.85.215.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgA3cI7CSuNbK4JaAQ--.30380S3;
+	Thu, 08 Nov 2018 04:27:47 +0800 (CST)
+Received: from mail-pg1-f175.google.com (unknown [209.85.215.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnAT2_SuNbrS8ZAA--.991S3;
+	Thu, 08 Nov 2018 04:27:43 +0800 (CST)
+Received: by mail-pg1-f175.google.com with SMTP id z17-v6so7804774pgv.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:27:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version:sender:precedence:list-id;
+        bh=0UxaUcnUaN43R2U9vaq2IPXYI/MFW5twLwIUkCxVE70=;
+        b=Et5Lrsp5EW7I1GSh9MYoMtHGEALJp6Z1DdcrJNXS9qq8efcY8E3Jdpel2npIJ4VG4T
+         N7d3vJna1eZjsJGIwgkMv0NKHRI5Vq3kVjYh8uAMk3vpMZFE/YLWcIfn2ea9DpyEVxUm
+         pGSd2cGO7b1q3TZ0XvfdOopnw6FISv4vwv7/oU+eqpGX9KKOxFpG/Xv7cBw/1rhLLeFc
+         F0qOMajxgLxC5jws61D1pcy/4Oh9wjmeJO1N8sxsk7F4W583DZ54tq7HnuC4J+L91r5m
+         y3wLgEPTJqvg5NNZl3HLEK26UdNIKMdqwWoOHJQP4RLNZfOSidgQ7hCPWKglo/zpn2nf
+         wMCw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIbhr06TCBIn0Jn1h4NkbKP6iCF7p3Od1s6EYrF24CUTzdM1tv/
+	kerO54+J5+xDg8cJJXOlFToLwNFWZYGfLxH/+7j4Kx2G7tmG19EJCQ==
+X-Received: by 2002:a62:ab05:: with SMTP id p5-v6mr1710146pff.211.1541622463386;
+        Wed, 07 Nov 2018 12:27:43 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5707891pjt;
+        Wed, 7 Nov 2018 12:27:42 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eQmvwCk2IBb9TQBY1rC5lcmYHl8SiNimilKgERUvzhtK3JzV+jV/JyXMh0/x497aV7Bghg
+X-Received: by 2002:a17:902:6b87:: with SMTP id p7-v6mr1771586plk.282.1541622462802;
+        Wed, 07 Nov 2018 12:27:42 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541622462; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ra8CxzaZYRqC/2/eWs5+dT6GF2i+iUUBpQTP++HXdvwDD6SvJbCdVz0R43bP+SDiGF
+         +I9rPeyhYRS4hP2dcKYnnClMNEuZlgwaLdZGDgDqn04iwyGGgCX4zKzjmFVORGMsH3n5
+         9IWcIYnY8nbTy3lz05lQukRsZLIMagcleu5I5VATUJkk6NJzIjWT3YwQ/o4N2tm1Lc+G
+         ghHX+ig34tnw4krTLCaSACjqM+0NESdgFx/50hmyO7TR5eYz286pL+O2FXfe+4Vdg7z2
+         yEvpwhbK5JoVgiE+PDeihA4q525nhCuuBuZ42fWpGGwU9ywipPRvHbtp8qgQo1h1DoVl
+         5JDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:user-agent:references
+         :message-id:in-reply-to:subject:cc:to:from:date;
+        bh=0UxaUcnUaN43R2U9vaq2IPXYI/MFW5twLwIUkCxVE70=;
+        b=Y0rVWcpW65MLCYbBN+RPEysuaPu3i7FgKs68SZe75Hssz6l1R74ddsJpRpeA4EHWti
+         8l2orJVXi6nGub4kEuIIPXSBgEpwvkcHPZ+ksOBT/Vc23ueIhZC6XFa7z0xQ7nVVOzPq
+         hyNAks4BLHJ8nOGHYosOb+Gt8YN9Z/ETSVxK9UTpQ6gwRvBxxZocDKJqa2MqfLCvAVYB
+         5yTlTPUN8kQ7a2AReFsY+Lw+/EwAMHh5XKAH6Uqs2x0Od3gIft7EHQ2hBXHtK3rn7Aki
+         y2N49MPzFN6Rh+Itl6Gv6se6pNcEemORxxvVi8758+ty2EtBnEKwVx6765Hm7BOYI8xs
+         Kvdw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v5-v6si1575412pfe.237.2018.11.07.12.27.14;
+        Wed, 07 Nov 2018 12:27:42 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727162AbeKHF6y (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:58:54 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:42076 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726724AbeKHF6y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:58:54 -0500
+Received: from p5492fe24.dip0.t-ipconnect.de ([84.146.254.36] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1gKUPT-0007tu-1N; Wed, 07 Nov 2018 21:26:43 +0100
+Date: Wed, 7 Nov 2018 21:26:42 +0100 (CET)
+From: Thomas Gleixner <tglx@linutronix.de>
+To: Logan Gunthorpe <logang@deltatee.com>
+cc: Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH 2/2] mm/sparse: add common helper to mark all memblocks
+ present
+In-Reply-To: <724be9bb-59b6-33f3-7b59-3ca644d59bf7@deltatee.com>
+Message-ID: <alpine.DEB.2.21.1811072125280.1666@nanos.tec.linutronix.de>
+References: <20181107173859.24096-1-logang@deltatee.com> <20181107173859.24096-3-logang@deltatee.com> <20181107121207.62cb37cf58484b7cc80a8fd8@linux-foundation.org> <724be9bb-59b6-33f3-7b59-3ca644d59bf7@deltatee.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnAT2_SuNbrS8ZAA--.991S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7JFyrGr1DKw45Ww4xCFW8Xrb_yoWDJFXEvw
+	40kr4xGw17AF43KF4ak3yrtFZ7trWkAr18WFn7JFy2vws5Xa4jgFW8Kr1kXrnxWF4Yywnx
+	ur98WFy8t34aqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqxYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_AwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IU5d5
+	r7UUUUU==
+
+Logan,
+
+On Wed, 7 Nov 2018, Logan Gunthorpe wrote:
+> On 2018-11-07 1:12 p.m., Andrew Morton wrote:
+> >> +void __init memblocks_present(void)
+> >> +{
+> >> +	struct memblock_region *reg;
+> >> +
+> >> +	for_each_memblock(memory, reg) {
+> >> +		memory_present(memblock_get_region_node(reg),
+> >> +			       memblock_region_memory_base_pfn(reg),
+> >> +			       memblock_region_memory_end_pfn(reg));
+> >> +	}
+> >> +}
+> >> +
+> > 
+> > I don't like the name much.  To me, memblocks_present means "are
+> > memblocks present" whereas this actually means "memblocks are present".
+> > But whatever.  A little covering comment which describes what this
+> > does and why it does it would be nice.
+> 
+> The same argument can be made about the existing memory_present()
+> function and I think it's worth keeping the naming consistent. I'll add
+> a comment and resend shortly.
+
+Actually if both names suck, then there also is the option to rename both
+instead of adding a comment to explain the suckage.
+
+Thanks,
+
+	tglx

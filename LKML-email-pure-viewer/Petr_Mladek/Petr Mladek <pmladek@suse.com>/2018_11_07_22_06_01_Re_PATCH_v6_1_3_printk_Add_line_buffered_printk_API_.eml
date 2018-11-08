@@ -1,0 +1,151 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:04 -0000
+Received: from icoremail.net (unknown [209.85.210.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX99n8eJbeWFYAQ--.26323S3;
+	Wed, 07 Nov 2018 22:06:33 +0800 (CST)
+Received: from mail-pf1-f180.google.com (unknown [209.85.210.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDXvEhl8eJbcr0XAA--.6878S3;
+	Wed, 07 Nov 2018 22:06:29 +0800 (CST)
+Received: by mail-pf1-f180.google.com with SMTP id x2-v6so3658441pfm.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:06:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=LtBdAhZ4PoptVYqvwXbNBTn/ZC/xskEEqk3/97dAY8Q=;
+        b=kPPanL8i6jedOASCkGRM4cZI9HufSB6CBR6xGaQ2ly5UjlXPJjqHwVvVq8JCUWrX5Q
+         YgeEuYqaASaD7LE0ghAZY6PNuAqrAxYp/nCCPWuYDr2q3QP0f1nkXF7ZouVs+Inu904k
+         K16FOlgedogdYHV/7n45ODuxMZ1xzDeHGe7hwMkBxpbWFK/oA0SqsoauB8gkuqu/Wsje
+         EYhFSQ2TtLvbXec56UzX2tim8Z/lQjSbpOxA1qPvF6cCMCSCNL7b/8qdzQkga20a7jiF
+         dKPskydSexlm97CaQOO3Qn8s1ouvYDgM7GAdAs02rjYu1VZ6b5W0KRj/tgdXzcWkiOJ8
+         ylCw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJ4ZdaFscsRrwnygI4LKcg3u6mWSezcE3pMT2kHZRQ9ws917mR/
+	IUIHFGrktsTnbB7EbyNlOn+1IAL2UveCXlf00+CUBbwQ3fYrIa4KCQ==
+X-Received: by 2002:a62:3301:: with SMTP id z1-v6mr326606pfz.85.1541599589350;
+        Wed, 07 Nov 2018 06:06:29 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5286412pjt;
+        Wed, 7 Nov 2018 06:06:28 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fX8hhasc9qzYv5idCy8fqK9hszaHzR+nNMUiEwYf+zamn8Ro5Ir8KAWlidT2Qjc2qZ0R7r
+X-Received: by 2002:a62:8c93:: with SMTP id m141-v6mr310932pfd.239.1541599588328;
+        Wed, 07 Nov 2018 06:06:28 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541599588; cv=none;
+        d=google.com; s=arc-20160816;
+        b=xQAxSPW7bYw9zuT0KttHbtx1TifrSojJPpr1ome3Z2mE5YKZnkfa0CzMk7uF1XY6J2
+         SNDs9/aKNdHntRV0y3jJ9ElHYl2W7j84FocPUqhkdyj9WfzQDR3wvxYoJz+cgo5aU+Bb
+         eJF0gXuhYJjLH8i577Op6eTWmAikWvaTAlNdawxi1HFmyG0xIonSbHMQ6R1FC04OCxRw
+         OwOfs+B1+V+ZC6vtCK3wtUjpOL1JZwrUv69VaiwcUCifJ438MjvYv8xGdLbK1VRkOmGP
+         VjZXeHv2Mrx/8b0yCl+1ChRE1/epuOGzA0//WTGZLir+AT+XgNUvIIbcZ9s8Z4rXKCsN
+         Qz6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=LtBdAhZ4PoptVYqvwXbNBTn/ZC/xskEEqk3/97dAY8Q=;
+        b=1KPIN5UtVowg5ZT3jqluwFP1do74mvFgrQP1x32aKkbfdUqAKeythkFOM4unmTftyG
+         fdSTuXxnezF9C/khCtys/ZV9EWDX8uIsNDGm2dLp4bvrL+qofnPdAfgMBcXNHNDeMqAN
+         DKdQcncIiNbjLOXNLPOxQdpIUwXFdlsnocWgX0FOCU/G4kM5uk3GxqeSgH4peVRm9N1V
+         eCftGDHROdDa8XMmgFX42cyfj6CBu5xkmUwB3JROWfMrF69ORHKYtZnFzL0554R6nr6B
+         MEkPUIedOtZbLjGuS7mQjrmY2lcqxLyfUgO2eY7/1HTFwwQXx1uHG+8rxraeCzWCA9Pf
+         fudg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id y6-v6si750304pll.30.2018.11.07.06.06.11;
+        Wed, 07 Nov 2018 06:06:28 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727203AbeKGXge (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:36:34 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39666 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726669AbeKGXge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:36:34 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F3503AFEA;
+        Wed,  7 Nov 2018 14:06:01 +0000 (UTC)
+Date: Wed, 7 Nov 2018 15:06:01 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexander Potapenko <glider@google.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v6 1/3] printk: Add line-buffered printk() API.
+Message-ID: <20181107140601.53y5vlubtugeczyt@pathway.suse.cz>
+References: <1541165517-3557-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1541165517-3557-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+User-Agent: NeoMutt/20170421 (1.8.2)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDXvEhl8eJbcr0XAA--.6878S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrKr4fWFyDKr1ktw1xKF4fGrg_yoWDurcEq3
+	srJrykGayDWrn3Aa1Uua4YyayUJr13J34kK3yxGFW3Gw47Gw4rCw4DJr13GF4rArZ7CFyD
+	C3srWFy0v3W7AjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbDkYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY02Avz4vEIxC_Xrylc2IjII80xcxEwVAK
+	I48JMxvI42IY6xIIjxv20xvE14v26r1I6r4UMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lcIIF0xvEx4A2jsIE14v26rxl6s0DMxvI42IY6I8E87Iv6xkF7I0E14v26rxl6s0D
+	MxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026x
+	CaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrw
+	CI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3JrUvcSsGvfC2KfnxnUUI43ZEXa7IU5ec_3UU
+	UUU==
+
+On Fri 2018-11-02 22:31:55, Tetsuo Handa wrote:
+> How to use this API:
+> 
+>   (1) Call get_printk_buffer() and acquire "struct printk_buffer *".
+> 
+>   (2) Rewrite printk() calls in the following way. The "ptr" is
+>       "struct printk_buffer *" obtained in step (1).
+> 
+>       printk(fmt, ...)     => printk_buffered(ptr, fmt, ...)
+>       vprintk(fmt, args)   => vprintk_buffered(ptr, fmt, args)
+>       pr_emerg(fmt, ...)   => bpr_emerg(ptr, fmt, ...)
+>       pr_alert(fmt, ...)   => bpr_alert(ptr, fmt, ...)
+>       pr_crit(fmt, ...)    => bpr_crit(ptr, fmt, ...)
+>       pr_err(fmt, ...)     => bpr_err(ptr, fmt, ...)
+>       pr_warning(fmt, ...) => bpr_warning(ptr, fmt, ...)
+>       pr_warn(fmt, ...)    => bpr_warn(ptr, fmt, ...)
+>       pr_notice(fmt, ...)  => bpr_notice(ptr, fmt, ...)
+>       pr_info(fmt, ...)    => bpr_info(ptr, fmt, ...)
+>       pr_cont(fmt, ...)    => bpr_cont(ptr, fmt, ...)
+
+I am looking at the sample conversions. We actually won't need
+bpr_cont(). We will use buffer_printk() instead.
+
+Well, I think about renaming buffer_printk() to bprintk() or
+define it as a wrapper at least.
+
+Best Regards,
+Petr

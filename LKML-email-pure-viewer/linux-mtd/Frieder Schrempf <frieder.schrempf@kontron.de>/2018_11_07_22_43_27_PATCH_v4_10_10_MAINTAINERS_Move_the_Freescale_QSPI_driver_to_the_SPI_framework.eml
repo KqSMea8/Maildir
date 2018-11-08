@@ -1,0 +1,162 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:15 -0000
+Received: from icoremail.net (unknown [209.85.214.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f+0l_eJbLKdYAQ--.26178S3;
+	Wed, 07 Nov 2018 22:56:39 +0800 (CST)
+Received: from mail-pl1-f177.google.com (unknown [209.85.214.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHLEgj_eJbT+8XAA--.7061S3;
+	Wed, 07 Nov 2018 22:56:35 +0800 (CST)
+Received: by mail-pl1-f177.google.com with SMTP id p16-v6so7971482plr.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:56:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:in-reply-to:references:sender:precedence:list-id;
+        bh=m2YsMMOBfs+D7786lFfP8GUtXhPZCNAbq1fBqxwhGPg=;
+        b=rs7uk7igSCEDQEX3uSNg0bbaPBIUEXaaaxncZ2v1ycGRetv/2qBKYntANg7HoNG74x
+         IgrgWX/UVGPk0oLGNEmUsjQTq39Qmabo+GCK8lRMSAt+yQFFHOQA7TIN5N9Xllj06rm9
+         5jRjhi9ArugY6HuQkK3sAkGcdpu/qWcPNSCLgsymFCmfs1GdzoKoCU+epTIPAJT4Oysp
+         nLlyHdSaAAWprkoFxaJuFNuPIfl0xztGYcHJISKrogRnjqy87sCZpDfHMLp7an7k0Zxo
+         EYZpJEgpsNRyIHmOkVhg4s2/pce/l+0rXtItw78RZipm6lGOLY/EqdUKfdxmDXBiaEHl
+         hu2w==
+X-Gm-Message-State: AGRZ1gIMk4xOQxC1mwb8+OsPfKYBjyhg0oCnCMld5cxK/xgzPO/LbhFe
+	6ocWMOYE149IeZb2KrCsUpx9kSayMoAEJn+aNprQbj72jRaArEEOkQ==
+X-Received: by 2002:a17:902:6b4b:: with SMTP id g11-v6mr527721plt.213.1541602595241;
+        Wed, 07 Nov 2018 06:56:35 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5345325pjt;
+        Wed, 7 Nov 2018 06:56:34 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eirA89VamfJ6Jh57EpmulSIzwzStPlyA4cgGk1Nf/T/NKOn/yqwFB/Ys9RmusBkHdoCWzn
+X-Received: by 2002:a65:4784:: with SMTP id e4mr461124pgs.12.1541602594542;
+        Wed, 07 Nov 2018 06:56:34 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541602594; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ka5l4a/2ahW39C5mXRMgp9Xo/JOZwsDS9AgbvDngGm37lEJOFCtfBSUXzxBDgf7g/B
+         6SMn9GqbUjXCN08krH7rZI3O+jJeYNZXQT3DBPdN63TT/jR7jLX3Zgkq6eqGrKarXsX+
+         +B5jWwMcDrt8/JN62yNlePyWo/fbBK94DJ7NQRCvNTZo+eL7cmOmEyNlnDmGdeoUaAN+
+         YGKW/AU0cYJXuOGTI/uHmORWJ9ULv9UuedtiGscgjPZYhQvDmSTYECu1P6QwX4wto9cB
+         T63G5sPW01lpKX4r7SAKZX6FPDeNw9SnaJaiRfN3X+hCsxhojOTEHBUmyaTYgcByxZbH
+         6Aig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from:dkim-signature;
+        bh=m2YsMMOBfs+D7786lFfP8GUtXhPZCNAbq1fBqxwhGPg=;
+        b=WanPklSyZ1sSwBdjTi3rlsVCz1lnvuohyCmAJ2O1AzYMsTVJcMIlabpJSDD3zAonmI
+         D6QJsPmC9quyIqp9AnCK6LWBurgBdGeHf3p4nRq0qydZa6ZTABrWZ8Ja3FXe1TZtuIyn
+         SaKPtWJM0wUW+SSyXMfxBQnW3Tw9frDFRRRqoD7KA63vMqggd/gSi+G73Fol9UV7KkYt
+         YlTtIfmhyH3A8IvjFjdoQt7MdgaLNwNqqXu0EH/9y+LCjBlJ5/srFBHnUo8NGRV8BQtM
+         fAC5n/Q8kaLwOCKk7oiAjYAN6Az2JQwcMmcjhDItQWZNeb9QHtCMHZS7VrOhCzxhGxRL
+         /yig==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@as-electronics.de header.s=strato-dkim-0002 header.b=tjVpDHk8;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id t1-v6si830246ply.279.2018.11.07.06.56.19;
+        Wed, 07 Nov 2018 06:56:34 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S2387720AbeKHA0g (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:26:36 -0500
+Received: from mo4-p05-ob.smtp.rzone.de ([85.215.255.135]:31274 "EHLO
+        mo4-p05-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728005AbeKHA0f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:26:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1541602552;
+        s=strato-dkim-0002; d=as-electronics.de;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=m2YsMMOBfs+D7786lFfP8GUtXhPZCNAbq1fBqxwhGPg=;
+        b=tjVpDHk8dRDPOwyH1Q7/K0+M8Y4VGsraHLgYd7S7cn6OBn9TBFQYj9LhBUJQXJSvbe
+        CNcD/FtmDGthmJB9MLlFK6/tafYn4FEqxG2ITjqEse352fBl2GqbxEoycd+iencuiw43
+        GveoKNHBAzoqrj6VaUGaMnE9SlAtxn8UMco4zPfQD1ZgWRvOKBxAub4BsSJa89y4XATs
+        8OLCTc3AvJXhSieF9PvOrwxBluP7QRBaaip/s0ZP/aswaiNpLdcw+6a9JKGbgdSWX8ZM
+        q5k74KM4YDt1Wx7lS56V/FgUBHau8uAC1DwzqhWkagnCj2Oq7vVN6CKmHJWMfyVIy4Pj
+        OqJA==
+X-RZG-AUTH: ":LX8JdEmkW/4tAFwMkcNJIloh1hrA5u3owhPk7bdT5Fx22AatU+eLaHfutoZdl+X9BETxn4/4+IVqx7ZdE8mPU5nMS5P2QgHAetWm5FNngAjmE0pFNjw="
+X-RZG-CLASS-ID: mo05
+Received: from fs-work.fritz.box
+        by smtp.strato.de (RZmta 44.3 AUTH)
+        with ESMTPSA id j097e4uA7EjAUR8
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 7 Nov 2018 15:45:10 +0100 (CET)
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
+To: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com,
+        linux-spi@vger.kernel.org
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com,
+        marek.vasut@gmail.com, richard@nod.at, miquel.raynal@bootlin.com,
+        broonie@kernel.org, david.wolfe@nxp.com, fabio.estevam@nxp.com,
+        prabhakar.kushwaha@nxp.com, yogeshnarayan.gaur@nxp.com,
+        han.xu@nxp.com, shawnguo@kernel.org,
+        Frieder Schrempf <frieder.schrempf@exceet.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 10/10] MAINTAINERS: Move the Freescale QSPI driver to the SPI framework
+Date: Wed,  7 Nov 2018 15:43:27 +0100
+Message-Id: <1541601809-16950-11-git-send-email-frieder.schrempf@kontron.de>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1541601809-16950-1-git-send-email-frieder.schrempf@kontron.de>
+References: <1541601809-16950-1-git-send-email-frieder.schrempf@kontron.de>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHLEgj_eJbT+8XAA--.7061S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xw4xJw1xZF43JrW8Xr1rtFb_yoWfGrX_Ca
+	1xXFW7Xw48JFn7Ar1xKFsFyryDtw45GFn7J3Zrtwn8A34qy3s8Ja4qkFn7K34Uur43CFsr
+	ZayxXF9Ikr13WjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbDAYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6ry5MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW0oVCq3wCYIxAI
+	cVC2z280aVCY1x0267AKxVW0oVCq3wCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xYxBIdaVFxhVjvjDU0xZFpf9x07b8MKZU
+	UUUU=
+
+From: Frieder Schrempf <frieder.schrempf@exceet.de>
+
+The driver was ported to the SPI framework so it can be used as
+a generic SPI memory driver and not only for SPI NOR.
+Reflect this transition in the MAINTAINERS file.
+
+Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
+---
+ MAINTAINERS | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f485597..1ff3c5b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5932,9 +5932,9 @@ F:	Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
+ 
+ FREESCALE QUAD SPI DRIVER
+ M:	Han Xu <han.xu@nxp.com>
+-L:	linux-mtd@lists.infradead.org
++L:	linux-spi@vger.kernel.org
+ S:	Maintained
+-F:	drivers/mtd/spi-nor/fsl-quadspi.c
++F:	drivers/spi/spi-fsl-qspi.c
+ 
+ FREESCALE QUICC ENGINE LIBRARY
+ M:	Qiang Zhao <qiang.zhao@nxp.com>
+-- 
+2.7.4

@@ -1,0 +1,135 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:58 -0000
+Received: from icoremail.net (unknown [209.85.215.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv2KuGONbL1FZAQ--.27053S3;
+	Thu, 08 Nov 2018 00:54:08 +0800 (CST)
+Received: from mail-pg1-f171.google.com (unknown [209.85.215.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXeESuGONbeWgYAA--.284S3;
+	Thu, 08 Nov 2018 00:54:06 +0800 (CST)
+Received: by mail-pg1-f171.google.com with SMTP id 70so1977956pgh.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:54:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=gsW/bt3Xd/NV4YG7cz7zVOgIA9M+h8ARwxfkXUkBG0k=;
+        b=XlgivxpbIzrAX7Pb8exGdSPnDqtYhGtv03MRHu7+a+7CDDA/GMCwaozjxnMutmY0OH
+         n/XC6j3QwUdtIBDWmyaW+omU/s5/3nODRE1M3Ra2zQYcEXT5cmmRWp5R+BDG9RHPuFXP
+         zy9y04SwX196z+DjYieBSZ/ao1T0Mj8WnCVMbtKHdYkE4VX7AFtftmBQ1siN8yB0lXEK
+         gOx74I3RG2Y535UtAx52RqRtIU09F0/8iUIrfttmmyo8zgI9Dtm+mQRWzIzRUXJKpwTt
+         CAi6++6wgd2s9lOyPBeJIJfps1mMpZ6qqic196roA0BZjuo2EmsS2MtL5whndeIkc/Sz
+         2GIw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=8bytes.org
+X-Gm-Message-State: AGRZ1gI58k9O4pXybwuzwH/fc8kbnprsve1MBPwiYLtM6c65ZF5xe3Wg
+	ZaOx5j9Eho4SHqFCf8aI9evBHS87HbNAygze+CR3bMi/6spaS7M3SA==
+X-Received: by 2002:a63:a91a:: with SMTP id u26mr788555pge.349.1541609645686;
+        Wed, 07 Nov 2018 08:54:05 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5478144pjt;
+        Wed, 7 Nov 2018 08:54:04 -0800 (PST)
+X-Google-Smtp-Source: AJdET5evIwUF1u4NfcRBif4mPd4vYbGmAhruaP9EhFLV8k4nPSpM3gZ6lr3dJUBndKYcaTHBLs5V
+X-Received: by 2002:a17:902:b701:: with SMTP id d1-v6mr927083pls.29.1541609644799;
+        Wed, 07 Nov 2018 08:54:04 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541609644; cv=none;
+        d=google.com; s=arc-20160816;
+        b=p4BgyVv61S1zqj6gfsBm7nD6OxBdZz0qKOg63/RSWPLomY4x0hy0AOI9nksZxsHh6u
+         lTVcqZEI7I8W4WRBS21EX9QhAVm7C9n3TZG5zJjMqzgrR5r1B5KiS05I+f595a1C5+RD
+         jzz14XcfSlet7/7n1yKKdchaUYe0sphHiIzDtoOH5AVjWFnH8XfQznpaB8YVKAv/4RKp
+         x44lSXSwMqlVhgAWkGggLAtA4sKqFIlKFapNyJpw4IWlXqUFefQMmwqcNFhtIdYt8gTo
+         g+AT2oQxVjOp6l+qGuKNnpQX+XJEZxoK0kTTxjSichr/X5QwjaQFhG55dcaLqrM047HZ
+         VMXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=gsW/bt3Xd/NV4YG7cz7zVOgIA9M+h8ARwxfkXUkBG0k=;
+        b=pXqOzSQP10QJc5i7ee3L8z6QKgyI8qQarh0n5QS4bYLTgxlOL+6PBX5IfPqSr+g179
+         GRQNh4vyTUHz7thjCfHyVQOyzJrkWUeLhyMkzEDJYIjNZXeYF94v5PoyR4ltmCbXmCsb
+         S7ffVVCsYCCuA+3OJmvdmSHgbMMvUOc1ciGu88U/9SfAJwUyn0qEtdU/TvMH6gVXMPFX
+         XzqqTO1juoBLlvTIQgmJBAyWAsgBCC/IswgKGk7k3+H6wEkYYvqkIE3086VgFWyH80Qu
+         QGX6RYSP600IgkmEE6XwMGU/NG9VGJnYLqK8lrjLw7IP64guvfAKC8LcW9oNBGE38X58
+         zlbw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=8bytes.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id p3-v6si1101292pff.272.2018.11.07.08.53.49;
+        Wed, 07 Nov 2018 08:54:04 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728079AbeKHCYt (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:24:49 -0500
+Received: from 8bytes.org ([81.169.241.247]:42830 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727546AbeKHCYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:24:48 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 59A93247; Wed,  7 Nov 2018 17:53:36 +0100 (CET)
+Date: Wed, 7 Nov 2018 17:53:36 +0100
+From: Joerg Roedel <joro@8bytes.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iommu/ipmmu-vmsa: Fix crash on early domain free
+Message-ID: <20181107165336.GB19831@8bytes.org>
+References: <20181107131850.11584-1-geert+renesas@glider.be>
+ <e4dcd8b2-768e-b11d-b6de-337b7e942050@arm.com>
+ <20181107153418.cge2dj5zmztahxrf@8bytes.org>
+ <CAMuHMdWPkMtnGrxrtFGmyJ5NEvSSCiMUVXXBWX+NS-J4tQXLAw@mail.gmail.com>
+ <20181107160341.pfpukoqhyhapfzpn@8bytes.org>
+ <f8259910-3e07-497b-9f18-6bcb47430cff@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f8259910-3e07-497b-9f18-6bcb47430cff@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXeESuGONbeWgYAA--.284S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrCryUZw4kZrW7Cry8XFykuFg_yoWxGwc_ur
+	9xJw4DuayvyFWvg3W5tF43GFWkC3yxZrWUJ3s3G3s0yryfJFy3CFyUKw1DJFsxJr4q9rnx
+	Gr12q3y7Xr129jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUby8YjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4w
+	CY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VWUMxkI
+	7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJVW8Jr1lcIIF0xvEx4A2jsIEc7Cj
+	xVAFwI0_Gr0_Gr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnV
+	CjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
+	CIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZF
+	pf9x07beUUUUUUUU=
+
+On Wed, Nov 07, 2018 at 04:17:09PM +0000, Robin Murphy wrote:
+> FWIW it looks like it *has* always been possible to hit this crash by
+> allocating a domain and freeing it again without attaching any devices, it's
+> just highly improbable for any sane code to do that explicitly, so the real
+> latent triggers are failure paths in external callers (which in this case
+> are themselves only being reached thanks to my bug elsewhere).
+
+Okay, given this, it probably makes more sense to change the fixes tag.
+This is what I just committed:
+
+Fixes: d25a2a16f0889 ('iommu: Add driver for Renesas VMSA-compatible IPMMU')
+
+Regards,
+
+	Joerg

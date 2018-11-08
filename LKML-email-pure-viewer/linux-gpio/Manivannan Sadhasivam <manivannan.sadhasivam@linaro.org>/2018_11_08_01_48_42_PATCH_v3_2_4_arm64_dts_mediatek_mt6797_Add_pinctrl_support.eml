@@ -1,0 +1,163 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:22 -0000
+Received: from icoremail.net (unknown [209.85.215.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHHya6JeNb7LhZAQ--.27308S3;
+	Thu, 08 Nov 2018 01:49:47 +0800 (CST)
+Received: from mail-pg1-f170.google.com (unknown [209.85.215.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3X0u4JeNbjrMYAA--.79S3;
+	Thu, 08 Nov 2018 01:49:44 +0800 (CST)
+Received: by mail-pg1-f170.google.com with SMTP id i4-v6so7615273pgq.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:49:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:in-reply-to:references:sender:precedence:list-id;
+        bh=ZvL9JXPkSCEpU6IxoDs/WZI6AFU5ENywXz2f9GrqSf8=;
+        b=k6ElesKCB1pd6fRhR1BAMJX+nv3+zeoPXd+pcM5zDDuDA3zxdE0PwpqeudOV+Ye6H1
+         B5bKhC57RObGDk6+inTsksRA4i2aExAEEHqfyuTtd7FflEc4Him7HMKgoqPT39CvO0N8
+         O2PYYsRHduelsxXqO+CYv0RhPWHhalf2QO8QG5sP7MkVjI1yU9e1hNJzcBgNweaATc8a
+         YX02NX+jHwP2Y34WZp7GfgnM4FR8rXxrW+SHDXFCeaE22Xj2v64tc4O5xtbqzbvk1nxV
+         e+Ks5NZlP44Wu+E5bDm05TXo5WlOJEvLxFl8PS2daXk2M8tI784zoa++cnqFpiPAGHq6
+         /HTQ==
+X-Gm-Message-State: AGRZ1gJ+909/lLLkzunfE2Cb6uiJ/B1X7B8RQrelxME3niuUYaQ0jKt9
+	ehPECn4/xfyjlhB6//cg+QhmB4vdeo6fPcKq5naXzINnfQv9Uay7qA==
+X-Received: by 2002:a65:66ce:: with SMTP id c14mr964540pgw.450.1541612983899;
+        Wed, 07 Nov 2018 09:49:43 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5541327pjt;
+        Wed, 7 Nov 2018 09:49:43 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dD2PJJhtPg3mCv/s4eTADsPF+vn3yra1M4xR+g7dT88pzTy2M1EEPVEyI3TIegLujXJu1o
+X-Received: by 2002:a62:3101:: with SMTP id x1-v6mr1181021pfx.204.1541612983242;
+        Wed, 07 Nov 2018 09:49:43 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541612983; cv=none;
+        d=google.com; s=arc-20160816;
+        b=G3ogTSO4eMaKQbagcV6i1tI4igUtzkgqUYMVFzb4lnJgfIaUVcvFasiuJbPb3k4qo1
+         ASmxhIXGTViofVxl4CeUs5mNXxmyPPo0/NMjc/Zh+iD9MC9eyPadArUwiBu3336ocs5U
+         KAkGYPF2L/BhfMAuMFrfL55F1r1vdSfx1thzaJZKI5HdNSIKBdEpNrca9iP9N41mPnvL
+         43iCYDTFP8tXkTIG61FJ+WAOXAJ2e5hN7edhUGd1+p+A41+cB/OsB8sNqGrCD9A4MWxR
+         liXeYfNVfT1amB+mQth3Nd2qA8AcoCzVgiIsE8PaLOr4frdytTKBcg71suVHrUT7HFbS
+         mM3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from:dkim-signature;
+        bh=ZvL9JXPkSCEpU6IxoDs/WZI6AFU5ENywXz2f9GrqSf8=;
+        b=b0uhVc5rDIypjaYFzr+gW1J4ISlHCeEnd4hv/H+ZfYNYEehDdFl8kEq4rWlbj7zigB
+         0zhseUPg58fGgD3asfDJxn88uj42Gq2w+tCqK1gX+UTfsabGX9yD4VhDGLtbNWl7pnws
+         wOEVXgCVAsWTQkeeWJvN068yzv6qaBYkQROwcoh0HyXCPtFs9iHI6VOniPL6dEmHP2gB
+         4Ztk0aKRJY+wFzkExRqENsWQXKTDrc5rOt8H+5N5S03kT4Wm5XsfFNah/fIBNrOBbjyS
+         eBa365HqPkbxjzFeT7TwosPxUFwt6SySX1tDcR0qjf3M9bMpQe9S4nupfQvycbOEptSu
+         f23A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@linaro.org header.s=google header.b=Z0J5bk+e;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=linaro.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id z71si1098424pgd.490.2018.11.07.09.49.26;
+        Wed, 07 Nov 2018 09:49:43 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731610AbeKHDUh (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:20:37 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43712 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731591AbeKHDUg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:20:36 -0500
+Received: by mail-pl1-f194.google.com with SMTP id g59-v6so8179229plb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 09:49:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ZvL9JXPkSCEpU6IxoDs/WZI6AFU5ENywXz2f9GrqSf8=;
+        b=Z0J5bk+eoNem0AnNMuMANJe512cbFAU49tWAMroki8xfL7uSXXzcffXoFDzh7kMcgE
+         mLlsioDz9P2drBo7TPvY4l6U8x11NoT6CR+Uy1wRDot8pw4yS4glvTqbtbEqNTMMKTA4
+         gSAYVS2q9dsA0MW8Fr7b8ST2aJs23i94Exbx8=
+X-Received: by 2002:a17:902:f097:: with SMTP id go23mr1119856plb.328.1541612949727;
+        Wed, 07 Nov 2018 09:49:09 -0800 (PST)
+Received: from localhost.localdomain ([2409:4072:6282:6ca8:a0d9:6a81:97fe:992e])
+        by smtp.gmail.com with ESMTPSA id e70-v6sm1232645pfb.113.2018.11.07.09.49.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 09:49:09 -0800 (PST)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: sean.wang@kernel.org, linus.walleij@linaro.org,
+        matthias.bgg@gmail.com, robh+dt@kernel.org
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, amit.kucheria@linaro.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 2/4] arm64: dts: mediatek: mt6797: Add pinctrl support
+Date: Wed,  7 Nov 2018 23:18:42 +0530
+Message-Id: <20181107174844.5381-3-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20181107174844.5381-1-manivannan.sadhasivam@linaro.org>
+References: <20181107174844.5381-1-manivannan.sadhasivam@linaro.org>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3X0u4JeNbjrMYAA--.79S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWrZF1rGw45CFy8Zr48tF1UJrb_yoW8JrW3pF
+	4qkFZxGrZ7uF17Ga1Yv348KF4rZan5CF1DGry2qr1UJ3y5ZF4DJryrAwn5CrWUJFWvv3yj
+	9FnaqryI9r13uaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPmb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
+	kI7VAKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80
+	FwCY02Avz4vEIxC_GwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr
+	1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4U
+	JwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcV
+	AKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
+	CIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF7vcSsGvfC2KfnxnUUI43ZE
+	Xa7IU54pB3UUUUU==
+
+Add pinctrl support for Mediatek MT6797 SoC.
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ arch/arm64/boot/dts/mediatek/mt6797.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt6797.dtsi b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
+index 4beaa71107d7..231230d32d09 100644
+--- a/arch/arm64/boot/dts/mediatek/mt6797.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
+@@ -14,6 +14,7 @@
+ #include <dt-bindings/clock/mt6797-clk.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/pinctrl/mt6797-pinfunc.h>
+ 
+ / {
+ 	compatible = "mediatek,mt6797";
+@@ -129,6 +130,19 @@
+ 		#clock-cells = <1>;
+ 	};
+ 
++	pio: pinctrl@10005000 {
++		compatible = "mediatek,mt6797-pinctrl";
++		reg = <0 0x10005000 0 0x1000>,
++		      <0 0x10002000 0 0x400>,
++		      <0 0x10002400 0 0x400>,
++		      <0 0x10002800 0 0x400>,
++		      <0 0x10002C00 0 0x400>;
++		reg-names = "gpio", "iocfgl", "iocfgb",
++			    "iocfgr", "iocfgt";
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
+ 	scpsys: scpsys@10006000 {
+ 		compatible = "mediatek,mt6797-scpsys";
+ 		#power-domain-cells = <1>;
+-- 
+2.17.1

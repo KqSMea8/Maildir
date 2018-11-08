@@ -1,0 +1,166 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:24 -0000
+Received: from icoremail.net (unknown [209.85.215.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn31xbJuNb3rtZAQ--.27134S3;
+	Thu, 08 Nov 2018 01:52:28 +0800 (CST)
+Received: from mail-pg1-f175.google.com (unknown [209.85.215.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBX0ExZJuNb9LUYAA--.79S3;
+	Thu, 08 Nov 2018 01:52:25 +0800 (CST)
+Received: by mail-pg1-f175.google.com with SMTP id n10-v6so7611779pgv.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:52:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:sender:precedence:list-id;
+        bh=PlgXOOwrJHJJiKxje6zgPJnsxvzU0hJfT3GJPdyu57s=;
+        b=Z3X1Ko2zZCNBIRbTLLJjjX6Qpe9yxDehP9fCbNDGuIeVSTShTlxeFvEa9cOz5+M/yt
+         ItodW/s7C4XGkRtBWEZXKXnum66ncEr1x55F1GX4PyB44qhW17Z4dHtogBqqtbUM0016
+         w7awyhphAOTmq2ydoyOAKoRr8Dt+eVWbr20fwMvJlRXTYgi765SKIHCFCqfVje5MCx1v
+         O+uksMAgKV4LzSVxiGwUNZmpeuXQSpsv+D4mTT1ViLqlEysABJXogwzd2VUffAi98yqE
+         Jz6rhYNYhuXTMzoslzvpO95PWIzN2G8ww8N0cMvNzD3srltBNpvDuaFE/HV0CsyooZuM
+         djkw==
+X-Gm-Message-State: AGRZ1gJSZd7Rr3oqRn1YR+3MP5mNrA/yVX+I+0N+gDi8dh2VL+tw6ZZ/
+	vzcf4kz9USwrecBH9S1WNkhaXtsmxaC5JasN6tzzKUiRMXe27migQw==
+X-Received: by 2002:a63:4044:: with SMTP id n65mr971540pga.90.1541613145016;
+        Wed, 07 Nov 2018 09:52:25 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5544138pjt;
+        Wed, 7 Nov 2018 09:52:24 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fQGlVpssxDyXKZcv0CTBi8VFWdxz2xvKNEsLGnDkz3Etju/fQqTP9+7eLgTpvazqetNFgk
+X-Received: by 2002:a17:902:a5c6:: with SMTP id t6-v6mr1173296plq.31.1541613144374;
+        Wed, 07 Nov 2018 09:52:24 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541613144; cv=none;
+        d=google.com; s=arc-20160816;
+        b=eUFpLxXemeAat2jgfdtpQPz//aTt/zYdZCaiKFQGwG3KoMDsxsdwIpk+bXxkiGTRsO
+         qF1m7adqy6Xu9b9GHuNxXzDfMyv19fjeN2gZb2rZFs9TM2US/ElJeEFXlRkLWFKUsgaU
+         nlacgibx+UpGU7TQkeFPzQwp9h99sEdXavsHnDNy+ML50bRURS6vIQbnJ3oZM0sFG0qW
+         sXycQK1tY9Vw7Px6+WqS2d+vyX8DDIJHmTE2apXXW/R12nWJEp6qZDs6GJthUu/Dpsoq
+         jK2hzh+yYO6xfns9d4RURr69Fm0zejfSIA4f1NLrqwyf+SqmIW18ofa8YAVONLwRgH3H
+         IfRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:date:subject:cc:to:from
+         :dkim-signature;
+        bh=PlgXOOwrJHJJiKxje6zgPJnsxvzU0hJfT3GJPdyu57s=;
+        b=Z5ScEIH790yFY1mnkrvdfQQPgritFAW6ZHib1sO+L3U3boMMi32S+OYT6aWVQEtDMb
+         +AMVUDDZNPQcBHQrJL34ZyXeAGiEbCevH97/MRu0gQZgQNSjQ4a5XTPZd+tizgsM05Ci
+         c93ODpEhi4QmbQHj/hDQPVPs734verbrhqhwQo7zld4AL+UWLc+g5rF7PQH0YUj4floc
+         hxYs88kVsJWaiwKXJyYRIcO6DQUnXZfHK8LvFx2OQBcfCEOKTBFAVGUftbSyywEkXEY5
+         ErkSvdCpB3JP3gGzWKvj3XuczG3uhGbXmcTdSki1qcgwqZ9H1v74ar6ma11cKAtETrnU
+         0qDQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@linaro.org header.s=google header.b="PsB/ogyt";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=linaro.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id m75-v6si1145178pga.481.2018.11.07.09.52.08;
+        Wed, 07 Nov 2018 09:52:24 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731584AbeKHDUY (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:20:24 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41433 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728085AbeKHDUX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:20:23 -0500
+Received: by mail-pf1-f195.google.com with SMTP id e22-v6so8002121pfn.8
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 09:48:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=PlgXOOwrJHJJiKxje6zgPJnsxvzU0hJfT3GJPdyu57s=;
+        b=PsB/ogytMFtjBI1hwRaBYrKNWTJCAxT1zYJCLwWbOiOUBRl0Ny5Zn+YYPx7E0fcLmu
+         U9msr5uVSn3xwBUaCFTAo925ow9CB8KaZi6sZL69NYxQ5glxtOBYlcgxBTVxqWdEf1ji
+         uFqV/4wie7uxXsstS7h4rkaXu3SjFFNNROPTY=
+X-Received: by 2002:a63:f960:: with SMTP id q32-v6mr935759pgk.213.1541612937152;
+        Wed, 07 Nov 2018 09:48:57 -0800 (PST)
+Received: from localhost.localdomain ([2409:4072:6282:6ca8:a0d9:6a81:97fe:992e])
+        by smtp.gmail.com with ESMTPSA id e70-v6sm1232645pfb.113.2018.11.07.09.48.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 09:48:56 -0800 (PST)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: sean.wang@kernel.org, linus.walleij@linaro.org,
+        matthias.bgg@gmail.com, robh+dt@kernel.org
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, amit.kucheria@linaro.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 0/4] Add initial pinctrl support for MT6797 SoC
+Date: Wed,  7 Nov 2018 23:18:40 +0530
+Message-Id: <20181107174844.5381-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBX0ExZJuNb9LUYAA--.79S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7KF13Gr48GFW3AryruFWktFb_yoW8Cr1fpa
+	yakFsYkrn8trsrG3yfXw18XFyfua1xJry7KwnIq34DXay5CFy8Jr1Yka4FvrWkGrWfAw4U
+	JF1YgryagryUZFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPlb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
+	kI7VAKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80
+	FwCY02Avz4vEIxC_GwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr
+	1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4U
+	JwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcV
+	AKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
+	CIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZF
+	pf9x07b10PfUUUUU=
+
+This patchset adds initial pinctrl support for Mediatek MT6797 SoC.
+The pinctrl driver is based on the vendor binding as like MT6765 and
+implements only GPIO and pinmux functionalities.
+
+The devicetree binding document consists of pinmux, pinconf and
+interrupt functionalities documented since the binding should describe
+what the hardware is capable of rather than what the driver offers.
+
+This patchset has been tested on 96Boards MediatekX20 development board.
+
+Thanks,
+Mani
+
+Changes in v3:
+
+* Modified bindings doc according to Sean's suggestion.
+
+Changes in v2:
+
+* Added devicetree bindings for Pin Controller
+* Dropped the applied warning fix patch
+* Added Tested-by tag from Matthias Brugger
+* Added Acked-by tag from Sean Wang
+
+Manivannan Sadhasivam (4):
+  dt-bindings: pinctrl: Add devicetree bindings for MT6797 SoC Pinctrl
+  arm64: dts: mediatek: mt6797: Add pinctrl support
+  arm64: dts: mediatek: x20: Add pinmux support for UART1
+  pinctrl: mediatek: Add initial pinctrl driver for MT6797 SoC
+
+ .../bindings/pinctrl/pinctrl-mt6797.txt       |   83 +
+ .../boot/dts/mediatek/mt6797-x20-dev.dts      |    2 +
+ arch/arm64/boot/dts/mediatek/mt6797.dtsi      |   21 +
+ drivers/pinctrl/mediatek/Kconfig              |    7 +
+ drivers/pinctrl/mediatek/Makefile             |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt6797.c     |   82 +
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt6797.h | 2430 +++++++++++++++++
+ include/dt-bindings/pinctrl/mt6797-pinfunc.h  | 1368 ++++++++++
+ 8 files changed, 3994 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt6797.txt
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt6797.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt6797.h
+ create mode 100644 include/dt-bindings/pinctrl/mt6797-pinfunc.h
+
+-- 
+2.17.1

@@ -1,0 +1,125 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:34 -0000
+Received: from icoremail.net (unknown [209.85.214.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH7ZABuNbVN1YAQ--.26743S3;
+	Wed, 07 Nov 2018 23:35:29 +0800 (CST)
+Received: from mail-pl1-f179.google.com (unknown [209.85.214.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3Hko6BuNbOBgYAA--.7744S3;
+	Wed, 07 Nov 2018 23:35:22 +0800 (CST)
+Received: by mail-pl1-f179.google.com with SMTP id o19-v6so8001978pll.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:35:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=S1BXrMj/CpFNaK68Sh56Y5GzTlaZU/e83GR8kHGF+zk=;
+        b=O/v1IquavucuANdMDYsiqlO/epAmDPKJ/r3/rQffXjq30qU0qVnKVj4kqT/lK6eJfE
+         ssmX/EoU5nBP8EuiAbxklYJ//bC6NTbkrS5zhDtIoPgnV2D9MPUdMGPWOW5+DvwKFt+x
+         UeYBJCmjB/dVaeU5gC5dmQDR6aAyx6kaEwmpsiPx5opnktjvaFGQLsVx2vVKW5yXJQws
+         +3xMuG13a+GNjyIT4UdnvzzDL4vLsDID/jwzQruwo87TAu0DsR2hHabqrdhr4Gi2D/Cj
+         krHEctHJ1keNYv1u+utsyaDTfzv7VACEAvOg+gOmKP/Z4mvaNz4lEVLULcC+nKG5t3Na
+         zQrw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=8bytes.org
+X-Gm-Message-State: AGRZ1gKN1aPUgMu3mF8ubpYci6q078K8so7UKFvLQuaU4xrBIT1/oZdi
+	qRSbxIe9bB85rFuVa55o3NWya+TxNonJUPenPmKkY1PQll/GkXfL1Q==
+X-Received: by 2002:a17:902:bd4a:: with SMTP id b10-v6mr660148plx.171.1541604922089;
+        Wed, 07 Nov 2018 07:35:22 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5390593pjt;
+        Wed, 7 Nov 2018 07:35:21 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fE5hgwh1DeOoQIB6VoSytbJAcJlmN4Uzj2Xlc2a2TqeDVy4S/b42pRqUYwnznCpFXdueJq
+X-Received: by 2002:a63:9e0a:: with SMTP id s10mr565392pgd.239.1541604921183;
+        Wed, 07 Nov 2018 07:35:21 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541604921; cv=none;
+        d=google.com; s=arc-20160816;
+        b=PfuPlYxLNA1nWooiazRF+Y3EV4AMG0Ieb8U52tNR2sQBj5/EmhfG7rf5IRw8hMnZkr
+         yLqOh8UmsJuCHK8KNAK2tXzOcvdiNgD5SiENnm41ZGLbryniRDlf6NMhcpRinkeuJ74q
+         P8GAH9087uQKLnyz7cd1bRm86neTqw56jGw4jKgsPVgYi/kRbuH8f+nIdbJl4ie83Zn1
+         vmrM0cNtO1c4jtzAU1V0u8yCYF4/fvPZY0ke04yjaZXCvDzjEq7R7sTKmZ6fbTjbskDK
+         aD1suGPSCG10IA8mBatTasuIfKrboaK4Z2+p82iPZ+6OA8wNdzQy8kMH4RHsk2I0BrUV
+         3Pvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=S1BXrMj/CpFNaK68Sh56Y5GzTlaZU/e83GR8kHGF+zk=;
+        b=gPp2LjVO1HGDKR17QPLmJqEJd14jhEnwTY3sB+4GyzlSujYyPkUXaGIxhmTjPo0gR/
+         O3BXtFkoQSLpWfmACrqTOYvdZRUtW4wNB79gpdon8Px8KOF+71LKnXATBAOid5eAXc8Q
+         KpWI1QgNY/PNlNW3r+Ty1iNCKDkTVIro5UM4NZHe7sCICKiYuhh8jcYStkmW3n07r69p
+         QWdznYfe5VpDoFX8sVh2ozYPVatcBpT9vAs7VMvteo/fY+EK9l5l4/EzEft3nNIDPSZd
+         tvcODavO38tbDIwTwaPBiiQJMghypkAC4eqaNT4P0qwqLXEhJCymZasj6h+VL65ZgZxn
+         dtUA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=8bytes.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id j135-v6si976711pfd.243.2018.11.07.07.35.05;
+        Wed, 07 Nov 2018 07:35:21 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731134AbeKHBFO (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:05:14 -0500
+Received: from 8bytes.org ([81.169.241.247]:39342 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727387AbeKHBFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:05:13 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id A2FED201; Wed,  7 Nov 2018 16:34:21 +0100 (CET)
+Date: Wed, 7 Nov 2018 16:34:18 +0100
+From: Joerg Roedel <joro@8bytes.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iommu/ipmmu-vmsa: Fix crash on early domain free
+Message-ID: <20181107153418.cge2dj5zmztahxrf@8bytes.org>
+References: <20181107131850.11584-1-geert+renesas@glider.be>
+ <e4dcd8b2-768e-b11d-b6de-337b7e942050@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e4dcd8b2-768e-b11d-b6de-337b7e942050@arm.com>
+User-Agent: NeoMutt/20170421 (1.8.2)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3Hko6BuNbOBgYAA--.7744S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUYW7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW5WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07
+	x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
+	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI4
+	8JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUqmFADUUU
+	U
+
+On Wed, Nov 07, 2018 at 01:22:52PM +0000, Robin Murphy wrote:
+> On 2018-11-07 1:18 pm, Geert Uytterhoeven wrote:
+> > Fix this by checking if the domain's context already exists, before
+> > trying to destroy it.
+> 
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+
+Does this need a Fixes-tag? If so, which patch should be in that tag?
+
+
+Thanks,
+
+	Joerg

@@ -1,0 +1,141 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:04 -0000
+Received: from icoremail.net (unknown [209.85.210.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f91faeNbHjpbAQ--.27685S3;
+	Thu, 08 Nov 2018 06:38:24 +0800 (CST)
+Received: from mail-pf1-f178.google.com (unknown [209.85.210.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXbjpdaeNb0JoZAA--.78S3;
+	Thu, 08 Nov 2018 06:38:21 +0800 (CST)
+Received: by mail-pf1-f178.google.com with SMTP id v68-v6so4746170pfk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:38:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=LZZlowt5Ane5vAuok+dg7Z7vrqmYwYKKyfNpAP3eJCU=;
+        b=sShs71CKIWkc6UZSLi3/S67PHsTq7lLl4SDxvPsM82//OnpT3hUKQLK+RJo7llVIs7
+         SpDRFZoN2Ujx7ikXXcy9HRGYo3E4pv56g0UlNTlVowhMiMZ0XPe/f9J/KGHduewn/q6n
+         odf33czyPcM2nd2eNDIpBSYJVIBrOEfKexTusTtjgwKdcrnoWwsaUMfaxBZwI2rU50Dl
+         qX52oYw3Ue5+h7/uydtDHqT91x3GXK4JJoqaAdI8cNRqrtyxp/E6C1jC/EYSNjUbBnWh
+         2mLLSYPb9g9QR9GBhJ6y6B0qxEbSo96Zheww/qPscl/ZH2C9DPJ7snIFgoZPfrL6lTsJ
+         bPEQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJFzw4o5cLUbSMnGtc8njqlHK6SPsAd9AYHtewKybWyZ/jmRgMD
+	7GaJVgyP7jbfZxjfO32DZrw1pyO1NBItST2P9n5qW/qthDny40uU0A==
+X-Received: by 2002:a63:1e17:: with SMTP id e23mr1797535pge.130.1541630301488;
+        Wed, 07 Nov 2018 14:38:21 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp85492pjt;
+        Wed, 7 Nov 2018 14:38:20 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fwd6RTf0k9qiZDXX91+mW9RA7dTPp+fZ97Hv/b52w+u5hsKVZb3DlXFqsWizYe1RJTXyD4
+X-Received: by 2002:a62:888c:: with SMTP id l134-v6mr2148309pfd.198.1541630300720;
+        Wed, 07 Nov 2018 14:38:20 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541630300; cv=none;
+        d=google.com; s=arc-20160816;
+        b=PuW746/S6lxyIGVcZOjvmEUSiyqEmH1Hs1kE5/vJ3madjAf9fWLgXoRi2jzFIItCwQ
+         IVYn3Q+Aub4lbuLIY/fld/0+ej5YTu2tnJcLiPCit28M136TT/sIW1is1e/UZsqCDFz3
+         0lK3dE80P+Mt0iD6FmfvouuIHe8IA/Rg2B5JDgtgYYkGO1yzwtvvmTaiylPvk69Kkaou
+         aqOOxidIwORLWApoFTfSLiZw8gbSzhrqewngkxtEbqPJzv3JVCzLBMlsDdzf09FrvK67
+         v7lGaYKma3SxGtONR8UQn78d24DbqsHOSSVDMahz2Cesw7akhNLQIKhBkxI6PelZeyVl
+         P74g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:subject:cc:to:from:date;
+        bh=LZZlowt5Ane5vAuok+dg7Z7vrqmYwYKKyfNpAP3eJCU=;
+        b=yK5fOHus6HIxt1tPyKiwC2SgEwVoskAyeeGb9XkfXn4/jHnkPoPTbOOvH4d8xR5ppe
+         HN/FR72UCVd8eZ7bfFfbuAeyCeNl+o2CT5Ks0eEIOm+C1GTK3+qDuNNu7OxoiPuHSCS2
+         lul6C5E4fQMx0DvV63XE+WNHAkWLpSgRhzzE781f230Pr9YI6UWCy54yt4l/hcjQCGi1
+         0PGV14A1YaDekTUtelrfz25WJVpTj4NlN4o9Q2SHaofI9cDdVq1dr5u+2hDzGtxl7ipu
+         NVCjoLa5Gm5CK6Iuz/GneJ8xDqGIdm5khxn3INxU1ZMJ6cKjOg7Y/zio1V4YL5UG4s1a
+         9+AQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v9-v6si2138371plg.177.2018.11.07.14.38.04;
+        Wed, 07 Nov 2018 14:38:20 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728165AbeKHIKO (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:10:14 -0500
+Received: from mail.linuxfoundation.org ([140.211.169.12]:47788 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727454AbeKHIKO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:10:14 -0500
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 71C1F891;
+        Wed,  7 Nov 2018 22:37:45 +0000 (UTC)
+Date: Wed, 7 Nov 2018 14:37:44 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: =?UTF-8?B?Y2hvdXJ5emhvdQ==?= (=?UTF-8?B?5ZGo5aiB?=) 
+        <chouryzhou@tencent.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "arve@android.com" <arve@android.com>,
+        "tkjos@android.com" <tkjos@android.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2] binder: ipc namespace support for android binder
+Message-Id: <20181107143744.2dd91690aad06ab1d678dfe8@linux-foundation.org>
+In-Reply-To: <5FBCBE569E134E4CA167B91C0A77FD610198F816F8@EXMBX-SZMAIL022.tencent.com>
+References: <5FBCBE569E134E4CA167B91C0A77FD610198F816F8@EXMBX-SZMAIL022.tencent.com>
+X-Mailer: Sylpheed 3.6.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXbjpdaeNb0JoZAA--.78S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrtw1kCw17WF4UCFWrAw48Xrb_yoW3Zwb_WF
+	Z2934kur45Ww18JFnxX3ZYvFnxXFZ5JF4jvanYvFWqg3s3ArZ5GFnxCFyxZ347Gr4Yv3y5
+	Gr4FvF4furWj9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqAYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6Fylc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxU
+	g2NtUUUUU
+
+On Wed, 7 Nov 2018 01:48:12 +0000 chouryzhou(周威) <chouryzhou@tencent.com> wrote:
+
+> > > --- a/ipc/namespace.c
+> > > +++ b/ipc/namespace.c
+> > > @@ -56,6 +56,9 @@ static struct ipc_namespace *create_ipc_ns(struct
+> > user_namespace *user_ns,
+> > >         ns->ucounts = ucounts;
+> > >
+> > >         err = mq_init_ns(ns);
+> > > +       if (err)
+> > > +               goto fail_put;
+> > > +       err = binder_init_ns(ns);
+> > >         if (err)
+> > >                 goto fail_put;
+> > >
+> > 
+> > Don't we need an mq_put_mnt() if binder_init_ns() fails?
+> > 
+> > free_ipc_ns() seems to have forgotten about that too.  In which case it
+> > must be madly leaking mounts so probably I'm wrong.  Confused.
+> > 
+> 
+> mq_init_ns will do clean job if it failed, and as do binder_init_ns. 
+
+My point is that if mq_init_ns() succeeds and binder_init_ns() fails,
+we don't undo the effects of mq_init_ns()?

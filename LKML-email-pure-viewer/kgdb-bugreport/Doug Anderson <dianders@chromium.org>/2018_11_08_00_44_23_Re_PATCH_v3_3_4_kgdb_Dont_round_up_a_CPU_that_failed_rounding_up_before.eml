@@ -1,0 +1,285 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:55 -0000
+Received: from icoremail.net (unknown [209.85.214.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXvwqWFuNbj0RZAQ--.26800S3;
+	Thu, 08 Nov 2018 00:45:11 +0800 (CST)
+Received: from mail-pl1-f170.google.com (unknown [209.85.214.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3HkqQFuNbh2AYAA--.283S3;
+	Thu, 08 Nov 2018 00:45:04 +0800 (CST)
+Received: by mail-pl1-f170.google.com with SMTP id p6-v6so8102575pll.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:45:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=ZVfwt5B82ufv3POIcIW//zJjtqDZA4QQg9Bilo8F8Bw=;
+        b=eIg7S6Qn6UYc1epZO2+nwC+zFvj3ydJcysLtPGNd8oXN5xyXYOLu9iqWGGUjgFw2+O
+         SbHCxr2LkUVO1diibMFAyK4jOQYTU8DlTxja7VDh9NDekjR3HpnBCPrdLMtv2dFCjihe
+         9ZFYbQTmEnl3VNKjJVb3y932zkuZ9n6o1LnxnSDEZqacOB8tMdqA+uXxL5yvstacY1d1
+         NxQYXDowU7exeJtxRciAtqXRAqhGkbrxnNoClQbES1qB7dBUbWIY70Yp68Ry//Vbb3ip
+         RamxQ9wxJ6Pi3zfMIpmwHC14d8HhHoo6OA7W2F1DWROEJrIfGxJpTgga5B3hniLrB0wo
+         H2EA==
+X-Gm-Message-State: AGRZ1gIyvKBShx0YYir51EXblfK1s34Orye3Z2SjWN5iDJObPaVQjOuO
+	U3EhlX30xvDGTpoIbImczvVQGxJ/fiio6nRwo/2DNm4xAcQPkpnCww==
+X-Received: by 2002:a17:902:758f:: with SMTP id j15-v6mr979401pll.160.1541609104225;
+        Wed, 07 Nov 2018 08:45:04 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5468836pjt;
+        Wed, 7 Nov 2018 08:45:03 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cls8lqPeSvKSAW7+MoGEVvUxGTt3buZrcgAACP5kUCEZ2H+OVQIfaWB6Zizw5vWB8r7SQS
+X-Received: by 2002:a63:ec12:: with SMTP id j18mr787048pgh.200.1541609103136;
+        Wed, 07 Nov 2018 08:45:03 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541609103; cv=none;
+        d=google.com; s=arc-20160816;
+        b=yS49nzPiqbJogbtzPjBslBFTW68/vyJ1MYZUrfp9i3nid3mST7QOx4XBvDi21eXLqs
+         yo4lk051nc/OtmJHPCUtbKMRICWLlzA7fZO5GVxv9dW6nc+SAr3eWq9ppW1dv5cgJ6ST
+         3PYPmW3DzQtyE6CvKTFfLXEhGpS/Ty0tvRXgQAWBirEtMCXvMS4PjnLblsdPnjjKQccO
+         GCYXvSUduPf9ggPqv2aYIBEsu7vZDueCHaWFRdWEmIBeeZuqZUXYFE7CwUpUELK+vUah
+         /jyCUFmgwaVAIYTZ+e7WP4LQptVhY+cvjHBIbVw6Hyp6O9WMIdL7u47geKaSIX0soJha
+         MV2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ZVfwt5B82ufv3POIcIW//zJjtqDZA4QQg9Bilo8F8Bw=;
+        b=cGxZZrx82xP17E4t6I/B5FwFX7+7ltMkA4898U4HFlVmMisnq3PsMIhZ+pIL35V/ys
+         8iEvjWamdR+Ci9TiVQDoZ9QpHjC55GuX/IrfKvFaAIe+4H81YI1+6oJKs6kwdVH9SS9h
+         SgkcZ26lqj9vnVY7raVd7XglsCQtXm+3zsExgrId8hsDBOp9sdJ3Ds+HmEivmfC78Toz
+         7mUFj7tExefx5DT5U2SNJOnmqjHaNZ2udqvh5kTFrx/L2m6N4j8GcbUh+3s1Hi+nSML6
+         OI5Y5tbmzm4Zjl5bf3foVdojqJSC/JHM4lupVsPDXpd3QddxjadtOni69YGR8m90SAmC
+         +aIQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@chromium.org header.s=google header.b=fOw4ewkd;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=chromium.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id m5-v6si1088209pll.320.2018.11.07.08.44.47;
+        Wed, 07 Nov 2018 08:45:03 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731340AbeKHCPt (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:15:49 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:43752 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727627AbeKHCPt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:15:49 -0500
+Received: by mail-vs1-f66.google.com with SMTP id x1so3464045vsc.10
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 08:44:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZVfwt5B82ufv3POIcIW//zJjtqDZA4QQg9Bilo8F8Bw=;
+        b=fOw4ewkdSoqO0vYhMo8g5quAmFWJacoP9y+9daoWk29Gc8hOOwjBp2QtfA8iwBPuxr
+         Z93HayMMoPw7+jw89143qAjaFYG44bdry2LoHTlVxwqZWiaBCwOs1a7DfJZBIRFxgsHS
+         2zeLfQ28qsmthZXTGvsGArh8I5LNnwRtmhWxw=
+X-Received: by 2002:a67:32c6:: with SMTP id y189mr385359vsy.105.1541609078875;
+        Wed, 07 Nov 2018 08:44:38 -0800 (PST)
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
+        by smtp.gmail.com with ESMTPSA id f126sm288883vsd.11.2018.11.07.08.44.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 08:44:38 -0800 (PST)
+Received: by mail-ua1-f52.google.com with SMTP id z11so4176138uaa.10
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 08:44:37 -0800 (PST)
+X-Received: by 2002:ab0:650e:: with SMTP id w14mr420101uam.83.1541609077408;
+ Wed, 07 Nov 2018 08:44:37 -0800 (PST)
+MIME-Version: 1.0
+References: <20181107010028.184543-1-dianders@chromium.org>
+ <20181107010028.184543-4-dianders@chromium.org> <20181107115953.cnar4u2axi4poaxe@holly.lan>
+In-Reply-To: <20181107115953.cnar4u2axi4poaxe@holly.lan>
+From: Doug Anderson <dianders@chromium.org>
+Date: Wed, 7 Nov 2018 08:44:23 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WcgYFkxJh=nvgXkBQsHsebGNzRkLnnTT1OWA9--n1nwQ@mail.gmail.com>
+Message-ID: <CAD=FV=WcgYFkxJh=nvgXkBQsHsebGNzRkLnnTT1OWA9--n1nwQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] kgdb: Don't round up a CPU that failed rounding up before
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Jason Wessel <jason.wessel@windriver.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3HkqQFuNbh2AYAA--.283S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3WrW8WF4UJw17Ww1UurWDCFg_yoWxGr1fpa
+	15WF1jkFWkJr4xZwn7Aw40g3y0y395JFW3tF95Aas3A398G3WxKrZ3KF15Z3W8urs3XF1j
+	vFW8Z3sFgwnIyFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcV
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_JwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr0_Cr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IUOAk
+	u3UUUUU==
+
+Hi,
+
+On Wed, Nov 7, 2018 at 3:59 AM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Tue, Nov 06, 2018 at 05:00:27PM -0800, Douglas Anderson wrote:
+> > If we're using the default implementation of kgdb_roundup_cpus() that
+> > uses smp_call_function_single_async() we can end up hanging
+> > kgdb_roundup_cpus() if we try to round up a CPU that failed to round
+> > up before.
+> >
+> > Specifically smp_call_function_single_async() will try to wait on the
+> > csd lock for the CPU that we're trying to round up.  If the previous
+> > round up never finished then that lock could still be held and we'll
+> > just sit there hanging.
+> >
+> > There's not a lot of use trying to round up a CPU that failed to round
+> > up before.  Let's keep a flag that indicates whether the CPU started
+> > but didn't finish to round up before.  If we see that flag set then
+> > we'll skip the next round up.
+> >
+> > In general we have a few goals here:
+> > - We never want to end up calling smp_call_function_single_async()
+> >   when the csd is still locked.  This is accomplished because
+> >   flush_smp_call_function_queue() unlocks the csd _before_ invoking
+> >   the callback.  That means that when kgdb_nmicallback() runs we know
+> >   for sure the the csd is no longer locked.  Thus when we set
+> >   "rounding_up = false" we know for sure that the csd is unlocked.
+> > - If there are no timeouts rounding up we should never skip a round
+> >   up.
+> >
+> > NOTE #1: In general trying to continue running after failing to round
+> > up CPUs doesn't appear to be supported in the debugger.  When I
+> > simulate this I find that kdb reports "Catastrophic error detected"
+> > when I try to continue.  I can overrule and continue anyway, but it
+> > should be noted that we may be entering the land of dragons here.
+>
+> It's been quite a while but AFAIR I decided to set the catastrophic
+> error here *because* the stuck csd lock would make restarting fragile.
+>
+> So arguably we are now able to remove the code that sets this flag when
+> a CPU fails to round up.
+
+I will leave that to a future patch.  It's definitely not a
+well-tested corner of the code (and also in general the debugger makes
+the assumption that all the other CPUs are stopped) so I'd hesitate
+making it seem supported, but it's up to you.
+
+
+> > NOTE #3: setting 'kgdb_info[cpu].rounding_up = false' is in
+> > kgdb_nmicallback() instead of kgdb_call_nmi_hook() because some
+> > implementations override kgdb_call_nmi_hook().  It shouldn't hurt to
+> > have it in kgdb_nmicallback() in any case.
+>
+> Slightly icky but I guess this is OK.
+
+It was definitely a judgement call and I felt it was about 50/50
+between putting it there vs. copying it to 'arch/arch'.  If you want
+me to move it I can.
+
+...or we can try to figure out why exactly arch/arc passes NULL
+instead of get_irq_regs() to kgdb_nmicallback().  If it's OK for
+arch/arc to pass get_irq_regs() then we can make everyone use the
+default.
+
+
+> > diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+> > index 23f2b5613afa..324cba8917f1 100644
+> > --- a/kernel/debug/debug_core.c
+> > +++ b/kernel/debug/debug_core.c
+> > @@ -246,6 +246,20 @@ void __weak kgdb_roundup_cpus(void)
+> >                       continue;
+> >
+> >               csd = &per_cpu(kgdb_roundup_csd, cpu);
+> > +
+> > +             /*
+> > +              * If it didn't round up last time, don't try again
+> > +              * since smp_call_function_single_async() will block.
+> > +              *
+> > +              * If rounding_up is false then we know that the
+> > +              * previous call must have at least started and that
+> > +              * means smp_call_function_single_async() won't block.
+> > +              */
+> > +             smp_mb();
+>
+> Not commented and I suspect this may have no useful effect. What
+> (harmful) orderings does this barrier render impossible?
+
+As you have noticed, weakly ordered memory makes my brain hurt.  I'm
+happy to just remove this.
+
+...or I'm happy to not have to think about all this and just add a
+small global spinlock that protects all accesses to all instances of
+"rounding_up".  In general I follow the advice that, unless you're in
+a performance critical section, weakly ordered memory is too hard for
+humans to reason about (normal concurrency is hard enough) so you
+should just protect everything touched by more than one CPU with a
+lock.  I didn't do that in this case since it seemed like the pattern
+was to use memory barriers in this file, but it would definitely be my
+preference.
+
+In general I was trying to make sure that we didn't miss rounding up a
+CPU that may have arrived at just the wrong time to the party.  Said
+another way, I think we're OK w/ no barriers in the "easy" cases.
+
+Easy case #1: everyone rounds up in time all the time
+
+- I believe that the "rounding_up = true" is guaranteed to be visible
+to the target CPU by the time kgdb_call_nmi_hook() is called on the
+target CPU.
+- I believe that the "rounding_up = false" is guaranteed to be visible
+to all CPUs by the time we leave the debugger.
+
+Easy case #2: a CPU totally goes out to lunch and never comes back
+
+- Super easy.  "rounding_up" will be true and never go false.
+
+
+So the hard cases are when a CPU comes back at some sort of
+inopportune time.  I'm trying to re-establish my reasoning for why I
+thought these memory barriers were useful for this case but I'm not
+sure it's worth it.  Even without the barriers I think the worst that
+can happen is that a CPU might fail to round up in a 2nd debugger
+entry if it failed to round up in a previous one.  ...in the very
+least I can't think of any way where we'll accidentally try to round
+up a CPU while the csd is locked, can you?
+
+
+> > +             if (kgdb_info[cpu].rounding_up)
+> > +                     continue;
+> > +             kgdb_info[cpu].rounding_up = true;
+> > +
+> >               csd->func = kgdb_call_nmi_hook;
+> >               smp_call_function_single_async(cpu, csd);
+> >       }
+> > @@ -782,6 +796,9 @@ int kgdb_nmicallback(int cpu, void *regs)
+> >       struct kgdb_state kgdb_var;
+> >       struct kgdb_state *ks = &kgdb_var;
+> >
+> > +     kgdb_info[cpu].rounding_up = false;
+> > +     smp_mb();
+>
+> Also not commented. Here I think the barrier may have a purpose (to
+> ensure rounding_up gets cleared before we peek at dbg_master_lock) but
+> if that is the case we need to comment it.
+
+As per above, I'll plan to remove this and the other memory barrier
+unless you tell me otherwise.
+
+
+Thanks so much for your very timely reviews on all this and your
+invaluable advice.
+
+-Doug

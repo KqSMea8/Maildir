@@ -1,0 +1,149 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:41 -0000
+Received: from icoremail.net (unknown [209.85.214.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3__txC+NbIf5YAQ--.26787S3;
+	Wed, 07 Nov 2018 23:57:38 +0800 (CST)
+Received: from mail-pl1-f182.google.com (unknown [209.85.214.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3FUFuC+NbnTAYAA--.41S3;
+	Wed, 07 Nov 2018 23:57:34 +0800 (CST)
+Received: by mail-pl1-f182.google.com with SMTP id n4-v6so8053444plp.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:57:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=a54sX7gkOMHaIBL4YeAEBvx5fB65niTWR5dD5f73KkI=;
+        b=aqU71wFlEaEH7xR228egkE/bOCWwYcHTxIxQejK9+gEXPX7iL8Q8eOPf263WG2UsbN
+         RHqOlr1mz7Zybw+E1T3VUXA8ykrOt4767ca8J/GrtpDgEEDTGRq8Hq8zSkXlLxDE28so
+         qI0mVIP2ZApG1CIruc9+jKawveproKL+n+B+tAX0CRikCHhjmvXUU/Guf3Hg+xGZeRIm
+         G5zrLOAA1lz6zqsZ1M++ogbM916J/8mbBWGDJPKElqcepCCO2V6J/HpIuULRxOcq4D3X
+         9rKuOfS9B8elFlFGhnGcTTF2AM09XGcdkhpXL4vRAGAHa4I4K9/CJvJPPvEVHra5CdEW
+         YI6Q==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKsSOUjP8KFXZpZzoyBpkt6sD3y6rfaq3T+vb+TQEnAB8UtmRa/
+	vgyTi/T4GYGBwnak4BkjP52AnTfejvz6b4QWcHlRYB1mS10AdKd0Aw==
+X-Received: by 2002:a17:902:a5cc:: with SMTP id t12-v6mr774819plq.298.1541606253603;
+        Wed, 07 Nov 2018 07:57:33 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5414263pjt;
+        Wed, 7 Nov 2018 07:57:32 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fL5Vz6zeG6yq0YS66JO8FR9i4amgEMOxQ3vEXbNm2GqWonZnGqGTtSikiu//1eADhk4HZV
+X-Received: by 2002:a62:6486:: with SMTP id y128-v6mr796680pfb.76.1541606252798;
+        Wed, 07 Nov 2018 07:57:32 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541606252; cv=none;
+        d=google.com; s=arc-20160816;
+        b=gkcJqlOqoR9w8fold8DyrsBW4xpicWrnwzvnbPkO0Bxlk9JJZ0E6RGXs0mrtwPyF2R
+         HsKtu8WYN6hJHU5ss3FfnanTMmaGLWsNxAUPPXDayaOsHVZGlBxsl5H9A1Cz+UO99GK0
+         GX9aNxl5f/sTpYI07kysFqEmcgwovpnQ2JQAaPCrlWaSWCZVQcWXnlJmtpcX4Z8EmT8g
+         udGXffTDFcXsEARuAWLjNO3PPlPlMWdIU7blSFKu6No5qOKxNRkpdc/0DfmecPKADoxk
+         nYoLlkiLw8/LDS3wOpNSAouQRm7BaPGbMQfH9M1RfDYy9ZktsedydcsXrK60zPt5VKZS
+         xJQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:reply-to:message-id
+         :subject:cc:to:from:date;
+        bh=a54sX7gkOMHaIBL4YeAEBvx5fB65niTWR5dD5f73KkI=;
+        b=YqEmEyLbSP3tPJ2VciWhczZIUDTlsx1gtkd6/GxWNMTp3snCcHxdzWcgl2vGfLnYmy
+         /E/+yxRY+cjq/Ooa+RBTG/iGYpFXCKGHvFMZWVZaUbp7V26i/MRDDdm9z512ncopny58
+         4CDYuHLMAKf2ZB/IRvBdXxbzhRXiH6pfiq1BPUoMCdDRzH4sjvU86h5Goz65AsBOPETj
+         UhO7s3OldiW1Pv9HN3b3V+iIoXTZBYFn8lckpgVJRFU6FuAoh4+Im63VaCarSDxb/1ID
+         x4IOW2R7G3+ieLbqwLV+SDvXNeD4qanoDveQSLJExCB1V5s0Pzf2zitI4ncY5KtbqB35
+         wiTQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id i127-v6si1082587pfc.148.2018.11.07.07.57.18;
+        Wed, 07 Nov 2018 07:57:32 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731285AbeKHB1p (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:27:45 -0500
+Received: from mx2.suse.de ([195.135.220.15]:59274 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727970AbeKHB1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:27:45 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay1.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7E9D3B151;
+        Wed,  7 Nov 2018 15:56:47 +0000 (UTC)
+Date: Wed, 7 Nov 2018 16:56:44 +0100
+From: Petr Vorel <pvorel@suse.cz>
+To: gregkh <gregkh@linuxfoundation.org>,
+        David Miller <davem@davemloft.net>
+Cc: mkubecek@suse.cz, Networking <netdev@vger.kernel.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        rweikusat@mobileactivedefense.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ltp@lists.linux.it, Cyril Hrubis <chrubis@suse.cz>,
+        junchi.chen@intel.com, Dmitry Vyukov <dvyukov@google.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: RFC: changed error code when binding unix socket twice
+Message-ID: <20181107155644.GA29531@dell5510>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20170630073448.GA9546@unicorn.suse.cz>
+ <20180831111436.GA23780@dell5510>
+ <CAK8P3a2yfZKMtE16DNCjZBOQ1R5=uXD16k43eJ=najJBh7H85Q@mail.gmail.com>
+ <20181029163331.GA31059@dell5510>
+ <CAK8P3a1q32spcF445Zhw-KMXG2VwFZuMw5C1sYFk3qLXz3HB5w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1q32spcF445Zhw-KMXG2VwFZuMw5C1sYFk3qLXz3HB5w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3FUFuC+NbnTAYAA--.41S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7XF18Ar15ZrWkAry7Xw1kXwb_yoWfKFg_ur
+	yDZr97C34rXasFqF47GF9Iy39Ivw17XF95Jr9rGwnFkryrGFZxuFW7WFn2krZ5WayrGF9x
+	CrnI93WxCFy3ZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbT8YjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWU
+	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkIecxEwVCI4VW5WwCY0x0Ix7I2Y4AK64vI
+	r41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JV
+	WxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_GcCE3s1l
+	42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4I
+	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
+	WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rV
+	W8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUDveHDUUUU
+
+Hi
+
+> I forgot that 4.1 has ended a while ago. Greg also sometimes still takes patches
+> for 3.18, so that might be a candidate aside from 3.18
+
+Gregkh, David, does it make sense to you to merge commit 0fb44559ffd6 ("af_unix:
+move unix_mknod() out of bindlock") to 3.18? If yes, please do so.
+
+
+> > I guess we need to adjust LTP test to accept either return code as EOL longterm
+> > branches probably will not take this patch.
+
+> I'd argue that if we decide that EADDRINUSE is the intended return value,
+> it would be appropriate for LTP to warn about kernels that never got the
+> backport.
+
+> The alternative would be to not backport the patch further, and then change LTP
+> to no longer warn. Note that the bug that got fixed by the 0fb44559ffd6 patch
+> is probably more important than the return code, so I would say
+> we want the patch backported to anything that people still run anyway,
+> especially if they are running LTP to make sure it works correctly.
+
+>         Arnd
+
+Kind regards,
+Petr

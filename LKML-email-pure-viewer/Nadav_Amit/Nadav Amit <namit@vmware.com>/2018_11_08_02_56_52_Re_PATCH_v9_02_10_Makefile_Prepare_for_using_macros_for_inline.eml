@@ -1,0 +1,201 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:46 -0000
+Received: from icoremail.net (unknown [209.85.210.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH3qbNeNbJA1aAQ--.26730S3;
+	Thu, 08 Nov 2018 02:57:32 +0800 (CST)
+Received: from mail-pf1-f173.google.com (unknown [209.85.210.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDXvEiYNeNb4esYAA--.394S3;
+	Thu, 08 Nov 2018 02:57:28 +0800 (CST)
+Received: by mail-pf1-f173.google.com with SMTP id y18-v6so5695146pfn.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:57:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :thread-topic:thread-index:date:message-id:references:in-reply-to
+         :accept-language:content-language:spamdiagnosticoutput
+         :spamdiagnosticmetadata:content-id:content-transfer-encoding
+         :mime-version:sender:precedence:list-id;
+        bh=VSnmHtyO5KgtWnjIQ1/EhzKAQUHuTG86Mwjmym832Qc=;
+        b=ETf/B+OnyGdrKwMlCWXAbII81rR8iPJrY+xUwLqcBzV/NrRv70cqyQen4eJF/TqxfU
+         TNWt1QjfOtyMggqjnEWRK3OEjxQQtPgCDBaUfdXeewrryfaM7M47k52UA10UDh1D6zuO
+         5l+nag6zsTVfWrG0DNXL8yRuYBgFA5O+rZOPyj2J9q6+NazSzDkwtmQJk55KBx1WfQH3
+         fHZnujsph1SKdH9BzC3TLDKjkR8AlEHGDIKrr1g4m6lpuElMJ2bZN2IHIKN0UwjoGCz8
+         jTwVqy6Jj1d0I+VAiHDOfo1tpZMdsUmewWBziAsN3VJdBMd3pgM1tk74qhMktfEQbiHC
+         8EpQ==
+X-Gm-Message-State: AGRZ1gIvpm4NVG04REE0bE64Cf8Ghb822OuNizI4t22pZq/dAd0njrJu
+	lMc3Ia+9oE+bDpmG1zOcTQ9Hg+t72MihVQCJUGZIs1i9qGB0aMYTUw==
+X-Received: by 2002:a65:66ce:: with SMTP id c14mr1173746pgw.450.1541617048390;
+        Wed, 07 Nov 2018 10:57:28 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5615530pjt;
+        Wed, 7 Nov 2018 10:57:27 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f4MsJyPSa765ALrXskMviIW13j59skBaVWADM+Wt4CVd6TSFQE1iG33bzCM1CyKDX5ETko
+X-Received: by 2002:a17:902:3064:: with SMTP id u91-v6mr1402175plb.164.1541617047737;
+        Wed, 07 Nov 2018 10:57:27 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541617047; cv=none;
+        d=google.com; s=arc-20160816;
+        b=KWn/oNS5oXA/EGvqVLa9bXCt9XZ+Px4Rl7In1uXwm1jsQFW6lR30DcAiVPFLrTw2/M
+         la9SMGx163OYurPV7t1McvMzMpf98ADBq7R6KKbNKBU3iiixgmccviPQur+q83iofxqX
+         1vw4pgeQE/BegTRBjooyKNWPNoq8uuz5gXKSIxKl5+5FDPravAFe5HbxuKL1IbBNwWOB
+         oq8vPsv02BiB6BVu6Shw/3pQ0Yg+nFGTVF8k4TYUypcM3rCDvMNzWmjLEltHlYs3IyIi
+         Hc8a0hMSXyTLahz93wH+OCwmt59kpC0KhKQ6iY1vow/SfE7OK6obJWc9ZucDu16j7+CR
+         wMZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:content-transfer-encoding
+         :content-id:spamdiagnosticmetadata:spamdiagnosticoutput
+         :content-language:accept-language:in-reply-to:references:message-id
+         :date:thread-index:thread-topic:subject:cc:to:from:dkim-signature;
+        bh=VSnmHtyO5KgtWnjIQ1/EhzKAQUHuTG86Mwjmym832Qc=;
+        b=rZhmwtMsz1nxHlISPfpbDNFE2kNEzGPNZRLuDXBkMqHIQw81C/owYVWaJOZXCAhBCl
+         /bhSybLf3tHFCvp9PL7t0AQ+0cjUxNkUftdrmW9/tkk/laWwrYKPW2UzfMF7mv1ZAgbw
+         7LuYDuq24PAM/WzVXUff7Vrjun5WVmDeSxDWlvh+oaoIw5DWShNO0f6/9lUq5mYHUCeT
+         RMbqG5DC4MeBECLLFi694wmTbDjbYlk3iD5NmrMdaqAidy2F4QYD5iv62bXBnQmiRWZj
+         dATDJR8hgKSEzAxX9xqVZq34LKhk8OnN/x3/IcmaKcA/hO+0SPN6TAoFUCP3/SZYnyvv
+         8xTw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@vmware.com header.s=selector1 header.b=m7SPCK2o;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=vmware.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id c134-v6si1415819pfb.139.2018.11.07.10.57.12;
+        Wed, 07 Nov 2018 10:57:27 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1729823AbeKHE2l (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:28:41 -0500
+Received: from mail-eopbgr820079.outbound.protection.outlook.com ([40.107.82.79]:28160
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726335AbeKHE2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:28:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VSnmHtyO5KgtWnjIQ1/EhzKAQUHuTG86Mwjmym832Qc=;
+ b=m7SPCK2o6pW8bPHq9VIdry2duzU/ecvE+GKN7HHU9QYKx7ipAHTEvnG3FcEI7w4yP76ifHtqNjc3WG31Y/tDkLarQmfSnIWSRbCpRzZp6UTx7eVig1KSs6B1KWS/+ciOTJMyl1PBxI1bQU1IrEYiKHmTaB/fHC0ekZduQLuK/YA=
+Received: from SN6PR05MB4783.namprd05.prod.outlook.com (52.135.115.17) by
+ SN6PR05MB4671.namprd05.prod.outlook.com (52.135.114.205) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1294.15; Wed, 7 Nov 2018 18:56:53 +0000
+Received: from SN6PR05MB4783.namprd05.prod.outlook.com
+ ([fe80::c964:38d3:a19b:6091]) by SN6PR05MB4783.namprd05.prod.outlook.com
+ ([fe80::c964:38d3:a19b:6091%3]) with mapi id 15.20.1294.034; Wed, 7 Nov 2018
+ 18:56:53 +0000
+From: Nadav Amit <namit@vmware.com>
+To: Logan Gunthorpe <logang@deltatee.com>,
+        Ingo Molnar <mingo@redhat.com>
+CC: LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [PATCH v9 02/10] Makefile: Prepare for using macros for inline
+ asm
+Thread-Topic: [PATCH v9 02/10] Makefile: Prepare for using macros for inline
+ asm
+Thread-Index: AQHUW2CZ0dZfAolPxUG9hT8O5ZUp5qVDToGAgAAFpACAAAwfgIABcMKAgAAOcACAAAERgA==
+Date: Wed, 7 Nov 2018 18:56:52 +0000
+Message-ID: <192946CF-8543-4CF5-B2A3-93674FCD07E2@vmware.com>
+References: <20181003213100.189959-1-namit@vmware.com>
+ <20181003213100.189959-3-namit@vmware.com>
+ <89262174-6f15-6116-e67f-436f7c1bfe99@deltatee.com>
+ <6651971B-E3AB-4CDD-868C-2338593F7D83@vmware.com>
+ <d0812681-4a8f-8cc4-24ce-d02002ee34d2@deltatee.com>
+ <DC1EA50F-FAC3-4750-BCF7-0622D1FB4756@vmware.com>
+ <a3902c4c-64b1-9c49-02fb-d5e4c9b04314@deltatee.com>
+In-Reply-To: <a3902c4c-64b1-9c49-02fb-d5e4c9b04314@deltatee.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [208.91.2.1]
+x-ms-publictraffictype: Email
+x-microsoft-exchange-diagnostics: 1;SN6PR05MB4671;20:d6GVqQZPbWLRP26EFc0LZOG8R3PtM5AcHZg+7tqId474Odwwb5wv29IuPd/XptmAVbEI2UVlRIxS2C7WcFCyNug0MPLxXM/FTAEgg4ysQfPzMvEUYbfzsG9mkKB9gIc04zWrAy0zN+9kzZOnq/SrKwnrik8t/K6NBdAPqobpCXY=
+x-ms-exchange-antispam-srfa-diagnostics: SOS;
+x-ms-office365-filtering-correlation-id: ae3c029b-f0b1-477f-c76f-08d644e2c826
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600074)(711020)(2017052603328)(7153060)(7193020);SRVR:SN6PR05MB4671;
+x-ms-traffictypediagnostic: SN6PR05MB4671:
+x-microsoft-antispam-prvs: <SN6PR05MB4671BC2CA9E03602DE83B45DD0C40@SN6PR05MB4671.namprd05.prod.outlook.com>
+x-exchange-antispam-report-test: UriScan:;
+x-ms-exchange-senderadcheck: 1
+x-exchange-antispam-report-cfa-test: BCL:0;PCL:0;RULEID:(8211001083)(6040522)(2401047)(5005006)(8121501046)(3231382)(944501410)(52105095)(10201501046)(93006095)(93001095)(3002001)(148016)(149066)(150057)(6041310)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(20161123558120)(20161123564045)(20161123560045)(20161123562045)(201708071742011)(7699051)(76991095);SRVR:SN6PR05MB4671;BCL:0;PCL:0;RULEID:;SRVR:SN6PR05MB4671;
+x-forefront-prvs: 08497C3D99
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(136003)(376002)(346002)(366004)(199004)(189003)(6506007)(71200400001)(53546011)(305945005)(86362001)(6436002)(316002)(229853002)(97736004)(14454004)(102836004)(33656002)(53936002)(7736002)(6486002)(36756003)(6246003)(7416002)(110136005)(478600001)(93886005)(6512007)(2900100001)(446003)(11346002)(25786009)(106356001)(68736007)(5660300001)(105586002)(76176011)(256004)(99286004)(186003)(26005)(476003)(2616005)(4326008)(6116002)(3846002)(8676002)(8936002)(486006)(66066001)(82746002)(81166006)(81156014)(71190400001)(54906003)(83716004)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR05MB4671;H:SN6PR05MB4783.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-microsoft-antispam-message-info: cJFjaYqXLQw9XPZJko3OghIuUYcQtr7oMThcWEZqlEhuDcqoZUkQ/zzYd1oXA2CiUbytUjgYstO2MyO1p4stswLWLcYkwnYzhgW7WicwPtIo/tW1OEr7V59/PgiCcmVrAlcuJ9EDfkzW+apIWzedY2TQ9mkhDSwARj26Xq+J55NkMatPO4C4IVy5NQLcThkRsBtrJapZpYTRz+lMlvzVb/hLs8EyUIfFYByybJ1VTcNDdPFvITNn3PxJlykxRE0oq+AychRDYc6UOoZwDPSzyaNmDzZt+D6Ugdlq+yITQm56mRCcot3SdbkNgfttggiKRwRY0QAxJKKdlneKJq03bR0MNm0WTahVdfxhrn9zovA=
+spamdiagnosticoutput: 1:99
+spamdiagnosticmetadata: NSPM
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7211FD300DB08248A699CA13BAEFB2B2@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae3c029b-f0b1-477f-c76f-08d644e2c826
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2018 18:56:52.9848
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR05MB4671
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDXvEiYNeNb4esYAA--.394S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7GFyDur15Cr15Jr1UXw43KFg_yoWDXrX_ur
+	97Cw1kCwsxC3WkXw43tFsxZFW3Kr12vryrXFy8Xws2v34UJas5GFZ8CFn5Xr4xKa92vwnI
+	9rnYya1xZay7XjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbh8YjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4wCY1x
+	0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VW5MxkI7II2
+	jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E
+	14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x
+	804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42
+	xK8VAvwI8IcIk0rVWUCVW8JbIYCTnIWIevJa73UjIFyTuYvjxUDqg4UUUUU
+
+From: Logan Gunthorpe
+Sent: November 7, 2018 at 6:53:02 PM GMT
+> Subject: Re: [PATCH v9 02/10] Makefile: Prepare for using macros for inli=
+ne asm
+>=20
+>=20
+>=20
+>=20
+> On 2018-11-07 11:01 a.m., Nadav Amit wrote:
+>> Ideas? Do people care about it?
+>=20
+> Just spit balling, but is there a reason we didn't just put the macros
+> for inline assembly directly in the header? Something like this:
+>=20
+> asm(".macro ANNOTATE_UNREACHABLE counter:req\n\t"
+>    "\\counter:\n\t"
+>        ".pushsection .discard.unreachable\n\t"
+>        ".long \\counter\\()b -.\n\t"
+>        ".popsection\n\t"
+>    ".endm\n");
+>=20
+> #define annotate_unreachable() ({                   \
+>    asm volatile("ANNOTATE_UNREACHABLE counter=3D%c0" \
+>                 : : "i" (__COUNTER__));            \
+> })
+>=20
+> It does mean the macros won't be usable in non-inline assembly, without
+> duplicating them, but do we care about that?
+
+HPA indicated more than once that this is wrong (and that was indeed my
+initial solution), since it is not guaranteed that the compiler would put
+the macro assembly before its use.

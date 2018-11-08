@@ -1,0 +1,2350 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:42 -0000
+Received: from icoremail.net (unknown [209.85.214.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f0FcMuNbDf1ZAQ--.26743S3;
+	Thu, 08 Nov 2018 02:43:40 +0800 (CST)
+Received: from mail-pl1-f173.google.com (unknown [209.85.214.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnvztTMuNbDeEYAA--.303S3;
+	Thu, 08 Nov 2018 02:43:32 +0800 (CST)
+Received: by mail-pl1-f173.google.com with SMTP id s5-v6so8235876plq.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:43:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=+wh64t0z7fxKb7JTDdaaFTLSxepEWUnsuzEn7/e5tiw=;
+        b=X02ThrZyEhwCejSKChx22qKWSPOUYNMyhkMe08jKCWa/ADCmfT93VG7OZziLDLDO6F
+         Dey503QM1rkoQpqZQkRfZkt2IEYtvG+Sh+GDFe06h4+Llmkb7XBccEjxqOGrWSJ9pBIM
+         y076CVll+JLV5horeITX7yHvLix3EL6UdZCvd+E4b5bbvVlR20v9abclxiMTkeTeP2PR
+         LPG1huHYksu2xDjMvGYUk5BixEyb0aau9CPW2goa1ZxjuLoPa+vIw7hA9z5rONpmU2mk
+         sZxEmrzKtygWVC8zp2hWjjW0oGCRtdNvaZd2Pjasef9Go+lwgZPVgNfUpImxquzmml6R
+         MGmA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLk3zRsI9R7qpVpqa5LDgtWU4fUPm0mROWBKhsS2OMPydAkZn9Y
+	0jRALzySqahGuh5Rggt7vtW399f4gaXkcQ1Gim2PVameeoWYjpeYhg==
+X-Received: by 2002:a17:902:a9:: with SMTP id a38-v6mr1371247pla.7.1541616210605;
+        Wed, 07 Nov 2018 10:43:30 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5601342pjt;
+        Wed, 7 Nov 2018 10:43:25 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cE1zyqgr8dyt2UQqby4OJ9jyAwbTpybH4MJdS6NNsd5iqrJzUTDYdjwVX5KU6++yjhtv9g
+X-Received: by 2002:a63:a91a:: with SMTP id u26mr1114878pge.349.1541616205742;
+        Wed, 07 Nov 2018 10:43:25 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541616205; cv=none;
+        d=google.com; s=arc-20160816;
+        b=U5HCWB/5K3cKj6RjcdTgZgv7I85nnVx+biKkpw8Dr4Z3A3lrm5rmaMz32bPeb/ecV0
+         5NsefllUx5auR+CSfw9PFaSsvJJb2/+5uGUAOGIpqFMlofyUs2V8AyO/VUhQiuD/AnBY
+         QeXvSIETMDRX6hDt0gBc/GpxVjZZ5iZeJyGslUHBra6FOUfV+ro8KwivitAvgNFqwXUm
+         3bB6BJGBr6W6ElDTzrAFBSIKjIoxU11O4WawjZE2t03gbEKg/9cb7ouLTtxiSk2Cs7eV
+         ase1Hx1XMZdEvTjsy4eNdM8UZM1L67Z8fReZXJ5rG9IKK9dTSoorIgClKmihS1nLBvg6
+         OXGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:in-reply-to
+         :mime-version:user-agent:date:message-id:from:cc:references:to
+         :subject;
+        bh=+wh64t0z7fxKb7JTDdaaFTLSxepEWUnsuzEn7/e5tiw=;
+        b=YZulwNU9U8McqZZS6Rz9Rl1iIvRLWrjVOQAi6zhpcRadUDZpqDc9ZYvMrs7x3+stBD
+         LEKXwKV5rFCTQINEkOZLt3Deb8y9vRy4ENhDcqP6OxD3X2HnET7dt6euPfLj+lznxyEG
+         F2x5jUC1ofC9hGyv37fYSx713YsI8yrX5UhrTB22AE1ESo2/hSbvjO6G4LbLx6JVqwg4
+         nQlBTo1Q5HYvYlMrFJY2ClsnVUZQZcmHAX88U7r/Ds614qQTro4CFIw0qdzM72sKbi+I
+         0e6GJ9mCTLWyXVRR/dCqz9/uDgnC8J53oyBLetbR5T7tr43YPF2oneVZguc6xlwi9VLs
+         6HFQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id g24-v6si1216030pgh.188.2018.11.07.10.43.10;
+        Wed, 07 Nov 2018 10:43:25 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1729140AbeKHEOb (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:14:31 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:14611 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726335AbeKHEOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:14:31 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CB31B94AEA3ED;
+        Thu,  8 Nov 2018 02:42:43 +0800 (CST)
+Received: from [127.0.0.1] (10.202.226.41) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.408.0; Thu, 8 Nov 2018
+ 02:42:38 +0800
+Subject: Re: Crash report: Broken NUMA distance map causes crash on arm64
+ system
+To: Peter Zijlstra <peterz@infradead.org>
+References: <b89bf686-05bd-a3de-e7ef-4ab9ab7bdb6c@huawei.com>
+ <20181030092640.GE1459@hirez.programming.kicks-ass.net>
+ <d126099d-2698-8e3a-06ca-f229e57c3052@huawei.com>
+ <ae352fe1-3c59-dcde-fd00-2c03b4491dc6@huawei.com>
+ <20181031204622.GB3141@hirez.programming.kicks-ass.net>
+ <bf2b890a-4ce7-d0f6-0663-84a1a6e8dbd2@huawei.com>
+ <20181102105003.GK3178@hirez.programming.kicks-ass.net>
+ <be3f2f03-6d19-2c6a-e859-c946594e3af1@huawei.com>
+ <20181102121958.GL3178@hirez.programming.kicks-ass.net>
+CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Anshuman Khandual" <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Linuxarm <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+From: John Garry <john.garry@huawei.com>
+Message-ID: <98e8777a-9bdf-a18f-3972-683d67fb25df@huawei.com>
+Date: Wed, 7 Nov 2018 18:42:31 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
+MIME-Version: 1.0
+In-Reply-To: <20181102121958.GL3178@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.41]
+X-CFilter-Loop: Reflected
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnvztTMuNbDeEYAA--.303S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvAXoWDZFWUJrWrGFyUWry5Jr4ktFb_yoWDGF17Ko
+	W3A3W7XFW8GasrKF9xta17Wa9xX3WFkas3GFs7Xa45Ga4ayr4jqrW3Ga47J3W3AF1UXas7
+	AasrZr4xAa4UtFs3n29KB7ZKAUJUUUUU529EdanIXcx71UUUUj7v73VFW2AGmfu7jjvjm3
+	AaLaJ3UjIYCTnIWjp_UUU5Z7k0a2IF6w4kM7kC6x804xWl14x267AKxVWUJVW8JwAFIxvE
+	14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
+	v20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vE
+	x4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4w
+	CY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6rylc2IjII80xcxEwVAKI48JMxvI42IY
+	6xIIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0x
+	vEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF72vE
+	77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxAIcVCF04k26cxKx2IYs7xG
+	6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07b6yI8UUUUU=
+
+On 02/11/2018 12:19, Peter Zijlstra wrote:
+> On Fri, Nov 02, 2018 at 12:08:53PM +0000, John Garry wrote:
+>>> @@ -1337,7 +1353,7 @@ void sched_init_numa(void)
+>>>  	int level = 0;
+>>>  	int i, j, k;
+>>>
+>>> -	sched_domains_numa_distance = kzalloc(sizeof(int) * nr_node_ids, GFP_KERNEL);
+>>> +	sched_domains_numa_distance = kzalloc(sizeof(int) * (nr_node_ids + 1), GFP_KERNEL);
+>>
+>> Ahhhh, unfortuately this change in isolation is not fixing the crash for me.
+>> I'm still crashing in the same place repeatedly.
+>
+> Hurm.. sadness, means my reproduces doesn't reproduce quite enough :/
+> I'll see if I can somehow get something better going.
+
+Quick update: As expected, v4.20-rc1 has the same issue.
+
+I did notice that if I set the .flags and .sd_flags members for the NUMA 
+identity sched domain topology level - as done for other domains:
+
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1455,6 +1455,8 @@ void sched_init_numa(void)
+          */
+         tl[i++] = (struct sched_domain_topology_level){
+                 .mask = sd_numa_mask,
++               .sd_flags = cpu_numa_flags,
++               .flags = SDTL_OVERLAP,
+                 .numa_level = 0,
+                 SD_INIT_NAME(NODE)
+         };
+
+
+... then no crash. I doubt that this is right ... but at least a fuller 
+log to analyse (which may be useless, considering the previous point):
+
+
+[    0.000000] Booting Linux on physical CPU 0x0000010000 [0x410fd082]
+[    0.000000] Linux version 4.20.0-rc1-00003-g68cb15521541-dirty 
+(johnpgarry@johnpgarry-ThinkCentre-M93p) (gcc version 7.3.1 20180425 
+[linaro-7.3-2018.05-rc1 revision 
+38aec9a676236eaa42ca03ccb3a6c1dd0182c29f] (Linaro GCC 7.3-2018.05-rc1)) 
+#3498 SMP PREEMPT Wed Nov 7 18:28:48 GMT 2018
+[    0.000000] Machine model: Hisilicon Hip07 D05 Development Board
+[    0.000000] efi: Getting EFI parameters from FDT:
+[    0.000000] efi: EFI v2.60 by EDK II
+[    0.000000] efi:  SMBIOS=0x3f050000  SMBIOS 3.0=0x39b00000 
+ACPI=0x39bd0000  ACPI 2.0=0x39bd0014  MEMATTR=0x3cc99018 
+MEMRESERVE=0x31902e98
+[    0.000000] cannot reserve crashkernel: region overlaps reserved memory
+[    0.000000] cma: Reserved 32 MiB at 0x000000003d000000
+[    0.000000] earlycon: pl11 at MMIO32 0x00000000602b0000 (options 
+'115200n8')
+[    0.000000] printk: bootconsole [pl11] enabled
+[    0.000000] OF: NUMA: parsing numa-distance-map-v1
+[    0.000000] NUMA: Warning: invalid distance parameter, from=3 to=3 
+distance=15
+[    0.000000] NUMA: NODE_DATA [mem 0x1ffbffe840-0x1ffbffffff]
+[    0.000000] NUMA: Initmem setup node 1 [<memory-less node>]
+[    0.000000] NUMA: NODE_DATA [mem 0x41ffbfc5840-0x41ffbfc6fff]
+[    0.000000] NUMA: NODE_DATA(1) on node 2
+[    0.000000] NUMA: NODE_DATA [mem 0x41ffbfc4080-0x41ffbfc583f]
+[    0.000000] NUMA: Initmem setup node 3 [<memory-less node>]
+[    0.000000] NUMA: NODE_DATA [mem 0x41ffbfc28c0-0x41ffbfc407f]
+[    0.000000] NUMA: NODE_DATA(3) on node 2
+[    0.000000] Zone ranges:
+[    0.000000]   DMA32    [mem 0x0000000000000000-0x00000000ffffffff]
+[    0.000000]   Normal   [mem 0x0000000100000000-0x0000041ffbffffff]
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000000000000-0x0000000031902fff]
+[    0.000000]   node   0: [mem 0x0000000031903000-0x0000000031906fff]
+[    0.000000]   node   0: [mem 0x0000000031907000-0x000000003999ffff]
+[    0.000000]   node   0: [mem 0x00000000399a0000-0x0000000039a3ffff]
+[    0.000000]   node   0: [mem 0x0000000039a40000-0x0000000039a8ffff]
+[    0.000000]   node   0: [mem 0x0000000039a90000-0x0000000039a9ffff]
+[    0.000000]   node   0: [mem 0x0000000039aa0000-0x0000000039aeffff]
+[    0.000000]   node   0: [mem 0x0000000039af0000-0x0000000039bbffff]
+[    0.000000]   node   0: [mem 0x0000000039bc0000-0x0000000039bdffff]
+[    0.000000]   node   0: [mem 0x0000000039be0000-0x000000003a05ffff]
+[    0.000000]   node   0: [mem 0x000000003a060000-0x000000003f04ffff]
+[    0.000000]   node   0: [mem 0x000000003f050000-0x000000003f07ffff]
+[    0.000000]   node   0: [mem 0x000000003f080000-0x000000003fbfffff]
+[    0.000000]   node   0: [mem 0x0000001040000000-0x0000001ffbffffff]
+[    0.000000]   node   2: [mem 0x0000041000000000-0x0000041ffbffffff]
+[    0.000000] Zeroed struct page in unavailable ranges: 148 pages
+[    0.000000] Initmem setup node 0 [mem 
+0x0000000000000000-0x0000001ffbffffff]
+[    0.000000] On node 0 totalpages: 16759808
+[    0.000000]   DMA32 zone: 4080 pages used for memmap
+[    0.000000]   DMA32 zone: 0 pages reserved
+[    0.000000]   DMA32 zone: 261120 pages, LIFO batch:63
+[    0.000000]   Normal zone: 257792 pages used for memmap
+[    0.000000]   Normal zone: 16498688 pages, LIFO batch:63
+[    0.000000] Could not find start_pfn for node 1
+[    0.000000] Initmem setup node 1 [mem 
+0x0000000000000000-0x0000000000000000]
+[    0.000000] On node 1 totalpages: 0
+[    0.000000] Initmem setup node 2 [mem 
+0x0000041000000000-0x0000041ffbffffff]
+[    0.000000] On node 2 totalpages: 16760832
+[    0.000000]   Normal zone: 261888 pages used for memmap
+[    0.000000]   Normal zone: 16760832 pages, LIFO batch:63
+[    0.000000] Could not find start_pfn for node 3
+[    0.000000] Initmem setup node 3 [mem 
+0x0000000000000000-0x0000000000000000]
+[    0.000000] On node 3 totalpages: 0
+[    0.000000] kasan: KernelAddressSanitizer initialized
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: PSCIv1.0 detected in firmware.
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+[    0.000000] psci: MIGRATE_INFO_TYPE not supported.
+[    0.000000] psci: SMC Calling Convention v1.0
+[    0.000000] random: get_random_bytes called from 
+start_kernel+0x10c/0x514 with crng_init=0
+[    0.000000] percpu: Embedded 29 pages/cpu @(____ptrval____) s81752 
+r8192 d28840 u118784
+[    0.000000] pcpu-alloc: s81752 r8192 d28840 u118784 alloc=29*4096
+[    0.000000] pcpu-alloc: [0] 00 [0] 01 [0] 02 [0] 03 [0] 04 [0] 05 [0] 
+06 [0] 07
+[    0.000000] pcpu-alloc: [0] 08 [0] 09 [0] 10 [0] 11 [0] 12 [0] 13 [0] 
+14 [0] 15
+[    0.000000] pcpu-alloc: [1] 16 [1] 17 [1] 18 [1] 19 [1] 20 [1] 21 [1] 
+22 [1] 23
+[    0.000000] pcpu-alloc: [1] 24 [1] 25 [1] 26 [1] 27 [1] 28 [1] 29 [1] 
+30 [1] 31
+[    0.000000] pcpu-alloc: [2] 32 [2] 33 [2] 34 [2] 35 [2] 36 [2] 37 [2] 
+38 [2] 39
+[    0.000000] pcpu-alloc: [2] 40 [2] 41 [2] 42 [2] 43 [2] 44 [2] 45 [2] 
+46 [2] 47
+[    0.000000] pcpu-alloc: [3] 48 [3] 49 [3] 50 [3] 51 [3] 52 [3] 53 [3] 
+54 [3] 55
+[    0.000000] pcpu-alloc: [3] 56 [3] 57 [3] 58 [3] 59 [3] 60 [3] 61 [3] 
+62 [3] 63
+[    0.000000] Detected PIPT I-cache on CPU0
+[    0.000000] CPU features: enabling workaround for EL2 vector hardening
+[    0.000000] CPU features: detected: Kernel page table isolation (KPTI)
+[    0.000000] Built 4 zonelists, mobility grouping on.  Total pages: 
+32996880
+[    0.000000] Policy zone: Normal
+[    0.000000] Kernel command line: BOOT_IMAGE=/john/Image rdinit=/init 
+crashkernel=256M@32M console=ttyAMA0,115200 acpi=off pcie_aspm=off 
+earlycon sched_debug loglevel=7
+[    0.000000] PCIe ASPM is disabled
+[    0.000000] printk: log_buf_len individual max cpu contribution: 4096 
+bytes
+[    0.000000] printk: log_buf_len total cpu_extra contributions: 258048 
+bytes
+[    0.000000] printk: log_buf_len min size: 131072 bytes
+[    0.000000] printk: log_buf_len: 524288 bytes
+[    0.000000] printk: early log buf free: 125080(95%)
+[    0.000000] software IO TLB: mapped [mem 0x359a0000-0x399a0000] (64MB)
+[    0.000000] Memory: 114779408K/134082560K available (9532K kernel 
+code, 6780K rwdata, 6804K rodata, 1408K init, 8717K bss, 19270384K 
+reserved, 32768K cma-reserved)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=64, Nodes=4
+[    0.000000] rcu: Preemptible hierarchical RCU implementation.
+[    0.000000]     Tasks RCU enabled.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay 
+is 25 jiffies.
+[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[    0.000000] GICv3: GIC: Using split EOI/Deactivate mode
+[    0.000000] GICv3: Distributor has no Range Selector support
+[    0.000000] GICv3: VLPI support, direct LPI support
+[    0.000000] GICv3: CPU0: found redistributor 10000 region 
+0:0x000000004d100000
+[    0.000000] ITS [mem 0x4c000000-0x4c03ffff]
+[    0.000000] ITS@0x000000004c000000: Using ITS number 0
+[    0.000000] GIC: enabling workaround for ITS: Hip07 erratum 161600802
+[    0.000000] ITS@0x000000004c000000: allocated 524288 Devices 
+@1dba400000 (flat, esz 8, psz 16K, shr 1)
+[    0.000000] ITS@0x000000004c000000: allocated 65536 Virtual CPUs 
+@1dbac80000 (flat, esz 8, psz 4K, shr 1)
+[    0.000000] ITS@0x000000004c000000: allocated 512 Interrupt 
+Collections @1dbac39000 (flat, esz 8, psz 4K, shr 1)
+[    0.000000] ITS [mem 0x6c000000-0x6c03ffff]
+[    0.000000] ITS@0x000000006c000000: Using ITS number 1
+[    0.000000] GIC: enabling workaround for ITS: Hip07 erratum 161600802
+[    0.000000] ITS@0x000000006c000000: allocated 524288 Devices 
+@1dba000000 (flat, esz 8, psz 16K, shr 1)
+[    0.000000] ITS@0x000000006c000000: allocated 65536 Virtual CPUs 
+@1dbad00000 (flat, esz 8, psz 4K, shr 1)
+[    0.000000] ITS@0x000000006c000000: allocated 512 Interrupt 
+Collections @1dbac3a000 (flat, esz 8, psz 4K, shr 1)
+[    0.000000] ITS [mem 0xc6000000-0xc603ffff]
+[    0.000000] ITS@0x00000000c6000000: Using ITS number 2
+[    0.000000] GIC: enabling workaround for ITS: Hip07 erratum 161600802
+[    0.000000] ITS@0x00000000c6000000: allocated 524288 Devices 
+@1db9c00000 (flat, esz 8, psz 16K, shr 1)
+[    0.000000] ITS@0x00000000c6000000: allocated 65536 Virtual CPUs 
+@1dbad80000 (flat, esz 8, psz 4K, shr 1)
+[    0.000000] ITS@0x00000000c6000000: allocated 512 Interrupt 
+Collections @1dbac3c000 (flat, esz 8, psz 4K, shr 1)
+[    0.000000] ITS [mem 0x8c6000000-0x8c603ffff]
+[    0.000000] ITS@0x00000008c6000000: Using ITS number 3
+[    0.000000] GIC: enabling workaround for ITS: Hip07 erratum 161600802
+[    0.000000] ITS@0x00000008c6000000: allocated 524288 Devices 
+@1db9800000 (flat, esz 8, psz 16K, shr 1)
+[    0.000000] ITS@0x00000008c6000000: allocated 65536 Virtual CPUs 
+@1dbae00000 (flat, esz 8, psz 4K, shr 1)
+[    0.000000] ITS@0x00000008c6000000: allocated 512 Interrupt 
+Collections @1dbac3d000 (flat, esz 8, psz 4K, shr 1)
+[    0.000000] ITS [mem 0x4004c000000-0x4004c03ffff]
+[    0.000000] ITS@0x000004004c000000: Using ITS number 4
+[    0.000000] GIC: enabling workaround for ITS: Hip07 erratum 161600802
+[    0.000000] ITS@0x000004004c000000: allocated 524288 Devices 
+@1db9400000 (flat, esz 8, psz 16K, shr 1)
+[    0.000000] ITS@0x000004004c000000: allocated 65536 Virtual CPUs 
+@1dbaf00000 (flat, esz 8, psz 4K, shr 1)
+[    0.000000] ITS@0x000004004c000000: allocated 512 Interrupt 
+Collections @1dbae90000 (flat, esz 8, psz 4K, shr 1)
+[    0.000000] ITS [mem 0x4006c000000-0x4006c03ffff]
+[    0.000000] ITS@0x000004006c000000: Using ITS number 5
+[    0.000000] GIC: enabling workaround for ITS: Hip07 erratum 161600802
+[    0.000000] ITS@0x000004006c000000: allocated 524288 Devices 
+@1db9000000 (flat, esz 8, psz 16K, shr 1)
+[    0.000000] ITS@0x000004006c000000: allocated 65536 Virtual CPUs 
+@1dbaf80000 (flat, esz 8, psz 4K, shr 1)
+[    0.000000] ITS@0x000004006c000000: allocated 512 Interrupt 
+Collections @1dbae92000 (flat, esz 8, psz 4K, shr 1)
+[    0.000000] ITS [mem 0x400c6000000-0x400c603ffff]
+[    0.000000] ITS@0x00000400c6000000: Using ITS number 6
+[    0.000000] GIC: enabling workaround for ITS: Hip07 erratum 161600802
+[    0.000000] ITS@0x00000400c6000000: allocated 524288 Devices 
+@1db8c00000 (flat, esz 8, psz 16K, shr 1)
+[    0.000000] ITS@0x00000400c6000000: allocated 65536 Virtual CPUs 
+@1db8800000 (flat, esz 8, psz 4K, shr 1)
+[    0.000000] ITS@0x00000400c6000000: allocated 512 Interrupt 
+Collections @1dbae93000 (flat, esz 8, psz 4K, shr 1)
+[    0.000000] ITS [mem 0x408c6000000-0x408c603ffff]
+[    0.000000] ITS@0x00000408c6000000: Using ITS number 7
+[    0.000000] GIC: enabling workaround for ITS: Hip07 erratum 161600802
+[    0.000000] ITS@0x00000408c6000000: allocated 524288 Devices 
+@1db8400000 (flat, esz 8, psz 16K, shr 1)
+[    0.000000] ITS@0x00000408c6000000: allocated 65536 Virtual CPUs 
+@1db8880000 (flat, esz 8, psz 4K, shr 1)
+[    0.000000] ITS@0x00000408c6000000: allocated 512 Interrupt 
+Collections @1dbae94000 (flat, esz 8, psz 4K, shr 1)
+[    0.000000] GICv3: using LPI property table @0x0000001dbaed0000
+[    0.000000] ITS: Using DirectLPI for VPE invalidation
+[    0.000000] ITS: Enabling GICv4 support
+[    0.000000] GICv3: CPU0: using allocated LPI pending table 
+@0x0000001dbaee0000
+[    0.000000] arch_timer: cp15 timer(s) running at 50.00MHz (phys).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff 
+max_cycles: 0xb8812736b, max_idle_ns: 440795202655 ns
+[    0.000002] sched_clock: 56 bits at 50MHz, resolution 20ns, wraps 
+every 4398046511100ns
+[    0.008704] Console: colour dummy device 80x25
+[    0.013312] mempolicy: Enabling automatic NUMA balancing. Configure 
+with numa_balancing= or the kernel.numa_balancing sysctl
+[    0.024688] Calibrating delay loop (skipped), value calculated using 
+timer frequency.. 100.00 BogoMIPS (lpj=200000)
+[    0.035246] pid_max: default: 65536 minimum: 512
+[    0.040090] LSM: Security Framework initializing
+[    0.075362] Dentry cache hash table entries: 8388608 (order: 14, 
+67108864 bytes)
+[    0.097804] Inode-cache hash table entries: 4194304 (order: 13, 
+33554432 bytes)
+[    0.105781] Mount-cache hash table entries: 131072 (order: 8, 1048576 
+bytes)
+[    0.113382] Mountpoint-cache hash table entries: 131072 (order: 8, 
+1048576 bytes)
+[    0.181076] ASID allocator initialised with 32768 entries
+[    0.194552] rcu: Hierarchical SRCU implementation.
+[    0.207491] Platform MSI: interrupt-controller@4c000000 domain created
+[    0.214116] Platform MSI: interrupt-controller@6c000000 domain created
+[    0.220732] Platform MSI: interrupt-controller@c6000000 domain created
+[    0.227348] Platform MSI: interrupt-controller@8,c6000000 domain created
+[    0.234147] Platform MSI: interrupt-controller@400,4c000000 domain 
+created
+[    0.241114] Platform MSI: interrupt-controller@400,6c000000 domain 
+created
+[    0.248079] Platform MSI: interrupt-controller@400,c6000000 domain 
+created
+[    0.255048] Platform MSI: interrupt-controller@408,c6000000 domain 
+created
+[    0.262092] PCI/MSI: 
+/interrupt-controller@4d000000/interrupt-controller@4c000000 domain created
+[    0.270994] PCI/MSI: 
+/interrupt-controller@4d000000/interrupt-controller@6c000000 domain created
+[    0.279895] PCI/MSI: 
+/interrupt-controller@4d000000/interrupt-controller@c6000000 domain created
+[    0.288795] PCI/MSI: 
+/interrupt-controller@4d000000/interrupt-controller@8,c6000000 domain 
+created
+[    0.297872] PCI/MSI: 
+/interrupt-controller@4d000000/interrupt-controller@400,4c000000 domain 
+created
+[    0.307124] PCI/MSI: 
+/interrupt-controller@4d000000/interrupt-controller@400,6c000000 domain 
+created
+[    0.316376] PCI/MSI: 
+/interrupt-controller@4d000000/interrupt-controller@400,c6000000 domain 
+created
+[    0.325628] PCI/MSI: 
+/interrupt-controller@4d000000/interrupt-controller@408,c6000000 domain 
+created
+[    0.336346] Remapping and enabling EFI services.
+[    0.349031] smp: Bringing up secondary CPUs ...
+[    0.436257] Detected PIPT I-cache on CPU1
+[    0.436274] GICv3: CPU1: found redistributor 10001 region 
+0:0x000000004d140000
+[    0.436295] GICv3: CPU1: using allocated LPI pending table 
+@0x0000001dbaef0000
+[    0.436418] CPU1: Booted secondary processor 0x0000010001 [0x410fd082]
+[    0.518922] Detected PIPT I-cache on CPU2
+[    0.518933] GICv3: CPU2: found redistributor 10002 region 
+0:0x000000004d180000
+[    0.518946] GICv3: CPU2: using allocated LPI pending table 
+@0x0000001db8900000
+[    0.519054] CPU2: Booted secondary processor 0x0000010002 [0x410fd082]
+[    0.601589] Detected PIPT I-cache on CPU3
+[    0.601601] GICv3: CPU3: found redistributor 10003 region 
+0:0x000000004d1c0000
+[    0.601614] GICv3: CPU3: using allocated LPI pending table 
+@0x0000001db8910000
+[    0.601721] CPU3: Booted secondary processor 0x0000010003 [0x410fd082]
+[    0.684259] Detected PIPT I-cache on CPU4
+[    0.684272] GICv3: CPU4: found redistributor 10100 region 
+0:0x000000004d200000
+[    0.684287] GICv3: CPU4: using allocated LPI pending table 
+@0x0000001db8920000
+[    0.684394] CPU4: Booted secondary processor 0x0000010100 [0x410fd082]
+[    0.766926] Detected PIPT I-cache on CPU5
+[    0.766938] GICv3: CPU5: found redistributor 10101 region 
+0:0x000000004d240000
+[    0.766950] GICv3: CPU5: using allocated LPI pending table 
+@0x0000001db8930000
+[    0.767059] CPU5: Booted secondary processor 0x0000010101 [0x410fd082]
+[    0.849594] Detected PIPT I-cache on CPU6
+[    0.849606] GICv3: CPU6: found redistributor 10102 region 
+0:0x000000004d280000
+[    0.849619] GICv3: CPU6: using allocated LPI pending table 
+@0x0000001db8940000
+[    0.849724] CPU6: Booted secondary processor 0x0000010102 [0x410fd082]
+[    0.932265] Detected PIPT I-cache on CPU7
+[    0.932277] GICv3: CPU7: found redistributor 10103 region 
+0:0x000000004d2c0000
+[    0.932290] GICv3: CPU7: using allocated LPI pending table 
+@0x0000001db8950000
+[    0.932398] CPU7: Booted secondary processor 0x0000010103 [0x410fd082]
+[    1.014937] Detected PIPT I-cache on CPU8
+[    1.014951] GICv3: CPU8: found redistributor 10200 region 
+0:0x000000004d300000
+[    1.014966] GICv3: CPU8: using allocated LPI pending table 
+@0x0000001db8960000
+[    1.015075] CPU8: Booted secondary processor 0x0000010200 [0x410fd082]
+[    1.097605] Detected PIPT I-cache on CPU9
+[    1.097617] GICv3: CPU9: found redistributor 10201 region 
+0:0x000000004d340000
+[    1.097630] GICv3: CPU9: using allocated LPI pending table 
+@0x0000001db8970000
+[    1.097736] CPU9: Booted secondary processor 0x0000010201 [0x410fd082]
+[    1.180275] Detected PIPT I-cache on CPU10
+[    1.180288] GICv3: CPU10: found redistributor 10202 region 
+0:0x000000004d380000
+[    1.180301] GICv3: CPU10: using allocated LPI pending table 
+@0x0000001db8980000
+[    1.180407] CPU10: Booted secondary processor 0x0000010202 [0x410fd082]
+[    1.262946] Detected PIPT I-cache on CPU11
+[    1.262958] GICv3: CPU11: found redistributor 10203 region 
+0:0x000000004d3c0000
+[    1.262972] GICv3: CPU11: using allocated LPI pending table 
+@0x0000001db8990000
+[    1.263079] CPU11: Booted secondary processor 0x0000010203 [0x410fd082]
+[    1.345617] Detected PIPT I-cache on CPU12
+[    1.345632] GICv3: CPU12: found redistributor 10300 region 
+0:0x000000004d400000
+[    1.345648] GICv3: CPU12: using allocated LPI pending table 
+@0x0000001db89a0000
+[    1.345756] CPU12: Booted secondary processor 0x0000010300 [0x410fd082]
+[    1.428285] Detected PIPT I-cache on CPU13
+[    1.428297] GICv3: CPU13: found redistributor 10301 region 
+0:0x000000004d440000
+[    1.428311] GICv3: CPU13: using allocated LPI pending table 
+@0x0000001db89b0000
+[    1.428419] CPU13: Booted secondary processor 0x0000010301 [0x410fd082]
+[    1.510954] Detected PIPT I-cache on CPU14
+[    1.510967] GICv3: CPU14: found redistributor 10302 region 
+0:0x000000004d480000
+[    1.510981] GICv3: CPU14: using allocated LPI pending table 
+@0x0000001db89c0000
+[    1.511089] CPU14: Booted secondary processor 0x0000010302 [0x410fd082]
+[    1.593637] Detected PIPT I-cache on CPU15
+[    1.593650] GICv3: CPU15: found redistributor 10303 region 
+0:0x000000004d4c0000
+[    1.593664] GICv3: CPU15: using allocated LPI pending table 
+@0x0000001db89d0000
+[    1.593770] CPU15: Booted secondary processor 0x0000010303 [0x410fd082]
+[    1.675970] Detected PIPT I-cache on CPU16
+[    1.675988] GICv3: CPU16: found redistributor 30000 region 
+1:0x000000006d100000
+[    1.676008] GICv3: CPU16: using allocated LPI pending table 
+@0x0000001db89e0000
+[    1.676162] CPU16: Booted secondary processor 0x0000030000 [0x410fd082]
+[    1.758640] Detected PIPT I-cache on CPU17
+[    1.758655] GICv3: CPU17: found redistributor 30001 region 
+1:0x000000006d140000
+[    1.758671] GICv3: CPU17: using allocated LPI pending table 
+@0x0000001db89f0000
+[    1.758819] CPU17: Booted secondary processor 0x0000030001 [0x410fd082]
+[    1.841313] Detected PIPT I-cache on CPU18
+[    1.841328] GICv3: CPU18: found redistributor 30002 region 
+1:0x000000006d180000
+[    1.841340] GICv3: CPU18: using allocated LPI pending table 
+@0x0000001db8a00000
+[    1.841488] CPU18: Booted secondary processor 0x0000030002 [0x410fd082]
+[    1.923986] Detected PIPT I-cache on CPU19
+[    1.924002] GICv3: CPU19: found redistributor 30003 region 
+1:0x000000006d1c0000
+[    1.924013] GICv3: CPU19: using allocated LPI pending table 
+@0x0000001db8a10000
+[    1.924162] CPU19: Booted secondary processor 0x0000030003 [0x410fd082]
+[    2.006664] Detected PIPT I-cache on CPU20
+[    2.006683] GICv3: CPU20: found redistributor 30100 region 
+1:0x000000006d200000
+[    2.006699] GICv3: CPU20: using allocated LPI pending table 
+@0x0000001db8a20000
+[    2.006853] CPU20: Booted secondary processor 0x0000030100 [0x410fd082]
+[    2.089332] Detected PIPT I-cache on CPU21
+[    2.089348] GICv3: CPU21: found redistributor 30101 region 
+1:0x000000006d240000
+[    2.089359] GICv3: CPU21: using allocated LPI pending table 
+@0x0000001db8a30000
+[    2.089506] CPU21: Booted secondary processor 0x0000030101 [0x410fd082]
+[    2.172007] Detected PIPT I-cache on CPU22
+[    2.172023] GICv3: CPU22: found redistributor 30102 region 
+1:0x000000006d280000
+[    2.172034] GICv3: CPU22: using allocated LPI pending table 
+@0x0000001db8a40000
+[    2.172183] CPU22: Booted secondary processor 0x0000030102 [0x410fd082]
+[    2.254680] Detected PIPT I-cache on CPU23
+[    2.254695] GICv3: CPU23: found redistributor 30103 region 
+1:0x000000006d2c0000
+[    2.254708] GICv3: CPU23: using allocated LPI pending table 
+@0x0000001db8a50000
+[    2.254857] CPU23: Booted secondary processor 0x0000030103 [0x410fd082]
+[    2.337357] Detected PIPT I-cache on CPU24
+[    2.337376] GICv3: CPU24: found redistributor 30200 region 
+1:0x000000006d300000
+[    2.337392] GICv3: CPU24: using allocated LPI pending table 
+@0x0000001db8a60000
+[    2.337547] CPU24: Booted secondary processor 0x0000030200 [0x410fd082]
+[    2.420027] Detected PIPT I-cache on CPU25
+[    2.420044] GICv3: CPU25: found redistributor 30201 region 
+1:0x000000006d340000
+[    2.420055] GICv3: CPU25: using allocated LPI pending table 
+@0x0000001db8a70000
+[    2.420203] CPU25: Booted secondary processor 0x0000030201 [0x410fd082]
+[    2.502699] Detected PIPT I-cache on CPU26
+[    2.502716] GICv3: CPU26: found redistributor 30202 region 
+1:0x000000006d380000
+[    2.502727] GICv3: CPU26: using allocated LPI pending table 
+@0x0000001db8a80000
+[    2.502875] CPU26: Booted secondary processor 0x0000030202 [0x410fd082]
+[    2.585373] Detected PIPT I-cache on CPU27
+[    2.585390] GICv3: CPU27: found redistributor 30203 region 
+1:0x000000006d3c0000
+[    2.585402] GICv3: CPU27: using allocated LPI pending table 
+@0x0000001db8a90000
+[    2.585551] CPU27: Booted secondary processor 0x0000030203 [0x410fd082]
+[    2.668052] Detected PIPT I-cache on CPU28
+[    2.668072] GICv3: CPU28: found redistributor 30300 region 
+1:0x000000006d400000
+[    2.668088] GICv3: CPU28: using allocated LPI pending table 
+@0x0000001db8aa0000
+[    2.668241] CPU28: Booted secondary processor 0x0000030300 [0x410fd082]
+[    2.750722] Detected PIPT I-cache on CPU29
+[    2.750739] GICv3: CPU29: found redistributor 30301 region 
+1:0x000000006d440000
+[    2.750751] GICv3: CPU29: using allocated LPI pending table 
+@0x0000001db8ab0000
+[    2.750900] CPU29: Booted secondary processor 0x0000030301 [0x410fd082]
+[    2.825388] Detected PIPT I-cache on CPU30
+[    2.825405] GICv3: CPU30: found redistributor 30302 region 
+1:0x000000006d480000
+[    2.825417] GICv3: CPU30: using allocated LPI pending table 
+@0x0000001db8ac0000
+[    2.825567] CPU30: Booted secondary processor 0x0000030302 [0x410fd082]
+[    2.908063] Detected PIPT I-cache on CPU31
+[    2.908080] GICv3: CPU31: found redistributor 30303 region 
+1:0x000000006d4c0000
+[    2.908093] GICv3: CPU31: using allocated LPI pending table 
+@0x0000001db8ad0000
+[    2.908242] CPU31: Booted secondary processor 0x0000030303 [0x410fd082]
+[    2.990430] Detected PIPT I-cache on CPU32
+[    2.990477] GICv3: CPU32: found redistributor 50000 region 
+2:0x000004004d100000
+[    2.990514] GICv3: CPU32: using allocated LPI pending table 
+@0x0000001db8ae0000
+[    2.990675] CPU32: Booted secondary processor 0x0000050000 [0x410fd082]
+[    3.073089] Detected PIPT I-cache on CPU33
+[    3.073118] GICv3: CPU33: found redistributor 50001 region 
+2:0x000004004d140000
+[    3.073130] GICv3: CPU33: using allocated LPI pending table 
+@0x0000001db8af0000
+[    3.073239] CPU33: Booted secondary processor 0x0000050001 [0x410fd082]
+[    3.155775] Detected PIPT I-cache on CPU34
+[    3.155803] GICv3: CPU34: found redistributor 50002 region 
+2:0x000004004d180000
+[    3.155819] GICv3: CPU34: using allocated LPI pending table 
+@0x0000001db8b00000
+[    3.155928] CPU34: Booted secondary processor 0x0000050002 [0x410fd082]
+[    3.238461] Detected PIPT I-cache on CPU35
+[    3.238490] GICv3: CPU35: found redistributor 50003 region 
+2:0x000004004d1c0000
+[    3.238503] GICv3: CPU35: using allocated LPI pending table 
+@0x0000001db8b10000
+[    3.238613] CPU35: Booted secondary processor 0x0000050003 [0x410fd082]
+[    3.321152] Detected PIPT I-cache on CPU36
+[    3.321183] GICv3: CPU36: found redistributor 50100 region 
+2:0x000004004d200000
+[    3.321199] GICv3: CPU36: using allocated LPI pending table 
+@0x0000001db8b20000
+[    3.321312] CPU36: Booted secondary processor 0x0000050100 [0x410fd082]
+[    3.403837] Detected PIPT I-cache on CPU37
+[    3.403867] GICv3: CPU37: found redistributor 50101 region 
+2:0x000004004d240000
+[    3.403881] GICv3: CPU37: using allocated LPI pending table 
+@0x0000001db8b30000
+[    3.403990] CPU37: Booted secondary processor 0x0000050101 [0x410fd082]
+[    3.486525] Detected PIPT I-cache on CPU38
+[    3.486555] GICv3: CPU38: found redistributor 50102 region 
+2:0x000004004d280000
+[    3.486567] GICv3: CPU38: using allocated LPI pending table 
+@0x0000001db8b40000
+[    3.486677] CPU38: Booted secondary processor 0x0000050102 [0x410fd082]
+[    3.569212] Detected PIPT I-cache on CPU39
+[    3.569242] GICv3: CPU39: found redistributor 50103 region 
+2:0x000004004d2c0000
+[    3.569255] GICv3: CPU39: using allocated LPI pending table 
+@0x0000001db8b50000
+[    3.569365] CPU39: Booted secondary processor 0x0000050103 [0x410fd082]
+[    3.651903] Detected PIPT I-cache on CPU40
+[    3.651934] GICv3: CPU40: found redistributor 50200 region 
+2:0x000004004d300000
+[    3.651949] GICv3: CPU40: using allocated LPI pending table 
+@0x0000001db8b60000
+[    3.652061] CPU40: Booted secondary processor 0x0000050200 [0x410fd082]
+[    3.734587] Detected PIPT I-cache on CPU41
+[    3.734617] GICv3: CPU41: found redistributor 50201 region 
+2:0x000004004d340000
+[    3.734631] GICv3: CPU41: using allocated LPI pending table 
+@0x0000001db8b70000
+[    3.734742] CPU41: Booted secondary processor 0x0000050201 [0x410fd082]
+[    3.817274] Detected PIPT I-cache on CPU42
+[    3.817304] GICv3: CPU42: found redistributor 50202 region 
+2:0x000004004d380000
+[    3.817319] GICv3: CPU42: using allocated LPI pending table 
+@0x0000001db8b80000
+[    3.817431] CPU42: Booted secondary processor 0x0000050202 [0x410fd082]
+[    3.899963] Detected PIPT I-cache on CPU43
+[    3.899993] GICv3: CPU43: found redistributor 50203 region 
+2:0x000004004d3c0000
+[    3.900006] GICv3: CPU43: using allocated LPI pending table 
+@0x0000001db8b90000
+[    3.900117] CPU43: Booted secondary processor 0x0000050203 [0x410fd082]
+[    3.982652] Detected PIPT I-cache on CPU44
+[    3.982684] GICv3: CPU44: found redistributor 50300 region 
+2:0x000004004d400000
+[    3.982700] GICv3: CPU44: using allocated LPI pending table 
+@0x0000001db8ba0000
+[    3.982814] CPU44: Booted secondary processor 0x0000050300 [0x410fd082]
+[    4.065337] Detected PIPT I-cache on CPU45
+[    4.065367] GICv3: CPU45: found redistributor 50301 region 
+2:0x000004004d440000
+[    4.065381] GICv3: CPU45: using allocated LPI pending table 
+@0x0000001db8bb0000
+[    4.065492] CPU45: Booted secondary processor 0x0000050301 [0x410fd082]
+[    4.148024] Detected PIPT I-cache on CPU46
+[    4.148055] GICv3: CPU46: found redistributor 50302 region 
+2:0x000004004d480000
+[    4.148070] GICv3: CPU46: using allocated LPI pending table 
+@0x0000001db8bc0000
+[    4.148181] CPU46: Booted secondary processor 0x0000050302 [0x410fd082]
+[    4.230729] Detected PIPT I-cache on CPU47
+[    4.230760] GICv3: CPU47: found redistributor 50303 region 
+2:0x000004004d4c0000
+[    4.230775] GICv3: CPU47: using allocated LPI pending table 
+@0x0000001db8bd0000
+[    4.230885] CPU47: Booted secondary processor 0x0000050303 [0x410fd082]
+[    4.313078] Detected PIPT I-cache on CPU48
+[    4.313115] GICv3: CPU48: found redistributor 70000 region 
+3:0x000004006d100000
+[    4.313134] GICv3: CPU48: using allocated LPI pending table 
+@0x0000001db8be0000
+[    4.313291] CPU48: Booted secondary processor 0x0000070000 [0x410fd082]
+[    4.395762] Detected PIPT I-cache on CPU49
+[    4.395796] GICv3: CPU49: found redistributor 70001 region 
+3:0x000004006d140000
+[    4.395811] GICv3: CPU49: using allocated LPI pending table 
+@0x0000001db8bf0000
+[    4.395960] CPU49: Booted secondary processor 0x0000070001 [0x410fd082]
+[    4.478451] Detected PIPT I-cache on CPU50
+[    4.478484] GICv3: CPU50: found redistributor 70002 region 
+3:0x000004006d180000
+[    4.478508] GICv3: CPU50: using allocated LPI pending table 
+@0x0000001db8000000
+[    4.478659] CPU50: Booted secondary processor 0x0000070002 [0x410fd082]
+[    4.561139] Detected PIPT I-cache on CPU51
+[    4.561173] GICv3: CPU51: found redistributor 70003 region 
+3:0x000004006d1c0000
+[    4.561189] GICv3: CPU51: using allocated LPI pending table 
+@0x0000001db8010000
+[    4.561338] CPU51: Booted secondary processor 0x0000070003 [0x410fd082]
+[    4.643831] Detected PIPT I-cache on CPU52
+[    4.643869] GICv3: CPU52: found redistributor 70100 region 
+3:0x000004006d200000
+[    4.643889] GICv3: CPU52: using allocated LPI pending table 
+@0x0000001db8020000
+[    4.644046] CPU52: Booted secondary processor 0x0000070100 [0x410fd082]
+[    4.726517] Detected PIPT I-cache on CPU53
+[    4.726551] GICv3: CPU53: found redistributor 70101 region 
+3:0x000004006d240000
+[    4.726566] GICv3: CPU53: using allocated LPI pending table 
+@0x0000001db8030000
+[    4.726715] CPU53: Booted secondary processor 0x0000070101 [0x410fd082]
+[    4.809206] Detected PIPT I-cache on CPU54
+[    4.809240] GICv3: CPU54: found redistributor 70102 region 
+3:0x000004006d280000
+[    4.809256] GICv3: CPU54: using allocated LPI pending table 
+@0x0000001db8040000
+[    4.809406] CPU54: Booted secondary processor 0x0000070102 [0x410fd082]
+[    4.891894] Detected PIPT I-cache on CPU55
+[    4.891929] GICv3: CPU55: found redistributor 70103 region 
+3:0x000004006d2c0000
+[    4.891944] GICv3: CPU55: using allocated LPI pending table 
+@0x0000001db8050000
+[    4.892093] CPU55: Booted secondary processor 0x0000070103 [0x410fd082]
+[    4.974586] Detected PIPT I-cache on CPU56
+[    4.974624] GICv3: CPU56: found redistributor 70200 region 
+3:0x000004006d300000
+[    4.974646] GICv3: CPU56: using allocated LPI pending table 
+@0x0000001db8060000
+[    4.974803] CPU56: Booted secondary processor 0x0000070200 [0x410fd082]
+[    5.057271] Detected PIPT I-cache on CPU57
+[    5.057306] GICv3: CPU57: found redistributor 70201 region 
+3:0x000004006d340000
+[    5.057321] GICv3: CPU57: using allocated LPI pending table 
+@0x0000001db8070000
+[    5.057471] CPU57: Booted secondary processor 0x0000070201 [0x410fd082]
+[    5.139961] Detected PIPT I-cache on CPU58
+[    5.139996] GICv3: CPU58: found redistributor 70202 region 
+3:0x000004006d380000
+[    5.140011] GICv3: CPU58: using allocated LPI pending table 
+@0x0000001db8080000
+[    5.140162] CPU58: Booted secondary processor 0x0000070202 [0x410fd082]
+[    5.222651] Detected PIPT I-cache on CPU59
+[    5.222686] GICv3: CPU59: found redistributor 70203 region 
+3:0x000004006d3c0000
+[    5.222710] GICv3: CPU59: using allocated LPI pending table 
+@0x0000001db8090000
+[    5.222859] CPU59: Booted secondary processor 0x0000070203 [0x410fd082]
+[    5.305342] Detected PIPT I-cache on CPU60
+[    5.305380] GICv3: CPU60: found redistributor 70300 region 
+3:0x000004006d400000
+[    5.305402] GICv3: CPU60: using allocated LPI pending table 
+@0x0000001db80a0000
+[    5.305559] CPU60: Booted secondary processor 0x0000070300 [0x410fd082]
+[    5.388027] Detected PIPT I-cache on CPU61
+[    5.388062] GICv3: CPU61: found redistributor 70301 region 
+3:0x000004006d440000
+[    5.388086] GICv3: CPU61: using allocated LPI pending table 
+@0x0000001db80b0000
+[    5.388235] CPU61: Booted secondary processor 0x0000070301 [0x410fd082]
+[    5.470714] Detected PIPT I-cache on CPU62
+[    5.470750] GICv3: CPU62: found redistributor 70302 region 
+3:0x000004006d480000
+[    5.470766] GICv3: CPU62: using allocated LPI pending table 
+@0x0000001db80c0000
+[    5.470916] CPU62: Booted secondary processor 0x0000070302 [0x410fd082]
+[    5.553405] Detected PIPT I-cache on CPU63
+[    5.553440] GICv3: CPU63: found redistributor 70303 region 
+3:0x000004006d4c0000
+[    5.553457] GICv3: CPU63: using allocated LPI pending table 
+@0x0000001db80d0000
+[    5.553606] CPU63: Booted secondary processor 0x0000070303 [0x410fd082]
+[    5.553763] smp: Brought up 4 nodes, 64 CPUs
+[    7.169648] SMP: Total of 64 processors activated.
+[    7.174498] CPU features: detected: GIC system register CPU interface
+[    7.181049] CPU features: detected: 32-bit EL0 Support
+[    7.186248] CPU features: detected: CRC32 instructions
+[   10.204147] CPU: All CPU(s) started at EL2
+[   10.208466] alternatives: patching kernel code
+[   10.213364] ERROR: Node-distance not symmetric
+
+[   10.219353]   10 15 20 25
+[   10.222085]   15 10 25 30
+[   10.224821]   20 25 10 15
+[   10.227552]   10 10 15 10
+
+[   10.241326] CPU0 attaching sched-domain(s):
+[   10.241329]  domain-0: span=0-3 level=MC
+[   10.241333]   groups: 0:{ span=0 }, 1:{ span=1 }, 2:{ span=2 }, 3:{ 
+span=3 }
+[   10.241344]   domain-1: span=0-15 level=DIE
+[   10.241347]    groups: 0:{ span=0-3 cap=4096 }, 4:{ span=4-7 cap=4096 
+}, 8:{ span=8-11 cap=4096 }, 12:{ span=12-15 cap=4096 }
+[   10.241361]    domain-2: span=0-15 level=NODE
+[   10.241364]     groups: 0:{ span=0-15 cap=16384 }
+[   10.241369]     domain-3: span=0-31 level=NUMA
+[   10.241372]      groups: 0:{ span=0-15 cap=16384 }, 16:{ span=16-31 
+cap=16384 }
+[   10.241380]      domain-4: span=0-47 level=NUMA
+[   10.241383]       groups: 0:{ span=0-31 cap=32768 }, 32:{ span=32-63 
+mask=32-47 cap=32768 }
+[   10.241393] ERROR: groups don't span domain->span
+[   10.246153]       domain-5: span=0-63 level=NUMA
+[   10.246157]        groups: 0:{ span=0-47 mask=0-15 cap=49152 }
+[   10.246163] ERROR: groups don't span domain->span
+[   10.250924] CPU1 attaching sched-domain(s):
+[   10.250926]  domain-0: span=0-3 level=MC
+[   10.250929]   groups: 1:{ span=1 }, 2:{ span=2 }, 3:{ span=3 }, 0:{ 
+span=0 }
+[   10.250939]   domain-1: span=0-15 level=DIE
+[   10.250942]    groups: 0:{ span=0-3 cap=4096 }, 4:{ span=4-7 cap=4096 
+}, 8:{ span=8-11 cap=4096 }, 12:{ span=12-15 cap=4096 }
+[   10.250955]    domain-2: span=0-15 level=NODE
+[   10.250958]     groups: 0:{ span=0-15 cap=16384 }
+[   10.250963]     domain-3: span=0-31 level=NUMA
+[   10.250966]      groups: 0:{ span=0-15 cap=16384 }, 16:{ span=16-31 
+cap=16384 }
+[   10.250974]      domain-4: span=0-47 level=NUMA
+[   10.250977]       groups: 0:{ span=0-31 cap=32768 }, 32:{ span=32-63 
+mask=32-47 cap=32768 }
+[   10.250986] ERROR: groups don't span domain->span
+[   10.255745]       domain-5: span=0-63 level=NUMA
+[   10.255749]        groups: 0:{ span=0-47 mask=0-15 cap=49152 }
+[   10.255755] ERROR: groups don't span domain->span
+[   10.260512] CPU2 attaching sched-domain(s):
+[   10.260514]  domain-0: span=0-3 level=MC
+[   10.260517]   groups: 2:{ span=2 }, 3:{ span=3 }, 0:{ span=0 }, 1:{ 
+span=1 }
+[   10.260527]   domain-1: span=0-15 level=DIE
+[   10.260530]    groups: 0:{ span=0-3 cap=4096 }, 4:{ span=4-7 cap=4096 
+}, 8:{ span=8-11 cap=4096 }, 12:{ span=12-15 cap=4096 }
+[   10.260542]    domain-2: span=0-15 level=NODE
+[   10.260545]     groups: 0:{ span=0-15 cap=16384 }
+[   10.260550]     domain-3: span=0-31 level=NUMA
+[   10.260554]      groups: 0:{ span=0-15 cap=16384 }, 16:{ span=16-31 
+cap=16384 }
+[   10.260561]      domain-4: span=0-47 level=NUMA
+[   10.260565]       groups: 0:{ span=0-31 cap=32768 }, 32:{ span=32-63 
+mask=32-47 cap=32768 }
+[   10.260574] ERROR: groups don't span domain->span
+[   10.265329]       domain-5: span=0-63 level=NUMA
+[   10.265332]        groups: 0:{ span=0-47 mask=0-15 cap=49152 }
+[   10.265338] ERROR: groups don't span domain->span
+[   10.270096] CPU3 attaching sched-domain(s):
+[   10.270098]  domain-0: span=0-3 level=MC
+[   10.270101]   groups: 3:{ span=3 }, 0:{ span=0 }, 1:{ span=1 }, 2:{ 
+span=2 }
+[   10.270110]   domain-1: span=0-15 level=DIE
+[   10.270114]    groups: 0:{ span=0-3 cap=4096 }, 4:{ span=4-7 cap=4096 
+}, 8:{ span=8-11 cap=4096 }, 12:{ span=12-15 cap=4096 }
+[   10.270126]    domain-2: span=0-15 level=NODE
+[   10.270129]     groups: 0:{ span=0-15 cap=16384 }
+[   10.270134]     domain-3: span=0-31 level=NUMA
+[   10.270137]      groups: 0:{ span=0-15 cap=16384 }, 16:{ span=16-31 
+cap=16384 }
+[   10.270145]      domain-4: span=0-47 level=NUMA
+[   10.270148]       groups: 0:{ span=0-31 cap=32768 }, 32:{ span=32-63 
+mask=32-47 cap=32768 }
+[   10.270157] ERROR: groups don't span domain->span
+[   10.274912]       domain-5: span=0-63 level=NUMA
+[   10.274916]        groups: 0:{ span=0-47 mask=0-15 cap=49152 }
+[   10.274923] ERROR: groups don't span domain->span
+[   10.279679] CPU4 attaching sched-domain(s):
+[   10.279681]  domain-0: span=4-7 level=MC
+[   10.279684]   groups: 4:{ span=4 }, 5:{ span=5 }, 6:{ span=6 }, 7:{ 
+span=7 }
+[   10.279694]   domain-1: span=0-15 level=DIE
+[   10.279697]    groups: 4:{ span=4-7 cap=4096 }, 8:{ span=8-11 
+cap=4096 }, 12:{ span=12-15 cap=4096 }, 0:{ span=0-3 cap=4096 }
+[   10.279710]    domain-2: span=0-15 level=NODE
+[   10.279713]     groups: 0:{ span=0-15 cap=16384 }
+[   10.279718]     domain-3: span=0-31 level=NUMA
+[   10.279721]      groups: 0:{ span=0-15 cap=16384 }, 16:{ span=16-31 
+cap=16384 }
+[   10.279728]      domain-4: span=0-47 level=NUMA
+[   10.279731]       groups: 0:{ span=0-31 cap=32768 }, 32:{ span=32-63 
+mask=32-47 cap=32768 }
+[   10.279740] ERROR: groups don't span domain->span
+[   10.284495]       domain-5: span=0-63 level=NUMA
+[   10.284499]        groups: 0:{ span=0-47 mask=0-15 cap=49152 }
+[   10.284505] ERROR: groups don't span domain->span
+[   10.289262] CPU5 attaching sched-domain(s):
+[   10.289264]  domain-0: span=4-7 level=MC
+[   10.289267]   groups: 5:{ span=5 }, 6:{ span=6 }, 7:{ span=7 }, 4:{ 
+span=4 }
+[   10.289276]   domain-1: span=0-15 level=DIE
+[   10.289280]    groups: 4:{ span=4-7 cap=4096 }, 8:{ span=8-11 
+cap=4096 }, 12:{ span=12-15 cap=4096 }, 0:{ span=0-3 cap=4096 }
+[   10.289292]    domain-2: span=0-15 level=NODE
+[   10.289295]     groups: 0:{ span=0-15 cap=16384 }
+[   10.289300]     domain-3: span=0-31 level=NUMA
+[   10.289303]      groups: 0:{ span=0-15 cap=16384 }, 16:{ span=16-31 
+cap=16384 }
+[   10.289311]      domain-4: span=0-47 level=NUMA
+[   10.289314]       groups: 0:{ span=0-31 cap=32768 }, 32:{ span=32-63 
+mask=32-47 cap=32768 }
+[   10.289323] ERROR: groups don't span domain->span
+[   10.294079]       domain-5: span=0-63 level=NUMA
+[   10.294082]        groups: 0:{ span=0-47 mask=0-15 cap=49152 }
+[   10.294089] ERROR: groups don't span domain->span
+[   10.298846] CPU6 attaching sched-domain(s):
+[   10.298847]  domain-0: span=4-7 level=MC
+[   10.298850]   groups: 6:{ span=6 }, 7:{ span=7 }, 4:{ span=4 }, 5:{ 
+span=5 }
+[   10.298860]   domain-1: span=0-15 level=DIE
+[   10.298863]    groups: 4:{ span=4-7 cap=4096 }, 8:{ span=8-11 
+cap=4096 }, 12:{ span=12-15 cap=4096 }, 0:{ span=0-3 cap=4096 }
+[   10.298875]    domain-2: span=0-15 level=NODE
+[   10.298878]     groups: 0:{ span=0-15 cap=16384 }
+[   10.298883]     domain-3: span=0-31 level=NUMA
+[   10.298887]      groups: 0:{ span=0-15 cap=16384 }, 16:{ span=16-31 
+cap=16384 }
+[   10.298894]      domain-4: span=0-47 level=NUMA
+[   10.298897]       groups: 0:{ span=0-31 cap=32768 }, 32:{ span=32-63 
+mask=32-47 cap=32768 }
+[   10.298906] ERROR: groups don't span domain->span
+[   10.303662]       domain-5: span=0-63 level=NUMA
+[   10.303665]        groups: 0:{ span=0-47 mask=0-15 cap=49152 }
+[   10.303671] ERROR: groups don't span domain->span
+[   10.308429] CPU7 attaching sched-domain(s):
+[   10.308431]  domain-0: span=4-7 level=MC
+[   10.308434]   groups: 7:{ span=7 }, 4:{ span=4 }, 5:{ span=5 }, 6:{ 
+span=6 }
+[   10.308443]   domain-1: span=0-15 level=DIE
+[   10.308446]    groups: 4:{ span=4-7 cap=4096 }, 8:{ span=8-11 
+cap=4096 }, 12:{ span=12-15 cap=4096 }, 0:{ span=0-3 cap=4096 }
+[   10.308459]    domain-2: span=0-15 level=NODE
+[   10.308462]     groups: 0:{ span=0-15 cap=16384 }
+[   10.308467]     domain-3: span=0-31 level=NUMA
+[   10.308470]      groups: 0:{ span=0-15 cap=16384 }, 16:{ span=16-31 
+cap=16384 }
+[   10.308477]      domain-4: span=0-47 level=NUMA
+[   10.308481]       groups: 0:{ span=0-31 cap=32768 }, 32:{ span=32-63 
+mask=32-47 cap=32768 }
+[   10.308490] ERROR: groups don't span domain->span
+[   10.313245]       domain-5: span=0-63 level=NUMA
+[   10.313248]        groups: 0:{ span=0-47 mask=0-15 cap=49152 }
+[   10.313255] ERROR: groups don't span domain->span
+[   10.318012] CPU8 attaching sched-domain(s):
+[   10.318014]  domain-0: span=8-11 level=MC
+[   10.318017]   groups: 8:{ span=8 }, 9:{ span=9 }, 10:{ span=10 }, 
+11:{ span=11 }
+[   10.318027]   domain-1: span=0-15 level=DIE
+[   10.318030]    groups: 8:{ span=8-11 cap=4096 }, 12:{ span=12-15 
+cap=4096 }, 0:{ span=0-3 cap=4096 }, 4:{ span=4-7 cap=4096 }
+[   10.318043]    domain-2: span=0-15 level=NODE
+[   10.318046]     groups: 0:{ span=0-15 cap=16384 }
+[   10.318050]     domain-3: span=0-31 level=NUMA
+[   10.318053]      groups: 0:{ span=0-15 cap=16384 }, 16:{ span=16-31 
+cap=16384 }
+[   10.318061]      domain-4: span=0-47 level=NUMA
+[   10.318064]       groups: 0:{ span=0-31 cap=32768 }, 32:{ span=32-63 
+mask=32-47 cap=32768 }
+[   10.318073] ERROR: groups don't span domain->span
+[   10.322828]       domain-5: span=0-63 level=NUMA
+[   10.322832]        groups: 0:{ span=0-47 mask=0-15 cap=49151 }
+[   10.322838] ERROR: groups don't span domain->span
+[   10.327595] CPU9 attaching sched-domain(s):
+[   10.327597]  domain-0: span=8-11 level=MC
+[   10.327600]   groups: 9:{ span=9 }, 10:{ span=10 }, 11:{ span=11 }, 
+8:{ span=8 }
+[   10.327610]   domain-1: span=0-15 level=DIE
+[   10.327613]    groups: 8:{ span=8-11 cap=4096 }, 12:{ span=12-15 
+cap=4096 }, 0:{ span=0-3 cap=4096 }, 4:{ span=4-7 cap=4096 }
+[   10.327625]    domain-2: span=0-15 level=NODE
+[   10.327628]     groups: 0:{ span=0-15 cap=16384 }
+[   10.327633]     domain-3: span=0-31 level=NUMA
+[   10.327636]      groups: 0:{ span=0-15 cap=16384 }, 16:{ span=16-31 
+cap=16384 }
+[   10.327644]      domain-4: span=0-47 level=NUMA
+[   10.327647]       groups: 0:{ span=0-31 cap=32768 }, 32:{ span=32-63 
+mask=32-47 cap=32768 }
+[   10.327656] ERROR: groups don't span domain->span
+[   10.332411]       domain-5: span=0-63 level=NUMA
+[   10.332415]        groups: 0:{ span=0-47 mask=0-15 cap=49151 }
+[   10.332421] ERROR: groups don't span domain->span
+[   10.337177] CPU10 attaching sched-domain(s):
+[   10.337179]  domain-0: span=8-11 level=MC
+[   10.337182]   groups: 10:{ span=10 }, 11:{ span=11 }, 8:{ span=8 }, 
+9:{ span=9 }
+[   10.337192]   domain-1: span=0-15 level=DIE
+[   10.337195]    groups: 8:{ span=8-11 cap=4096 }, 12:{ span=12-15 
+cap=4096 }, 0:{ span=0-3 cap=4096 }, 4:{ span=4-7 cap=4096 }
+[   10.337208]    domain-2: span=0-15 level=NODE
+[   10.337211]     groups: 0:{ span=0-15 cap=16384 }
+[   10.337216]     domain-3: span=0-31 level=NUMA
+[   10.337219]      groups: 0:{ span=0-15 cap=16384 }, 16:{ span=16-31 
+cap=16384 }
+[   10.337227]      domain-4: span=0-47 level=NUMA
+[   10.337230]       groups: 0:{ span=0-31 cap=32768 }, 32:{ span=32-63 
+mask=32-47 cap=32768 }
+[   10.337238] ERROR: groups don't span domain->span
+[   10.341994]       domain-5: span=0-63 level=NUMA
+[   10.341997]        groups: 0:{ span=0-47 mask=0-15 cap=49151 }
+[   10.342003] ERROR: groups don't span domain->span
+[   10.346760] CPU11 attaching sched-domain(s):
+[   10.346762]  domain-0: span=8-11 level=MC
+[   10.346765]   groups: 11:{ span=11 }, 8:{ span=8 }, 9:{ span=9 }, 
+10:{ span=10 }
+[   10.346775]   domain-1: span=0-15 level=DIE
+[   10.346778]    groups: 8:{ span=8-11 cap=4096 }, 12:{ span=12-15 
+cap=4096 }, 0:{ span=0-3 cap=4095 }, 4:{ span=4-7 cap=4096 }
+[   10.346791]    domain-2: span=0-15 level=NODE
+[   10.346794]     groups: 0:{ span=0-15 cap=16383 }
+[   10.346799]     domain-3: span=0-31 level=NUMA
+[   10.346802]      groups: 0:{ span=0-15 cap=16384 }, 16:{ span=16-31 
+cap=16384 }
+[   10.346809]      domain-4: span=0-47 level=NUMA
+[   10.346813]       groups: 0:{ span=0-31 cap=32768 }, 32:{ span=32-63 
+mask=32-47 cap=32768 }
+[   10.346822] ERROR: groups don't span domain->span
+[   10.351577]       domain-5: span=0-63 level=NUMA
+[   10.351581]        groups: 0:{ span=0-47 mask=0-15 cap=49151 }
+[   10.351587] ERROR: groups don't span domain->span
+[   10.356344] CPU12 attaching sched-domain(s):
+[   10.356345]  domain-0: span=12-15 level=MC
+[   10.356348]   groups: 12:{ span=12 }, 13:{ span=13 }, 14:{ span=14 }, 
+15:{ span=15 }
+[   10.356358]   domain-1: span=0-15 level=DIE
+[   10.356361]    groups: 12:{ span=12-15 cap=4096 }, 0:{ span=0-3 
+cap=4095 }, 4:{ span=4-7 cap=4096 }, 8:{ span=8-11 cap=4096 }
+[   10.356374]    domain-2: span=0-15 level=NODE
+[   10.356377]     groups: 0:{ span=0-15 cap=16383 }
+[   10.356381]     domain-3: span=0-31 level=NUMA
+[   10.356385]      groups: 0:{ span=0-15 cap=16384 }, 16:{ span=16-31 
+cap=16384 }
+[   10.356392]      domain-4: span=0-47 level=NUMA
+[   10.356396]       groups: 0:{ span=0-31 cap=32768 }, 32:{ span=32-63 
+mask=32-47 cap=32768 }
+[   10.356404] ERROR: groups don't span domain->span
+[   10.361160]       domain-5: span=0-63 level=NUMA
+[   10.361163]        groups: 0:{ span=0-47 mask=0-15 cap=49151 }
+[   10.361170] ERROR: groups don't span domain->span
+[   10.365927] CPU13 attaching sched-domain(s):
+[   10.365929]  domain-0: span=12-15 level=MC
+[   10.365932]   groups: 13:{ span=13 }, 14:{ span=14 }, 15:{ span=15 }, 
+12:{ span=12 }
+[   10.365941]   domain-1: span=0-15 level=DIE
+[   10.365944]    groups: 12:{ span=12-15 cap=4096 }, 0:{ span=0-3 
+cap=4095 }, 4:{ span=4-7 cap=4096 }, 8:{ span=8-11 cap=4096 }
+[   10.365957]    domain-2: span=0-15 level=NODE
+[   10.365960]     groups: 0:{ span=0-15 cap=16383 }
+[   10.365965]     domain-3: span=0-31 level=NUMA
+[   10.365968]      groups: 0:{ span=0-15 cap=16383 }, 16:{ span=16-31 
+cap=16384 }
+[   10.365976]      domain-4: span=0-47 level=NUMA
+[   10.365979]       groups: 0:{ span=0-31 cap=32768 }, 32:{ span=32-63 
+mask=32-47 cap=32768 }
+[   10.365988] ERROR: groups don't span domain->span
+[   10.370743]       domain-5: span=0-63 level=NUMA
+[   10.370747]        groups: 0:{ span=0-47 mask=0-15 cap=49151 }
+[   10.370752] ERROR: groups don't span domain->span
+[   10.375510] CPU14 attaching sched-domain(s):
+[   10.375511]  domain-0: span=12-15 level=MC
+[   10.375514]   groups: 14:{ span=14 }, 15:{ span=15 }, 12:{ span=12 }, 
+13:{ span=13 }
+[   10.375524]   domain-1: span=0-15 level=DIE
+[   10.375527]    groups: 12:{ span=12-15 cap=4096 }, 0:{ span=0-3 
+cap=4095 }, 4:{ span=4-7 cap=4096 }, 8:{ span=8-11 cap=4096 }
+[   10.375540]    domain-2: span=0-15 level=NODE
+[   10.375543]     groups: 0:{ span=0-15 cap=16383 }
+[   10.375548]     domain-3: span=0-31 level=NUMA
+[   10.375551]      groups: 0:{ span=0-15 cap=16383 }, 16:{ span=16-31 
+cap=16384 }
+[   10.375558]      domain-4: span=0-47 level=NUMA
+[   10.375562]       groups: 0:{ span=0-31 cap=32768 }, 32:{ span=32-63 
+mask=32-47 cap=32768 }
+[   10.375570] ERROR: groups don't span domain->span
+[   10.380326]       domain-5: span=0-63 level=NUMA
+[   10.380329]        groups: 0:{ span=0-47 mask=0-15 cap=49151 }
+[   10.380336] ERROR: groups don't span domain->span
+[   10.385093] CPU15 attaching sched-domain(s):
+[   10.385095]  domain-0: span=12-15 level=MC
+[   10.385098]   groups: 15:{ span=15 }, 12:{ span=12 }, 13:{ span=13 }, 
+14:{ span=14 }
+[   10.385107]   domain-1: span=0-15 level=DIE
+[   10.385111]    groups: 12:{ span=12-15 cap=4096 }, 0:{ span=0-3 
+cap=4095 }, 4:{ span=4-7 cap=4096 }, 8:{ span=8-11 cap=4096 }
+[   10.385123]    domain-2: span=0-15 level=NODE
+[   10.385126]     groups: 0:{ span=0-15 cap=16383 }
+[   10.385131]     domain-3: span=0-31 level=NUMA
+[   10.385134]      groups: 0:{ span=0-15 cap=16383 }, 16:{ span=16-31 
+cap=16384 }
+[   10.385142]      domain-4: span=0-47 level=NUMA
+[   10.385145]       groups: 0:{ span=0-31 cap=32768 }, 32:{ span=32-63 
+mask=32-47 cap=32768 }
+[   10.385154] ERROR: groups don't span domain->span
+[   10.389909]       domain-5: span=0-63 level=NUMA
+[   10.389912]        groups: 0:{ span=0-47 mask=0-15 cap=49151 }
+[   10.389918] ERROR: groups don't span domain->span
+[   10.394685] CPU16 attaching sched-domain(s):
+[   10.394687]  domain-0: span=16-19 level=MC
+[   10.394690]   groups: 16:{ span=16 }, 17:{ span=17 }, 18:{ span=18 }, 
+19:{ span=19 }
+[   10.394700]   domain-1: span=16-31 level=DIE
+[   10.394703]    groups: 16:{ span=16-19 cap=4096 }, 20:{ span=20-23 
+cap=4096 }, 24:{ span=24-27 cap=4096 }, 28:{ span=28-31 cap=4096 }
+[   10.394716]    domain-2: span=16-31 level=NODE
+[   10.394720]     groups: 16:{ span=16-31 cap=16384 }
+[   10.394725]     domain-3: span=0-31 level=NUMA
+[   10.394728]      groups: 16:{ span=16-31 cap=16384 }, 0:{ span=0-15 
+cap=16383 }
+[   10.394736]      domain-4: span=0-47 level=NUMA
+[   10.394739]       groups: 16:{ span=0-31 mask=16-31 cap=32768 }, 32:{ 
+span=0-15,32-63 mask=32-47 cap=49152 }
+[   10.394749] ERROR: groups don't span domain->span
+[   10.399506]       domain-5: span=0-63 level=NUMA
+[   10.399509]        groups: 16:{ span=0-47 mask=16-31 cap=49152 }
+[   10.399515] ERROR: groups don't span domain->span
+[   10.404276] CPU17 attaching sched-domain(s):
+[   10.404278]  domain-0: span=16-19 level=MC
+[   10.404281]   groups: 17:{ span=17 }, 18:{ span=18 }, 19:{ span=19 }, 
+16:{ span=16 }
+[   10.404291]   domain-1: span=16-31 level=DIE
+[   10.404294]    groups: 16:{ span=16-19 cap=4096 }, 20:{ span=20-23 
+cap=4096 }, 24:{ span=24-27 cap=4096 }, 28:{ span=28-31 cap=4096 }
+[   10.404306]    domain-2: span=16-31 level=NODE
+[   10.404310]     groups: 16:{ span=16-31 cap=16384 }
+[   10.404315]     domain-3: span=0-31 level=NUMA
+[   10.404318]      groups: 16:{ span=16-31 cap=16384 }, 0:{ span=0-15 
+cap=16383 }
+[   10.404326]      domain-4: span=0-47 level=NUMA
+[   10.404329]       groups: 16:{ span=0-31 mask=16-31 cap=32768 }, 32:{ 
+span=0-15,32-63 mask=32-47 cap=49152 }
+[   10.404339] ERROR: groups don't span domain->span
+[   10.409095]       domain-5: span=0-63 level=NUMA
+[   10.409098]        groups: 16:{ span=0-47 mask=16-31 cap=49150 }
+[   10.409105] ERROR: groups don't span domain->span
+[   10.413865] CPU18 attaching sched-domain(s):
+[   10.413867]  domain-0: span=16-19 level=MC
+[   10.413870]   groups: 18:{ span=18 }, 19:{ span=19 }, 16:{ span=16 }, 
+17:{ span=17 }
+[   10.413880]   domain-1: span=16-31 level=DIE
+[   10.413884]    groups: 16:{ span=16-19 cap=4096 }, 20:{ span=20-23 
+cap=4096 }, 24:{ span=24-27 cap=4096 }, 28:{ span=28-31 cap=4096 }
+[   10.413896]    domain-2: span=16-31 level=NODE
+[   10.413900]     groups: 16:{ span=16-31 cap=16384 }
+[   10.413905]     domain-3: span=0-31 level=NUMA
+[   10.413908]      groups: 16:{ span=16-31 cap=16384 }, 0:{ span=0-15 
+cap=16383 }
+[   10.413916]      domain-4: span=0-47 level=NUMA
+[   10.413919]       groups: 16:{ span=0-31 mask=16-31 cap=32766 }, 32:{ 
+span=0-15,32-63 mask=32-47 cap=49152 }
+[   10.413929] ERROR: groups don't span domain->span
+[   10.418685]       domain-5: span=0-63 level=NUMA
+[   10.418689]        groups: 16:{ span=0-47 mask=16-31 cap=49150 }
+[   10.418695] ERROR: groups don't span domain->span
+[   10.423455] CPU19 attaching sched-domain(s):
+[   10.423457]  domain-0: span=16-19 level=MC
+[   10.423460]   groups: 19:{ span=19 }, 16:{ span=16 cap=1023 }, 17:{ 
+span=17 }, 18:{ span=18 }
+[   10.423470]   domain-1: span=16-31 level=DIE
+[   10.423473]    groups: 16:{ span=16-19 cap=4096 }, 20:{ span=20-23 
+cap=4096 }, 24:{ span=24-27 cap=4096 }, 28:{ span=28-31 cap=4096 }
+[   10.423486]    domain-2: span=16-31 level=NODE
+[   10.423490]     groups: 16:{ span=16-31 cap=16384 }
+[   10.423495]     domain-3: span=0-31 level=NUMA
+[   10.423498]      groups: 16:{ span=16-31 cap=16384 }, 0:{ span=0-15 
+cap=16383 }
+[   10.423506]      domain-4: span=0-47 level=NUMA
+[   10.423509]       groups: 16:{ span=0-31 mask=16-31 cap=32766 }, 32:{ 
+span=0-15,32-63 mask=32-47 cap=49152 }
+[   10.423519] ERROR: groups don't span domain->span
+[   10.428275]       domain-5: span=0-63 level=NUMA
+[   10.428278]        groups: 16:{ span=0-47 mask=16-31 cap=49150 }
+[   10.428284] ERROR: groups don't span domain->span
+[   10.433045] CPU20 attaching sched-domain(s):
+[   10.433047]  domain-0: span=20-23 level=MC
+[   10.433050]   groups: 20:{ span=20 }, 21:{ span=21 }, 22:{ span=22 }, 
+23:{ span=23 }
+[   10.433060]   domain-1: span=16-31 level=DIE
+[   10.433063]    groups: 20:{ span=20-23 cap=4096 }, 24:{ span=24-27 
+cap=4096 }, 28:{ span=28-31 cap=4096 }, 16:{ span=16-19 cap=4096 }
+[   10.433076]    domain-2: span=16-31 level=NODE
+[   10.433079]     groups: 16:{ span=16-31 cap=16384 }
+[   10.433084]     domain-3: span=0-31 level=NUMA
+[   10.433087]      groups: 16:{ span=16-31 cap=16384 }, 0:{ span=0-15 
+cap=16383 }
+[   10.433095]      domain-4: span=0-47 level=NUMA
+[   10.433098]       groups: 16:{ span=0-31 mask=16-31 cap=32766 }, 32:{ 
+span=0-15,32-63 mask=32-47 cap=49152 }
+[   10.433108] ERROR: groups don't span domain->span
+[   10.437864]       domain-5: span=0-63 level=NUMA
+[   10.437868]        groups: 16:{ span=0-47 mask=16-31 cap=49150 }
+[   10.437874] ERROR: groups don't span domain->span
+[   10.442634] CPU21 attaching sched-domain(s):
+[   10.442636]  domain-0: span=20-23 level=MC
+[   10.442639]   groups: 21:{ span=21 }, 22:{ span=22 }, 23:{ span=23 }, 
+20:{ span=20 }
+[   10.442649]   domain-1: span=16-31 level=DIE
+[   10.442651]    groups: 20:{ span=20-23 cap=4096 }, 24:{ span=24-27 
+cap=4096 }, 28:{ span=28-31 cap=4096 }, 16:{ span=16-19 cap=4096 }
+[   10.442664]    domain-2: span=16-31 level=NODE
+[   10.442667]     groups: 16:{ span=16-31 cap=16384 }
+[   10.442672]     domain-3: span=0-31 level=NUMA
+[   10.442676]      groups: 16:{ span=16-31 cap=16384 }, 0:{ span=0-15 
+cap=16382 }
+[   10.442683]      domain-4: span=0-47 level=NUMA
+[   10.442687]       groups: 16:{ span=0-31 mask=16-31 cap=32766 }, 32:{ 
+span=0-15,32-63 mask=32-47 cap=49152 }
+[   10.442697] ERROR: groups don't span domain->span
+[   10.447452]       domain-5: span=0-63 level=NUMA
+[   10.447456]        groups: 16:{ span=0-47 mask=16-31 cap=49150 }
+[   10.447462] ERROR: groups don't span domain->span
+[   10.452223] CPU22 attaching sched-domain(s):
+[   10.452225]  domain-0: span=20-23 level=MC
+[   10.452228]   groups: 22:{ span=22 }, 23:{ span=23 }, 20:{ span=20 }, 
+21:{ span=21 }
+[   10.452238]   domain-1: span=16-31 level=DIE
+[   10.452241]    groups: 20:{ span=20-23 cap=4096 }, 24:{ span=24-27 
+cap=4096 }, 28:{ span=28-31 cap=4096 }, 16:{ span=16-19 cap=4095 }
+[   10.452254]    domain-2: span=16-31 level=NODE
+[   10.452257]     groups: 16:{ span=16-31 cap=16383 }
+[   10.452262]     domain-3: span=0-31 level=NUMA
+[   10.452265]      groups: 16:{ span=16-31 cap=16384 }, 0:{ span=0-15 
+cap=16382 }
+[   10.452273]      domain-4: span=0-47 level=NUMA
+[   10.452276]       groups: 16:{ span=0-31 mask=16-31 cap=32766 }, 32:{ 
+span=0-15,32-63 mask=32-47 cap=49152 }
+[   10.452286] ERROR: groups don't span domain->span
+[   10.457042]       domain-5: span=0-63 level=NUMA
+[   10.457046]        groups: 16:{ span=0-47 mask=16-31 cap=49150 }
+[   10.457052] ERROR: groups don't span domain->span
+[   10.461813] CPU23 attaching sched-domain(s):
+[   10.461815]  domain-0: span=20-23 level=MC
+[   10.461818]   groups: 23:{ span=23 }, 20:{ span=20 }, 21:{ span=21 }, 
+22:{ span=22 }
+[   10.461827]   domain-1: span=16-31 level=DIE
+[   10.461831]    groups: 20:{ span=20-23 cap=4096 }, 24:{ span=24-27 
+cap=4096 }, 28:{ span=28-31 cap=4096 }, 16:{ span=16-19 cap=4095 }
+[   10.461843]    domain-2: span=16-31 level=NODE
+[   10.461846]     groups: 16:{ span=16-31 cap=16383 }
+[   10.461852]     domain-3: span=0-31 level=NUMA
+[   10.461855]      groups: 16:{ span=16-31 cap=16384 }, 0:{ span=0-15 
+cap=16382 }
+[   10.461862]      domain-4: span=0-47 level=NUMA
+[   10.461866]       groups: 16:{ span=0-31 mask=16-31 cap=32766 }, 32:{ 
+span=0-15,32-63 mask=32-47 cap=49152 }
+[   10.461876] ERROR: groups don't span domain->span
+[   10.466632]       domain-5: span=0-63 level=NUMA
+[   10.466635]        groups: 16:{ span=0-47 mask=16-31 cap=49150 }
+[   10.466641] ERROR: groups don't span domain->span
+[   10.471403] CPU24 attaching sched-domain(s):
+[   10.471404]  domain-0: span=24-27 level=MC
+[   10.471407]   groups: 24:{ span=24 }, 25:{ span=25 }, 26:{ span=26 }, 
+27:{ span=27 }
+[   10.471417]   domain-1: span=16-31 level=DIE
+[   10.471420]    groups: 24:{ span=24-27 cap=4096 }, 28:{ span=28-31 
+cap=4096 }, 16:{ span=16-19 cap=4095 }, 20:{ span=20-23 cap=4096 }
+[   10.471433]    domain-2: span=16-31 level=NODE
+[   10.471436]     groups: 16:{ span=16-31 cap=16383 }
+[   10.471441]     domain-3: span=0-31 level=NUMA
+[   10.471445]      groups: 16:{ span=16-31 cap=16384 }, 0:{ span=0-15 
+cap=16382 }
+[   10.471452]      domain-4: span=0-47 level=NUMA
+[   10.471456]       groups: 16:{ span=0-31 mask=16-31 cap=32766 }, 32:{ 
+span=0-15,32-63 mask=32-47 cap=49152 }
+[   10.471466] ERROR: groups don't span domain->span
+[   10.476221]       domain-5: span=0-63 level=NUMA
+[   10.476225]        groups: 16:{ span=0-47 mask=16-31 cap=49150 }
+[   10.476231] ERROR: groups don't span domain->span
+[   10.480992] CPU25 attaching sched-domain(s):
+[   10.480994]  domain-0: span=24-27 level=MC
+[   10.480997]   groups: 25:{ span=25 }, 26:{ span=26 }, 27:{ span=27 }, 
+24:{ span=24 }
+[   10.481007]   domain-1: span=16-31 level=DIE
+[   10.481010]    groups: 24:{ span=24-27 cap=4096 }, 28:{ span=28-31 
+cap=4096 }, 16:{ span=16-19 cap=4095 }, 20:{ span=20-23 cap=4096 }
+[   10.481023]    domain-2: span=16-31 level=NODE
+[   10.481026]     groups: 16:{ span=16-31 cap=16383 }
+[   10.481031]     domain-3: span=0-31 level=NUMA
+[   10.481034]      groups: 16:{ span=16-31 cap=16384 }, 0:{ span=0-15 
+cap=16382 }
+[   10.481042]      domain-4: span=0-47 level=NUMA
+[   10.481045]       groups: 16:{ span=0-31 mask=16-31 cap=32766 }, 32:{ 
+span=0-15,32-63 mask=32-47 cap=49152 }
+[   10.481055] ERROR: groups don't span domain->span
+[   10.485811]       domain-5: span=0-63 level=NUMA
+[   10.485814]        groups: 16:{ span=0-47 mask=16-31 cap=49150 }
+[   10.485820] ERROR: groups don't span domain->span
+[   10.490581] CPU26 attaching sched-domain(s):
+[   10.490583]  domain-0: span=24-27 level=MC
+[   10.490586]   groups: 26:{ span=26 }, 27:{ span=27 }, 24:{ span=24 }, 
+25:{ span=25 }
+[   10.490596]   domain-1: span=16-31 level=DIE
+[   10.490599]    groups: 24:{ span=24-27 cap=4096 }, 28:{ span=28-31 
+cap=4096 }, 16:{ span=16-19 cap=4095 }, 20:{ span=20-23 cap=4096 }
+[   10.490611]    domain-2: span=16-31 level=NODE
+[   10.490615]     groups: 16:{ span=16-31 cap=16383 }
+[   10.490619]     domain-3: span=0-31 level=NUMA
+[   10.490623]      groups: 16:{ span=16-31 cap=16383 }, 0:{ span=0-15 
+cap=16382 }
+[   10.490630]      domain-4: span=0-47 level=NUMA
+[   10.490634]       groups: 16:{ span=0-31 mask=16-31 cap=32766 }, 32:{ 
+span=0-15,32-63 mask=32-47 cap=49152 }
+[   10.490644] ERROR: groups don't span domain->span
+[   10.495400]       domain-5: span=0-63 level=NUMA
+[   10.495403]        groups: 16:{ span=0-47 mask=16-31 cap=49150 }
+[   10.495410] ERROR: groups don't span domain->span
+[   10.500170] CPU27 attaching sched-domain(s):
+[   10.500172]  domain-0: span=24-27 level=MC
+[   10.500175]   groups: 27:{ span=27 }, 24:{ span=24 }, 25:{ span=25 }, 
+26:{ span=26 }
+[   10.500185]   domain-1: span=16-31 level=DIE
+[   10.500188]    groups: 24:{ span=24-27 cap=4096 }, 28:{ span=28-31 
+cap=4096 }, 16:{ span=16-19 cap=4095 }, 20:{ span=20-23 cap=4096 }
+[   10.500201]    domain-2: span=16-31 level=NODE
+[   10.500204]     groups: 16:{ span=16-31 cap=16383 }
+[   10.500209]     domain-3: span=0-31 level=NUMA
+[   10.500212]      groups: 16:{ span=16-31 cap=16383 }, 0:{ span=0-15 
+cap=16382 }
+[   10.500220]      domain-4: span=0-47 level=NUMA
+[   10.500224]       groups: 16:{ span=0-31 mask=16-31 cap=32766 }, 32:{ 
+span=0-15,32-63 mask=32-47 cap=49152 }
+[   10.500234] ERROR: groups don't span domain->span
+[   10.504990]       domain-5: span=0-63 level=NUMA
+[   10.504994]        groups: 16:{ span=0-47 mask=16-31 cap=49150 }
+[   10.505000] ERROR: groups don't span domain->span
+[   10.509761] CPU28 attaching sched-domain(s):
+[   10.509763]  domain-0: span=28-31 level=MC
+[   10.509766]   groups: 28:{ span=28 }, 29:{ span=29 }, 30:{ span=30 }, 
+31:{ span=31 }
+[   10.509775]   domain-1: span=16-31 level=DIE
+[   10.509778]    groups: 28:{ span=28-31 cap=4096 }, 16:{ span=16-19 
+cap=4095 }, 20:{ span=20-23 cap=4096 }, 24:{ span=24-27 cap=4096 }
+[   10.509791]    domain-2: span=16-31 level=NODE
+[   10.509794]     groups: 16:{ span=16-31 cap=16383 }
+[   10.509799]     domain-3: span=0-31 level=NUMA
+[   10.509803]      groups: 16:{ span=16-31 cap=16383 }, 0:{ span=0-15 
+cap=16382 }
+[   10.509810]      domain-4: span=0-47 level=NUMA
+[   10.509814]       groups: 16:{ span=0-31 mask=16-31 cap=32766 }, 32:{ 
+span=0-15,32-63 mask=32-47 cap=49152 }
+[   10.509824] ERROR: groups don't span domain->span
+[   10.514580]       domain-5: span=0-63 level=NUMA
+[   10.514583]        groups: 16:{ span=0-47 mask=16-31 cap=49150 }
+[   10.514590] ERROR: groups don't span domain->span
+[   10.519350] CPU29 attaching sched-domain(s):
+[   10.519352]  domain-0: span=28-31 level=MC
+[   10.519355]   groups: 29:{ span=29 }, 30:{ span=30 }, 31:{ span=31 }, 
+28:{ span=28 }
+[   10.519365]   domain-1: span=16-31 level=DIE
+[   10.519368]    groups: 28:{ span=28-31 cap=4096 }, 16:{ span=16-19 
+cap=4095 }, 20:{ span=20-23 cap=4096 }, 24:{ span=24-27 cap=4096 }
+[   10.519381]    domain-2: span=16-31 level=NODE
+[   10.519384]     groups: 16:{ span=16-31 cap=16383 }
+[   10.519388]     domain-3: span=0-31 level=NUMA
+[   10.519392]      groups: 16:{ span=16-31 cap=16383 }, 0:{ span=0-15 
+cap=16381 }
+[   10.519400]      domain-4: span=0-47 level=NUMA
+[   10.519404]       groups: 16:{ span=0-31 mask=16-31 cap=32766 }, 32:{ 
+span=0-15,32-63 mask=32-47 cap=49152 }
+[   10.519414] ERROR: groups don't span domain->span
+[   10.524169]       domain-5: span=0-63 level=NUMA
+[   10.524173]        groups: 16:{ span=0-47 mask=16-31 cap=49150 }
+[   10.524179] ERROR: groups don't span domain->span
+[   10.528940] CPU30 attaching sched-domain(s):
+[   10.528942]  domain-0: span=28-31 level=MC
+[   10.528945]   groups: 30:{ span=30 }, 31:{ span=31 }, 28:{ span=28 }, 
+29:{ span=29 }
+[   10.528955]   domain-1: span=16-31 level=DIE
+[   10.528958]    groups: 28:{ span=28-31 cap=4096 }, 16:{ span=16-19 
+cap=4095 }, 20:{ span=20-23 cap=4096 }, 24:{ span=24-27 cap=4096 }
+[   10.528971]    domain-2: span=16-31 level=NODE
+[   10.528974]     groups: 16:{ span=16-31 cap=16383 }
+[   10.528979]     domain-3: span=0-31 level=NUMA
+[   10.528982]      groups: 16:{ span=16-31 cap=16383 }, 0:{ span=0-15 
+cap=16381 }
+[   10.528990]      domain-4: span=0-47 level=NUMA
+[   10.528993]       groups: 16:{ span=0-31 mask=16-31 cap=32762 }, 32:{ 
+span=0-15,32-63 mask=32-47 cap=49152 }
+[   10.529004] ERROR: groups don't span domain->span
+[   10.533759]       domain-5: span=0-63 level=NUMA
+[   10.533763]        groups: 16:{ span=0-47 mask=16-31 cap=49150 }
+[   10.533769] ERROR: groups don't span domain->span
+[   10.538529] CPU31 attaching sched-domain(s):
+[   10.538531]  domain-0: span=28-31 level=MC
+[   10.538534]   groups: 31:{ span=31 }, 28:{ span=28 }, 29:{ span=29 }, 
+30:{ span=30 }
+[   10.538544]   domain-1: span=16-31 level=DIE
+[   10.538547]    groups: 28:{ span=28-31 cap=4096 }, 16:{ span=16-19 
+cap=4095 }, 20:{ span=20-23 cap=4096 }, 24:{ span=24-27 cap=4096 }
+[   10.538560]    domain-2: span=16-31 level=NODE
+[   10.538563]     groups: 16:{ span=16-31 cap=16383 }
+[   10.538567]     domain-3: span=0-31 level=NUMA
+[   10.538571]      groups: 16:{ span=16-31 cap=16383 }, 0:{ span=0-15 
+cap=16381 }
+[   10.538579]      domain-4: span=0-47 level=NUMA
+[   10.538582]       groups: 16:{ span=0-31 mask=16-31 cap=32762 }, 32:{ 
+span=0-15,32-63 mask=32-47 cap=49152 }
+[   10.538592] ERROR: groups don't span domain->span
+[   10.543347]       domain-5: span=0-63 level=NUMA
+[   10.543351]        groups: 16:{ span=0-47 mask=16-31 cap=49150 }
+[   10.543357] ERROR: groups don't span domain->span
+[   10.548115] CPU32 attaching sched-domain(s):
+[   10.548117]  domain-0: span=32-35 level=MC
+[   10.548119]   groups: 32:{ span=32 }, 33:{ span=33 }, 34:{ span=34 }, 
+35:{ span=35 }
+[   10.548129]   domain-1: span=32-47 level=DIE
+[   10.548132]    groups: 32:{ span=32-35 cap=4096 }, 36:{ span=36-39 
+cap=4096 }, 40:{ span=40-43 cap=4096 }, 44:{ span=44-47 cap=4096 }
+[   10.548145]    domain-2: span=32-47 level=NODE
+[   10.548147]     groups: 32:{ span=32-47 cap=16384 }
+[   10.548152]     domain-3: span=32-63 level=NUMA
+[   10.548156]      groups: 32:{ span=32-47 cap=16384 }, 48:{ 
+span=0-31,48-63 mask=48-63 cap=49152 }
+[   10.548165] ERROR: groups don't span domain->span
+[   10.552921] ERROR: parent span is not a superset of domain->span
+[   10.558994]      domain-4: span=0-15,32-63 level=NUMA
+[   10.558998]       groups: 32:{ span=32-63 mask=32-47 cap=32768 }, 0:{ 
+span=0-31 cap=32763 }
+[   10.559007] ERROR: groups don't span domain->span
+[   10.563762]       domain-5: span=0-63 level=NUMA
+[   10.563766]        groups: 32:{ span=0-15,32-63 mask=32-47 cap=49152 
+}, 16:{ span=0-31 mask=16-31 cap=32762 }
+[   10.563780] CPU33 attaching sched-domain(s):
+[   10.563782]  domain-0: span=32-35 level=MC
+[   10.563785]   groups: 33:{ span=33 }, 34:{ span=34 }, 35:{ span=35 }, 
+32:{ span=32 }
+[   10.563794]   domain-1: span=32-47 level=DIE
+[   10.563798]    groups: 32:{ span=32-35 cap=4096 }, 36:{ span=36-39 
+cap=4096 }, 40:{ span=40-43 cap=4096 }, 44:{ span=44-47 cap=4096 }
+[   10.563810]    domain-2: span=32-47 level=NODE
+[   10.563813]     groups: 32:{ span=32-47 cap=16384 }
+[   10.563818]     domain-3: span=32-63 level=NUMA
+[   10.563821]      groups: 32:{ span=32-47 cap=16384 }, 48:{ 
+span=0-31,48-63 mask=48-63 cap=49152 }
+[   10.563830] ERROR: groups don't span domain->span
+[   10.568586] ERROR: parent span is not a superset of domain->span
+[   10.574660]      domain-4: span=0-15,32-63 level=NUMA
+[   10.574664]       groups: 32:{ span=32-63 mask=32-47 cap=32768 }, 0:{ 
+span=0-31 cap=32763 }
+[   10.574673] ERROR: groups don't span domain->span
+[   10.579428]       domain-5: span=0-63 level=NUMA
+[   10.579431]        groups: 32:{ span=0-15,32-63 mask=32-47 cap=49149 
+}, 16:{ span=0-31 mask=16-31 cap=32762 }
+[   10.579446] CPU34 attaching sched-domain(s):
+[   10.579448]  domain-0: span=32-35 level=MC
+[   10.579450]   groups: 34:{ span=34 }, 35:{ span=35 }, 32:{ span=32 }, 
+33:{ span=33 }
+[   10.579460]   domain-1: span=32-47 level=DIE
+[   10.579464]    groups: 32:{ span=32-35 cap=4096 }, 36:{ span=36-39 
+cap=4096 }, 40:{ span=40-43 cap=4096 }, 44:{ span=44-47 cap=4096 }
+[   10.579477]    domain-2: span=32-47 level=NODE
+[   10.579480]     groups: 32:{ span=32-47 cap=16384 }
+[   10.579485]     domain-3: span=32-63 level=NUMA
+[   10.579488]      groups: 32:{ span=32-47 cap=16384 }, 48:{ 
+span=0-31,48-63 mask=48-63 cap=49152 }
+[   10.579498] ERROR: groups don't span domain->span
+[   10.584253] ERROR: parent span is not a superset of domain->span
+[   10.590327]      domain-4: span=0-15,32-63 level=NUMA
+[   10.590330]       groups: 32:{ span=32-63 mask=32-47 cap=32768 }, 0:{ 
+span=0-31 cap=32763 }
+[   10.590339] ERROR: groups don't span domain->span
+[   10.595094]       domain-5: span=0-63 level=NUMA
+[   10.595097]        groups: 32:{ span=0-15,32-63 mask=32-47 cap=49149 
+}, 16:{ span=0-31 mask=16-31 cap=32762 }
+[   10.595111] CPU35 attaching sched-domain(s):
+[   10.595113]  domain-0: span=32-35 level=MC
+[   10.595116]   groups: 35:{ span=35 }, 32:{ span=32 cap=1022 }, 33:{ 
+span=33 }, 34:{ span=34 }
+[   10.595127]   domain-1: span=32-47 level=DIE
+[   10.595130]    groups: 32:{ span=32-35 cap=4096 }, 36:{ span=36-39 
+cap=4096 }, 40:{ span=40-43 cap=4096 }, 44:{ span=44-47 cap=4096 }
+[   10.595143]    domain-2: span=32-47 level=NODE
+[   10.595146]     groups: 32:{ span=32-47 cap=16384 }
+[   10.595151]     domain-3: span=32-63 level=NUMA
+[   10.595154]      groups: 32:{ span=32-47 cap=16384 }, 48:{ 
+span=0-31,48-63 mask=48-63 cap=49152 }
+[   10.595163] ERROR: groups don't span domain->span
+[   10.599918] ERROR: parent span is not a superset of domain->span
+[   10.605992]      domain-4: span=0-15,32-63 level=NUMA
+[   10.605995]       groups: 32:{ span=32-63 mask=32-47 cap=32768 }, 0:{ 
+span=0-31 cap=32763 }
+[   10.606004] ERROR: groups don't span domain->span
+[   10.610759]       domain-5: span=0-63 level=NUMA
+[   10.610763]        groups: 32:{ span=0-15,32-63 mask=32-47 cap=49149 
+}, 16:{ span=0-31 mask=16-31 cap=32762 }
+[   10.610777] CPU36 attaching sched-domain(s):
+[   10.610779]  domain-0: span=36-39 level=MC
+[   10.610782]   groups: 36:{ span=36 }, 37:{ span=37 }, 38:{ span=38 }, 
+39:{ span=39 }
+[   10.610792]   domain-1: span=32-47 level=DIE
+[   10.610795]    groups: 36:{ span=36-39 cap=4096 }, 40:{ span=40-43 
+cap=4096 }, 44:{ span=44-47 cap=4096 }, 32:{ span=32-35 cap=4096 }
+[   10.610807]    domain-2: span=32-47 level=NODE
+[   10.610810]     groups: 32:{ span=32-47 cap=16384 }
+[   10.610815]     domain-3: span=32-63 level=NUMA
+[   10.610818]      groups: 32:{ span=32-47 cap=16384 }, 48:{ 
+span=0-31,48-63 mask=48-63 cap=49152 }
+[   10.610827] ERROR: groups don't span domain->span
+[   10.615582] ERROR: parent span is not a superset of domain->span
+[   10.621656]      domain-4: span=0-15,32-63 level=NUMA
+[   10.621660]       groups: 32:{ span=32-63 mask=32-47 cap=32768 }, 0:{ 
+span=0-31 cap=32763 }
+[   10.621668] ERROR: groups don't span domain->span
+[   10.626424]       domain-5: span=0-63 level=NUMA
+[   10.626427]        groups: 32:{ span=0-15,32-63 mask=32-47 cap=49149 
+}, 16:{ span=0-31 mask=16-31 cap=32762 }
+[   10.626442] CPU37 attaching sched-domain(s):
+[   10.626444]  domain-0: span=36-39 level=MC
+[   10.626447]   groups: 37:{ span=37 }, 38:{ span=38 }, 39:{ span=39 }, 
+36:{ span=36 }
+[   10.626456]   domain-1: span=32-47 level=DIE
+[   10.626459]    groups: 36:{ span=36-39 cap=4096 }, 40:{ span=40-43 
+cap=4096 }, 44:{ span=44-47 cap=4096 }, 32:{ span=32-35 cap=4095 }
+[   10.626472]    domain-2: span=32-47 level=NODE
+[   10.626475]     groups: 32:{ span=32-47 cap=16383 }
+[   10.626480]     domain-3: span=32-63 level=NUMA
+[   10.626483]      groups: 32:{ span=32-47 cap=16384 }, 48:{ 
+span=0-31,48-63 mask=48-63 cap=49152 }
+[   10.626492] ERROR: groups don't span domain->span
+[   10.631248] ERROR: parent span is not a superset of domain->span
+[   10.637322]      domain-4: span=0-15,32-63 level=NUMA
+[   10.637325]       groups: 32:{ span=32-63 mask=32-47 cap=32768 }, 0:{ 
+span=0-31 cap=32763 }
+[   10.637334] ERROR: groups don't span domain->span
+[   10.642089]       domain-5: span=0-63 level=NUMA
+[   10.642093]        groups: 32:{ span=0-15,32-63 mask=32-47 cap=49149 
+}, 16:{ span=0-31 mask=16-31 cap=32762 }
+[   10.642108] CPU38 attaching sched-domain(s):
+[   10.642109]  domain-0: span=36-39 level=MC
+[   10.642112]   groups: 38:{ span=38 }, 39:{ span=39 }, 36:{ span=36 
+cap=1023 }, 37:{ span=37 }
+[   10.642123]   domain-1: span=32-47 level=DIE
+[   10.642126]    groups: 36:{ span=36-39 cap=4096 }, 40:{ span=40-43 
+cap=4096 }, 44:{ span=44-47 cap=4096 }, 32:{ span=32-35 cap=4095 }
+[   10.642138]    domain-2: span=32-47 level=NODE
+[   10.642141]     groups: 32:{ span=32-47 cap=16383 }
+[   10.642146]     domain-3: span=32-63 level=NUMA
+[   10.642149]      groups: 32:{ span=32-47 cap=16384 }, 48:{ 
+span=0-31,48-63 mask=48-63 cap=49152 }
+[   10.642158] ERROR: groups don't span domain->span
+[   10.646914] ERROR: parent span is not a superset of domain->span
+[   10.652988]      domain-4: span=0-15,32-63 level=NUMA
+[   10.652991]       groups: 32:{ span=32-63 mask=32-47 cap=32766 }, 0:{ 
+span=0-31 cap=32763 }
+[   10.653001] ERROR: groups don't span domain->span
+[   10.657756]       domain-5: span=0-63 level=NUMA
+[   10.657759]        groups: 32:{ span=0-15,32-63 mask=32-47 cap=49149 
+}, 16:{ span=0-31 mask=16-31 cap=32763 }
+[   10.657773] CPU39 attaching sched-domain(s):
+[   10.657776]  domain-0: span=36-39 level=MC
+[   10.657778]   groups: 39:{ span=39 }, 36:{ span=36 cap=1023 }, 37:{ 
+span=37 }, 38:{ span=38 }
+[   10.657789]   domain-1: span=32-47 level=DIE
+[   10.657792]    groups: 36:{ span=36-39 cap=4096 }, 40:{ span=40-43 
+cap=4096 }, 44:{ span=44-47 cap=4096 }, 32:{ span=32-35 cap=4095 }
+[   10.657805]    domain-2: span=32-47 level=NODE
+[   10.657808]     groups: 32:{ span=32-47 cap=16383 }
+[   10.657813]     domain-3: span=32-63 level=NUMA
+[   10.657816]      groups: 32:{ span=32-47 cap=16384 }, 48:{ 
+span=0-31,48-63 mask=48-63 cap=49152 }
+[   10.657824] ERROR: groups don't span domain->span
+[   10.662580] ERROR: parent span is not a superset of domain->span
+[   10.668655]      domain-4: span=0-15,32-63 level=NUMA
+[   10.668658]       groups: 32:{ span=32-63 mask=32-47 cap=32766 }, 0:{ 
+span=0-31 cap=32762 }
+[   10.668667] ERROR: groups don't span domain->span
+[   10.673422]       domain-5: span=0-63 level=NUMA
+[   10.673426]        groups: 32:{ span=0-15,32-63 mask=32-47 cap=49149 
+}, 16:{ span=0-31 mask=16-31 cap=32763 }
+[   10.673440] CPU40 attaching sched-domain(s):
+[   10.673441]  domain-0: span=40-43 level=MC
+[   10.673444]   groups: 40:{ span=40 }, 41:{ span=41 }, 42:{ span=42 }, 
+43:{ span=43 }
+[   10.673454]   domain-1: span=32-47 level=DIE
+[   10.673457]    groups: 40:{ span=40-43 cap=4096 }, 44:{ span=44-47 
+cap=4096 }, 32:{ span=32-35 cap=4095 }, 36:{ span=36-39 cap=4096 }
+[   10.673469]    domain-2: span=32-47 level=NODE
+[   10.673472]     groups: 32:{ span=32-47 cap=16383 }
+[   10.673477]     domain-3: span=32-63 level=NUMA
+[   10.673480]      groups: 32:{ span=32-47 cap=16383 }, 48:{ 
+span=0-31,48-63 mask=48-63 cap=49152 }
+[   10.673490] ERROR: groups don't span domain->span
+[   10.678245] ERROR: parent span is not a superset of domain->span
+[   10.684319]      domain-4: span=0-15,32-63 level=NUMA
+[   10.684323]       groups: 32:{ span=32-63 mask=32-47 cap=32766 }, 0:{ 
+span=0-31 cap=32762 }
+[   10.684331] ERROR: groups don't span domain->span
+[   10.689087]       domain-5: span=0-63 level=NUMA
+[   10.689090]        groups: 32:{ span=0-15,32-63 mask=32-47 cap=49149 
+}, 16:{ span=0-31 mask=16-31 cap=32763 }
+[   10.689104] CPU41 attaching sched-domain(s):
+[   10.689105]  domain-0: span=40-43 level=MC
+[   10.689108]   groups: 41:{ span=41 }, 42:{ span=42 }, 43:{ span=43 }, 
+40:{ span=40 }
+[   10.689118]   domain-1: span=32-47 level=DIE
+[   10.689121]    groups: 40:{ span=40-43 cap=4096 }, 44:{ span=44-47 
+cap=4096 }, 32:{ span=32-35 cap=4095 }, 36:{ span=36-39 cap=4096 }
+[   10.689133]    domain-2: span=32-47 level=NODE
+[   10.689136]     groups: 32:{ span=32-47 cap=16383 }
+[   10.689141]     domain-3: span=32-63 level=NUMA
+[   10.689145]      groups: 32:{ span=32-47 cap=16383 }, 48:{ 
+span=0-31,48-63 mask=48-63 cap=49152 }
+[   10.689154] ERROR: groups don't span domain->span
+[   10.693909] ERROR: parent span is not a superset of domain->span
+[   10.699982]      domain-4: span=0-15,32-63 level=NUMA
+[   10.699985]       groups: 32:{ span=32-63 mask=32-47 cap=32766 }, 0:{ 
+span=0-31 cap=32762 }
+[   10.699994] ERROR: groups don't span domain->span
+[   10.704749]       domain-5: span=0-63 level=NUMA
+[   10.704753]        groups: 32:{ span=0-15,32-63 mask=32-47 cap=49149 
+}, 16:{ span=0-31 mask=16-31 cap=32763 }
+[   10.704767] CPU42 attaching sched-domain(s):
+[   10.704769]  domain-0: span=40-43 level=MC
+[   10.704771]   groups: 42:{ span=42 }, 43:{ span=43 }, 40:{ span=40 }, 
+41:{ span=41 }
+[   10.704781]   domain-1: span=32-47 level=DIE
+[   10.704784]    groups: 40:{ span=40-43 cap=4096 }, 44:{ span=44-47 
+cap=4096 }, 32:{ span=32-35 cap=4095 }, 36:{ span=36-39 cap=4096 }
+[   10.704797]    domain-2: span=32-47 level=NODE
+[   10.704801]     groups: 32:{ span=32-47 cap=16383 }
+[   10.704806]     domain-3: span=32-63 level=NUMA
+[   10.704809]      groups: 32:{ span=32-47 cap=16383 }, 48:{ 
+span=0-31,48-63 mask=48-63 cap=49152 }
+[   10.704818] ERROR: groups don't span domain->span
+[   10.709573] ERROR: parent span is not a superset of domain->span
+[   10.715651]      domain-4: span=0-15,32-63 level=NUMA
+[   10.715655]       groups: 32:{ span=32-63 mask=32-47 cap=32766 }, 0:{ 
+span=0-31 cap=32762 }
+[   10.715664] ERROR: groups don't span domain->span
+[   10.720420]       domain-5: span=0-63 level=NUMA
+[   10.720424]        groups: 32:{ span=0-15,32-63 mask=32-47 cap=49149 
+}, 16:{ span=0-31 mask=16-31 cap=32763 }
+[   10.720438] CPU43 attaching sched-domain(s):
+[   10.720440]  domain-0: span=40-43 level=MC
+[   10.720443]   groups: 43:{ span=43 }, 40:{ span=40 }, 41:{ span=41 }, 
+42:{ span=42 }
+[   10.720453]   domain-1: span=32-47 level=DIE
+[   10.720456]    groups: 40:{ span=40-43 cap=4096 }, 44:{ span=44-47 
+cap=4096 }, 32:{ span=32-35 cap=4095 }, 36:{ span=36-39 cap=4096 }
+[   10.720469]    domain-2: span=32-47 level=NODE
+[   10.720472]     groups: 32:{ span=32-47 cap=16383 }
+[   10.720477]     domain-3: span=32-63 level=NUMA
+[   10.720481]      groups: 32:{ span=32-47 cap=16383 }, 48:{ 
+span=0-31,48-63 mask=48-63 cap=49152 }
+[   10.720490] ERROR: groups don't span domain->span
+[   10.725246] ERROR: parent span is not a superset of domain->span
+[   10.731319]      domain-4: span=0-15,32-63 level=NUMA
+[   10.731323]       groups: 32:{ span=32-63 mask=32-47 cap=32767 }, 0:{ 
+span=0-31 cap=32762 }
+[   10.731332] ERROR: groups don't span domain->span
+[   10.736086]       domain-5: span=0-63 level=NUMA
+[   10.736089]        groups: 32:{ span=0-15,32-63 mask=32-47 cap=49149 
+}, 16:{ span=0-31 mask=16-31 cap=32763 }
+[   10.736104] CPU44 attaching sched-domain(s):
+[   10.736105]  domain-0: span=44-47 level=MC
+[   10.736108]   groups: 44:{ span=44 }, 45:{ span=45 }, 46:{ span=46 }, 
+47:{ span=47 }
+[   10.736118]   domain-1: span=32-47 level=DIE
+[   10.736121]    groups: 44:{ span=44-47 cap=4096 }, 32:{ span=32-35 
+cap=4095 }, 36:{ span=36-39 cap=4096 }, 40:{ span=40-43 cap=4096 }
+[   10.736134]    domain-2: span=32-47 level=NODE
+[   10.736137]     groups: 32:{ span=32-47 cap=16383 }
+[   10.736142]     domain-3: span=32-63 level=NUMA
+[   10.736145]      groups: 32:{ span=32-47 cap=16383 }, 48:{ 
+span=0-31,48-63 mask=48-63 cap=49152 }
+[   10.736154] ERROR: groups don't span domain->span
+[   10.740909] ERROR: parent span is not a superset of domain->span
+[   10.746983]      domain-4: span=0-15,32-63 level=NUMA
+[   10.746987]       groups: 32:{ span=32-63 mask=32-47 cap=32767 }, 0:{ 
+span=0-31 cap=32762 }
+[   10.746996] ERROR: groups don't span domain->span
+[   10.751751]       domain-5: span=0-63 level=NUMA
+[   10.751754]        groups: 32:{ span=0-15,32-63 mask=32-47 cap=49149 
+}, 16:{ span=0-31 mask=16-31 cap=32763 }
+[   10.751769] CPU45 attaching sched-domain(s):
+[   10.751771]  domain-0: span=44-47 level=MC
+[   10.751773]   groups: 45:{ span=45 }, 46:{ span=46 }, 47:{ span=47 }, 
+44:{ span=44 }
+[   10.751783]   domain-1: span=32-47 level=DIE
+[   10.751786]    groups: 44:{ span=44-47 cap=4096 }, 32:{ span=32-35 
+cap=4095 }, 36:{ span=36-39 cap=4096 }, 40:{ span=40-43 cap=4096 }
+[   10.751799]    domain-2: span=32-47 level=NODE
+[   10.751802]     groups: 32:{ span=32-47 cap=16383 }
+[   10.751806]     domain-3: span=32-63 level=NUMA
+[   10.751809]      groups: 32:{ span=32-47 cap=16383 }, 48:{ 
+span=0-31,48-63 mask=48-63 cap=49152 }
+[   10.751818] ERROR: groups don't span domain->span
+[   10.756574] ERROR: parent span is not a superset of domain->span
+[   10.762648]      domain-4: span=0-15,32-63 level=NUMA
+[   10.762651]       groups: 32:{ span=32-63 mask=32-47 cap=32767 }, 0:{ 
+span=0-31 cap=32762 }
+[   10.762660] ERROR: groups don't span domain->span
+[   10.767415]       domain-5: span=0-63 level=NUMA
+[   10.767419]        groups: 32:{ span=0-15,32-63 mask=32-47 cap=49144 
+}, 16:{ span=0-31 mask=16-31 cap=32763 }
+[   10.767433] CPU46 attaching sched-domain(s):
+[   10.767435]  domain-0: span=44-47 level=MC
+[   10.767438]   groups: 46:{ span=46 }, 47:{ span=47 }, 44:{ span=44 }, 
+45:{ span=45 }
+[   10.767448]   domain-1: span=32-47 level=DIE
+[   10.767451]    groups: 44:{ span=44-47 cap=4096 }, 32:{ span=32-35 
+cap=4095 }, 36:{ span=36-39 cap=4096 }, 40:{ span=40-43 cap=4096 }
+[   10.767464]    domain-2: span=32-47 level=NODE
+[   10.767466]     groups: 32:{ span=32-47 cap=16383 }
+[   10.767471]     domain-3: span=32-63 level=NUMA
+[   10.767474]      groups: 32:{ span=32-47 cap=16383 }, 48:{ 
+span=0-31,48-63 mask=48-63 cap=49152 }
+[   10.767484] ERROR: groups don't span domain->span
+[   10.772239] ERROR: parent span is not a superset of domain->span
+[   10.778312]      domain-4: span=0-15,32-63 level=NUMA
+[   10.778316]       groups: 32:{ span=32-63 mask=32-47 cap=32767 }, 0:{ 
+span=0-31 cap=32762 }
+[   10.778325] ERROR: groups don't span domain->span
+[   10.783080]       domain-5: span=0-63 level=NUMA
+[   10.783083]        groups: 32:{ span=0-15,32-63 mask=32-47 cap=49144 
+}, 16:{ span=0-31 mask=16-31 cap=32758 }
+[   10.783097] CPU47 attaching sched-domain(s):
+[   10.783099]  domain-0: span=44-47 level=MC
+[   10.783102]   groups: 47:{ span=47 }, 44:{ span=44 }, 45:{ span=45 }, 
+46:{ span=46 }
+[   10.783112]   domain-1: span=32-47 level=DIE
+[   10.783115]    groups: 44:{ span=44-47 cap=4096 }, 32:{ span=32-35 
+cap=4095 }, 36:{ span=36-39 cap=4096 }, 40:{ span=40-43 cap=4096 }
+[   10.783128]    domain-2: span=32-47 level=NODE
+[   10.783131]     groups: 32:{ span=32-47 cap=16383 }
+[   10.783136]     domain-3: span=32-63 level=NUMA
+[   10.783139]      groups: 32:{ span=32-47 cap=16383 }, 48:{ 
+span=0-31,48-63 mask=48-63 cap=49152 }
+[   10.783148] ERROR: groups don't span domain->span
+[   10.787904] ERROR: parent span is not a superset of domain->span
+[   10.793978]      domain-4: span=0-15,32-63 level=NUMA
+[   10.793982]       groups: 32:{ span=32-63 mask=32-47 cap=32767 }, 0:{ 
+span=0-31 cap=32763 }
+[   10.793991] ERROR: groups don't span domain->span
+[   10.798746]       domain-5: span=0-63 level=NUMA
+[   10.798749]        groups: 32:{ span=0-15,32-63 mask=32-47 cap=49144 
+}, 16:{ span=0-31 mask=16-31 cap=32758 }
+[   10.798764] CPU48 attaching sched-domain(s):
+[   10.798766]  domain-0: span=48-51 level=MC
+[   10.798769]   groups: 48:{ span=48 }, 49:{ span=49 }, 50:{ span=50 }, 
+51:{ span=51 }
+[   10.798779]   domain-1: span=48-63 level=DIE
+[   10.798782]    groups: 48:{ span=48-51 cap=4096 }, 52:{ span=52-55 
+cap=4096 }, 56:{ span=56-59 cap=4096 }, 60:{ span=60-63 cap=4096 }
+[   10.798795]    domain-2: span=0-31,48-63 level=NODE
+[   10.798798]     groups: 48:{ span=48-63 cap=16384 }, 0:{ span=0-15 
+cap=16378 }, 16:{ span=16-31 cap=16383 }
+[   10.798809]     domain-3: span=0-63 level=NUMA
+[   10.798812]      groups: 48:{ span=0-31,48-63 mask=48-63 cap=49152 }, 
+32:{ span=32-47 cap=16383 }
+[   10.798826] CPU49 attaching sched-domain(s):
+[   10.798828]  domain-0: span=48-51 level=MC
+[   10.798830]   groups: 49:{ span=49 }, 50:{ span=50 }, 51:{ span=51 }, 
+48:{ span=48 }
+[   10.798840]   domain-1: span=48-63 level=DIE
+[   10.798843]    groups: 48:{ span=48-51 cap=4096 }, 52:{ span=52-55 
+cap=4096 }, 56:{ span=56-59 cap=4096 }, 60:{ span=60-63 cap=4096 }
+[   10.798856]    domain-2: span=0-31,48-63 level=NODE
+[   10.798859]     groups: 48:{ span=48-63 cap=16384 }, 0:{ span=0-15 
+cap=16378 }, 16:{ span=16-31 cap=16383 }
+[   10.798870]     domain-3: span=0-63 level=NUMA
+[   10.798873]      groups: 48:{ span=0-31,48-63 mask=48-63 cap=49152 }, 
+32:{ span=32-47 cap=16383 }
+[   10.798886] CPU50 attaching sched-domain(s):
+[   10.798887]  domain-0: span=48-51 level=MC
+[   10.798890]   groups: 50:{ span=50 }, 51:{ span=51 }, 48:{ span=48 }, 
+49:{ span=49 }
+[   10.798900]   domain-1: span=48-63 level=DIE
+[   10.798903]    groups: 48:{ span=48-51 cap=4096 }, 52:{ span=52-55 
+cap=4096 }, 56:{ span=56-59 cap=4096 }, 60:{ span=60-63 cap=4096 }
+[   10.798916]    domain-2: span=0-31,48-63 level=NODE
+[   10.798919]     groups: 48:{ span=48-63 cap=16384 }, 0:{ span=0-15 
+cap=16378 }, 16:{ span=16-31 cap=16383 }
+[   10.798930]     domain-3: span=0-63 level=NUMA
+[   10.798933]      groups: 48:{ span=0-31,48-63 mask=48-63 cap=49152 }, 
+32:{ span=32-47 cap=16383 }
+[   10.798946] CPU51 attaching sched-domain(s):
+[   10.798948]  domain-0: span=48-51 level=MC
+[   10.798950]   groups: 51:{ span=51 }, 48:{ span=48 }, 49:{ span=49 }, 
+50:{ span=50 }
+[   10.798960]   domain-1: span=48-63 level=DIE
+[   10.798963]    groups: 48:{ span=48-51 cap=4096 }, 52:{ span=52-55 
+cap=4096 }, 56:{ span=56-59 cap=4096 }, 60:{ span=60-63 cap=4096 }
+[   10.798976]    domain-2: span=0-31,48-63 level=NODE
+[   10.798979]     groups: 48:{ span=48-63 cap=16384 }, 0:{ span=0-15 
+cap=16378 }, 16:{ span=16-31 cap=16383 }
+[   10.798990]     domain-3: span=0-63 level=NUMA
+[   10.798993]      groups: 48:{ span=0-31,48-63 mask=48-63 cap=49152 }, 
+32:{ span=32-47 cap=16383 }
+[   10.799006] CPU52 attaching sched-domain(s):
+[   10.799008]  domain-0: span=52-55 level=MC
+[   10.799011]   groups: 52:{ span=52 }, 53:{ span=53 }, 54:{ span=54 }, 
+55:{ span=55 }
+[   10.799021]   domain-1: span=48-63 level=DIE
+[   10.799023]    groups: 52:{ span=52-55 cap=4096 }, 56:{ span=56-59 
+cap=4096 }, 60:{ span=60-63 cap=4096 }, 48:{ span=48-51 cap=4096 }
+[   10.799036]    domain-2: span=0-31,48-63 level=NODE
+[   10.799039]     groups: 48:{ span=48-63 cap=16384 }, 0:{ span=0-15 
+cap=16378 }, 16:{ span=16-31 cap=16383 }
+[   10.799050]     domain-3: span=0-63 level=NUMA
+[   10.799054]      groups: 48:{ span=0-31,48-63 mask=48-63 cap=49152 }, 
+32:{ span=32-47 cap=16383 }
+[   10.799066] CPU53 attaching sched-domain(s):
+[   10.799068]  domain-0: span=52-55 level=MC
+[   10.799071]   groups: 53:{ span=53 }, 54:{ span=54 }, 55:{ span=55 }, 
+52:{ span=52 }
+[   10.799081]   domain-1: span=48-63 level=DIE
+[   10.799084]    groups: 52:{ span=52-55 cap=4096 }, 56:{ span=56-59 
+cap=4096 }, 60:{ span=60-63 cap=4096 }, 48:{ span=48-51 cap=4096 }
+[   10.799097]    domain-2: span=0-31,48-63 level=NODE
+[   10.799100]     groups: 48:{ span=48-63 cap=16384 }, 0:{ span=0-15 
+cap=16378 }, 16:{ span=16-31 cap=16383 }
+[   10.799110]     domain-3: span=0-63 level=NUMA
+[   10.799114]      groups: 48:{ span=0-31,48-63 mask=48-63 cap=49152 }, 
+32:{ span=32-47 cap=16383 }
+[   10.799127] CPU54 attaching sched-domain(s):
+[   10.799129]  domain-0: span=52-55 level=MC
+[   10.799131]   groups: 54:{ span=54 }, 55:{ span=55 }, 52:{ span=52 }, 
+53:{ span=53 }
+[   10.799141]   domain-1: span=48-63 level=DIE
+[   10.799144]    groups: 52:{ span=52-55 cap=4096 }, 56:{ span=56-59 
+cap=4096 }, 60:{ span=60-63 cap=4096 }, 48:{ span=48-51 cap=4096 }
+[   10.799157]    domain-2: span=0-31,48-63 level=NODE
+[   10.799161]     groups: 48:{ span=48-63 cap=16384 }, 0:{ span=0-15 
+cap=16378 }, 16:{ span=16-31 cap=16383 }
+[   10.799171]     domain-3: span=0-63 level=NUMA
+[   10.799175]      groups: 48:{ span=0-31,48-63 mask=48-63 cap=49152 }, 
+32:{ span=32-47 cap=16383 }
+[   10.799188] CPU55 attaching sched-domain(s):
+[   10.799189]  domain-0: span=52-55 level=MC
+[   10.799192]   groups: 55:{ span=55 }, 52:{ span=52 }, 53:{ span=53 }, 
+54:{ span=54 }
+[   10.799202]   domain-1: span=48-63 level=DIE
+[   10.799205]    groups: 52:{ span=52-55 cap=4096 }, 56:{ span=56-59 
+cap=4096 }, 60:{ span=60-63 cap=4096 }, 48:{ span=48-51 cap=4096 }
+[   10.799218]    domain-2: span=0-31,48-63 level=NODE
+[   10.799221]     groups: 48:{ span=48-63 cap=16384 }, 0:{ span=0-15 
+cap=16378 }, 16:{ span=16-31 cap=16383 }
+[   10.799231]     domain-3: span=0-63 level=NUMA
+[   10.799235]      groups: 48:{ span=0-31,48-63 mask=48-63 cap=49152 }, 
+32:{ span=32-47 cap=16383 }
+[   10.799248] CPU56 attaching sched-domain(s):
+[   10.799249]  domain-0: span=56-59 level=MC
+[   10.799252]   groups: 56:{ span=56 }, 57:{ span=57 }, 58:{ span=58 }, 
+59:{ span=59 }
+[   10.799262]   domain-1: span=48-63 level=DIE
+[   10.799265]    groups: 56:{ span=56-59 cap=4096 }, 60:{ span=60-63 
+cap=4096 }, 48:{ span=48-51 cap=4096 }, 52:{ span=52-55 cap=4096 }
+[   10.799278]    domain-2: span=0-31,48-63 level=NODE
+[   10.799281]     groups: 48:{ span=48-63 cap=16384 }, 0:{ span=0-15 
+cap=16378 }, 16:{ span=16-31 cap=16383 }
+[   10.799292]     domain-3: span=0-63 level=NUMA
+[   10.799295]      groups: 48:{ span=0-31,48-63 mask=48-63 cap=49152 }, 
+32:{ span=32-47 cap=16383 }
+[   10.799308] CPU57 attaching sched-domain(s):
+[   10.799310]  domain-0: span=56-59 level=MC
+[   10.799313]   groups: 57:{ span=57 }, 58:{ span=58 }, 59:{ span=59 }, 
+56:{ span=56 }
+[   10.799322]   domain-1: span=48-63 level=DIE
+[   10.799325]    groups: 56:{ span=56-59 cap=4096 }, 60:{ span=60-63 
+cap=4096 }, 48:{ span=48-51 cap=4096 }, 52:{ span=52-55 cap=4096 }
+[   10.799338]    domain-2: span=0-31,48-63 level=NODE
+[   10.799341]     groups: 48:{ span=48-63 cap=16384 }, 0:{ span=0-15 
+cap=16378 }, 16:{ span=16-31 cap=16383 }
+[   10.799352]     domain-3: span=0-63 level=NUMA
+[   10.799355]      groups: 48:{ span=0-31,48-63 mask=48-63 cap=49152 }, 
+32:{ span=32-47 cap=16383 }
+[   10.799368] CPU58 attaching sched-domain(s):
+[   10.799370]  domain-0: span=56-59 level=MC
+[   10.799373]   groups: 58:{ span=58 }, 59:{ span=59 }, 56:{ span=56 }, 
+57:{ span=57 }
+[   10.799382]   domain-1: span=48-63 level=DIE
+[   10.799385]    groups: 56:{ span=56-59 cap=4096 }, 60:{ span=60-63 
+cap=4096 }, 48:{ span=48-51 cap=4096 }, 52:{ span=52-55 cap=4096 }
+[   10.799397]    domain-2: span=0-31,48-63 level=NODE
+[   10.799400]     groups: 48:{ span=48-63 cap=16384 }, 0:{ span=0-15 
+cap=16378 }, 16:{ span=16-31 cap=16383 }
+[   10.799410]     domain-3: span=0-63 level=NUMA
+[   10.799414]      groups: 48:{ span=0-31,48-63 mask=48-63 cap=49152 }, 
+32:{ span=32-47 cap=16383 }
+[   10.799426] CPU59 attaching sched-domain(s):
+[   10.799428]  domain-0: span=56-59 level=MC
+[   10.799431]   groups: 59:{ span=59 }, 56:{ span=56 }, 57:{ span=57 }, 
+58:{ span=58 }
+[   10.799440]   domain-1: span=48-63 level=DIE
+[   10.799443]    groups: 56:{ span=56-59 cap=4096 }, 60:{ span=60-63 
+cap=4096 }, 48:{ span=48-51 cap=4096 }, 52:{ span=52-55 cap=4096 }
+[   10.799456]    domain-2: span=0-31,48-63 level=NODE
+[   10.799459]     groups: 48:{ span=48-63 cap=16384 }, 0:{ span=0-15 
+cap=16378 }, 16:{ span=16-31 cap=16383 }
+[   10.799469]     domain-3: span=0-63 level=NUMA
+[   10.799473]      groups: 48:{ span=0-31,48-63 mask=48-63 cap=49152 }, 
+32:{ span=32-47 cap=16383 }
+[   10.799485] CPU60 attaching sched-domain(s):
+[   10.799487]  domain-0: span=60-63 level=MC
+[   10.799490]   groups: 60:{ span=60 }, 61:{ span=61 }, 62:{ span=62 }, 
+63:{ span=63 }
+[   10.799500]   domain-1: span=48-63 level=DIE
+[   10.799503]    groups: 60:{ span=60-63 cap=4096 }, 48:{ span=48-51 
+cap=4096 }, 52:{ span=52-55 cap=4096 }, 56:{ span=56-59 cap=4096 }
+[   10.799515]    domain-2: span=0-31,48-63 level=NODE
+[   10.799519]     groups: 48:{ span=48-63 cap=16384 }, 0:{ span=0-15 
+cap=16378 }, 16:{ span=16-31 cap=16383 }
+[   10.799529]     domain-3: span=0-63 level=NUMA
+[   10.799533]      groups: 48:{ span=0-31,48-63 mask=48-63 cap=49152 }, 
+32:{ span=32-47 cap=16383 }
+[   10.799546] CPU61 attaching sched-domain(s):
+[   10.799548]  domain-0: span=60-63 level=MC
+[   10.799550]   groups: 61:{ span=61 }, 62:{ span=62 }, 63:{ span=63 }, 
+60:{ span=60 }
+[   10.799560]   domain-1: span=48-63 level=DIE
+[   10.799563]    groups: 60:{ span=60-63 cap=4096 }, 48:{ span=48-51 
+cap=4096 }, 52:{ span=52-55 cap=4096 }, 56:{ span=56-59 cap=4096 }
+[   10.799575]    domain-2: span=0-31,48-63 level=NODE
+[   10.799579]     groups: 48:{ span=48-63 cap=16384 }, 0:{ span=0-15 
+cap=16378 }, 16:{ span=16-31 cap=16383 }
+[   10.799589]     domain-3: span=0-63 level=NUMA
+[   10.799593]      groups: 48:{ span=0-31,48-63 mask=48-63 cap=49152 }, 
+32:{ span=32-47 cap=16383 }
+[   10.799606] CPU62 attaching sched-domain(s):
+[   10.799607]  domain-0: span=60-63 level=MC
+[   10.799610]   groups: 62:{ span=62 }, 63:{ span=63 }, 60:{ span=60 }, 
+61:{ span=61 }
+[   10.799620]   domain-1: span=48-63 level=DIE
+[   10.799623]    groups: 60:{ span=60-63 cap=4096 }, 48:{ span=48-51 
+cap=4096 }, 52:{ span=52-55 cap=4096 }, 56:{ span=56-59 cap=4096 }
+[   10.799635]    domain-2: span=0-31,48-63 level=NODE
+[   10.799639]     groups: 48:{ span=48-63 cap=16384 }, 0:{ span=0-15 
+cap=16378 }, 16:{ span=16-31 cap=16383 }
+[   10.799649]     domain-3: span=0-63 level=NUMA
+[   10.799653]      groups: 48:{ span=0-31,48-63 mask=48-63 cap=49152 }, 
+32:{ span=32-47 cap=16383 }
+[   10.799665] CPU63 attaching sched-domain(s):
+[   10.799667]  domain-0: span=60-63 level=MC
+[   10.799670]   groups: 63:{ span=63 }, 60:{ span=60 }, 61:{ span=61 }, 
+62:{ span=62 }
+[   10.799680]   domain-1: span=48-63 level=DIE
+[   10.799683]    groups: 60:{ span=60-63 cap=4096 }, 48:{ span=48-51 
+cap=4096 }, 52:{ span=52-55 cap=4096 }, 56:{ span=56-59 cap=4096 }
+[   10.799695]    domain-2: span=0-31,48-63 level=NODE
+[   10.799699]     groups: 48:{ span=48-63 cap=16384 }, 0:{ span=0-15 
+cap=16378 }, 16:{ span=16-31 cap=16383 }
+[   10.799709]     domain-3: span=0-63 level=NUMA
+[   10.799713]      groups: 48:{ span=0-31,48-63 mask=48-63 cap=49152 }, 
+32:{ span=32-47 cap=16383 }
+[   10.799726] root domain span: 0-63 (max cpu_capacity = 1024)
+[   10.833135] devtmpfs: initialized
+[   10.850493] clocksource: jiffies: mask: 0xffffffff max_cycles: 
+0xffffffff, max_idle_ns: 7645041785100000 ns
+[   10.860707] futex hash table entries: 16384 (order: 8, 1048576 bytes)
+[   10.870358] pinctrl core: initialized pinctrl subsystem
+[   10.877601] SMBIOS 3.0.0 present.
+[   10.880985] DMI: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT17 
+Nemo 2.0 RC0 10/05/2018
+[   10.892569] cpuidle: using governor menu
+[   10.897069] vdso: 2 pages (1 code @ (____ptrval____), 1 data @ 
+(____ptrval____))
+[   10.904605] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+[   10.913915] DMA: preallocated 256 KiB pool for atomic allocations
+[   10.921368] Serial: AMBA PL011 UART driver
+[   10.952984] HugeTLB registered 2.00 MiB page size, pre-allocated 0 pages
+[   10.960757] cryptd: max_cpu_qlen set to 1000
+[   10.966351] ACPI: Interpreter disabled.
+[   10.970932] vgaarb: loaded
+[   10.974738] SCSI subsystem initialized
+[   10.978927] libata version 3.00 loaded.
+[   10.979611] Registered efivars operations
+[   10.985647] clocksource: Switched to clocksource arch_sys_counter
+[   10.992239] VFS: Disk quotas dquot_6.6.0
+[   10.996315] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 
+bytes)
+[   11.003588] pnp: PnP ACPI: disabled
+[   11.016949] PCI: CLS 0 bytes, default 64
+[   11.017166] Unpacking initramfs...
+[   18.701705] Freeing initrd memory: 258820K
+[   18.712591] hw perfevents: enabled with armv8_cortex_a72 PMU driver, 
+7 counters available
+[   18.721384] kvm [1]: 8-bit VMID
+[   18.724582] kvm [1]: IPA Size Limit: 44bits
+[   18.730467] kvm [1]: GICv4 support disabled
+[   18.734731] kvm [1]: vgic-v2@fe020000
+[   18.738493] kvm [1]: GIC system register CPU interface enabled
+[   18.745755] kvm [1]: vgic interrupt IRQ1
+[   18.751000] kvm [1]: Hyp mode initialized successfully
+[   18.833687] workingset: timestamp_bits=44 max_order=25 bucket_order=0
+[   18.852508] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[   18.890310] Block layer SCSI generic (bsg) driver version 0.4 loaded 
+(major 250)
+[   18.897849] io scheduler noop registered
+[   18.901841] io scheduler deadline registered
+[   18.906503] io scheduler cfq registered (default)
+[   18.911292] io scheduler mq-deadline registered
+[   18.915903] io scheduler kyber registered
+[   18.927845] hisi-lpc a01b0000.isa: registered range 
+[0x0000000000ffbfff - 0x0000000000ffffff]
+[   18.943828] hisi-pcie-almost-ecam af800000.pcie: host bridge 
+/soc/pcie@a00a0000 ranges:
+[   18.952004] hisi-pcie-almost-ecam af800000.pcie:   MEM 
+0xa8000000..0xaf7effff -> 0xa8000000
+[   18.960522] hisi-pcie-almost-ecam af800000.pcie:    IO 
+0xaf7f0000..0xaf7fffff -> 0x00000000
+[   18.969053] hisi-pcie-almost-ecam af800000.pcie: resource collision: 
+[io  0x0000-0xffff] conflicts with IPMI Address 1 [io  0x00e4]
+[   18.981149] hisi-pcie-almost-ecam: probe of af800000.pcie failed with 
+error -16
+[   18.989415] EINJ: ACPI disabled.
+[   19.003110] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+[   19.012350] SuperH (H)SCI(F) driver initialized
+[   19.017498] msm_serial: driver initialized
+[   19.022268] arm-smmu-v3 d0040000.smmu_alg: option 
+hisilicon,broken-prefetch-cmd
+[   19.030146] arm-smmu-v3 d0040000.smmu_alg: ias 44-bit, oas 44-bit 
+(features 0x00000f0d)
+[   19.042717] arm-smmu-v3 8d0040000.smmu_alg: option 
+hisilicon,broken-prefetch-cmd
+[   19.050616] arm-smmu-v3 8d0040000.smmu_alg: ias 44-bit, oas 44-bit 
+(features 0x00000f0d)
+[   19.063087] arm-smmu-v3 400d0040000.smmu_alg: option 
+hisilicon,broken-prefetch-cmd
+[   19.071156] arm-smmu-v3 400d0040000.smmu_alg: ias 44-bit, oas 44-bit 
+(features 0x00000f0d)
+[   19.083316] arm-smmu-v3 408d0040000.smmu_alg: option 
+hisilicon,broken-prefetch-cmd
+[   19.091396] arm-smmu-v3 408d0040000.smmu_alg: ias 44-bit, oas 44-bit 
+(features 0x00000f0d)
+[   19.153965] loop: module loaded
+[   19.194531] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.201283] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.208022] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.214762] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.221502] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.228241] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.234981] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.241728] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.248466] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.255208] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.261947] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.268687] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.275425] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.282165] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.288903] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.295641] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.302383] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.309132] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.315871] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.322612] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.329350] cma: cma_alloc: alloc failed, req-size: 33 pages, ret: -12
+[   19.336254] cma: cma_alloc: alloc failed, req-size: 128 pages, ret: -12
+[   19.343315] cma: cma_alloc: alloc failed, req-size: 1024 pages, ret: -12
+[   19.353318] scsi host0: hisi_sas_v2_hw
+[   19.379826]  phy-0:0: sas_phy_setup1 tc=0xffff801da2680630
+[   19.385424] sas_phy phy-0:0: sas_phy_setup2 tc=0xffff801da2680630
+[   19.391890]  phy-0:1: sas_phy_setup1 tc=0xffff801da2680630
+[   19.397476] sas_phy phy-0:1: sas_phy_setup2 tc=0xffff801da2680630
+[   19.403918]  phy-0:2: sas_phy_setup1 tc=0xffff801da2680630
+[   19.409503] sas_phy phy-0:2: sas_phy_setup2 tc=0xffff801da2680630
+[   19.415932]  phy-0:3: sas_phy_setup1 tc=0xffff801da2680630
+[   19.421517] sas_phy phy-0:3: sas_phy_setup2 tc=0xffff801da2680630
+[   19.427945]  phy-0:4: sas_phy_setup1 tc=0xffff801da2680630
+[   19.433530] sas_phy phy-0:4: sas_phy_setup2 tc=0xffff801da2680630
+[   19.439960]  phy-0:5: sas_phy_setup1 tc=0xffff801da2680630
+[   19.445546] sas_phy phy-0:5: sas_phy_setup2 tc=0xffff801da2680630
+[   19.451974]  phy-0:6: sas_phy_setup1 tc=0xffff801da2680630
+[   19.457558] sas_phy phy-0:6: sas_phy_setup2 tc=0xffff801da2680630
+[   19.464008]  phy-0:7: sas_phy_setup1 tc=0xffff801da2680630
+[   19.469593] sas_phy phy-0:7: sas_phy_setup2 tc=0xffff801da2680630
+[   20.104417] hisi_sas_v2_hw a2000000.sas: phyup: phy0 link_rate=11
+[   20.110620] hisi_sas_v2_hw a2000000.sas: phyup: phy1 link_rate=11
+[   20.116788] hisi_sas_v2_hw a2000000.sas: phyup: phy2 link_rate=11
+[   20.122996] hisi_sas_v2_hw a2000000.sas: phyup: phy3 link_rate=11
+[   20.129158] hisi_sas_v2_hw a2000000.sas: phyup: phy4 link_rate=11
+[   20.133825] sas: phy-0:0 added to port-0:0, phy_mask:0x1 
+(500e004aaaaaaa1f)
+[   20.135321] hisi_sas_v2_hw a2000000.sas: phyup: phy5 link_rate=11
+[   20.141482] hisi_sas_v2_hw a2000000.sas: phyup: phy6 link_rate=11
+[   20.145678] sas: DOING DISCOVERY on port 0, pid:7
+[   20.147643] hisi_sas_v2_hw a2000000.sas: phyup: phy7 link_rate=11
+[   20.148243] hisi_sas_v2_hw a2000000.sas: dev[0:2] found
+[   20.159677]  phy-0:0:0: sas_phy_setup1 tc=0xffff801da2680630
+[   20.165407] sas_phy phy-0:0:0: sas_phy_setup2 tc=0xffff801da2680630
+[   20.171945] sas: ex 500e004aaaaaaa1f phy00:U:0 attached: 
+0000000000000000 (no device)
+[   20.172090]  phy-0:0:1: sas_phy_setup1 tc=0xffff801da2680630
+[   20.177820] sas_phy phy-0:0:1: sas_phy_setup2 tc=0xffff801da2680630
+[   20.184333] sas: ex 500e004aaaaaaa1f phy01:U:0 attached: 
+0000000000000000 (no device)
+[   20.184503]  phy-0:0:2: sas_phy_setup1 tc=0xffff801da2680630
+[   20.190232] sas_phy phy-0:0:2: sas_phy_setup2 tc=0xffff801da2680630
+[   20.196743] sas: ex 500e004aaaaaaa1f phy02:U:A attached: 
+500e004aaaaaaa02 (stp)
+[   20.196911]  phy-0:0:3: sas_phy_setup1 tc=0xffff801da2680630
+[   20.202639] sas_phy phy-0:0:3: sas_phy_setup2 tc=0xffff801da2680630
+[   20.209152] sas: ex 500e004aaaaaaa1f phy03:U:B attached: 
+5001e82002865f0e (ssp)
+[   20.209329]  phy-0:0:4: sas_phy_setup1 tc=0xffff801da2680630
+[   20.215062] sas_phy phy-0:0:4: sas_phy_setup2 tc=0xffff801da2680630
+[   20.221576] sas: ex 500e004aaaaaaa1f phy04:U:B attached: 
+5001e8200287321e (ssp)
+[   20.221738]  phy-0:0:5: sas_phy_setup1 tc=0xffff801da2680630
+[   20.227467] sas_phy phy-0:0:5: sas_phy_setup2 tc=0xffff801da2680630
+[   20.233976] sas: ex 500e004aaaaaaa1f phy05:U:B attached: 
+5000cca05b01d9c9 (ssp)
+[   20.234123]  phy-0:0:6: sas_phy_setup1 tc=0xffff801da2680630
+[   20.239852] sas_phy phy-0:0:6: sas_phy_setup2 tc=0xffff801da2680630
+[   20.246366] sas: ex 500e004aaaaaaa1f phy06:U:0 attached: 
+0000000000000000 (no device)
+[   20.246535]  phy-0:0:7: sas_phy_setup1 tc=0xffff801da2680630
+[   20.252268] sas_phy phy-0:0:7: sas_phy_setup2 tc=0xffff801da2680630
+[   20.258779] sas: ex 500e004aaaaaaa1f phy07:U:B attached: 
+5001e820028580ae (ssp)
+[   20.258945]  phy-0:0:8: sas_phy_setup1 tc=0xffff801da2680630
+[   20.264674] sas_phy phy-0:0:8: sas_phy_setup2 tc=0xffff801da2680630
+[   20.271189] sas: ex 500e004aaaaaaa1f phy08:U:B attached: 
+5001e82002858496 (ssp)
+[   20.271361]  phy-0:0:9: sas_phy_setup1 tc=0xffff801da2680630
+[   20.277093] sas_phy phy-0:0:9: sas_phy_setup2 tc=0xffff801da2680630
+[   20.283606] sas: ex 500e004aaaaaaa1f phy09:U:0 attached: 
+0000000000000000 (no device)
+[   20.283770]  phy-0:0:10: sas_phy_setup1 tc=0xffff801da2680630
+[   20.289590] sas_phy phy-0:0:10: sas_phy_setup2 tc=0xffff801da2680630
+[   20.296195] sas: ex 500e004aaaaaaa1f phy10:U:B attached: 
+5001e82002862816 (ssp)
+[   20.296363]  phy-0:0:11: sas_phy_setup1 tc=0xffff801da2680630
+[   20.302179] sas_phy phy-0:0:11: sas_phy_setup2 tc=0xffff801da2680630
+[   20.308785] sas: ex 500e004aaaaaaa1f phy11:U:B attached: 
+5001e8200285850a (ssp)
+[   20.308945]  phy-0:0:12: sas_phy_setup1 tc=0xffff801da2680630
+[   20.314765] sas_phy phy-0:0:12: sas_phy_setup2 tc=0xffff801da2680630
+[   20.321362] sas: ex 500e004aaaaaaa1f phy12:U:0 attached: 
+0000000000000000 (no device)
+[   20.321518]  phy-0:0:13: sas_phy_setup1 tc=0xffff801da2680630
+[   20.327338] sas_phy phy-0:0:13: sas_phy_setup2 tc=0xffff801da2680630
+[   20.333943] sas: ex 500e004aaaaaaa1f phy13:U:0 attached: 
+0000000000000000 (no device)
+[   20.334098]  phy-0:0:14: sas_phy_setup1 tc=0xffff801da2680630
+[   20.339918] sas_phy phy-0:0:14: sas_phy_setup2 tc=0xffff801da2680630
+[   20.346520] sas: ex 500e004aaaaaaa1f phy14:U:0 attached: 
+0000000000000000 (no device)
+[   20.346677]  phy-0:0:15: sas_phy_setup1 tc=0xffff801da2680630
+[   20.352497] sas_phy phy-0:0:15: sas_phy_setup2 tc=0xffff801da2680630
+[   20.359100] sas: ex 500e004aaaaaaa1f phy15:U:0 attached: 
+0000000000000000 (no device)
+[   20.359251]  phy-0:0:16: sas_phy_setup1 tc=0xffff801da2680630
+[   20.365068] sas_phy phy-0:0:16: sas_phy_setup2 tc=0xffff801da2680630
+[   20.371672] sas: ex 500e004aaaaaaa1f phy16:U:B attached: 
+5001882016000000 (host)
+[   20.371838]  phy-0:0:17: sas_phy_setup1 tc=0xffff801da2680630
+[   20.377659] sas_phy phy-0:0:17: sas_phy_setup2 tc=0xffff801da2680630
+[   20.384259] sas: ex 500e004aaaaaaa1f phy17:U:B attached: 
+5001882016000000 (host)
+[   20.384423]  phy-0:0:18: sas_phy_setup1 tc=0xffff801da2680630
+[   20.390243] sas_phy phy-0:0:18: sas_phy_setup2 tc=0xffff801da2680630
+[   20.396850] sas: ex 500e004aaaaaaa1f phy18:U:B attached: 
+5001882016000000 (host)
+[   20.397017]  phy-0:0:19: sas_phy_setup1 tc=0xffff801da2680630
+[   20.402836] sas_phy phy-0:0:19: sas_phy_setup2 tc=0xffff801da2680630
+[   20.409437] sas: ex 500e004aaaaaaa1f phy19:U:B attached: 
+5001882016000000 (host)
+[   20.409602]  phy-0:0:20: sas_phy_setup1 tc=0xffff801da2680630
+[   20.415418] sas_phy phy-0:0:20: sas_phy_setup2 tc=0xffff801da2680630
+[   20.422022] sas: ex 500e004aaaaaaa1f phy20:U:B attached: 
+5001882016000000 (host)
+[   20.422173]  phy-0:0:21: sas_phy_setup1 tc=0xffff801da2680630
+[   20.427994] sas_phy phy-0:0:21: sas_phy_setup2 tc=0xffff801da2680630
+[   20.434594] sas: ex 500e004aaaaaaa1f phy21:U:B attached: 
+5001882016000000 (host)
+[   20.434758]  phy-0:0:22: sas_phy_setup1 tc=0xffff801da2680630
+[   20.440579] sas_phy phy-0:0:22: sas_phy_setup2 tc=0xffff801da2680630
+[   20.447185] sas: ex 500e004aaaaaaa1f phy22:U:B attached: 
+5001882016000000 (host)
+[   20.447364]  phy-0:0:23: sas_phy_setup1 tc=0xffff801da2680630
+[   20.453184] sas_phy phy-0:0:23: sas_phy_setup2 tc=0xffff801da2680630
+[   20.459792] sas: ex 500e004aaaaaaa1f phy23:U:B attached: 
+5001882016000000 (host)
+[   20.459926]  phy-0:0:24: sas_phy_setup1 tc=0xffff801da2680630
+[   20.465742] sas_phy phy-0:0:24: sas_phy_setup2 tc=0xffff801da2680630
+[   20.472346] sas: ex 500e004aaaaaaa1f phy24:D:B attached: 
+500e004aaaaaaa1e (host+target)
+[   20.473130] hisi_sas_v2_hw a2000000.sas: dev[2:5] found
+[   20.485177] hisi_sas_v2_hw a2000000.sas: dev[1:1] found
+[   20.497191] hisi_sas_v2_hw a2000000.sas: dev[3:1] found
+[   20.509241] hisi_sas_v2_hw a2000000.sas: dev[4:1] found
+[   20.514767] hisi_sas_v2_hw a2000000.sas: dev[5:1] found
+[   20.526781] hisi_sas_v2_hw a2000000.sas: dev[6:1] found
+[   20.538824] hisi_sas_v2_hw a2000000.sas: dev[7:1] found
+[   20.550846] hisi_sas_v2_hw a2000000.sas: dev[8:1] found
+[   20.563053] hisi_sas_v2_hw a2000000.sas: dev[9:1] found
+[   20.568532] sas: Enter sas_scsi_recover_host busy: 0 failed: 0
+[   20.568552] sas: ata1: end_device-0:0:2: dev error handler
+[   20.568564] sas: ata1: end_device-0:0:2: Unable to reset ata device?
+[   20.727878] ata1.00: ATA-8: HGST HUS724040ALA640, MFAOA8B0, max UDMA/133
+[   20.734666] ata1.00: 7814037168 sectors, multi 0: LBA48 NCQ (depth 32)
+[   20.743376] ata1.00: configured for UDMA/133
+[   20.747715] sas: --- Exit sas_scsi_recover_host: busy: 0 failed: 0 
+tries: 1
+[   20.759480] scsi 0:0:0:0: Direct-Access     ATA      HGST HUS724040AL 
+A8B0 PQ: 0 ANSI: 5
+[   20.768482] sd 0:0:0:0: [sda] 7814037168 512-byte logical blocks: 
+(4.00 TB/3.64 TiB)
+[   20.776358] sd 0:0:0:0: [sda] Write Protect is off
+[   20.781226] sd 0:0:0:0: [sda] Mode Sense: 00 3a 00 00
+[   20.781285] sd 0:0:0:0: [sda] Write cache: enabled, read cache: 
+enabled, doesn't support DPO or FUA
+[   20.807142] scsi 0:0:1:0: Direct-Access     SanDisk  LT0200MO 
+P404 PQ: 0 ANSI: 6
+[   20.836050]  sda:
+[   20.841757] sd 0:0:0:0: [sda] Attached SCSI disk
+[   21.106218] scsi 0:0:2:0: Direct-Access     SanDisk  LT0200MO 
+P404 PQ: 0 ANSI: 6
+[   21.283134] sd 0:0:1:0: [sdb] 390721968 512-byte logical blocks: (200 
+GB/186 GiB)
+[   21.325155] sd 0:0:1:0: [sdb] Write Protect is off
+[   21.330011] sd 0:0:1:0: [sdb] Mode Sense: cf 00 10 08
+[   21.368679] scsi 0:0:3:0: Direct-Access     HGST     HUC156030CSS200 
+A3F0 PQ: 0 ANSI: 6
+[   21.379727] sd 0:0:3:0: [sdd] 586072368 512-byte logical blocks: (300 
+GB/279 GiB)
+[   21.388536] sd 0:0:3:0: [sdd] Write Protect is off
+[   21.393388] sd 0:0:3:0: [sdd] Mode Sense: f7 00 10 08
+[   21.395700] sd 0:0:3:0: [sdd] Write cache: enabled, read cache: 
+enabled, supports DPO and FUA
+[   21.407151] sd 0:0:1:0: [sdb] Write cache: disabled, read cache: 
+disabled, supports DPO and FUA
+[   21.417692] scsi 0:0:4:0: Direct-Access     SanDisk  LT0200MO 
+P404 PQ: 0 ANSI: 6
+[   21.417958]  sdd:
+[   21.439299] sd 0:0:3:0: [sdd] Attached SCSI disk
+[   21.582299] sd 0:0:2:0: [sdc] 390721968 512-byte logical blocks: (200 
+GB/186 GiB)
+[   21.624339] sd 0:0:2:0: [sdc] Write Protect is off
+[   21.629190] sd 0:0:2:0: [sdc] Mode Sense: cf 00 10 08
+[   21.706374] sd 0:0:2:0: [sdc] Write cache: disabled, read cache: 
+disabled, supports DPO and FUA
+[   21.716827] scsi 0:0:5:0: Direct-Access     SanDisk  LT0200MO 
+P404 PQ: 0 ANSI: 6
+[   21.893654] sd 0:0:4:0: [sde] 390721968 512-byte logical blocks: (200 
+GB/186 GiB)
+[   21.935677] sd 0:0:4:0: [sde] Write Protect is off
+[   21.940528] sd 0:0:4:0: [sde] Mode Sense: cf 00 10 08
+[   22.016279] scsi 0:0:6:0: Direct-Access     SanDisk  LT0200MO 
+P404 PQ: 0 ANSI: 6
+[   22.017886] sd 0:0:4:0: [sde] Write cache: disabled, read cache: 
+disabled, supports DPO and FUA
+[   22.069654]  sdb: sdb1 sdb2
+[   22.192873] sd 0:0:5:0: [sdf] 390721968 512-byte logical blocks: (200 
+GB/186 GiB)
+[   22.234896] sd 0:0:5:0: [sdf] Write Protect is off
+[   22.239766] sd 0:0:5:0: [sdf] Mode Sense: cf 00 10 08
+[   22.315387] scsi 0:0:7:0: Direct-Access     SanDisk  LT0200MO 
+P404 PQ: 0 ANSI: 6
+[   22.316918] sd 0:0:5:0: [sdf] Write cache: disabled, read cache: 
+disabled, supports DPO and FUA
+[   22.323315] random: fast init done
+[   22.369160]  sdc: sdc1 sdc2 sdc3
+[   22.492220] sd 0:0:6:0: [sdg] 390721968 512-byte logical blocks: (200 
+GB/186 GiB)
+[   22.534258] sd 0:0:6:0: [sdg] Write Protect is off
+[   22.539109] sd 0:0:6:0: [sdg] Mode Sense: cf 00 10 08
+[   22.577965] scsi 0:0:8:0: Enclosure         12G SAS  Expander 
+RevB PQ: 0 ANSI: 6
+[   22.586309] scsi 0:0:8:0: Power-on or device reset occurred
+[   22.593121] sas: DONE DISCOVERY on port 0, pid:7, result:0
+[   22.593146] sas: broadcast received: 0
+[   22.593152] sas: broadcast received: 0
+[   22.593156] sas: broadcast received: 0
+[   22.593160] sas: broadcast received: 0
+[   22.593164] sas: broadcast received: 0
+[   22.593167] sas: broadcast received: 0
+[   22.593171] sas: broadcast received: 0
+[   22.593178] sas: phy1 matched wide port0
+[   22.593193] sas: phy-0:1 added to port-0:0, phy_mask:0x3 
+(500e004aaaaaaa1f)
+[   22.593219] sas: phy2 matched wide port0
+[   22.593232] sas: phy-0:2 added to port-0:0, phy_mask:0x7 
+(500e004aaaaaaa1f)
+[   22.593251] sas: phy3 matched wide port0
+[   22.593266] sas: phy-0:3 added to port-0:0, phy_mask:0xf 
+(500e004aaaaaaa1f)
+[   22.593285] sas: phy4 matched wide port0
+[   22.593300] sas: phy-0:4 added to port-0:0, phy_mask:0x1f 
+(500e004aaaaaaa1f)
+[   22.593319] sas: phy5 matched wide port0
+[   22.593332] sas: phy-0:5 added to port-0:0, phy_mask:0x3f 
+(500e004aaaaaaa1f)
+[   22.593349] sas: phy6 matched wide port0
+[   22.593363] sas: phy-0:6 added to port-0:0, phy_mask:0x7f 
+(500e004aaaaaaa1f)
+[   22.593381] sas: phy7 matched wide port0
+[   22.593394] sas: phy-0:7 added to port-0:0, phy_mask:0xff 
+(500e004aaaaaaa1f)
+[   22.616276] sd 0:0:6:0: [sdg] Write cache: disabled, read cache: 
+disabled, supports DPO and FUA
+[   22.641826] sd 0:0:1:0: [sdb] Attached SCSI disk
+[   22.681015]  sde: sde1 sde2 sde3
+[   22.724602] rtc-efi rtc-efi: rtc core: registered rtc-efi as rtc0
+[   22.738490] 602b0000.uart: ttyAMA0 at MMIO 0x602b0000 (irq = 147, 
+base_baud = 0) is a SBSA
+[   22.746933] printk: console [ttyAMA0] enabled
+[   22.755712] printk: bootconsole [pl11] disabled
+[   22.791459] sd 0:0:7:0: [sdh] 390721968 512-byte logical blocks: (200 
+GB/186 GiB)
+[   22.828764] rtc-efi rtc-efi: setting system clock to 2018-11-07 
+18:32:59 UTC (1541615579)
+[   22.833477] sd 0:0:7:0: [sdh] Write Protect is off
+[   22.841725] sd 0:0:7:0: [sdh] Mode Sense: cf 00 10 08
+[   22.915642] sd 0:0:7:0: [sdh] Write cache: disabled, read cache: 
+disabled, supports DPO and FUA
+[   22.941208] sd 0:0:2:0: [sdc] Attached SCSI disk
+[   22.979798]  sdf: sdf1 sdf2 sdf3
+[   23.253026] sd 0:0:4:0: [sde] Attached SCSI disk
+[   23.279081]  sdg: sdg1 sdg2
+[   23.551508] sd 0:0:5:0: [sdf] Attached SCSI disk
+[   23.578883]  sdh: sdh1 sdh2
+[   23.851190] sd 0:0:6:0: [sdg] Attached SCSI disk
+[   24.150829] sd 0:0:7:0: [sdh] Attached SCSI disk
+[   24.155934] Freeing unused kernel memory: 1408K
+[   24.160715] Run /init as init process
+
+EOM

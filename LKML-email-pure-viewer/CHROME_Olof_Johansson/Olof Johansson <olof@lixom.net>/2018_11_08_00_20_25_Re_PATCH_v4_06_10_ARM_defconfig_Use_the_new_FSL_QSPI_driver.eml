@@ -1,0 +1,170 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:48 -0000
+Received: from icoremail.net (unknown [209.85.214.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f7X8EONb0yFZAQ--.26479S3;
+	Thu, 08 Nov 2018 00:21:18 +0800 (CST)
+Received: from mail-pl1-f169.google.com (unknown [209.85.214.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3FkL7EONb10cYAA--.95S3;
+	Thu, 08 Nov 2018 00:21:15 +0800 (CST)
+Received: by mail-pl1-f169.google.com with SMTP id w22-v6so4752059plk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:21:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=sai0rEWO5dfIo6EMYKgTwNRZXaZlmh2kFhl257Ay/BY=;
+        b=IuwLUe0kJd1ChENNHJOOB4vaVcf+CI39dCTt3bcSen5aTdM8oi7l8PA1L5eiTvICes
+         vIN9uZ2IFfl2lKFUsvetuDA4dzIULTiJqmR8rDMxOXeGX7cyW7fftY4FdJMYDLmvUUVF
+         0caiaRtco+650l0w7mPQXin4kRuL0N5waMaY1+DCIt0S/01ZPdJr8Z19NnkfJn+iWOQm
+         LmqkF32ufcfVtd5JMfjlkDns0arBzgCKc/6FxuxIJlzXo6x0FTJIgjoVERC49uqSwmRO
+         fbjHIt4F9rPYajC43c3LMFVw8z+5rje5NDYUgvKh8OHWu418Kc20t5S7aE8BdEUHOC7T
+         DsJw==
+X-Gm-Message-State: AGRZ1gJrTFw1LDqbzpYH9Zk9XlKrwMjshU8fuPTSpwhEJ/aXUtfYD5zY
+	NHwZb4JvD2t8vKl8oE4IOghe17o2r6Dxpk3tigDYDVR1UfPLEVZKFA==
+X-Received: by 2002:a17:902:b789:: with SMTP id e9-v6mr863826pls.338.1541607675385;
+        Wed, 07 Nov 2018 08:21:15 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5443352pjt;
+        Wed, 7 Nov 2018 08:21:14 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dbVbK0hPM2ajoK6UUD9MN3fSmzLCylwXs/hoZm1+iYVbihyuOPs2dOwnwk21J77j8IhTK3
+X-Received: by 2002:a63:82c6:: with SMTP id w189mr735476pgd.344.1541607674479;
+        Wed, 07 Nov 2018 08:21:14 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541607674; cv=none;
+        d=google.com; s=arc-20160816;
+        b=d4eqE99I4nolCwmwPVuGXoIOLiDDqAbXCF4C18iLz7EMOhAoxxV72uZ3z/ZXXVw49E
+         odm8EV0EYbMwSNZB3yiaPliiJhpUuUpaUt7vFBKOXNPyygcd5XpCA2kJ201X7KtJfkYN
+         0wgnFyS0U4Hy+zXFaiGgRLYq2fVtOQGL8CBgfaf9llM7tUdnBV/7E/0Ov1z1eXbgDT9+
+         FqaSfhZccm1U5tkRhJ9llIC+jWSNeWdoUtrmSwMQCoSExmd9O1vy68pWZJch1JITK8xu
+         nK0Eq+8UP9NYbdaWMIzz+IGaYqI1D63nS6haLdpB2Hx77XzMkoENj2XP8sitAyF6gWpB
+         yk/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=sai0rEWO5dfIo6EMYKgTwNRZXaZlmh2kFhl257Ay/BY=;
+        b=uVuOhF/gcttJaq7kcyIwPzCM1RRDa2PaA85Ae5JQ5VOlATMO6GCrwvCfSXKw4Qj57f
+         NnqROHE6scDKWpmnGirXquBX/vrK6G2yz4cZTFPFjLjmfHSGaDT9XvZxxD11G/xsvDeA
+         TYk+itHDQ2Z5DTHErrRWA0uuGhXlS5FvgbdUJvQD93BB4BlftYoMNJW6WjBC3wQslCw3
+         VsTLGlfFF2W5JM0rSfxHUm+Uo+7XBUdzs5eokxTyUjOJcvX5EL4p5nK4D18TUcH2peaG
+         TjAgyGBNRlAAu5Adm2bR/aYksh3X2WRUeAqJyiSYk3tlbdHKy9dMIfEZqRLo5o8cDLeV
+         F9ug==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@lixom-net.20150623.gappssmtp.com header.s=20150623 header.b="GXI/DaYn";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id c5-v6si1077376plr.1.2018.11.07.08.20.58;
+        Wed, 07 Nov 2018 08:21:14 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731324AbeKHBvm (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:51:42 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45178 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbeKHBvl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:51:41 -0500
+Received: by mail-lf1-f67.google.com with SMTP id b20so11878624lfa.12
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 08:20:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sai0rEWO5dfIo6EMYKgTwNRZXaZlmh2kFhl257Ay/BY=;
+        b=GXI/DaYnfhpQm/Ru+LxgxLsxFjYdnECwObsGGtsO8Dtl9aivCU3rPVR43zqId5yC6+
+         Xt+fDdFXJ7g1vFSEGkpG5KW2hkFB7n8PJw9WQ05L5sNf2UB+lAghnCiD67xSWyzGoNjr
+         Nk+6gsZcEbYVxkHLT6BPpAJve97MyY6rhX3zdXOqjRlklXgVqZpnW8YG223/P77JVSVA
+         tFzxV0BCXlStzgc7Fr4ZZqUJgHy0wa0Ep3Zm3A+BHRka2dQEKE28QuGhzKIC+ZmFBC/z
+         z3aQ1FE231F5gApme/v9u/9D1Mkl03DSwW7HgkCPORkLl5Fotx/ZO0PKBqxcKZ3XIzoG
+         +BIw==
+X-Received: by 2002:a19:2d16:: with SMTP id k22mr531826lfj.12.1541607637278;
+ Wed, 07 Nov 2018 08:20:37 -0800 (PST)
+MIME-Version: 1.0
+References: <1541601809-16950-1-git-send-email-frieder.schrempf@kontron.de> <1541601809-16950-7-git-send-email-frieder.schrempf@kontron.de>
+In-Reply-To: <1541601809-16950-7-git-send-email-frieder.schrempf@kontron.de>
+From: Olof Johansson <olof@lixom.net>
+Date: Wed, 7 Nov 2018 08:20:25 -0800
+Message-ID: <CAOesGMgPwwwmizC+R4W1aLpvgcuVOYQr2qR2Vqb6171zGfarRw@mail.gmail.com>
+Subject: Re: [PATCH v4 06/10] ARM: defconfig: Use the new FSL QSPI driver
+ under the SPI framework
+To: frieder.schrempf@kontron.de
+Cc: linux-mtd@lists.infradead.org,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
+        linux-spi@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Mark Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>, miquel.raynal@bootlin.com,
+        Mark Brown <broonie@kernel.org>, david.wolfe@nxp.com,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        prabhakar.kushwaha@nxp.com, yogeshnarayan.gaur@nxp.com,
+        han.xu@nxp.com, Shawn Guo <shawnguo@kernel.org>,
+        frieder.schrempf@exceet.de, Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>, linux-imx@nxp.com,
+        Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Eric Anholt <eric@anholt.net>, Stefan Agner <stefan@agner.ch>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Tony Lindgren <tony@atomide.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Stefan Wahren <stefan.wahren@i2se.com>, yannick.fertre@st.com,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3FkL7EONb10cYAA--.95S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7JFyfXr1UCF47KFWxArWkWFg_yoWDZwb_CF
+	Z7WFZrGr1rJr48uFsxKF4DZrsrtayFyr1vg34Dtr1aqryUtrWUJFykXr1rWr18ua1qkrn7
+	GrWvq3WkAw13CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbq8YjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r4UJwAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_JwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr0_Cr1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Gr0_Gr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52
+	x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8Jr1lIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUqM7K
+	UUUUU
+
+On Wed, Nov 7, 2018 at 6:44 AM Frieder Schrempf
+<frieder.schrempf@kontron.de> wrote:
+>
+> From: Frieder Schrempf <frieder.schrempf@exceet.de>
+>
+> The new driver at spi/spi-fsl-qspi.c replaces the old SPI NOR driver
+> at mtd/fsl-quadspi.c. Switch to the new driver in the defconfigs.
+>
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
+
+Hi Frieder,
+
+This patch is part of a series that I didn't see the rest of, but in
+general we prefer to merge these through arm-soc even if the driver
+goes in through another tree. The way we'd prefer to handle it is that
+once the driver lands, we'll take the config option change to turn it
+on. To avoid our branches to break until both sides have landed, it
+might be a good idea to keep both drivers on for a short while (one
+release).
+
+So, I'm not going to ack this since we avoid taking defconfig changes
+through driver trees (these two defconfigs tend to churn a lot and we
+don't want to create merge conflicts where we don't have to), but
+we'll be happy to pick it up when the time comes.
+
+
+Thanks,
+
+-Olof

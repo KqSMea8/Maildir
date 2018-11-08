@@ -1,0 +1,205 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:18 -0000
+Received: from icoremail.net (unknown [209.85.214.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv5rO_eJbgqtYAQ--.26537S3;
+	Wed, 07 Nov 2018 22:59:27 +0800 (CST)
+Received: from mail-pl1-f174.google.com (unknown [209.85.214.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXEE3M_eJbVPIXAA--.636S3;
+	Wed, 07 Nov 2018 22:59:25 +0800 (CST)
+Received: by mail-pl1-f174.google.com with SMTP id p4-v6so5584889plo.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:59:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding:sender:precedence
+         :list-id;
+        bh=od9qZ/u5DMHeveh8MRZfHbr5BBNuRmqZVRi36J9gC7M=;
+        b=BdfL8sCe/B91my/lqGq6d07YMfAY7HlMhLNel+R/dzoEmpshn/LCNyw1YDrDe9tj3r
+         sNn+7zJJphj8UynClFX8Wy8mbpIUtHMXJkdt2Diya/pSCR+tmlRrjDquv2bsfzU5NwpC
+         h3Bv6lAIFBrAFD52ZTypQyM6rui3U50wnIW8PBwAIA8nY/VPYkdIEN2F5BV3A+UEot5C
+         gyd4IXWljYgYLPowDmWkYTGUPaTiiYtxZIHvc1YwCXMqj8WSK4oZWqAeWTs71F7zkU2c
+         O/15AraxCoLnY7nuYa0TSqmBxX/TrC0r3r8SqY0h3tKjGCx8OrYbaCxmOk5FrZltlMaq
+         /yNQ==
+X-Gm-Message-State: AGRZ1gK++AZ0xbUWVq5cfnTtr7knekB1HzPcNQQFYMJ2az9XMBIaxITo
+	yrR1cwcDlph6fx7PO1gsCqepIF1tZKhtd4HYqlVgB8oCVc+P8sOUzA==
+X-Received: by 2002:a17:902:6b4b:: with SMTP id g11-v6mr538041plt.213.1541602764788;
+        Wed, 07 Nov 2018 06:59:24 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5348215pjt;
+        Wed, 7 Nov 2018 06:59:24 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dG3lTUx9Znk45JrBILU2srGc3RKe0c1iYNio99XUkJE11oh96S1O3KvBIT5ejNKZLk2cX9
+X-Received: by 2002:a17:902:9a94:: with SMTP id w20-v6mr544365plp.115.1541602763973;
+        Wed, 07 Nov 2018 06:59:23 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541602763; cv=none;
+        d=google.com; s=arc-20160816;
+        b=sEGQMPlZNlwoA27KuGwCQErmh/QPZaFNHeEgtnSxonC59TtE/Re76qcs1k/k/SkNn+
+         sWBXrZ74v5kIg/ZSDKutOQnNOB5ss4ltPOcEzpCm+QFGROD27jHVqoe4HloHcsDeK2Ye
+         C0zghAXz80WrBUj6Wdd3Cndx1X/qV0mYNy3KMzKDmhzkz6xW8HrWCAnl4ndWtg7IKOkv
+         vNC82inHu4mVbXGDwCzTt56E9HSrvpfl0kWiP/rs13xKTvmYRzhJS7wDlLsO8JbpEHOD
+         sFM3YLW+Hakp11p+R+y3RTFLqpsSF0mAqRo5udBmN6UkXxWS09M8IJD+TfCDVeAX5cQ4
+         Q98Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:dkim-signature;
+        bh=od9qZ/u5DMHeveh8MRZfHbr5BBNuRmqZVRi36J9gC7M=;
+        b=CEYtaKkN+FUAEnFaTQgkm6KfoaaRNJVy5NUg0hbFnjP821ATPz7uoGdVbe1x4cDYJf
+         2XayI9Do439cfWKHt38Ca9i5ZWHNqON39EwAYbyVVuMYvkKiByzqpzYRQsh+Hi8hiPgq
+         +2W9IVcUWB8S19jynwrGBhJr2kR+Lk7SUeO0GfnA6pv8ot5OTuyc5FH3lGSZJqYNvwM6
+         wIJ66gT4vv3gBAL76wNbJOgjNrhzM7M2vrUMpMi9wP8t1f9QpbQ35w6SDi8CExqY3BFC
+         uO80k2A2ZPzHGpwx27YUf7VHOHNxoK5dguwYXOlzrWKA4iVKUgsJIvDJZYbLzZ2sTioz
+         cRVw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=mwBlWuhu;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id e31si822426pge.270.2018.11.07.06.59.07;
+        Wed, 07 Nov 2018 06:59:23 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730854AbeKHA3k (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:29:40 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40109 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727265AbeKHA3k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:29:40 -0500
+Received: by mail-pf1-f195.google.com with SMTP id x2-v6so3716770pfm.7;
+        Wed, 07 Nov 2018 06:58:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=od9qZ/u5DMHeveh8MRZfHbr5BBNuRmqZVRi36J9gC7M=;
+        b=mwBlWuhuVV4OEqMdCiTCZGTq8R6w85WZJC3puF8AB9KVZcrb21AItbT1kH5FL1YNTa
+         gueduavt2Ar4pmDxu59eVDmqvvavL6bxmcOCTUX9jHzV1KzwnChlAxq3+nVugH0OTXAK
+         up62uhSe51SIF9x8UE6426RzRmqoarNVyt0nNc5fodIbrDMo1nHojSxBC6ZzE6LDlJf7
+         +DIR3FzYOgcZnDR9zUWHH3AHbMlPSX0zrcyIc74mMC5Osa+Ko2TBKgTKCjvAcrllCR09
+         d4E97Z4xUT3UUFG7ib6aPLH2hogy6+2LedTw7CTAt7uxiF8O2hDw+3p0gHS8O5xYqiGg
+         CIyg==
+X-Received: by 2002:a62:a511:: with SMTP id v17-v6mr556795pfm.18.1541602738039;
+        Wed, 07 Nov 2018 06:58:58 -0800 (PST)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id q76-v6sm1155163pfa.18.2018.11.07.06.58.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 06:58:57 -0800 (PST)
+Subject: Re: [PATCH v6 04/18] powerpc/pseries: add of_node_put() in
+ dlpar_detach_node()
+To: Michael Ellerman <mpe@ellerman.id.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
+References: <1541431515-25197-1-git-send-email-frowand.list@gmail.com>
+ <1541431515-25197-5-git-send-email-frowand.list@gmail.com>
+ <87muqlqdog.fsf@concordia.ellerman.id.au>
+From: Frank Rowand <frowand.list@gmail.com>
+Message-ID: <ea4d4314-a7e8-f4cd-f9e0-15fedcd3510f@gmail.com>
+Date: Wed, 7 Nov 2018 06:58:56 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <87muqlqdog.fsf@concordia.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXEE3M_eJbVPIXAA--.636S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7tw13Aw1DWF43Kw47tr1rXrb_yoW8Cr48pw
+	srKFWakF4UXr18uFyIya47WrWvq3yrJr45Kw1qyFZ3u3WDWrn5Wr1Ivw13CwsxGrWUGw1S
+	yF9FqwnxXF1DWaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmIb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
+	6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik2
+	6cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6ry5MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7
+	IYx2IY67AKxVW5JVW7JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E
+	87Iv67AKxVW0oVCq3wCYIxAIcVC2z280aVCY1x0267AKxVW0oVCq3wCF04k20xvY0x0EwI
+	xGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
+	AFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnI
+	WIevJa73UjIFyTuYvjxUqyv3UUUUU
+
+On 11/7/18 4:23 AM, Michael Ellerman wrote:
+> frowand.list@gmail.com writes:
+> 
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> "of: overlay: add missing of_node_get() in __of_attach_node_sysfs"
+> 
+> It would be clearer if you said 'The previous commit "of: overlay ..."
+
+Will fix.
+
+
+>> added a missing of_node_get() to __of_attach_node_sysfs().  This
+>> results in a refcount imbalance for nodes attached with
+>> dlpar_attach_node().  The calling sequence from dlpar_attach_node()
+>> to __of_attach_node_sysfs() is:
+>>
+>>    dlpar_attach_node()
+>>       of_attach_node()
+>>          __of_attach_node_sysfs()
+>>
+>> Tested-by: Alan Tull <atull@kernel.org>
+>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>> ---
+>>
+>> ***** UNTESTED.  I need people with the affected PowerPC systems
+>> *****            (systems that dynamically allocate and deallocate
+>> *****            devicetree nodes) to test this patch.
+> 
+> This looks OK to me in light of the previous patch.
+> 
+> Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+> 
+> It also means dlpar_detach_node() is again behaving as described in the
+> comment to of_detach_node().
+> 
+> It would be good to make mention of:
+> 
+>   Fixes: 68baf692c435 ("powerpc/pseries: Fix of_node_put() underflow during DLPAR remove")
+> 
+> Which removed an of_node_put() in the exact same place for different
+> reasons.
+
+OK.
+
+-Frank
+
+> 
+> cheers
+> 
+>> diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
+>> index 7625546caefd..17958043e7f7 100644
+>> --- a/arch/powerpc/platforms/pseries/dlpar.c
+>> +++ b/arch/powerpc/platforms/pseries/dlpar.c
+>> @@ -270,6 +270,8 @@ int dlpar_detach_node(struct device_node *dn)
+>>  	if (rc)
+>>  		return rc;
+>>  
+>> +	of_node_put(dn);
+>> +
+>>  	return 0;
+>>  }
+>>  
+>> -- 
+>> Frank Rowand <frank.rowand@sony.com>
+> 

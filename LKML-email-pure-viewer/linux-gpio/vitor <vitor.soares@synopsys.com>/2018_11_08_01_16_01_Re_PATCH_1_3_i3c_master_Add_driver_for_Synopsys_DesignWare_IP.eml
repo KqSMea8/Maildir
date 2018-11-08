@@ -1,0 +1,204 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:12 -0000
+Received: from icoremail.net (unknown [209.85.210.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH9IAHuNbjHRZAQ--.26878S3;
+	Thu, 08 Nov 2018 01:16:50 +0800 (CST)
+Received: from mail-pf1-f179.google.com (unknown [209.85.210.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHJ0P9HeNbyH8YAA--.504S3;
+	Thu, 08 Nov 2018 01:16:46 +0800 (CST)
+Received: by mail-pf1-f179.google.com with SMTP id b11-v6so7972887pfi.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:16:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:message-id:date:user-agent:mime-version:in-reply-to
+         :content-transfer-encoding:content-language:sender:precedence
+         :list-id;
+        bh=oFIUCUJQcPD8aK2r0CqlWB3Zggur8nubA4/BnhaJEWY=;
+        b=romCm2BK1kxWIZfgOvFgn/CA62Itvkco6o1fSyp2QhNa2LKjnI+cB7j0gtlptHtR+W
+         bQqPkJBxYjzGgeERHp/BoxNXmwn6biVYvxA4JTRTL4D6oUrPVFyGqb6q0RG/9TAMjwUc
+         ldPXAj2DLVNAW9/bDDC6252dyyRowIK46Y1HSejn62u8PiFCZizhteCBpDnyfjl/d1uf
+         cI5gbmV3LcrVrRLmzBLUDj4G3E8tgFhz42Zk1IjXXm+TVqW2/cxzG8tEFxh+YZAII6Aw
+         AocCe+6aBkAvMmgrNbhxUzDcakJTYDtRlOPsHUzSbOIgwgc8HWsqou7Em7nbenMWbAgq
+         36Gw==
+X-Gm-Message-State: AGRZ1gKV3e3a7LrD+iPo/eMBNJk1ELsLRJ3VA40wxP01lk6/Jcbh8OQ5
+	Ks+CHqTOnvh03rq5OSuF7AIeOf/VJVE3ZwGjEmFrwrlfxidtG83QoQ==
+X-Received: by 2002:a62:c184:: with SMTP id i126-v6mr1041446pfg.53.1541611005689;
+        Wed, 07 Nov 2018 09:16:45 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5504788pjt;
+        Wed, 7 Nov 2018 09:16:44 -0800 (PST)
+X-Google-Smtp-Source: AJdET5e65JKDzzqX2U8B6KF2QJMUdW3EA1K760DibpC4GM76YpZw6Ahrdj8Ls2L+v8C4ubUqfQ5J
+X-Received: by 2002:a17:902:4324:: with SMTP id i33-v6mr1051947pld.253.1541611004784;
+        Wed, 07 Nov 2018 09:16:44 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541611004; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Le24YXqKpGiIPkiznJ1fjaHwOyX3bHGUe/SN6Dk91/mkM3mkEKygue37iesxkJQ4HI
+         559bR2zEPOmNawaWvSevcdiIz61GiXDzVN/s5yNReIYDBHxLCx5SCb+ivRnGb5s68VdS
+         hu6oKTnlU3RcOONaH1k+pprPaz8/7v1sVWqNzvCOiqZaV1f3WQnK1/AFabm4qy7X7eVq
+         TPv/faET2P7pSmgjOUiZYoW46M2swnQk9Ns4hn1wIXmkcjCaLHyLMFTbJRlCfLJWQOWH
+         uPC1RwSoFvBI0tp+ge7hH90U+HWAeo4q4OI1DAP7vA+0F+R33B9XfqESuyFThQVeQTmP
+         g2xw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-language
+         :content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:dkim-signature;
+        bh=oFIUCUJQcPD8aK2r0CqlWB3Zggur8nubA4/BnhaJEWY=;
+        b=zq8X+Z4vWXNqPw5cReDeb3QaqhqSTXAyjikVLNg/Gwf+fsJi1+2UoNXWZ0FichESv5
+         576ExO145j2JPL705Y+gGOUHWDMTXHsHJalBd4lvj1lAxBUpKgKUsxf0WH4Nd3S4AEM0
+         A8AHebb0IEaHD2Iwxs3GPl6LgP07miOfMohACB5Uk/XJf87+r3eIL5zfDnTFojfi+5TU
+         LwWEfpSIcRc7c2gHoLwIo/sRwit1Dhir0JeKQ2KKg9U4HJLeFXKzaqM0Zl1S/KEG7sqG
+         nvE9gPmJbr23qww52ULfcUIxeonrvtyWKy8gmEOEGSm5mrftwOLAj2xnf7e5M4B5M5I9
+         wdHg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@synopsys.com header.s=mail header.b=BzM35mhF;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=synopsys.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id k69-v6si1141522pfc.161.2018.11.07.09.16.28;
+        Wed, 07 Nov 2018 09:16:44 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728072AbeKHCrl (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:47:41 -0500
+Received: from us01smtprelay-2.synopsys.com ([198.182.47.9]:49332 "EHLO
+        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbeKHCrl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:47:41 -0500
+Received: from mailhost.synopsys.com (mailhost1.synopsys.com [10.12.238.239])
+        by smtprelay.synopsys.com (Postfix) with ESMTP id 22B8324E0372;
+        Wed,  7 Nov 2018 09:16:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1541610983; bh=M5fTyR4ZdkZypVDxzlDWk94TVstF4kI7osU4Ap4uT4w=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To:From;
+        b=BzM35mhFlyS2gTFv82Knxh8WOqKI6lbR+5xPO16ysqi56hDbQURlgofpNbQesuA0b
+         FcoKIqNYXF+0aDhHdptJOtvqGrTsfpi7+SX7uDwJSovaLblEKsC6EudquJZY6yxr5P
+         lLOt0zpB5QsFgKycHXIjH+RPClh3Kgj+CTZR1tdX1ML5IOUZrV/DcU4UyAVte+Zhe8
+         xnZPABkH9H4NLS0op4HLnrijLRYUuzblbrq0oYBDu4TWvb+K03p5VJfqLSEL0ESXgp
+         iXIkkEr+IOXz+hRhyXPIL4UOHCYiSCb8vdD8VstegOK2alAHGHliw2aU+iByF3HoSu
+         lZcTpZ4a3umiQ==
+Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 016CC57A2;
+        Wed,  7 Nov 2018 09:16:18 -0800 (PST)
+Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
+ US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 7 Nov 2018 09:16:18 -0800
+Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
+ DE02WEHTCA.internal.synopsys.com (10.225.19.92) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 7 Nov 2018 18:16:16 +0100
+Received: from [10.0.2.15] (10.107.19.141) by DE02WEHTCB.internal.synopsys.com
+ (10.225.19.80) with Microsoft SMTP Server (TLS) id 14.3.408.0; Wed, 7 Nov
+ 2018 18:16:16 +0100
+Subject: Re: [PATCH 1/3] i3c: master: Add driver for Synopsys DesignWare IP
+To: Geert Uytterhoeven <geert@linux-m68k.org>,
+        Vitor Soares <vitor.soares@synopsys.com>
+CC: Matthew Wilcox <willy@infradead.org>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Przemyslaw Sroka <psroka@cadence.com>,
+        Arkadiusz Golec <agolec@cadence.com>,
+        Alan Douglas <adouglas@cadence.com>,
+        Bartosz Folta <bfolta@cadence.com>,
+        Damian Kos <dkos@cadence.com>,
+        Alicja Jurasik-Urbaniak <alicja@cadence.com>,
+        "Cyprian Wronka" <cwronka@cadence.com>,
+        Suresh Punnoose <sureshp@cadence.com>,
+        "Rafal Ciepiela" <rafalc@cadence.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        "Kumar Gala" <galak@codeaurora.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Xiang Lin <Xiang.Lin@synaptics.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>, <pgaj@cadence.com>,
+        Peter Rosin <peda@axentia.se>, <mshettel@codeaurora.org>,
+        <swboyd@chromium.org>, <joao.pinto@synopsys.com>,
+        <luis.oliveira@synopsys.com>, <manuel.abreu@synopsys.com>,
+        <gustavo.pimentel@synopsys.com>
+References: <1540807618-13246-1-git-send-email-soares@synopsys.com>
+ <1540807618-13246-2-git-send-email-soares@synopsys.com>
+ <20181029134100.GD28520@bombadil.infradead.org>
+ <8a71cb94-ccf5-8ec0-446a-37a29405f585@synopsys.com>
+ <CAMuHMdUO5_-TsGiu3otuLqNtLNgdnw=1QdKjTzPmSxHp9QotxQ@mail.gmail.com>
+From: vitor <vitor.soares@synopsys.com>
+Message-ID: <4e05e568-c010-a6db-92b1-4c26ad503333@synopsys.com>
+Date: Wed, 7 Nov 2018 17:16:01 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <CAMuHMdUO5_-TsGiu3otuLqNtLNgdnw=1QdKjTzPmSxHp9QotxQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.107.19.141]
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHJ0P9HeNbyH8YAA--.504S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7XrW8Wr18ZF17Cw4rZw4ktFb_yoWDZFbEqa
+	ykuwn7Cr4UuF1UKFZxJan8A3WUCay8W3Wj93WxAr93uFWrXFZ3ua1kuFyUA3y7Wr43Xrn8
+	urn3u3s8ZrWa9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbBxYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64
+	vIr41l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY
+	1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6r4lc2IjII80xcxEwVAKI48JMxvI42IY6x
+	IIjxv20xvE14v26F1j6w1UMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvE
+	x4A2jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20x
+	vY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkE
+	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_Wrv_Gr1UMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWr
+	JrUvcSsGvfC2KfnxnUUI43ZEXa7IU55Ef5UUUUU==
+
+Hi Geert,
+
+On 07/11/18 15:34, Geert Uytterhoeven wrote:
+> Hi Vitor,
+>
+> On Wed, Nov 7, 2018 at 4:15 PM vitor <vitor.soares@synopsys.com> wrote:
+>> On 29/10/18 13:41, Matthew Wilcox wrote:
+>>> On Mon, Oct 29, 2018 at 10:06:56AM +0000, Vitor soares wrote:
+>>>> +config DW_I3C_MASTER
+>>>> +    tristate "Synospsys DesignWare I3C master driver"
+>>>> +    depends on I3C
+>>>> +    depends on !(ALPHA || PARISC)
+>>> why?
+>> Please check this email thread: https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_2018_10_8_393&d=DwIBaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=qVuU64u9x77Y0Kd0PhDK_lpxFgg6PK9PateHwjb_DY0&m=dVPXOATdi751iTXEXYcWuChJA6hcIkXr8tF-i9hrv4E&s=Nk3lXNpRMzhvKMnlXUsFySTr5VYAr2228vXaZfiGBgM&e=
+> Hence this deserves a comment, so we know when/what to do to drop the
+> dependency:
+>
+>      depends on  !(ALPHA || PARISC) # needs {read,write}sl()
+>
+> Gr{oetje,eeting}s,
+>
+>                          Geert
+>
+I agree with you, I just didn't know if I should comment or not. I will 
+do that next version.
+
+
+Best regards,
+
+Vitor Soares

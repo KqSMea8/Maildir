@@ -1,0 +1,180 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:20 -0000
+Received: from icoremail.net (unknown [209.85.215.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv+4g_uJbHa1YAQ--.26678S3;
+	Wed, 07 Nov 2018 23:00:50 +0800 (CST)
+Received: from mail-pg1-f169.google.com (unknown [209.85.215.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDHrEgf_uJbz_MXAA--.6380S3;
+	Wed, 07 Nov 2018 23:00:47 +0800 (CST)
+Received: by mail-pg1-f169.google.com with SMTP id w3-v6so7412752pgs.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:00:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:sender:precedence:list-id;
+        bh=eR2pW+izYCqkZ3ddThkngdjZxzmNnyvxyAauSFaq8MQ=;
+        b=A1hG6Mz7qU0lB8lw8FtkdlQ+BGZxodJAbA/HWq4dRuaMfsyFb9kvtjNb3PTKQNllgI
+         tBXbzWj8wexfs27DxXpDWoMjyjUwwSiJBjth89hxfmfSMLZzeuJveDD+2Gz/mRB0tjki
+         rdnOhNTKvqSkhA/FZ6mS78Q4HSJuI8L6o3Fvarzsmhx/SifGk8vyL6p4AZnmC5VQUVgm
+         tRaqrV4fDhwALAp3XNTfvwZgbQdt3U4fP19yE72CKjDHq8+4+Flu+UpNZLScSZo/ZDQs
+         FWKUKqM8uUK8mvFwJmCQ748urMatlTwN3WtNadXv0GdlICfNAe3dD5sCNd8KEK6vhZhG
+         iESg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=ibm.com
+X-Gm-Message-State: AGRZ1gIvKjNQjgFrD5wcWk9rBI/JDgTR00HdwRCQjllPyXdRyg4546kJ
+	tfyGHMjY5ZIugEkCdQ9UQeGXDcbASKM5FX5sYV9aOPQtAAZf4tNfBw==
+X-Received: by 2002:a63:cd17:: with SMTP id i23mr456999pgg.13.1541602847168;
+        Wed, 07 Nov 2018 07:00:47 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5349885pjt;
+        Wed, 7 Nov 2018 07:00:46 -0800 (PST)
+X-Google-Smtp-Source: AJdET5e4jmJXxFLTIV97egU5ucNAe6+YpBOEjYZ8pnY7BVvBOHoM2DDDtBbY0frhMx9Ki6FPLYPc
+X-Received: by 2002:a63:c344:: with SMTP id e4mr467579pgd.268.1541602846535;
+        Wed, 07 Nov 2018 07:00:46 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541602846; cv=none;
+        d=google.com; s=arc-20160816;
+        b=1BAKJ8HhIJPJ0wMrLSq9p3XcXuGk25pANJHxwHqKhkHG/kAGgnaROM+j+15gAT7/rx
+         jr41oAWdZfhP9eleyT1ieIZPgQIbzK+zeRlNmBCRiz8Pc+NOh/n8pl4Gcym5/z8O+tJP
+         4H3yXNOorAEurilY2COjxyQFRbFRM6jq+oeFZufY83M7gybo4d2uomTDBMkizUtD6mk6
+         HyGPhbskQEMMChIbsEIlm3K2TFkYDJw4czCPWiQLgt0CBPV67FYXiYIG3f9LPnhg+fmo
+         yvgIZlN4i+M2p6MBA+b592hoNbkndq1n5zsP9K5hc6fH54cF2anWin0VM1u/5LUxGUPg
+         AlWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:date:subject:cc:to:from;
+        bh=eR2pW+izYCqkZ3ddThkngdjZxzmNnyvxyAauSFaq8MQ=;
+        b=yJ7IO0NK+psvJgcT0YWzTNxXHyE+19/7qkYEZsKvfNPdGBKWVobb3Ry9dx7rztXtNr
+         QochU6mPiUp7eB6SLMJVObNj3ZYetNV3a+tPMJphr4pwbBX/cRgQxb4lcyPh0DkI6MMh
+         +ipyOdkATwM6lgZGv59yRBJWo2XO0zKuBTStJwHvAHY0yM9t3vZsK2bW2SzLQA2YyMxn
+         9xqj1x8FaOIFfdZTXqpYSgTSUfu5KIdgSlg8/3xuODkZUeadr6KQjZUQCc+LHGINSxtB
+         9EmOTNBCR8p66VLdrzh/1b822o/UopfoOuAcMpAAWDD8NWxcI3GdeF8M86m2QkBZLi49
+         ZAjw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=ibm.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 76-v6si936436pfa.194.2018.11.07.07.00.31;
+        Wed, 07 Nov 2018 07:00:46 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731168AbeKHAbB (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:31:01 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42003 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727866AbeKHAbB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:31:01 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id wA7F04ND102164
+        for <linux-kernel@vger.kernel.org>; Wed, 7 Nov 2018 10:00:17 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2nm1303mrc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 10:00:16 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Wed, 7 Nov 2018 15:00:15 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 7 Nov 2018 15:00:12 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id wA7F0BmA48890002
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 7 Nov 2018 15:00:11 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 89B665205A;
+        Wed,  7 Nov 2018 15:00:11 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.58])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 3DCF15204F;
+        Wed,  7 Nov 2018 15:00:10 +0000 (GMT)
+Received: by rapoport-lnx (sSMTP sendmail emulation); Wed, 07 Nov 2018 17:00:09 +0200
+From: Mike Rapoport <rppt@linux.ibm.com>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH] kernel-doc: extend $type_param to match members referenced by pointer
+Date: Wed,  7 Nov 2018 17:00:08 +0200
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-GCONF: 00
+x-cbid: 18110715-0020-0000-0000-000002E32AFC
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 18110715-0021-0000-0000-00002132A8AA
+Message-Id: <1541602808-26233-1-git-send-email-rppt@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2018-11-07_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1807170000 definitions=main-1811070135
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDHrEgf_uJbz_MXAA--.6380S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7uw45uryxKF13CrW5trWxtFb_yoW8XFyrpw
+	n7Zw18G3y5Aa1xJ3W7Ar4fur13X3yq93W7Gw1UXFyayrW7tw4IqF12kr1rKwnI9r4Svr90
+	9w4UZayUK3WxGrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW5WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCbIYCTnIWIevJa73UjIFyTuYvjxUHApe
+	UUUUU
+
+Currently, function parameter description can match '@type.member'
+expressions but fails to match '@type->member'.
+Extend the $type_param regex to allow matching both
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ scripts/kernel-doc | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+index ffbe901..3ce8800 100755
+--- a/scripts/kernel-doc
++++ b/scripts/kernel-doc
+@@ -212,7 +212,7 @@ my $anon_struct_union = 0;
+ my $type_constant = '\b``([^\`]+)``\b';
+ my $type_constant2 = '\%([-_\w]+)';
+ my $type_func = '(\w+)\(\)';
+-my $type_param = '\@(\w*(\.\w+)*(\.\.\.)?)';
++my $type_param = '\@(\w*((\.\w+)|(->\w+))*(\.\.\.)?)';
+ my $type_fp_param = '\@(\w+)\(\)';  # Special RST handling for func ptr params
+ my $type_env = '(\$\w+)';
+ my $type_enum = '\&(enum\s*([_\w]+))';
+@@ -361,7 +361,7 @@ my $doc_com = '\s*\*\s*';
+ my $doc_com_body = '\s*\* ?';
+ my $doc_decl = $doc_com . '(\w+)';
+ # @params and a strictly limited set of supported section names
+-my $doc_sect = $doc_com . 
++my $doc_sect = $doc_com .
+     '\s*(\@[.\w]+|\@\.\.\.|description|context|returns?|notes?|examples?)\s*:(.*)';
+ my $doc_content = $doc_com_body . '(.*)';
+ my $doc_block = $doc_com . 'DOC:\s*(.*)?';
+@@ -751,7 +751,7 @@ sub output_blockhead_rst(%) {
+ 
+ #
+ # Apply the RST highlights to a sub-block of text.
+-#   
++#  
+ sub highlight_block($) {
+     # The dohighlight kludge requires the text be called $contents
+     my $contents = shift;
+-- 
+2.7.4

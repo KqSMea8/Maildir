@@ -1,0 +1,285 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:08 -0000
+Received: from icoremail.net (unknown [209.85.210.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f0FUbuNbBFhbAQ--.27141S3;
+	Thu, 08 Nov 2018 06:59:32 +0800 (CST)
+Received: from mail-pf1-f176.google.com (unknown [209.85.210.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHwExSbuNbl6cZAA--.1824S3;
+	Thu, 08 Nov 2018 06:59:30 +0800 (CST)
+Received: by mail-pf1-f176.google.com with SMTP id u13-v6so8360671pfm.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:59:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-transfer-encoding:content-language:sender:precedence
+         :list-id;
+        bh=Aiwguuk6z3WuTxAmCpUzmPVhfuHFfWB0zfyw1VGJPlY=;
+        b=D4s1yBDvPEV2GIQOlOLjr2z20RoYgyGlYbKc6/e1b6I/+mWUXZDk5re+31ovdz0Rzh
+         OrEHTXVy91KlvUYaSQaZx+clsOJqHyWvccgfOygAuFPyWt0RvvnFh897SvbBJj1LLbCz
+         KK+bOroBt+gi9QxPcwRXxz2HZbD5l2wo7wAepCpZK4iF0bZ4jrsTqViWWkkT71n69OJA
+         lYcchuEFPWjL2cg2RrN/sfxEcNYAV0G7Uc9/j9ju8mZHwQpV1UAhU5Dcj5M95t9FoCuf
+         +XZJLQ/16kY+fuOqjwFSoKmhrhBumOoSnm8JB6h9cbGC9pDAUsb0sn/RBnOqhw9psB+8
+         H20g==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+X-Gm-Message-State: AGRZ1gKFGDtU7oSLEeSZJF/qWOVbPnFbYTQfF8dAb1USY913q3Zsu3wr
+	jQRqOzYintrIgjS+fbviU7zRW5yC1n+ukwERnbDe1TPR3482clbG6g==
+X-Received: by 2002:a62:3687:: with SMTP id d129-v6mr2230829pfa.56.1541631570085;
+        Wed, 07 Nov 2018 14:59:30 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp101288pjt;
+        Wed, 7 Nov 2018 14:59:28 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cLGh26UUHdThlxon+pnNekDxqnQ0q0Vmc9jGod0eVpPsCsGk6NQW6paiHamIEEtq3d/+xI
+X-Received: by 2002:a63:c10f:: with SMTP id w15mr1833683pgf.199.1541631568835;
+        Wed, 07 Nov 2018 14:59:28 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541631568; cv=none;
+        d=google.com; s=arc-20160816;
+        b=OWjZ7Gj+yOW+cuOztB9C23VYlqUYw/oJqyr2uYfS4ERud4vnFr8SJi9KzH2J1WRh2W
+         Kq3OhpuxGIkUyOCWqkWTLr6lwrWua/OIvrSgcd/s0KM+eHb/d6fM1SODTTxEgB1zW7Mb
+         L/bZxAx2YN0RXsNU/Xt/ug/zafVKkbrjoG/W5nAUdoizmbhguVZKh4CT3pdm6SAQrofl
+         BN7tWrmAIrcMQCLGbe5mevimiX6R0lWjeZ0bQRCJru0moSYOFSuk1JSsfg5PUWs6a9Io
+         bsGS1Nbfllq577mtJwgi2neyYIzNetd6oIKLrT8k3+LwR9txGXmX9yn1BH7Lk4ndYCnu
+         sPsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-language
+         :content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:organization:autocrypt:openpgp:from:references:cc:to
+         :subject;
+        bh=Aiwguuk6z3WuTxAmCpUzmPVhfuHFfWB0zfyw1VGJPlY=;
+        b=WnHggowhSodR//0hmnisZBTtvN3xAz2LzyDG0YElGvcXi03DfANJ1Xg9qwg+XvTQMl
+         GrbuCuGqIrgP6PeoTfFsH7ghtnsn+7CnwCbMhdmdvqIFYPbCdPC5wpSNXdOZe0a0Tylq
+         K/ofI4ul1je6mZ2TDq9nL+Ktym1Zn4q0Vkzpj2JuTVKpL7Yz9wnombtMmwi7+9ppYL9r
+         otYbOW22LKJcaJVXScClMwvGRk8amIRzKgYoBJATQqr11QxZqlt6xL/oL37m/rd8GOfe
+         5elZOFw144jCCnusNx9FpCsRVhBe5+Sy7I2Zs3SewOa8ku22ctRlyu8Jshr4ByUT1HEE
+         l5fw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id h2-v6si2098656plh.157.2018.11.07.14.59.12;
+        Wed, 07 Nov 2018 14:59:28 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727854AbeKHIbk (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:31:40 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:27663 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726896AbeKHIbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:31:40 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6D060804E0;
+        Wed,  7 Nov 2018 22:59:06 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-55.bos.redhat.com [10.18.17.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F91219481;
+        Wed,  7 Nov 2018 22:58:59 +0000 (UTC)
+Subject: Re: [PATCH v14 10/12] cpuset: Add documentation about the new
+ "cpuset.sched.partition" flag
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        kernel-team@fb.com, pjt@google.com, luto@amacapital.net,
+        Mike Galbraith <efault@gmx.de>, torvalds@linux-foundation.org,
+        Roman Gushchin <guro@fb.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Tom Hromatka <tom.hromatka@oracle.com>
+References: <1539635377-22335-1-git-send-email-longman@redhat.com>
+ <1539635377-22335-11-git-send-email-longman@redhat.com>
+ <20181106115045.GO22431@hirez.programming.kicks-ass.net>
+From: Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <7f71f746-582b-42d0-11f1-e690ab4d94b0@redhat.com>
+Date: Wed, 7 Nov 2018 17:58:58 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20181106115045.GO22431@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 07 Nov 2018 22:59:06 +0000 (UTC)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHwExSbuNbl6cZAA--.1824S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxAryUWw17KF4UCF15uFyrCrg_yoWrtrW7pF
+	WDJay3tws8Gw13C34Sq3WIvw1rt397Ar1UJrn8Jry8AwsxJ3Z2yF1Iya15Z3WUWr93Ja4j
+	vrWYg34fuF1qyFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmSb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAKzI0EY4vE52x082I5MxkFs20E
+	Y4vE44CYbxCE4x80FwCY02Avz4vEIxC_ZwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI
+	8IcVAFwI0_JFI_Gr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCYIxAIcVC2z280
+	aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7V
+	AKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j
+	6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBI
+	daVFxhVjvjDU0xZFpf9x07bl-BiUUUUU=
+
+On 11/06/2018 06:50 AM, Peter Zijlstra wrote:
+> On Mon, Oct 15, 2018 at 04:29:35PM -0400, Waiman Long wrote:
+>> The cgroup-v2.rst file is updated to document the purpose of the new
+>> "cpuset.sched.partition" flag and how its usage.
+>>
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+>> ---
+>>  Documentation/admin-guide/cgroup-v2.rst | 66 +++++++++++++++++++++++++
+>>  1 file changed, 66 insertions(+)
+>>
+>> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+>> index 533e85cb851b..178cda473a26 100644
+>> --- a/Documentation/admin-guide/cgroup-v2.rst
+>> +++ b/Documentation/admin-guide/cgroup-v2.rst
+>> @@ -1686,6 +1686,72 @@ Cpuset Interface Files
+>>  
+>>  	Its value will be affected by memory nodes hotplug events.
+>>  
+>> +  cpuset.sched.partition
+>> +	A read-write single value file which exists on non-root
+>> +	cpuset-enabled cgroups.  It accepts either "0" (off) or "1"
+>> +	(on) when written to.  
+>> +     This flag is set and owned by the
+>> +	parent cgroup.
+> What does that mean? The parent cgroup doesn't 'set' anything at all.
+> The user will.
+>
+>> +
+>> +	If set, it indicates that the current cgroup is the root of a
+>> +	new partition or scheduling domain that comprises itself and
+>> +	all its descendants except those that are separate partition
+>> +	roots themselves and their descendants.  The root cgroup is
+>> +	always a partition root.
+>> +
+>> +	There are constraints on where this flag can be set.  It can
+>> +	only be set in a cgroup if all the following conditions are true.
+>> +
+>> +	1) The "cpuset.cpus" is not empty and the list of CPUs are
+>> +	   exclusive, i.e. they are not shared by any of its siblings.
+>> +	2) The parent cgroup is a partition root.
+>> +	3) The "cpuset.cpus" is also a proper subset of the parent's
+>> +	   "cpuset.cpus.effective".
+>> +	4) There is no child cgroups with cpuset enabled.  This is for
+>> +	   eliminating corner cases that have to be handled if such a
+>> +	   condition is allowed.
+>> +
+>> +	Setting this flag will take the CPUs away from the effective
+>> +	CPUs of the parent cgroup.  Once it is set, this flag cannot
+>> +	be cleared if there are any child cgroups with cpuset enabled.
+>> +
+>> +	A parent partition cannot distribute all its CPUs to its
+>> +	child partitions.  There must be at least one cpu left in the
+>> +	parent partition.
+>> +
+>> +	Once becoming a partition root, changes to "cpuset.cpus" is
+>> +	generally allowed as long as the first condition above is true,
+>> +	the change will not take away all the CPUs from the parent
+>> +	partition and the new "cpuset.cpus" value is a superset of its
+>> +	children's "cpuset.cpus" values.
+>> +	Sometimes, external factors like changes to ancestors'
+>> +	"cpuset.cpus" or cpu hotplug can cause the state of the partition
+>> +	root to change.  On read, the "cpuset.sched.partition" file
+>> +	can show the following values.
+> Are those the only conditions under which that -1 can happen? Parent
+> taking away CPUs it previously granted and hotplug?
+
+Yes, if none of the cpus are available. It will become invalid. It still
+remains a partition (a partial one) if at least one cpu is allocated to
+that partition.
+
+>> +
+>> +	"0"  Not a partition root
+>> +	"1"  Partition root
+>> +	"-1" Erroneous partition root
+>> +
+>> +	It is a partition root if the first 2 partition root conditions
+>> +	above are true and at least one CPU from "cpuset.cpus" is
+>> +	granted by the parent cgroup.
+>> +
+>> +	A partition root can become an erroneous partition root if none
+>> +	of CPUs requested in "cpuset.cpus" can be granted by the parent
+>> +	cgroup or the parent cgroup is no longer a partition root.
+>> +	In this case, it is not a real partition even though the
+>> +	restriction of the first partition root condition above will
+>> +	still apply.  All the tasks in the cgroup will be migrated to
+>> +	the nearest ancestor partition.
+> Effectively or actual? Actual migrating tasks out of the cgroup is
+> irreversible.
+
+I am not talking about actual migration to a different cgroup. I am
+talking moving to a different partition. When a partition become
+invalid, it will inherent the partition parent's effective cpumask.
+
+>> +	An erroneous partition root can be transitioned back to a real
+>> +	partition root if at least one of the requested CPUs can now be
+>> +	granted by its parent.	In this case, the tasks will be migrated
+>> +	back to the newly created partition.  Clearing the partition
+>> +	flag of an erroneous partition root is always allowed even if
+>> +	child cpusets are present.
+> So you need to clarify the above point (I think it is effectively),
+> because otherwise you don't know which tasks to put back.
+
+I will clarify that.
+
+Thanks,
+Longman

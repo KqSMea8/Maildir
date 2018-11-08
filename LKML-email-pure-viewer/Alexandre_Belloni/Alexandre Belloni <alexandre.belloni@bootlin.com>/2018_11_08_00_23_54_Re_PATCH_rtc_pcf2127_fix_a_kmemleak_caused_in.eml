@@ -1,0 +1,155 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:49 -0000
+Received: from icoremail.net (unknown [209.85.214.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv2LdEeNbLyhZAQ--.26996S3;
+	Thu, 08 Nov 2018 00:25:02 +0800 (CST)
+Received: from mail-pl1-f178.google.com (unknown [209.85.214.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDXvUncEeNbzUsYAA--.120S3;
+	Thu, 08 Nov 2018 00:25:00 +0800 (CST)
+Received: by mail-pl1-f178.google.com with SMTP id p16-v6so8081822plr.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:25:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=UgeFNADOiNFYTj5g764u4Y9deKUEsi6SfqJnMi5hK7k=;
+        b=lf+aT5s7E2/gv9gidSmdWIT6ItVI4QinPbu4op5qVwnJc226sdEkxHLXPz2AqbNpQ2
+         ihrWG5FqCA1HGPC00YgyYNeIiXj1SZGTj8IizAMaYJXpiL0jmUqXoKyYXGgCfc2u7AgF
+         XSRO4J9PiqIkpOet84FuYCEf6ZbrjZ1FqyA6i46PijTOak4UAmTryIBO9SCJrT4J0scK
+         LztzXHYo4cckvWfcmL2OMAzO+w+rKUpuuBWp7jQB/EG7kbUdQgqjmrRaeBLBgW3LTNNZ
+         2II7MHXO74ua8eojm2mA3BiljP947pt8ibH80DB1abqKscY9XlTrsAOhGwgHsl5mGhc7
+         se9w==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKUtq1VrPoFbq0yZuP/8hADVMDNV36tlWcqIle+lIW+x5z4u/YI
+	NwdsZf4YQmIkrb74wHWG3wRIFy5THXZRVAgzIPHJgFZhBDmZR0UVwA==
+X-Received: by 2002:a17:902:b789:: with SMTP id e9-v6mr876796pls.338.1541607899829;
+        Wed, 07 Nov 2018 08:24:59 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5447376pjt;
+        Wed, 7 Nov 2018 08:24:58 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fzVpLercaGV6WyTcphfA3hePjNhR2OC08p+mdFzfqmZD7c8d+OMp6ryhcA+Z+B18PjlqSf
+X-Received: by 2002:a17:902:bc83:: with SMTP id bb3-v6mr480838plb.223.1541607898681;
+        Wed, 07 Nov 2018 08:24:58 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541607898; cv=none;
+        d=google.com; s=arc-20160816;
+        b=0Buec72JhYxQMpSmIkHSIgHVt5CbROKc1wGFgkrQrX7HFGjefqgun9dPkYtJIQKSE/
+         lywFNCjDMZb6gGzewMv4kUiJwi+5IuAAO7kwB6QGzftdUKFQW67d3TxrPe7ZrIcR0x3y
+         23jPfHZ/7rBQNJnUDs4G7ni+blmeYS9vVa89DDGD1oK2sChaoyABavMngHj9gXkRXfwu
+         k+KKR8HVnfb+JOM5rQF6lKmMG1JyN3myz+QZgns9zMe0ZBtkK0p+6lvSyVJhlWI8Eza1
+         BLVBlOrcGnAtlGh8mOW8gk9AsmPsymudJhdLctjuin2jv2RTz/C/N3Ariw8ohDknw+dg
+         n7bA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=UgeFNADOiNFYTj5g764u4Y9deKUEsi6SfqJnMi5hK7k=;
+        b=Mft0/blkD8HcbL1Fg3GFmwdYnboDCcyoC6fHR6dFUQOs7ga8Q/LMfkppz409lhgVKS
+         s3TH2vPNtq/wr8Q+K5FQDSdHaiMJSX4FiiGfTFh1DyE1xYU2N6nYidT7+hO1+tyLgyjp
+         j2aHIDPyYBA6jtxQEgvQwGRrasDaksHIGcEMeSoVW1wdM5MYniVYjzOOnAoU09PCVt62
+         uaJK72S2HcWfLB9eI9oeOxdKSZVNL1rxFPZ/LI5Xz36bhaIkkTkup9ewT3MhhMaZdpCW
+         7TiKXylv8DTLRn263pPrcVTIug0g8voaO4JC2D1nyn8Ss9Tl4KQfkm2kgt+/MJ3+5TG7
+         OEjg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 185-v6si1047044pff.270.2018.11.07.08.24.43;
+        Wed, 07 Nov 2018 08:24:58 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731396AbeKHBzA (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:55:00 -0500
+Received: from mail.bootlin.com ([62.4.15.54]:35209 "EHLO mail.bootlin.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727546AbeKHBzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:55:00 -0500
+Received: by mail.bootlin.com (Postfix, from userid 110)
+        id 1C910224CD; Wed,  7 Nov 2018 17:23:55 +0100 (CET)
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail.bootlin.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=5.0 tests=ALL_TRUSTED,SHORTCIRCUIT,
+        URIBL_BLOCKED shortcircuit=ham autolearn=disabled version=3.4.2
+Received: from localhost (242.171.71.37.rev.sfr.net [37.71.171.242])
+        by mail.bootlin.com (Postfix) with ESMTPSA id E6DEF20712;
+        Wed,  7 Nov 2018 17:23:54 +0100 (CET)
+Date: Wed, 7 Nov 2018 17:23:54 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Xulin Sun <xulin.sun@windriver.com>
+Cc: a.zummo@towertech.it, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xulinsun@gmail.com
+Subject: Re: [PATCH] rtc: pcf2127: fix a kmemleak caused in
+ pcf2127_i2c_gather_write
+Message-ID: <20181107162354.GE21694@piout.net>
+References: <1541493739-85733-1-git-send-email-xulin.sun@windriver.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1541493739-85733-1-git-send-email-xulin.sun@windriver.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDXvUncEeNbzUsYAA--.120S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7KryxJFWxJFyrWF45tF4xJFb_yoW8XF1UpF
+	43Xr4qkFWvyr47Aw40y3WYgr1rta1UCa47WrWrJr15uF18GF1UGF10yF4xXrWDArn8XF17
+	JF4q93yjg34UJw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPYb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1le2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6r1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4j6F4UMxvI42IY
+	6I8E87Iv6xkF7I0E14v26r4j6r4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07b5Z2-U
+	UUUU=
+
+On 06/11/2018 16:42:19+0800, Xulin Sun wrote:
+> pcf2127_i2c_gather_write() allocates memory as local variable
+> for i2c_master_send(), after finishing the master transfer,
+> the allocated memory should be freed. The kmemleak is reported:
+> 
+> unreferenced object 0xffff80231e7dba80 (size 64):
+>   comm "hwclock", pid 27762, jiffies 4296880075 (age 356.944s)
+>   hex dump (first 32 bytes):
+>     03 00 12 03 19 02 11 13 00 80 98 18 00 00 ff ff ................
+>     00 50 00 00 00 00 00 00 02 00 00 00 00 00 00 00 .P..............
+>   backtrace:
+>     [<ffff000008221398>] create_object+0xf8/0x278
+>     [<ffff000008a96264>] kmemleak_alloc+0x74/0xa0
+>     [<ffff00000821070c>] __kmalloc+0x1ac/0x348
+>     [<ffff0000087ed1dc>] pcf2127_i2c_gather_write+0x54/0xf8
+>     [<ffff0000085fd9d4>] _regmap_raw_write+0x464/0x850
+>     [<ffff0000085fe3f4>] regmap_bulk_write+0x1a4/0x348
+>     [<ffff0000087ed32c>] pcf2127_rtc_set_time+0xac/0xe8
+>     [<ffff0000087eaad8>] rtc_set_time+0x80/0x138
+>     [<ffff0000087ebfb0>] rtc_dev_ioctl+0x398/0x610
+>     [<ffff00000823f2c0>] do_vfs_ioctl+0xb0/0x848
+>     [<ffff00000823fae4>] SyS_ioctl+0x8c/0xa8
+>     [<ffff000008083ac0>] el0_svc_naked+0x34/0x38
+>     [<ffffffffffffffff>] 0xffffffffffffffff
+> 
+> Signed-off-by: Xulin Sun <xulin.sun@windriver.com>
+> ---
+>  drivers/rtc/rtc-pcf2127.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+
+Applied, thanks.
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com

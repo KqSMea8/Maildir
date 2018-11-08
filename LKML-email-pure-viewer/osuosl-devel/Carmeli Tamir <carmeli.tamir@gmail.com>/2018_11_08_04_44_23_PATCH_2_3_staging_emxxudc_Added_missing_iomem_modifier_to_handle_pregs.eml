@@ -1,0 +1,347 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:32 -0000
+Received: from icoremail.net (unknown [209.85.214.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3_hMT+Nb159aAQ--.27190S3;
+	Thu, 08 Nov 2018 04:47:09 +0800 (CST)
+Received: from mail-pl1-f171.google.com (unknown [209.85.214.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3X0tHT+NbZD4ZAA--.1124S3;
+	Thu, 08 Nov 2018 04:47:04 +0800 (CST)
+Received: by mail-pl1-f171.google.com with SMTP id q19-v6so5398685pll.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:47:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:subject:date
+         :message-id:in-reply-to:references:sender:precedence:list-id;
+        bh=ON73W39uz1wDyrCHfnFWi9REK1J1+J7OzKwpSL3zUSA=;
+        b=lURtGb7zxP5r+SmeyqzMLt6oXvG50mL/zeZfKA3QJz0OYSv2cmJlWCJ3UYbwKRL5li
+         LcvItJbD3H1TEbfA/vsdZW6TlD5X/QHRoNHvklSodPSdkpFQwZ7RnrEy0bVVvBHYWZBl
+         /WCitUJzx4bT8x3wAlLBz/Scb22ChlXZKYpgShuPoQY4F9SisXUNr8pTXw+9XtdyntSs
+         eGTfvNqqMriaNCYWFkaIvCM0gRE/R6sFO3ktdG8ebqkf7/us6ZvxbBBkGwHcxkz1syPe
+         j6xtCRwZ4GCzVx5yqUsmDQ5hJ4kn5SpL0UlMwXxRSsTtZQbAlxCwch7nBpaNjEwypgCo
+         3q4A==
+X-Gm-Message-State: AGRZ1gLDkNUhiEg39s8L6Kk9LBGiSFDU/XwN1s5F7HDlc5C6b9BSf50o
+	7hp5hC07p8nU21YhbWYk5b3O3c5WnuphFWPWJjXLbJnOGRLeyKW62g==
+X-Received: by 2002:a17:902:b789:: with SMTP id e9-v6mr1798895pls.338.1541623623695;
+        Wed, 07 Nov 2018 12:47:03 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5725159pjt;
+        Wed, 7 Nov 2018 12:47:02 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fkHQVoLlAETW8tvcbGKrH8gIzY09I808J/GstTJLgbvx81PqwaeqoYRIWv+kMH4rYDiHNE
+X-Received: by 2002:a17:902:b498:: with SMTP id y24-v6mr1827341plr.179.1541623622567;
+        Wed, 07 Nov 2018 12:47:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541623622; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ThNR6Z7Jm3YQWsMiIoe+tovD3WLW4OSXEB9icA6Q5D/r+LnrgZqRYhJxRlk4Y8vvOn
+         kTeEfN9FkoRYRkJ3RjUduX7p0GE1qJpsKd+4r6NkHm4BA0hGZipgViEJKrdtvCu9PEnn
+         LxGr8zeEOkpymYUP39HzDkuYx/Zn82C7ctgHfSDArC6kTmPPRe7NzJ2MN24P2pMJwWEr
+         OLDW5HxVCM5NVBZhKgvWN68bN6ZoC5zaFExlPtsCxdyvEVz4C7HWe6XWMZbOSW2EhLF8
+         aHXOZWlkah7VTSE657ZnLdS1gZEGzjnnsS6ZSrXn8dCbXDP1Sp9L3LkJI86GDb1V3S+T
+         WpAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:to:from:dkim-signature;
+        bh=ON73W39uz1wDyrCHfnFWi9REK1J1+J7OzKwpSL3zUSA=;
+        b=u/j+x5dX+PPg1V7JLxccZTM89py0K+mrWX3GTU+jV8JusQLsqqiePM18oBBXjZVRra
+         +Jjx1xT4V3dj6lpPhbUCsadkH+3PQh/fgoXEbXmGz+wK1WI4BGEKJi0L5yqRHDTwJxhO
+         TRubctqLb904/OmGlRyUhi5R+vu0J5hF9WiEL6KRmRsIm4XbXwcPbD0dRZpyjlKhCGqK
+         e3tdvmdWlx9eggEh42Y7HHR+BDzPV45n8KFs/rC0kfJEoiDBAouPNbCe4xlcU00YmWtR
+         20/OeRKXa5KIM5f9v0N79t4qqj1xnaKSzjzs+bjJkzSHhkY411zt0n1TJlM+rpuoXbD0
+         d7ng==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=dHWOAPJr;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id o125-v6si1485963pgo.302.2018.11.07.12.46.47;
+        Wed, 07 Nov 2018 12:47:02 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727252AbeKHGQu (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:16:50 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37185 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726517AbeKHGQu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:16:50 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p2-v6so16894923wmc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 12:44:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=ON73W39uz1wDyrCHfnFWi9REK1J1+J7OzKwpSL3zUSA=;
+        b=dHWOAPJrcCnwguncPiZ7ulF4H5N9xLttOuNlXEguPypo7mtKE2PMwAYAukXuaXnM6r
+         1D8aWDyDKdCeyFeacmyN3unAnZzSajYZ5lZ8IrIQUZuh83oA7yYLu83UctafCswGfKj4
+         4qkZyWhD2d5sk4ffBlya6n3VY//PvxsJP7qEJTQwxXsa1uh2cwF28T//LqPaTei+gqym
+         nwjeljsAA0bXRGTN5d/aV8s/NUbVV2Rd3s57gRrThpqKIm8u9YR+914xQdsHMlnIzCyX
+         g4x737cgnKJVu54HeBpCl7EzMQdLqQCB7ubTKwpQcvKN1+44H2hohL8WMwdUpdIW/u3e
+         2DFw==
+X-Received: by 2002:a1c:13d2:: with SMTP id 201-v6mr1417594wmt.58.1541623483738;
+        Wed, 07 Nov 2018 12:44:43 -0800 (PST)
+Received: from osboxes.localdomain (bzq-79-178-252-231.red.bezeqint.net. [79.178.252.231])
+        by smtp.googlemail.com with ESMTPSA id y2-v6sm3578764wrh.53.2018.11.07.12.44.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 07 Nov 2018 12:44:42 -0800 (PST)
+From: Carmeli Tamir <carmeli.tamir@gmail.com>
+To: carmeli.tamir@gmail.com, gregkh@linuxfoundation.org,
+        natechancellor@gmail.com, chrisadr@gentoo.org,
+        areklis909@gmail.com, dan.carpenter@oracle.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] staging: emxx_udc: Added missing __iomem modifier to handle p_regs
+Date: Wed,  7 Nov 2018 15:44:23 -0500
+Message-Id: <1541623464-49041-3-git-send-email-carmeli.tamir@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1541623464-49041-1-git-send-email-carmeli.tamir@gmail.com>
+References: <1541623464-49041-1-git-send-email-carmeli.tamir@gmail.com>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3X0tHT+NbZD4ZAA--.1124S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3JryxZF45CF4rJr47tr4ktFb_yoWxKFWxpF
+	43uw4xAF4ktFn7Wr4kAr4DCr1avr1Iqry8Cr18Canakr15ArWUJrn7Zry0yFy8Gry8Crs7
+	Aw4kKw1fKw13trUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6F1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xYxBIdaVFxhVjvjDU0xZFpf9x07bY
+	tC7UUUUU=
+
+Since in nbu2ss_drv_probe() p_regs is assigned from mmio_base, which is
+marked as __iomem, p_regs also should be market with __iomem.
+
+Signed-off-by: Carmeli Tamir <carmeli.tamir@gmail.com>
+---
+ drivers/staging/emxx_udc/emxx_udc.c | 44 ++++++++++++++++++-------------------
+ drivers/staging/emxx_udc/emxx_udc.h |  2 +-
+ 2 files changed, 23 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/staging/emxx_udc/emxx_udc.c b/drivers/staging/emxx_udc/emxx_udc.c
+index f49c863..3504277 100644
+--- a/drivers/staging/emxx_udc/emxx_udc.c
++++ b/drivers/staging/emxx_udc/emxx_udc.c
+@@ -60,21 +60,21 @@ static struct nbu2ss_udc udc_controller;
+ 
+ /*-------------------------------------------------------------------------*/
+ /* Read */
+-static inline u32 _nbu2ss_readl(void *address)
++static inline u32 _nbu2ss_readl(void __iomem *address)
+ {
+ 	return __raw_readl(address);
+ }
+ 
+ /*-------------------------------------------------------------------------*/
+ /* Write */
+-static inline void _nbu2ss_writel(void *address, u32 udata)
++static inline void _nbu2ss_writel(void __iomem *address, u32 udata)
+ {
+ 	__raw_writel(udata, address);
+ }
+ 
+ /*-------------------------------------------------------------------------*/
+ /* Set Bit */
+-static inline void _nbu2ss_bitset(void *address, u32 udata)
++static inline void _nbu2ss_bitset(void __iomem *address, u32 udata)
+ {
+ 	u32	reg_dt = __raw_readl(address) | (udata);
+ 
+@@ -83,7 +83,7 @@ static inline void _nbu2ss_bitset(void *address, u32 udata)
+ 
+ /*-------------------------------------------------------------------------*/
+ /* Clear Bit */
+-static inline void _nbu2ss_bitclr(void *address, u32 udata)
++static inline void _nbu2ss_bitclr(void __iomem *address, u32 udata)
+ {
+ 	u32	reg_dt = __raw_readl(address) & ~(udata);
+ 
+@@ -184,7 +184,7 @@ static u32 _nbu2ss_get_begin_ram_address(struct nbu2ss_udc *udc)
+ 	u32		num, buf_type;
+ 	u32		data, last_ram_adr, use_ram_size;
+ 
+-	struct ep_regs *p_ep_regs;
++	struct ep_regs __iomem *p_ep_regs;
+ 
+ 	last_ram_adr = (D_RAM_SIZE_CTRL / sizeof(u32)) * 2;
+ 	use_ram_size = 0;
+@@ -377,7 +377,7 @@ static void _nbu2ss_ep_dma_exit(struct nbu2ss_udc *udc, struct nbu2ss_ep *ep)
+ {
+ 	u32		num;
+ 	u32		data;
+-	struct fc_regs	*preg = udc->p_regs;
++	struct fc_regs __iomem *preg = udc->p_regs;
+ 
+ 	if (udc->vbus_active == 0)
+ 		return;		/* VBUS OFF */
+@@ -408,7 +408,7 @@ static void _nbu2ss_ep_dma_exit(struct nbu2ss_udc *udc, struct nbu2ss_ep *ep)
+ /* Abort DMA */
+ static void _nbu2ss_ep_dma_abort(struct nbu2ss_udc *udc, struct nbu2ss_ep *ep)
+ {
+-	struct fc_regs	*preg = udc->p_regs;
++	struct fc_regs __iomem *preg = udc->p_regs;
+ 
+ 	_nbu2ss_bitclr(&preg->EP_DCR[ep->epnum - 1].EP_DCR1, DCR1_EPN_REQEN);
+ 	mdelay(DMA_DISABLE_TIME);	/* DCR1_EPN_REQEN Clear */
+@@ -426,7 +426,7 @@ static void _nbu2ss_ep_in_end(
+ {
+ 	u32		data;
+ 	u32		num;
+-	struct fc_regs	*preg = udc->p_regs;
++	struct fc_regs __iomem *preg = udc->p_regs;
+ 
+ 	if (length >= sizeof(u32))
+ 		return;
+@@ -817,7 +817,7 @@ static int _nbu2ss_out_dma(
+ 	u32		burst = 1;
+ 	u32		data;
+ 	int		result = -EINVAL;
+-	struct fc_regs	*preg = udc->p_regs;
++	struct fc_regs __iomem *preg = udc->p_regs;
+ 
+ 	if (req->dma_flag)
+ 		return 1;		/* DMA is forwarded */
+@@ -880,7 +880,7 @@ static int _nbu2ss_epn_out_pio(
+ 	union usb_reg_access	temp_32;
+ 	union usb_reg_access	*p_buf_32;
+ 	int		result = 0;
+-	struct fc_regs	*preg = udc->p_regs;
++	struct fc_regs __iomem *preg = udc->p_regs;
+ 
+ 	if (req->dma_flag)
+ 		return 1;		/* DMA is forwarded */
+@@ -964,7 +964,7 @@ static int _nbu2ss_epn_out_transfer(
+ 	u32		num;
+ 	u32		i_recv_length;
+ 	int		result = 1;
+-	struct fc_regs	*preg = udc->p_regs;
++	struct fc_regs __iomem *preg = udc->p_regs;
+ 
+ 	if (ep->epnum == 0)
+ 		return -EINVAL;
+@@ -1026,7 +1026,7 @@ static int _nbu2ss_in_dma(
+ 	u32		i_write_length;
+ 	u32		data;
+ 	int		result = -EINVAL;
+-	struct fc_regs	*preg = udc->p_regs;
++	struct fc_regs __iomem *preg = udc->p_regs;
+ 
+ 	if (req->dma_flag)
+ 		return 1;		/* DMA is forwarded */
+@@ -1101,7 +1101,7 @@ static int _nbu2ss_epn_in_pio(
+ 	union usb_reg_access	temp_32;
+ 	union usb_reg_access	*p_buf_32 = NULL;
+ 	int		result = 0;
+-	struct fc_regs	*preg = udc->p_regs;
++	struct fc_regs __iomem *preg = udc->p_regs;
+ 
+ 	if (req->dma_flag)
+ 		return 1;		/* DMA is forwarded */
+@@ -1317,7 +1317,7 @@ static void _nbu2ss_set_endpoint_stall(
+ 	u8		num, epnum;
+ 	u32		data;
+ 	struct nbu2ss_ep *ep;
+-	struct fc_regs	*preg = udc->p_regs;
++	struct fc_regs __iomem *preg = udc->p_regs;
+ 
+ 	if ((ep_adrs == 0) || (ep_adrs == 0x80)) {
+ 		if (bstall) {
+@@ -1421,7 +1421,7 @@ static int _nbu2ss_get_ep_stall(struct nbu2ss_udc *udc, u8 ep_adrs)
+ {
+ 	u8		epnum;
+ 	u32		data = 0, bit_data;
+-	struct fc_regs	*preg = udc->p_regs;
++	struct fc_regs __iomem *preg = udc->p_regs;
+ 
+ 	epnum = ep_adrs & ~USB_ENDPOINT_DIR_MASK;
+ 	if (epnum == 0) {
+@@ -1516,7 +1516,7 @@ static void _nbu2ss_epn_set_stall(
+ 	u32	regdata;
+ 	int	limit_cnt = 0;
+ 
+-	struct fc_regs	*preg = udc->p_regs;
++	struct fc_regs __iomem *preg = udc->p_regs;
+ 
+ 	if (ep->direct == USB_DIR_IN) {
+ 		for (limit_cnt = 0
+@@ -1924,7 +1924,7 @@ static inline void _nbu2ss_epn_in_int(
+ 	int	result = 0;
+ 	u32	status;
+ 
+-	struct fc_regs	*preg = udc->p_regs;
++	struct fc_regs __iomem *preg = udc->p_regs;
+ 
+ 	if (req->dma_flag)
+ 		return;		/* DMA is forwarded */
+@@ -2019,7 +2019,7 @@ static inline void _nbu2ss_epn_out_dma_int(
+ 	u32		num;
+ 	u32		dmacnt, ep_dmacnt;
+ 	u32		mpkt;
+-	struct fc_regs	*preg = udc->p_regs;
++	struct fc_regs __iomem *preg = udc->p_regs;
+ 
+ 	num = ep->epnum - 1;
+ 
+@@ -2195,7 +2195,7 @@ static int _nbu2ss_pullup(struct nbu2ss_udc *udc, int is_on)
+ /*-------------------------------------------------------------------------*/
+ static void _nbu2ss_fifo_flush(struct nbu2ss_udc *udc, struct nbu2ss_ep *ep)
+ {
+-	struct fc_regs	*p = udc->p_regs;
++	struct fc_regs __iomem *p = udc->p_regs;
+ 
+ 	if (udc->vbus_active == 0)
+ 		return;
+@@ -2413,7 +2413,7 @@ static irqreturn_t _nbu2ss_udc_irq(int irq, void *_udc)
+ 	u32	epnum, int_bit;
+ 
+ 	struct nbu2ss_udc	*udc = (struct nbu2ss_udc *)_udc;
+-	struct fc_regs	*preg = udc->p_regs;
++	struct fc_regs __iomem *preg = udc->p_regs;
+ 
+ 	if (gpio_get_value(VBUS_VALUE) == 0) {
+ 		_nbu2ss_writel(&preg->USB_INT_STA, ~USB_INT_STA_RW);
+@@ -2804,7 +2804,7 @@ static int nbu2ss_ep_fifo_status(struct usb_ep *_ep)
+ 	struct nbu2ss_ep	*ep;
+ 	struct nbu2ss_udc	*udc;
+ 	unsigned long		flags;
+-	struct fc_regs		*preg;
++	struct fc_regs	__iomem *preg;
+ 
+ 	if (!_ep) {
+ 		pr_err("%s, bad param\n", __func__);
+@@ -3177,7 +3177,7 @@ static int nbu2ss_drv_probe(struct platform_device *pdev)
+ 				  0, driver_name, udc);
+ 
+ 	/* IO Memory */
+-	udc->p_regs = (struct fc_regs *)mmio_base;
++	udc->p_regs = (struct fc_regs __iomem *)mmio_base;
+ 
+ 	/* USB Function Controller Interrupt */
+ 	if (status != 0) {
+diff --git a/drivers/staging/emxx_udc/emxx_udc.h b/drivers/staging/emxx_udc/emxx_udc.h
+index 8337e38c..e28a74d 100644
+--- a/drivers/staging/emxx_udc/emxx_udc.h
++++ b/drivers/staging/emxx_udc/emxx_udc.h
+@@ -582,7 +582,7 @@ struct nbu2ss_udc {
+ 
+ 	u32		curr_config;	/* Current Configuration Number */
+ 
+-	struct fc_regs		*p_regs;
++	struct fc_regs __iomem *p_regs;
+ };
+ 
+ /* USB register access structure */
+-- 
+2.7.4

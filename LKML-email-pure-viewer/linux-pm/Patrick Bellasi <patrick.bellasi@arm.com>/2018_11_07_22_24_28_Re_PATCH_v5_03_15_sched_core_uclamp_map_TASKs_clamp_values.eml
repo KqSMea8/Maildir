@@ -1,0 +1,212 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:09 -0000
+Received: from icoremail.net (unknown [209.85.214.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX1_F9eJbrXtYAQ--.26556S3;
+	Wed, 07 Nov 2018 22:25:10 +0800 (CST)
+Received: from mail-pl1-f182.google.com (unknown [209.85.214.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHa0fE9eJbL88XAA--.12950S3;
+	Wed, 07 Nov 2018 22:25:09 +0800 (CST)
+Received: by mail-pl1-f182.google.com with SMTP id q19-v6so4937345pll.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:25:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=kdDhBdDOR5kj7fLPukgtzsrVgMminrmeOqFdgqwad5A=;
+        b=SqwNnS7lZLxwUSlKlzsarNfN4A82Cel8pujMV3I+uy8TYp3531wH8rbMUKk6m5CrEb
+         /TnjtDHWfA5gmWn9GrBfBusXmhSaTsQSW7N9q8HAHz5yd24uFSlCHjUhZGpzKpWDSKGm
+         b8v+kr5jS4hfU2OBjoOzbuMMU0i0TNtrL6HpXSNEeBvobdVJGVYRqSkLNdzki0kQ+nun
+         mOBPdIuqnwCV/gTM/WL70hPTLlPuBDwIqjqSsKuvWjc33XVl6LIEs80jBOzibYw/mYGT
+         g+fK4pfYFKesgwVfXGNt9Y7gLak5/77dkerC71gSuTvxaVQgtZfH5pHIu37mIN03zjaJ
+         KrHw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLmLjdiz+jNcn2DRf+NQVCAyQRutTNHIeiD7w16j0t4kFIjYc3/
+	nDLpmHLXy/RavwSvt5XF1KNjoVPplghP3csV3x9XqQQhA9h0rfD/7w==
+X-Received: by 2002:a17:902:8e81:: with SMTP id bg1-v6mr441665plb.192.1541600708339;
+        Wed, 07 Nov 2018 06:25:08 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5310099pjt;
+        Wed, 7 Nov 2018 06:25:07 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dzNm9ePQVPYrz/dmQjI4BHwCKzUhHIpvk9Zy/dTbz3lmEPFUJ7JTBiElT1UVS5/h/VFAWo
+X-Received: by 2002:a63:484c:: with SMTP id x12mr323228pgk.375.1541600707445;
+        Wed, 07 Nov 2018 06:25:07 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541600707; cv=none;
+        d=google.com; s=arc-20160816;
+        b=UFecbptT+p4RSZovyoGq84zc1a3ARGVBv4wrD8UJBI3RVGTZXuTJvmd12z5xWizJ0w
+         ifnXz+fr3jjnBZPkp4zgp1VjdXNZF8Fjz2LL6A3reeKOQAmCg4lVD/S9cVQnrZVgPOwK
+         URumz1He3GMe5dpGS1M2mNSyJY/9pZcsvRuV1VUy0U/3TmVtOC3ET8pw5F0BXfDveM84
+         HF5QuoaFZnbBxmPIqv3IEXd0ZyWHrn+FJWCiUJkIsiPtphqMUHvOZ0PoPWxdhmssrVY7
+         cJh+MMTVDHdaTxMt5dAe2nLIaxTxIL5l0K9KU/8618AkwWsABGYCUwRRDhwXUc4MzFTk
+         hBmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=kdDhBdDOR5kj7fLPukgtzsrVgMminrmeOqFdgqwad5A=;
+        b=fwY8EVjZnuZMcJIL9Ns4lGPgomGl2CjE1SEskOGoEGasRscnwG//zA/dDpi3URamFR
+         chfPQQW9bweAONodD0guwAUghIqcnYDv1fxwSV5pN2ZYrp5ce/eVPQsSTKy2Oi1IzX86
+         wxOxJSn0jK2CiaE64bCgAA5UR6ZyFkgDjab2rB7VvK1yNGbDZ0vx4invdWdHBqoQRltf
+         SC/ITD1jGJfwO26ywSiZWzh1SdcUXTVmuwN2gGSJnlZ+UjXPZtrGF9UtjVPc3ArytBqQ
+         WIZ+pWDxWjyr6BQpeiwmGTRse9v8/0edxFxJ4roMdp/PVfcGGL2cxzZ6EP1wq3xzrc1m
+         ++ug==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 1-v6si781029plj.146.2018.11.07.06.24.49;
+        Wed, 07 Nov 2018 06:25:07 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730583AbeKGXzJ (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:55:09 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51638 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726688AbeKGXzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:55:09 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F28AFA78;
+        Wed,  7 Nov 2018 06:24:33 -0800 (PST)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 30B233F718;
+        Wed,  7 Nov 2018 06:24:31 -0800 (PST)
+Date: Wed, 7 Nov 2018 14:24:28 +0000
+From: Patrick Bellasi <patrick.bellasi@arm.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v5 03/15] sched/core: uclamp: map TASK's clamp values
+ into CPU's clamp groups
+Message-ID: <20181107142428.GG14309@e110439-lin>
+References: <20181029183311.29175-1-patrick.bellasi@arm.com>
+ <20181029183311.29175-4-patrick.bellasi@arm.com>
+ <20181107134414.GR9781@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107134414.GR9781@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHa0fE9eJbL88XAA--.12950S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxGF1DuF48uFyfKr1kZw43Jrb_yoW5AF1UpF
+	WkJF47JFWUKFnrKw4xG3y0qFn5Jw48XwsF9rW7tF1DAasxur1rur1xtFW7ur4UAFWktr12
+	vF13ur9ruan0yFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBYb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc2IjII80xcxEwVAKI48JMxvI42IY6xII
+	jxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4
+	A2jsIE14v26rxl6s0DMxvI42IY6I8E87Iv6xkF7I0E14v26rxl6s0DMxAIw28IcxkI7VAK
+	I48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r
+	4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4
+	v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IUe1rW7UUUUU==
+
+On 07-Nov 14:44, Peter Zijlstra wrote:
+> On Mon, Oct 29, 2018 at 06:32:57PM +0000, Patrick Bellasi wrote:
+> > +/**
+> > + * uclamp_group_get: increase the reference count for a clamp group
+> > + * @uc_se: the utilization clamp data for the task
+> > + * @clamp_id: the clamp index affected by the task
+> > + * @clamp_value: the new clamp value for the task
+> > + *
+> > + * Each time a task changes its utilization clamp value, for a specified clamp
+> > + * index, we need to find an available clamp group which can be used to track
+> > + * this new clamp value. The corresponding clamp group index will be used to
+> > + * reference count the corresponding clamp value while the task is enqueued on
+> > + * a CPU.
+> > + */
+> > +static void uclamp_group_get(struct uclamp_se *uc_se, unsigned int clamp_id,
+> > +			     unsigned int clamp_value)
+> > +{
+> > +	union uclamp_map *uc_maps = &uclamp_maps[clamp_id][0];
+> > +	unsigned int prev_group_id = uc_se->group_id;
+> > +	union uclamp_map uc_map_old, uc_map_new;
+> > +	unsigned int free_group_id;
+> > +	unsigned int group_id;
+> > +	unsigned long res;
+> > +
+> > +retry:
+> > +
+> > +	free_group_id = UCLAMP_GROUPS;
+> > +	for (group_id = 0; group_id < UCLAMP_GROUPS; ++group_id) {
+> > +		uc_map_old.data = atomic_long_read(&uc_maps[group_id].adata);
+> > +		if (free_group_id == UCLAMP_GROUPS && !uc_map_old.se_count)
+> > +			free_group_id = group_id;
+> > +		if (uc_map_old.value == clamp_value)
+> > +			break;
+> > +	}
+> > +	if (group_id >= UCLAMP_GROUPS) {
+> > +#ifdef CONFIG_SCHED_DEBUG
+> > +#define UCLAMP_MAPERR "clamp value [%u] mapping to clamp group failed\n"
+> > +		if (unlikely(free_group_id == UCLAMP_GROUPS)) {
+> > +			pr_err_ratelimited(UCLAMP_MAPERR, clamp_value);
+> > +			return;
+> > +		}
+> > +#endif
+> 
+> Can you please put in a comment, either here or on top, on why this can
+> not in fact happen? And we're always guaranteed a free group.
+
+You right, that's confusing especially because up to this point we are
+not granted. We are always granted a free group once we add:
+
+   sched/core: uclamp: add clamp group bucketing support
+
+I've kept it separated to better document how we introduce that
+support.
+
+Is it ok for for you if I better call out in the change log that the
+guarantee comes from a following patch... and add the comment in
+that later patch ?
+
+> 
+> > +		group_id = free_group_id;
+> > +		uc_map_old.data = atomic_long_read(&uc_maps[group_id].adata);
+> > +	}
+> > +
+> > +	uc_map_new.se_count = uc_map_old.se_count + 1;
+> > +	uc_map_new.value = clamp_value;
+> > +	res = atomic_long_cmpxchg(&uc_maps[group_id].adata,
+> > +				  uc_map_old.data, uc_map_new.data);
+> > +	if (res != uc_map_old.data)
+> > +		goto retry;
+> > +
+> > +	/* Update SE's clamp values and attach it to new clamp group */
+> > +	uc_se->value = clamp_value;
+> > +	uc_se->group_id = group_id;
+> > +
+> > +	/* Release the previous clamp group */
+> > +	if (uc_se->mapped)
+> > +		uclamp_group_put(clamp_id, prev_group_id);
+> > +	uc_se->mapped = true;
+> > +}
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi

@@ -1,0 +1,201 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:51 -0000
+Received: from icoremail.net (unknown [209.85.210.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3yRNOuNb8iZaAQ--.27362S3;
+	Thu, 08 Nov 2018 03:17:34 +0800 (CST)
+Received: from mail-pf1-f174.google.com (unknown [209.85.210.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHHztIOuNbkvsYAA--.513S3;
+	Thu, 08 Nov 2018 03:17:28 +0800 (CST)
+Received: by mail-pf1-f174.google.com with SMTP id v9-v6so5810838pff.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:17:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:sender:precedence:list-id;
+        bh=3gcZFYBZwCJhMzy2iLHl9m14GhjS5muXQGyf40agkhw=;
+        b=t+THcOjmRT8Pp35fuHWIi4dJh+A9HaNQzhacT9cdVtnWjy/kY1CbLxl4u9QhpThvbJ
+         m7k6uLDvUz9DOGeNQF48Su5gWFah4+rsQdz/HD3Ox50R+Ze8cNCePD4F2JBBL755tZkR
+         c5VNXWCVDmwLi2QN7rFEnDtDqXXx+jBojCd9G4LMFt3c+MpBBNLugbr0Y3ugJhgv/yyA
+         2kw09Qj74c27Pze14C6cLW3NqHJh3g41JAEC+ioGmcDzumpdw7qBUDm3Y/0nBX0Y2wOm
+         mDJ1TLi9ykzfEcxMdN11TTY6iRv4p7L8G3CzGDCGDnifbqi9Co22AV1oHsLsuxaFfbFf
+         LjNA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=alibaba.com
+X-Gm-Message-State: AGRZ1gIzTf3nfbbO5u3+FtFflylW6P3/JJugmhrlIDp0j2YA2T7VxU38
+	UQREBt8DaBdwQYk6MqJGg8Rw1OFBhn9kBhJ9JkjE617KaqbzxPuO/w==
+X-Received: by 2002:a63:cd17:: with SMTP id i23mr1241888pgg.13.1541618248296;
+        Wed, 07 Nov 2018 11:17:28 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5638584pjt;
+        Wed, 7 Nov 2018 11:17:26 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fxqvFYmQFLcBySS98XbPIWwIscl7aXEN9EM7m/gKRVWHOxdFXaB9/S+Txp5dY8Hi9TZ21H
+X-Received: by 2002:a62:fc52:: with SMTP id e79-v6mr1438128pfh.167.1541618246921;
+        Wed, 07 Nov 2018 11:17:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541618246; cv=none;
+        d=google.com; s=arc-20160816;
+        b=rhZkqRAchNC3f+2vLM3aLH79PGcJW4F06wQg83eZkMMENC+RX+JyjAZVpBF4qx3x9l
+         qvfKq53vZFLKefG0B9GYh31OhPHbreOXAoa2/ASkfKsmZ9Gd9nUaNbXfgHzlWp1wOaiA
+         gaZZ1tmmK8aR+gjrk7GWJYijGb7kE5lYfLumvpFgRjdU6yfvkUKukHLLVsl2MBGIK0q/
+         pFlOZ8Oe5bN+5L3l2fd1Lq65gnyMRyZWHEr/xZ2O77TxiE3v9SakdUZ33qBrsUVfTx1Y
+         gMJmKgk+KF+4AD5NdykN7wchYWlQyaUuIOYAVhHaXHff6/QFq/pj8Fw0F18YolDb+n8a
+         xirQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:date:subject:cc:to:from;
+        bh=3gcZFYBZwCJhMzy2iLHl9m14GhjS5muXQGyf40agkhw=;
+        b=zwOAKISFUaYqPBBMQJB/BQJlP7MfVK4Y71TZBd9KUXBHrsxMGfamQOhaA5DE64W7zA
+         /H30xDlRS6byFcdFGWoj+/If5Cl7fAOyXDdvHx5rtHIO5qXkPhdSB9rCq0wafMCLpbaD
+         E3h8G9P7euG9VESekq+SbdakvFTkI1EV7JjaeBPHTPVpE13cL2ZxKTa8j7xDFFltausQ
+         WtViv2hPfSO0/i1+GnmsX+WfZ8mr3jE4wJAlwayggZIbbpz4EhaEKh4eq86a0YXmfxda
+         GUmEqgG94fNRZkPlgkavqPMib99kx94wyj85PjxCCvExHczpRw4D0Gifqck3NN487A9Z
+         IVNw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=alibaba.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id j91-v6si1585096pld.6.2018.11.07.11.17.11;
+        Wed, 07 Nov 2018 11:17:26 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730344AbeKHEsh (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:48:37 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:60126 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730044AbeKHEsg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:48:36 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R451e4;CH=green;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TCUHVgb_1541618201;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TCUHVgb_1541618201)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 08 Nov 2018 03:16:49 +0800
+From: Yang Shi <yang.shi@linux.alibaba.com>
+To: mhocko@kernel.org, vbabka@suse.cz, hannes@cmpxchg.org,
+        hughd@google.com, akpm@linux-foundation.org
+Cc: yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] mm: vmscan: skip KSM page in direct reclaim if priority is low
+Date: Thu,  8 Nov 2018 03:16:40 +0800
+Message-Id: <1541618201-120667-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHHztIOuNbkvsYAA--.513S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxAFy7JrWDXrWruw1fJFWfGrg_yoW5KryDpF
+	WSgF4jgr48KF43tr17tF909r95KwsrAa9rJrZakry0vr13Gw1UJry7CryUWrn8Zr95Ja43
+	JF4Dtw4IgrW5taDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x
+	07bJksgUUUUU=
+
+When running some stress test, we ran into the below hung issue
+occasionally:
+
+INFO: task ksmd:205 blocked for more than 360 seconds.
+      Tainted: G            E 4.9.128-001.ali3000_nightly_20180925_264.alios7.x86_64 #1
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+ksmd            D    0   205      2 0x00000000
+ ffff882fa00418c0 0000000000000000 ffff882fa4b10000 ffff882fbf059d00
+ ffff882fa5bc1800 ffffc900190c7c28 ffffffff81725e58 ffffffff810777c0
+ 00ffc900190c7c88 ffff882fbf059d00 ffffffff8138cc09 ffff882fa4b10000
+Call Trace:
+ [<ffffffff81725e58>] ? __schedule+0x258/0x720
+ [<ffffffff810777c0>] ? do_flush_tlb_all+0x30/0x30
+ [<ffffffff8138cc09>] ? free_cpumask_var+0x9/0x10
+ [<ffffffff81726356>] schedule+0x36/0x80
+ [<ffffffff81729916>] schedule_timeout+0x206/0x4b0
+ [<ffffffff81077d0f>] ? native_flush_tlb_others+0x11f/0x180
+ [<ffffffff8110ca40>] ? ktime_get+0x40/0xb0
+ [<ffffffff81725b6a>] io_schedule_timeout+0xda/0x170
+ [<ffffffff81726c50>] ? bit_wait+0x60/0x60
+ [<ffffffff81726c6b>] bit_wait_io+0x1b/0x60
+ [<ffffffff81726759>] __wait_on_bit_lock+0x59/0xc0
+ [<ffffffff811aff76>] __lock_page+0x86/0xa0
+ [<ffffffff810d53e0>] ? wake_atomic_t_function+0x60/0x60
+ [<ffffffff8121a269>] ksm_scan_thread+0xeb9/0x1430
+ [<ffffffff810d5340>] ? prepare_to_wait_event+0x100/0x100
+ [<ffffffff812193b0>] ? try_to_merge_with_ksm_page+0x850/0x850
+ [<ffffffff810ac226>] kthread+0xe6/0x100
+ [<ffffffff810ac140>] ? kthread_park+0x60/0x60
+ [<ffffffff8172b196>] ret_from_fork+0x46/0x60
+
+ksmd found the suitable KSM page on the stable tree, an is trying to
+lock it. But, it is locked by direct reclaim path when walking its rmap
+to get the number of referenced PTEs.
+
+The KSM page rmap walk need iterate all rmap_item of the page and all
+rmap anon_vma of each rmap_item. So, it may take (# rmap_item * #
+children processes) loops. The number of loop might be very big in the
+worst case, and may take long time.
+
+Typically, direct reclaim will not intend to reclaim too many pages, and
+it is latency sensitive. So, it sounds not worth doing the long ksm page
+rmap walk to just reclaim one page.
+
+Skip KSM page in direct reclaim if the reclaim priority is low, but
+still try to reclaim KSM page with high priority.
+
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+---
+ mm/vmscan.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 62ac0c48..e821ad3 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1260,8 +1260,17 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+ 			}
+ 		}
+ 
+-		if (!force_reclaim)
+-			references = page_check_references(page, sc);
++		if (!force_reclaim) {
++			/*
++			 * Don't try to reclaim KSM page in direct reclaim if
++			 * the priority is not high enough.
++			 */
++			if (PageKsm(page) && !current_is_kswapd() &&
++			    sc->priority > (DEF_PRIORITY - 2))
++				references = PAGEREF_KEEP;
++			else
++				references = page_check_references(page, sc);
++		}
+ 
+ 		switch (references) {
+ 		case PAGEREF_ACTIVATE:
+@@ -2136,6 +2145,16 @@ static void shrink_active_list(unsigned long nr_to_scan,
+ 			}
+ 		}
+ 
++		/*
++		 * Skip KSM page in direct reclaim if priority is not
++		 * high enough.
++		 */
++		if (PageKsm(page) && !current_is_kswapd() &&
++		    sc->priority > (DEF_PRIORITY - 2)) {
++			putback_lru_page(page);
++			continue;
++		}
++
+ 		if (page_referenced(page, 0, sc->target_mem_cgroup,
+ 				    &vm_flags)) {
+ 			nr_rotated += hpage_nr_pages(page);
+-- 
+1.8.3.1

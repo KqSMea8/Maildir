@@ -1,0 +1,146 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:19 -0000
+Received: from icoremail.net (unknown [209.85.215.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv373IeNbN49ZAQ--.27361S3;
+	Thu, 08 Nov 2018 01:33:44 +0800 (CST)
+Received: from mail-pg1-f182.google.com (unknown [209.85.215.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHKkbzIeNbZo8YAA--.635S3;
+	Thu, 08 Nov 2018 01:33:39 +0800 (CST)
+Received: by mail-pg1-f182.google.com with SMTP id k1-v6so7615182pgq.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:33:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=jkHKJLfHdqCKtjXy2HqPvNWu2YYvOqdR+TodQUJG0Zk=;
+        b=XK9R6XzRv8g2IpIjajdJT0KdypEHjfeoOvYztwWKLUyw4d2WPCBJrs8mbMzhcBGjrA
+         S0UtTCS03VJmT9a6S8LXayv6XPEaO5Ly7BQKk4/utWDl3b057zG8ClFtTvoT+k2TFOCa
+         8UDr0wZKzTYA/OBszryA2XTDSaA/ofYj9GIX1+8lHEtpT4zJjUYOizPnYjb4vlUJmQ25
+         DXdCyKifZ6PhEWtlV3CCbRpZUmDQg8Ukk8ybfiWlci0viMzTNZ5f1eVi52Zupq0tBDn/
+         sGrAwampTDxOgNKwZbAjhrSQczpQcvM+6pW6ID51aduo+gWax5xd+x2KlTevyKk/pyn/
+         F1bQ==
+X-Gm-Message-State: AGRZ1gLq5fkmd/UE50wpe3dW9dX8xhtoqzgD39k62Tn1OdUHVqsuiU9K
+	YfnVxA3J8uPedzWgumz4kVk2wUI5lk1Ox7fD3ziZhLUeu2H31HRn8A==
+X-Received: by 2002:a63:4044:: with SMTP id n65mr924568pga.90.1541612019569;
+        Wed, 07 Nov 2018 09:33:39 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5523616pjt;
+        Wed, 7 Nov 2018 09:33:38 -0800 (PST)
+X-Google-Smtp-Source: AJdET5e97b6Fzn1xgnNMT825kfl2PskK99ZWEUSnKTFSSVEnD2KcpYAfE1PETytkfPFKY5NUA8as
+X-Received: by 2002:a17:902:6185:: with SMTP id u5-v6mr1085517plj.41.1541612018598;
+        Wed, 07 Nov 2018 09:33:38 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541612018; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Uve5zwxJgG0040fzPML056r8N4j9ePkUrC4J9b/UXhxWbgFBfX6gvBp4FFC9VPysg3
+         m73okD36cD+lnkir0UOiqOFphRVUUNwHd4xHcQYkH7dGKDH6fY9mgfelEDP4k70r7ohU
+         nvrPNgzHpx1uQcFbf621mvvi3qDYOPBKFPE9iex8xgOaPWp2U/LJy/e+TZVskdVLi1XE
+         JP75olHkrgzhIylcz5jUuRkJrAcoSMWGCyxRVZC7pfGgL5+lEanIYCW2OSBAhVSfZkEc
+         nGdC/0uo9GffmrGRE1UEe7ABVCz0skiTbwpDSqB0jQrctWXX1Pg+FAfqmWT2aKZT7GNw
+         lZ3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=jkHKJLfHdqCKtjXy2HqPvNWu2YYvOqdR+TodQUJG0Zk=;
+        b=Zm6uYfuDEgkB01w5brJ+iU0pXS9OdHYnsqW3VeXlx4x2fLmu7HunPB5gz+TrRPMgzw
+         urCIejBNv7UDCuTy+zy7luYVFUpQSjd2ZZiN86BFi63FP6ngv7Ta5823rBqfDiThCYt3
+         PoxzZ9uaqeNugmlw4N4T3l011SutNCKOWV+gHFOSPFBkuu7WwCxjRf4gbrm6rI4EBR17
+         2LIR4hF/T9oGPfEYlOaq163ddStRo5TZsNRI2+vAbSSz5zUva3YwQqOs6nndtEaiZaAT
+         FBgy615UzfwHlCGag2tg989CXaHkv+lRT4GuTpLOvs1Ka33beJAvhnA8u7g4kl0gLsWP
+         XQzw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@cisco.com header.s=iport header.b=LC7YKeOx;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=cisco.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 10-v6si1132108pgo.486.2018.11.07.09.33.19;
+        Wed, 07 Nov 2018 09:33:38 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731383AbeKHDE2 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:04:28 -0500
+Received: from alln-iport-8.cisco.com ([173.37.142.95]:36712 "EHLO
+        alln-iport-8.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727648AbeKHDE2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:04:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=377; q=dns/txt; s=iport;
+  t=1541611986; x=1542821586;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rdgFNDA1kBuzvi1iWbqFCfFEn6FxmgRtB3TMwVULx+U=;
+  b=LC7YKeOxWpsQJX/CcCcE+D2RutRTYJ5C9L9P+az2BofEMjEFhkA3ckK0
+   6/pFhOxd02NtO0CKefHn+7l9FvX63o0h53qY6Xk/NDI+Pd75+Fm0X1OHz
+   v80sYGJ3gj8+TmLMOSAOhmUTFKYtTEHJkNbzPCbfBroIQhCTYRlP7tBm3
+   g=;
+X-IronPort-AV: E=Sophos;i="5.54,476,1534809600"; 
+   d="scan'208";a="197328108"
+Received: from alln-core-7.cisco.com ([173.36.13.140])
+  by alln-iport-8.cisco.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 17:33:05 +0000
+Received: from zorba ([10.156.154.31])
+        by alln-core-7.cisco.com (8.15.2/8.15.2) with ESMTPS id wA7HX3iP006686
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 7 Nov 2018 17:33:05 GMT
+Date: Wed, 7 Nov 2018 09:33:03 -0800
+From: Daniel Walker <danielwa@cisco.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
+        "nkela@cisco.com" <nkela@cisco.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "xe-linux-external@cisco.com" <xe-linux-external@cisco.com>
+Subject: Re: [PATCH] jffs2: implement mount option to configure endianness
+Message-ID: <20181107173303.slnb3i2d6ufaonp7@zorba>
+References: <20181106214928.40020-1-nkela@cisco.com>
+ <921b0f78cf67d7307a0555e1fd6f2c2976310adc.camel@infradead.org>
+ <1e4c066d1896e2a0b8b146253d34d05cc4f9ab36.camel@infinera.com>
+ <8b08e8b992093453bb2b9caff8cff08c.squirrel@twosheds.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8b08e8b992093453bb2b9caff8cff08c.squirrel@twosheds.infradead.org>
+User-Agent: NeoMutt/20170609 (1.8.3)
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-Outbound-SMTP-Client: 10.156.154.31, [10.156.154.31]
+X-Outbound-Node: alln-core-7.cisco.com
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHKkbzIeNbZo8YAA--.635S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUOe7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvEwIxGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK
+	6xAEc7vF6xCjj44lc2xSY4AK6IIF6r4lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20x
+	vE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE
+	14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwI
+	xGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
+	AFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xYxBIdaVF
+	xhVjvjDU0xZFpf9x07bb_-PUUUUU=
+
+On Wed, Nov 07, 2018 at 04:12:14PM -0000, David Woodhouse wrote:
+> 
+> > Yes, this may slow things down. I am not sure I agree with the impl.
+> > either.
+> > Could one not make cpu_to_je_X/jeX_to_cpu a function ptr which is set to
+> > a func. with the correct endian?
+> 
+> On x86 retpoline would make that quite slow.
+
+Is x86 the largest consumer of jffs2 ?
+
+Daniel

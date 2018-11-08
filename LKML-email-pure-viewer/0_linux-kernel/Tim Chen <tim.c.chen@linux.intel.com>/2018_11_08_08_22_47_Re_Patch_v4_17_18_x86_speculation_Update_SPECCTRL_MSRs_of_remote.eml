@@ -1,0 +1,252 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:20 -0000
+Received: from icoremail.net (unknown [209.85.214.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH+bxgeNbvcRbAQ--.27359S3;
+	Thu, 08 Nov 2018 08:23:14 +0800 (CST)
+Received: from mail-pl1-f178.google.com (unknown [209.85.214.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH5UDugeNb2OcZAA--.2419S3;
+	Thu, 08 Nov 2018 08:23:10 +0800 (CST)
+Received: by mail-pl1-f178.google.com with SMTP id p16-v6so8640408plr.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 16:23:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :to:cc:references:from:openpgp:autocrypt:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=6FSrvDv6/oFsNi2OFZ4mcUNGpw/mf2fML8tjHkUBT2M=;
+        b=dd6bXyPjDzHgPfD3PKKWrS1rj8OMMr9H4zREu80KLU1eZH/KLRM4FEwum1eTRIDmOJ
+         GihOOQeF0SwTyvb43bcsOCxTa2JqF/rEpsWIBAwmOLtn08CRH6h2JH9obecKZEV3VhSw
+         RKxVOuoLqtvqsGIeMxB0GvkHJ8DdnRgRHiUtPfHzRwTVTNbuPCaQStPHZ49uDPE7C7XU
+         lu00p+q9uHWrW7d3ZRb9Y226JvWcmstEPCWEhJPH5xSJCQ6i/v4qC8lSoQv7rwUOVT39
+         0Se1JXz2onPgDhqkc6XjNArS6XIGLkyOtTJYY6n0Y6zxzy0mI+L6eqMOshyC63STNssT
+         Kr7w==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gJqz3keB92ax4Qm4DLQTs6bHmKGwk1TSwW0KoaSPf6VPH3Paxpi
+	n2sKz/6wWiEIMCdrv/MBHepCYuM2jsEhsvVIzmxNM61VzEU6ud26Hg==
+X-Received: by 2002:a17:902:7882:: with SMTP id q2-v6mr2487325pll.188.1541636590474;
+        Wed, 07 Nov 2018 16:23:10 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp169001pjt;
+        Wed, 7 Nov 2018 16:23:09 -0800 (PST)
+X-Google-Smtp-Source: AJdET5c9bt5ti1JBcKuQAOzehC1x6lYOQmBVCRmLRkipctliOC2eVTZERHXIt4ILv8E734bDrgrk
+X-Received: by 2002:a17:902:650f:: with SMTP id b15-v6mr2438653plk.2.1541636589627;
+        Wed, 07 Nov 2018 16:23:09 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541636589; cv=none;
+        d=google.com; s=arc-20160816;
+        b=HSBJ/T8xrcJ+XZaEiD+ySlqLPlxLBb9pHdXVx0aAVDEZiNzf1uToRnmsa6r0BRvQAn
+         gE2gI2dJN7noVF6Ztg60wgkOsAFH/AObRFC7FPR9y0iC2zTguNZK4FDp2k+jyMR3MFPk
+         RMHPNKTkNfqAPN4lxtZ1ssXcSQMcE2T7l3VQfRZWInrxW5zYQ9mdgQMvsdgaopC8pssw
+         FlrUWdN9Z3s5Bvhic/s1ZQXa16r0thsGhJ4itsaL7FONJUOi5xq7EyPMdIqX30PZDOkl
+         M55RprdXm6YpI2Fy1cX6z4zJ2wmrdneSUG+IznLx4CnFUgMduloWLLiprclT+xLcsx2Z
+         cDgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:subject:autocrypt:openpgp:from:references:cc:to;
+        bh=6FSrvDv6/oFsNi2OFZ4mcUNGpw/mf2fML8tjHkUBT2M=;
+        b=NcCfy5osthoB+38wBNOIjG9g3adTgltnGlt/dWGjI/WxAcONibgbb45j/fmjsBGtIB
+         fKFaB5zAOGY8+QD+3+w+H5rIzg/QIdynS0k9j38hX9Jw6/OamrD5vm9BibnvuWf1VYQu
+         hoSLMqSovJffA0r4yvXdnHKmeMtoHFwD7cvNhZA3uAJ4v0jNrzurU+minkhZK7iawJBx
+         Y7MJ6VXIAQl4NMeBm97JoSQGFGJq0BeVbxImC43SThDNi58Eyu6bj6p1kuao9Aauh32h
+         JpOjJmOeM+cjJYIgSE7zhCJiKnzJjxc6kkAd+xjK5k1eo/YBCchouAugvJcU+6DWmLsY
+         0LtQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d10-v6si2325659pla.207.2018.11.07.16.22.54;
+        Wed, 07 Nov 2018 16:23:09 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728151AbeKHJzi (ORCPT <rfc822;yamahata.lkml@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 04:55:38 -0500
+Received: from mga02.intel.com ([134.134.136.20]:56732 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727990AbeKHJzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 04:55:37 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 16:22:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,477,1534834800"; 
+   d="scan'208";a="278007321"
+Received: from schen9-desk.jf.intel.com (HELO [10.54.74.144]) ([10.54.74.144])
+  by fmsmga005.fm.intel.com with ESMTP; 07 Nov 2018 16:22:48 -0800
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jiri Kosina <jikos@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Casey Schaufler <casey.schaufler@intel.com>,
+        Asit Mallick <asit.k.mallick@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Jon Masters <jcm@redhat.com>,
+        Waiman Long <longman9394@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Kees Cook <keescook@chromium.org>
+References: <cover.1540923609.git.tim.c.chen@linux.intel.com>
+ <a14236d8b56dafe6988ce1b266a6e929be5296a8.1540923609.git.tim.c.chen@linux.intel.com>
+ <alpine.DEB.2.21.1811042042060.10744@nanos.tec.linutronix.de>
+ <ea646842-bd32-3615-bf38-27b568a2d81e@linux.intel.com>
+ <alpine.DEB.2.21.1811052326040.1659@nanos.tec.linutronix.de>
+ <81398b26-e1c3-aac3-b44a-2a0982ae74e0@linux.intel.com>
+ <alpine.DEB.2.21.1811060139090.1659@nanos.tec.linutronix.de>
+ <e41a9d15-f667-ebb5-3fbb-91f14ae034a3@linux.intel.com>
+ <alpine.DEB.2.21.1811072337120.1666@nanos.tec.linutronix.de>
+From: Tim Chen <tim.c.chen@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
+ xsFNBE6ONugBEAC1c8laQ2QrezbYFetwrzD0v8rOqanj5X1jkySQr3hm/rqVcDJudcfdSMv0
+ BNCCjt2dofFxVfRL0G8eQR4qoSgzDGDzoFva3NjTJ/34TlK9MMouLY7X5x3sXdZtrV4zhKGv
+ 3Rt2osfARdH3QDoTUHujhQxlcPk7cwjTXe4o3aHIFbcIBUmxhqPaz3AMfdCqbhd7uWe9MAZX
+ 7M9vk6PboyO4PgZRAs5lWRoD4ZfROtSViX49KEkO7BDClacVsODITpiaWtZVDxkYUX/D9OxG
+ AkxmqrCxZxxZHDQos1SnS08aKD0QITm/LWQtwx1y0P4GGMXRlIAQE4rK69BDvzSaLB45ppOw
+ AO7kw8aR3eu/sW8p016dx34bUFFTwbILJFvazpvRImdjmZGcTcvRd8QgmhNV5INyGwtfA8sn
+ L4V13aZNZA9eWd+iuB8qZfoFiyAeHNWzLX/Moi8hB7LxFuEGnvbxYByRS83jsxjH2Bd49bTi
+ XOsAY/YyGj6gl8KkjSbKOkj0IRy28nLisFdGBvgeQrvaLaA06VexptmrLjp1Qtyesw6zIJeP
+ oHUImJltjPjFvyfkuIPfVIB87kukpB78bhSRA5mC365LsLRl+nrX7SauEo8b7MX0qbW9pg0f
+ wsiyCCK0ioTTm4IWL2wiDB7PeiJSsViBORNKoxA093B42BWFJQARAQABzTRUaW0gQ2hlbiAo
+ d29yayByZWxhdGVkKSA8dGltLmMuY2hlbkBsaW51eC5pbnRlbC5jb20+wsF+BBMBAgAoAhsD
+ BgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCWfPBPgUJDyfxUQAKCRCiZ7WKota4SReFEACa
+ 5ruzJM/hXJguHJY8i95rxHfLOgE7QoDgsR2aK2C1BSu84StTcT9BMikndQ0em28mpd1zROCs
+ FvJ8Dzpp923699FU7s70+bFG9zIWtAOLWt2QyIMYImILzKkzkyLZo2RTcLNdUWS5fkAtjspQ
+ QPg29W+kcbX1NhB6WDdbvk2HNeZoDh4A5ucOzKjEPqbSFIbw2Wt3RUmXxezjH1NzZG3fMkEN
+ cT7JezYhUxvi2PrJlD+mo26q2/PQmFgF49tneRJXmYyie5o2+ClfFVO9I6Rd1k7hS9uXQLg3
+ udpnDKobNYZ7/+O5+ucp0Y/MwzTfBYmtJ5fBjUTi2L1RMDJee8WqCNY1VU6cQ8MD4KstxUp2
+ bxlSRAYaDtNa1Omr61E7BA1Cc2E3cIt/O1mMfudWUjCND8qrAtEnugqKjk5tJJZzmzIKSHPY
+ dCiJtOBQaVAYYchXF2hwOKhpFS43V4FdWLlM1CnFXsmbk48hGbiA8XHU85JBCXmG0i4qUlKn
+ x2ilChvq4A102ahnlGbEmFaSwxuqR/5lhai6lOkwHXDFUT6jblaSs24L3MTn/vXtvwaLEEKh
+ SPzNaj7yFvEhrJoLiZmDm0SZuPbQ+wrmPWUbzyf5te2Oq0JyrHTQJoQqn+CwGqwF/JaUq60f
+ VuUD3T0icgsfljsOA4apyH7kyfxXGP0hOM7BTQROjjboARAAx+LxKhznLH0RFvuBEGTcntrC
+ 3S0tpYmVsuWbdWr2ZL9VqZmXh6UWb0K7w7OpPNW1FiaWtVLnG1nuMmBJhE5jpYsi+yU8sbMA
+ 5BEiQn2hUo0k5eww5/oiyNI9H7vql9h628JhYd9T1CcDMghTNOKfCPNGzQ8Js33cFnszqL4I
+ N9jh+qdg5FnMHs/+oBNtlvNjD1dQdM6gm8WLhFttXNPn7nRUPuLQxTqbuoPgoTmxUxR3/M5A
+ KDjntKEdYZziBYfQJkvfLJdnRZnuHvXhO2EU1/7bAhdz7nULZktw9j1Sp9zRYfKRnQdIvXXa
+ jHkOn3N41n0zjoKV1J1KpAH3UcVfOmnTj+u6iVMW5dkxLo07CddJDaayXtCBSmmd90OG0Odx
+ cq9VaIu/DOQJ8OZU3JORiuuq40jlFsF1fy7nZSvQFsJlSmHkb+cDMZDc1yk0ko65girmNjMF
+ hsAdVYfVsqS1TJrnengBgbPgesYO5eY0Tm3+0pa07EkONsxnzyWJDn4fh/eA6IEUo2JrOrex
+ O6cRBNv9dwrUfJbMgzFeKdoyq/Zwe9QmdStkFpoh9036iWsj6Nt58NhXP8WDHOfBg9o86z9O
+ VMZMC2Q0r6pGm7L0yHmPiixrxWdW0dGKvTHu/DH/ORUrjBYYeMsCc4jWoUt4Xq49LX98KDGN
+ dhkZDGwKnAUAEQEAAcLBZQQYAQIADwIbDAUCVEAL2AUJC1VvawAKCRCiZ7WKota4SWWrD/9L
+ 4H3kHUR9qPTfSpwFBV0+PspkpMQmRQ9cQauIRXL+qIqCYfx48Jz/WZkq47COhY4d1tAvX4qv
+ lviIoCwShAHhVkxD2rWFpa6Yang7cyPDjS6sNChsZ9aTAP0zX4LLHN8ub5LwCcU9JA4Avwdy
+ NDSeeSeqNq9QOvVd2bDmyHxgVv4zRgLTNPH28hXAnDODy0wCJWg53PWvlp35XfWdIsC0ZAPK
+ vgA1Bh+FYYKfT8Uzj8J/SYH+chmeYMt+8Y+FZa+NybivWJg6+UaJ2fCTuKCc7TgqLneBudox
+ izWQMnBso0tHOT6+ju+L+ewPWc0OrJdKJeadrE2T1E949vMup5jG0lJLeSpBNmELODNL0xz6
+ Erjs/pwX7cYGKUbJfBaQcC9frPfpWfSqnK5X+12HFDxAxquXKC4ejBJOhbo3xx0sziiPTC3m
+ 4LvLkEa9evQNtMvRcnWY5qIC4YdT5waC0stYNpyCiBXpYArKYCmlra3xpgAe0MRL94PHU4UW
+ yxxdxRubFYna9LeNcWL7C0w2ngg1jd0tjRjLnimrOL8rSVUzwjNSQOV37tWTueTr40M/SfjU
+ B6bifflZQpeSY8IpqzKqB0vvxo2xD0rU7JqUh7rW8U6rg2JEzVgYiHS4cf/vJMHuauHAjH7a
+ ys7DYlLhlOVo3o0jOor4xuZPrWbSp4w51sLBZQQYAQIADwIbDAUCWfPBJQUJDyfxOAAKCRCi
+ Z7WKota4SZKQD/wLu3j8kgATic+wF3ekngjwPcW3JhbQJeHxUZwsb9OgVMHumlrZHGoltKQu
+ FfAhG/sOfuAh5f7QMzzA1M+2JD1Q6lr74vUHNBu+xBFMgZstE6hpkKmn0pNZ5JS3iZRVRLBx
+ dWw63DYr0GM80vmbHjAhwxoF2PsO2/PkWTc68+pFyl3Dy0heZSJii81hkzh8FnF8CaMH0VXu
+ MJoWyuYgnC058hHj0QqXvlNx9LzMtmrsskTmPvwqXTgG/dTEfTkQ4RfX3enrBy55cg9tMc88
+ BEQ/0/JV1bCDwyWXKRpz6FsHbICGQ4G9TTD4pS5QJ+oRQccMjfiDM3rFTcG1RYP2lHXjSm9c
+ 0VnimpQBz3LarrdHJilmTHbAWf5KLmtWfYXHrlncnhnCtw2nfwBBdy8cQW4tUyniSVRLOwGm
+ eJziyuPJ5SVVZcil2oN5/o7js7BYAeAV/WVF2Sk/blnXaaObIYIVqnDhV4N0oUz1KXq1Leem
+ Uvjo5rljmmhOBdgl6D0scXCWICbuuWN9eW2fZl38hBSI3M0MX0jnV2e+0FY+76iNmKadpTDw
+ gY3OaQAZ/UlJVI+pRV4JtRrajtpo9Vb38SBPXwp9moWmwVQyIdFUXjCTQARvxjRsUoPVu9oA
+ SCd9W74oOgrqC1hadvVU867d07PlWksfYwCeYP4bs+4GSLzI1w==
+Subject: Re: [Patch v4 17/18] x86/speculation: Update SPEC_CTRL MSRs of remote
+ CPUs
+Message-ID: <738a6c7d-6ed0-a44c-e754-34758e360bed@linux.intel.com>
+Date: Wed, 7 Nov 2018 16:22:47 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.1.0
+MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.1811072337120.1666@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH5UDugeNb2OcZAA--.2419S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF47Jw48AF48Aw1fCF18uFg_yoW8Ar4UpF
+	ZayasrKwn5Ja9rur9rJa10qa4Fyw4rXa1fJr1akrW5A3sYk3ySkrW3tay5WFyUCa4fZ3WY
+	vFWYqwnrua9rA3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAKzI0EY4vE52x082I5MxkFs20E
+	Y4vE44CYbxCE4x80FwCY02Avz4vEIxC_twCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI
+	8IcVAFwI0_Jr0_JF4lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCYIxAIcVC2z280
+	aVAFwI0_Cr1j6rxdMxvI42IY6I8E87Iv6xkF7I0E14v26F4UJVW0owCF04k20xvY0x0EwI
+	xGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
+	AFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnI
+	WIevJa73UjIFyTuYvjxUH9jbUUUUU
+
+Thomas,
+
+> 
+> The goal is to glue the mitigation decision on dumpable. That's debatable,
+> but understandable, so let's not go into that discussion.
+> 
+> There are two ways to modify dumpable:
+> 
+>   1) prctl(PR_SET_DUMPABLE)
+> 
+>   2) operations which change UID/GID and end up in commit_creds()
+> 
+> Now the really interesting question is _when_ is any of the above invoked:
+> 
+>   1) When the process is still single threaded ?
+> 
+>   2) When the process has already spawned threads ?
+> 
+
+
+The UID/GID changes in setuid and setgid syscalls are applied to the
+thread only.  There's no propagation of the cred change to other 
+related threads.  So if the user process expect the change to propagate
+to other related threads, they should do setuid/setgid before they spawn
+other threads.
+
+I think similar logic should apply for prctl(PR_SET_DUMPABLE) that
+the user expects the change to be for the current task and the
+propagation of this change to other threads is a side effect.
+
+Will anyone mind if we put in restriction that prctl(PR_SET_DUMPABLE)
+should only be done when a task is single threaded?
+
+Otherwise the user process should only expect the current thread to get the 
+benefit of STIBP protection when setting it to non-dumpable.  I can
+add comments in the code to explain this.
+
+
+> If #2 is just the oddball exception, then why on earth should we go through
+> loops and hoops to make it work and add overhead in hot paths for no real
+> value?
+> 
+
+I tend to agree with you on this.
+
+> So what we really want before discussing any potential solutions and their
+> pro and cons is an answer to that.
+> 
+> If we don't have that answer, then we might just create a purely academic
+> solution which creates more problems than it solves.
+> 
+
+Thanks.
+
+Tim

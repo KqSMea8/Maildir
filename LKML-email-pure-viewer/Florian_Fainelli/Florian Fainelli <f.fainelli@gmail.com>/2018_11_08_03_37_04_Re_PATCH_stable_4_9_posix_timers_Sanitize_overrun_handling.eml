@@ -1,0 +1,324 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:53 -0000
+Received: from icoremail.net (unknown [209.85.214.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv94TP+NbmENaAQ--.27245S3;
+	Thu, 08 Nov 2018 03:37:56 +0800 (CST)
+Received: from mail-pl1-f170.google.com (unknown [209.85.214.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3l0MEP+NbPAkZAA--.1257S3;
+	Thu, 08 Nov 2018 03:37:40 +0800 (CST)
+Received: by mail-pl1-f170.google.com with SMTP id g59-v6so8310290plb.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:37:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:openpgp:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding
+         :sender:precedence:list-id;
+        bh=Y1DH6KbdnQmQRVnBzWdxwikPXlUu9DEEgUUGi56wSdQ=;
+        b=aDopgeL+gFxpTVXNDW+Ia+JPP2wublk9VZJTzQhifiWXr8Hxvy4FmrQiJE1iaZoFjs
+         g0W7w4AqrzQm6TM66PkaUanBD1f6sN+9b2rjXADHasg6RvKcD/islGQyQHIH0q3gjYXY
+         X2J6rLjUV/xwdraBYmKniPkEDI7hq2C9OctJTBaOdVO04pYLEEh6U9Nx8Dvo65TzV3lF
+         RpztMFFBaU8OVPK3BqXKlWF2XIh4S+vLKgPzB+TyoohCFjBuHCTsc76x1oLE2Hf/FU69
+         BDWlinEJP4ta+cXMMrU8XPXHbHp5t9sI7RFSV70pGOn/4L5rr7l3bDZdOmCWSCYUa1FL
+         0a7w==
+X-Gm-Message-State: AGRZ1gLkYOecP3Vp/4yuvCG5uXPtV0upp272teHnuq955DSFRDQgXLiV
+	dnpY/KJRKxmGxnM482mnsFo5gMsyqzSNeO8O0ia/kDW0iHgDNeD6oA==
+X-Received: by 2002:a17:902:a9:: with SMTP id a38-v6mr1569668pla.7.1541619460278;
+        Wed, 07 Nov 2018 11:37:40 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5658240pjt;
+        Wed, 7 Nov 2018 11:37:39 -0800 (PST)
+X-Google-Smtp-Source: AJdET5c0LdgCoJpIRVinrfSxT9aqfWR08vf6vnDol9TQds7oHlQJl7KCxgb0y2YhYmNHCejfiKPG
+X-Received: by 2002:a62:5d49:: with SMTP id r70-v6mr1562599pfb.123.1541619459270;
+        Wed, 07 Nov 2018 11:37:39 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541619459; cv=none;
+        d=google.com; s=arc-20160816;
+        b=yDH7i5EBW72cUyd2DeQbt+iPLJuWbYhhR/z8k/8c3XdtqZLkPzwuATl2ehiIqRdDKZ
+         Tua4bznK/y+dLdNsU+6nL6kvM3Pv35B5eDyDNsezn81cznCPlIWWunTGhRrWh9LoKzG5
+         KlAdqvhR7d46kWPMXvrrYKbEVQZ2h7JdINt4tPLOv6rCHfz+9XQ+MxlYMaJB7n8gQgWe
+         ooxJDMCFMAotTRNo/cJx/mqrJs7vSZ15GENreSfE8KCFdVBBKzgICZjViTk4B0Brw7Lk
+         LpLyM6sPmlgzty1+TTSTr95bDZHIn+TTLBlcvIgesqREVjeACcbAAzTPt5jkJ9VFM3JX
+         kf2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:autocrypt:openpgp:from:references:cc:to:subject
+         :dkim-signature;
+        bh=Y1DH6KbdnQmQRVnBzWdxwikPXlUu9DEEgUUGi56wSdQ=;
+        b=dXGNrZb1qjSr8pGjsaKvNmb4MHd/KoHKq83beW6XQwSudv1QXSWGBrNv++VuaGsFtG
+         EK3HY+OgVWV2GCpkbPvfxVy9dSdjt7K4UXIHpHOwwPU+K8QjS9iPaMH1TTwolQGw1lMY
+         c+SM9ZF7OqKP0A7w99QIiKjyXpHqSjta68J59uRbkrsqw0YTR58n5q6pfSlfo3l3aYIE
+         CF/iD/Ledp2T11DqPZjasXEyxjXP4c7A+YqGykQvJVJtTzZg8y05zbGDG/L2cZSLH1Ui
+         rUS7XRnqhsmhMV5e+LI//gP7Wean9QOW7hofu9kJ0I8htcG6uhggZ1m06qMJ7rYAUvYN
+         qgtA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=JzATzUZe;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b12-v6si1479104plr.175.2018.11.07.11.37.24;
+        Wed, 07 Nov 2018 11:37:39 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727145AbeKHFJB (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:09:01 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:33716 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbeKHFJB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:09:01 -0500
+Received: by mail-yb1-f196.google.com with SMTP id i78-v6so7343390ybg.0;
+        Wed, 07 Nov 2018 11:37:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Y1DH6KbdnQmQRVnBzWdxwikPXlUu9DEEgUUGi56wSdQ=;
+        b=JzATzUZeWjRCr5x9kcvqHY8D6+G7PEojCZM329mObX6uN6px2JhsU59hOrA87eiRQA
+         uGUmFVCV3Ft/0YQB9WZkLEFuqYKr3YjQv2rZlJ43ktSUa19QM9R1GGZgH2/woDZf1pEv
+         tp+YOUVNJ8A4dWtPG92bGYCSX3rmwwTx5gbCneTWGekKz8rXHGR86OoOflL4gazrmAKY
+         oM9wgBHr5t3v3frmULQa9vtIVHBMS2QX+qvzoH1Patoniw6Vpm/oOlCu2l6P7Er2Vt4k
+         QtpIcAueZVi97wCggJIYl+rM77Ts+LaflfHLiMXTWRKaz8nrfJOYCcgIUlCARX3fxjTw
+         jztQ==
+X-Received: by 2002:a25:ac0e:: with SMTP id w14-v6mr1682077ybi.139.1541619433359;
+        Wed, 07 Nov 2018 11:37:13 -0800 (PST)
+Received: from [10.67.49.62] ([192.19.223.250])
+        by smtp.googlemail.com with ESMTPSA id s129-v6sm349976ywc.41.2018.11.07.11.37.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 11:37:12 -0800 (PST)
+Subject: Re: [PATCH stable 4.9] posix-timers: Sanitize overrun handling
+To: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>
+Cc: stable@vger.kernel.org, gregkh@linuxfoundation.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>
+References: <1541102558-14839-1-git-send-email-f.fainelli@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ HGuUuzv+GKZ6nsysJw==
+Message-ID: <6341cf9e-b2aa-9447-88e9-ad89ab42a641@gmail.com>
+Date: Wed, 7 Nov 2018 11:37:04 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <1541102558-14839-1-git-send-email-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3l0MEP+NbPAkZAA--.1257S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3Xw1fCF1rAF1ktw1kZFW8Zwb_yoW7tFy7pa
+	1Uu3Z3Xr48ArZrGF18Jwn0gry3Xr48J3yakr1kGw1ayrsxG3ZFqFWjyFy5XFWIkrWDCa12
+	yr4Igr90k345CF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmqb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0264kExVAvwVAq07x20xylc7Ca
+	8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VWrMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7
+	IYx2IY67AKxVWUCVW8JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMxvI42IY6I8E
+	87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2
+	Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIY
+	CTnIWIevJa73UjIFyTuYvjxUy6wZUUUUU
+
+On 11/1/18 1:02 PM, Florian Fainelli wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> [ Upstream commit 78c9c4dfbf8c04883941445a195276bb4bb92c76 ]
+> 
+> The posix timer overrun handling is broken because the forwarding functions
+> can return a huge number of overruns which does not fit in an int. As a
+> consequence timer_getoverrun(2) and siginfo::si_overrun can turn into
+> random number generators.
+> 
+> The k_clock::timer_forward() callbacks return a 64 bit value now. Make
+> k_itimer::ti_overrun[_last] 64bit as well, so the kernel internal
+> accounting is correct. 3Remove the temporary (int) casts.
+> 
+> Add a helper function which clamps the overrun value returned to user space
+> via timer_getoverrun(2) or siginfo::si_overrun limited to a positive value
+> between 0 and INT_MAX. INT_MAX is an indicator for user space that the
+> overrun value has been clamped.
+> 
+> Reported-by: Team OWL337 <icytxw@gmail.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Acked-by: John Stultz <john.stultz@linaro.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
+> Link: https://lkml.kernel.org/r/20180626132705.018623573@linutronix.de
+> [florian: Make patch apply to v4.9.135]
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+> Thomas, can you review for correctness? Thanks!
+
+Thomas, John, does that look like a reasonable backport for 4.9?
+
+> 
+>  include/linux/posix-timers.h   |  4 ++--
+>  kernel/time/posix-cpu-timers.c |  2 +-
+>  kernel/time/posix-timers.c     | 29 +++++++++++++++++++----------
+>  3 files changed, 22 insertions(+), 13 deletions(-)
+> 
+> diff --git a/include/linux/posix-timers.h b/include/linux/posix-timers.h
+> index 62d44c176071..e4b8678183f5 100644
+> --- a/include/linux/posix-timers.h
+> +++ b/include/linux/posix-timers.h
+> @@ -65,8 +65,8 @@ struct k_itimer {
+>  	spinlock_t it_lock;
+>  	clockid_t it_clock;		/* which timer type */
+>  	timer_t it_id;			/* timer id */
+> -	int it_overrun;			/* overrun on pending signal  */
+> -	int it_overrun_last;		/* overrun on last delivered signal */
+> +	s64 it_overrun;			/* overrun on pending signal  */
+> +	s64 it_overrun_last;		/* overrun on last delivered signal */
+>  	int it_requeue_pending;		/* waiting to requeue this timer */
+>  #define REQUEUE_PENDING 1
+>  	int it_sigev_notify;		/* notify word of sigevent struct */
+> diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+> index 39008d78927a..21a27bb73587 100644
+> --- a/kernel/time/posix-cpu-timers.c
+> +++ b/kernel/time/posix-cpu-timers.c
+> @@ -103,7 +103,7 @@ static void bump_cpu_timer(struct k_itimer *timer,
+>  			continue;
+>  
+>  		timer->it.cpu.expires += incr;
+> -		timer->it_overrun += 1 << i;
+> +		timer->it_overrun += 1LL << i;
+>  		delta -= incr;
+>  	}
+>  }
+> diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+> index fc7c37ad90a0..0e6ed2e7d066 100644
+> --- a/kernel/time/posix-timers.c
+> +++ b/kernel/time/posix-timers.c
+> @@ -355,6 +355,17 @@ static __init int init_posix_timers(void)
+>  
+>  __initcall(init_posix_timers);
+>  
+> +/*
+> + * The siginfo si_overrun field and the return value of timer_getoverrun(2)
+> + * are of type int. Clamp the overrun value to INT_MAX
+> + */
+> +static inline int timer_overrun_to_int(struct k_itimer *timr, int baseval)
+> +{
+> +	s64 sum = timr->it_overrun_last + (s64)baseval;
+> +
+> +	return sum > (s64)INT_MAX ? INT_MAX : (int)sum;
+> +}
+> +
+>  static void schedule_next_timer(struct k_itimer *timr)
+>  {
+>  	struct hrtimer *timer = &timr->it.real.timer;
+> @@ -362,12 +373,11 @@ static void schedule_next_timer(struct k_itimer *timr)
+>  	if (timr->it.real.interval.tv64 == 0)
+>  		return;
+>  
+> -	timr->it_overrun += (unsigned int) hrtimer_forward(timer,
+> -						timer->base->get_time(),
+> -						timr->it.real.interval);
+> +	timr->it_overrun += hrtimer_forward(timer, timer->base->get_time(),
+> +					    timr->it.real.interval);
+>  
+>  	timr->it_overrun_last = timr->it_overrun;
+> -	timr->it_overrun = -1;
+> +	timr->it_overrun = -1LL;
+>  	++timr->it_requeue_pending;
+>  	hrtimer_restart(timer);
+>  }
+> @@ -396,7 +406,7 @@ void do_schedule_next_timer(struct siginfo *info)
+>  		else
+>  			schedule_next_timer(timr);
+>  
+> -		info->si_overrun += timr->it_overrun_last;
+> +		info->si_overrun = timer_overrun_to_int(timr, info->si_overrun);
+>  	}
+>  
+>  	if (timr)
+> @@ -491,8 +501,7 @@ static enum hrtimer_restart posix_timer_fn(struct hrtimer *timer)
+>  					now = ktime_add(now, kj);
+>  			}
+>  #endif
+> -			timr->it_overrun += (unsigned int)
+> -				hrtimer_forward(timer, now,
+> +			timr->it_overrun += hrtimer_forward(timer, now,
+>  						timr->it.real.interval);
+>  			ret = HRTIMER_RESTART;
+>  			++timr->it_requeue_pending;
+> @@ -633,7 +642,7 @@ SYSCALL_DEFINE3(timer_create, const clockid_t, which_clock,
+>  	it_id_set = IT_ID_SET;
+>  	new_timer->it_id = (timer_t) new_timer_id;
+>  	new_timer->it_clock = which_clock;
+> -	new_timer->it_overrun = -1;
+> +	new_timer->it_overrun = -1LL;
+>  
+>  	if (timer_event_spec) {
+>  		if (copy_from_user(&event, timer_event_spec, sizeof (event))) {
+> @@ -762,7 +771,7 @@ common_timer_get(struct k_itimer *timr, struct itimerspec *cur_setting)
+>  	 */
+>  	if (iv.tv64 && (timr->it_requeue_pending & REQUEUE_PENDING ||
+>  			timr->it_sigev_notify == SIGEV_NONE))
+> -		timr->it_overrun += (unsigned int) hrtimer_forward(timer, now, iv);
+> +		timr->it_overrun += hrtimer_forward(timer, now, iv);
+>  
+>  	remaining = __hrtimer_expires_remaining_adjusted(timer, now);
+>  	/* Return 0 only, when the timer is expired and not pending */
+> @@ -824,7 +833,7 @@ SYSCALL_DEFINE1(timer_getoverrun, timer_t, timer_id)
+>  	if (!timr)
+>  		return -EINVAL;
+>  
+> -	overrun = timr->it_overrun_last;
+> +	overrun = timer_overrun_to_int(timr, 0);
+>  	unlock_timer(timr, flags);
+>  
+>  	return overrun;
+> 
+
+
+-- 
+Florian

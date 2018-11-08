@@ -1,0 +1,210 @@
+Return-Path: <xen-devel-bounces@lists.xenproject.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:26 -0000
+Received: from icoremail.net (unknown [209.85.214.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv95hKONbLsZZAQ--.27110S3;
+	Thu, 08 Nov 2018 02:01:06 +0800 (CST)
+Received: from mail-pl1-f180.google.com (unknown [209.85.214.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHKkZaKONbPr0YAA--.730S3;
+	Thu, 08 Nov 2018 02:00:58 +0800 (CST)
+Received: by mail-pl1-f180.google.com with SMTP id c13-v6so8186100plz.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:00:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :message-id:from:to:date:in-reply-to:references:organization
+         :user-agent:mime-version:subject:precedence:list-id:list-unsubscribe
+         :list-post:list-help:list-subscribe:cc:errors-to:sender;
+        bh=bCp5iG+4toLVQBTysSwv1ffK1H2ByymF+PANluU9weU=;
+        b=txGksWRXmIfwzqW7kiCSmKl9uDSVAb2GIwOsMk/Wxdq2WqBaqwEF3rVXr0hVPnCRQx
+         53m6LauONFLjb2KFDCpu7Q+lJ2aEvSQTwn8EGSlSeyd0PTmZ3DdSbbo/mqCm12BMxKdt
+         kiHPbKMLTlfBqQoQ8h3BrqfNup/phj6OsOZOcS6u9pr83Ef2o17uVpVqtHC3jwFI48qB
+         E7fL1DN+vMP/Tidd+q6EWoTIoDmaYP96z3q06BwCH5Z7AxfyHsuDxPdVGSk9ZDZNVe8v
+         AdjkoCvA1nzoxSSl1+jS6qbvIyVE/qHER+Sb4ar8OMhSpIE8kCHECgU8DD1YTikvxSaW
+         l/2Q==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of xen-devel-bounces@lists.xenproject.org designates 192.237.175.120 as permitted sender) smtp.mailfrom=xen-devel-bounces@lists.xenproject.org
+X-Gm-Message-State: AGRZ1gIOzKZotUuBnv6ak1HFaM3EMKwWdZWuAS/scWLr2+p8etJnW5RD
+	Zw3hb7XmW8Z7QA8ZwYPane1sOpevb8TIJvJSNPxLIj8O4U74ckjvvQ==
+X-Received: by 2002:a17:902:b789:: with SMTP id e9-v6mr1189449pls.338.1541613657850;
+        Wed, 07 Nov 2018 10:00:57 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5553046pjt;
+        Wed, 7 Nov 2018 10:00:57 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dloDOcslWi4D+oo9z4IlaIUAp9eAZZ+bCtituiM3WXN3QCDsE5pl4S0lh1DkIodEZYATZz
+X-Received: by 2002:a5b:883:: with SMTP id e3-v6mr1290731ybq.227.1541613656913;
+        Wed, 07 Nov 2018 10:00:56 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541613656; cv=none;
+        d=google.com; s=arc-20160816;
+        b=i0gJt7irpyIdxDinyP8Q57bd92sAGOdxzxAOxB0ggpwC/4Oas+3vpOfRluwUDSEfDL
+         S/b3+h9gmxqVJi2fdD0/mSoIHPpSVgo+k03nhGj6M8yOXku92xc7YMPSIuaRelGD9Bxb
+         RQ8CeDK23+FKth9bEK5lqTOh0KPjym72MjmhLYb6s7LCR8oLuboAQYHoQ35IYDSPsWgL
+         QkNICWiNqelf+cpwRXuImJS/IuPAcyoA9CZcFp1VXPB5GoW+i5bzCVBXKONzZV/Z4PWM
+         QKRNNPcw+FanDStT+sHngb3azs6/93DMzVijC9UhxrmWvnQBpx/jQeg21SpLvkeKWJnY
+         Kq3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=sender:errors-to:cc:list-subscribe:list-help:list-post
+         :list-unsubscribe:list-id:precedence:subject:mime-version:user-agent
+         :organization:references:in-reply-to:date:to:from:message-id;
+        bh=bCp5iG+4toLVQBTysSwv1ffK1H2ByymF+PANluU9weU=;
+        b=NuCd513U5CXHelF9yZHSPmcgl3mgWBqNURfQWDdBsFK2AlEO1XG+oxWKLmvSYi+9y3
+         dbVXv/C/MZV+8lROozM5x9CpbN9qcEwqdeD5r1kAQZUW221H6PvcJ6H46/GM20ouSG6U
+         RJjGKff38WjtB8o+NnKIuGlH5xsLqcckfDWXTfZendJTucsMF7YHsdfB2tRtA9Mmfr8R
+         BClxD7cD+yMucOIwt1xARNHV8e7AqsQLHM5loIheqOmYneH4loSqsuL8HOJFmCPehdTk
+         AOow6bjYbKI5AzdvR+UQSyYuNQyZDeU+hV2xUKGlJwZOgS2MFUKPT0gRVz8mK7BMM7aM
+         DS5A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of xen-devel-bounces@lists.xenproject.org designates 192.237.175.120 as permitted sender) smtp.mailfrom=xen-devel-bounces@lists.xenproject.org
+Received: from lists.xenproject.org (lists.xenproject.org. [192.237.175.120])
+        by mx.google.com with ESMTPS id v128-v6si828374ybb.434.2018.11.07.10.00.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 10:00:56 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of xen-devel-bounces@lists.xenproject.org designates 192.237.175.120 as permitted sender) client-ip=192.237.175.120;
+Received: from localhost ([127.0.0.1] helo=lists.xenproject.org)
+	by lists.xenproject.org with esmtp (Exim 4.89)
+	(envelope-from <xen-devel-bounces@lists.xenproject.org>)
+	id 1gKS6b-0001k2-GV; Wed, 07 Nov 2018 17:59:05 +0000
+Received: from us1-rack-dfw2.inumbo.com ([104.130.134.6])
+ by lists.xenproject.org with esmtp (Exim 4.89) (envelope-from
+ <srs0=3bvd=ns=suse.com=dfaggioli@srs-us1.protection.inumbo.net>)
+ id 1gKS6Z-0001im-LS
+ for xen-devel@lists.xenproject.org; Wed, 07 Nov 2018 17:59:03 +0000
+X-Inumbo-ID: ce73bb11-e2b6-11e8-9a16-bc764e045a96
+Received: from smtp.nue.novell.com (unknown [195.135.221.5])
+ by us1-rack-dfw2.inumbo.com (Halon) with ESMTPS
+ id ce73bb11-e2b6-11e8-9a16-bc764e045a96;
+ Wed, 07 Nov 2018 17:59:02 +0000 (UTC)
+Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
+ by smtp.nue.novell.com with ESMTP (TLS encrypted);
+ Wed, 07 Nov 2018 18:59:00 +0100
+Received: from [192.168.0.30] (nwb-a10-snat.microfocus.com [10.120.13.202])
+ by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted);
+ Wed, 07 Nov 2018 17:58:44 +0000
+Message-ID: <742baf00117093a38fbd35b8ffb7e0d13b0cde61.camel@suse.com>
+From: Dario Faggioli <dfaggioli@suse.com>
+To: xen-devel@lists.xenproject.org
+Date: Wed, 07 Nov 2018 18:58:54 +0100
+In-Reply-To: <153926549830.22680.203200918007449375.stgit@wayrath>
+References: <153926549830.22680.203200918007449375.stgit@wayrath>
+Organization: SUSE
+User-Agent: Evolution 3.30.1 
+Mime-Version: 1.0
+Subject: Re: [Xen-devel] [PATCH] xen: sched: Credit2: during scheduling,
+ update the idle mask before using it
+X-BeenThere: xen-devel@lists.xenproject.org
+X-Mailman-Version: 2.1.23
+Precedence: list
+List-Id: Xen developer discussion <xen-devel.lists.xenproject.org>
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Cc: George Dunlap <george.dunlap@citrix.com>
+Content-Type: multipart/mixed; boundary="===============7367197121225770723=="
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+X-CM-TRANSID: AQAAfwBHKkZaKONbPr0YAA--.730S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7XF47KFWDGrW7GF1kur43Awb_yoWfKrb_WF
+	9rtFn5tw1UXryUtFsYqr48XryUKrW7XrZ8Ar4rtF4xA34fAFs8Gr1rWa13Wr1Ygw48trnr
+	WrnYvFyxAw17ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUU1UkYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2vj62AExV
+	A0xI801c8C04v26x02cVCv0xWlnx0E6VACY4xI67k04243AVACY4xI67k04243AVAKzVAK
+	j4xI6x02cVCv0xWle2I262IYc4CY6c8Ij28IcVAaY2xG8wASzI0EjI02j7AqF2xKxwAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACY4xI67k04243AVAKzV
+	AKj4xxMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1l6VACY4xI67k04243AbIY
+	CTnIWIevJa73UjIFyTuYvjxUsF4iDUUUU
+
+
+--===============7367197121225770723==
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-0GFY1BRJghQWKtSmcMtT"
+
+
+--=-0GFY1BRJghQWKtSmcMtT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, 2018-10-11 at 15:44 +0200, Dario Faggioli wrote:
+> Load balancing, when happening, at the end of a "scheduler epoch",
+> can
+> trigger vcpu migration, which in its turn may call runq_tickle(). If
+> the
+> cpu where this happens was idle, but we're now going to schedule a
+> vcpu
+> on it, let's update the runq's idle cpus mask accordingly _before_
+> doing
+> load balancing.
+>=20
+> Not doing that, in fact, may cause runq_tickle() to think that the
+> cpu
+> is still idle, and tickle it to go pick up a vcpu from the runqueue,
+> which might be wrong/unideal.
+>=20
+> Signed-off-by: Dario Faggioli <dfaggioli@suse.com>
+> ---
+> Cc: George Dunlap <george.dunlap@citrix.com>
+>
+Ping?
+
+Thanks and Regards,
+Dario
+--=20
+<<This happens because I choose it to happen!>> (Raistlin Majere)
+-----------------------------------------------------------------
+Dario Faggioli, Ph.D, http://about.me/dario.faggioli
+Software Engineer @ SUSE https://www.suse.com/
+
+--=-0GFY1BRJghQWKtSmcMtT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEES5ssOj3Vhr0WPnOLFkJ4iaW4c+4FAlvjJ94ACgkQFkJ4iaW4
+c+6Vvw//QT9IIohircsd8nHlKe9yn9vr5hEdCl9wklFS3dR6VxsNxO6N/UeceO8Y
+YwZK6T93Y2uMuvSV/DYzhX3oDYbOOtyPQT4ycxdIGiEOhiaOux3fotNAp6d923+4
+myIevWk2JyJTvXdpODU+TSrUCm6SfF59idRki9B/PYl4+xQpJCc4WtSkDiWh8etq
+QCbHGtoc6yyB9BbiSNjZ6Ro7BTYUysRImMFiVg+GDBNz7+9PPPrjmkGPuaBJPrh2
+RQ2K+rlOCakSXSRxSWtqHvVERr6BmLJvMv47iL0tKrdcpoHWdzRW8/AYh6RuOGal
+KBeLft1R/9ZUiblGcs2H5nwDHhn7xqMCZIrds/NUt8eswvNDNvz7jA7KaAtbrnFW
+HanKYOCzCleIfzFnQDoPYcu9AKQ4xvNeIhYvRgK8CSOXBwhjzMCRMmr/oS9HiPe4
++UKQPjooJHSjRDeC8GqTas3c8eq5O8TCP9TdC9eNoZbabCQ64TEGU57qiQHSEIw2
+3+KQ6nbUabEiS8jUAyVZHPlxjow4KmZ8YRSW8K3gFQC3rW/ZyZGi/djxWJDqL6ef
+K7Cn2UrXN3ivLtU5FRJWvQr/QYot15mX21FSeSzTaZSGafO+GHBoVKps3xh3xlCe
+XAmp9uuPsQ399xTOueY+eRffH4p9eJh+fUZSXB2Vbi/FWh9xOOg=
+=SOsT
+-----END PGP SIGNATURE-----
+
+--=-0GFY1BRJghQWKtSmcMtT--
+
+
+
+--===============7367197121225770723==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KWGVuLWRldmVs
+IG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMueGVucHJvamVjdC5vcmcKaHR0cHM6Ly9saXN0
+cy54ZW5wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL3hlbi1kZXZlbA==
+
+--===============7367197121225770723==--
+

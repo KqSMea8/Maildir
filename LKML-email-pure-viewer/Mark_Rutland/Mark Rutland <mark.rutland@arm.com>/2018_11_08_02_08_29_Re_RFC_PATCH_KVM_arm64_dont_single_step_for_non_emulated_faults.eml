@@ -1,0 +1,169 @@
+Return-Path: <kvm-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:31 -0000
+Received: from icoremail.net (unknown [209.85.215.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX9M1KuNbls5ZAQ--.27003S3;
+	Thu, 08 Nov 2018 02:08:54 +0800 (CST)
+Received: from mail-pg1-f179.google.com (unknown [209.85.215.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBX0EwyKuNbcMQYAA--.150S3;
+	Thu, 08 Nov 2018 02:08:50 +0800 (CST)
+Received: by mail-pg1-f179.google.com with SMTP id q5-v6so7652196pgv.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:08:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent:sender:precedence:list-id;
+        bh=nLYzN/VLA5hNx/KVuQ7zjACd3NLWwELFG5MDOQBklqo=;
+        b=Lh9B/quMSRmTnqcwfY6g5MQXeoaZS96jux7MqGikFw7ncrNIqDKOCGZh2vQ8Teoovd
+         QegVyO6AJQeUVWCx3Cw4gfmqVwN2dzsVyk4ybTFhpw0hcaJBWEyx927YPJYHNHqWAB9b
+         WaNSivjlpxwTZjDsZPJEB7VjliClsetBVjFY8EOPRXbnJjgxhiMZwuGRsCfYRJ7K0oKN
+         IJnjFL5ahlljrHNx2R2AKEmUqoMkbzgMvgMP78014o2/jNsVEusDchfDBzM6Xamvke/x
+         zuYselCeZE7WzKBE07KKZNvSw+Jei/gZfywnBqqnXYosSxeIdoWuCi7fxPkDoRqJEOVw
+         JfQg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=kvm-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKI4wvaFM+QlENp94Rv8QETv3pvAK7yHMXxysnsGbGY7VlPFAMK
+	2lfK9xMSDk8g9yUKn+LYVcjgsmafWWaolr/2gjmvG+zL0MiQcOXDBw==
+X-Received: by 2002:a62:c20b:: with SMTP id l11-v6mr1214841pfg.251.1541614130074;
+        Wed, 07 Nov 2018 10:08:50 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5562693pjt;
+        Wed, 7 Nov 2018 10:08:49 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fAgG1w9f8puKsgMRxLuXZuI/US4szB5Qg2eCHr1+TNRnidHjAGMYShJAQKhtAhj4kkZvum
+X-Received: by 2002:a17:902:4a0c:: with SMTP id w12-v6mr1203016pld.63.1541614129266;
+        Wed, 07 Nov 2018 10:08:49 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541614129; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Qek+SBI29cyBOaB4RKJqfIcP2uw30DuCMyQq4OSg7YEJdw8CwMZxC3n2FXbL9WQOnN
+         Frfaiz47XORAjrYg2nb+LYwcpAdNjA+52RvfYQrWiRjfOJCgRnlWsXREnQakQ+79FRr3
+         DwVerVH0ZmOfQJRs5Ja46L5xQp9gbAsKW1Ddq4+sV+sc5eXR/FrBjUnaplZkP4Cao8w5
+         R88cY3Ai9XKUL6ItmC/ljDpZRkYX/aMIhLRxkSM7aMUDeRqS2QbXW61AjSD0eNZPKvHr
+         SbyKg2zkhgAPaeJunVLX7eRADQLzK3eBfkw34VWda85U/VrdbBGAwFmC2E9VSDU5XdW5
+         /Dyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-transfer-encoding:content-disposition:mime-version
+         :references:message-id:subject:cc:to:from:date;
+        bh=nLYzN/VLA5hNx/KVuQ7zjACd3NLWwELFG5MDOQBklqo=;
+        b=NL1SX8ax6rHbsrc1/Si/tyuTJNr6DROgoRCeohSarqef2nWbKxKhndrQ3GdJaqpacw
+         n8BvBsrZ472Bw2gwnezFtUjBE40uQRqbiZjlAO/7s2kGdmMnEjV75aBXVNfkEbR+BHoq
+         2Oz3yzmEXxyJYVHcofvWDYDq9G/jcV/FU3Rfl5b+4D2KnBWWMa5IaLMW7JO+Ex2F3/d6
+         zYE11WxeMFNL6jnr0kDciTeuGO4Lpu13sSvOypftGuKgfzEH9jAuN+F1YhvNtEehNk02
+         RGwHnGAG9wSM1lxSFLVRqLFiBoLo+kA13UkO8Y0ztPFjuMOZ6sRJYPzhHbPBHUaoPod2
+         kPfQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=kvm-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id y5-v6si1347913pfg.52.2018.11.07.10.08.34;
+        Wed, 07 Nov 2018 10:08:49 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727638AbeKHDkF (ORCPT <rfc822;fanshuming2011@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:40:05 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56158 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727168AbeKHDkF (ORCPT <rfc822;kvm@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:40:05 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AB9EA78;
+        Wed,  7 Nov 2018 10:08:33 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFD003F5C0;
+        Wed,  7 Nov 2018 10:08:31 -0800 (PST)
+Date: Wed, 7 Nov 2018 18:08:29 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
+Cc: kvm@vger.kernel.org, marc.zyngier@arm.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        christoffer.dall@linaro.org
+Subject: Re: [RFC PATCH] KVM: arm64: don't single-step for non-emulated faults
+Message-ID: <20181107180829.sex54bxhd5wyqvan@lakrids.cambridge.arm.com>
+References: <20181107171031.22573-1-alex.bennee@linaro.org>
+ <20181107180120.urnvkcrkh46ytsdb@lakrids.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20181107180120.urnvkcrkh46ytsdb@lakrids.cambridge.arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <kvm.vger.kernel.org>
+X-Mailing-List: kvm@vger.kernel.org
+X-CM-TRANSID: AQAAfwBX0EwyKuNbcMQYAA--.150S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7CFWUZry7CF1UGr4xWFW8Crg_yoW8urWfpF
+	93CFyak3yYga4agasF9ws3Jr4Svws5Kr17JrWUt3y5twn0vryrtF4rK345KFW5CrykXa1a
+	vF10vFn8ZF1UAa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmSb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
+	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBI
+	daVFxhVjvjDU0xZFpf9x07b1miiUUUUU=
+
+On Wed, Nov 07, 2018 at 06:01:20PM +0000, Mark Rutland wrote:
+> On Wed, Nov 07, 2018 at 05:10:31PM +0000, Alex Bennée wrote:
+> > Not all faults handled by handle_exit are instruction emulations. For
+> > example a ESR_ELx_EC_IABT will result in the page tables being updated
+> > but the instruction that triggered the fault hasn't actually executed
+> > yet. We use the simple heuristic of checking for a changed PC before
+> > seeing if kvm_arm_handle_step_debug wants to claim we stepped an
+> > instruction.
+> > 
+> > Signed-off-by: Alex Bennée <alex.bennee@linaro.org>
+> > ---
+> >  arch/arm64/kvm/handle_exit.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm64/kvm/handle_exit.c b/arch/arm64/kvm/handle_exit.c
+> > index e5e741bfffe1..b8252e72f882 100644
+> > --- a/arch/arm64/kvm/handle_exit.c
+> > +++ b/arch/arm64/kvm/handle_exit.c
+> > @@ -214,6 +214,7 @@ static exit_handle_fn kvm_get_exit_handler(struct kvm_vcpu *vcpu)
+> >  static int handle_trap_exceptions(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> >  {
+> >  	int handled;
+> > +        unsigned long old_pc = *vcpu_pc(vcpu);
+> >  
+> >  	/*
+> >  	 * See ARM ARM B1.14.1: "Hyp traps on instructions
+> > @@ -233,7 +234,8 @@ static int handle_trap_exceptions(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> >  	 * kvm_arm_handle_step_debug() sets the exit_reason on the kvm_run
+> >  	 * structure if we need to return to userspace.
+> >  	 */
+> > -	if (handled > 0 && kvm_arm_handle_step_debug(vcpu, run))
+> > +	if (handled > 0 && *vcpu_pc(vcpu) != old_pc &&
+> 
+> This doesn't work if the emulation is equivalent to a branch-to-self, so
+> I don't think that we want to do this.
+> 
+> When are we failing to advance the single-step state machine correctly?
+
+I don't understand how this is intended to work currently.
+
+Surely kvm_skip_instr() should advance the state machine as necessary,
+so that we can rely on the HW to generate any necessary single-step
+exception when we next return to the guest?
+
+... and if userspace decides to emulate something, it's up to it to
+advance the state machine consistently.
+
+Thanks,
+Mark.

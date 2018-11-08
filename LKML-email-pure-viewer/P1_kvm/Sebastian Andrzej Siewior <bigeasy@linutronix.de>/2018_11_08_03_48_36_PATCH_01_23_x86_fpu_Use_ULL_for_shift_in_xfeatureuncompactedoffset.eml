@@ -1,0 +1,141 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:07 -0000
+Received: from icoremail.net (unknown [209.85.215.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH37FQuNbzlVaAQ--.27256S3;
+	Thu, 08 Nov 2018 03:53:42 +0800 (CST)
+Received: from mail-pg1-f177.google.com (unknown [209.85.215.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXeETDQuNb9BUZAA--.1262S3;
+	Thu, 08 Nov 2018 03:53:39 +0800 (CST)
+Received: by mail-pg1-f177.google.com with SMTP id i4-v6so7752613pgq.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:53:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=0QKKXEpQRsXt8mN3XeufwcpdBQgzWGknrX7wn4l/5V8=;
+        b=cXaDrJac+CSQapWOTHOsNSdyIpbisdWkBcBNj0mAUNTjAEPgC4ih4ghS7N/IIyS0TW
+         h6DRCX+DRPiJA3VQ0Tt/b2CCNCdKHNE33PxvP1VplH8Nz9VB4QOd1PAz7vKMA03YI9uN
+         EVpvozja5GgYA6r3uvWr8n7iceKi1mwbARWNEnlpHw6zpiMoGxK3fslfbXXH7zkW0VHE
+         OhHT1RMolkvi4GkvjyxPJO1bBG3WGWRuBauapCOjbffumSPnC9sVCzbly889/7EXb/K3
+         ddSJiC8Fh4Pi/2WXIuJPuw5S4ixrYTWW2pWUq/6FOXhLy2HgJRVRBX5Xo2FWWHZws92L
+         p/pw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJPxL3GbFhi6UNnNMFv6raz3hL+rdj/0wVqWN3Y8/HRyYp58KK0
+	iDJ3a9xKCwJx/KAmL+KKZf6MZoq0bkoIwnZfEBZtxKvRojBTIz0xlA==
+X-Received: by 2002:a63:1e17:: with SMTP id e23mr1347006pge.130.1541620419042;
+        Wed, 07 Nov 2018 11:53:39 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5672952pjt;
+        Wed, 7 Nov 2018 11:53:38 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fFf1j9iewHAbEuXABLciQNn4j+oBqmeT+lo41nPP16XpDZk3UQNuU56kXrkI/Ujcs+rDWS
+X-Received: by 2002:a17:902:5a09:: with SMTP id q9-v6mr1636542pli.186.1541620418467;
+        Wed, 07 Nov 2018 11:53:38 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620418; cv=none;
+        d=google.com; s=arc-20160816;
+        b=qOMIRzhXqmR25zgaziArlzn6oqV8do2uTwraHeJ6oKdkNfkuXRCE2kAX86As54aL0s
+         LLbv0NpA5WJZ3xspPq0YcsI7Ij/E6iT5b0U3PCpdbICuvC0Ilgr+eMMyA00eqw8dYwlM
+         Wp4zimWKASVonpwvOElf5if/tQlhizZqe/RWIOJXqzGx6lPcTgvqR7tQtIVSyLTxJDY1
+         upv5M7COySFfrNXm/KaSJ3Lho/gogqwM74mqeUV5PQJpiHpDzPanneMJrvSsI3DpHbBf
+         UzbXJPkso3DQGp3mGGl78h9fUg6+tN5AyPV2H5U2gY5QyHSX0ZpFRKZzWGLamVkKdfyH
+         pQrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=0QKKXEpQRsXt8mN3XeufwcpdBQgzWGknrX7wn4l/5V8=;
+        b=GBnnkAMNp7SD87N6/AV4TSmULtWNk3sseZgG0XmE0aT/rpjvWWTRG28hwygouqUWu6
+         xCNW3JVuf8etB0ASSvE8TQFV8O/0kH4IWl8FrPeYibncv8dU66MGS83P3fI5pYWVydRP
+         O64YuuP1NpzRjiVzVLv2taskWSK9mJ4+mWNvYQBve+kpTi6RC7jYF6H9iOXhOm3O5AsV
+         RM9ws9fcFFWnQ5ilQLfuUcgDCoG3Z0XqHU3nYa4LX3Bz/YwpHRvU15C/wGt+2i5hpNNd
+         CzFszyD9L8ZQWzT1G3qjkg6xLWt736HV72eaavcp2benvrV1Zl455KovMtNSg1febk9x
+         Berg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v13si1407827pgn.355.2018.11.07.11.53.20;
+        Wed, 07 Nov 2018 11:53:38 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726956AbeKHFVC (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:21:02 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:41830 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726337AbeKHFVC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:21:02 -0500
+Received: from localhost ([127.0.0.1] helo=bazinga.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1gKTp4-00070Q-OG; Wed, 07 Nov 2018 20:49:07 +0100
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 01/23] x86/fpu: Use ULL for shift in xfeature_uncompacted_offset()
+Date: Wed,  7 Nov 2018 20:48:36 +0100
+Message-Id: <20181107194858.9380-2-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107194858.9380-1-bigeasy@linutronix.de>
+References: <20181107194858.9380-1-bigeasy@linutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXeETDQuNb9BUZAA--.1262S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrtFW3JF48CFyfJw1UKFyfZwb_yoWDWwbEg3
+	W3Ja18Cr1vkrZFya47Aa95Ww1vkw10yr95Zr1Sqr1j9r95tF15Aa92vFnYgwsaqryfAFWD
+	CryruryDJr43ZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUb-xYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkI7II2jI8vz4vEwIxGrwCYIxAI
+	cVC0I7IYx2IY67AKxVW5JVW7JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42
+	IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK
+	82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JV
+	W3JbIYCTnIWIevJa73UjIFyTuYvjxU-M5lUUUUU
+
+The xfeature mask is 64bit so a shift from a number to its mask should
+have LL prefix or else nr > 31 will be lost. This is not a problem now
+but should XFEATURE_MASK_SUPERVISOR gain a bit >31 then this check won't
+catch it.
+
+Add a ULL suffix so >31bit number will be properly shifted.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/x86/kernel/fpu/xstate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 87a57b7642d36..9dc0a2c8c2755 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -444,7 +444,7 @@ static int xfeature_uncompacted_offset(int xfeature_nr)
+ 	 * format. Checking a supervisor state's uncompacted offset is
+ 	 * an error.
+ 	 */
+-	if (XFEATURE_MASK_SUPERVISOR & (1 << xfeature_nr)) {
++	if (XFEATURE_MASK_SUPERVISOR & (1ULL << xfeature_nr)) {
+ 		WARN_ONCE(1, "No fixed offset for xstate %d\n", xfeature_nr);
+ 		return -1;
+ 	}
+-- 
+2.19.1

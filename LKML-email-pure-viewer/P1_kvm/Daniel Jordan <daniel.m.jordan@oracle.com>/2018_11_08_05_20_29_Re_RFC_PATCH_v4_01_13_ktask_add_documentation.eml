@@ -1,0 +1,269 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:39 -0000
+Received: from icoremail.net (unknown [209.85.210.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX+9VV+Nb1dZaAQ--.27646S3;
+	Thu, 08 Nov 2018 05:21:25 +0800 (CST)
+Received: from mail-pf1-f171.google.com (unknown [209.85.210.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH3zpTV+NbGVwZAA--.1310S3;
+	Thu, 08 Nov 2018 05:21:23 +0800 (CST)
+Received: by mail-pf1-f171.google.com with SMTP id p17-v6so7873099pfj.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 13:21:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=0wXbyvHvxnjwCKoziUWh73cbxf7raaHmbKmlQEu720c=;
+        b=sJs9437YjuaE4nW8ZQAF5n6/AJ1ck/9TS97EcrYA509R1mxMYrseD+4vY/cC9ndjNx
+         IdiZB0kK7a4RJY0Sr07qa7W8XlTHxiA+p5MROX0huinX0ozSHW3IhlDO9iwlOMleBlsB
+         599lWSzoQOFQAPsWSHzBkuQuhb9yuw81B4GFmp9vOGVJ2ObrKt10J44+HWTbEbl+2DEq
+         0AFjRNfJjTgmW0frF6ciFp3vEisi9FUnRaF57cvrZZ8DLAY6pUCAMCzRu33KUfUcZdHj
+         Eg9p+FqwQsALPWli3Hz6W+4T/STZJruVCNovys+GWgJDwG159d7MFAHrfjUe6WKG9tq8
+         0RMw==
+X-Gm-Message-State: AGRZ1gIw955vDrrs8HlOWBMYoYeK5Y2puAOT61SOA/oIhbtmRraXL9jk
+	j9gzlskW3l35obv96qhTw+qJfFGUrOme2PWqldFmFg8Yp/WpD6Hg0w==
+X-Received: by 2002:a63:4044:: with SMTP id n65mr1593537pga.90.1541625683035;
+        Wed, 07 Nov 2018 13:21:23 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp18807pjt;
+        Wed, 7 Nov 2018 13:21:22 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fgy601qW+mwvCdMkzVusBPaEpjPS5sj+cS7EGBmIeceOxfLo6ciOocJbeY0pMVuN1qrJk0
+X-Received: by 2002:a63:50b:: with SMTP id 11mr1551995pgf.411.1541625681943;
+        Wed, 07 Nov 2018 13:21:21 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541625681; cv=none;
+        d=google.com; s=arc-20160816;
+        b=GQTcY80I41sKXopXcyYoizA/jlSjNxbbDfnZ06KuxlSqfJmgBfb+fwQC3BB6hULcFA
+         F/uuhT7tpJ4VsLO7REZY0Gr76oQUL0v7BinG5Ldf/2uJUUcl5ySlhsm1iW+q05jGeAoZ
+         ulzSEDmhe1fHXOF353lJrWyl3+WHWvl3ol02UgC5e6OADt40/L2ONuEcVhAgHqxnnHDn
+         p2H/Q8ft7Y+4bPBfMqcNLWjoLfFToHNn98C4UMDzffA94S6tPumI1DgPTECRjmRVUa0p
+         PdD8H1/ZqhAsqF3rnN8DjFHY7L2T9Qqv5WS1U9Ts9MdzNYvJCQ6Au3MnwKzywDCN97de
+         ECZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=0wXbyvHvxnjwCKoziUWh73cbxf7raaHmbKmlQEu720c=;
+        b=Mw6Lx9h9Mb2XiGruDedy5Qc87uveCWb6wvrysq3Fw6guDPeaEQUPKeT01krxyMCZeX
+         pqQeoxIvhwYk4N8yKtMSZq9FKvgVb20puefmazdS+5gYtH1fW9UFjH1zxNxRv/GXRMDT
+         BvqzKbZfrM0SzFT54M9L0PLx300giMvszQ9DH6dJ+SnYuwNzKHv7DozeJcJ/aDoJdnVF
+         rayT8Zrh7FmQcdi9cF9kDYucLZLQ3YVHriM3hkm45/+O9gTJc9CwSEtBRb1Fq+d/pqzH
+         ggmr2+42rlXDx0xSQo9f5Rn/i5o9G8/erF+0dUSGdRxHqN+U3MMOuLyK9zJUGXXm9Jmb
+         L63A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@oracle.com header.s=corp-2018-07-02 header.b=Wjan71rx;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=oracle.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id h37-v6si1466290pgh.537.2018.11.07.13.21.05;
+        Wed, 07 Nov 2018 13:21:21 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727369AbeKHGxL (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:53:11 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:46560 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727136AbeKHGxL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:53:11 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.22/8.16.0.22) with SMTP id wA7LJHBn026197;
+        Wed, 7 Nov 2018 21:20:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=0wXbyvHvxnjwCKoziUWh73cbxf7raaHmbKmlQEu720c=;
+ b=Wjan71rxEKb8P1KQxWK/VGHYoXLAka/bKmfuoU2cuScbWaaf0bddfgtJzu9ysMdwkuAx
+ 6jDr4FHhcR+Dy4Q6IeTjLxjB82+NvYZq1NCwi7WlMv6ie+YmZJChydHknzaObgWbqeWE
+ rl1oIC3CXaOBAH3x2WyDKl9/Ih+iElbmwdouXYp2mi/RuTjECqOZBQY1Ax7HggkjKOm1
+ S+6HrPz2g9x9mj7f3IdTqLd+U1emJHXEAaWjPZ4R8O7U3LRFdOyQCrze9+LK+RcnfUHD
+ Vixjv68ngJwCBy/iuuQZBHP8wxSpweVRDd4+rbx/i3xVd7sx6sdWuPROI4Fv561KbPKF ow== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by userp2120.oracle.com with ESMTP id 2nh4aqwxfs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 07 Nov 2018 21:20:25 +0000
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id wA7LKOlt027617
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 7 Nov 2018 21:20:24 GMT
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id wA7LKMbu003572;
+        Wed, 7 Nov 2018 21:20:22 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 07 Nov 2018 13:20:22 -0800
+Date: Wed, 7 Nov 2018 13:20:29 -0800
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Daniel Jordan <daniel.m.jordan@oracle.com>, rjw@rjwysocki.net,
+        linux-pm@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, aarcange@redhat.com,
+        aaron.lu@intel.com, akpm@linux-foundation.org,
+        alex.williamson@redhat.com, bsd@redhat.com,
+        darrick.wong@oracle.com, dave.hansen@linux.intel.com,
+        jgg@mellanox.com, jwadams@google.com, jiangshanlai@gmail.com,
+        mhocko@kernel.org, mike.kravetz@oracle.com,
+        Pavel.Tatashin@microsoft.com, prasad.singamsetty@oracle.com,
+        rdunlap@infradead.org, steven.sistare@oracle.com,
+        tim.c.chen@intel.com, tj@kernel.org, vbabka@suse.cz,
+        dhaval.giani@oracle.com
+Subject: Re: [RFC PATCH v4 01/13] ktask: add documentation
+Message-ID: <20181107212029.sqf56bbkd7ld6jav@ca-dmjordan1.us.oracle.com>
+References: <20181105165558.11698-1-daniel.m.jordan@oracle.com>
+ <20181105165558.11698-2-daniel.m.jordan@oracle.com>
+ <20181106084911.GA22504@hirez.programming.kicks-ass.net>
+ <20181106203411.pdce6tgs7dncwflh@ca-dmjordan1.us.oracle.com>
+ <20181107103554.GL9781@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107103554.GL9781@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180323-268-5a959c
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9070 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1807170000 definitions=main-1811070190
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH3zpTV+NbGVwZAA--.1310S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxWF1UJw1fZr48JrW7WrW7urg_yoWruw4kpF
+	yDKayxKF4ktFW0vwn7tw18XryxtrZ7Jr13Jr95KrW8C3s8W3ZFqrWUtayj9Fykurs5C3Wj
+	vr4jqa47u398AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6F4lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r1j6r1xMxvI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUdjQD
+	DUUUU
+
+On Wed, Nov 07, 2018 at 11:35:54AM +0100, Peter Zijlstra wrote:
+> On Tue, Nov 06, 2018 at 12:34:11PM -0800, Daniel Jordan wrote:
+> > On Tue, Nov 06, 2018 at 09:49:11AM +0100, Peter Zijlstra wrote:
+> > > On Mon, Nov 05, 2018 at 11:55:46AM -0500, Daniel Jordan wrote:
+> > > > +Concept
+> > > > +=======
+> > > > +
+> > > > +ktask is built on unbound workqueues to take advantage of the thread management
+> > > > +facilities it provides: creation, destruction, flushing, priority setting, and
+> > > > +NUMA affinity.
+> > > > +
+> > > > +A little terminology up front:  A 'task' is the total work there is to do and a
+> > > > +'chunk' is a unit of work given to a thread.
+> > > 
+> > > So I hate on the task naming. We already have a task, lets not overload
+> > > that name.
+> > 
+> > Ok, agreed, it's a crowded field with 'task', 'work', 'thread'...
+> > 
+> > Maybe 'job', since nothing seems to have taken that in kernel/.
+> 
+> Do we want to somehow convey the fundamentally parallel nature of the
+> thing?
+
+Ok, I've consulted my thesaurus and everything.  Best I can come up with is
+just 'parallel', so for example parallel_run would be the interface.  Or
+para_run.
+
+Going to think about this more, and I'm open to suggestions.
+
+> 
+> > > I see no mention of padata anywhere; I also don't see mention of the
+> > > async init stuff. Both appear to me to share, at least in part, the same
+> > > reason for existence.
+> > 
+> > padata is news to me.  From reading its doc, it comes with some special
+> > requirements of its own, like softirqs disabled during the parallel callback,
+> > and some ktask users need to sleep.  I'll check whether it could be reworked to
+> > handle this.
+> 
+> Right, padata is something that came from the network stack I think.
+> It's a bit of an odd thing, but it would be nice if we can fold it into
+> something larger.
+
+Sure, I'll see how it goes.
+
+> > And yes, async shares the same basic infrastructure, but ktask callers need to
+> > wait, so the two seem fundamentally at odds.  I'll add this explanation in.
+> 
+> Why does ktask have to be fundamentally async?
+
+Assuming you mean sync.  It doesn't have to be synchronous always, but some
+users need that.  A caller that clears a page shouldn't return to userland
+before the job is done.
+
+Anyway, sure, it may come out clean to encapsulate the async parts of async.c
+into their own paths and then find a new name for that file.  I'll see how this
+goes too.
+
+>
+> > > > +Scheduler Interaction
+> > > > +=====================
+> > ...
+> > > > +It is possible for a helper thread to start running and then be forced off-CPU
+> > > > +by a higher priority thread.  With the helper's CPU time curtailed by MAX_NICE,
+> > > > +the main thread may wait longer for the task to finish than it would have had
+> > > > +it not started any helpers, so to ensure forward progress at a single-threaded
+> > > > +pace, once the main thread is finished with all outstanding work in the task,
+> > > > +the main thread wills its priority to one helper thread at a time.  At least
+> > > > +one thread will then always be running at the priority of the calling thread.
+> > > 
+> > > What isn't clear is if this calling thread is waiting or not. Only do
+> > > this inheritance trick if it is actually waiting on the work. If it is
+> > > not, nobody cares.
+> > 
+> > The calling thread waits.  Even if it didn't though, the inheritance trick
+> > would still be desirable for timely completion of the job.
+> 
+> No, if nobody is waiting on it, it really doesn't matter.
+
+Ok, I (think) I see what you meant.  If nobody is waiting on it, as in, it's
+not desirable from a performance POV.  Agree.
+
+> 
+> > > > +Power Management
+> > > > +================
+> > > > +
+> > > > +Starting additional helper threads may cause the system to consume more energy,
+> > > > +which is undesirable on energy-conscious devices.  Therefore ktask needs to be
+> > > > +aware of cpufreq policies and scaling governors.
+> > > > +
+> > > > +If an energy-conscious policy is in use (e.g. powersave, conservative) on any
+> > > > +part of the system, that is a signal that the user has strong power management
+> > > > +preferences, in which case ktask is disabled.
+> > > > +
+> > > > +TODO: Implement this.
+> > > 
+> > > No, don't do that, its broken. Also, we're trying to move to a single
+> > > cpufreq governor for all.
+> > >
+> > > Sure we'll retain 'performance', but powersave and conservative and all
+> > > that nonsense should go away eventually.
+> > 
+> > Ok, good to know.
+> > 
+> > > That's not saying you don't need a knob for this; but don't look at
+> > > cpufreq for this.
+> > 
+> > Ok, I'll dig through power management to see what else is there.  Maybe there's
+> > some way to ask "is this machine energy conscious?"
+> 
+> IIRC you're presenting at LPC, drop by the Power Management and
+> Energy-awareness MC.
+
+Will do.

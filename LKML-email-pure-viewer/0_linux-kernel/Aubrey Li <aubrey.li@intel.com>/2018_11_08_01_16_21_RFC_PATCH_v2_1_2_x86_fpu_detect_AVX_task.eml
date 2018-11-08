@@ -1,0 +1,299 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:41:25 -0000
+Received: from icoremail.net (unknown [209.85.210.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_2N7hONbJtRbAQ--.27129S3;
+	Thu, 08 Nov 2018 08:34:04 +0800 (CST)
+Received: from mail-pf1-f182.google.com (unknown [209.85.210.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnDEh5hONbA+8ZAA--.803S3;
+	Thu, 08 Nov 2018 08:34:01 +0800 (CST)
+Received: by mail-pf1-f182.google.com with SMTP id v9-v6so6159412pff.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 16:34:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:sender:precedence:list-id;
+        bh=IkgTN2YaHlfbJDrwABYEAi4tMFd3avOIrsx+jlE9HWQ=;
+        b=m0PG+62xuT0FsVxboEkiS8l73Q1kY3r/Y+OIKaTJDBw4d3o1vII+EdtvtNT8LY8A/o
+         mPA71kEvW3GaeiJcvCNeNh5MCz6j2IYgrTjRK3+RfClFOgtmc7PEzfMx5J7GoaDxHoci
+         bzlxpJLAW5kKl5Q+n+P9E4HdLtSZplrmjbZoLa958eUsOeOgpnkHRa31a8VUqrz+++eh
+         DfRDBpmjw1rFXjQAJW6upW6KvHv+2MQJeWsX9sFaMBFPP4Uqq+HPsNu7yCZf5gbyWDoc
+         RSuM6EH0R84BcHt/SmqqT9H9LyR8MFT3/z1t7A0w/6Zd91Ob1atoupVkVT3nwhWLNlMw
+         etDw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gKhRp0IUz7YKsfAVXYLfMCxqSP4edtE2j8zq0xoCY17ns+ui5qI
+	gS+RqXKIkZ9PFJahdOFV1Z5SkGIVGNQ1d+NkrF+n8sYBrtcxliem+Q==
+X-Received: by 2002:a62:3687:: with SMTP id d129-v6mr2510423pfa.56.1541637241571;
+        Wed, 07 Nov 2018 16:34:01 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp177192pjt;
+        Wed, 7 Nov 2018 16:34:00 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f6+ODI16xD5eeggk84Fq+lu3CWpH+6j+WKo0GGaO8Dku6xHTUORcnyL5bJ6W48fDtPTTNg
+X-Received: by 2002:a62:9989:: with SMTP id t9-v6mr2431038pfk.179.1541637240116;
+        Wed, 07 Nov 2018 16:34:00 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541637240; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Ek1dmESUfYM9X0bu1qV0yZ7mVjD/HQ09VwE4OO/oJZnCR2zYa8N0yvm2uJcnK1gDXs
+         QoX6mOfLpa1XVucpOl+tLE6v8T3VpRKeqmpAdGtU6goIjNIuNfMXKDb5CRyK93clbBf+
+         jxlqBvmxFcFnYLUVUTwalEnOq/ft/4B9V/irOgrT0TFVmUvvBMAsnpHEhjfF4xSktcHz
+         EY1rgc3lXbQiFf1WgpMwoXIcxIaongu4wk61NwgOJHlVjrL/mAPL/gy533toCqFc6IlY
+         vSR+Ha7kOpAjrpUbyZDI8hD9TQHEx/LkR5ieBcViZThhRloAPTTyNh1qcx3xVvcanKAL
+         7+ZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:date:subject:cc:to:from;
+        bh=IkgTN2YaHlfbJDrwABYEAi4tMFd3avOIrsx+jlE9HWQ=;
+        b=BOuWz9tB5SG/Ryho+BbksCr6AxZFyDZctHZrNzfQhBmwHVqOxtD1iX0WJzuELvWfeG
+         v3DRGDXsG+LYIfcWcJUe5ven0UMeZujAji9oYgezA8db+bfyOz4qHXJwKQxo9voyahwW
+         zwj1oEvdyzgYLa//XygFCtn/nJfPc/vtcsow49KxdACgK4GC1ihvz6bhthXG1t1Ksbwf
+         MMrqjKJUYfAgiXQ7duj8fHU2Bwy8ov5W4MAkRgAO3a2ju/fPgK3dammqPluIbYWAiaC8
+         rN3fOBXotq7bMxJbknTdmFu0gUSOJ7TSWDZNuhWVvMwZH66jZh0u6PrTkRoH2voYL9dN
+         ZJnQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id j129-v6si2544258pfb.201.2018.11.07.16.33.44;
+        Wed, 07 Nov 2018 16:34:00 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728099AbeKHKG1 (ORCPT <rfc822;yamahata.lkml@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 05:06:27 -0500
+Received: from mga03.intel.com ([134.134.136.65]:17841 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727525AbeKHKG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 05:06:27 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 16:33:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,477,1534834800"; 
+   d="scan'208";a="279252377"
+Received: from aubrey-skl.sh.intel.com ([10.239.53.9])
+  by fmsmga006.fm.intel.com with ESMTP; 07 Nov 2018 16:33:34 -0800
+From: Aubrey Li <aubrey.li@intel.com>
+To: tglx@linutronix.de, mingo@redhat.com, peterz@infradead.org,
+        hpa@zytor.com
+Cc: ak@linux.intel.com, tim.c.chen@linux.intel.com,
+        arjan@linux.intel.com, aubrey.li@intel.com,
+        linux-kernel@vger.kernel.org, Aubrey Li <aubrey.li@linux.intel.com>
+Subject: [RFC PATCH v2 1/2] x86/fpu: detect AVX task
+Date: Thu,  8 Nov 2018 01:16:21 +0800
+Message-Id: <1541610982-33478-1-git-send-email-aubrey.li@intel.com>
+X-Mailer: git-send-email 2.7.4
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnDEh5hONbA+8ZAA--.803S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3Xw4rAw4xGw47Jr1rWryxAFb_yoW7GFW3pF
+	ZrGrn3Gw4YgFyfGa9Fqr40grn8uFn3CFy7JrZ7Gas5Xa15JryrGF1kKry5AFy8JFZ5uF13
+	XFWj9r1SgFsxZw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP2b7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M280x2IEY4vE77IFxVWUZVW8XwA2ocxC64kIII0Yj41l84x0c7CEw4AK67
+	xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E
+	14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14
+	v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xf
+	McIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7
+	v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc2xS
+	Y4AK6IIF6w1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r1I6r4UMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIE14v26F4UJVW0owCYIxAI
+	cVC2z280aVCY1x0267AKxVWxJr0_GcWl42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IU57-
+	BtUUUUU==
+
+XSAVES and its variants use init optimization to reduce the amount of
+data that they save to memory during context switch. Init optimization
+uses the state component bitmap to denote if a component is in its init
+configuration. We use this information to detect if a task contains AVX
+instructions.
+
+Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+---
+ arch/x86/include/asm/fpu/internal.h | 97 +++++++++++++++++++++++++++----------
+ arch/x86/include/asm/fpu/types.h    | 17 +++++++
+ 2 files changed, 88 insertions(+), 26 deletions(-)
+
+diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
+index a38bf5a..b0519f4 100644
+--- a/arch/x86/include/asm/fpu/internal.h
++++ b/arch/x86/include/asm/fpu/internal.h
+@@ -74,6 +74,12 @@ static __always_inline __pure bool use_fxsr(void)
+ 	return static_cpu_has(X86_FEATURE_FXSR);
+ }
+ 
++static __always_inline __pure bool use_xgetbv1(void)
++{
++	return static_cpu_has(X86_FEATURE_OSXSAVE) &&
++		static_cpu_has(X86_FEATURE_XGETBV1);
++}
++
+ /*
+  * fpstate handling functions:
+  */
+@@ -103,6 +109,34 @@ static inline void fpstate_init_fxstate(struct fxregs_state *fx)
+ }
+ extern void fpstate_sanitize_xstate(struct fpu *fpu);
+ 
++/*
++ * MXCSR and XCR definitions:
++ */
++
++extern unsigned int mxcsr_feature_mask;
++
++#define	XCR_XFEATURE_ENABLED_MASK	0x00000000
++#define	XINUSE_STATE_BITMAP_INDEX	0x00000001
++
++static inline u64 xgetbv(u32 index)
++{
++	u32 eax, edx;
++
++	asm volatile(".byte 0x0f,0x01,0xd0" /* xgetbv */
++		     : "=a" (eax), "=d" (edx)
++		     : "c" (index));
++	return eax + ((u64)edx << 32);
++}
++
++static inline void xsetbv(u32 index, u64 value)
++{
++	u32 eax = value;
++	u32 edx = value >> 32;
++
++	asm volatile(".byte 0x0f,0x01,0xd1" /* xsetbv */
++		     : : "a" (eax), "d" (edx), "c" (index));
++}
++
+ #define user_insn(insn, output, input...)				\
+ ({									\
+ 	int err;							\
+@@ -275,6 +309,42 @@ static inline void copy_fxregs_to_kernel(struct fpu *fpu)
+ 		     : "D" (st), "m" (*st), "a" (lmask), "d" (hmask)	\
+ 		     : "memory")
+ 
++#define	AVX_STATE_DECAY_COUNT	3
++
++/*
++ * This function is called during context switch to update AVX component state
++ */
++static inline void update_avx_state(struct avx_state *avx)
++{
++	/*
++	 * Check if XGETBV with ECX = 1 supported. XGETBV with ECX = 1
++	 * returns the logical-AND of XCR0 and XINUSE. XINUSE is a bitmap
++	 * by which the processor tracks the status of various components.
++	 */
++	if (!use_xgetbv1()) {
++		avx->state = 0;
++		return;
++	}
++	/*
++	 * XINUSE is dynamic to track component state because VZEROUPPER
++	 * happens on every function end and reset the bitmap to the
++	 * initial configuration.
++	 *
++	 * State decay is introduced to solve the race condition between
++	 * context switch and a function end. State is aggressively set
++	 * once it's detected but need to be cleared by decay 3 context
++	 * switches
++	 */
++	if (xgetbv(XINUSE_STATE_BITMAP_INDEX) & XFEATURE_MASK_Hi16_ZMM) {
++		avx->state = 1;
++		avx->decay_count = AVX_STATE_DECAY_COUNT;
++	} else {
++		if (avx->decay_count)
++			avx->decay_count--;
++		else
++			avx->state = 0;
++	}
++}
+ /*
+  * This function is called only during boot time when x86 caps are not set
+  * up and alternative can not be used yet.
+@@ -411,6 +481,7 @@ static inline int copy_fpregs_to_fpstate(struct fpu *fpu)
+ {
+ 	if (likely(use_xsave())) {
+ 		copy_xregs_to_kernel(&fpu->state.xsave);
++		update_avx_state(&fpu->avx);
+ 		return 1;
+ 	}
+ 
+@@ -577,31 +648,5 @@ static inline void user_fpu_begin(void)
+ 	preempt_enable();
+ }
+ 
+-/*
+- * MXCSR and XCR definitions:
+- */
+-
+-extern unsigned int mxcsr_feature_mask;
+-
+-#define XCR_XFEATURE_ENABLED_MASK	0x00000000
+-
+-static inline u64 xgetbv(u32 index)
+-{
+-	u32 eax, edx;
+-
+-	asm volatile(".byte 0x0f,0x01,0xd0" /* xgetbv */
+-		     : "=a" (eax), "=d" (edx)
+-		     : "c" (index));
+-	return eax + ((u64)edx << 32);
+-}
+-
+-static inline void xsetbv(u32 index, u64 value)
+-{
+-	u32 eax = value;
+-	u32 edx = value >> 32;
+-
+-	asm volatile(".byte 0x0f,0x01,0xd1" /* xsetbv */
+-		     : : "a" (eax), "d" (edx), "c" (index));
+-}
+ 
+ #endif /* _ASM_X86_FPU_INTERNAL_H */
+diff --git a/arch/x86/include/asm/fpu/types.h b/arch/x86/include/asm/fpu/types.h
+index 202c539..39d5bc2 100644
+--- a/arch/x86/include/asm/fpu/types.h
++++ b/arch/x86/include/asm/fpu/types.h
+@@ -274,6 +274,15 @@ union fpregs_state {
+ };
+ 
+ /*
++ * This is per task AVX state data structure that indicates
++ * whether the task uses AVX instructions.
++ */
++struct avx_state {
++	unsigned int			state;
++	unsigned int			decay_count;
++};
++
++/*
+  * Highest level per task FPU state data structure that
+  * contains the FPU register state plus various FPU
+  * state fields:
+@@ -303,6 +312,14 @@ struct fpu {
+ 	unsigned char			initialized;
+ 
+ 	/*
++	 * @avx_state:
++	 *
++	 * This data structure indicates whether this context
++	 * contains AVX states
++	 */
++	struct avx_state		avx;
++
++	/*
+ 	 * @state:
+ 	 *
+ 	 * In-memory copy of all FPU registers that we save/restore
+-- 
+2.7.4

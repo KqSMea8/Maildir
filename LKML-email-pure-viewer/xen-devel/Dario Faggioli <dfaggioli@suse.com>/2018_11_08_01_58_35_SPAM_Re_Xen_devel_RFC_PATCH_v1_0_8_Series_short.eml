@@ -1,0 +1,269 @@
+Return-Path: <xen-devel-bounces@lists.xenproject.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:26 -0000
+Received: from icoremail.net (unknown [209.85.215.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3_hgKONbK8ZZAQ--.26919S3;
+	Thu, 08 Nov 2018 02:01:05 +0800 (CST)
+Received: from mail-pg1-f173.google.com (unknown [209.85.215.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnoExVKONbMb0YAA--.79S3;
+	Thu, 08 Nov 2018 02:00:53 +0800 (CST)
+Received: by mail-pg1-f173.google.com with SMTP id y4so7191712pgc.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:00:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :message-id:from:to:date:in-reply-to:references:organization
+         :user-agent:mime-version:subject:precedence:list-id:list-unsubscribe
+         :list-post:list-help:list-subscribe:cc:errors-to:sender;
+        bh=5XUvmqeH/QKL+Ys9er6P2tms/ac1khUqDnj3RVmcqTY=;
+        b=XRQR80L4mf8UO7KAobt8h4LBILJFIrXbP7gTQc6Ggi/rui5goQeYjg2Rjy4BERB6w/
+         LSSdd9oA/nto2pMd9t2Nyo5a/m0LpGSzvBr9M5nHEjSoxVolfWS21+gC64fb7dzkfdfI
+         E4sol9nVkqR5jy+ksBIqlj3yMaycA+EqGcbEX56DedgNN8TNgd18PxwQFI/fcv29vOMX
+         Jj9zIx6+S9SeYF63MaYeDi8keETYBoYGopeNgCEUl5VdwRYJNv2NgFp+H7ibiAzt6mc1
+         HeK4buQaDfePJrq7Yfks80oShOjb3u1a4h71JhGAV1qY+yHzFqhQptt2m+jx2S8OM0Mi
+         ZdIw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of xen-devel-bounces@lists.xenproject.org designates 192.237.175.120 as permitted sender) smtp.mailfrom=xen-devel-bounces@lists.xenproject.org
+X-Gm-Message-State: AGRZ1gKrhGFkd54DC5K7U+IDpGvSxjXzKRsMlZGsyfVXUsToAfPpJmIN
+	ahEAgx10cw76qpg9IkHzV8oAyQLiDq6gTM2oxLlSDPz7Y2rdFLO0hA==
+X-Received: by 2002:a62:c184:: with SMTP id i126-v6mr1185319pfg.53.1541613653048;
+        Wed, 07 Nov 2018 10:00:53 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5552947pjt;
+        Wed, 7 Nov 2018 10:00:51 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d69cQqa2ucW0hZaKwJ1P0XxGYKBFWZffFvFcydx6QOHyG134IR2bg2686A0nAizQuXJL+K
+X-Received: by 2002:a81:6254:: with SMTP id w81-v6mr1240471ywb.501.1541613651702;
+        Wed, 07 Nov 2018 10:00:51 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541613651; cv=none;
+        d=google.com; s=arc-20160816;
+        b=pzmwRmV6FqUitsZePgOIJaDus5384dickwsG8zoskG5FiKZBx3jZ1BX7jrfG+wGBni
+         mOOViqdhoRloDPJXSWhoHAmPQz+MUxcL8GApfqBMlLrpndsl1MvMyYXEUJsooBAxdHYK
+         P6ScoWeSHqvglv6YpABnbSXUAVXsXTAiWAfFqCwR7dGASMS4OqDAJYyiZaxA5S9r8BhR
+         RDIsHpotD+VPDWkMjBlqiZITbSwXEluJXob7Ebo3k6N1WusqLs8Z/UmHi0RBZcjr3sga
+         lRrvW0L2FbF+Y5cFZrEiC7jT3rBiqbA8yJhVsOL3N8fNhyN8+fn5kRg+psaf/3gm0+nI
+         WLkg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=sender:errors-to:cc:list-subscribe:list-help:list-post
+         :list-unsubscribe:list-id:precedence:subject:mime-version:user-agent
+         :organization:references:in-reply-to:date:to:from:message-id;
+        bh=5XUvmqeH/QKL+Ys9er6P2tms/ac1khUqDnj3RVmcqTY=;
+        b=dsEnD+ohhg7AFpp7af8GXUGcYh1PJTCZAf55KSAJoMOJ2IHQ1VMvK/up8R90nrWnn/
+         auODUm8GG3/XGOkv7ophE4g6+MSbMhdWxP7g43KrnHAR4WYOGTiZaQhteS4QjddAX7a+
+         MavvRY7JHz6PjUiXL6xxLXsP37YdISCPMomCMVZzW/OuO147wiKS/VJrxA1ak3a1toAF
+         IQjfqvktx+s3IRv/4be2hN9qjUuSQAe9uyHNyr4Xu7DWcUe9mEN7yY/5RI7UMUVTSL8C
+         DQo77ZxmZWKXL2uR/AH9ow663jjA4cBLjj9Ehq6SEEhK/fnabQ3M0ODLhHhU2rVnwwDI
+         De3A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of xen-devel-bounces@lists.xenproject.org designates 192.237.175.120 as permitted sender) smtp.mailfrom=xen-devel-bounces@lists.xenproject.org
+Received: from lists.xenproject.org (lists.xenproject.org. [192.237.175.120])
+        by mx.google.com with ESMTPS id y12-v6si820415ybp.309.2018.11.07.10.00.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 10:00:51 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of xen-devel-bounces@lists.xenproject.org designates 192.237.175.120 as permitted sender) client-ip=192.237.175.120;
+Received: from localhost ([127.0.0.1] helo=lists.xenproject.org)
+	by lists.xenproject.org with esmtp (Exim 4.89)
+	(envelope-from <xen-devel-bounces@lists.xenproject.org>)
+	id 1gKS66-0001gU-Q9; Wed, 07 Nov 2018 17:58:34 +0000
+Received: from us1-rack-dfw2.inumbo.com ([104.130.134.6])
+ by lists.xenproject.org with esmtp (Exim 4.89) (envelope-from
+ <srs0=3bvd=ns=suse.com=dfaggioli@srs-us1.protection.inumbo.net>)
+ id 1gKS66-0001gP-6F
+ for xen-devel@lists.xenproject.org; Wed, 07 Nov 2018 17:58:34 +0000
+X-Inumbo-ID: bc785d62-e2b6-11e8-9a16-bc764e045a96
+Received: from smtp.nue.novell.com (unknown [195.135.221.5])
+ by us1-rack-dfw2.inumbo.com (Halon) with ESMTPS
+ id bc785d62-e2b6-11e8-9a16-bc764e045a96;
+ Wed, 07 Nov 2018 17:58:31 +0000 (UTC)
+Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
+ by smtp.nue.novell.com with ESMTP (TLS encrypted);
+ Wed, 07 Nov 2018 18:58:30 +0100
+Received: from [192.168.0.30] (nwb-a10-snat.microfocus.com [10.120.13.202])
+ by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted);
+ Wed, 07 Nov 2018 17:58:24 +0000
+Message-ID: <2ac529aea69ec34e08dbed2fedd614e4f69df7a0.camel@suse.com>
+From: Dario Faggioli <dfaggioli@suse.com>
+To: xen-devel@lists.xenproject.org
+Date: Wed, 07 Nov 2018 18:58:35 +0100
+In-Reply-To: <153936590062.22652.12114301510794181099.stgit@wayrath>
+References: <153936590062.22652.12114301510794181099.stgit@wayrath>
+Organization: SUSE
+User-Agent: Evolution 3.30.1 
+Mime-Version: 1.0
+Subject: [SPAM] Re: [Xen-devel] [RFC PATCH v1 0/8] Series short
+ description
+X-BeenThere: xen-devel@lists.xenproject.org
+X-Mailman-Version: 2.1.23
+Precedence: list
+List-Id: Xen developer discussion <xen-devel.lists.xenproject.org>
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
+ Bhavesh Davda <bhavesh.davda@oracle.com>, Wei Liu <wei.liu2@citrix.com>,
+ George Dunlap <george.dunlap@citrix.com>
+Content-Type: multipart/mixed; boundary="===============3457295618795926511=="
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+X-CM-TRANSID: AQAAfwAnoExVKONbMb0YAA--.79S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxAF4UAr4fCr48Cw1fGr15urg_yoW5ZrykpF
+	Z3Ka13Grs7JryxtrykZw1fXF4fXr4fAay5Xrn8KryxJrn8CF12vF1ktr48WFyUu3y8ur1a
+	vryYv34ruw1DA3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUJYb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa7VASzI
+	0EjI02j7AqF2xKxVCjxxvEa2IrM2vj6VCEFcxC0VAYjxAxZF0EFcxC0VAYjxAxZF0Ew4CE
+	w7xC0VCjxxvEa2IrM2AIxVAIcxkEcVAq07x20xvEncxIr21le4C267I2x7xF54xIwI1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFcxC0VAYjxAxZF0Ew4
+	CEw7xC0wCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44l
+	c2xSY4AK6IIF6rylc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMx
+	vI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1l
+	cIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4
+	C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMVCEFcxC0VAYjxAxZFUv
+	cSsGvfC2KfnxnUUI43ZEXa7IUYbZ2DUUUUU==
+
+
+--===============3457295618795926511==
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-CAPQdSU1+NldscoRY7n2"
+
+
+--=-CAPQdSU1+NldscoRY7n2
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, 2018-10-12 at 19:43 +0200, Dario Faggioli wrote:
+> Hello,
+>=20
+> Here it comes, core-scheduling for Credit2 as well. Well, this time,
+> it's actually group-scheduling (see below).
+>=20
+>  git://xenbits.xen.org/people/dariof/xen.git rel/sched/credit2/group-
+> scheduling-RFCv1
+> =20
+> http://xenbits.xen.org/gitweb/?p=3Dpeople/dariof/xen.git;a=3Dshortlog;h=
+=3Drefs/heads/rel/sched/credit2/group-scheduling-RFCv1
+>=20
+>  (Or=20
+> https://github.com/fdario/xen/tree/rel/sched/credit2/group-scheduling-RFC=
+v1
+> ,
+>   Or=20
+> https://gitlab.com/dfaggioli/xen/tree/rel/sched/credit2/group-scheduling-=
+RFCv1
+> )
+>=20
+> An RFC series implementing the same feature for Credit1 is here:
+> https://lists.xenproject.org/archives/html/xen-devel/2018-08/msg02164.htm=
+l
+>=20
+> The two series, however, are completely independent, and I'd
+> recommend
+> focusing on this one first. In fact, implementing the feature here in
+> Credit2 was waaay simpler, and the result is, IMO, already a lot
+> better.
+>=20
+> Therefore, I expect that the amount of effort required for making
+> this
+> very series upstreamable to be much smaller than for the Credit1 one.
+> When this is in, we'll have one scheduler that supports
+> group-scheduling, and we can focus on what to do with the others.
+>=20
+> Let me also point out, that there is some discussion (in the thread
+> of
+> the Credit1 RFC series [1]), about whether a different approach
+> toward
+> implementing core/group-scheduling wouldn't be better. I had this
+> code
+> almost ready already, and so I decided to send it out anyway. If it
+> then
+> turns out that we have to throw it away, then fine. But, so far, I'm
+> all
+> but convinced that the way things are done in this series is not our
+> current best solution to deal with the problems we have at hand.
+>=20
+> So, what's in here? Well, we have a generic group scheduling
+> implementation which seems to me to work reasonably well... For an
+> RFC. ;-P
+>=20
+> I call it generic because, although the main aim is core-scheduling,
+> it
+> can be made to work (and in fact, it already kind of does) with
+> different grouping (like node, socket, or arbitrary sets of CPUs).
+>=20
+> I does not have the fairness and starvation issues that the RFC
+> series
+> for Credit1 liked above has. I.e., it already sort-of works. :-D
+>=20
+> Some improvements are necessary, mostly because Credit2 is not a
+> fully
+> work conserving scheduler, and this hurts when we do things like
+> group
+> scheduling. So we need to add logic for doing some quick load-
+> balancing,
+> or work stealing, when a CPU goes idle, but that is not that much of
+> a
+> big deal (I was already thinking to add it anyway).
+>=20
+> Finding a way of considering group-scheduling while doing proper load
+> balancing is also on my todo list. It is less easy than the work
+> conserving-ification described above, but also less important, IMO.
+>=20
+So... Any idea? Thoughts? First impressions? :-D
+
+Thanks and Regards,
+Dario
+--=20
+<<This happens because I choose it to happen!>> (Raistlin Majere)
+-----------------------------------------------------------------
+Dario Faggioli, Ph.D, http://about.me/dario.faggioli
+Software Engineer @ SUSE https://www.suse.com/
+
+--=-CAPQdSU1+NldscoRY7n2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEES5ssOj3Vhr0WPnOLFkJ4iaW4c+4FAlvjJ8sACgkQFkJ4iaW4
+c+55ChAA3c2D2rHgwIAptSc8tqv6qIUTHJiqEDLFc9GbLVfNi56hd+tBGk7XPf3+
+4QoKciWBl7zmBQ4n7NQndSugDIva99D7epVYb05XlGm5MzYNZgCyGq91pvzmpX77
+Xtam/oBPqYHhrwZX51L/8zZVsjJE+yOkl7Y5BE9o03jzRCpKSMbiiV1n9hCtFlR1
+bCR7m7aXrJXZGfG7lYZTu+HuOa+Mhmeq0LneWfME2jxyg1C7iZmxasxCCDxJK9iB
+rkhailH3fHVN25/XWQwflmFP6ee+GRogXsAvhGs0sXTBrCNUsIlg37t4VxDxk85e
+LQAL5Lb27ED6fdHGHnnkxT5HiBjSncmrc8fXziXSWI3AtZbJANTbAMEus1Z+jkuz
+uhNqoPreAls2IdS7LnY2e4Vh5xVMjfQo8HUc4nVUjl4/C6PnxbaAqU9cun3C5Q4b
+AZ5BOaPZt1NpPc62mIuUWuT0XSs5a9eqLy1F8y4sRmYam2DpXvIj5HTv2QGTy4E0
+KhaeT0ipwNJNsszql3307Hw0VYYnEjqn3C6rIMjdtJSCGkMRIBc+baTOGPgyZ3cL
+10M6OCAeT4aGPEjLiDTeWGV/h8sEQZ/bkSO5AGWSSdIYXgLYUmuytcG5l+8vcB4j
+sUjNEfJu6M+EgYJRc+3GaJVBmJTydLXoryyEAYP9Q5iAqFECzk8=
+=q9Lz
+-----END PGP SIGNATURE-----
+
+--=-CAPQdSU1+NldscoRY7n2--
+
+
+
+--===============3457295618795926511==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KWGVuLWRldmVs
+IG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMueGVucHJvamVjdC5vcmcKaHR0cHM6Ly9saXN0
+cy54ZW5wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL3hlbi1kZXZlbA==
+
+--===============3457295618795926511==--
+

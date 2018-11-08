@@ -1,0 +1,178 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:06 -0000
+Received: from icoremail.net (unknown [209.85.214.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f9FI8+JbbWxYAQ--.26242S3;
+	Wed, 07 Nov 2018 22:14:35 +0800 (CST)
+Received: from mail-pl1-f178.google.com (unknown [209.85.214.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3WUUW8uJbbsAXAA--.10449S3;
+	Wed, 07 Nov 2018 22:09:26 +0800 (CST)
+Received: by mail-pl1-f178.google.com with SMTP id o19-v6so7899856pll.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:09:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=DN5gzufHLnkIiutwR+k+EaQGRb9gOh5K98WoAz7j8P4=;
+        b=X+Y7sAaqijJlvd5/QqtxLEUYbCXaDBL8478rG1Kd5lbJ/KrD+QxHiusYrH4R78mU6q
+         4kB7y4RZNfBrophxCIKchjhY+K+cTtOkdeS/hoawChhuLjLm0kr6jXaHLhwIER41do1i
+         7F+iTuK4WOSgl8wsw8KVJamu8lFL4y0KymbpiHubfNQQvt0zfwagBJAbahDfgeF7WRjD
+         Di1PkL9pMFxQTan/4CB4D9RVzLAeFogyYXsfwZFZvV4cmf047JiFb54/YBwm3mvfVweZ
+         EuaDvv2jcUfRQD6VE/xxYskOkitJCayVPLRrbI0QDseBvqaw3d3yvUFW1iK8ztBZ2cgW
+         tVbQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gI51uRhRUqcv3Jft3WMiz3SKTa45pvFPklrWNNljqZtKBDumzkM
+	SdyLgLHQRZq8xvJf8bfELVZwmwVRLNJAy9VR+mglHkrVkT/dkPgMdg==
+X-Received: by 2002:a17:902:8e81:: with SMTP id bg1-v6mr383996plb.192.1541599765801;
+        Wed, 07 Nov 2018 06:09:25 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5290688pjt;
+        Wed, 7 Nov 2018 06:09:24 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fe0hJGodfoddhaOoUwScl3ABywzlJAdbV9Iidd+Clgfy2pEyMjP+IHJyvIG4ysAFB5hHLJ
+X-Received: by 2002:a17:902:9693:: with SMTP id n19-v6mr399674plp.20.1541599764936;
+        Wed, 07 Nov 2018 06:09:24 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541599764; cv=none;
+        d=google.com; s=arc-20160816;
+        b=P74fdSa4KnbwBTiZZQhPND65iehosn6qHG6mvYfa9s9WRlE4TxMc/NnBhFMU1gM3zj
+         jRdXVk3Qva9v2GTWSs+pvXOXioMmhoUZ6lSQQbzU3mA4bJatrsOuEyXDOCq5GYeKluqO
+         sdrKwvgN5yRvdipTKw/m/13gEhrczQHlpcMyoR+z+uTOxKQcK9aegbi8kn+5QEFFXxtd
+         rhvJhFIOmyMlphPJs8MwKsVLzmMePdZAKLczG37Gm/5Bk49jNbg1IzmUW0fa/rqTbDRG
+         nqHwCNwNiKF6No4P8qtNH9wCxQa840BrL84vZcJOdi0ewA3SyI0lLuXe+hHq79v/YQH1
+         sDaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=DN5gzufHLnkIiutwR+k+EaQGRb9gOh5K98WoAz7j8P4=;
+        b=z1CPMf3qsbMmkhyaqcuCq0AR/tM8Vlyh4vi429K5xnkLxzDnqAo8x/Pxls4sEoPIRA
+         0OrgMLnlhQ2hRzbFQTR9yHrBqc/Yzgs3mvgrve1XCttBL1cFJ9RMgqMHnVUooA8TihiS
+         F+Po/JdEa8UO5AsAjbEKoifoflejKPV6fAVAa1LhzKj45xei6jaehs+TQRFzDi9AAYRy
+         no6UKKAvDnzX3eYzL99npeZyh71wE4ol+I5G9X9uPwddaKn0Is13WerWKdzPKqC6gTdg
+         Eb72CUk2NCrWU4ejVnU2zxqb/pq2Gxs/O9jQp7VxJ7sNH2y3Ejt963SFcz10D5UGal+Z
+         Pq8A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id x87-v6si798164pfk.54.2018.11.07.06.09.09;
+        Wed, 07 Nov 2018 06:09:24 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727709AbeKGXiK (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:38:10 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39970 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726635AbeKGXiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:38:10 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0AF42B179;
+        Wed,  7 Nov 2018 14:07:37 +0000 (UTC)
+Date: Wed, 7 Nov 2018 15:07:36 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexander Potapenko <glider@google.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 2/3] mm: Use line-buffered printk() for show_free_areas().
+Message-ID: <20181107140736.hmsomid74ofzpxvd@pathway.suse.cz>
+References: <1541165517-3557-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <1541165517-3557-2-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1541165517-3557-2-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+User-Agent: NeoMutt/20170421 (1.8.2)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3WUUW8uJbbsAXAA--.10449S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr4xur4fGr4xCry5Xw13Jwb_yoW8AFyUpF
+	WfCFWfZa48Xw1xC393Jrn7uFySvrWkGF15GrW7Xw48A3Z3JrnFq3sF9F1DZry2k348CFW3
+	ZFs5tFyrC3Wjk37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP0b7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW5XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07
+	x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
+	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI4
+	8JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IU53wI3UU
+	UUU==
+
+On Fri 2018-11-02 22:31:56, Tetsuo Handa wrote:
+> syzbot is sometimes getting mixed output like below due to concurrent
+> printk(). Mitigate such output by using line-buffered printk() API.
+> 
+>   Node 0 DMA: 1*4kB (U) 0*8kB 0*16kB 1*32kB 
+>   syz-executor0: page allocation failure: order:0, mode:0x484020(GFP_ATOMIC|__GFP_COMP), nodemask=(null)
+>   (U) 
+>   syz-executor0 cpuset=
+>   2*64kB 
+>   syz0
+>   (U) 
+>    mems_allowed=0
+>   1*128kB 
+>   CPU: 0 PID: 7592 Comm: syz-executor0 Not tainted 4.19.0-rc6+ #118
+>   (U) 
+>   Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+>   1*256kB (U) 
+>   Call Trace:
+>   0*512kB 
+>    <IRQ>
+>   1*1024kB 
+>    __dump_stack lib/dump_stack.c:77 [inline]
+>    dump_stack+0x1c4/0x2b4 lib/dump_stack.c:113
+>   (U) 
+>   1*2048kB 
+>    warn_alloc.cold.119+0xb7/0x1bd mm/page_alloc.c:3426
+>   (M) 
+> 
+> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> ---
+>  mm/page_alloc.c | 32 +++++++++++++++++---------------
+>  1 file changed, 17 insertions(+), 15 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index a919ba5..4411d5a 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -4694,10 +4694,10 @@ unsigned long nr_free_pagecache_pages(void)
+>  	return nr_free_zone_pages(gfp_zone(GFP_HIGHUSER_MOVABLE));
+>  }
+>  
+> -static inline void show_node(struct zone *zone)
+> +static inline void show_node(struct zone *zone, struct printk_buffer *buf)
+>  {
+>  	if (IS_ENABLED(CONFIG_NUMA))
+> -		printk("Node %d ", zone_to_nid(zone));
+> +		printk_buffered(buf, "Node %d ", zone_to_nid(zone));
+
+The conversion looks fine to me. I just think about renaming
+printk_buffered to bprintk().
+
+Best Regards,
+Petr

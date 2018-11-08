@@ -1,0 +1,201 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:42 -0000
+Received: from icoremail.net (unknown [209.85.215.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH0IqWeNb9+BaAQ--.27258S3;
+	Thu, 08 Nov 2018 05:29:14 +0800 (CST)
+Received: from mail-pg1-f176.google.com (unknown [209.85.215.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBX0EwnWeNbxGEZAA--.1354S3;
+	Thu, 08 Nov 2018 05:29:12 +0800 (CST)
+Received: by mail-pg1-f176.google.com with SMTP id k1-v6so7872405pgq.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 13:29:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=AgZ8rzR1rDWSBuVt9UHqNxzw1eQ/8Da6/RFQz6vJkoo=;
+        b=TngsMl2ucBE3gpXQy9vmpT4V/2XRJerlK3o8OyTD+s0keGGm2m6N953NbDyRUK07sS
+         Zggkm+tCGPS4nDqJntb1wUVskafGwDM9IkZy2m+4e0ouUCDM1rV9n5KegVn/s6QUvxJN
+         v9k0qsNSI8LbTO9MKmPzM26IdKUnl7YWzRTBQgWqvZdhA8bSFMxM6nRDrw6BIlcZ9yuU
+         NCKcOdcbxelCoMbCgZfhR8nxB0fmIlbggD1B8gAiPpjLDtdp0HZOuTx/vKkppSdMboDf
+         3Ks6QbNXsMAwNZylk3KCdpzX9DiYEYdAm39grQ8lIhJml9QeFXeqbCqVogf28MKVTLkL
+         y3IQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIJ0oO3oLU6kNgbyVA8KQR23Sf/4nLzBWrQMMGP2YXqvDuW12x6
+	Jk9eMJPk7vX3qUceDwuqHf6M8LDk6eDiWtN9Ia/GcP+1BrmDaCZeEw==
+X-Received: by 2002:a62:1c53:: with SMTP id c80-v6mr1947799pfc.14.1541626151679;
+        Wed, 07 Nov 2018 13:29:11 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp26169pjt;
+        Wed, 7 Nov 2018 13:29:10 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ceDgO0Zqt1NnhzyHgXs5x2ufTGQwsaHyNLiw7oUionMsxQJQvrkqTu/UjpdzKTFcYsunb3
+X-Received: by 2002:a63:907:: with SMTP id 7-v6mr1620529pgj.121.1541626150606;
+        Wed, 07 Nov 2018 13:29:10 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541626150; cv=none;
+        d=google.com; s=arc-20160816;
+        b=SrrJwqdRNVsQhJ5ZQNGpUaeYG9YKdtKuAGEgjNWTrKit99Kqx767pAkFLmZSNz6KXU
+         P/rZ/b2K/H6aC9rM1XaIcdxMwuvr/bK16I+oMAY2Fi+X611Ewy0O+iyz7wxPbYMM79H4
+         +1O8P/aE8znXCi0uvApZIlHzJkpztAYFkyms4+FzxfrMpxh0PUNTj1kXlZFcMjHDT6Gm
+         ol5y4GAUJQND2K8EM794XtM2VpgudxU4YuWfQT3tChWVes628hQXE030cNUws+H+YP33
+         ZoJBOH7L8YVmIWv8TQwi99lhD1yI7h1WJEQXkyQjIfvymJIBn9C3pdCF2HTqEa/RJ520
+         V2zw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=AgZ8rzR1rDWSBuVt9UHqNxzw1eQ/8Da6/RFQz6vJkoo=;
+        b=y56r3d/LP6dpHxQQkatK52FxQbyMPyixWw/XMw4dK8gUxq/GGmwebRH7Z89eT8ssnT
+         r0TW2h9hGchdHpuanAufjqMrwReL8Qo2wIfj3yKsch0X+0ULpeaPDmN7rZOuQt8O/5zF
+         m3F2aw//enRB8AbK3SjyUwE8XJ4BngT62KQGbWkdsrHLse4fZANCD5Ozmpfauoj9nTjL
+         FJUuvOq0QvE/T+bUNa2JVlyM8lBDJ8y6037vXno4BdZbfJ1y5n/JAldt+5etmtE89XwC
+         IvhqeDd2VkJBfEMnsVyyq08F1Fvk0aCnG1BgO9eztBf9BY9f77jC+GBwATzS4PnuU8Dk
+         Mm5g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 31-v6si1827459plj.36.2018.11.07.13.28.45;
+        Wed, 07 Nov 2018 13:29:10 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727558AbeKHHAf (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:00:35 -0500
+Received: from 216-12-86-13.cv.mvl.ntelos.net ([216.12.86.13]:58188 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbeKHHAe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:00:34 -0500
+Received: from dalias by brightrain.aerifal.cx with local (Exim 3.15 #2)
+        id 1gKVMk-0003R5-00; Wed, 07 Nov 2018 21:27:58 +0000
+Date: Wed, 7 Nov 2018 16:27:58 -0500
+From: Rich Felker <dalias@libc.org>
+To: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, nhorman@redhat.com,
+        npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>,
+        shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Carlos O'Donell <carlos@redhat.com>,
+        adhemerval.zanella@linaro.org
+Subject: Re: RFC: userspace exception fixups
+Message-ID: <20181107212758.GU5150@brightrain.aerifal.cx>
+References: <CAG48ez1+nGDbuBaKJVPAOzEwiBkXqHHs7vmyAqvbeM42r0nFHg@mail.gmail.com>
+ <CALCETrXq1Kj=McxnPVjkscNq-b_7LeoFOdu7qKjHdvwcfFh9Og@mail.gmail.com>
+ <1541518670.7839.31.camel@intel.com>
+ <AF4A5C77-0A79-403F-A205-0F93B7CD6E26@amacapital.net>
+ <1541524750.7839.51.camel@intel.com>
+ <22596E35-F5D1-4935-86AB-B510DCA0FABE@amacapital.net>
+ <c9659222-efc6-b73a-ce48-30be8bdc5397@intel.com>
+ <CALCETrWBV=1JbAKYn2Jy2LxkGZQvKRtFRnrWUMoejrwQe73VHw@mail.gmail.com>
+ <20181106231730.GR5150@brightrain.aerifal.cx>
+ <20181106232616.GA11101@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181106232616.GA11101@linux.intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBX0EwnWeNbxGEZAA--.1354S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxuF4fXF15GrykGw4kCF47CFg_yoW5ZFyrpF
+	y5GF9IkF4ktFWxArZFyw1avFyFk3WxJw45Xrnruw1Yyr90qa4FyrWDKF15CFyUCr4Syw12
+	yF4UtFZruanYvaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBab7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwCjxxvEa2IrMxkF7I
+	0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6F4lc2IjII80
+	xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r1I6r4UMxvI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77
+	IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVCF04
+	k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bOMKZUUUUU=
+
+On Tue, Nov 06, 2018 at 03:26:16PM -0800, Sean Christopherson wrote:
+> On Tue, Nov 06, 2018 at 06:17:30PM -0500, Rich Felker wrote:
+> > On Tue, Nov 06, 2018 at 11:02:11AM -0800, Andy Lutomirski wrote:
+> > > On Tue, Nov 6, 2018 at 10:41 AM Dave Hansen <dave.hansen@intel.com> wrote:
+> > > >
+> > > > On 11/6/18 10:20 AM, Andy Lutomirski wrote:
+> > > > > I almost feel like the right solution is to call into SGX on its own
+> > > > > private stack or maybe even its own private address space.
+> > > >
+> > > > Yeah, I had the same gut feeling.  Couldn't the debugger even treat the
+> > > > enclave like its own "thread" with its own stack and its own set of
+> > > > registers and context?  That seems like a much more workable model than
+> > > > trying to weave it together with the EENTER context.
+> > > 
+> > > So maybe the API should be, roughly
+> > > 
+> > > sgx_exit_reason_t sgx_enter_enclave(pointer_to_enclave, struct
+> > > host_state *state);
+> > > sgx_exit_reason_t sgx_resume_enclave(same args);
+> > > 
+> > > where host_state is something like:
+> > > 
+> > > struct host_state {
+> > >   unsigned long bp, sp, ax, bx, cx, dx, si, di;
+> > > };
+> > > 
+> > > and the values in host_state explicitly have nothing to do with the
+> > > actual host registers.  So, if you want to use the outcall mechanism,
+> > > you'd allocate some memory, point sp to that memory, call
+> > > sgx_enter_enclave(), and then read that memory to do the outcall.
+> > > 
+> > > Actually implementing this would be distinctly nontrivial, and would
+> > > almost certainly need some degree of kernel help to avoid an explosion
+> > > when a signal gets delivered while we have host_state.sp loaded into
+> > > the actual SP register.  Maybe rseq could help with this?
+> > > 
+> > > The ISA here is IMO not well thought through.
+> > 
+> > Maybe I'm mistaken about some fundamentals here, but my understanding
+> > of SGX is that the whole point is that the host application and the
+> > code running in the enclave are mutually adversarial towards one
+> > another. Do any or all of the proposed protocols here account for this
+> > and fully protect the host application from malicious code in the
+> > enclave? It seems that having control over the register file on exit
+> > from the enclave is fundamentally problematic but I assume there must
+> > be some way I'm missing that this is fixed up.
+> 
+> SGX provides protections for the enclave but not the other way around.
+> The kernel has all of its normal non-SGX protections in place, but the
+> enclave can certainly wreak havoc on its userspace process.  The basic
+> design idea is that the enclave is a specialized .so that gets extra
+> security protections but is still effectively part of the overall
+> application, e.g. it has full access to its host userspace process'
+> virtual memory.
+
+In that case it seems like the only way to use SGX that's not a gaping
+security hole is to run the SGX enclave in its own fully-seccomp (or
+equivalent) process, with no host application in the same address
+space. Since the host application can't see the contents of the
+enclave to make any determination of whether it's safe to run, running
+it in the same address space only makes sense if the cpu provides
+protection against unwanted accesses to the host's memory from the
+enclave -- and according to you, it doesn't.
+
+Rich

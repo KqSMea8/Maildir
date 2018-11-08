@@ -1,0 +1,247 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:07 -0000
+Received: from icoremail.net (unknown [209.85.214.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f+2W8+JbxW5YAQ--.26106S3;
+	Wed, 07 Nov 2018 22:15:51 +0800 (CST)
+Received: from mail-pl1-f173.google.com (unknown [209.85.214.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3H0uS8+JbSsYXAA--.6877S3;
+	Wed, 07 Nov 2018 22:15:46 +0800 (CST)
+Received: by mail-pl1-f173.google.com with SMTP id n4-v6so7931492plp.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:15:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:reply-to:subject:to
+         :cc:references:from:openpgp:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:sender:precedence:list-id;
+        bh=rcGW0Ysn9e5V0G4NiqHphZuYgEZdHTzt5Ngk6ikjAiU=;
+        b=ZFvUv7qkFGs8Cs6mrLeVjg0ksWp9T9C5j3vFs9kc8PES7vQEhjVIpdP13+JpC9Xl7b
+         zHW8CmL8DkBlD28V78BkfFVTX65i3PCWLUp2fqsHtRyKuM/RTuSdh/FtXy7w9l+EtmFe
+         1e6frEFw8Dk+8n0GVNf69Gfa/lb7AvMMjWYKj9RVkMysu05X4f8IMlisWm9JLYwILSso
+         2fuzIU/7tcYh4JDOxjKacUknahQdwDE3ghr03aYFkdealTaSlXOGPhkZRPFU4vc1+m1j
+         tJKGyPGkdd20ZDYn3RxiKvQuZ3F42oGLvemLZduntAMLzdWRYEKCTp9Nrn9EZqYQJB2A
+         qfiw==
+X-Gm-Message-State: AGRZ1gJgyPXHqGMIb3u5g4N4VwOcl0rWPFYBKeCWaJVGFSw3MTshL1nk
+	hvUNoipZ3J/YKARO7BxzRtWw5hCtJimem0vdg2ecc9QArf0ug71hEw==
+X-Received: by 2002:a17:902:a9:: with SMTP id a38-v6mr398549pla.7.1541600146201;
+        Wed, 07 Nov 2018 06:15:46 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5298763pjt;
+        Wed, 7 Nov 2018 06:15:45 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dx3fcRCJiurhTjiStiJwpMgnSmg7xmFJveh3cjbaTdwqZWYna7D3p33QxFqx8+yzBwDoqN
+X-Received: by 2002:a62:5343:: with SMTP id h64-v6mr375409pfb.226.1541600145483;
+        Wed, 07 Nov 2018 06:15:45 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541600145; cv=none;
+        d=google.com; s=arc-20160816;
+        b=qiwz4ZlQsX99T+DYygYV/h9PAZeunuzoBfYjUbv4S4FdLEJ7x3plGlL5LLcPxLNhQy
+         f2n7F0Ig0il5gsoCD0cbVcTdolPQ2Ii6KmRJoCY1hNzx0E56Z1G4YiRcQBvhW4XTgy4/
+         THJvx16G8GxiAoM9TBwUmohEXOaOmgyFzf9FGXkE5TlTQGupTKWydXb2+RLck+HggTpB
+         19D+855rR8/ZFdSrsHYFFwbghhDpNcNGrI18TFEbr4fxCKNKhJuJuPyVS3bF8MkxMvHm
+         +bDRTmsO2cB0W+1K6yjhBCVQqG5SXFGpfIVEL4B7TB3EY5J1O+0C/SU3t/vH8qKFqaAL
+         zc3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:in-reply-to:mime-version:user-agent:date
+         :message-id:autocrypt:openpgp:from:references:cc:to:subject:reply-to
+         :dkim-signature;
+        bh=rcGW0Ysn9e5V0G4NiqHphZuYgEZdHTzt5Ngk6ikjAiU=;
+        b=nDP1IatZJSkN3sDkAbJcocBuIcO641QhzDjCRwkgvP8B/yc/d+5pycaMWz2Vy95H1R
+         K0qIkBaNK16plDycSZM3gJrX1tMBCtY6fJrHwTVmlr5b6awvsZkYfaseY1TMhN7gsa4N
+         a2b9BS/dePe4eNNUvNCXuR0tr9CMjekjnsPoUXO7tPg+Lv4cl2OD0gMvdzxhOlQuNnRi
+         gIaOL/YOSsxZq6CWSw5+kDOc1MAE4JRBI6anmpQSECGsdZ5vnUqVsUlHdMgzekFCzNjW
+         veawnblimdEbtuY6AObJ7Q7AFSRH1obxdlS6o7CnyXUCGilIvMRr+8MpMTtlbWK32LKd
+         E7pg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@monstr-eu.20150623.gappssmtp.com header.s=20150623 header.b=z0DPdIVp;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id s82-v6si757790pfk.197.2018.11.07.06.15.29;
+        Wed, 07 Nov 2018 06:15:45 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730676AbeKGXpi (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:45:38 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54079 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726830AbeKGXpi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:45:38 -0500
+Received: by mail-wm1-f65.google.com with SMTP id f10-v6so2047230wme.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 06:15:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=reply-to:subject:to:cc:references:from:openpgp:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to;
+        bh=rcGW0Ysn9e5V0G4NiqHphZuYgEZdHTzt5Ngk6ikjAiU=;
+        b=z0DPdIVp+2cKLJ5IG/i2EY5ihbTUuhi/TlP6fpTUXdvMU1nDpTUYYozIHuggSUa41K
+         +68J7W4Z3HdrqUJ998DjwLdm0rTl4xGNV2VOlX2DobQfnZwkDdGqw5wXsRxxSYe6ATw5
+         RNz+1N1hTe26HLbvDzxtxhLzGyGTuuE4emFcgPlTj1Qpbm4+2bmfvUPH5HbBpoCJrIqw
+         GgN05bb/wfMFAKvkzNF8FiAqeCmWyAaPWdhMJPfoXrCPORpagIZSx7z8x0nNiZDi0Aah
+         PzCozEA4pFsmQ/TvGrccKsTDP5xT6iQUYeSY8NQMUsDCxHGl/Q+ZxEA57JT4xS3NRhaY
+         MMQQ==
+X-Received: by 2002:a1c:f514:: with SMTP id t20-v6mr317814wmh.129.1541600102226;
+        Wed, 07 Nov 2018 06:15:02 -0800 (PST)
+Received: from [74.125.133.108] ([149.199.62.130])
+        by smtp.gmail.com with ESMTPSA id z7-v6sm1128719wrv.21.2018.11.07.06.14.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 06:15:01 -0800 (PST)
+Reply-To: monstr@monstr.eu
+Subject: Re: [PATCH trivial] microblaze: Typo s/use use/use/
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jiri Kosina <trivial@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+References: <20181107134753.14327-1-geert+renesas@glider.be>
+From: Michal Simek <monstr@monstr.eu>
+Openpgp: preference=signencrypt
+Autocrypt: addr=monstr@monstr.eu; prefer-encrypt=mutual; keydata=
+ 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
+ RmzhqoTJlA==
+Message-ID: <f06f8c7b-9f32-43d7-4493-50fe940ecf75@monstr.eu>
+Date: Wed, 7 Nov 2018 15:14:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20181107134753.14327-1-geert+renesas@glider.be>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="GqnFRloksOZPccFYbl9Ny0bbsZ9NWMk3h"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3H0uS8+JbSsYXAA--.6877S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWrZw1ftw1xArWfGF1rZw1xGrg_yoW8JF13pa
+	srur4kGrs5G348Aay8trnF9F1Y9w1DKrsY9rWDGr95Zw43tF18ZasFgay8Jry8WayIyw4f
+	Zw1I9rZxGa1UCrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUHCb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2vj62AExVA0xI
+	801c8C04v26x02cVCv0xWle2I262IYc4CY6c8Ij28IcVAaY2xG8wASzI0EjI02j7AqF2xK
+	xwAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2js
+	IE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCjxxvEa2IrMxk0
+	xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x
+	80FwCY02Avz4vEIxC_Xrylc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j
+	6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26rxl6s
+	0DMxvI42IY6I8E87Iv6xkF7I0E14v26rxl6s0DMxAIw28IcxkI7VAKI48JMxAIw28IcVAK
+	zI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
+	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCI
+	c40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_JFI_GrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IUe-BMJUUUUU==
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--GqnFRloksOZPccFYbl9Ny0bbsZ9NWMk3h
+Content-Type: multipart/mixed; boundary="GJ2Ug7Vj10rtm6NqgcFXnHPRHspxEvGne";
+ protected-headers="v1"
+From: Michal Simek <monstr@monstr.eu>
+Reply-To: monstr@monstr.eu
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+ Jiri Kosina <trivial@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Message-ID: <f06f8c7b-9f32-43d7-4493-50fe940ecf75@monstr.eu>
+Subject: Re: [PATCH trivial] microblaze: Typo s/use use/use/
+References: <20181107134753.14327-1-geert+renesas@glider.be>
+In-Reply-To: <20181107134753.14327-1-geert+renesas@glider.be>
+
+--GJ2Ug7Vj10rtm6NqgcFXnHPRHspxEvGne
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 07. 11. 18 14:47, Geert Uytterhoeven wrote:
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  arch/microblaze/include/asm/pgtable.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/microblaze/include/asm/pgtable.h b/arch/microblaze/in=
+clude/asm/pgtable.h
+> index f64ebb9c9a413535..bdfb2b3182b04c3b 100644
+> --- a/arch/microblaze/include/asm/pgtable.h
+> +++ b/arch/microblaze/include/asm/pgtable.h
+> @@ -200,7 +200,7 @@ static inline pte_t pte_mkspecial(pte_t pte)	{ retu=
+rn pte; }
+>   * is cleared in the TLB miss handler before the TLB entry is loaded.
+>   * - All other bits of the PTE are loaded into TLBLO without
+>   *  * modification, leaving us only the bits 20, 21, 24, 25, 26, 30 fo=
+r
+> - * software PTE bits.  We actually use use bits 21, 24, 25, and
+> + * software PTE bits.  We actually use bits 21, 24, 25, and
+>   * 30 respectively for the software bits: ACCESSED, DIRTY, RW, and
+>   * PRESENT.
+>   */
+>=20
+
+Applied.
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP SoCs
+
+
+
+--GJ2Ug7Vj10rtm6NqgcFXnHPRHspxEvGne--
+
+--GqnFRloksOZPccFYbl9Ny0bbsZ9NWMk3h
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iEYEARECAAYFAlvi82AACgkQykllyylKDCFWowCgjIj4F25Vglo1DXUi41Je7sYh
+FmsAniC9E+erqDIV5ZA+xSxKj8GcPJDs
+=FU9n
+-----END PGP SIGNATURE-----
+
+--GqnFRloksOZPccFYbl9Ny0bbsZ9NWMk3h--

@@ -1,0 +1,191 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:19 -0000
+Received: from icoremail.net (unknown [209.85.210.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH9LOe+Nbfp9bAQ--.27636S3;
+	Thu, 08 Nov 2018 07:57:03 +0800 (CST)
+Received: from mail-pf1-f177.google.com (unknown [209.85.210.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwD32kbMe+Nbr88ZAA--.2101S3;
+	Thu, 08 Nov 2018 07:57:00 +0800 (CST)
+Received: by mail-pf1-f177.google.com with SMTP id y18-v6so6025578pfn.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 15:57:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version:sender:precedence:list-id;
+        bh=ghtNQuzKJaqD8blAhYFEKJ2r/n5KXJmLi0kTiPkEREA=;
+        b=Yab37e/oZ84whoP5HPWTNpwffuwmsTgfh6QJ/RQ01XzRJ0Q05XPRuuwwoSKACUMqB/
+         84doyDnMrnbtJXz4kvuD+Mtnd+nuuFaNjOx/8wQvd2ttyjcNIX38EHOGLPmT28aXjoqr
+         DqSxGdwYrAiLfIrbMY5FgAQmgJzvv/gV4Nn1/gwMnqkq8qCWpPLvv2br6eGvEaQw+wMY
+         aTOsJ9HK2PBWP8fKZgdOaqw0HHW/VQ2FPPECz9xtk1vnhrsrHcjutV2DvUaxFbct5JyD
+         M0IqQBsEtMrX0xbcPFhbt+2fXKbNFZpOS1E1HCsAsFfTkB4TF5sLmzi2sgSVovSK3kJb
+         cdVw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gK6O9MQ78GPVqXQNShphnv+qyHsDyHgW/sg0OpwoWFD8x/FLx5L
+	89uZyt/pVKYRxHM9XSCUtZ//7V8Azp9eKPCsfuZzLpg/uKBbpnKIAQ==
+X-Received: by 2002:a62:d084:: with SMTP id p126-v6mr2448498pfg.147.1541635020331;
+        Wed, 07 Nov 2018 15:57:00 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp147561pjt;
+        Wed, 7 Nov 2018 15:56:59 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ePJ5RnjeKTvwdMSK+5b3SQ53wbpiCrB8CVg7fPve0FtdPZSMWXIFXiJTmlrVUGftl2gvuj
+X-Received: by 2002:a17:902:59dd:: with SMTP id d29-v6mr2386115plj.193.1541635019107;
+        Wed, 07 Nov 2018 15:56:59 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541635019; cv=none;
+        d=google.com; s=arc-20160816;
+        b=qIvQPgDhSr7eskPSY2yLNl2jHmI0pZSku7IDABgdXRCMd479mBwA3VQu4R7UWKsIww
+         +Nbh+q40tkffTLR/ZUKQdLvZa+IzGTuqRfZ9UrR+/LOP6IpbTykPvxVxOuGgcj0Ra3Xn
+         YHbmvY6X4yqqpJE3HehDrY2yBL9nQ2er5X8PUzHlqmyPHywUN/QMzRLlGQm+TKsaL0W6
+         hxo4HVsD6zZZe4zFSG6Pq03tCI1UEl3s6WteI/4OLlt+Q7GTNRDXCa7+YVSXuuyXpbto
+         v9OP+QtXK5rjGn16zW5IVMHmsdgM/JEPyn04vUAwRONYiZAF2SD0nqRPpggOCiT7FVpL
+         HlnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from;
+        bh=ghtNQuzKJaqD8blAhYFEKJ2r/n5KXJmLi0kTiPkEREA=;
+        b=bPihZ5SK8pAKeVYJoU9DCC3pzmu7MgwcojfIwPOmZeNSjol9mNjw9LbtVskkuoXSLD
+         +ty9rawks0fdIepT5JTlls63hR+2SFK1raRdhnsEJj/Ci1rQZBYqKyD20vfd+mHSn714
+         hLJvMOGsL2F+1PzIPH/ZhQ3JEuFdMIGnecEktsXRSk6YfgQ5C8nluOdmQZzYmc4WWDPX
+         dyK1WmC71nxOF3Tl/7V53rfyZ8/UQn7ekxofaMvoLZjlOMAnHT5aXKSH3Kfq8H2QstHx
+         wwIZaapzpT9nzM5I79BXvY01HR7HXQg1JiLphZwN6hizepEiY8cc8hcil4cCtPlxQMPB
+         6mNQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d16-v6si2008392pgd.555.2018.11.07.15.56.41;
+        Wed, 07 Nov 2018 15:56:59 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727995AbeKHJ3V (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 04:29:21 -0500
+Received: from ozlabs.org ([203.11.71.1]:50035 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727591AbeKHJ3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 04:29:21 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.org (Postfix) with ESMTPSA id 42r3Gl10Jqz9sBZ;
+        Thu,  8 Nov 2018 10:56:30 +1100 (AEDT)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Mark Brown <broonie@kernel.org>,
+        Rob Herring <rob.herring@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        kirill@shutemov.name, "Linus Walleij" <linus.walleij@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Guenter Roeck <linux@roeck-us.net>, jacek.anaszewski@gmail.com,
+        axboe@kernel.dk, "Ulf Hansson" <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Git pull ack emails..
+In-Reply-To: <20181107114153.187fbc25@bbrezillon>
+References: <CAHk-=wjS6cjjP+fkZWzzrdZ_fZ1F=PrAGcBc57vKCpNyoD73Vw@mail.gmail.com> <CACRpkdbi2gqqc271eMgHjD68bqf2mzw8zw+iAhYv2LFajfo-eQ@mail.gmail.com> <CAHk-=wiiC65aZFrDp69vdcSALLDZNPkTL1diadxNL54tBPeAzQ@mail.gmail.com> <20181023093521.dm3l5oen2j7etsot@kshutemo-mobl1> <CAHk-=wh6i5t5jYHrC-ZCdj8qoZWP3BptV87U=G9G4UyunzPf7Q@mail.gmail.com> <20181023200408.GA13179@chatter.qube.local> <CAHk-=wjVJ1w=MYXhu42+1rPybtztz+7q=KWo53nQmasR7R4SNA@mail.gmail.com> <CABGGiszsw=QXPwTe3mf26BG=Pxig6zGcXXJfRA+w0Pawrm5qpQ@mail.gmail.com> <20181026211504.GG27137@sirena.org.uk> <87zhutdrt7.fsf@concordia.ellerman.id.au> <20181107114153.187fbc25@bbrezillon>
+Date: Thu, 08 Nov 2018 10:56:31 +1100
+Message-ID: <87efbwqw5s.fsf@concordia.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwD32kbMe+Nbr88ZAA--.2101S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxWFW8Gw45tryDKr1xJw4DXFb_yoW5CFy7pa
+	yagF4YkF4DJrW0yws2kw409FWIg397Zay5Jrn5JrykA3s0gFn7tF4rK3yY9Fy7CF1fGw12
+	vrWDZ34fZas8AFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6FWlc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r1I6r4UMxvI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UYxBIdaVFxhVjvjDU0xZFpf9x07bL
+	pBhUUUUU=
+
+Boris Brezillon <boris.brezillon@bootlin.com> writes:
+> Hello Michael,
+>
+> On Thu, 01 Nov 2018 21:18:28 +1100
+> Michael Ellerman <mpe@ellerman.id.au> wrote:
+>
+>> Mark Brown <broonie@kernel.org> writes:
+>> 
+>> > On Fri, Oct 26, 2018 at 12:36:14PM -0500, Rob Herring wrote:  
+>> >> On Thu, Oct 25, 2018 at 9:14 AM Linus Torvalds
+>> >> <torvalds@linux-foundation.org> wrote:  
+>> >  
+>> >> > Are there other situations where you might want to track something
+>> >> > _outside_ of a pull request? Maybe. I can't really think of a lot of
+>> >> > them, though. Patches etc don't have commit ID's to track, but it  
+>> >
+>> > patchwork gives them IDs and lets you do lookups using them, that's what
+>> > I'm doing.  You can get the ID from a git commit by piping the output of
+>> > git show into parser.py from the patchwork source, it works a lot of the
+>> > time but things like editing the commit message will break it (this is a
+>> > theme with my scripting around the mail stuff...).
+>> >  
+>> >> submissions. For example, with Greg and Mark B you can expect an
+>> >> automated replies. Mark's reply gets threaded with the original, but
+>> >> Greg's do not. For networking, you may or may not get a manual reply,  
+>> >
+>> > Mine *mostly* gets threaded, it's relying on being able to talk to
+>> > patchwork to figure out the message ID at the minute so if the patchwork
+>> > lookup fails for whatever reason it'll just use on what's in the commit
+>> > for the CC list and not thread.  That isn't ideal, especially when I'm
+>> > travelling and my network connection isn't the best, I keep meaning to
+>> > try to figure out a better way which would probably be based on git
+>> > notes as discussed earlier.  
+>> 
+>> Yeah I use git notes for this.
+>> 
+>> When I apply a patch I record the patchwork id in a git note, I have a
+>> custom hacked pwclient that does it automatically. I also download the
+>> full mbox from patchwork and stash it in .git/patchwork/<patch id>.
+>> 
+>> Then I have everything I need to generate a properly threaded reply to
+>> the original mail.
+>> 
+>> The git notes work well, if you add the following to your .git/config:
+>> 
+>> [notes]
+>> 	rewriteRef = refs/notes/*
+>> 	displayRef = refs/notes/*
+>> 
+>> Then all notes are copied when you rewrite a commit (rebase), and also
+>> displayed by eg. git show.
+>> 
+>> Every now and then if you do extensive rebasing/splitting you get
+>> commits with the wrong or no patchwork ids. But that's pretty rare and
+>> not that hard to fixup when it happens.
+>> 
+>> There's a slightly sanitised version of some of my scripts here:
+>>   https://github.com/mpe/patchwork-scripts
+>
+> I had pretty much the same workflow to automatically update the patch
+> status in patchwork when I push things to the MTD tree, but I was
+> lacking the part sending notifications (this was done manually).
+>
+> With your scripts this is now addressed, thanks a lot for sharing
+> them!
+
+Awesome, glad they helped!
+
+I have some modifications locally to detect when I've merged an entire
+series and only reply to the first patch. At the moment that's all a bit
+too hacky for public viewing, but I'll try and clean it up at some point
+and push it out :)
+
+cheers

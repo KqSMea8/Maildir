@@ -1,0 +1,164 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:20 -0000
+Received: from icoremail.net (unknown [209.85.214.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv9Jf_uJbVa5YAQ--.26634S3;
+	Wed, 07 Nov 2018 23:01:53 +0800 (CST)
+Received: from mail-pl1-f172.google.com (unknown [209.85.214.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDHrEhe_uJb3_QXAA--.6386S3;
+	Wed, 07 Nov 2018 23:01:50 +0800 (CST)
+Received: by mail-pl1-f172.google.com with SMTP id b5-v6so7977302pla.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:01:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:sender:precedence:list-id;
+        bh=lrCgMd5aB29UDxkP4+Dhx2tcotNtUM5bvR43by0uZ9w=;
+        b=Fvkoxau+Mvb9voSmnYz15j86G0YAN+7Vqd8/rBSNxGE8+xgmIrMhzgY8ALhs2utl1o
+         6l0WWIhXWnLv6n+IfeSEgP6iZYr/L5HpjXv2Dl4umqC/6MwvBFFEA3gb4jcSa33xyfAf
+         4ev7OQCxW5If4XqrL/xn9kzU8PDLNJLZwXAUq7E2rDRJcKIFlaUAVwkIkKu/Ach+p3X1
+         E6O9xhtNZoBsvtxVRQ6QishO5GE1I1NXXwAEmCrda5Q5BRT5w/KMlXM6YnNHKgyTTGSl
+         ndgB8ie9Bwrwn4fBvt3By4wQ1kvw++5U/Ech9/feQiZX6LzL5zUu5Ttxr+OLT5Bzb7ny
+         XAfA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIaOvyDKjTonzAfHXOq56ayYQuZNIMvpMH5NqYgm+P+W9Kyq1L0
+	foA64Ia8q5UV8ylwMSpFlhmxZLPMaAvzaRJT0kr5DDyWbEGsfDPLGA==
+X-Received: by 2002:a17:902:7882:: with SMTP id q2-v6mr584323pll.188.1541602910383;
+        Wed, 07 Nov 2018 07:01:50 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5351231pjt;
+        Wed, 7 Nov 2018 07:01:49 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d6R6VpHYbtsOYOkC1zF/8MTgaqifUN5EqF6yoDxHbu8LXt642+DUnRKwWwraFbbldbPYzO
+X-Received: by 2002:a17:902:a58c:: with SMTP id az12-v6mr557728plb.266.1541602909742;
+        Wed, 07 Nov 2018 07:01:49 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541602909; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ne5cb7aeHTxUmznGNke65WtGJ7NL+aM+EDj7rvMZt1tGQfwVTdjuRmTS1q19S8NPYf
+         Ktfdx0GPl7RXPCScK5t4L2qEa4Ev/VrQiwYATB7a9brtH6l7Rw/yf4eefJ6ydE71Rd6X
+         xhFsdLAtbvwbFyYlo+knSqkGdYmLOgSgI5nR5QWadssUhFxRxFW5Zg1CvDLBY7rjqE7S
+         pJusjAVXmeyinpgUwUz/QHyLj2KkFqhvxYAQ7fSbeb2j9P+1vh2PLJSGmqWgQDb/DfaO
+         DfM4N9ixP7Uoh139jKXbP+gKd/lTWFKHZ7wCv8q1vX/la/xu+jP0rG0RfBW18cQYrr3C
+         DOhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version;
+        bh=lrCgMd5aB29UDxkP4+Dhx2tcotNtUM5bvR43by0uZ9w=;
+        b=BN1Y3nQ7jvbjeglNzLSgHq/n0Z/O0OeSn1DjMlkIybGFKInrbUznalz7tJiBzSEnhW
+         k+ij77qaisKpIgiE5zTXbFn6Jk+r76poHmjsyfHoE09JFe3zL5WUV4X5eHT0a3KQIAt2
+         2rp52PAg0rI8/jkxUsI+lN6YCNVST6TZSI293Sxd0HlwxxWGe9EYXPB4KIzcaDDKoJlX
+         T1xkRjCjbmCj90DUHmKIBg+kLXX3j+IZ9Ro5KUY3IvhRimW2PhrhTBzRdETRE+7WMZAu
+         cTkWP7kDl5nPWslsUjRMRupEfoLsp23tELavqrL3e9GH9yvHGBxTyUd1REzheWhrE4W4
+         4IWg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id r20-v6si783478pgm.28.2018.11.07.07.01.33;
+        Wed, 07 Nov 2018 07:01:49 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731055AbeKHAcA (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:32:00 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42424 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbeKHAb7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:31:59 -0500
+Received: by mail-qk1-f195.google.com with SMTP id u68so21226148qkg.9;
+        Wed, 07 Nov 2018 07:01:15 -0800 (PST)
+X-Received: by 2002:aed:35c5:: with SMTP id d5mr555617qte.212.1541602874338;
+ Wed, 07 Nov 2018 07:01:14 -0800 (PST)
+MIME-Version: 1.0
+References: <20181107003250.5832-1-elder@linaro.org> <20181107003250.5832-8-elder@linaro.org>
+In-Reply-To: <20181107003250.5832-8-elder@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Wed, 7 Nov 2018 16:00:58 +0100
+Message-ID: <CAK8P3a2FsgR=SYAWsgFURVni1ReiCugKs1iUAfQzZhPkbW8aOA@mail.gmail.com>
+Subject: Re: [RFC PATCH 07/12] soc: qcom: ipa: IPA register abstraction
+To: Alex Elder <elder@linaro.org>
+Cc: David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Networking <netdev@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-soc@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syadagir@codeaurora.org, mjavid@codeaurora.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDHrEhe_uJb3_QXAA--.6386S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7tryDZw18XFyfuFyrZrW5ZFb_yoW8Xw18pa
+	n5Cw4kCrs7JF48ursxZF48ZFyrC3ZxWFyYk34UW3WYqrnxKryvqF4q9Fy5Ca4kJr40kw10
+	qF1qqw4jvrWrZ3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPjb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW5WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07
+	x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
+	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI4
+	8JMIIF0xvE42xK8VAvwI8IcIk0rVWUCVW8JbIYCTnIWIevJa73UjIFyTuYvjxUgSdgDUUU
+	U
+
+On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
+> diff --git a/drivers/net/ipa/ipa_reg.c b/drivers/net/ipa/ipa_reg.c
+> new file mode 100644
+> index 000000000000..5e0aa6163235
+> --- /dev/null
+> +++ b/drivers/net/ipa/ipa_reg.c
+> @@ -0,0 +1,972 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+> + * Copyright (C) 2018 Linaro Ltd.
+> + */
+> +
+> +#include <linux/types.h>
+> +#include <linux/io.h>
+> +#include <linux/bitfield.h>
+> +
+> +#include "ipa_reg.h"
+> +
+> +/* I/O remapped base address of IPA register space */
+> +static void __iomem *ipa_reg_virt;
+
+This should of course be part of the device structure.
+
+> +/* struct ipa_reg_desc - descriptor for an abstracted hardware register
+> + *
+> + * @construct - fn to construct the register value from its field structure
+> + * @parse - function to parse register field values into its field structure
+> + * @offset - register offset relative to base address
+> + * @n_ofst - size multiplier for "N-parameterized" registers
+> + */
+> +struct ipa_reg_desc {
+> +       u32 (*construct)(enum ipa_reg reg, const void *fields);
+> +       void (*parse)(enum ipa_reg reg, void *fields, u32 val);
+> +       u32 offset;
+> +       u16 n_ofst;
+> +};
+
+Indirect function pointers can be a bit expensive in the post-spectre
+days. It's probably not overly important if these are always part of
+an MMIO access function, but you should be careful about using
+these in the data path.
+
+How many different versions do we have to support in practice?
+
+       Arnd

@@ -1,0 +1,137 @@
+Return-Path: <kvm-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:01 -0000
+Received: from icoremail.net (unknown [209.85.210.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX19dQuNbrVNaAQ--.27239S3;
+	Thu, 08 Nov 2018 03:51:58 +0800 (CST)
+Received: from mail-pf1-f175.google.com (unknown [209.85.210.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnvTlbQuNbrxQZAA--.709S3;
+	Thu, 08 Nov 2018 03:51:55 +0800 (CST)
+Received: by mail-pf1-f175.google.com with SMTP id s9-v6so797551pfm.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:51:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=BX7mf4H4qoxGYd2z2Vn9HsJnfueiYtXg2aTxUdU86Hk=;
+        b=QyzoHNgkYJ0l/vz8afi2qOamxq0MOQfLCp90TMWD9vEMZxpvJvzo561Otj/caNpmv2
+         D8oZaRbl5qVqu9Fo1KuW62eCzd+kClmv3J/umUx5s9YWGXx6/kbW0rVjg3b9xoPKYAk5
+         Hpqz3227JU2nd2uOL+HsfOXJPoCDA66q08dVlcLeXyl1YuN3iXteJgPqvvRQE+ZvFW77
+         bR3KsPN8CljMDLnEf4QzF1c0QZ9XcU2/nuKEPPiFgfMHrQ58m4OmQPnKDD2ztSAH3Zg9
+         SQMHp2A4mIjxSoA03tM0fTRQ7XrOjNsmI9DQSSheXowDLmHqzucGrBxH+vzAzS2rMeb5
+         8r3w==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=kvm-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLrgjRm2uNl0rr2ja8r2PphWcUPr3JAi9DJGRq4DYoxwm++PM6c
+	TPG93FFWL4tzo11cmQEbqJ3diycMvsFQwHH/H9foB+D33swuZLe9Ug==
+X-Received: by 2002:a63:5816:: with SMTP id m22-v6mr1340393pgb.332.1541620315524;
+        Wed, 07 Nov 2018 11:51:55 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5671300pjt;
+        Wed, 7 Nov 2018 11:51:54 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dUQGA3ELe0QOr1+HEr6gZGthn6WmJ9xgirzUbpAdJ4ef84jA/SuR3j7oXU0MwtGO2dnns9
+X-Received: by 2002:a63:1412:: with SMTP id u18mr1309826pgl.247.1541620314908;
+        Wed, 07 Nov 2018 11:51:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620314; cv=none;
+        d=google.com; s=arc-20160816;
+        b=kRvnCBdu9vdlRFg5jg0mhLrTmC0nnLIQ11gqAm+8X0Xjfsio2g2RIETih35bcfnuV/
+         R/KSnWAmoTq/qZVINMJkHkrNcCey8mLiKQ4rByFp6W0wOEjehVH3Lu+9o3QO9tck3CS3
+         XeBJza9971zC9fGRPG7m0oXbuRaP7yvMwhuoUEG/qWAkNW/PkiJvx8tKi+aFGRPuUPO1
+         dcvXYuvPmnRP6g/3zOH4kJv/n6ZSEPe/nxYeMpJjJfWHITLxjLWYvsqcEjMjpdKr20t3
+         G/pxioLSWkz8W3Kq0dCXMRLrViGuc6JPyhL23XGO5vYh9ElISgXk3Of+E3seIOZKvOeh
+         YeuQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=BX7mf4H4qoxGYd2z2Vn9HsJnfueiYtXg2aTxUdU86Hk=;
+        b=OX8ExkVtM34TJpLIuvVzjc3aaNWcw3Zyd5jyCWF8dvsbdkLqSCh712VZFAYaW1atJn
+         jOZd7QukfzeSL1KdZspLcUOs+kuRhoi/KqTFPUDyYp2R1eUj1iOOdHWmFDqCOsiFV2pE
+         Ty733W1nTSdfvU2TPxm4lmFJkQ23TFqrXtujXOdefr7wXkmi4zD0jRBw9C403bEOQ6Xj
+         H2cVmCfb3xRYz1JKR3FWcpMk4WmAcRGWHpWqeL4yWhEV7Zm6Mu2dTAGeE9zEpf7LIGIN
+         UFCVakaK6cB+V8VqBd67EyILSc88qP77DCqtxQVpbJlvvOFNtWW1gJBfMzZHUBVY2D2X
+         t3Hw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=kvm-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b4si1429422pgk.350.2018.11.07.11.51.41;
+        Wed, 07 Nov 2018 11:51:54 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726996AbeKHFWl (ORCPT <rfc822;fanshuming2011@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:22:41 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:41921 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727590AbeKHFVP (ORCPT <rfc822;kvm@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:21:15 -0500
+Received: from localhost ([127.0.0.1] helo=bazinga.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1gKTpI-00070Q-9L; Wed, 07 Nov 2018 20:49:20 +0100
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 14/23] x86/pkeys: Make init_pkru_value static
+Date: Wed,  7 Nov 2018 20:48:49 +0100
+Message-Id: <20181107194858.9380-15-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107194858.9380-1-bigeasy@linutronix.de>
+References: <20181107194858.9380-1-bigeasy@linutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <kvm.vger.kernel.org>
+X-Mailing-List: kvm@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnvTlbQuNbrxQZAA--.709S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7GF15Kw48Zw1UJFWUCFW3ZFb_yoWfXrX_Zw
+	18ArZ8Cr1rK3yFkwn3GF4ava48Xwn3XF1rWrWDWr43XryYkry5Jrs7A3Wvqanrta4jq398
+	Jw1Dur4rAwsxGjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqAYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VWrMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI
+	42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExV
+	AvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
+	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrx
+	kI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxU
+	gX18DUUUU
+
+The variable init_pkru_value isn't used outside of this file.
+Make init_pkru_value static.
+
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/x86/mm/pkeys.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/mm/pkeys.c b/arch/x86/mm/pkeys.c
+index 0af3ece18f113..05bb9a44eb1c3 100644
+--- a/arch/x86/mm/pkeys.c
++++ b/arch/x86/mm/pkeys.c
+@@ -126,6 +126,7 @@ int __arch_override_mprotect_pkey(struct vm_area_struct *vma, int prot, int pkey
+  * in the process's lifetime will not accidentally get access
+  * to data which is pkey-protected later on.
+  */
++static
+ u32 init_pkru_value = PKRU_AD_KEY( 1) | PKRU_AD_KEY( 2) | PKRU_AD_KEY( 3) |
+ 		      PKRU_AD_KEY( 4) | PKRU_AD_KEY( 5) | PKRU_AD_KEY( 6) |
+ 		      PKRU_AD_KEY( 7) | PKRU_AD_KEY( 8) | PKRU_AD_KEY( 9) |
+-- 
+2.19.1

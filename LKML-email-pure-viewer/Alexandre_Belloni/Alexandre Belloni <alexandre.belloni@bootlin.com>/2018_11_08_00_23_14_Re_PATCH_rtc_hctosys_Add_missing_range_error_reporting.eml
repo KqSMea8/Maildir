@@ -1,0 +1,140 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:49 -0000
+Received: from icoremail.net (unknown [209.85.210.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX++SEeNb7CVZAQ--.27022S3;
+	Thu, 08 Nov 2018 00:23:47 +0800 (CST)
+Received: from mail-pf1-f169.google.com (unknown [209.85.210.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3mUWMEeNbj0oYAA--.125S3;
+	Thu, 08 Nov 2018 00:23:40 +0800 (CST)
+Received: by mail-pf1-f169.google.com with SMTP id e22-v6so7898795pfn.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:23:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=hgx2BF2xcu9+Mk4S6qn6Cn8r/yP+Y5Vv435cFPIEn+A=;
+        b=uUBNZAp/ZF2K5sMacmLi987bFf0VFfrkdnwp9C788eMIvg/SYEUoGp6WgsZ1OxscYx
+         mm4sYlHJxZaxeSIfBIsOKMaEThnHn7/rQczesXMTgpvZ2r6gfjMReaohQKHKWfu40XKZ
+         tI+l7R+WTb7uwqgnjF/bfBD5mh0u8ZfOx3o21/56p7aqWrDrcOSTSLpInhXWANOmkgCb
+         2JzCKGPF2UbYvtCUUquGH1ckROp+lg/AWuHnQRLZchTL8TxLsP3K5SUPk6oCGeI4/+Jk
+         KPnlmoLBM3OC3+y1LZ5w2k/IiIDv7LRJlt/NkdtJ07JmY9m9L2UC9243GKRepDBpV0cF
+         2Nfw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gL0HZnLiUHTcZFyYZnMRbAHN1YJvzN9gAV5/uA2VlNa49VH0akN
+	Z0pLfkgKXdnljNE/V8oxlyj/FimC1+YGhSNi5UweIEUvn0S+q7JKZw==
+X-Received: by 2002:a65:64d5:: with SMTP id t21-v6mr740930pgv.428.1541607819838;
+        Wed, 07 Nov 2018 08:23:39 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5445894pjt;
+        Wed, 7 Nov 2018 08:23:38 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dxunuagI6AOpvib9GdpV/nb2cou4a9myjKaB6Mjb4fhgI9jtjN60R+aeq518SY0mWbbzAT
+X-Received: by 2002:a63:2744:: with SMTP id n65mr712936pgn.65.1541607818776;
+        Wed, 07 Nov 2018 08:23:38 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541607818; cv=none;
+        d=google.com; s=arc-20160816;
+        b=b04gwJJl+9MBeDk2nRVTy34s9U5feyw3s/qVwGuGE82CT7SnLAoRqoc8/YZ9flvlGW
+         hjgS4ysZ1nuI/uix/h8RhIlduRuCYb+LTzvoOeJv1mr2ZMciZnjH/gqVeOQXUOfkunjl
+         3cg7dcfJqB+DXMD2giazYvOM8+kTFjU7vUvmpuGyq/Pr+MWX8nAth+M2nTJ2uWAycDqL
+         mPVJ9wDFQvfyI2LPqeGoAEJCRjlUUuLdH6ioH6p0ndtcoZeN0hx83HmOMq/HAaPlmoX8
+         Fic+6fY5NYmztduwsjEp2D813+S1fVoyIv/ZUBmNYZtxux6eRn2WPHzhZ408N3jsTUXg
+         9+2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=hgx2BF2xcu9+Mk4S6qn6Cn8r/yP+Y5Vv435cFPIEn+A=;
+        b=BfT8J8DYz0hNv54QbgJe1pZkC7AldfAyuaSMN0MphhS6gVd2dOZ49mPP5PiuB4tXmc
+         H93KdMSaD4vxaEdhCnqF2swQFivqtHQ6V6xeyFLAGPZ23p9NMe9AELqyjxRHvl50W+cR
+         woco0xBK5P/3xkr7mbjyXWPg0ynHuPFCiqWBAeKwbaALc7Ou4R9qQISra2tm47aK8/Wl
+         E9suaw1XTffnyzwa6jODl5UlXamTnNhlFR0lsZhqxsVb0txN09jUFiDHiDL7DlHMHoUq
+         HcfK51EmSzEyCnW37ZpRtT7IMi/KdaU+K12gcK+FmkG+UiQ8uvPMcxqoTUge8ZwIDFPx
+         ou0g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id p12si932104pgl.106.2018.11.07.08.23.22;
+        Wed, 07 Nov 2018 08:23:38 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731202AbeKHByT (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:54:19 -0500
+Received: from mail.bootlin.com ([62.4.15.54]:35184 "EHLO mail.bootlin.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727372AbeKHByT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:54:19 -0500
+Received: by mail.bootlin.com (Postfix, from userid 110)
+        id C915C20741; Wed,  7 Nov 2018 17:23:14 +0100 (CET)
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail.bootlin.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=5.0 tests=ALL_TRUSTED,SHORTCIRCUIT,
+        URIBL_BLOCKED shortcircuit=ham autolearn=disabled version=3.4.2
+Received: from localhost (242.171.71.37.rev.sfr.net [37.71.171.242])
+        by mail.bootlin.com (Postfix) with ESMTPSA id 7ACC920736;
+        Wed,  7 Nov 2018 17:23:14 +0100 (CET)
+Date: Wed, 7 Nov 2018 17:23:14 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: "Maciej W. Rozycki" <macro@linux-mips.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] rtc: hctosys: Add missing range error reporting
+Message-ID: <20181107162314.GD21694@piout.net>
+References: <alpine.LFD.2.21.1811050319150.20378@eddie.linux-mips.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.21.1811050319150.20378@eddie.linux-mips.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3mUWMEeNbj0oYAA--.125S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7XrW3Ar13uryrJr4fXw4xWFg_yoWfWwb_ua
+	4xKw1vq3sruFs3W3WxJrn2vFW8Kw43JryrCw4kKFy2vryrKrs5JFW3Wr4fZr98W3yIqa43
+	AFWvv34ftr1SvjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUUxYxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbDkYjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r4UJwAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_JwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr0_Cr1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Gr0_Gr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52
+	x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
+	xGrwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF7vcSsGvfC2KfnxnUUI43ZEXa7IUOAku3UU
+	UUU==
+
+On 05/11/2018 03:48:25+0000, Maciej W. Rozycki wrote:
+> Fix an issue with the 32-bit range error path in `rtc_hctosys' where no 
+> error code is set and consequently the successful preceding call result 
+> from `rtc_read_time' is propagated to `rtc_hctosys_ret'.  This in turn 
+> makes any subsequent call to `hctosys_show' incorrectly report in sysfs 
+> that the system time has been set from this RTC while it has not.
+> 
+> Set the error to ERANGE then if we can't express the result due to an 
+> overflow.
+> 
+> Signed-off-by: Maciej W. Rozycki <macro@linux-mips.org>
+> Fixes: b3a5ac42ab18 ("rtc: hctosys: Ensure system time doesn't overflow time_t")
+> Cc: stable@vger.kernel.org # 4.17+
+> ---
+>  drivers/rtc/hctosys.c |    4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+Applied, thanks.
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com

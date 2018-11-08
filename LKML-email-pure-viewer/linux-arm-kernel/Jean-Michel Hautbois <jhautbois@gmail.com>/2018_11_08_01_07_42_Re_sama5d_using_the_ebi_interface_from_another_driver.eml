@@ -1,0 +1,262 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:05 -0000
+Received: from icoremail.net (unknown [209.85.210.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH9KuG+NbnGJZAQ--.26857S3;
+	Thu, 08 Nov 2018 01:06:56 +0800 (CST)
+Received: from mail-pf1-f174.google.com (unknown [209.85.210.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHb0usG+NbInYYAA--.576S3;
+	Thu, 08 Nov 2018 01:06:52 +0800 (CST)
+Received: by mail-pf1-f174.google.com with SMTP id b11-v6so7960827pfi.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:06:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=2manXyxiixH+CojxXLCyUIi+u/Q8AUKb/fNRJUhH6wI=;
+        b=QvgBdawI26hR7ukVrg6l0usz2k6AObxpN12QD6Hm/TgcDjPVhgu5DbmCB4BL61p0gC
+         uKfqsk4gNCLGNijtRosVHx9WW9F/wZMyVuwGpH5DfM00e0VOox0Vd3uDm5iI2TUqAFjp
+         iYYwwDtgK9LDLRLf7hpRjo5kUyH4sHEtzSP7sVozOAMl7rWQbvym1dVolVoNnqMmccWX
+         v0iEr7sYn4LtF65kg31IcB7v6EwI/J8InUbNRc0VB0pxACcmHeyyb8+oTew3/wLQQwa0
+         HXe81ITZmPpYChU5iA1mhdCQ2QSIL8tR8N/C2GcTSmSinwPyTtEAsyQSii9/DSw4fKVq
+         kH2Q==
+X-Gm-Message-State: AGRZ1gI8+BIgLmNfieLbchKpeV6hKG40Hcr955zfzG+KnA+k3ATzQmf5
+	7sPw57w3yf+DWUMoifV4zhIV4Db6SDNN3JL/W0Fca6I7p6znd7voDg==
+X-Received: by 2002:a63:fd53:: with SMTP id m19mr871032pgj.340.1541610412402;
+        Wed, 07 Nov 2018 09:06:52 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5492818pjt;
+        Wed, 7 Nov 2018 09:06:51 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fusHV69s8evOMJ74gqsZq1ETPVN2y/1GUN8OL+XfcmOuhXk143jmJy/O0j8cYBEHvFyl+n
+X-Received: by 2002:a62:9989:: with SMTP id t9-v6mr974569pfk.179.1541610411358;
+        Wed, 07 Nov 2018 09:06:51 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610411; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Go/h26TVZ2e3uMJMsmG1FEnEiQ1zJ1GZmMHVAs9hhnsC+8aUTK53K92azEY8/sq3+6
+         etkXXLwl/xEe1pjavKMrkJjiPV7mcOLgiv+G3iMjyBnNNWalcbAItbktuIQV60ud7Kr3
+         WioSVI2iSgJCXzdd2jZ16X9o0fKskdlk2tZZ1Z1GsMrU6DEt+WBmpmXiw/nsH38wM98Y
+         r7JPWfez8Rx7HuTrGEok+BfCMN5ycHExyehNdT8w3UCCfw2rA5KZ0YyNKewLJAMPYE0N
+         wUANjeuP61TRhBywLXx9Z8T4V3aT+287PkQG5eziF1l7M6NF8utcy+P5TD5hSPyv/dCz
+         vfNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:cc:to:subject
+         :message-id:date:from:in-reply-to:references:mime-version
+         :dkim-signature;
+        bh=2manXyxiixH+CojxXLCyUIi+u/Q8AUKb/fNRJUhH6wI=;
+        b=qxHTikpQFHrS4mCgCOg4WEru5wlO8IPxEkRGd0VDiSf6SfCKLgsj61dt3SgFT6owOk
+         Gyhw5X2AxKZ+HK12x5G198DT41PRcVYkl7z80CjU9uneJYvQGpZM6DDrZYkdUYdAbdbT
+         YPlj2yXUqQnrim4hkTDx7Siya5hvzJv29EL/g3xg0/6PsWuXjBzeUwTvCtFEBpjSKao+
+         Jo2euqzxgQze4PKJcA0SdHIxVXTTnu6X9G4R2D7YLnBCHolh5DrHqeaW76Xou9XowqO6
+         NzilrW0DiIM1kPREuF4e3xb0GgNlpAwn2g34XvcAYhp9Ms2gb0ztM9Pu8Fzr4ezaB+lZ
+         TIyw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=ZYPY1tVI;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id r23si1058915pgu.359.2018.11.07.09.06.35;
+        Wed, 07 Nov 2018 09:06:51 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731417AbeKHChn (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:37:43 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34524 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727757AbeKHChn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:37:43 -0500
+Received: by mail-wm1-f66.google.com with SMTP id f1-v6so11769917wmg.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 09:06:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2manXyxiixH+CojxXLCyUIi+u/Q8AUKb/fNRJUhH6wI=;
+        b=ZYPY1tVI7hA4gs7B8bVP/hqGmJ1BurrVzjr9z+jSHNH7wMzVQV5FirrzyaYAogbqNW
+         BqFreWysJkHS2gfQHrWnZX4Z3RTNJ8cXkQj83CYGNet7vBQSvgO7WTOdRQzoWVxTGa6n
+         RbVNg5zNRgb+8JA5quYB6Re8c8s+OJ936ZmYYy9oox2jW8ia4rOF6fLaV15ki7oev5/f
+         UxqdPpNOXHS1GtSsphS2zG2bcH45KU45M7kkI1Y1XdxTfZnUsmRcaDVz4NOd6doO/Lne
+         HIIa843IdTDoCjYVjHCZSnh0Z6ASm5UpgvvwcOD/P6R0c52cHhmu+bCI8o5hKJYNNjYB
+         Fv5g==
+X-Received: by 2002:a1c:f417:: with SMTP id z23-v6mr923386wma.80.1541610387037;
+ Wed, 07 Nov 2018 09:06:27 -0800 (PST)
+MIME-Version: 1.0
+References: <CAL8zT=imudTXvbsxx42mPSQj7Qt1b=44wnPHpb09-sOqLewu-w@mail.gmail.com>
+ <3857132.MlRd14rs7I@ada>
+In-Reply-To: <3857132.MlRd14rs7I@ada>
+From: Jean-Michel Hautbois <jhautbois@gmail.com>
+Date: Wed, 7 Nov 2018 18:07:42 +0100
+Message-ID: <CAL8zT=hWY2FbFbmDm8wAoWO7pCqBiwboULE4-VVJ2m=5n2AaVw@mail.gmail.com>
+Subject: Re: sama5d: using the ebi interface from another driver
+To: ada@thorsis.com
+Cc: linux-arm-kernel@lists.infradead.org, boris.brezillon@bootlin.com,
+        Nicolas Ferre <nicolas.ferre@atmel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHb0usG+NbInYYAA--.576S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxXryDAr4DZw15XF4xZr43Jrb_yoWrGF4Dp3
+	9xtay8Grs7Xr1vyFWjvFWUC3W8uas5CF9xCw1DZFyvyFy5JFy7ArWYk3s2vFZ8WFs3Cw1U
+	tr4IvF92qFs5A3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcV
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_GwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Cr0_Gr1UMxvI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bj
+	PfQUUUUU=
+
+Hi there !
+
+Le mar. 6 nov. 2018 =C3=A0 10:57, Alexander Dahl <ada@thorsis.com> a =C3=A9=
+crit :
+>
+> Hei hei,
+>
+> Am Freitag, 2. November 2018, 14:35:26 CET schrieb Jean-Michel Hautbois:
+> > Then, after looking into deeper details in the datasheet I understand
+> > it is connected through EBI and it sounds not so easy :D.
+>
+> Did you read docs on that? You'll find the binding docs here:
+>
+> Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+>
+> > I would appreciate some help/pointers on this, as there is (at least,
+> > I could find) few documentation on how to use it except for NAND
+> > cases.
+>
+> I use EBI with at91sam9g20 and custom FPGA on CS5 (0x6000000) and CS7
+> (0x8000000).
+>
+> > I have something like that in my DTS, but not sure this is the correct
+> > way to do it :
+> >
+> >         ebi: ebi@10000000 {
+> >             pinctrl-0 =3D <&pinctrl_ebi_nand_addr>;
+> >             pinctrl-names =3D "default";
+> >             status =3D "okay";
+> >
+> >             dsp0: pef24628@1 {
+> >                 status =3D "okay";
+> >                 compatible =3D "intel,pef24628";
+> >                 #address-cells =3D <1>;
+> >                 #size-cells =3D <1>;
+> >                 reg =3D <0x1 0x0 0x8000>;
+> >                 pinctrl-0 =3D <&pinctrl_dsp_cs1>;
+> >             };
+> >
+> >             dsp1: pef24628@2 {
+> >                 status =3D "okay";
+> >                 compatible =3D "intel,pef24628";
+> >                 #address-cells =3D <1>;
+> >                 #size-cells =3D <1>;
+> >                 reg =3D <0x2 0x0 0x8000>;
+> >                 pinctrl-0 =3D <&pinctrl_dsp_cs2>;
+> >             };
+>
+> I'm not sure about those 'reg' settings. IIRC the first should correspond=
+ to
+> the CS line, on at91sam9g20 the 0x40000000 would be CS3 (which is used by
+> NAND, like in the dts snippet you posted) and 0x50000000 would be CS4. Ar=
+e CS1
+> (which is used by SD-RAM) and CS2 free to use on sama5d3?
+>
+> Maybe that's different on sama5d3? I would check it again.
+
+Well, yes, I am using CS1 and 2, and right now, I can confirm the reg
+settings are ok as the platform_get_resource returns the correct
+values :) !
+
+> > The pinctrl for ebi should probably be changed however, I am wondering
+> > how the (platform ?) driver can access the adress ? Should it parse
+> > itself the parent, and find range, etc. Or is there an accessor for it
+> > ?
+>
+> Probably. This is what I have for the at91sam9g20:
+>
+>             pinctrl@fffff400 {
+>                 ebi {
+>                     pinctrl_ebi_cs5: ebi-cs5-0 {
+>                         atmel,pins =3D
+>                             <AT91_PIOC 9 AT91_PERIPH_A AT91_PINCTRL_PULL_=
+UP>;
+>                     };
+>
+>                     pinctrl_ebi_cs7: ebi-cs7-0 {
+>                         atmel,pins =3D
+>                             <AT91_PIOC 12 AT91_PERIPH_B AT91_PINCTRL_PULL=
+_UP>;
+>                     };
+>
+>                     pinctrl_ebi_nwait: ebi-nwait-0 {
+>                         atmel,pins =3D
+>                             <AT91_PIOC 15 AT91_PERIPH_A AT91_PINCTRL_PULL=
+_UP>;
+>                     };
+>                 };
+>             };
+>
+> > Maybe can I just manually toggle the CS GPIO, and don't try to make
+> > anything more complex than what it should be ? The driver should not
+> > be atmel dependant...
+>
+> As Ludovic said, you should check the settings and timings for the extern=
+al
+> memory interface. This could look more or less similar to that:
+>
+>             foo_bar: foo-bar@5,0 {
+>                 status =3D "okay";
+>                 pinctrl-0 =3D <&pinctrl_ebi_cs5>;
+>                 pinctrl-names =3D "default";
+>                 reg =3D <0x5 0x0 0x80000>;
+>
+>                 atmel,smc-bus-width =3D <8>;
+>                 atmel,smc-read-mode =3D "nrd";
+>                 atmel,smc-write-mode =3D "nwe";
+>                 atmel,smc-exnw-mode =3D "ready";
+>
+>                 atmel,smc-ncs-rd-setup-ns =3D <7>;
+>                 atmel,smc-nrd-setup-ns =3D <7>;
+>                 atmel,smc-ncs-wr-setup-ns =3D <7>;
+>                 atmel,smc-nwe-setup-ns =3D <7>;
+>
+>                 atmel,smc-ncs-rd-pulse-ns =3D <56>;
+>                 atmel,smc-nrd-pulse-ns =3D <56>;
+>                 atmel,smc-ncs-wr-pulse-ns =3D <56>;
+>                 atmel,smc-nwe-pulse-ns =3D <56>;
+>
+>                 atmel,smc-nwe-cycle-ns =3D <77>;
+>                 atmel,smc-nrd-cycle-ns =3D <77>;
+>
+>                 atmel,smc-tdf-ns =3D <0>;
+>             };
+>
+> As you can see, quite a lot of settings are made, all depending on how th=
+e
+> memory access is supposed to be configured. You should look out for detai=
+ls in
+> the hardware manuals of the SoC and the devices you want to connect.
+
+Yes, this is the last part I need to get information about, but this
+is datasheet reading basically, so not a big deal :).
+Thanks to both of you, Alexander and Ludovic, I have now something
+really better ;).
+
+JM

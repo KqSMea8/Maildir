@@ -1,0 +1,144 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:47 -0000
+Received: from icoremail.net (unknown [209.85.210.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH9KnD+NbIBhZAQ--.26742S3;
+	Thu, 08 Nov 2018 00:15:37 +0800 (CST)
+Received: from mail-pf1-f179.google.com (unknown [209.85.210.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3nkqlD+Nb4EIYAA--.76S3;
+	Thu, 08 Nov 2018 00:15:33 +0800 (CST)
+Received: by mail-pf1-f179.google.com with SMTP id u13-v6so7898580pfm.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:15:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:sender:precedence
+         :list-id;
+        bh=6GulyvsoL3CZ2f4iWpWtifFCe3aPw+IrwmaqCw3SM+Q=;
+        b=GLgBHZLmtOQqQ+ANH1puiH8RtlUwlymCyQGhV5+1qewyL/T+fGuS8AtdGhhPStZ49Q
+         vn0bPKbHvwvdqb0JFBE1Zf+wiMrhrv6K2WKjKK5u/Td/+cD84YdAcTxm4pGGM6/9lsUl
+         rC7jrSoRxa+BZO+jbrNuBtqzvgKsp1rLXr2+uLvjQzoTDFJpyucR8so7DmwAb/IB1+1E
+         x/SkSqONQBVVaR21nykP/cJFvMScitXf08FKcEK4+kWSHo83zVxssjQHRKK0Gyqi/p/V
+         zbShusiq2UwN4f/E8gdgxgX1N6SkzFnf6Nc+fu82kIxJhvUr3cKeQebak1F8v49N+H9j
+         E6Tw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJXS8YtChUBa/5tx3NqEqJSSjQfbx0+jxBuSIufcKUlDz77hcII
+	sN6GVmzo4ocBDWvf1v6ZNF/uWDB3NZaOPVumr+W0TEq/+LgsdbKjIQ==
+X-Received: by 2002:a62:35c2:: with SMTP id c185-v6mr806380pfa.69.1541607333382;
+        Wed, 07 Nov 2018 08:15:33 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5436645pjt;
+        Wed, 7 Nov 2018 08:15:32 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fmhCwPGCbghxY9VAoQ6nOB5hDnBRvMUhXD4dcmrHu7jUZI7DZlhAJ5wYvwXszdA7r2xTtQ
+X-Received: by 2002:a62:ea10:: with SMTP id t16-v6mr870242pfh.228.1541607332538;
+        Wed, 07 Nov 2018 08:15:32 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541607332; cv=none;
+        d=google.com; s=arc-20160816;
+        b=gPsdKaMyBsgNGmRBdarC3IwgjZRU6/EkB3vDjHQQud/u8wE3+NntHBf+RZxbXW0Ly/
+         jyBkxmxjJBAP9FdXHz6X/Oirw1vi7GkxGUIlJH6z97NXNC4cJl6sZYdyAJeT2EYNZZZ6
+         j2S8eO3RA5ogi74zVAkf5hcCgNV+YxKhadPB+dfdGMidQuJLJon+0TjAwBLtd6zlGaU3
+         g6PY8bfJWr6wwZa1J3SD6QnnMfr99R1lObF6ewhy8SZCz4QzfCYLhd0SvhnByH4++ucj
+         gD7xGxpyoLpDK9fdpiWbQD81OGSQVeTBl4PEnH+ucBN0vM3mDFKOzr5D6xrfT2MJDZiu
+         5bWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:in-reply-to:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date;
+        bh=6GulyvsoL3CZ2f4iWpWtifFCe3aPw+IrwmaqCw3SM+Q=;
+        b=C21XSaM6cFKC7xFCQxHUUcBbME4CD3zp2tWCYqeuKkuCEC0s2A908Ljq96xagbj+CK
+         FaVzKJmAo/z+XWC0y7o5L0E9QvH+RxiLjd6sJ85YNFiuRPKKYUD8gPy5ROZ3ffinHNyo
+         nXWx4mbKkx03e6OZo3zaE1dOVGRfehjwV9xYAaXaQLntSLPv5Bwc8lGcdJ1eL5YZMvvs
+         +G9SSb37tgSRYhIPVTKJ710KmW8toZerPUYqqlgwMnkYoLL7L6Rai0V2sMpG6YTsFO8N
+         3mMiYKxa5DhHHcQi5hPqUl8ckq0XvMHZmTSfxTp5cEztHi2I4yWcPorIiB//hFeLjVg1
+         ZiOQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id l14si913269pgi.147.2018.11.07.08.15.16;
+        Wed, 07 Nov 2018 08:15:32 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731356AbeKHBnr (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:43:47 -0500
+Received: from vmicros1.altlinux.org ([194.107.17.57]:39936 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbeKHBnq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:43:46 -0500
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id C1DAC72CA56;
+        Wed,  7 Nov 2018 19:12:44 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id B418F7CC774; Wed,  7 Nov 2018 19:12:44 +0300 (MSK)
+Date: Wed, 7 Nov 2018 19:12:44 +0300
+From: "Dmitry V. Levin" <ldv@altlinux.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Elvira Khabirova <lineprinter@altlinux.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Eugene Syromyatnikov <esyr@redhat.com>,
+        linux-kernel@vger.kernel.org, strace-devel@lists.strace.io
+Subject: Re: [RFC PATCH] ptrace: add PTRACE_GET_SYSCALL_INFO request
+Message-ID: <20181107161244.GA27809@altlinux.org>
+Mail-Followup-To: Oleg Nesterov <oleg@redhat.com>,
+        Elvira Khabirova <lineprinter@altlinux.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+        Eugene Syromyatnikov <esyr@redhat.com>,
+        linux-kernel@vger.kernel.org, strace-devel@lists.strace.io
+References: <20181107042751.3b519062@akathisia>
+ <20181107112100.GA20419@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107112100.GA20419@redhat.com>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3nkqlD+Nb4EIYAA--.76S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrZr4UZrW7Xr1fGFyfXFyUGFg_yoW3KFg_Xr
+	Z2q3WkKFZ8KFnrJFn3KF15uF4Igay5Zr4UZ34DKrW2q3ykW3s5JFsY9r1kC3Wrtr4rurnx
+	CanF9rn5Jw45ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUb-kYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r4UJwAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UMx02cVCv0xWlc7
+	CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY0x0Ix7I2Y4AK64vIr41l
+	cIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJw
+	CYIxAIcVC2z280aVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UMxAI
+	w28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFV
+	Cjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWl
+	x4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr
+	0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IUeIfO7UUUUU==
+
+On Wed, Nov 07, 2018 at 12:21:01PM +0100, Oleg Nesterov wrote:
+> On 11/07, Elvira Khabirova wrote:
+> >
+> > In short, if a 64-bit task performs a syscall through int 0x80, its tracer
+> > has no reliable means to find out that the syscall was, in fact,
+> > a compat syscall, and misidentifies it.
+> > * Syscall-enter-stop and syscall-exit-stop look the same for the tracer.
+> 
+> Yes, this was discussed many times...
+> 
+> So perhaps it makes sense to encode compat/is_enter in ->ptrace_message,
+> debugger can use PTRACE_GETEVENTMSG to get this info.
+
+This would mean for the debugger an extra syscall invocation for each
+syscall stop.  When strace doesn't have to fetch memory, it invokes three
+syscalls per syscall stop (wait4, PTRACE_GETREGSET, and PTRACE_SYSCALL).
+We definitely want to avoid adding PTRACE_GETEVENTMSG on top of that.
+
+
+-- 
+ldv

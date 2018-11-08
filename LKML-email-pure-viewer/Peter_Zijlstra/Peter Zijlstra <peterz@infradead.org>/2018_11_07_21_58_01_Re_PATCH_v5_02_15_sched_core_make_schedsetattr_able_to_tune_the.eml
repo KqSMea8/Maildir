@@ -1,0 +1,176 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:04 -0000
+Received: from icoremail.net (unknown [209.85.210.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_yeU7+JbWVdYAQ--.26571S3;
+	Wed, 07 Nov 2018 21:58:45 +0800 (CST)
+Received: from mail-pf1-f170.google.com (unknown [209.85.210.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnz0uT7+JbJ7YXAA--.168S3;
+	Wed, 07 Nov 2018 21:58:43 +0800 (CST)
+Received: by mail-pf1-f170.google.com with SMTP id n11-v6so7736770pfb.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:58:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=EltP8ilXjkv36t1bw1TG5a0Czq2nBHXdy4S7Z15GOtE=;
+        b=Z20AngxB4PxdoIjYp+naJC2EypBK4mVBHfV0X+xEK7h/ehJvRdprWTU09attM6Dz6U
+         Ez9SchJ0VstgjXO99SWtsCXg5bP6e8RqKVc02TlB63s+vBNtdDrm/LX2Q+fghLASNUpx
+         UJwYn9B3krohJR3ll+wLD6yMc6QIu21CDWugtuVPCeUZTrmnwluREm4UGTBUzE8dVLqh
+         PWAGoIE4ss/8xac+meBRl3qJjexEkExbzQRjHPAPlcA2RokCHsFCdQfCtmAPb7FcdX6i
+         9zBj02O0hiDqNx5ZKSVsHVgPromwV4caiCBp6ipwgqWoZcv43KtF6Q3Bw99O2o3aoF7p
+         uBAQ==
+X-Gm-Message-State: AGRZ1gLtQZ2JfGndiORQuOJ2IBWQ4Y0ietkyt3MgAH7w28XL8kKbD58H
+	CM/IuUd3XBuftDKx7AqKCI7ls3VgUSRyst8dH4JimA7Tm4kJlKTPLw==
+X-Received: by 2002:a62:35c2:: with SMTP id c185-v6mr303013pfa.69.1541599122814;
+        Wed, 07 Nov 2018 05:58:42 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5276080pjt;
+        Wed, 7 Nov 2018 05:58:42 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dYltqJZjOVXmEUncyofK2R6Z+sQ6m8xSjkd4cSkl1/lJzmMLwrHBi8E5D1sCBpF82GdBOX
+X-Received: by 2002:a63:f60c:: with SMTP id m12-v6mr249473pgh.293.1541599122215;
+        Wed, 07 Nov 2018 05:58:42 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541599122; cv=none;
+        d=google.com; s=arc-20160816;
+        b=IfnItiPpcPX7mC7eMH25dy+1jFQRbkwzCMEqKYcFlYP6yy4Wpxpe7/egOe1940caS6
+         fPZmTPXQBrtIHQNEjVZz8f8Fpj8vukJtoxiE++NsFfB7MYDz3r0MRncuix49oHa+1kVm
+         PJmFUcHpAmUGwnYzZ2VkJSQpSct6fhOcvkcIsTLDlPkoB0ipCY6ThfI5wYRFdXizBnli
+         j544pmqmZnozXxF4xMLvMIUuNxKN7tXDzN06OlRxveB7KhXnMbB3+/5JANJ7IzM1mNug
+         q8NXo8b7WAJ3Ue674fhoufsfFFl4Dp/W2UHYR/VYK3xZaGFOQ2Y93dVRmgWOnenLvVYC
+         tXqg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=EltP8ilXjkv36t1bw1TG5a0Czq2nBHXdy4S7Z15GOtE=;
+        b=KgQhXYRaGwJY7FtuBW1SbrH5TsWlzM30cxsQExkXskoGggrSe1Sdm6kEIV520Vwrzg
+         03B/eHTjrTAP4Lqt7Ew5Ivf4yhYaviTF0/0n8wSkk1MoGV22OGVc6h6DDw7uvKLSVLSx
+         AFXZLk4jRxMAXH8JvvFle//lr8yd1AR8Xbzu5W7XnG769I+qrzI1KKO40D3N35/Shmd6
+         buyeDViGsvI2g+dUEsUy5P7aVa6mBvuxNJcLU4FJOiKbqtwzoxnTC7sjDU8y//GGntz4
+         cCOLTHEZmeY2wBiqqFiJCsp1msD+uJ0S/0kug5KaR9Ky6YhEHycdO1VVmNfokzpAlTXP
+         eqag==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@infradead.org header.s=merlin.20170209 header.b="SxUv/afP";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b4-v6si755337pla.189.2018.11.07.05.58.27;
+        Wed, 07 Nov 2018 05:58:42 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730642AbeKGX2k (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:28:40 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:60982 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727168AbeKGX2k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:28:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=EltP8ilXjkv36t1bw1TG5a0Czq2nBHXdy4S7Z15GOtE=; b=SxUv/afPVdYpf1ZVY+PTm0CeM
+        RFSwfZgn0sDUHzEGnNMZaiK2fj+0vm9K1vBLZHM7zx3DLaomdkT/DRIqzc+RzbPwEdghwWmJK3ql2
+        vZhnlBFbHT3qxv5zxlL0JmI35lttZHhuIHs0069DLIZR2zlaue8zTi9fu7EMvKoBgSY9qwBK+onNn
+        KBwLtEIt6/VOLhV7cpgOPshA6xpvWjs+iL24OvHr7fP/YCbdVFFu5zfqalMLeb2pZFQ240oywqmTq
+        Vx5P3IH1EXxFQRxvsP59qTd6APaABQjB7N45c2itL+qLr6qVnKli88lEJkyef4tcft+VwDv7GoCgs
+        vIUiUOiXQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1gKOLL-00068w-Te; Wed, 07 Nov 2018 13:58:04 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C03302029F883; Wed,  7 Nov 2018 14:58:01 +0100 (CET)
+Date: Wed, 7 Nov 2018 14:58:01 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Patrick Bellasi <patrick.bellasi@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH v5 02/15] sched/core: make sched_setattr able to tune the
+ current policy
+Message-ID: <20181107135801.GE9761@hirez.programming.kicks-ass.net>
+References: <20181029183311.29175-1-patrick.bellasi@arm.com>
+ <20181029183311.29175-3-patrick.bellasi@arm.com>
+ <20181107121126.GN9781@hirez.programming.kicks-ass.net>
+ <20181107135039.GD14309@e110439-lin>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107135039.GD14309@e110439-lin>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnz0uT7+JbJ7YXAA--.168S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr1xXr18WryUXF1xJryUGFg_yoW8Gw15pr
+	y7ZF92ya1jqr1fC3Z2yw43WryYkwsFyr1UWr93Zrn8Aas0qw1SgrySgF4Yk345Ww1rZr9a
+	yrWY9a9xCr90k37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB2b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4wCY1x
+	0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VW5GwCY0x0I
+	x7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804x
+	Wl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE42xK8V
+	AvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUqc4SUUUUU
+
+On Wed, Nov 07, 2018 at 01:50:39PM +0000, Patrick Bellasi wrote:
+> On 07-Nov 13:11, Peter Zijlstra wrote:
+> > On Mon, Oct 29, 2018 at 06:32:56PM +0000, Patrick Bellasi wrote:
+> > 
+> > > @@ -50,11 +52,13 @@
+> > >  #define SCHED_FLAG_RESET_ON_FORK	0x01
+> > >  #define SCHED_FLAG_RECLAIM		0x02
+> > >  #define SCHED_FLAG_DL_OVERRUN		0x04
+> > > -#define SCHED_FLAG_UTIL_CLAMP		0x08
+> > > +#define SCHED_FLAG_TUNE_POLICY		0x08
+> > > +#define SCHED_FLAG_UTIL_CLAMP		0x10
+> > 
+> > That seems to suggest you want to do this patch first, but you didn't..
+> 
+> I've kept it here just to better highlight this change, suggested by
+> Juri, since we was not entirely sure you are fine with it...
+> 
+> If you think it's ok adding a SCHED_FLAG_TUNE_POLICY behavior to the
+> sched_setattr syscall, I can certainly squash into the previous patch,
+> which gives more context on why we need it.
+
+I'm fine with the idea I think. It's the details I worry about. Which
+fields in particular are not updated with this. Are flags?
+
+Also, I'm not too keen on the name; since it explicitly does not modify
+the policy and its related parameters, so TUNE_POLICY is actively wrong.
+
+But the thing that confused me most is how fiddled the numbers to fit
+this before UTIL_CLAMP.
+
+> Since we are at that, are we supposed to document some{where,how}
+> these API changes ?
+
+I'm pretty sure there's a manpage somewhere... SCHED_SETATTR(2) seems to
+exist on my machine. So that wants updates.

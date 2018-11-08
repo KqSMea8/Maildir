@@ -1,0 +1,173 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:30 -0000
+Received: from icoremail.net (unknown [209.85.210.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_yeRAuNbfcdYAQ--.26750S3;
+	Wed, 07 Nov 2018 23:19:46 +0800 (CST)
+Received: from mail-pf1-f174.google.com (unknown [209.85.210.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3W0eRAuNbBgcYAA--.7510S3;
+	Wed, 07 Nov 2018 23:19:45 +0800 (CST)
+Received: by mail-pf1-f174.google.com with SMTP id j13-v6so7816959pff.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:19:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=heow3a3ws6S486zdNzM8H4joyX79XovSYgmZfggF1KA=;
+        b=r7x8ZcY/zv1Fex9xPkEGcDXHhf9YuXPH8dDMDy54t6CziXs8eS1w82XIrzhnRLSVzy
+         DoHhA9QZwAEUR0IGaoPi45ZzuzzdHP1qkLSV8tsrjxbxL2sCzSBFelRsh9VNQJTCal6D
+         n7o8cGswzoN+RnpdzB0vkq8socHbO5kqy36R9Zv79NBdNyCkboIaY0JO5+uUsZH541hB
+         elzAUzADkGDu+rPiq7W5Dq4ahW7puAN1o+8r2WfpFVPbXqpTbFhGWJbw1wx5Z9N/4a+i
+         mFPYaR9zAXWIXhkBgUK8Mv/BvGjxALBfFpcF2HCAZitVNkmeRNE/Iltr5QFNCxfAMsyu
+         AL2Q==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJn/m7xBnAtbCKPXFBgddE0BuUMXnKfsQlZAADMOyh09LZJfS8Q
+	l4ZbDqKEi0pPp/9PMp9WWb9AZrl0Z2oYEJcWe9Vk9cEQ6zmf7hi++w==
+X-Received: by 2002:a63:1d10:: with SMTP id d16-v6mr520804pgd.228.1541603984833;
+        Wed, 07 Nov 2018 07:19:44 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5373233pjt;
+        Wed, 7 Nov 2018 07:19:44 -0800 (PST)
+X-Google-Smtp-Source: AJdET5doS0DYFUD+VpBDoVXtev1CV5lIRrWTtTymHm8KB/HpogESKJC33iT6kEcyFnymYOT1RZqA
+X-Received: by 2002:a17:902:bccc:: with SMTP id o12-v6mr622720pls.281.1541603984145;
+        Wed, 07 Nov 2018 07:19:44 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541603984; cv=none;
+        d=google.com; s=arc-20160816;
+        b=DteqkezUdbpU/BosaW6J0sCgDbxLWAXlC1LsbIkexnMOS8/rjwvyyrf5F80gTyssJX
+         fpAJeYWaPJEwqtpj0MXnHvFhUqL8Z10l24N8zmWSq97qkPe1+yDsSNGgYG4dL52wQNHF
+         AgReAu0IjBt8jCW9iUzUuY5w0tAY+roymxHlzc2fskylYup803ADMWhhni13WXQeEpCp
+         jURB2Uz2YVj7QFnSVgAOWPFCS/bYxgpOtgYFNdabTzwCfR9Ljs7L1zae9BzJlhPog7h6
+         2K8SUZeOxeCO2+iwBd1R2YhWWq7e9YR3rJJG0R54nTfAOzobjQN66iK4tcz8ucot1/s/
+         i2gg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=heow3a3ws6S486zdNzM8H4joyX79XovSYgmZfggF1KA=;
+        b=ri+TbGy2xmeWs2pFz64Kvdz9Bxsb8e31Sq2xJ/ggtbLaWkhqlx+irczDp1aXo6aJpE
+         Jgx7/3hxiXBPXTK/Re5w50Wsxl+EWRUkfFUFfvpUeITgk3CsWCyZj8410g5YK9eQ8fNX
+         h3/I/fIIZvaeMpszeHnGCgmu+4D7QPDtCX+sZNJIYSU8xQWjW0fgAkYG1z6ctaCreHfA
+         9/zOOG2yixuYkWHumA/HDtMJsRiYNeTLAnlmQOJDx+KWYi/3bXBWsHMID+Ep4ixGXqtk
+         NUFqKT3b7Zmz/vPbUKD5Y4RxzEg5/uwbkICpXVvlc+aL7dPh+A/76e2OR4oajeT2sozZ
+         mEaw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id cf14-v6si889629plb.422.2018.11.07.07.19.28;
+        Wed, 07 Nov 2018 07:19:44 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728004AbeKHAtw (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:49:52 -0500
+Received: from mx2.suse.de ([195.135.220.15]:52752 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726635AbeKHAtw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:49:52 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A4797B613;
+        Wed,  7 Nov 2018 15:19:02 +0000 (UTC)
+Date: Wed, 7 Nov 2018 16:19:00 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexander Potapenko <glider@google.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 3/3] lockdep: Use line-buffered printk() for lockdep
+ messages.
+Message-ID: <20181107151900.gxmdvx42qeanpoah@pathway.suse.cz>
+References: <1541165517-3557-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <1541165517-3557-3-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1541165517-3557-3-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+User-Agent: NeoMutt/20170421 (1.8.2)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3W0eRAuNbBgcYAA--.7510S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr4xur4fGr18Ar4kuw4kJFb_yoW8XFy7pa
+	ya9Fn5GwsrZw1kXw12yr1v9a4Svw4Du34UCr4DZr1UAFyUGrWDX3srKw12vw13uw4fK39I
+	qFn5K34kX3Z5AFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPjb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW5WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07
+	x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
+	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI4
+	8JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUgg18UUUU
+	U
+
+On Fri 2018-11-02 22:31:57, Tetsuo Handa wrote:
+> syzbot is sometimes getting mixed output like below due to concurrent
+> printk(). Mitigate such output by using line-buffered printk() API.
+> 
+> @@ -2421,18 +2458,20 @@ static void check_chain_key(struct task_struct *curr)
+>  print_usage_bug_scenario(struct held_lock *lock)
+>  {
+>  	struct lock_class *class = hlock_class(lock);
+> +	struct printk_buffer *buf = get_printk_buffer();
+>  
+>  	printk(" Possible unsafe locking scenario:\n\n");
+>  	printk("       CPU0\n");
+>  	printk("       ----\n");
+> -	printk("  lock(");
+> -	__print_lock_name(class);
+> -	printk(KERN_CONT ");\n");
+> +	printk_buffered(buf, "  lock(");
+> +	__print_lock_name(class, buf);
+> +	printk_buffered(buf, ");\n");
+>  	printk("  <Interrupt>\n");
+> -	printk("    lock(");
+> -	__print_lock_name(class);
+> -	printk(KERN_CONT ");\n");
+> +	printk_buffered(buf, "    lock(");
+> +	__print_lock_name(class, buf);
+> +	printk_buffered(buf, ");\n");
+>  	printk("\n *** DEADLOCK ***\n\n");
+> +	put_printk_buffer(buf);
+>  }
+>  
+>  static int
+
+I really hope that the maze of pr_cont() calls in lockdep.c is the most
+complicated one that we would meet.
+
+Anyway, the following comes to my mind:
+
+1. The mixing of normal and buffered printk calls is a bit confusing
+   and error prone. It would make sense to use the buffered printk
+   everywhere in the given section of code even when it is not
+   strictly needed.
+
+2. I would replace "buf" with "pbuf" or "prbuf" to distinguish it a
+   bit from other eventual buffers.
+
+
+Best Regards,
+Petr

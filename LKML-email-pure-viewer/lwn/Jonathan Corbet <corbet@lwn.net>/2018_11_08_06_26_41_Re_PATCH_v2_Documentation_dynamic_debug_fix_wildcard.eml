@@ -1,0 +1,128 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:59 -0000
+Received: from icoremail.net (unknown [209.85.214.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv97IZuNbWSlbAQ--.27531S3;
+	Thu, 08 Nov 2018 06:27:21 +0800 (CST)
+Received: from mail-pl1-f174.google.com (unknown [209.85.214.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3W0fEZuNb+pEZAA--.1684S3;
+	Thu, 08 Nov 2018 06:27:16 +0800 (CST)
+Received: by mail-pl1-f174.google.com with SMTP id n4-v6so8517762plp.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:27:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=W+byspl6LnPAg58p+lRTj9DQ/366oTFHA80jDuR60/k=;
+        b=Sebsg1W0m415o1fLCxxIex8NXOS1DgLRvCrvITsoX6sKgz/AFZ1HTUD/JA6ad/XYF6
+         QYqbHa+fccjMH/zGACPlxAvemJ6tFsw+mJhh477OIujjNEtAybngnxJ7R620MAwX1sR7
+         cnmKWRXHi8qRElDgA8FawA/3N4OwVy/NDOVoEIKdfKMwyeDSSggAEbkl5fYF12NgS/pI
+         owagtfp8lBVIbuFNpOwwL2U92IcXmB0b/ymiWvOoCFY+WKncz4SxwQAbl8q8l40UBIMS
+         HFT7JG0lG1LpTyslJYOS3NJGfeueE8nU61gcBHXsMVgHnfVKi3iA9z2r3+DnBdLX0i3P
+         OCRg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIqkN11yncymAQbL0kI+Ttgv8AatQstmb9l3Ts03hhuFd3sdcL0
+	n9BXVs6Z/0cfMTudInVmTEB0j/0I9DkcbzRabcvFLPEq0CCISmeMRw==
+X-Received: by 2002:a17:902:166:: with SMTP id 93-v6mr2082356plb.68.1541629636463;
+        Wed, 07 Nov 2018 14:27:16 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp76578pjt;
+        Wed, 7 Nov 2018 14:27:15 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dKUjObnIPpeHUrqxNgrVyA1fEhxSznAik79J+QbTSN41ojNz4rad4oveUeiZWnrz904VPk
+X-Received: by 2002:a17:902:104:: with SMTP id 4-v6mr2192016plb.184.1541629635732;
+        Wed, 07 Nov 2018 14:27:15 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541629635; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ASBgT28oHIxzDM1gLr+5o8myfZfBfM3aGsQIxX4CCwTgId/JyBHlfavcYfjri6ZoP8
+         tlT5kjLtHXpjJMDnPYNdGk7aQM8WSA91ypmbRFoi+ZayB6g59abqIyqYSqMZXVcNL19N
+         33QQNZ+RE1AqHrRA4chDaA30muRMi9Iu9Dl309W4QKkTgvU7NcOK0Pp6D9iuhhJcZo9Z
+         Npt1t+FxpmkCu/LK9TGgPhqDsk4vHA1rtxtoOfNvDuX7rhKYWHL3CpXR52yYu9cjX4LL
+         VTo6Uf3mvVTS0E+HWOW5lMwm5w1ygNfUMupvQMH+Af95J624W+VssPjqd3VvVFJwfjno
+         TxEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :organization:references:in-reply-to:message-id:subject:cc:to:from
+         :date;
+        bh=W+byspl6LnPAg58p+lRTj9DQ/366oTFHA80jDuR60/k=;
+        b=N9fUmsN9Z3n+9pQIbASN2mSvZ7zaXQA2HY/NDBjD2fZpqn64xcm/PSalwmcYCOstEy
+         pjdiRB9CPCLR/vVgX7wUsR8WXWiC52TGrq6poesS9yT+AKqsQMr7pLutOhTANPbMhUsA
+         oiQELUpTpB26OoivTFwTX/5Pju9B/KxaR91nZxEqNtA0SHf5bgzDz6awCjKsrbUeSmkF
+         zYJZa7Ivz47/OkIeFf9nNTJ11fRwDtIJ/j0CrJRVXn8W0KCmvapHf2VPOW9GsBNwOHJx
+         7+0XpYnyN/VMbSjBaVQjsYhHpOF4Gl5/Xxdj5YZUC9cH1teLbka+spcu+tFMqDg0/KFf
+         Xzdw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b137-v6si1987487pfb.144.2018.11.07.14.27.00;
+        Wed, 07 Nov 2018 14:27:15 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728003AbeKHH7I (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:59:08 -0500
+Received: from ms.lwn.net ([45.79.88.28]:45814 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727495AbeKHH7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:59:07 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 3277C6E8;
+        Wed,  7 Nov 2018 22:26:42 +0000 (UTC)
+Date: Wed, 7 Nov 2018 15:26:41 -0700
+From: Jonathan Corbet <corbet@lwn.net>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Will Korteland <will@korte.land>
+Subject: Re: [PATCH v2] Documentation: dynamic-debug: fix wildcard
+ description
+Message-ID: <20181107152641.275f2816@lwn.net>
+In-Reply-To: <c3bedde3-4653-f66d-c30f-4772d3d8bae2@infradead.org>
+References: <c3bedde3-4653-f66d-c30f-4772d3d8bae2@infradead.org>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3W0fEZuNb+pEZAA--.1684S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUOb7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IY64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY
+	4VCF77xAMxkIecxEwVCI4VW3MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxV
+	W8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8
+	Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42
+	xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2Iq
+	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+	126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73
+	UjIFyTuYvjxUqo5lUUUUU
+
+On Fri, 19 Oct 2018 18:10:58 -0700
+Randy Dunlap <rdunlap@infradead.org> wrote:
+
+> Fix grammar about wildcards and insert a space between sentences.
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Jason Baron <jbaron@akamai.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-doc@vger.kernel.org
+> Cc: Will Korteland <will@korte.land>
+
+Applied, thanks.
+
+jon

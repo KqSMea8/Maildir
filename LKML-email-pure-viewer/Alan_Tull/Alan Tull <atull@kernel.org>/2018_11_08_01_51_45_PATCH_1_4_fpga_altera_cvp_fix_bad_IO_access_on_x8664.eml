@@ -1,0 +1,155 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:25 -0000
+Received: from icoremail.net (unknown [209.85.210.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3fyVtJuNbL7xZAQ--.27009S3;
+	Thu, 08 Nov 2018 01:52:47 +0800 (CST)
+Received: from mail-pf1-f179.google.com (unknown [209.85.210.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHZkJrJuNbSbYYAA--.27S3;
+	Thu, 08 Nov 2018 01:52:43 +0800 (CST)
+Received: by mail-pf1-f179.google.com with SMTP id j13-v6so8001979pff.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:52:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:in-reply-to:references:sender:precedence:list-id;
+        bh=8kyea8Zvny5/7RZEcPAzFoF6PKIv7IhCeoYVnhjuz7c=;
+        b=J4iaGh7CnQygUt2arKkojIPDfI3nBbcWlwfXOogg6UxzWpBUVDUXfrZnc3GNsFy5hT
+         I49Uiqd8N4Z6U/J7JQ6kcDL0VgrSFK38KHXOh7kTiE6llneqWF5nSNnKyc99b6adojNo
+         enAeFv6vK0tkDpzunD8zaTH5TO/TxKig4kjUt6+uYA7SI25wPu2LFbrzwPWDsiVYniFA
+         c5t31e1n7X7UReHX+9/YA7RN6SoJqWK0pNbO7rNpqytMOl/LrKOS0FlkSlcmMM2E87S7
+         l9psuMc8O6EpxHb8Sgv6Idh6eblbT9HRacgvI/WHTRdo0/sqwpvOzjcv1lzS9n5qr7fF
+         suuA==
+X-Gm-Message-State: AGRZ1gIJXDXXteSl1viA05SpcqkXYEl6b84BQGzn4o/dIy1sqoqXom0+
+	48EklmSZr6q0Td7RcXkVOGFpHuURdwSYPBQz7TSylPspc37XJe+D6A==
+X-Received: by 2002:a62:22c3:: with SMTP id p64-v6mr1182049pfj.9.1541613163466;
+        Wed, 07 Nov 2018 09:52:43 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5544447pjt;
+        Wed, 7 Nov 2018 09:52:42 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fQJRzx7Dh0MtSD/OW45Fpfd3GGo5DSq2LQT9EOz/Ls3HZEjKzlbV1VUHnPZq7t+JJX0lLz
+X-Received: by 2002:a17:902:a587:: with SMTP id az7-v6mr1180927plb.151.1541613162888;
+        Wed, 07 Nov 2018 09:52:42 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541613162; cv=none;
+        d=google.com; s=arc-20160816;
+        b=eq5NONcSaaF4AgkQCGPKbUR0Y5iHtO5hzFmbswyR0UlwSJ5ti3+HUYTvWyLOpw2fC/
+         3bSmCV54mamytk3kfxaY9qnXHnMGkyN6lZCr2oAPQCv3X5GHDxAt2glmQhEhazlJZrSL
+         pwJPRRlAowOPGs6aqaXd0uLhy30Vi9CNQPkoRpJ04j8s08CaP8ktzqY+mC9CwQby+xTJ
+         HVdN9iW1mdbHDQyueOPiE3ZEEMjeA0AHNEmqntja424GBpXhiAS0eP2xLBSMAZsDJ7xT
+         xg57O9E+iMtQevhmbeD3GJ8bgARrQvfb+tyM1YgNdf57rH7aNkSVS6c/pBnTq3w6XetF
+         Y3iw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from:dkim-signature;
+        bh=8kyea8Zvny5/7RZEcPAzFoF6PKIv7IhCeoYVnhjuz7c=;
+        b=YXHuJlE0MFJWx6HvboRyFEMSts5tzA1XyuaeVwxsD/FwNGuzQeXidDjECFGVK9qkVR
+         JRIIBSO9sJPfRkbQ9X+tfqmzjjIJK2B3sn6e98Vd2kv77hjDOaBw/wMNlj5tvLLPTDtG
+         Fn6XGFFYpLOSKEqSEDNURrbVTtn98biU+6ALD8lMCjGFeud3q4nUr+no21Amqvxnis4K
+         fO1snttpMRP6YNantLRThETpv58PzyJMRauPXxi7sLMUXrZBpayprwwL1oaPZ8OkBAKh
+         R6rms8mfafd43l/PHfOO2UgGZXARCCx0JCdjwnVWWa5hVmE6dCVPuK2kzr57pajsyBpx
+         warw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kernel.org header.s=default header.b=LoFsPwBZ;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id x68-v6si1246791pfc.0.2018.11.07.09.52.27;
+        Wed, 07 Nov 2018 09:52:42 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731585AbeKHDX1 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:23:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728131AbeKHDXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:23:25 -0500
+Received: from localhost.localdomain (rrcs-67-79-197-43.sw.biz.rr.com [67.79.197.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 325412086C;
+        Wed,  7 Nov 2018 17:51:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1541613118;
+        bh=sY39UE+yRQ/D75n62OkdEzVGW8A8pqxGWZF2JuxXO0o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LoFsPwBZzykofPjYOv1Yjjitypdkpy14EKi30KhNW+LFNcjuYGsI1JiWCaIQ4kbj9
+         WdTK2qTlLMi2+mGljzoFdvCAM7biyJ7lrXrThXnFpHe+vkXsfKb8tusiht5JGd85Yj
+         F4skNMD1jfwxbPGBHK4c36aHr4UuAQGBRdLzRy7o=
+From: Alan Tull <atull@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Moritz Fischer <mdf@kernel.org>, Alan Tull <atull@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org,
+        Anatolij Gustschin <agust@denx.de>
+Subject: [PATCH 1/4] fpga: altera-cvp: fix 'bad IO access' on x86_64
+Date: Wed,  7 Nov 2018 11:51:45 -0600
+Message-Id: <1541613108-29660-2-git-send-email-atull@kernel.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1541613108-29660-1-git-send-email-atull@kernel.org>
+References: <1541613108-29660-1-git-send-email-atull@kernel.org>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHZkJrJuNbSbYYAA--.27S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZF4xtr1kCFWDGr1UWFWxJFb_yoW8Gr48pa
+	15Jas8Cr4fJF43ta1qvFWDCr95ua9rCrWjyry7GwsxuFZYyry7AryrJF9rZ3ZrJa95tFnI
+	vryYy3WqqF1jyaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBKb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
+	kI7VAKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80
+	FwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI
+	8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280
+	aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082
+	I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrw
+	CI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IUewmRUUUUUU=
+	=
+
+From: Anatolij Gustschin <agust@denx.de>
+
+If mapping the CvP BAR fails, we still can configure the FPGA via
+PCI config space access. In this case the iomap pointer is NULL.
+On x86_64, passing NULL address to pci_iounmap() generates
+"Bad IO access at port 0x0" output with stack call trace. Fix it.
+
+Signed-off-by: Anatolij Gustschin <agust@denx.de>
+Acked-by: Alan Tull <atull@kernel.org>
+---
+ drivers/fpga/altera-cvp.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
+index 610a155..144fa2a 100644
+--- a/drivers/fpga/altera-cvp.c
++++ b/drivers/fpga/altera-cvp.c
+@@ -477,7 +477,8 @@ static int altera_cvp_probe(struct pci_dev *pdev,
+ 	return 0;
+ 
+ err_unmap:
+-	pci_iounmap(pdev, conf->map);
++	if (conf->map)
++		pci_iounmap(pdev, conf->map);
+ 	pci_release_region(pdev, CVP_BAR);
+ err_disable:
+ 	cmd &= ~PCI_COMMAND_MEMORY;
+@@ -493,7 +494,8 @@ static void altera_cvp_remove(struct pci_dev *pdev)
+ 
+ 	driver_remove_file(&altera_cvp_driver.driver, &driver_attr_chkcfg);
+ 	fpga_mgr_unregister(mgr);
+-	pci_iounmap(pdev, conf->map);
++	if (conf->map)
++		pci_iounmap(pdev, conf->map);
+ 	pci_release_region(pdev, CVP_BAR);
+ 	pci_read_config_word(pdev, PCI_COMMAND, &cmd);
+ 	cmd &= ~PCI_COMMAND_MEMORY;
+-- 
+2.7.4

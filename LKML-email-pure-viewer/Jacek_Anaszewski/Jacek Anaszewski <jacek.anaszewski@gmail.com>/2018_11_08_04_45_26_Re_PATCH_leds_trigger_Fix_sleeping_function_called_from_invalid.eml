@@ -1,0 +1,199 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:32 -0000
+Received: from icoremail.net (unknown [209.85.214.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv9JKT+Nbu59aAQ--.27341S3;
+	Thu, 08 Nov 2018 04:47:07 +0800 (CST)
+Received: from mail-pl1-f180.google.com (unknown [209.85.214.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDXvEhIT+NbaD4ZAA--.1055S3;
+	Thu, 08 Nov 2018 04:47:04 +0800 (CST)
+Received: by mail-pl1-f180.google.com with SMTP id q19-v6so5398698pll.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:47:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding:sender:precedence
+         :list-id;
+        bh=o+OFHaukpQ4TOypFplNf8fU9NsL+rRWAbnuGecC3CfQ=;
+        b=MMMLcIBZnFxUuTRWCwAS43CE3Y0DRs7HPRKGDQAc6QSQdkn6y0UDrk6Hgck3k6Krkc
+         xXem2fdAORRuzJQIzPUl1qomepZ58zPHwL7/o9+gEFM7B9QCmyrPIFiucDyf+FsbrUf3
+         AQ87bGU5Pb6yClQeTMEHAV2GOtaCrRT6ZEFoxEZhW2bvZdPcDbr34QjaSsWKWwrnSf2W
+         CFmGBm8Np6VJJrEDCn+qHaTu50mcvemALHsentxRDVv8UO56IwSu3hkekAhwXxcIbNq8
+         BWnqNmMT2WBp5ziUYshw9JEFG0z8FE4R+zQeb5yNrpEYtH7gD0gBhEdjt4ZN3X5+qTdG
+         RkOQ==
+X-Gm-Message-State: AGRZ1gLL7oJHZuCAx3I7BiA971oM7mlXqP9gDpum6vzRfF0RcFO9em5m
+	IN9cv86LHQisRCpgwmavQOJiG6RANWGzZGQUqNTUOx1WnKEAQo3Kag==
+X-Received: by 2002:a17:902:b598:: with SMTP id a24-v6mr1781798pls.231.1541623624428;
+        Wed, 07 Nov 2018 12:47:04 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5725183pjt;
+        Wed, 7 Nov 2018 12:47:03 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fwBifyHPVj+VHFcJkj+9yqEdkaULYZuEGB1ObPv1cH5MjEO6US1wCsrWKkN+14DXPrMIkC
+X-Received: by 2002:a62:204a:: with SMTP id g71-v6mr1773755pfg.28.1541623623619;
+        Wed, 07 Nov 2018 12:47:03 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541623623; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ctVlVvZ4UYFGoSVZ/Flpzhm3mSqmPRim0CgQwWK6vZvfvVRGsyJ8didqQj5zYQVoN8
+         T/ipTQKXLXEn1FrSgC2jDPMe6UJlS6G3hoW+vJhWWyLWmpcI7X2exCxUXxLhTDanhzmB
+         n+r/TEps+77/FjgNRAhT9W4HBPqmBsoxwGw1athXjKo3YS9X7CjOJMzjzBeJzLBONY+G
+         TlmllDsak1+4VoTIh0iPHWhHf+2/Y7G9SUyTeLK6ZR2CyGMU7FDoRJL5L2IFdnOBRhLv
+         6o/wQWg8PcbZAosc0Dt2AqqzpWar2pNsvFInggOgpZ0jZIjrw9/8pNw7EFV+zs83ZbIE
+         /Gbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:dkim-signature;
+        bh=o+OFHaukpQ4TOypFplNf8fU9NsL+rRWAbnuGecC3CfQ=;
+        b=e+i93QxTjwAxpMY50CpGs07jWo3T1b7gEIr31um2bifgZTFtfeW142E3rd2TVGkCT9
+         fyRLaDaV9YXSCDwvS7ACs0Xdp8ShtVYxJZUDSW6mUGrvtbhXttCK7MCcUA8UGWK3mN9i
+         5gY6DdpcxYM+NejfIamsjyRHLMDTC4j0Jw+GHhmhg+L5p5M7GOpRcPEJaLHuH11kzAXv
+         VWOpbPHqq8jkQxQXyFthjRF7Z9IOzkefObrOe7Uqt6hmzYZROUYPHraTUlYaWBG077dO
+         nGmHlNiXncRWNQFfhIHX47oUIRWwmwADnFZUXikL4sNhc7XtGLB6EskyvVnmVsJ8M3mJ
+         wAKw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=CjbHuOZw;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id r68-v6si1479737pfa.15.2018.11.07.12.46.48;
+        Wed, 07 Nov 2018 12:47:03 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727374AbeKHGRh (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:17:37 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44851 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726583AbeKHGRh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:17:37 -0500
+Received: by mail-lf1-f66.google.com with SMTP id z13so2496307lfe.11;
+        Wed, 07 Nov 2018 12:45:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=o+OFHaukpQ4TOypFplNf8fU9NsL+rRWAbnuGecC3CfQ=;
+        b=CjbHuOZwqC0QbQvkbDPKoE71O6rMEQJ3u1vzTgTzmeqP1AxW7c2fy0PV9tIAyh8apE
+         NF3mS9DqWdQmU2yShyJwNCAjv++7DA9i4VQAwBFZ0M/8+uGYgOV3FvYuKrRrd9W0BKFC
+         9RoTkA5XRn/8hW56PrCbUYpycKy3sstl6P9AY0hOH6TAzjuAIgIbXiS+pMGnrNXQwesC
+         oYirQVXDtQv2XA+VOWh/LrZL8xHn0s6Zu26XDvspYxKmDDBnDOdtwG2pmzE94+gdLF3N
+         S0wX0KCLWwr8FdyxIKNfAlwu9kNgidVMz/44cCcdxt+F9BO0GlflzJGJBnjSuRzCjikr
+         BuFA==
+X-Received: by 2002:a19:8c1b:: with SMTP id o27mr1014087lfd.90.1541623530172;
+        Wed, 07 Nov 2018 12:45:30 -0800 (PST)
+Received: from [192.168.1.18] (dnl153.neoplus.adsl.tpnet.pl. [83.24.93.153])
+        by smtp.gmail.com with ESMTPSA id d15-v6sm290369lja.38.2018.11.07.12.45.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 12:45:29 -0800 (PST)
+Subject: Re: [PATCH] leds: trigger: Fix sleeping function called from invalid
+ context
+To: Geert Uytterhoeven <geert@linux-m68k.org>,
+        Baolin Wang <baolin.wang@linaro.org>
+Cc: Pavel Machek <pavel@ucw.cz>, rteysseyre@gmail.com,
+        Mark Brown <broonie@kernel.org>, linux-leds@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <5f1cfb9c87f591b12efa2e7a0063f15532649634.1541563908.git.baolin.wang@linaro.org>
+ <CAMuHMdVUnH7ubtLOHAt1uLFOqqeAy60LvoWaWLiJx0gf8PWhSg@mail.gmail.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <3233e3af-bd33-e719-7252-59d92a8da2b1@gmail.com>
+Date: Wed, 7 Nov 2018 21:45:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <CAMuHMdVUnH7ubtLOHAt1uLFOqqeAy60LvoWaWLiJx0gf8PWhSg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDXvEhIT+NbaD4ZAA--.1055S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxXw48JF48Ar18AF15XFyxZrb_yoW5ury7p3
+	4YkF98Crs5Jr48Zwsrtw18tFWYqw4vya4xJrn7Gr40ya43Zr1DJa1qgFWY9FZYgryxAasr
+	tF1vv3yakws0yaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmab7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAKzI0EY4vE52x082I5MxkFs20E
+	Y4vE44CYbxCE4x80FwCY02Avz4vEIxC_AwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280
+	aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7V
+	AKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j
+	6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsG
+	vfC2KfnxnUUI43ZEXa7IUOXjjPUUUUU==
+
+Hi Baolin and Geert,
+
+Geert - thanks for the heads-up.
+
+Baolin - thanks for the quick fix.
+
+Applied to the fixes-for-4.20-rc2 branch of linux-leds.git
+
+Best regards,
+Jacek Anaszewski
+
+On 11/07/2018 08:59 AM, Geert Uytterhoeven wrote:
+> Hi Baolin,
+> 
+> On Wed, Nov 7, 2018 at 6:43 AM Baolin Wang <baolin.wang@linaro.org> wrote:
+>> We will meet below issue due to mutex_lock() is called in interrupt context.
+>> The mutex lock is used to protect the pattern trigger data, but before changing
+>> new pattern trigger data (pattern values or repeat value) by users, we always
+>> cancel the timer firstly to clear previous patterns' performance. That means
+>> there is no race in pattern_trig_timer_function(), so we can drop the mutex
+>> lock in pattern_trig_timer_function() to avoid this issue.
+>>
+>> Moreover we can move the timer cancelling into mutex protection, since there
+>> is no deadlock risk if we remove the mutex lock in pattern_trig_timer_function().
+>>
+>> BUG: sleeping function called from invalid context at kernel/locking/mutex.c:254
+>> in_atomic(): 1, irqs_disabled(): 0, pid: 0, name: swapper/1
+>> CPU: 1 PID: 0 Comm: swapper/1 Not tainted
+>> 4.20.0-rc1-koelsch-00841-ga338c8181013c1a9 #171
+>> Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
+>> [<c020f19c>] (unwind_backtrace) from [<c020aecc>] (show_stack+0x10/0x14)
+>> [<c020aecc>] (show_stack) from [<c07affb8>] (dump_stack+0x7c/0x9c)
+>> [<c07affb8>] (dump_stack) from [<c02417d4>] (___might_sleep+0xf4/0x158)
+>> [<c02417d4>] (___might_sleep) from [<c07c92c4>] (mutex_lock+0x18/0x60)
+>> [<c07c92c4>] (mutex_lock) from [<c067b28c>] (pattern_trig_timer_function+0x1c/0x11c)
+>> [<c067b28c>] (pattern_trig_timer_function) from [<c027f6fc>] (call_timer_fn+0x1c/0x90)
+>> [<c027f6fc>] (call_timer_fn) from [<c027f944>] (expire_timers+0x94/0xa4)
+>> [<c027f944>] (expire_timers) from [<c027fc98>] (run_timer_softirq+0x108/0x15c)
+>> [<c027fc98>] (run_timer_softirq) from [<c02021cc>] (__do_softirq+0x1d4/0x258)
+>> [<c02021cc>] (__do_softirq) from [<c0224d24>] (irq_exit+0x64/0xc4)
+>> [<c0224d24>] (irq_exit) from [<c0268dd0>] (__handle_domain_irq+0x80/0xb4)
+>> [<c0268dd0>] (__handle_domain_irq) from [<c045e1b0>] (gic_handle_irq+0x58/0x90)
+>> [<c045e1b0>] (gic_handle_irq) from [<c02019f8>] (__irq_svc+0x58/0x74)
+>> Exception stack(0xeb483f60 to 0xeb483fa8)
+>> 3f60: 00000000 00000000 eb9afaa0 c0217e80 00000000 ffffe000 00000000 c0e06408
+>> 3f80: 00000002 c0e0647c c0c6a5f0 00000000 c0e04900 eb483fb0 c0207ea8 c0207e98
+>> 3fa0: 60020013 ffffffff
+>> [<c02019f8>] (__irq_svc) from [<c0207e98>] (arch_cpu_idle+0x1c/0x38)
+>> [<c0207e98>] (arch_cpu_idle) from [<c0247ca8>] (do_idle+0x138/0x268)
+>> [<c0247ca8>] (do_idle) from [<c0248050>] (cpu_startup_entry+0x18/0x1c)
+>> [<c0248050>] (cpu_startup_entry) from [<402022ec>] (0x402022ec)
+>>
+>> Fixes: 5fd752b6b3a2 ("leds: core: Introduce LED pattern trigger")
+>> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> 
+> Thanks!
+> 
+> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 

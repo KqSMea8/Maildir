@@ -1,0 +1,285 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:16 -0000
+Received: from icoremail.net (unknown [209.85.210.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv94s_eJbTqdYAQ--.26620S3;
+	Wed, 07 Nov 2018 22:56:46 +0800 (CST)
+Received: from mail-pf1-f182.google.com (unknown [209.85.210.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3H0sn_eJbYu8XAA--.7171S3;
+	Wed, 07 Nov 2018 22:56:39 +0800 (CST)
+Received: by mail-pf1-f182.google.com with SMTP id x2-v6so3714270pfm.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:56:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:in-reply-to:references:sender:precedence:list-id;
+        bh=L+2C2V6X05Jd6Z3JyhwcUJuCDtAzLwdUlTWG7X9XnDk=;
+        b=g4G9CKmgUFGzHYCTINocBhYr9HAQq4W1V5uAbDMUdL5OjVptJP9CyzPu0m+eEqMPLQ
+         U1EV5htS+1KS0Ihq7vOMZKKZqv68al63tIuccxm1yG4QyzsOIMT4CiMq1h9LojjCrpHj
+         ru/8aPP9YSb1TePNLSxpY2rZbdZ9pCm0FthdZuXjplPtLDwqtXfoeIDW3djeVcY4SBWu
+         6osIoTcR0OUesSZu4x2tcVcgs7m1cmAeRF/Z7+EuTPUftmVVqErtxVjuYymxzBolDx8W
+         uAujoi4NBAhykjB6QpTDhS5hjwD60IWO/gOwnIOV8irukkmXv9ULCZzIjVnsTC5Ywgui
+         VD1w==
+X-Gm-Message-State: AGRZ1gKbe+GaE0VFv3FXH5UP7oNLZnDCnGlS9TOqujIL9MIPZ+SQLqfE
+	3pwL6kAufyOkTmxVEHbDVm6xfWo3o93Qber4aPBws5OJIn+O1Z4FGQ==
+X-Received: by 2002:a63:2315:: with SMTP id j21mr434231pgj.297.1541602598876;
+        Wed, 07 Nov 2018 06:56:38 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5345394pjt;
+        Wed, 7 Nov 2018 06:56:37 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dgS1hD7YopLEtkg2hWgWx7L0INeOBZ2unYBj6OrgLhAlU2kylPiqFPAXwLPjI8br6YVG/+
+X-Received: by 2002:a65:44c6:: with SMTP id g6-v6mr442591pgs.350.1541602597607;
+        Wed, 07 Nov 2018 06:56:37 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541602597; cv=none;
+        d=google.com; s=arc-20160816;
+        b=dAsqJ1jjbN+RE66pJC1zfa+M4Qwe+wtytd5o4gT5NmK7IGk4MOeah5aqGp/Tjyv2N6
+         DCcA+5EPajO3wl4/OS4eJ2gMfIq5LxgW5WXgSIPS2VvGZsXPtVQQivMtI05HksS4idJf
+         MN9wM7lFIcpg4w6x6t2iUUHLmGU63RAwPL3FA3nKCWZO0oqkgqpmy3Nd/MhExqCHJ/ee
+         0yRSPXPLfQwsr5Ww+HSrnb12q5RiEzun4tOz4y4rlMnd9iu5g7hbTouw2aLp13PiM5J4
+         1CMgORyM/C45jdOy6epLo7RIe0oRD55KhH04VP35sj8BBUtVvPwVDxt3FS977J9tqIAA
+         RnqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from:dkim-signature;
+        bh=L+2C2V6X05Jd6Z3JyhwcUJuCDtAzLwdUlTWG7X9XnDk=;
+        b=oJlGRONPgYbhLup4Z+9Ixg7VHYiwzlHvMOJPk2ykQTZ8EfBehqfcgRUrBL4IlXZxcb
+         /+Y4pmhOMbeRueem7P/e/Xvob+fkdgRQGU9NR8iS0q48Ak1xCYx7zYwDp9CW4GXDCkiR
+         2Nl8WWdbiqC4RDTi/LvPuXu03gHFgd+3OivJ3ErkxRZJDLTTHfQ7RsO9CPtsp6VYPpJM
+         eQOYNvqzeHvniLV51VMfdTiVPed4S48dWta2JlmUmxHg2nV5OYoZmziA9XZWfynz4BAh
+         dmgc3+M/OXt7sw48pDVPFSPc33q2MCebJA9wWSrsRA0DclzswYGKG8yF4j9JUg40q9K/
+         QGzA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@as-electronics.de header.s=strato-dkim-0002 header.b=XtbpgVZP;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id j20si795224pgg.162.2018.11.07.06.56.22;
+        Wed, 07 Nov 2018 06:56:37 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731108AbeKHA0d (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:26:33 -0500
+Received: from mo4-p05-ob.smtp.rzone.de ([85.215.255.130]:15069 "EHLO
+        mo4-p05-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728005AbeKHA0c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:26:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1541602547;
+        s=strato-dkim-0002; d=as-electronics.de;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=L+2C2V6X05Jd6Z3JyhwcUJuCDtAzLwdUlTWG7X9XnDk=;
+        b=XtbpgVZPqwdWVJpMpdt/48/ZmRpGd6bbk2bjtcN/pL0bwSafyxSyOU/+tJJ+KfVfjI
+        espJy1abK5QzI5ysfmlRNG4W9CELzvzBfiEGs3sZ3dGvhB2LbFvaot69KgewuhWTk7m1
+        j7NBpkJFjLZEV6JXqN/lCpVbCtsMz9HOt5AnwVb5OHM1iGizEuAkTaZAkUtop1BKzWJk
+        Rgmse/uiVO/4eBy0XUx/nWat1tddtpOJItYFrUmg8e8YaG2HU+ax1I07uEJ/l23q7tkr
+        NDZPAhB71OsJ5CAohi6hL+YgeNc8k7k7ruBEaNFM7u+74cXrbfXUoJE13KZTo7idBSVd
+        sGSw==
+X-RZG-AUTH: ":LX8JdEmkW/4tAFwMkcNJIloh1hrA5u3owhPk7bdT5Fx22AatU+eLaHfutoZdl+X9BETxn4/4+IVqx7ZdE8mPU5nMS5P2QgHAetWm5FNngAjmE0pFNjw="
+X-RZG-CLASS-ID: mo05
+Received: from fs-work.fritz.box
+        by smtp.strato.de (RZmta 44.3 AUTH)
+        with ESMTPSA id j097e4uA7Ei8UQl
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 7 Nov 2018 15:44:08 +0100 (CET)
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
+To: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com,
+        linux-spi@vger.kernel.org
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com,
+        marek.vasut@gmail.com, richard@nod.at, miquel.raynal@bootlin.com,
+        broonie@kernel.org, david.wolfe@nxp.com, fabio.estevam@nxp.com,
+        prabhakar.kushwaha@nxp.com, yogeshnarayan.gaur@nxp.com,
+        han.xu@nxp.com, shawnguo@kernel.org,
+        Frieder Schrempf <frieder.schrempf@exceet.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 02/10] dt-bindings: spi: Move the bindings for the FSL QSPI driver
+Date: Wed,  7 Nov 2018 15:43:19 +0100
+Message-Id: <1541601809-16950-3-git-send-email-frieder.schrempf@kontron.de>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1541601809-16950-1-git-send-email-frieder.schrempf@kontron.de>
+References: <1541601809-16950-1-git-send-email-frieder.schrempf@kontron.de>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3H0sn_eJbYu8XAA--.7171S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3Ww1kJF15Gr1UWr4kWry7GFg_yoW7Xr4fpa
+	ySkFW3tFWvqr1xZw4avF18Ga4Ykw1xCF109rnxua48Xas8KFyUGF4agFn5JFy7JFW8Za98
+	XF4xCr18trn8uw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW5XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCbIYCTnIWIevJa73UjIFyTuYvjxUqwiS
+	DUUUU
+
+From: Frieder Schrempf <frieder.schrempf@exceet.de>
+
+Move the documentation of the old SPI NOR driver to the place of the new
+SPI memory interface based driver.
+
+Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
+---
+ .../devicetree/bindings/mtd/fsl-quadspi.txt     | 65 --------------------
+ .../devicetree/bindings/spi/spi-fsl-qspi.txt    | 65 ++++++++++++++++++++
+ 2 files changed, 65 insertions(+), 65 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
+deleted file mode 100644
+index 483e9cf..0000000
+--- a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
++++ /dev/null
+@@ -1,65 +0,0 @@
+-* Freescale Quad Serial Peripheral Interface(QuadSPI)
+-
+-Required properties:
+-  - compatible : Should be "fsl,vf610-qspi", "fsl,imx6sx-qspi",
+-		 "fsl,imx7d-qspi", "fsl,imx6ul-qspi",
+-		 "fsl,ls1021a-qspi"
+-		 or
+-		 "fsl,ls2080a-qspi" followed by "fsl,ls1021a-qspi",
+-		 "fsl,ls1043a-qspi" followed by "fsl,ls1021a-qspi"
+-  - reg : the first contains the register location and length,
+-          the second contains the memory mapping address and length
+-  - reg-names: Should contain the reg names "QuadSPI" and "QuadSPI-memory"
+-  - interrupts : Should contain the interrupt for the device
+-  - clocks : The clocks needed by the QuadSPI controller
+-  - clock-names : Should contain the name of the clocks: "qspi_en" and "qspi".
+-
+-Optional properties:
+-  - fsl,qspi-has-second-chip: The controller has two buses, bus A and bus B.
+-                              Each bus can be connected with two NOR flashes.
+-			      Most of the time, each bus only has one NOR flash
+-			      connected, this is the default case.
+-			      But if there are two NOR flashes connected to the
+-			      bus, you should enable this property.
+-			      (Please check the board's schematic.)
+-  - big-endian : That means the IP register is big endian
+-
+-Example:
+-
+-qspi0: quadspi@40044000 {
+-	compatible = "fsl,vf610-qspi";
+-	reg = <0x40044000 0x1000>, <0x20000000 0x10000000>;
+-	reg-names = "QuadSPI", "QuadSPI-memory";
+-	interrupts = <0 24 IRQ_TYPE_LEVEL_HIGH>;
+-	clocks = <&clks VF610_CLK_QSPI0_EN>,
+-		<&clks VF610_CLK_QSPI0>;
+-	clock-names = "qspi_en", "qspi";
+-
+-	flash0: s25fl128s@0 {
+-		....
+-	};
+-};
+-
+-Example showing the usage of two SPI NOR devices:
+-
+-&qspi2 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_qspi2>;
+-	status = "okay";
+-
+-	flash0: n25q256a@0 {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		compatible = "micron,n25q256a", "jedec,spi-nor";
+-		spi-max-frequency = <29000000>;
+-		reg = <0>;
+-	};
+-
+-	flash1: n25q256a@1 {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		compatible = "micron,n25q256a", "jedec,spi-nor";
+-		spi-max-frequency = <29000000>;
+-		reg = <1>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
+new file mode 100644
+index 0000000..483e9cf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
+@@ -0,0 +1,65 @@
++* Freescale Quad Serial Peripheral Interface(QuadSPI)
++
++Required properties:
++  - compatible : Should be "fsl,vf610-qspi", "fsl,imx6sx-qspi",
++		 "fsl,imx7d-qspi", "fsl,imx6ul-qspi",
++		 "fsl,ls1021a-qspi"
++		 or
++		 "fsl,ls2080a-qspi" followed by "fsl,ls1021a-qspi",
++		 "fsl,ls1043a-qspi" followed by "fsl,ls1021a-qspi"
++  - reg : the first contains the register location and length,
++          the second contains the memory mapping address and length
++  - reg-names: Should contain the reg names "QuadSPI" and "QuadSPI-memory"
++  - interrupts : Should contain the interrupt for the device
++  - clocks : The clocks needed by the QuadSPI controller
++  - clock-names : Should contain the name of the clocks: "qspi_en" and "qspi".
++
++Optional properties:
++  - fsl,qspi-has-second-chip: The controller has two buses, bus A and bus B.
++                              Each bus can be connected with two NOR flashes.
++			      Most of the time, each bus only has one NOR flash
++			      connected, this is the default case.
++			      But if there are two NOR flashes connected to the
++			      bus, you should enable this property.
++			      (Please check the board's schematic.)
++  - big-endian : That means the IP register is big endian
++
++Example:
++
++qspi0: quadspi@40044000 {
++	compatible = "fsl,vf610-qspi";
++	reg = <0x40044000 0x1000>, <0x20000000 0x10000000>;
++	reg-names = "QuadSPI", "QuadSPI-memory";
++	interrupts = <0 24 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&clks VF610_CLK_QSPI0_EN>,
++		<&clks VF610_CLK_QSPI0>;
++	clock-names = "qspi_en", "qspi";
++
++	flash0: s25fl128s@0 {
++		....
++	};
++};
++
++Example showing the usage of two SPI NOR devices:
++
++&qspi2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_qspi2>;
++	status = "okay";
++
++	flash0: n25q256a@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "micron,n25q256a", "jedec,spi-nor";
++		spi-max-frequency = <29000000>;
++		reg = <0>;
++	};
++
++	flash1: n25q256a@1 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "micron,n25q256a", "jedec,spi-nor";
++		spi-max-frequency = <29000000>;
++		reg = <1>;
++	};
++};
+-- 
+2.7.4

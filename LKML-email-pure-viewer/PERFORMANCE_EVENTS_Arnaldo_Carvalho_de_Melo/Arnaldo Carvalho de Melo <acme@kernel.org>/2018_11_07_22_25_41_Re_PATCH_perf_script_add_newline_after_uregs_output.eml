@@ -1,0 +1,130 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:09 -0000
+Received: from icoremail.net (unknown [209.85.210.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv34L9uJbrX1YAQ--.27010S3;
+	Wed, 07 Nov 2018 22:26:20 +0800 (CST)
+Received: from mail-pf1-f174.google.com (unknown [209.85.210.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3X0sH9uJbGtAXAA--.6227S3;
+	Wed, 07 Nov 2018 22:26:16 +0800 (CST)
+Received: by mail-pf1-f174.google.com with SMTP id s9-v6so413555pfm.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:26:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=riGsYXlw0olLv/AITf0+IPxaRD7H4pcXc5HRQRXwM8Q=;
+        b=MHrYpPazL6+bqkQTlja9DQTuNPkEDBeo/FH7z8g/Waz3wOkmatMZhh59IME44jUe9Z
+         mtwWZjs0g1jvqAHVL+aRs7vAzMvERZ/97BY/X2byWS9vIhfnJYKjBxcctzedu9T2MpgZ
+         Q7ZwiJbL6fn4/JiwssfZYju8SRq/AGQeiqkZxCzxPmJpPVP3RtTXDpR9NANfP6c/uedO
+         l1IYdqLcQ1DJ9xfaFdOjwxGKdAl8Be5uyzLCuhaVRYIYrcSxYLIDS0AyZAGQGWInUtqV
+         GKMgOXoo6b6bSQCGfdGgwF/m53X3gxJpuNPZ7IrIpQXbFE1TkFJqGYkbQEPxbtf336ng
+         mN7Q==
+X-Gm-Message-State: AGRZ1gI7cjChL92oeBTCPcnnzwnE6rgrbfXKWD8igE3GjMpmkFpQypwS
+	b/KdzodXjMS+MTK90RwI8W9B78/MLGjeLal9PAF3FSycPFDvMAwh3w==
+X-Received: by 2002:a63:2c0e:: with SMTP id s14mr377091pgs.132.1541600775750;
+        Wed, 07 Nov 2018 06:26:15 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5311490pjt;
+        Wed, 7 Nov 2018 06:26:15 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dnhzY/zZTjyVRr5Ddo8ps4ixt/xykdk2uBYB1t3uHC2H8JMlOHUXuUqD6qz4tqXK4Gq+cD
+X-Received: by 2002:a63:b90a:: with SMTP id z10-v6mr341751pge.221.1541600775070;
+        Wed, 07 Nov 2018 06:26:15 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541600775; cv=none;
+        d=google.com; s=arc-20160816;
+        b=YgH1lZDBPsgNaGdiqsTPZr2f1hDj2HYCmKzGPwXGhy3CbBD5FUUZi5Q08ckANEWl+Q
+         IhVM2KeKZQCG+cuhhgtfgxIH05d0YuEzaLLmSqvx9bSMQbPWxBBDpcdvooPvQsxwMeut
+         miUglDrB+nmckud1sj2XR6hSmT4+J8ouDj8JLp5BLRWzVFQ0F2RpF1qYDLNKuVdHjF/q
+         ppohUCH5uhFwzAW8uUQf/gqHQh3Ytuq7OGnNYcRmlX8gsMebqcARKavzWy1qAmEdKs1S
+         qikpR42KoZ//9xVE9GFokh7ZRx+tvl6EtJbHr8xmpajE6yemG3WddXB3XoWjIMZDUlzZ
+         xncQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=riGsYXlw0olLv/AITf0+IPxaRD7H4pcXc5HRQRXwM8Q=;
+        b=Xx2AQ1eAs+BoEjyKhPY6GD++WtQ0+rdBD9OThm87xBxXg2q4FNATiQOgZ80MrVWZG/
+         gjkgE7aLMAFDMmmWkqH9Ubk6azvW5H7z2fPXkCeFTn3EYL460kwJOeM/tJ8/anLBa+NV
+         Sc3Vy/1HBwWSZd1D8VkryD6zFguXoIatfDvTgDaqPub/UR4+YlTIVqDV7fvkLXbThWcG
+         +vgAHAGQFNr+PElrainfxvf/VdUil5eYuPeyTuKJ2D9e/Gp7OOvSzNzlyrjIQd0YaoZB
+         ejP1X2WnUivVyQGnxFuKSml2e7r4odxnspfxLVcoCu9heHGjL0ODiFVXbNCuxMSFhk3q
+         6y2w==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kernel.org header.s=default header.b=TQUL1FRI;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id g29-v6si664727pgb.508.2018.11.07.06.25.58;
+        Wed, 07 Nov 2018 06:26:15 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727721AbeKGX4U (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:56:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726670AbeKGX4U (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:56:20 -0500
+Received: from jouet.infradead.org (unknown [179.97.41.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8186A2085B;
+        Wed,  7 Nov 2018 14:25:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1541600744;
+        bh=riGsYXlw0olLv/AITf0+IPxaRD7H4pcXc5HRQRXwM8Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TQUL1FRIyyzieNTEq1rCiku6mJdp1IMClnxOh1TLB6teA5ot5iHzKiXZYW5A7kGNO
+         2L4rCf9gF6DNyJNv/0ySUVGEushUMfAZ3t+jjUxiONLOnJQPepUygJcnHhOb0tPEsU
+         eWMkBtgtULqPnVxPoUc3cJ3FmR2EC3A6Gqg3tQgg=
+Received: by jouet.infradead.org (Postfix, from userid 1000)
+        id 24456142D18; Wed,  7 Nov 2018 11:25:41 -0300 (-03)
+Date: Wed, 7 Nov 2018 11:25:41 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Milian Wolff <milian.wolff@kdab.com>
+Cc: jolsa@kernel.org, Linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf script: add newline after uregs output
+Message-ID: <20181107142541.GD18346@kernel.org>
+References: <20181107093705.16346-1-milian.wolff@kdab.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107093705.16346-1-milian.wolff@kdab.com>
+X-Url: http://acmel.wordpress.com
+User-Agent: Mutt/1.9.2 (2017-12-15)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3X0sH9uJbGtAXAA--.6227S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUYC7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_Xrylc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26rxl6s0DMxvI42IY
+	6I8E87Iv6xkF7I0E14v26rxl6s0DMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52
+	x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
+	xGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bbD73U
+	UUUU=
+
+Em Wed, Nov 07, 2018 at 10:37:05AM +0100, Milian Wolff escreveu:
+> This change makes it much easier to easily distinguish
+> between consecutive samples by keeping the empty line
+> between them, like we see when we do not enable uregs
+> output.
+
+Thanks, applied.
+
+- Arnaldo

@@ -1,0 +1,210 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:48 -0000
+Received: from icoremail.net (unknown [209.85.215.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f7WWNuNbCBJaAQ--.26843S3;
+	Thu, 08 Nov 2018 03:01:43 +0800 (CST)
+Received: from mail-pg1-f170.google.com (unknown [209.85.215.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3ET2TNuNb8u4YAA--.390S3;
+	Thu, 08 Nov 2018 03:01:39 +0800 (CST)
+Received: by mail-pg1-f170.google.com with SMTP id z17-v6so7711042pgv.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:01:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :content-transfer-encoding:to:from:in-reply-to:cc:references
+         :message-id:user-agent:subject:date:sender:precedence:list-id;
+        bh=rEucXQQIfj5QHbHIzwtC2HhQhgL7XQs8A26gtRZAtAE=;
+        b=K8FJ5DVmLOoTHS5JpLbxv3OW09SREqOV4bGDb9xCbQnOn+m/R7C6TsK4a1rLyrREE9
+         b2ZKNuEgvO7vqQMrBVne+jaLb0siNaNuce39TM4QIj3VKuxVja+mlPnSsHb4R8Vk4YKc
+         yel9Azxc4f42RWQ2oO1dU3usjoOtgN2SUCdmbkhUjk49k+9Rb+BIZPpwe2BXBL6axjWQ
+         py0QhSuWELV6kIXkC/w8UPJOyd5SA9BXIoh+5brqSFcyBMd6iyJM/3waoSo2zPmcGZzG
+         ItkMCsDFA7ZlpOFZZRnDodUsHUfGTTFM7qvXTJqo58JsqiKvB7XCr912u7ZvOzhHDayk
+         YcqA==
+X-Gm-Message-State: AGRZ1gIeG5XX6VwwpoltVXrvkL2J4IXych552hQef6Su0ivwhsJtFilN
+	V4B8v3I2JQQUn3OXrEn6RyIOxXqfulN0UbCdLQVLZa1+0DXrw7hyCQ==
+X-Received: by 2002:a63:4044:: with SMTP id n65mr1182422pga.90.1541617298868;
+        Wed, 07 Nov 2018 11:01:38 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5620112pjt;
+        Wed, 7 Nov 2018 11:01:38 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eVybajRYDPxWLwbydVogWXG8YEUG47KAW37IwN7Pdd+8YRtulij7hvzH0kFQvMSSFZjRA5
+X-Received: by 2002:a62:1049:: with SMTP id y70-v6mr1403952pfi.113.1541617298022;
+        Wed, 07 Nov 2018 11:01:38 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541617297; cv=none;
+        d=google.com; s=arc-20160816;
+        b=lABdR5NKiM2M23zRjQ80cy5iyZPXYtPGPxyg2qlLu01HTTdISdfTk+vdlnieHhXIYG
+         EIwge0aCi9Dlfqbj9a1ItE9keIGczBGn4OhOleuYWIU342e5WnKEz1FJ1EexybBkr6rA
+         Eg4ttamBk6WcEphlNKNijiXlbVuregWvCwXRLmucSFVYfpJo3W0XrMX1x5VrnwFpnIng
+         u2VN9QuluyFVEYgUsU7TuLfd5oxpCCRDrrv/K4jxJ1eDS31sWYJ7tYsXH70+25OY4A2E
+         SYfzRA7daqdAzDPDsG9CIUKNeWsv+qluENM2IhMoWwAGapktS5lK+E/5R8XxPW5pQSxQ
+         QwEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:date:subject:user-agent:message-id
+         :references:cc:in-reply-to:from:to:content-transfer-encoding
+         :mime-version:dkim-signature;
+        bh=rEucXQQIfj5QHbHIzwtC2HhQhgL7XQs8A26gtRZAtAE=;
+        b=Dce7sAg9e4Zug9lexGsM0dDgOvrld5c4/711RyswAKESXcNHkVvgD1CjfDlTM/jWKE
+         2ZPsaj14GJNFas681qUg0hucY6ZJWBpY0+pf1a6KP+m8SCUntXP6sCxS6NuhcbjYYOKT
+         wg3sySOu39K+rGaSrWiHIseIa/wEQGGAx78DJ+FMjTvOKU4JtwO+tS5pOxTLpr7Mt7p3
+         T1bj48hAMU51YEu0PUXEp4zGgEOlYlx6IR+q/NBFdikH/DnGLwm0ppu0r9F7TWdOHcDM
+         w/B2G3p8V/yVpwbkqCRJuhBGHkFOAvT/WUkJ7TT4zqar+O7dBGZgZO7JO8FfLZoN+ACA
+         oigw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kernel.org header.s=default header.b=sNOqtyQj;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id g7-v6si1385544pll.160.2018.11.07.11.01.22;
+        Wed, 07 Nov 2018 11:01:37 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1729371AbeKHEco (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:32:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51742 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725727AbeKHEcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:32:43 -0500
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 208B420862;
+        Wed,  7 Nov 2018 19:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1541617263;
+        bh=HY3iJm3Ccw0G4LKGVA8FPkjVKVLj2rK3qzm7WAZOftI=;
+        h=To:From:In-Reply-To:Cc:References:Subject:Date:From;
+        b=sNOqtyQjfit9uionxGXkE5iuD+Lo2caTTT5WM+Slfl6MNlOph7ZYVKZMAbyZlm43B
+         HiqDnQDoqVMIqNF51+KOT15dgkfiP6V13z9NlurkA78VS8Nwn7d+ziRNDdJscmCCo8
+         rITaL9fKdrC0R12jQqhjBv6IDvQ6PNNaXx7ndmds=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+To: Abel Vesa <abel.vesa@nxp.com>
+From: Stephen Boyd <sboyd@kernel.org>
+In-Reply-To: <20181107115444.gscxwud7e57nx3c7@fsr-ub1664-175>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "A.s. Dong" <aisheng.dong@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Rob Herring <robh@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, Abel Vesa <abelvesa@linux.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
+References: <1537785597-26499-1-git-send-email-abel.vesa@nxp.com>
+ <1537785597-26499-4-git-send-email-abel.vesa@nxp.com>
+ <153980615257.5275.13866740376184829057@swboyd.mtv.corp.google.com>
+ <20181107115444.gscxwud7e57nx3c7@fsr-ub1664-175>
+Message-ID: <154161726247.88331.15629902810537417880@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.7
+Subject: Re: [PATCH v9 3/5] clk: imx: add SCCG PLL type
+Date: Wed, 07 Nov 2018 11:01:02 -0800
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3ET2TNuNb8u4YAA--.390S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw1fWrykZFy3XryDtF1rCrg_yoW8AF18pF
+	ykJ3WxtayrtryxWrnav3Z0yFnYy3WUJ3W8ArW5Ja47Xr9rAF1fZFWFkrnrCrW5ZFZ3Ga17
+	Xw40qrZxAFZ3Ca7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bO
+	2NtUUUUU=
+
+Quoting Abel Vesa (2018-11-07 03:54:45)
+> On Wed, Oct 17, 2018 at 12:55:52PM -0700, Stephen Boyd wrote:
+> > Quoting Abel Vesa (2018-09-24 03:39:55)
+> > > +static unsigned long clk_pll2_recalc_rate(struct clk_hw *hw,
+> > > +                                        unsigned long parent_rate)
+> > > +{
+> > > +       struct clk_sccg_pll *pll =3D to_clk_sccg_pll(hw);
+> > > +       u32 val, ref, divr1, divf1, divr2, divf2;
+> > > +       u64 temp64;
+> > > +
+> > > +       val =3D readl_relaxed(pll->base + PLL_CFG0);
+> > > +       switch (FIELD_GET(PLL_REF_MASK, val)) {
+> > > +       case 0:
+> > > +               ref =3D OSC_25M;
+> > > +               break;
+> > > +       case 1:
+> > > +               ref =3D OSC_27M;
+> > > +               break;
+> > > +       default:
+> > > +               ref =3D OSC_25M;
+> > =
+
+> > Does this information not come through 'parent_rate'?
+> > =
+
+> =
+
+> No. So basically both pll1 and pll2 and the divider after it form togethe=
+r this SCCG:
+> =
+
+> https://www.nxp.com/docs/en/reference-manual/IMX8MDQLQRM.pdf#page=3D834
+> =
+
+> See: Figure 5-8. SSCG PLL Block Diagram
+
+Thanks for the link!
+
+> =
+
+> We're basically reading the input of the pll 1 in order to compute the ou=
+tput of the entire SCCG.
+> =
+
+> I know it's a mess. I'm working on cleaning it up, but for now we need th=
+is in in order to boot up.
+
+What's the plan to clean it up?
+
+> =
+
+> > > +               break;
+> > > +       }
+> > > +
+> > > +       val =3D readl_relaxed(pll->base + PLL_CFG2);
+> > > +       divr1 =3D FIELD_GET(PLL_DIVR1_MASK, val);
+> > > +       divr2 =3D FIELD_GET(PLL_DIVR2_MASK, val);
+> > > +       divf1 =3D FIELD_GET(PLL_DIVF1_MASK, val);
+> > > +       divf2 =3D FIELD_GET(PLL_DIVF2_MASK, val);
+> > > +
+> > > +       temp64 =3D ref * 2;
+> > > +       temp64 *=3D (divf1 + 1) * (divf2 + 1);
+> > > +
+> > > +       do_div(temp64, (divr1 + 1) * (divr2 + 1));
+> > =
+
+> > Nitpicks: A comment with the equation may be helpful to newcomers.
+> =
+
+> Since the SCCG is contructed by multiple different types of clocks here, =
+the equation doesn't help
+> since it is spread in all constructing blocks.
+
+Ok.

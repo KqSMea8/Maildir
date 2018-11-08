@@ -1,0 +1,132 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:49 -0000
+Received: from icoremail.net (unknown [209.85.214.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX_u4XuNbLf5aAQ--.27497S3;
+	Thu, 08 Nov 2018 05:52:57 +0800 (CST)
+Received: from mail-pl1-f180.google.com (unknown [209.85.214.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3FEC2XuNbb3UZAA--.1504S3;
+	Thu, 08 Nov 2018 05:52:55 +0800 (CST)
+Received: by mail-pl1-f180.google.com with SMTP id q19-v6so5473865pll.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 13:52:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:sender:precedence:list-id;
+        bh=RzHpnFGbmLZ5VwzZe7EkETPzozPMvBGuhN5RhH5MRlY=;
+        b=tLTKKBBZSOz+RmQLgBobM1jD8gcEr2CTv2dalVKm0GDrKWoyebkYleOs/6vdtAMwPZ
+         mu5j4M11faWn2/xdFzuuoUYyVfU+1VPVb3WRJFd7Kl4qMfpU3vQL3CBWgEV80H7fNm9r
+         mU6cqziRhaRk11V5lhWr7knaLW9sRsjsTkYCRcKczSUNnOp/gsAnySjob5zer3JPbdGa
+         PHST0JUZMVNl9dVsb+NC7EHpypyyOGUH+TVjdhIYGpJlMs1Cd4aH9akM7MI00zoumYVV
+         Wz0ej4u5XnYTvwbdsKdU89BrZy6sr8U8pvEhvPWmyEMAeK8UfMkYSZhL52rtoOK1IHhO
+         7t1A==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJc7zMUSAVSpaQhCal+EUel8Hx3INCeGGii2gvx57LbBKEp6hAC
+	qe4F++GNMfYL5aVO8QHugf+rhcFYCF/yplDK9opoM6zgaGv9cMWsug==
+X-Received: by 2002:a17:902:7882:: with SMTP id q2-v6mr2049516pll.188.1541627574777;
+        Wed, 07 Nov 2018 13:52:54 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp46180pjt;
+        Wed, 7 Nov 2018 13:52:54 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fCrYGp9+XuNp/GT+UQlwCeJuUeW7to/UdQMNxflc9CRO52aRfMfr6utiXd8Yc/ORBm2lwU
+X-Received: by 2002:a63:585c:: with SMTP id i28mr1710760pgm.178.1541627573988;
+        Wed, 07 Nov 2018 13:52:53 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541627573; cv=none;
+        d=google.com; s=arc-20160816;
+        b=pK+kAii//pS1sG5czsqCheG82qwvGZuEvLHzxD8bzcGLLEGGBICokofw59NGjOVowc
+         TtmzJKDsthhVmEhNMcA/QsNf+JLubHxZcrfdRsdZkC9KpvR5sugGUGlTZzlB3rzK6Ouk
+         gDNr4TIYR1SIWlU0e4U4UaJD78DdN2H9afeooIy5Mp2fshWvpwVpLebhSQJ6AClw7/xR
+         RIJf+SMSAhHWQe2nv/RMhnJznig76pD71bMFsy4GX0pm78ec+7BvM6K+GMpXXXoF2wXK
+         zhKAGV4AP7KU9/kvJXtpZnBsXgTMXstQG9x+eMD+Fz1I0fX/qG77+Sz+Bnn7nlfB2tdy
+         3A9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version;
+        bh=RzHpnFGbmLZ5VwzZe7EkETPzozPMvBGuhN5RhH5MRlY=;
+        b=xA6mjLhHS1mTHuTkOunggHlaXOZeioOpNjSO8EtMIP2551P07OIE5DG4Qi5OcOG1Q7
+         MopUweOJQjkyilS7POfOuiizNffzeXPQqHRde5zB2WUE6gNRLd3oLYFmlAZNsCNeQSUb
+         fiGeonLIbj2MRvwUSPEX7rmtWNeQz/FEdcSKvnKHDZYkFvctBCxFfGcYh/MX+qYUfQnX
+         NmMJFTCA92g0m6gJ9qKk9SQpGh1gWB00EKOOYXNycz79hJtEkLJ3jjb0+/GbsNE5Cu5/
+         h1ZonHmVG9ytpPCJd+nCOslu/C5FxZzi0D01ewNm7Dn5hDCLquqaG947z0LRcaixLi4v
+         PNLg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 19-v6si2154246pfb.113.2018.11.07.13.52.38;
+        Wed, 07 Nov 2018 13:52:53 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727731AbeKHHY1 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:24:27 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33848 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbeKHHY0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:24:26 -0500
+Received: by mail-qk1-f194.google.com with SMTP id a132so23280855qkg.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 13:52:08 -0800 (PST)
+X-Received: by 2002:a37:bdc6:: with SMTP id n189mr1883695qkf.330.1541627527950;
+ Wed, 07 Nov 2018 13:52:07 -0800 (PST)
+MIME-Version: 1.0
+References: <8b49a92b-ca92-1fca-cd09-3bcd7a3dcbb9@free.fr> <6eb79d2e-1857-39b5-90f5-29bc13bce16a@free.fr>
+In-Reply-To: <6eb79d2e-1857-39b5-90f5-29bc13bce16a@free.fr>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Wed, 7 Nov 2018 22:51:51 +0100
+Message-ID: <CAK8P3a1QE1Vr8_3m1=dhgjWkn9HLYwpmNUVZ4+fVZdRwpX=ZEQ@mail.gmail.com>
+Subject: Re: [PATCH 0/9] Regenerate arm64 defconfig for current kernel
+To: marc.w.gonzalez@free.fr
+Cc: arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3FEC2XuNbb3UZAA--.1504S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF15ZF47WF1fKrWkJFW7CFg_yoW3Crc_ZF
+	WkAas7Kw1qqFWIq3W5GF4S9rW3GwsFqFW5A3Wqvry3Z3409F4DXa1kWr93AF4UKFZ2grs8
+	AF4DXrs0yw1agjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbDkYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vE
+	IxC_CwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2
+	z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52
+	x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
+	xGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IU5pwZ5UU
+	UUU==
+
+On Wed, Nov 7, 2018 at 9:39 PM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
+>
+> Arnd, Olof,
+>
+> The following patch series was sent to arm@kernel.org
+> but the messages bounced because the SMTP server is
+> currently blacklisted. Can you get the patches through
+> the LAKML mailing list?
+
+Yes, that worked fine, and they ended up in the right folder for
+me because of the to:arm@kernel.org recipient.
+
+All patches look good to me, thanks a lot for doing this!
+
+One point about the changelogs: in some of them you just
+list the commit that changed things, but don't explain what
+the impact of that commit was (symbol dropped, always
+selected, etc). I always like to see changelog texts in full
+sentences, so if you can spend a few more minutes on this,
+would you send a v2 with that changed?
+
+       Arnd

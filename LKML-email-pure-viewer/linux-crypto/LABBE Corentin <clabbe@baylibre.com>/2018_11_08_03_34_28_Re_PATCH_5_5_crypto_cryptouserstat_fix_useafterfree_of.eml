@@ -1,0 +1,272 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:53 -0000
+Received: from icoremail.net (unknown [209.85.215.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH35xPuNbDD9aAQ--.27235S3;
+	Thu, 08 Nov 2018 03:35:14 +0800 (CST)
+Received: from mail-pg1-f169.google.com (unknown [209.85.215.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCngj5vPuNbhQcZAA--.694S3;
+	Thu, 08 Nov 2018 03:35:11 +0800 (CST)
+Received: by mail-pg1-f169.google.com with SMTP id y4so7296939pgc.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:35:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=ZfLxDfzKBQQkZT9NNt5WaCOgbU4iDEm4eraw377ahG0=;
+        b=pFfahA5W0Q5WAVXmEjBf2j/CWMATl/o0o9IilVMac7Y6cQr3fwK5/xSO9MU40dx5/T
+         R5JpysdJfF/A34ILZ66bfYpWafm61oATGmDQTYFhtxq6oC6Uh+NlOw5/wDHcfH+wMNui
+         FubgO6jiUU1IGT5yWXewqfLM5mcfErGVSyLRAMG7F0bKztqqSTevXnT99qCLZo6Ckner
+         7Yz6rk9uHyqtKmewhqVeW6Y9IzCyDY8hg//Wbdo6jZPpBeRSim8jYD0JgeJ89O8iQlKF
+         /3srCC8E55s3Z1uyfcYuYyrvuf/7EixTlyDU4vdHOk9jLNjbnycQf5OdXUFS65BIT6NH
+         QAZA==
+X-Gm-Message-State: AGRZ1gImrY0vtlRB25JaMncSON1IuI+9EUsp6X/GdDErdVjD9S3eT+w9
+	zz88QIekdLbCeKzOLHYVlUaDrdqpKjAIiNfiYdVqnvI4/s0bcm2OOw==
+X-Received: by 2002:a62:42dc:: with SMTP id h89-v6mr1618149pfd.0.1541619311125;
+        Wed, 07 Nov 2018 11:35:11 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5655912pjt;
+        Wed, 7 Nov 2018 11:35:10 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eC/KJcNVcfCS+29MZRi6gYBhkDnJkIm83rvGNwj7NVfpL9izX+ePHj3XO8LlrUUWD7OzYm
+X-Received: by 2002:a62:1416:: with SMTP id 22-v6mr1575775pfu.114.1541619310307;
+        Wed, 07 Nov 2018 11:35:10 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541619310; cv=none;
+        d=google.com; s=arc-20160816;
+        b=QLnkOg+Y0lp0hGqzlB8H83STERRo9WpJl96bgwt1bP7LvsdWpDwNLyzJIzx0SsHbim
+         s0Q+uP1ZJ+WAtLiJQMEBGMH1YjbBDbk7nWJqSrA9e9X40pzuF1fsxwYlyLTyL432vs7y
+         ngxQ3XnMQm84ovJXyn17ZIUZW9MuNn/cwCKPo3dZvaKHanVGgaFUZKJAbR1yHlkuiUik
+         h7ZZOc4wclaCVWMY71KkfKQLzZhjVJJDJrmqy8ff3+e58n3nJbcr8MZJ/QVXR/8yD5qn
+         00WI14pER/GaejN+ipF6gWvDNq2RONiuRfCqCTBIw4uaOjBJvRFyml+qBvfWN/cB7SnC
+         wtBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=ZfLxDfzKBQQkZT9NNt5WaCOgbU4iDEm4eraw377ahG0=;
+        b=K0/4loHGZohwFE3OOVrYO91MSdAU56OhUBOXZXK4XoarfzXZdXB6gkR0CfN7TAI5PG
+         A8pqXbLwNB17XvEMSvujpvochRnzzvyCAsNb0fexWyZHVUgF1FF6xro83Oi2r/nixL2t
+         XJMPBl24KfPWHW4CNhCyVn7uE1YZpnzymA0r6FR+AcKNW8HBwes4xF5c53ASOZackYBT
+         1JqJigmtNOWTh1+78CsUBwQhA3sy9tfIIsDSOigCGJVuYIYaUVvHPpb1lZGJBS+3lmTh
+         mQlUBXVxDNjdIxubqyJeVLuuam+DjI6bTDaACBEsqHgM+tcFd5D2RAyMK/uSU6kMv/F/
+         H3uA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@baylibre-com.20150623.gappssmtp.com header.s=20150623 header.b=PZH5zIPw;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id m70-v6si1485648pfj.48.2018.11.07.11.34.55;
+        Wed, 07 Nov 2018 11:35:10 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726609AbeKHFGU (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:06:20 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54805 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbeKHFGU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:06:20 -0500
+Received: by mail-wm1-f66.google.com with SMTP id r63-v6so15275940wma.4
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 11:34:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZfLxDfzKBQQkZT9NNt5WaCOgbU4iDEm4eraw377ahG0=;
+        b=PZH5zIPwKQPXTfgHGcTo9EppmymEcbBaeprtXzeZuDxI/B2NOo5fxmmVHZp6WTbKdf
+         SwFCXRNiIdqEnjawHbRtuAtOOtN5FXikDtjquKbOzqS6vF2RPLGoVFO+Y9HPjk0agBWa
+         WJF8P8o0UL8tCS/12cbgEMC+FIaphPta4o24iySIAfm5fRNkFQYt3lna2IJgE1cJMBD/
+         eQXwPDFPjhXcX4vU09k0gpPdZ1Claoxw+mY7o/cgPrABPSftttjKWPPoICjmYAkS1Ehk
+         4CBdu/dT14o3XdlTgbOZodcf6gaydRaFK6rNDIdOp803Obic/3kJgWu5RgU2h1PYoQT3
+         fqTg==
+X-Received: by 2002:a1c:b4c1:: with SMTP id d184-v6mr1292881wmf.143.1541619271835;
+        Wed, 07 Nov 2018 11:34:31 -0800 (PST)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id g1-v6sm2589465wmg.2.2018.11.07.11.34.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 11:34:31 -0800 (PST)
+Date: Wed, 7 Nov 2018 20:34:28 +0100
+From: LABBE Corentin <clabbe@baylibre.com>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] crypto: crypto_user_stat: fix use_after_free of
+ struct xxx_request
+Message-ID: <20181107193428.GE5133@Red>
+References: <1541422274-40060-1-git-send-email-clabbe@baylibre.com>
+ <1541422274-40060-6-git-send-email-clabbe@baylibre.com>
+ <20181106014905.GF28490@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181106014905.GF28490@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCngj5vPuNbhQcZAA--.694S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3GF48AF48KFWxKFW5JF15XFb_yoW7Cr43pF
+	4akayftr4UJas7GryrXrZ5Gr98JrWfA3W3Ar48Kr1rGFna9rW8Xry7Ary0vryUAFZ5WF1U
+	Kr4v9w1Uuw1DJFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP2b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IU5dD
+	G5UUUUU==
+
+On Mon, Nov 05, 2018 at 05:49:06PM -0800, Eric Biggers wrote:
+> Hi Corentin,
+> 
+> On Mon, Nov 05, 2018 at 12:51:14PM +0000, Corentin Labbe wrote:
+> > All crypto_stats functions use the struct xxx_request for feeding stats,
+> > but in some case this structure could already be freed.
+> > 
+> > For fixing this, the needed parameters (len and alg) will be stored
+> > before the request being executed.
+> > Fixes: cac5818c25d0 ("crypto: user - Implement a generic crypto statistics")
+> > Reported-by: syzbot <syzbot+6939a606a5305e9e9799@syzkaller.appspotmail.com>
+> > 
+> > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> > ---
+> >  crypto/ahash.c             | 14 ++++++++--
+> >  include/crypto/acompress.h | 30 ++++++++++----------
+> >  include/crypto/aead.h      | 30 ++++++++++----------
+> >  include/crypto/akcipher.h  | 56 ++++++++++++++++++--------------------
+> >  include/crypto/hash.h      | 25 +++++++++--------
+> >  include/crypto/kpp.h       | 22 +++++++--------
+> >  include/crypto/skcipher.h  | 16 +++++++----
+> >  include/linux/crypto.h     | 34 +++++++++++------------
+> >  8 files changed, 118 insertions(+), 109 deletions(-)
+> > 
+> > diff --git a/crypto/ahash.c b/crypto/ahash.c
+> > index 3a348fbcf8f9..3f4c44c1e80f 100644
+> > --- a/crypto/ahash.c
+> > +++ b/crypto/ahash.c
+> > @@ -364,20 +364,26 @@ static int crypto_ahash_op(struct ahash_request *req,
+> >  
+> >  int crypto_ahash_final(struct ahash_request *req)
+> >  {
+> > +	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
+> > +	struct crypto_alg *alg = tfm->base.__crt_alg;
+> > +	unsigned int nbytes = req->nbytes;
+> >  	int ret;
+> >  
+> >  	ret = crypto_ahash_op(req, crypto_ahash_reqtfm(req)->final);
+> > -	crypto_stat_ahash_final(req, ret);
+> > +	crypto_stat_ahash_final(nbytes, ret, alg);
+> >  	return ret;
+> >  }
+> >  EXPORT_SYMBOL_GPL(crypto_ahash_final);
+> 
+> I'm not confident this is enough.  If the request is being processed
+> asynchronously, the completion callback could be used to signal another thread
+> to go ahead and free the resources, including not only the request but also the
+> 'tfm', which could even result in the last reference to the 'alg' being dropped
+> and therefore the 'alg' being freed.  If I'm wrong, then please explain why :-)
+> 
+> Note: I'd also prefer a solution that is more obviously zero-overhead in the
+> !CONFIG_CRYPTO_STATS case.
+> 
+> - Eric
+> 
+
+I think the best solution is to grab a crypto_alg refcnt before the operation and release it after.
+So for example this will lead to:
+--- a/include/crypto/skcipher.h
++++ b/include/crypto/skcipher.h
+@@ -486,7 +486,7 @@ static inline struct crypto_sync_skcipher *crypto_sync_skcipher_reqtfm(
+ 	return container_of(tfm, struct crypto_sync_skcipher, base);
+ }
+ 
+-static inline void crypto_stat_skcipher_encrypt(struct skcipher_request *req,
++static inline void crypto_stat_skcipher_encrypt(unsigned int cryptlen,
+ 						int ret, struct crypto_alg *alg)
+ {
+ #ifdef CONFIG_CRYPTO_STATS
+@@ -494,12 +494,13 @@ static inline void crypto_stat_skcipher_encrypt(struct skcipher_request *req,
+ 		atomic64_inc(&alg->cipher_err_cnt);
+ 	} else {
+ 		atomic64_inc(&alg->encrypt_cnt);
+-		atomic64_add(req->cryptlen, &alg->encrypt_tlen);
++		atomic64_add(cryptlen, &alg->encrypt_tlen);
+ 	}
++	crypto_alg_put(alg);
+ #endif
+ }
+ 
+-static inline void crypto_stat_skcipher_decrypt(struct skcipher_request *req,
++static inline void crypto_stat_skcipher_decrypt(unsigned int cryptlen,
+ 						int ret, struct crypto_alg *alg)
+ {
+ #ifdef CONFIG_CRYPTO_STATS
+@@ -507,8 +508,9 @@ static inline void crypto_stat_skcipher_decrypt(struct skcipher_request *req,
+ 		atomic64_inc(&alg->cipher_err_cnt);
+ 	} else {
+ 		atomic64_inc(&alg->decrypt_cnt);
+-		atomic64_add(req->cryptlen, &alg->decrypt_tlen);
++		atomic64_add(cryptlen, &alg->decrypt_tlen);
+ 	}
++	crypto_alg_put(alg);
+ #endif
+ }
+ 
+@@ -526,13 +528,18 @@ static inline void crypto_stat_skcipher_decrypt(struct skcipher_request *req,
+ static inline int crypto_skcipher_encrypt(struct skcipher_request *req)
+ {
+ 	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
++	struct crypto_alg *alg = tfm->base.__crt_alg;
++	unsigned int cryptlen = req->cryptlen;
+ 	int ret;
+ 
++#ifdef CONFIG_CRYPTO_STATS
++	crypto_alg_get(alg);
++#endif
+ 	if (crypto_skcipher_get_flags(tfm) & CRYPTO_TFM_NEED_KEY)
+ 		ret = -ENOKEY;
+ 	else
+ 		ret = tfm->encrypt(req);
+-	crypto_stat_skcipher_encrypt(req, ret, tfm->base.__crt_alg);
++	crypto_stat_skcipher_encrypt(cryptlen, ret, alg);
+ 	return ret;
+ }
+ 
+@@ -550,13 +557,18 @@ static inline int crypto_skcipher_encrypt(struct skcipher_request *req)
+ static inline int crypto_skcipher_decrypt(struct skcipher_request *req)
+ {
+ 	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
++	struct crypto_alg *alg = tfm->base.__crt_alg;
++	unsigned int cryptlen = req->cryptlen;
+ 	int ret;
+ 
++#ifdef CONFIG_CRYPTO_STATS
++	crypto_alg_get(alg);
++#endif
+ 	if (crypto_skcipher_get_flags(tfm) & CRYPTO_TFM_NEED_KEY)
+ 		ret = -ENOKEY;
+ 	else
+ 		ret = tfm->decrypt(req);
+-	crypto_stat_skcipher_decrypt(req, ret, tfm->base.__crt_alg);
++	crypto_stat_skcipher_decrypt(cryptlen, ret, alg);
+ 	return ret;
+ }
+
+This should not have any overhead with !CONFIG_CRYPTO_STATS
+The only drawback is that crypto_alg_get/crypto_alg_put need to be moved out of crypto/internal.h to include/linux/crypto.h
+
+Herbert what do you think about that ?
+
+Regards

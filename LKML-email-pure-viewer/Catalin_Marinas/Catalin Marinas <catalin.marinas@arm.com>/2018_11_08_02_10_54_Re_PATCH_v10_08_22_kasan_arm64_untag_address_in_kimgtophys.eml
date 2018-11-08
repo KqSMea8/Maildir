@@ -1,0 +1,168 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:31 -0000
+Received: from icoremail.net (unknown [209.85.214.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn35jSKuNbiNFZAQ--.26906S3;
+	Thu, 08 Nov 2018 02:11:31 +0800 (CST)
+Received: from mail-pl1-f177.google.com (unknown [209.85.214.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXfkrPKuNbfsYYAA--.95S3;
+	Thu, 08 Nov 2018 02:11:27 +0800 (CST)
+Received: by mail-pl1-f177.google.com with SMTP id c13-v6so8199229plz.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:11:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=fEy5L6FEsqng8G2xggj71gHE8QIi7rYe8lZX991VrKo=;
+        b=Cj5+zUEFPEfW3j8A8PkL/IOh2JMDTtADYpDDiCuQwngDpf6ZMI7GbqchMjGzPZMXqO
+         e80zGUvxVb6SPy/4sUyCRH1ToE0D0YTNoSw03WlQORuOt/p9+U+r81TLYPNL65dHYnNr
+         vjeEnEPx2qdNUcHe6iqsT2ungZKG08tnWmQxDjR+ahWSnXsykagQTWKasQ57EIf0/yDx
+         e43KokMCyJxDt1S+4zNwz6nw1D/lUNUHX8bMVYxxi4KNfesJk2CoejiKNZ169wXJTrMQ
+         EUUUFQ5AezDMvh3EVLDUUbTGfsQza23BHoahTMPzSHu490JnBkmy1h5qXNXEeIGYlxMJ
+         gmVA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJtmw0BrsPPav3SHD4etzQMtUSE6xfJXYrxDwLJ6qh3VqKTyH3m
+	K1ix3EyBmu4mChH5xKC31T5B8aL3itmexOah6b4dd6PjjBftr4mLfA==
+X-Received: by 2002:a17:902:b598:: with SMTP id a24-v6mr1212312pls.231.1541614287542;
+        Wed, 07 Nov 2018 10:11:27 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5565607pjt;
+        Wed, 7 Nov 2018 10:11:26 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dgVmXutwXgKUivQVFEya6xVE/1xFX65VkKDOjvgRDWXwA7kKp8fDAYEuCjmUXPeKHiomLQ
+X-Received: by 2002:a63:5816:: with SMTP id m22-v6mr1029112pgb.332.1541614285653;
+        Wed, 07 Nov 2018 10:11:25 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541614285; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Z8uIdeUP6BD4nfXJyGK+oJiWjqPG4bI/UYf/p/tC7+DeL+CAwDSoiydSO9A4D8d7L/
+         berpLEPKRPW8/OyFCYtWc5eSgyXKspVR0l9JCX2828yVS/XCDqCyQEpdyBGJkTDM3w6F
+         5x1YCpSvW/NfgXThQGcnqaC5uBDgglz48DhynUt2wR3mvStYKlB+np4zGPWda+GwRxIi
+         EANBIjltmbRT3V/iWE/zpFZUTogZf8K/vpFTp7OX7z7MQxP4rGGEloEOAFtnK6dr3tjZ
+         xHxGjMYBj3Z73E/beharqlUbrpM2E7jvJLqTxiDbUulfFgPeC4vDtjoI+6IAAarLiRCM
+         duNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=fEy5L6FEsqng8G2xggj71gHE8QIi7rYe8lZX991VrKo=;
+        b=p3s3+VVxa6ZolM7RF43LCAzOCMODVeiKJztg3u2Sn2Z8brNvg1g1PveFH9L4rr83tH
+         VvIowW293txwZgCpio3rSbqbofagSKWs6tYVO4/Blt/fFhbTu9HRt5x5MTWLjArDk6yC
+         Yurod010n0T8BAUyasFsLtHBCL8kRpX/BNpSJktqmZpTmm7i4XaeyH9EQHYJ9jHKY3U0
+         PfgmYbx2NsvEPVNUI/obKrHejDrrCfCm4ocrQQPTJOGSoF9bSII6Ze8tLnN6S0wgCY8V
+         pjlr7Gno74hpGqHl2Emy+UD1mdz+yawFotnOnF9sFNZHsQWREPWVdqkuH8T7m14FjroS
+         XEiQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v141-v6si1295029pfc.193.2018.11.07.10.11.08;
+        Wed, 07 Nov 2018 10:11:25 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727851AbeKHDmf (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:42:35 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56246 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726897AbeKHDmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:42:35 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19911A78;
+        Wed,  7 Nov 2018 10:11:03 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 426ED3F5C0;
+        Wed,  7 Nov 2018 10:10:57 -0800 (PST)
+Date: Wed, 7 Nov 2018 18:10:54 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Andrey Konovalov <andreyknvl@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Dave Martin <dave.martin@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Paul Lawrence <paullawrence@google.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sparse@vger.kernel.org, linux-mm@kvack.org,
+        linux-kbuild@vger.kernel.org, Vishwath Mohan <vishwath@google.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Jann Horn <jannh@google.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Mark Brand <markbrand@google.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Evgeniy Stepanov <eugenis@google.com>
+Subject: Re: [PATCH v10 08/22] kasan, arm64: untag address in __kimg_to_phys
+ and _virt_addr_is_linear
+Message-ID: <20181107181054.GC255021@arrakis.emea.arm.com>
+References: <cover.1541525354.git.andreyknvl@google.com>
+ <b2aa056b65b8f1a410379bf2f6ef439d5d99e8eb.1541525354.git.andreyknvl@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b2aa056b65b8f1a410379bf2f6ef439d5d99e8eb.1541525354.git.andreyknvl@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXfkrPKuNbfsYYAA--.95S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrKr4fKFW3Ww4kZr1DKry8Zrb_yoWxuFb_Xw
+	sFvwn7Cr4kJF1SqFyakFy5XF1qyr1xur95tFy5GrZ3trnIv3s5Xa18WFZ7Xr1rAa4DGrsr
+	uw42gry5W3WqqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqAYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8Jr1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxU
+	DPkuUUUUU
+
+On Tue, Nov 06, 2018 at 06:30:23PM +0100, Andrey Konovalov wrote:
+> --- a/arch/arm64/include/asm/memory.h
+> +++ b/arch/arm64/include/asm/memory.h
+> @@ -92,6 +92,15 @@
+>  #define KASAN_THREAD_SHIFT	0
+>  #endif
+>  
+> +#ifdef CONFIG_KASAN_SW_TAGS
+> +#define KASAN_TAG_SHIFTED(tag)		((unsigned long)(tag) << 56)
+> +#define KASAN_SET_TAG(addr, tag)	(((addr) & ~KASAN_TAG_SHIFTED(0xff)) | \
+> +						KASAN_TAG_SHIFTED(tag))
+> +#define KASAN_RESET_TAG(addr)		KASAN_SET_TAG(addr, 0xff)
+> +#else
+> +#define KASAN_RESET_TAG(addr)		addr
+> +#endif
+
+I think we should reuse the untagged_addr() macro we have in uaccess.h
+(make it more general and move to another header file).
+
+-- 
+Catalin

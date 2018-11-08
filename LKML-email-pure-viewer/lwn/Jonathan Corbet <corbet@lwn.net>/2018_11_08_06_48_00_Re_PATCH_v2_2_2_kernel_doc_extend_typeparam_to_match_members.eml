@@ -1,0 +1,125 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:07 -0000
+Received: from icoremail.net (unknown [209.85.214.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXvwq5a+Nbx0ZbAQ--.27515S3;
+	Thu, 08 Nov 2018 06:48:26 +0800 (CST)
+Received: from mail-pl1-f173.google.com (unknown [209.85.214.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAX_km4a+NbiqEZAA--.2417S3;
+	Thu, 08 Nov 2018 06:48:24 +0800 (CST)
+Received: by mail-pl1-f173.google.com with SMTP id g59-v6so8529989plb.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:48:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=GWZRNUp7EeYom2rdBsfLinvkM8zMnUzcqrFVHkF4YcA=;
+        b=MdPIADeJ+6KLLV/uZoradshyYUDvSkkx75zh6oGetcm1jP3/4VGbqoRkzJp9A+lzaF
+         lBXISBC9Is4aa/bNLj+X8Tb+JMeNNpQC5QyeAhmP/P5ZIwuCPZYZGDFq9E0I/RZCRA+A
+         mwmFip1qzikpDwDbdljYGKP1ejjkPlgTjKFWX8F28NyRNQL9nLNY/rUa78AuaKqjstJD
+         bWm4xtCZFlO2qA/POy+oCDD/kc2x0r8GryrFnUwxa16G7WrrZ968OE5EuyEpYr51Zdye
+         Kg/XxWZXzsbkliBADkVCCTYhkcB4SqMR2/gQ7Op9qgZ/iVYSkM7MvjmDMwPKB4noW+tr
+         N/YQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gL6a0J9irxd9RDGPfvWI4uwSwSrVzRkOX0ByDD/pWUllgRg3DAn
+	6ZvMIrc+F4GRqDleCBfXW0t1cnWI1y5mkEjYh9WvXaVX3rRFkJLz3A==
+X-Received: by 2002:a17:902:1026:: with SMTP id b35-v6mr2188150pla.283.1541630903956;
+        Wed, 07 Nov 2018 14:48:23 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp93326pjt;
+        Wed, 7 Nov 2018 14:48:23 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dbBOFgpzQJwllRSsRx0ghKO1QykIIRGsoZCxWCREontz4JPw3QqKtZSxiaZ1QYICU9BaOR
+X-Received: by 2002:a17:902:d705:: with SMTP id w5-v6mr2087352ply.11.1541630903070;
+        Wed, 07 Nov 2018 14:48:23 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541630903; cv=none;
+        d=google.com; s=arc-20160816;
+        b=iK1rVnqE0AJeaxw4AdPrHnrnlAHJU/lhLYigLN0x3t2tWeZoH9rmXC47dm1WzwRIiC
+         aEneUg9oDgPpQjdN1qJJ9r6SdD96h4OBVn4T6EhYoqky/ElS2/2Nt7ST9ww6+L3z57i1
+         vFX3CArFalua1eBEtyzMi5t4d8jP0z3i1b4lQLGERmKMjwJo9nrHJ4KiAoZMl+XYDsAr
+         wNu3ouGOQaWU2VeO4leB7R/uNdSE816iKaVWaMwnyltijmMNny5u6f1nSr7AwRV92CET
+         wR7n/BAqivAsEBYgiuh99jD7Cwpmyyo7etByGa+wehb/kngnk/amJy51wL+AnH5IALbh
+         lI8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :organization:references:in-reply-to:message-id:subject:cc:to:from
+         :date;
+        bh=GWZRNUp7EeYom2rdBsfLinvkM8zMnUzcqrFVHkF4YcA=;
+        b=o/OGpDi0KVhvkCR+t3nzLl0X+Stfw22B0ttZYyi6cgjvv2UM0uy5d1oZefksi8JdJR
+         KwNrPgZeirUGAtu1U5S5aaZh/FSgdcBfQ2S+dn89f7v7FfmPkL6Z+DyuJQmHCNDD07H+
+         WjyUZ3kVYKXKaCV2a5rA9/w3gGHk94nNNIWhvpDYfAvOr15zQCYv1OFr7+qQDxra4HuZ
+         CuUi20NbYYcQefPllRzjxI1N7f10OS1MyGP79ClAeQ98guNIOajWloyjCrPWXrAOktsZ
+         qwUujc3i0eRltgP6dK/dOkjsh3vOC2O4YTNpQB8nxVTB1XEHRiR3jUBFThqtbOQS16o5
+         Zagg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id y13si1908015pgj.157.2018.11.07.14.48.06;
+        Wed, 07 Nov 2018 14:48:23 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727289AbeKHIUc (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:20:32 -0500
+Received: from ms.lwn.net ([45.79.88.28]:45924 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727031AbeKHIUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:20:32 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id B6F04537;
+        Wed,  7 Nov 2018 22:48:01 +0000 (UTC)
+Date: Wed, 7 Nov 2018 15:48:00 -0700
+From: Jonathan Corbet <corbet@lwn.net>
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] kernel-doc: extend $type_param to match members
+ referenced by pointer
+Message-ID: <20181107154800.50c5103d@lwn.net>
+In-Reply-To: <1541609233-14182-3-git-send-email-rppt@linux.ibm.com>
+References: <1541609233-14182-1-git-send-email-rppt@linux.ibm.com>
+        <1541609233-14182-3-git-send-email-rppt@linux.ibm.com>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAX_km4a+NbiqEZAA--.2417S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUOb7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IY64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY
+	4VCF77xAMxkIecxEwVCI4VW3MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxV
+	W8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8
+	Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42
+	xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2Iq
+	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+	126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73
+	UjIFyTuYvjxUqX18DUUUU
+
+On Wed,  7 Nov 2018 18:47:13 +0200
+Mike Rapoport <rppt@linux.ibm.com> wrote:
+
+> Currently, function parameter description can match '@type.member'
+> expressions but fails to match '@type->member'.
+> Extend the $type_param regex to allow matching both
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+
+That makes a lot of changes to the generated output but, as far as I can
+tell, they're all correct.  A definite improvement.  Applied, thanks.
+
+jon

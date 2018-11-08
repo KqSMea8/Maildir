@@ -1,0 +1,224 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:13 -0000
+Received: from icoremail.net (unknown [209.85.210.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv5qyR+NbzW5aAQ--.27139S3;
+	Thu, 08 Nov 2018 04:14:43 +0800 (CST)
+Received: from mail-pf1-f182.google.com (unknown [209.85.210.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH3zqwR+NboyUZAA--.882S3;
+	Thu, 08 Nov 2018 04:14:40 +0800 (CST)
+Received: by mail-pf1-f182.google.com with SMTP id s9-v6so824012pfm.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:14:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :message-id:from:subject:to:cc:date:sender:precedence:list-id;
+        bh=2cViU4Q524IDHm3Iv4BlzUE0eWLDvx6DVJFL95BRgYw=;
+        b=TtmW4O+YjBPW6vJWPDzGbfkDDqekWkqkFxbcqhpXi4gsykOSqZH0t7u4kjSyojXjQB
+         QmXl8qB060060tFvzcjTQgzvDv2VofI7kQH7rhX66dFkie998p4naYYEH2Gv6Wlb7sOE
+         bEGoJsKH0omgvZvvnWS+y1ksnASrqJ3jjTSP0gNMPKVcvhiKn33c/ViFEjxyz89lCL9P
+         65lx0z05zVyv7vy4Gj8dj8JHOb/7YFpHVs3hg5spO4ylhPWeiBAhEzwLcCNcZyzJj/1Z
+         VYrprTjABESSjQcrR2U2w9UW/AytfHv+Rdecgf+7hVaw2Zsi1XwDXDRJXAtNrntIMLfV
+         Ohzw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLWAq6xHR7hSW09ZX4vvrRxCbdf0n0peAZK40BaqUNoF1vpriL0
+	mD5hJB7VsrS/I4tY+rQ9VhQJjkUaQYcX2Owz61UlZ48GAQ1TfiIWjQ==
+X-Received: by 2002:a63:40c2:: with SMTP id n185-v6mr1448267pga.116.1541621680332;
+        Wed, 07 Nov 2018 12:14:40 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5694812pjt;
+        Wed, 7 Nov 2018 12:14:39 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ccEY132yzolmFbTui01XtdWiDLUqGPN1iEI2AJDcMoQ9TmHeOBFY/bU0wyYJIBjsGGaAzn
+X-Received: by 2002:a17:902:a508:: with SMTP id s8-v6mr1682987plq.135.1541621679534;
+        Wed, 07 Nov 2018 12:14:39 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541621679; cv=none;
+        d=google.com; s=arc-20160816;
+        b=DjkABOp1eZ3tXB4oBQxKx4X+fgnoMqCvqMGjKoRAoOoI5N2FMtdOf9aiWGKwmwsbO9
+         9vq2urcNQGFWgsAJFR79m5qZnk8n34MrfsqqVUvLIy/IdNMeBn0l+g6Y33pQkPUDsRle
+         Stq/TjYSpWaoOq5VvtyhowyaZW/HZgIOrDv9TWvYZVUbVriJSwHVNP1tt5nARqv/Y4yQ
+         HrRfvriWZAurnVkAd2za5bBETE923dq9tGWTYTtI3RqriHcCvhONx7bUCjoDUHvj8dMX
+         bEBtU5PLcG0pjo4gRmETNopisCC15z41alNdL/fKOpXdCP51mn4OFCR8RqYfsJxU1DlH
+         olbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:date:cc:to:subject:from:message-id;
+        bh=2cViU4Q524IDHm3Iv4BlzUE0eWLDvx6DVJFL95BRgYw=;
+        b=G8a2RDDUDb01mj//MUI68znCMwZFk2zHBVcpdSSBh36SSRRdmmnfKze9PLYuCglujg
+         J0ewex4noH55OKYx3oFRSn7ehLPchdXyjQ+m41jAfdgCVmwfYKZLJQUHjeyILkbkvChI
+         XPOmY6BBLEUzcq7WK19G8kQtuRJwqY2IAEK2SMdWozfjfFuhgHfp47T7Fm9891b12xML
+         l5s93CcnaE8Tz5hYTRPPFagiI69KxLORdCImNHjJeIfQ0BSsKmLbM/cG2bO3hM+E2Szp
+         gh5tzD7iROWXWm0GfncqBDoVyPZqtY3dqupHkv0sgwfcbsjNCSrmI8+zyVz4C+4b3RdD
+         6WZA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id u1-v6si1632249plb.313.2018.11.07.12.14.21;
+        Wed, 07 Nov 2018 12:14:39 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726700AbeKHFqH (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:46:07 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:60678 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726352AbeKHFqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:46:07 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 42qyL81wKVz9ttSR;
+        Wed,  7 Nov 2018 21:14:08 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id pQAdwXAlLRnJ; Wed,  7 Nov 2018 21:14:08 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 42qyL81JkKz9ttSH;
+        Wed,  7 Nov 2018 21:14:08 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AD01C8B81F;
+        Wed,  7 Nov 2018 21:14:10 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id YZm2Rmr25aWE; Wed,  7 Nov 2018 21:14:10 +0100 (CET)
+Received: from po14163vm.idsi0.si.c-s.fr (unknown [192.168.232.3])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6BC308B814;
+        Wed,  7 Nov 2018 21:14:10 +0100 (CET)
+Received: by po14163vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 3E5EB69970; Wed,  7 Nov 2018 20:14:10 +0000 (UTC)
+Message-Id: <edfe11c6d1f9bb0a7c2cee655895dfeedc1dda5e.1541613057.git.christophe.leroy@c-s.fr>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] lkdtm: print real addresses
+To: Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date: Wed,  7 Nov 2018 20:14:10 +0000 (UTC)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH3zqwR+NboyUZAA--.882S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxGw4xCFyftF1kAw1kCw47twb_yoWrJrW3pF
+	WfKrWDK3y7tw1DGFW8ua98W3s8Grs3Ja4xAwsrt348A3W5WF48Xr15u3W8Ary8tr4rXFsF
+	vrW5CFW3u3WfuaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9ab7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UMx02cVCv0xWlc7
+	CjxVAKzI0EY4vE52x082I5MxkIecxEwVCI4VW7MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0
+	I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I
+	8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IY
+	c2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+	1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr
+	UvcSsGvfC2KfnxnUUI43ZEXa7IUOS9aPUUUUU==
+
+Today, when doing a lkdtm test before the readiness of the
+random generator, (ptrval) is printed instead of the address
+at which it perform the fault:
+
+[ 1597.337030] lkdtm: Performing direct entry EXEC_USERSPACE
+[ 1597.337142] lkdtm: attempting ok execution at (ptrval)
+[ 1597.337398] lkdtm: attempting bad execution at (ptrval)
+[ 1597.337460] kernel tried to execute user page (77858000) -exploit attempt? (uid: 0)
+[ 1597.344769] Unable to handle kernel paging request for instruction fetch
+[ 1597.351392] Faulting instruction address: 0x77858000
+[ 1597.356312] Oops: Kernel access of bad area, sig: 11 [#1]
+
+If the lkdtm test is done later on, it prints an hashed address.
+
+In both cases this is pointless. The purpose of the test is to
+ensure the kernel generates an Oops at the expected address,
+so real addresses needs to be printed. This patch fixes that.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ drivers/misc/lkdtm/perms.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/misc/lkdtm/perms.c b/drivers/misc/lkdtm/perms.c
+index 53b85c9d16b8..fa54add6375a 100644
+--- a/drivers/misc/lkdtm/perms.c
++++ b/drivers/misc/lkdtm/perms.c
+@@ -47,7 +47,7 @@ static noinline void execute_location(void *dst, bool write)
+ {
+ 	void (*func)(void) = dst;
+ 
+-	pr_info("attempting ok execution at %p\n", do_nothing);
++	pr_info("attempting ok execution at %px\n", do_nothing);
+ 	do_nothing();
+ 
+ 	if (write == CODE_WRITE) {
+@@ -55,7 +55,7 @@ static noinline void execute_location(void *dst, bool write)
+ 		flush_icache_range((unsigned long)dst,
+ 				   (unsigned long)dst + EXEC_SIZE);
+ 	}
+-	pr_info("attempting bad execution at %p\n", func);
++	pr_info("attempting bad execution at %px\n", func);
+ 	func();
+ }
+ 
+@@ -66,14 +66,14 @@ static void execute_user_location(void *dst)
+ 	/* Intentionally crossing kernel/user memory boundary. */
+ 	void (*func)(void) = dst;
+ 
+-	pr_info("attempting ok execution at %p\n", do_nothing);
++	pr_info("attempting ok execution at %px\n", do_nothing);
+ 	do_nothing();
+ 
+ 	copied = access_process_vm(current, (unsigned long)dst, do_nothing,
+ 				   EXEC_SIZE, FOLL_WRITE);
+ 	if (copied < EXEC_SIZE)
+ 		return;
+-	pr_info("attempting bad execution at %p\n", func);
++	pr_info("attempting bad execution at %px\n", func);
+ 	func();
+ }
+ 
+@@ -82,7 +82,7 @@ void lkdtm_WRITE_RO(void)
+ 	/* Explicitly cast away "const" for the test. */
+ 	unsigned long *ptr = (unsigned long *)&rodata;
+ 
+-	pr_info("attempting bad rodata write at %p\n", ptr);
++	pr_info("attempting bad rodata write at %px\n", ptr);
+ 	*ptr ^= 0xabcd1234;
+ }
+ 
+@@ -100,7 +100,7 @@ void lkdtm_WRITE_RO_AFTER_INIT(void)
+ 		return;
+ 	}
+ 
+-	pr_info("attempting bad ro_after_init write at %p\n", ptr);
++	pr_info("attempting bad ro_after_init write at %px\n", ptr);
+ 	*ptr ^= 0xabcd1234;
+ }
+ 
+@@ -112,7 +112,7 @@ void lkdtm_WRITE_KERN(void)
+ 	size = (unsigned long)do_overwritten - (unsigned long)do_nothing;
+ 	ptr = (unsigned char *)do_overwritten;
+ 
+-	pr_info("attempting bad %zu byte write at %p\n", size, ptr);
++	pr_info("attempting bad %zu byte write at %px\n", size, ptr);
+ 	memcpy(ptr, (unsigned char *)do_nothing, size);
+ 	flush_icache_range((unsigned long)ptr, (unsigned long)(ptr + size));
+ 
+@@ -185,11 +185,11 @@ void lkdtm_ACCESS_USERSPACE(void)
+ 
+ 	ptr = (unsigned long *)user_addr;
+ 
+-	pr_info("attempting bad read at %p\n", ptr);
++	pr_info("attempting bad read at %px\n", ptr);
+ 	tmp = *ptr;
+ 	tmp += 0xc0dec0de;
+ 
+-	pr_info("attempting bad write at %p\n", ptr);
++	pr_info("attempting bad write at %px\n", ptr);
+ 	*ptr = tmp;
+ 
+ 	vm_munmap(user_addr, PAGE_SIZE);
+-- 
+2.13.3

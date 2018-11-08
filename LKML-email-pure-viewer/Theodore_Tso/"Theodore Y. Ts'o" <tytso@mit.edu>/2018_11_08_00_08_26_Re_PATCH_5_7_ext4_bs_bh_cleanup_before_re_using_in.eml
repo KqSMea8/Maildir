@@ -1,0 +1,145 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:45 -0000
+Received: from icoremail.net (unknown [209.85.210.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH34sDuNbMg9ZAQ--.26785S3;
+	Thu, 08 Nov 2018 00:09:17 +0800 (CST)
+Received: from mail-pf1-f173.google.com (unknown [209.85.210.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH7kkrDuNbzTwYAA--.52S3;
+	Thu, 08 Nov 2018 00:09:15 +0800 (CST)
+Received: by mail-pf1-f173.google.com with SMTP id u10-v6so2136675pfn.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:09:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:mail-followup-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=7AE4OJ7IwM64nMxZd3So8NMXiXZM3kqZ8yoD3EgR4AQ=;
+        b=sgBWWpV6RpxkiAmsXP33Y9+JwySM3patKnOjnf0BsvCgxg7B9vY9Qidkw5Cr1gXH99
+         L+I37GWVwWejHy9hKdetERkRjAYFuQfHwwdFCAZAlnUZHu+4TsnThJcVNhZsP2ATV4zO
+         9vZRnwha2HXuUFng9V/CG7P8s62LnSjuN/aUB/jH2bnzXvh7VI2GKIL0l/oryKzaseE3
+         PcbBDHHf6TUDAr/a0KA1/pCxgCnjMJbhZ6vRj5EQz6lv1LommCFiCiC7cBqiaJfgMfiE
+         JM+eY48eYpacF68iZ7MxzbUQuGRS9PAq2d2VTABUq/sTQCrDWQdw7E93DvQdtvSUNpXO
+         NWqg==
+X-Gm-Message-State: AGRZ1gImLj1imPuGB2ICRCSuLyJksRegZ1M2r7CjsDhZvsov+YFxyA+E
+	LjgFEX/9JX2qbfd9brGpAZGPCE9QuFH3JkVmi8iGe2tQCZmqVlws6g==
+X-Received: by 2002:a62:3687:: with SMTP id d129-v6mr822115pfa.56.1541606955273;
+        Wed, 07 Nov 2018 08:09:15 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5428794pjt;
+        Wed, 7 Nov 2018 08:09:14 -0800 (PST)
+X-Google-Smtp-Source: AJdET5egNWXJZO3KUY1y5fFTPUwoU1TWSAofKmXooxbzVcehiQnzoYfm+pFUF+yIqtRBkYNr/Avg
+X-Received: by 2002:a17:902:6948:: with SMTP id k8-v6mr842765plt.22.1541606954521;
+        Wed, 07 Nov 2018 08:09:14 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541606954; cv=none;
+        d=google.com; s=arc-20160816;
+        b=dVGOu4ibzAUcr1QGc1wfUuBlFM+2lvQDvZecLtmO3n6bFSYfyGfOQUtEJl01bOO/Dt
+         AjnQ9yQYNzIrWH//aub8iwTkyIlEoLcQPgxc5mHnOzXTBQ42D5U0bZqvML5uNUQHBM5I
+         Upd8jeZUb6AqYmYEQDCOyAC6WNxtgJZpiL72v5IHURC/oJpRVHDPcfq55K2VgUL27AnY
+         2f4+r8QQOJRxyGxLACZ+aBT7vPBdAK1trkJbXR+qh/gpGDhFI2QkPik11oZn+dXvxRBy
+         ZDkfYir8O5iCa3jivxCUVuAe3Hs3z3jfkdSPRrqzTJC+1acqnosnTwHyQEwabLtzJvaI
+         sG/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:mail-followup-to
+         :message-id:subject:cc:to:from:date:dkim-signature;
+        bh=7AE4OJ7IwM64nMxZd3So8NMXiXZM3kqZ8yoD3EgR4AQ=;
+        b=i5F9iS8+faVPKruADWatFSWcAkcREafrkOs76W8AYLWN3o3rjuboF5mD8F7RAy4hwW
+         YcRtEA2dH+9JPGYEmjgy+0X/K1HwUWTwkwHizT8PkpxyN7rKViG15akX3ROHCMPOSyLD
+         V1mc6kYxuLP9qzcdydJgwA40XQXqh13tiftDT+708z8gQW1Y95BvCNDX33rcbrnILc7S
+         zC7emfNCSScuF3+vy6XDL2CRLi1mMYHlcgXBPdyoa9IRiZryWgcWegzQ26U6dgOS/ipG
+         6rDR3QuthYCTTEMGXLjNFOo4w3oYoYv5XgnrekSVitLhb8hD3f/lpTmNaoEorUQhKyuM
+         vZFg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@thunk.org header.s=ef5046eb header.b=m8FjoKgN;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id j129-v6si1032053pfb.201.2018.11.07.08.08.57;
+        Wed, 07 Nov 2018 08:09:14 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731151AbeKHBj2 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:39:28 -0500
+Received: from imap.thunk.org ([74.207.234.97]:49392 "EHLO imap.thunk.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727561AbeKHBj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:39:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=thunk.org;
+         s=ef5046eb; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=7AE4OJ7IwM64nMxZd3So8NMXiXZM3kqZ8yoD3EgR4AQ=; b=m8FjoKgNBF0RXrkRc+MotJwfzQ
+        NsQDQV6ZbJ4W/T98BWNHG781diwOo6FI4R+qHuxFX07PZSebJ5jFlhtwpl3fp0/Ihc6Jd4G3Ls34N
+        kis4Q5v8eStMD9pacjCgHWcP5rEeteafzEbMlDXxISeoPQHoK4IYpWviUwo4fsOxxicQ=;
+Received: from root (helo=callcc.thunk.org)
+        by imap.thunk.org with local-esmtp (Exim 4.89)
+        (envelope-from <tytso@thunk.org>)
+        id 1gKQNX-0000WK-Ps; Wed, 07 Nov 2018 16:08:27 +0000
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id E60FF7A7D14; Wed,  7 Nov 2018 11:08:26 -0500 (EST)
+Date: Wed, 7 Nov 2018 11:08:26 -0500
+From: "Theodore Y. Ts'o" <tytso@mit.edu>
+To: Vasily Averin <vvs@virtuozzo.com>
+Cc: linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-kernel@vger.kernel.org, Tiger Yang <tiger.yang@oracle.com>
+Subject: Re: [PATCH 5/7] ext4: bs.bh cleanup before re-using in
+ ext4_xattr_block_find()
+Message-ID: <20181107160826.GF9919@thunk.org>
+Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Vasily Averin <vvs@virtuozzo.com>, linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-kernel@vger.kernel.org, Tiger Yang <tiger.yang@oracle.com>
+References: <cover.1541011937.git.vvs@virtuozzo.com>
+ <1a83ea26-a159-490a-1e07-e7c8f187672a@virtuozzo.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1a83ea26-a159-490a-1e07-e7c8f187672a@virtuozzo.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: tytso@thunk.org
+X-SA-Exim-Scanned: No (on imap.thunk.org); SAEximRunCond expanded to false
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH7kkrDuNbzTwYAA--.52S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUYC7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8JV
+	W8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6r1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r1j6r4UMxvI42IY
+	6I8E87Iv6xkF7I0E14v26r1j6r4UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52
+	x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
+	xGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bnZXOU
+	UUUU=
+
+On Wed, Oct 31, 2018 at 10:12:52PM +0300, Vasily Averin wrote:
+> bs.bh was taken in previous ext4_xattr_block_find() call,
+> it should be released before re-using
+> 
+> Fixes 7e01c8e5420b ("ext3/4: fix uninitialized bs in ...") # 2.6.26
+> cc: Tiger Yang <tiger.yang@oracle.com>
+> 
+> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+
+Thanks, applied.  I used the commit description:
+
+    ext4: release bs.bh before re-using in ext4_xattr_block_find()
+
+    	  	  	       		   - Ted

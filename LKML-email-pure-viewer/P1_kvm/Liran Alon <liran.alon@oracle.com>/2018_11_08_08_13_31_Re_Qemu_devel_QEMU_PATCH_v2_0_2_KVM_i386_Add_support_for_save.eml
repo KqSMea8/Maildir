@@ -1,0 +1,333 @@
+Return-Path: <kvm-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:20 -0000
+Received: from icoremail.net (unknown [209.85.210.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3wiqgONbXr1bAQ--.28050S3;
+	Thu, 08 Nov 2018 08:17:46 +0800 (CST)
+Received: from mail-pf1-f178.google.com (unknown [209.85.210.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXfkqogONbfOMZAA--.2302S3;
+	Thu, 08 Nov 2018 08:17:44 +0800 (CST)
+Received: by mail-pf1-f178.google.com with SMTP id d13-v6so1275094pfo.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 16:17:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version:subject
+         :from:in-reply-to:date:cc:content-transfer-encoding:message-id
+         :references:to:sender:precedence:list-id;
+        bh=fOmTN14MygQaahC33CHfebvbEIxFgK+1MM2GSGu1KSw=;
+        b=PBfjoBEIpS/m/b1ramw+ynLCE/Kv0nvuG1ra7a2nIUjp1ZF+DGnXVLBH+jrbzy/7vw
+         AFh8FZ0FVo9cMFlw3ml5sNOCmR7CG8eDOZYTThcHoa0f8DnqK8Nq9nj0K+lRrfI3E2KE
+         cHUpRoFbgJFTL5O32hEXKr70wQKp6bU+Af5NTe/Xix0k00Su0Uyhb+K0x2/a9t+j2zkL
+         wXe8zxtJguWR5a0BoVVTAWQ0vhKNh5y57AUaPO2LIDB3umvR4g2zojRgl1PP3DlMEMMI
+         Qw6KxZdy9PVUZtweh9y+jJtWfxLFOrllPvZJu6qUI+4guZV7m5K9G98LrV7UxqKfqS2a
+         sQ8w==
+X-Gm-Message-State: AGRZ1gKp3HuWs0zXjDliOMUFFyIzGIo53Th7tdaLLZ67exRq4PHkhk+u
+	TelXzfynHAl+Pa4JxAcdOpvklpKk3wDvzxzE7ZZpfglPSUJO4Rem7A==
+X-Received: by 2002:a63:4044:: with SMTP id n65mr2006931pga.90.1541636263739;
+        Wed, 07 Nov 2018 16:17:43 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp164858pjt;
+        Wed, 7 Nov 2018 16:17:42 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dTyyfj5z7MymbMtoHYWOKtTSROnTIZc2GrsJG1CBpPbJ8Cf5J0g8AoMT0IdiMYASpUp1g5
+X-Received: by 2002:a17:902:3fe4:: with SMTP id a91-v6mr2389308pld.295.1541636262458;
+        Wed, 07 Nov 2018 16:17:42 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541636262; cv=none;
+        d=google.com; s=arc-20160816;
+        b=0HsVs3GgWrxCAY9F/JZPAbs27W0CV0OSlTKlOIuL8YZBHj6jl6K0ROV0jKBgNJWVDL
+         oSXAQaH3nbUjC7PD/pvB8pQP9EWj+HP/dEI4aLYTMoY9h5rwc45H/0j0wMpG/saKya+J
+         JSkS/nH1SQvj98TZ7YkFbp0CSvb3N2Gq9psvOkUQcIo+RmNiM4vkYK/nstB2+hVldLde
+         7PtrOSzFdAQJ9KAryX6h1RKP1ZL5uAvm7fm5Om4rC8Cpb6D4pfVA5i34fNA64t0MvfOj
+         WnF+dzGpJ5+reLFno6CblvfTyL5jqe1c/jZJZn07Mvvtug90+QetFGleT8F+RLmodAiN
+         1zbg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:to:references:message-id
+         :content-transfer-encoding:cc:date:in-reply-to:from:subject
+         :mime-version:dkim-signature;
+        bh=fOmTN14MygQaahC33CHfebvbEIxFgK+1MM2GSGu1KSw=;
+        b=tbNc9ZpH7WV5e4WxgJGi0am+MTls+VbDxJ3mM7ERS5KSjghK6gGTRw+8Ae007ayuPa
+         id8aPwrsRDnwiZJ7R+H+N7rjfWy2dRMsJHo9aLUZvewuG0G36bJDMgTkDD9Jljl0ieg/
+         xHTtB2sGrLYzsX2kW7vjudRiAZPe1x57CPU3ApxClsjUIqh3/Vx28Gd2DVasC4y4DmZp
+         E5+ud/RmvCVRvpbIMHnNJFX9W9y29/egoZhTlP+orjaG3UhM20CKCrtR9990hpx9iBLQ
+         kMtgYDEEcrrSToQ2jJA6LMUPjz6irRY21B5QIJlscut+I8DzjVW1Xwcycukcn1koxu/C
+         uDAA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@oracle.com header.s=corp-2018-07-02 header.b=kkXPF5Uy;
+       spf=pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=kvm-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=oracle.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id r68-v6si2061128pfa.15.2018.11.07.16.17.15;
+        Wed, 07 Nov 2018 16:17:42 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727990AbeKHJqk (ORCPT <rfc822;fanshuming2011@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 04:46:40 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:59010 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727591AbeKHJqj (ORCPT <rfc822;kvm@vger.kernel.org>);
+        Thu, 8 Nov 2018 04:46:39 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.22/8.16.0.22) with SMTP id wA7NxUGv188493;
+        Thu, 8 Nov 2018 00:13:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=fOmTN14MygQaahC33CHfebvbEIxFgK+1MM2GSGu1KSw=;
+ b=kkXPF5UyP9R51fDC1kUTQINiRl2Idm2UwEdBP/wF2+RkYCv+YTkGDoGx2eYzij2bK3l2
+ lUpgE/A7Nk6BCt1yj0vl3CwBM7h4DT6b3fURtRayCtNOCI4KqvDsljtRvvomiHCsSNUf
+ dJMfJ3ikQwDZfj3y8qGFMQGOnyM5VDGC7NVjcH6O4HS9QBlT84uTsIFv9fWGgDltmIX/
+ t6peIJSDZ8hAqpmTL99Yor/1O9SRT0W3Ov3SxpbT1VoFzxWfgUKMknnmGRn9sO2MB1ac
+ iYFnZhp9RebIQkw/X0aKfjlP+2mYwuhzbRFQ2Ty/LAjKQ28piGYLDITy2Tja+3BWaMxF xw== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by userp2130.oracle.com with ESMTP id 2nh33u6nuk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 08 Nov 2018 00:13:38 +0000
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id wA80Da9B028380
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 8 Nov 2018 00:13:37 GMT
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id wA80DZg1020396;
+        Thu, 8 Nov 2018 00:13:35 GMT
+Received: from [192.168.14.112] (/79.178.245.51)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 07 Nov 2018 16:13:35 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [Qemu-devel] [QEMU PATCH v2 0/2]: KVM: i386: Add support for save
+ and restore nested state
+From: Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <1C803EF0-9E1B-4E1B-A4DD-4BE788A7A1FF@oracle.com>
+Date: Thu, 8 Nov 2018 02:13:31 +0200
+Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Eduardo Habkost <ehabkost@redhat.com>,
+        kvm list <kvm@vger.kernel.org>, mtosatti@redhat.com,
+        rth@twiddle.net, qemu-devel@nongnu.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <DF5EC0F1-BA8D-4B85-BB1A-B22234235FBA@oracle.com>
+References: <CALMp9eQ5zWxb2N9fyYz=WcQshwk0L6qQ4D6L6+p_dzMo4H=txA@mail.gmail.com>
+ <20181102034649.43559-1-liran.alon@oracle.com>
+ <CALMp9eRk=a1FEyr78NRGBBZ2iFCo5s2n5N=bM4zR=YF56oob3A@mail.gmail.com>
+ <1C803EF0-9E1B-4E1B-A4DD-4BE788A7A1FF@oracle.com>
+To: Jim Mattson <jmattson@google.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9070 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1807170000 definitions=main-1811070210
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <kvm.vger.kernel.org>
+X-Mailing-List: kvm@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXfkqogONbfOMZAA--.2302S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3Xw1DtF4fZw1fAw1DWF4xtFb_yoW3WFW8pr
+	WvqF4Ikr4DJFn7Kr97tw1rGr93Cw1fJrW3AF98Jry7AFn8WrWFyrn7tFW5ZFZ7JrWrG342
+	vF4Dt393ZayDAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6w1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r1j6r1xMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UYxBIdaVFxhVjvjDU0xZFpf9x
+	07bL385UUUUU=
+
+Ping on my last reply.
+I would like to reach to an agreement on how v3 should look like before =
+just implementing what I think is right.
+
+Thanks,
+-Liran
+
+> On 3 Nov 2018, at 4:02, Liran Alon <liran.alon@oracle.com> wrote:
+>=20
+>=20
+>=20
+>> On 2 Nov 2018, at 18:39, Jim Mattson <jmattson@google.com> wrote:
+>>=20
+>> On Thu, Nov 1, 2018 at 8:46 PM, Liran Alon <liran.alon@oracle.com> =
+wrote:
+>>=20
+>>> Hmm this makes sense.
+>>>=20
+>>> This means though that the patch I have submitted here isn't good =
+enough.
+>>> My patch currently assumes that when it attempts to get nested state =
+from KVM,
+>>> QEMU should always set nested_state->size to max size supported by =
+KVM as received
+>>> from kvm_check_extension(s, KVM_CAP_NESTED_STATE);
+>>> (See kvm_get_nested_state() introduced on my patch).
+>>> This indeed won't allow migration from host with new KVM to host =
+with old KVM if
+>>> nested_state size was enlarged between these KVM versions.
+>>> Which is obviously an issue.
+>>>=20
+>>> Jim, I think that my confusion was created from the fact that there =
+is no clear documentation
+>>> on how KVM_{GET,SET}_NESTED_STATE should be changed once we will =
+need to add more state to
+>>> nested_state in future KVM versions. I think it's worth adding that =
+to IOCTLs documentation.
+>>=20
+>> The nested state IOCTLs aren't unique in this respect. Any changes to
+>> the state saved by any of this whole family of state-saving ioctls
+>> require opt-in from userspace.
+>>=20
+>>> For example, let's assume we have a new KVM_CAP_NESTED_STATE_V2.
+>>> In this scenario, does kvm_check_extension(s, KVM_CAP_NESTED_STATE) =
+still returns the
+>>> size of nested_state v1 and kvm_check_extension(s, =
+KVM_CAP_NESTED_STATE_V2) returns the
+>>> size of the nested_state v2?
+>>=20
+>> Hmm...I don't recall kvm_check_extension(s, KVM_CAP_NESTED_STATE)
+>> being part of my original design. The way I had envisioned it,
+>> the set of capabilities enabled by userspace would be sufficient to
+>> infer the maximum data size.
+>=20
+> If the set of capabilities should be sufficient to infer the max size =
+of nested_state,
+> why did we code kvm_vm_ioctl_check_extension() such that on =
+KVM_CAP_NESTED_STATE
+> it returns the max size of nested_state?
+>=20
+>>=20
+>> If, for example, we add a field to stash the time remaining for the
+>> VMCS12 VMX preemption timer, then presumably, userspace will enable =
+it
+>> by enabling KVM_CAP_SAVE_VMX_PREEMPTION_TIMER (or something like
+>> that), and then userspace will know that the maximum nested state =
+data
+>> is 4 bytes larger.
+>=20
+> In that case, why did we defined struct kvm_nested_state to hold a =
+blob of data[] instead
+> of separating the blob into well defined blobs? (e.g. Currently one =
+blob for vmcs12 and another one for shadow vmcs12).
+> Then when we add a new component which is opt-in by a new KVM_CAP, we =
+will add another well defined blob
+> to struct kvm_nested_state.
+>=20
+> I think this is important because it allows us to specify in =
+nested_state->flags which components are saved
+> and create multiple VMState subsections with needed() methods for the =
+various saved components.
+>=20
+> Thus allowing for example to easily still migrate from a new QEMU =
+which does stash the time remaining for the VMCS12 VMX preemption timer
+> to an old QEMU which doesn=E2=80=99t stash it in case =
+nested_state->flags specify that this component is not saved (Because L1 =
+don=E2=80=99t use VMX preemption timer for example).
+>=20
+> This seems to behave more nicely with how QEMU migration mechanism is =
+defined and the purpose of VMState subsections.
+>=20
+> In addition, if we will define struct kvm_nested_state like this, we =
+will also not need the =E2=80=9Csize=E2=80=9D field which needs to be =
+carefully handled to avoid buffer overflows.
+> (We will just define large enough buffers (with padding) for each =
+opaque component such as vmcs12 and shadow vmcs12).
+>=20
+>>=20
+>>> Also note that the approach suggested by Jim requires mgmt-layer at =
+dest
+>>> to be able to specify to QEMU which KVM_CAP_NESTED_STATE_V* =
+capabilities it should enable on kvm_init().
+>>> When we know we are migrating from a host which supports v1 to a =
+host which supports v2,
+>>> we should make sure that dest QEMU doesn't enable =
+KVM_CAP_NESTED_STATE_V2.
+>>> However, when we are just launching a new machine on the host which =
+supports v2, we do want
+>>> QEMU to enable KVM_CAP_NESTED_STATE_V2 enabled for that VM.
+>>=20
+>> No, no, no. Even when launching a new VM on a host that supports v2,
+>> you cannot enable v2 until you have passed rollback horizon. Should
+>> you decide to roll back the kernel with v2 support, you must be able
+>> to move that new VM to a host with an old kernel.
+>=20
+> If we use VMState subsections as I described above, QEMU should be =
+able to know which components of nested_state are
+> actively saved by KVM and therefore are *required* to be restored on =
+dest host in order to migrate without guest issues after it is resumed =
+on dest.
+> Therefore, still allowing migration from new hosts to old hosts in =
+case guest didn=E2=80=99t enter a state which makes new saved state =
+required in order
+> for migration to succeed.
+>=20
+> If the mechanism will work like this, nested_state KVM_CAPs enabled on =
+QEMU launch are only used to inform KVM which
+> struct kvm_nested_state is used by userspace. Not what is actually =
+sent as part of migration stream.
+>=20
+> What are your thoughts on this?
+>=20
+> -Liran
+>=20
+>>=20
+>>> But on second thought, I'm not sure that this is the right approach =
+as-well.
+>>> We don't really want the used version of nested_state to be =
+determined on kvm_init().
+>>> * On source QEMU, we actually want to determine it when preparing =
+for migration based
+>>> on to the support given by our destination host. If it's an old =
+host, we would like to
+>>> save an old version nested_state and if it's a new host, we will =
+like to save our newest
+>>> supported nested_state.
+>>> * On dest QEMU, we will want to just be able to set received =
+nested_state in KVM.
+>>>=20
+>>> Therefore, I don't think that we want this versioning to be based on =
+KVM_CAP at all.
+>>> It seems that we would want the process to behave as follows:
+>>> 1) Mgmt-layer at dest queries dest host max supported nested_state =
+size.
+>>>  (Which should be returned from =
+kvm_check_extension(KVM_CAP_NESTED_STATE))
+>>> 2) Mgmt-layer at source initiate migration to dest with requesting =
+QEMU to send nested_state
+>>>  matching dest max supported nested_state size.
+>>>  When saving nested state using KVM_GET_NESTED_STATE IOCTL, QEMU =
+will specify in nested_state->size
+>>>  the *requested* size to be saved and KVM should be able to save =
+only the information which matches
+>>>  the version that worked with that size.
+>>> 3) After some sanity checks on received migration stream, dest host =
+use KVM_SET_NESTED_STATE IOCTL.
+>>>  This IOCTL should deduce which information it should deploy based =
+on given nested_state->size.
+>>>=20
+>>> This also makes me wonder if it's not just nicer to use =
+nested_state->flags to specify which
+>>> information is actually present on nested_state instead of managing =
+versioning with nested_state->size.
+>>=20
+>> Yes, you can use nested_state->flags to determine what the data
+>> payload is, but you cannot enable new flags unless userspace opts in.
+>> This is just like KVM_CAP_EXCEPTION_PAYLOAD for kvm_vcpu_events. The
+>> flag, KVM_VCPUEVENT_VALID_PAYLOAD, can only be set on the saved vcpu
+>> events if userspace has opted-in with KVM_CAP_EXCEPTION_PAYLOAD. This
+>> is because older kernels will reject kvm_vcpu_events that have the
+>> KVM_VCPUEVENT_VALID_PAYLOAD flag set.
+>>=20
+>> You don't need a new KVM_CAP_NESTED_STATE_V2 ioctl. You just need
+>> buy-in from userspace for any new data payload. Explicitly =
+enumerating
+>> the payload components in the flags field makes perfect sense.

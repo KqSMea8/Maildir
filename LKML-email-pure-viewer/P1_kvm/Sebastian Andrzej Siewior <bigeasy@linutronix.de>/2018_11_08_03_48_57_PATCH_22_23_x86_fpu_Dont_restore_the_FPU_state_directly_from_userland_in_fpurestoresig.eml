@@ -1,0 +1,268 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:58 -0000
+Received: from icoremail.net (unknown [209.85.210.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH0L4QeNbIlFaAQ--.27095S3;
+	Thu, 08 Nov 2018 03:50:17 +0800 (CST)
+Received: from mail-pf1-f177.google.com (unknown [209.85.210.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB38Ez2QeNbZhMZAA--.1490S3;
+	Thu, 08 Nov 2018 03:50:14 +0800 (CST)
+Received: by mail-pf1-f177.google.com with SMTP id j13-v6so8137908pff.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:50:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=T8UTLk94+akal/MG7L2EtDwy4xeBhyqXUyVssEQe8O0=;
+        b=Go66k+JWa2ZjcerFvqC+Hfi5FMs8nwR7MHqYd8leaSgcCuQrW551edUPbAFFog7lVv
+         XQ54O3VmLKrUKb310hK5vhGHuQ7AYZAgRAQWcKaFLC/hPQ/Jzs7W0Ocqti1Mxl5bzJSt
+         5LxXGcYIKo9fCJfuKY48CkvTrCgWYmWeIwaz2lrun4qAmWd+H8OGbWCOLKtMbig8TVvc
+         S3Q8RudyCdriKTo78gC6qRkWbuTqprF8lA9n2nm23YXQVnEx1uO1yLi/DNwEVdGjp82F
+         6MWXzdCWkQnhkfmjXb3oAfr5OHCPvqqnkKUhMbMSe7bmeFwXrgphhJvBKtoEufGiMh+G
+         ganw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gK2+Sz2HH1+Avt52jcAw7O1nFRvo+ntLW/4/b+q36nZa4xsiXA2
+	x7obvxmbC5aAtXPbbNI/LUYkDFuEfWfCkUI7g4GZavk37r2ywx64Aw==
+X-Received: by 2002:a63:9402:: with SMTP id m2mr1289024pge.93.1541620213985;
+        Wed, 07 Nov 2018 11:50:13 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5669721pjt;
+        Wed, 7 Nov 2018 11:50:13 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fwSy749zYVn4rH4Y0NqhbSeO0sV15Ysqx7yQa0Y4lLseL7ko+p/hkljVK+GPwxIKPtK/nQ
+X-Received: by 2002:a63:41c2:: with SMTP id o185-v6mr1333340pga.11.1541620213093;
+        Wed, 07 Nov 2018 11:50:13 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620213; cv=none;
+        d=google.com; s=arc-20160816;
+        b=FvrTIQM6pvgsOxPqpKGcZtmecqsmFcXhvBf5zF6cx5A9ghlqJJW+Fpu7eXpOn8bnPN
+         4qwQVuLmkiPlIAo5+auUz8qlmwkQ5pIuLUOpyz4z7lWBBBZ31Gj0zhBHHOXceiJw64nJ
+         Rt7Hu99Pi4Tw4l3i9g1yjqZ3RfFc456xV5wSCjGNp2M3qiV6jifVgV/CHAsTy8uhkl0F
+         yEjSE5rR0jw47dU23HNfJbz/x83UAZ/jhuyuGPBMty0cSJZte5RrhtVrp1971/nELE1J
+         LgBfHTLEkatluehMVjfw3e6CLRU/qupO2BJTRfX4uvGlER4C2RpE7aQdWHriTw/WgteS
+         xshw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=T8UTLk94+akal/MG7L2EtDwy4xeBhyqXUyVssEQe8O0=;
+        b=gs7iMrg9/IY6to8yZPu2H5QAZxFgd5K3X+bzaX38SlEwOp2no9yc1+qd007dwvUyA7
+         k4lsQLkUOJBwKdevX6q/VPsCgTZRny938IWZMNJL3/v2a70dh8GmNJapW9f5frG2jKg1
+         yT6Nlj+p/2wEWKWQtX9YXa488mr5kBV429YnBMJ96mil0Fya8G0koq/HsW9kVyqK4DQw
+         cIOAs1WVGLZPwmQRtLx/qDnQCAgUzSDs9LJv9k35+Y1VVDCme4xJDKjzipYLQ+Nc+9PR
+         vhxt2xoadxNZn8LfP3lw2LdfvoX0j9W6FGtH+tm9w111IiqioPXH2DZUdsF/1zThKLSv
+         yUCw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id t70si1310043pgd.339.2018.11.07.11.49.57;
+        Wed, 07 Nov 2018 11:50:13 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728201AbeKHFVZ (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:21:25 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:41990 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727454AbeKHFVY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:21:24 -0500
+Received: from localhost ([127.0.0.1] helo=bazinga.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1gKTpR-00070Q-7K; Wed, 07 Nov 2018 20:49:29 +0100
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 22/23] x86/fpu: Don't restore the FPU state directly from userland in __fpu__restore_sig()
+Date: Wed,  7 Nov 2018 20:48:57 +0100
+Message-Id: <20181107194858.9380-23-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107194858.9380-1-bigeasy@linutronix.de>
+References: <20181107194858.9380-1-bigeasy@linutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB38Ez2QeNbZhMZAA--.1490S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3XF4UKF15Aw4DWr18WFyUZFb_yoW7Xw4rpF
+	Z8CryfGr47Xry7Z3W7Xr1UZr95u3s7Gr1jkrWDG34rJ3Wj9r15Ar95tasIqFW5Ga4fCr4r
+	Xa1jk34Yv3W3tw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPSb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_JFI_GrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	Uob2-5UUUUU==
+
+__fpu__restore_sig() restores the CPU's FPU state directly from
+userland. If we restore registers on return to userland then we can't
+load them directly from userland because a context switch/BH could
+destroy them.
+
+Restore the FPU registers after they have been copied from userland.
+__fpregs_changes_begin() ensures that they are not modified while beeing
+worked on. TIF_NEED_FPU_LOAD is clreared we want to keep our state, not
+the saved state.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/x86/include/asm/fpu/internal.h | 34 -----------------------------
+ arch/x86/kernel/fpu/signal.c        | 33 ++++++++++++++++++----------
+ 2 files changed, 22 insertions(+), 45 deletions(-)
+
+diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
+index 9e213a6703c84..5e86ff60a3a5c 100644
+--- a/arch/x86/include/asm/fpu/internal.h
++++ b/arch/x86/include/asm/fpu/internal.h
+@@ -137,28 +137,11 @@ static inline void copy_kernel_to_fxregs(struct fxregs_state *fx)
+ 	}
+ }
+ 
+-static inline int copy_user_to_fxregs(struct fxregs_state __user *fx)
+-{
+-	if (IS_ENABLED(CONFIG_X86_32))
+-		return user_insn(fxrstor %[fx], "=m" (*fx), [fx] "m" (*fx));
+-	else if (IS_ENABLED(CONFIG_AS_FXSAVEQ))
+-		return user_insn(fxrstorq %[fx], "=m" (*fx), [fx] "m" (*fx));
+-
+-	/* See comment in copy_fxregs_to_kernel() below. */
+-	return user_insn(rex64/fxrstor (%[fx]), "=m" (*fx), [fx] "R" (fx),
+-			  "m" (*fx));
+-}
+-
+ static inline void copy_kernel_to_fregs(struct fregs_state *fx)
+ {
+ 	kernel_insn(frstor %[fx], "=m" (*fx), [fx] "m" (*fx));
+ }
+ 
+-static inline int copy_user_to_fregs(struct fregs_state __user *fx)
+-{
+-	return user_insn(frstor %[fx], "=m" (*fx), [fx] "m" (*fx));
+-}
+-
+ static inline void copy_fxregs_to_kernel(struct fpu *fpu)
+ {
+ 	if (IS_ENABLED(CONFIG_X86_32))
+@@ -333,23 +316,6 @@ static inline void copy_kernel_to_xregs(struct xregs_state *xstate, u64 mask)
+ 	XSTATE_XRESTORE(xstate, lmask, hmask);
+ }
+ 
+-/*
+- * Restore xstate from user space xsave area.
+- */
+-static inline int copy_user_to_xregs(struct xregs_state __user *buf, u64 mask)
+-{
+-	struct xregs_state *xstate = ((__force struct xregs_state *)buf);
+-	u32 lmask = mask;
+-	u32 hmask = mask >> 32;
+-	int err;
+-
+-	stac();
+-	XSTATE_OP(XRSTOR, xstate, lmask, hmask, err);
+-	clac();
+-
+-	return err;
+-}
+-
+ /*
+  * These must be called with preempt disabled. Returns
+  * 'true' if the FPU state is still intact and we can
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index 179e2b19976ad..9720529859483 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -228,23 +228,30 @@ sanitize_restored_xstate(union fpregs_state *state,
+ /*
+  * Restore the extended state if present. Otherwise, restore the FP/SSE state.
+  */
+-static inline int copy_user_to_fpregs_zeroing(void __user *buf, u64 xbv, int fx_only)
++static void copy_to_fpregs_zeroing(struct fpu *fpu, u64 xbv, int fx_only)
+ {
++	__fpregs_changes_begin();
+ 	if (use_xsave()) {
+-		if ((unsigned long)buf % 64 || fx_only) {
++		if (fx_only) {
+ 			u64 init_bv = xfeatures_mask & ~XFEATURE_MASK_FPSSE;
++
+ 			copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
+-			return copy_user_to_fxregs(buf);
++			copy_kernel_to_fxregs(&fpu->state.fxsave);
+ 		} else {
+ 			u64 init_bv = xfeatures_mask & ~xbv;
++
+ 			if (unlikely(init_bv))
+ 				copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
+-			return copy_user_to_xregs(buf, xbv);
++			copy_kernel_to_xregs(&fpu->state.xsave, xbv);
+ 		}
+ 	} else if (use_fxsr()) {
+-		return copy_user_to_fxregs(buf);
+-	} else
+-		return copy_user_to_fregs(buf);
++		copy_kernel_to_fxregs(&fpu->state.fxsave);
++	} else {
++		copy_kernel_to_fregs(&fpu->state.fsave);
++	}
++	clear_thread_flag(TIF_NEED_FPU_LOAD);
++	fpregs_activate(fpu);
++	__fpregs_changes_end();
+ }
+ 
+ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+@@ -255,6 +262,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 	int state_size = fpu_kernel_xstate_size;
+ 	u64 xfeatures = 0;
+ 	int fx_only = 0;
++	int err = 0;
+ 
+ 	ia32_fxstate &= (IS_ENABLED(CONFIG_X86_32) ||
+ 			 IS_ENABLED(CONFIG_IA32_EMULATION));
+@@ -298,7 +306,6 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 		union fpregs_state *state;
+ 		void *tmp;
+ 		struct user_i387_ia32_struct env;
+-		int err = 0;
+ 
+ 		tmp = kmalloc(sizeof(*state) + fpu_kernel_xstate_size + 64, GFP_KERNEL);
+ 		if (!tmp)
+@@ -327,12 +334,16 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 	} else {
+ 		/*
+ 		 * For 64-bit frames and 32-bit fsave frames, restore the user
+-		 * state to the registers directly (with exceptions handled).
++		 * state from a copy in thread's fpu state.
+ 		 */
+-		if (copy_user_to_fpregs_zeroing(buf_fx, xfeatures, fx_only)) {
++		err = __copy_from_user(&fpu->state.xsave, buf_fx, state_size);
++		if (err) {
+ 			fpu__clear(fpu);
+-			return -1;
++			return -EFAULT;
+ 		}
++		if ((unsigned long)buf_fx % 64)
++			fx_only = 1;
++		copy_to_fpregs_zeroing(fpu, xfeatures, fx_only);
+ 	}
+ 
+ 	return 0;
+-- 
+2.19.1

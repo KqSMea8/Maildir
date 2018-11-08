@@ -1,0 +1,390 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:26 -0000
+Received: from icoremail.net (unknown [209.85.215.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3__sTTuNbaJZaAQ--.27358S3;
+	Thu, 08 Nov 2018 04:41:56 +0800 (CST)
+Received: from mail-pg1-f176.google.com (unknown [209.85.215.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXNkIPTuNbLzsZAA--.1043S3;
+	Thu, 08 Nov 2018 04:41:51 +0800 (CST)
+Received: by mail-pg1-f176.google.com with SMTP id r9-v6so7809672pgv.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:41:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding
+         :sender:precedence:list-id;
+        bh=j5s2iAeNnpRWlNrS8+nc120qx7rOSiiocu5+Fzn6th8=;
+        b=mphAuQzxi3+Gq97DYCfj++pYhwjF5CI6I0L9IaE535hLm5+wt235zC3NZAH66CJBS2
+         fYzAMQONKH/nAXoBh/RxPoKpqwSOkBeZC00UHcGTwxraxaGcf4qppRh7Zo45KhS4Mjid
+         2p+77UlLQmLfZPM7LT9f788JQ4RR8d6VamCXtz0MBUAG+JXOZQLbJ3/ffULqauZ6vcQn
+         +sMeRpQZaecJt2oLemiG+Jv6+QRqvNh5U+LsG3haRermxCYkw4LMZut6DBevzlWRhWwB
+         kZtKqvaPFCXNSMvULotWKdD/63CELEQc3LCrTk1oT4yMrNrInPQliwYROg/oWM3KMjPU
+         JonQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gJsdR0Ayxy8NPGNaigTPWC6nbY09nclsB2AHkIoKo3PNoOpT/AC
+	b64LsEHNxgoNCAADlg5vbuCXSHglSOFkuhNtQTcDJmRkcLDBljiYog==
+X-Received: by 2002:a65:66ce:: with SMTP id c14mr1494825pgw.450.1541623311218;
+        Wed, 07 Nov 2018 12:41:51 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5720518pjt;
+        Wed, 7 Nov 2018 12:41:50 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cq6PvPpplVP7DU7oOZ7ZKROrtl2HvijP0BzRD8QPoPxXeOgiO7bSQrhh6miz2ya6uPML5E
+X-Received: by 2002:a17:902:bd0a:: with SMTP id p10-v6mr1706132pls.245.1541623310209;
+        Wed, 07 Nov 2018 12:41:50 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541623310; cv=none;
+        d=google.com; s=arc-20160816;
+        b=GzKcsPXJdIPgUmhqUGk0sxLH9Y5SsMdv1E9S0ZsDZ6FiyPNyvZtfnDO7l5fTypYxp7
+         IFEKGeQwAVGLsoGDfZkg0/R9BF5epXsvMkMzwMtFCDduf3KeCiRUle6SLUWzNV87+FXQ
+         P2fUz9d6Fdpn+ayQ1m9xc401xelaZcnnmO3Cg7bZzBgJ6TEop/7DNbzl6HlxEs64Rv+I
+         mfXJ5oVSNYAD7ITm88aet4rLXd3zV5eJRG1J6N5iKy3CMtB1PSYhxVGg3ikOkWeuQcho
+         axSr1buViT+hYusfuQU40M7ZuGY56pbek1xSSVS2eWR17f0MWjPu/EngVU6ZO0FN6bWE
+         GZfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject;
+        bh=j5s2iAeNnpRWlNrS8+nc120qx7rOSiiocu5+Fzn6th8=;
+        b=inbnWqvA0z9qGt5Um2UdUkM3at6Nce8d+RHp3uBe5WHiSaDb2lAqo/2ctwautcq77w
+         j2VCExn8/qY4zf8AVXXr0aRY8lGWhgRhACrSoer4jbvsogT0qygT3Gme0rQFUO1jJy6l
+         4xOHRMkJqt+2HcZ+omzlG7JFd/jR5JYO4IAzmfwg42JGx86Bqs115KPIzO30NophvSUP
+         I3+hgcMIJqH1+ILBJHMPivKVoSu7TBitgCjoR4iNXGUk7y8+ryY9b5dFG/gkNzViKZL7
+         2Y52SvDovX+jQx64N6HM8UT4l6NUIzhPWYFYguBAyoHGMg/l8LK7iFsaz4zr6CT59yNA
+         MaSQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b7-v6si1540999pgn.553.2018.11.07.12.41.35;
+        Wed, 07 Nov 2018 12:41:50 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727098AbeKHGM7 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:12:59 -0500
+Received: from mga18.intel.com ([134.134.136.126]:51151 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726719AbeKHGM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:12:59 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 12:40:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,476,1534834800"; 
+   d="scan'208";a="84123687"
+Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
+  by fmsmga007.fm.intel.com with ESMTP; 07 Nov 2018 12:40:54 -0800
+Subject: Re: [PATCHv10 8/8] firmware: add remote status update client support
+To: Moritz Fischer <mdf@kernel.org>
+Cc: gregkh@linuxfoundation.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, atull@kernel.org, arnd@arndb.de,
+        corbet@lwn.net, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-doc@vger.kernel.org,
+        todd.riffel@intel.com, richard.gong@intel.com
+References: <1541523172-5171-1-git-send-email-richard.gong@linux.intel.com>
+ <1541523172-5171-9-git-send-email-richard.gong@linux.intel.com>
+ <20181106172202.GA4042@archbook>
+From: Richard Gong <richard.gong@linux.intel.com>
+Message-ID: <f9657cd4-faea-8a5e-2c2a-35320ba3c72a@linux.intel.com>
+Date: Wed, 7 Nov 2018 14:49:50 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20181106172202.GA4042@archbook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXNkIPTuNbLzsZAA--.1043S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxKw1UCFyrCw4DJF4kGF18Grg_yoWfWw1fpF
+	yvka1jyr45tFW8G3yxJan09343Xwn7GF9xCryUW3W7A3ZYyr1IkFW0qF15GryDZr1kCryD
+	KF9Yg39a9as8Aa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmSb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik2
+	6cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6F1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjx
+	v20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2
+	jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x
+	0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r1I6r4UYxBI
+	daVFxhVjvjDU0xZFpf9x07bdD7-UUUUU=
+
+Hi Moritz,
+
+On 11/6/18 11:22 AM, Moritz Fischer wrote:
+> Hi Richard,
+> 
+> On Tue, Nov 06, 2018 at 10:52:52AM -0600, richard.gong@linux.intel.com wrote:
+>> From: Richard Gong <richard.gong@intel.com>
+>>
+>> Extend Intel Stratix10 service layer to support the second service layer
+>> client, Remote Status Update (RSU).
+>>
+>> RSU is used to provide our customers with protection against loading bas
+> Nit: 'bas' -> 'bad'
+>> bitstreams onto their devices when those device are booting from flash.
+>>
+
+I will correct that in the next submission.
+
+>> Signed-off-by: Richard Gong <richard.gong@intel.com>
+>> Signed-off-by: Alan Tull <atull@kernel.org>
+>> ---
+>> v7: this patch is added in patch set version 7
+>> v8: no change
+>> v9: add case for COMMAND_RSU_UPDATE at svc_thread_recv_status_ok() at
+>>      stratix10-svc.c file
+>>      add RSU related definitions at stratix10-smc.h file
+>> v10: s/misc/firmware at commit header
+>> ---
+>>   drivers/firmware/stratix10-svc.c                   | 35 +++++++++++++++-
+>>   include/linux/firmware/intel/stratix10-smc.h       | 47 ++++++++++++++++++++++
+>>   .../linux/firmware/intel/stratix10-svc-client.h    | 20 ++++++++-
+>>   3 files changed, 98 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
+>> index 898e588..ae99221 100644
+>> --- a/drivers/firmware/stratix10-svc.c
+>> +++ b/drivers/firmware/stratix10-svc.c
+>> @@ -34,7 +34,7 @@
+>>    * timeout is set to 30 seconds (30 * 1000) at Intel Stratix10 SoC.
+>>    */
+>>   #define SVC_NUM_DATA_IN_FIFO			32
+>> -#define SVC_NUM_CHANNEL				1
+>> +#define SVC_NUM_CHANNEL				2
+>>   #define FPGA_CONFIG_DATA_CLAIM_TIMEOUT_MS	200
+>>   #define FPGA_CONFIG_STATUS_TIMEOUT_SEC		30
+>>   
+>> @@ -271,7 +271,7 @@ static void svc_thread_cmd_config_status(struct stratix10_svc_controller *ctrl,
+>>    * @cb_data: pointer to callback data structure to service client
+>>    * @res: result from SMC or HVC call
+>>    *
+>> - * Send back the correspond status to the service client (FPGA manager etc).
+>> + * Send back the correspond status to the service clients.
+>>    */
+>>   static void svc_thread_recv_status_ok(struct stratix10_svc_data *p_data,
+>>   				      struct stratix10_svc_cb_data *cb_data,
+>> @@ -295,6 +295,9 @@ static void svc_thread_recv_status_ok(struct stratix10_svc_data *p_data,
+>>   	case COMMAND_RECONFIG_STATUS:
+>>   		cb_data->status = BIT(SVC_STATUS_RECONFIG_COMPLETED);
+>>   		break;
+>> +	case COMMAND_RSU_UPDATE:
+>> +		cb_data->status = BIT(SVC_STATUS_RSU_OK);
+>> +		break;
+>>   	default:
+>>   		pr_warn("it shouldn't happen\n");
+>>   		break;
+>> @@ -373,6 +376,16 @@ static int svc_normal_to_secure_thread(void *data)
+>>   			a1 = 0;
+>>   			a2 = 0;
+>>   			break;
+>> +		case COMMAND_RSU_STATUS:
+>> +			a0 = INTEL_SIP_SMC_RSU_STATUS;
+>> +			a1 = 0;
+>> +			a2 = 0;
+>> +			break;
+>> +		case COMMAND_RSU_UPDATE:
+>> +			a0 = INTEL_SIP_SMC_RSU_UPDATE;
+>> +			a1 = pdata->arg[0];
+>> +			a2 = 0;
+>> +			break;
+>>   		default:
+>>   			pr_warn("it shouldn't happen\n");
+>>   			break;
+>> @@ -389,6 +402,19 @@ static int svc_normal_to_secure_thread(void *data)
+>>   			 (unsigned int)res.a1, (unsigned int)res.a2);
+>>   		pr_debug(" res.a3=0x%016x\n", (unsigned int)res.a3);
+>>   
+>> +		if (pdata->command == COMMAND_RSU_STATUS) {
+>> +			if (res.a0 == INTEL_SIP_SMC_RSU_ERROR)
+>> +				cbdata->status = BIT(SVC_STATUS_RSU_ERROR);
+>> +			else
+>> +				cbdata->status = BIT(SVC_STATUS_RSU_OK);
+>> +
+>> +			cbdata->kaddr1 = &res;
+>> +			cbdata->kaddr2 = NULL;
+>> +			cbdata->kaddr3 = NULL;
+>> +			pdata->chan->scl->receive_cb(pdata->chan->scl, cbdata);
+>> +			continue;
+>> +		}
+>> +
+>>   		switch (res.a0) {
+>>   		case INTEL_SIP_SMC_STATUS_OK:
+>>   			svc_thread_recv_status_ok(pdata, cbdata, res);
+>> @@ -941,6 +967,11 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
+>>   	chans[0].name = SVC_CLIENT_FPGA;
+>>   	spin_lock_init(&chans[0].lock);
+>>   
+>> +	chans[1].scl = NULL;
+>> +	chans[1].ctrl = controller;
+>> +	chans[1].name = SVC_CLIENT_RSU;
+>> +	spin_lock_init(&chans[1].lock);
+>> +
+>>   	list_add_tail(&controller->node, &svc_ctrl);
+>>   	platform_set_drvdata(pdev, controller);
+>>   
+>> diff --git a/include/linux/firmware/intel/stratix10-smc.h b/include/linux/firmware/intel/stratix10-smc.h
+>> index a109e4c..5be5dab 100644
+>> --- a/include/linux/firmware/intel/stratix10-smc.h
+>> +++ b/include/linux/firmware/intel/stratix10-smc.h
+>> @@ -67,6 +67,12 @@
+>>    *
+>>    * INTEL_SIP_SMC_FPGA_CONFIG_STATUS_ERROR:
+>>    * There is error during the FPGA configuration process.
+>> + *
+>> + * INTEL_SIP_SMC_REG_ERROR:
+>> + * There is error during a read or write operation of the protected registers.
+>> + *
+>> + * INTEL_SIP_SMC_RSU_ERROR:
+>> + * There is error during a remote status update.
+>>    */
+>>   #define INTEL_SIP_SMC_RETURN_UNKNOWN_FUNCTION		0xFFFFFFFF
+>>   #define INTEL_SIP_SMC_STATUS_OK				0x0
+>> @@ -74,6 +80,7 @@
+>>   #define INTEL_SIP_SMC_FPGA_CONFIG_STATUS_REJECTED       0x2
+>>   #define INTEL_SIP_SMC_FPGA_CONFIG_STATUS_ERROR		0x4
+>>   #define INTEL_SIP_SMC_REG_ERROR				0x5
+>> +#define INTEL_SIP_SMC_RSU_ERROR				0x7
+>>   
+>>   /**
+>>    * Request INTEL_SIP_SMC_FPGA_CONFIG_START
+>> @@ -262,4 +269,44 @@ INTEL_SIP_SMC_FAST_CALL_VAL(INTEL_SIP_SMC_FUNCID_FPGA_CONFIG_COMPLETED_WRITE)
+>>   #define INTEL_SIP_SMC_REG_UPDATE \
+>>   	INTEL_SIP_SMC_FAST_CALL_VAL(INTEL_SIP_SMC_FUNCID_REG_UPDATE)
+>>   
+>> +/*
+>> + * Request INTEL_SIP_SMC_RSU_STATUS
+>> + *
+>> + * Request remote status update boot log, call is synchronous.
+>> + *
+>> + * Call register usage:
+>> + * a0 INTEL_SIP_SMC_RSU_STATUS
+>> + * a1-7 not used
+>> + *
+>> + * Return status
+>> + * a0: Current Image
+>> + * a1: Last Failing Image
+>> + * a2: Version | State
+>> + * a3: Error details | Error location
+>> + *
+>> + * Or
+>> + *
+>> + * a0: INTEL_SIP_SMC_RSU_ERROR
+>> + */
+>> +#define INTEL_SIP_SMC_FUNCID_RSU_STATUS 11
+>> +#define INTEL_SIP_SMC_RSU_STATUS \
+>> +	INTEL_SIP_SMC_FAST_CALL_VAL(INTEL_SIP_SMC_FUNCID_RSU_STATUS)
+>> +
+>> +/*
+>> + * Request INTEL_SIP_SMC_RSU_UPDATE
+>> + *
+>> + * Request to set the offset of the bitstream to boot after reboot, call
+>> + * is synchronous.
+>> + *
+>> + * Call register usage:
+>> + * a0 INTEL_SIP_SMC_RSU_UPDATE
+>> + * a1 64bit physical address of the configuration data memory in flash
+>> + * a2-7 not used
+>> + *
+>> + * Return status
+>> + * a0 INTEL_SIP_SMC_STATUS_OK
+>> + */
+>> +#define INTEL_SIP_SMC_FUNCID_RSU_UPDATE 12
+>> +#define INTEL_SIP_SMC_RSU_UPDATE \
+>> +	INTEL_SIP_SMC_FAST_CALL_VAL(INTEL_SIP_SMC_FUNCID_RSU_UPDATE)
+>>   #endif
+>> diff --git a/include/linux/firmware/intel/stratix10-svc-client.h b/include/linux/firmware/intel/stratix10-svc-client.h
+>> index f2fda7e..e521f17 100644
+>> --- a/include/linux/firmware/intel/stratix10-svc-client.h
+>> +++ b/include/linux/firmware/intel/stratix10-svc-client.h
+>> @@ -10,8 +10,10 @@
+>>    * Service layer driver supports client names
+>>    *
+>>    * fpga: for FPGA configuration
+>> + * rsu: for remote status update
+>>    */
+>>   #define SVC_CLIENT_FPGA			"fpga"
+>> +#define SVC_CLIENT_RSU			"rsu"
+>>   
+>>   /**
+>>    * Status of the sent command, in bit number
+>> @@ -36,6 +38,9 @@
+>>    *
+>>    * SVC_COMMAND_STATUS_RECONFIG_ERROR:
+>>    * Error encountered during FPGA configuration.
+>> + *
+>> + * SVC_STATUS_RSU_OK:
+>> + * Secure firmware accepts the request of remote status update (RSU).
+>>    */
+>>   #define SVC_STATUS_RECONFIG_REQUEST_OK		0
+>>   #define SVC_STATUS_RECONFIG_BUFFER_SUBMITTED	1
+>> @@ -43,7 +48,8 @@
+>>   #define SVC_STATUS_RECONFIG_COMPLETED		3
+>>   #define SVC_STATUS_RECONFIG_BUSY		4
+>>   #define SVC_STATUS_RECONFIG_ERROR		5
+>> -
+>> +#define SVC_STATUS_RSU_OK			6
+>> +#define SVC_STATUS_RSU_ERROR			7
+>>   /**
+>>    * Flag bit for COMMAND_RECONFIG
+>>    *
+>> @@ -56,9 +62,11 @@
+>>   /**
+>>    * Timeout settings for service clients:
+>>    * timeout value used in Stratix10 FPGA manager driver.
+>> + * timeout value used in RSU driver
+>>    */
+>>   #define SVC_RECONFIG_REQUEST_TIMEOUT_MS         100
+>>   #define SVC_RECONFIG_BUFFER_TIMEOUT_MS          240
+>> +#define SVC_RSU_REQUEST_TIMEOUT_MS              300
+>>   
+>>   struct stratix10_svc_chan;
+>>   
+>> @@ -81,13 +89,21 @@ struct stratix10_svc_chan;
+>>    * @COMMAND_RECONFIG_STATUS: check the status of the configuration, return
+>>    * status is SVC_STATUS_RECONFIG_COMPLETED, or  SVC_STATUS_RECONFIG_BUSY, or
+>>    * SVC_STATUS_RECONFIG_ERROR
+>> + *
+>> + * @COMMAND_RSU_STATUS: request remote system update boot log, return status
+>> + * is log data or SVC_STATUS_RSU_ERROR
+>> + *
+>> + * @COMMAND_RSU_UPDATE: set the offset of the bitstream to boot after reboot,
+>> + * return status is SVC_STATUS_RSU_OK or SVC_STATUS_RSU_ERROR
+>>    */
+>>   enum stratix10_svc_command_code {
+>>   	COMMAND_NOOP = 0,
+>>   	COMMAND_RECONFIG,
+>>   	COMMAND_RECONFIG_DATA_SUBMIT,
+>>   	COMMAND_RECONFIG_DATA_CLAIM,
+>> -	COMMAND_RECONFIG_STATUS
+>> +	COMMAND_RECONFIG_STATUS,
+>> +	COMMAND_RSU_STATUS,
+>> +	COMMAND_RSU_UPDATE
+>>   };
+>>   
+>>   /**
+>> -- 
+>> 2.7.4
+>>
+> 
+> Thanks,
+> Moritz
+> 
+Regards,
+Richard

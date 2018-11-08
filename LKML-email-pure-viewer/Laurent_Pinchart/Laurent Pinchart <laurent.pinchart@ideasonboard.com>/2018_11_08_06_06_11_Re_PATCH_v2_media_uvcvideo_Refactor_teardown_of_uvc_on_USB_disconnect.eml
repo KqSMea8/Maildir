@@ -1,0 +1,310 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:53 -0000
+Received: from icoremail.net (unknown [209.85.210.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv5rnYeNb1w1bAQ--.27341S3;
+	Thu, 08 Nov 2018 06:06:33 +0800 (CST)
+Received: from mail-pf1-f180.google.com (unknown [209.85.210.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHHTnfYeNb9X8ZAA--.1557S3;
+	Thu, 08 Nov 2018 06:06:23 +0800 (CST)
+Received: by mail-pf1-f180.google.com with SMTP id j13-v6so8290181pff.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:06:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:organization:in-reply-to:references:mime-version
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=WK0F3VUMJBmmVeE0NeMHbYwLiEb4OriYnWGSfTVMkdE=;
+        b=Ta7Bel+RUa6OaGys1Io59HbQ/oS63g75X0Kt2wZaWL+1oiGuR9RakjiB7wPHyV+SBf
+         MLEePSxd1PVYTEZD2Z+z06ATsr+VUAymWZp4on7yeWDIqGkpjyqHtRsYg3ivWS40isNS
+         27Q4ym+IVqJH2YceeKS8wrpElZEJ4D0spDfLYZiAL8PUGL8BWcOqeOFpMNU2VtgvXRTP
+         utCwxS6qNI2xNshRZrlilbuo9ZvuLrlQ2fSZ91VcZ6UukOogH0a/0aNYQMapotiUSPEC
+         lwAnDji66FfD9052S9OoxpoO5moYkThqDQuMfwSp32Z0PY5Bxym9ef8HMK7a9C9RDpuK
+         696A==
+X-Gm-Message-State: AGRZ1gLcn1/L1XBzzrjFsLXlLbKbZCGUc1GqkEf0c2zXIuGqoXZ0A1ZC
+	1AofH3n7dYslxjyOYg+irM+n+JcG812wRZoY7H+hbbLKDep4fqBBcA==
+X-Received: by 2002:a65:66ce:: with SMTP id c14mr1724195pgw.450.1541628382839;
+        Wed, 07 Nov 2018 14:06:22 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp58835pjt;
+        Wed, 7 Nov 2018 14:06:21 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cZvnUJnNV8zBVPfzi2HPZxBrAPhZivMUOI4RcphmnWTP40J7YN9m4V1iySv4Kjv9hHHhSU
+X-Received: by 2002:a62:de06:: with SMTP id h6-v6mr2080691pfg.36.1541628381883;
+        Wed, 07 Nov 2018 14:06:21 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541628381; cv=none;
+        d=google.com; s=arc-20160816;
+        b=lR1ddmt/hk8bdBDezboJWleehC4WvnPSD6EpbeI4S+gBrx3qOAoUrqEggailxyFMSk
+         xJlbNN28lrJFtsUJm5SHyDT2kgCK6JfzPSwnUnvjj6hV8B0q/hU586TkFHxN8+zGqUUH
+         dsOWGSQdY0QfWRuGBdYMz0o9iVb1wEjmlRaR0dLrBYSYONDvmgMpyXWwIDOxSCERBnP0
+         dU3WFbLZYHfugAdUCx22B0VEpsTdlZcZObkrvAvFanxYsbaVpC4K63NPmT5aCzyh0NRE
+         Wmrgaa5oUFWw7srfKexFXHB25LvRlZgHHnFgjtrg3umLOjPyWsGCDR9wqcDsn+mfsT51
+         RVIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:organization:message-id:date:subject:cc:to
+         :from:dkim-signature;
+        bh=WK0F3VUMJBmmVeE0NeMHbYwLiEb4OriYnWGSfTVMkdE=;
+        b=OSr0TKYzPtkAbGkzQHhV9C9g3RbwuYddL9o5Oz5WE9Q5VJ0nICpzXIfVvg3l8fStww
+         PDkwZS2/xrTKJMYju9fM4WnAYLoMFpoGM0R0AFWlF73SyMzJSKqrvMk8Sn/0z9g883a3
+         0eihHHcUa54X3uAFeVxJVZX+dV8kfyYBC1if0RIVruGLIIGoWGGp8Pz6Csb0Lbk4qvGU
+         Vrzx5pzW/IAKupoTak2CxJ8PiiQOpbM97P05c03eEdq7ju4BYGYf8FWEwhqxjuc8nzz0
+         HzcDU334wB0h4lJFUadQQPkcVB2mw6NTDM2DnxtyAeGOw2LuJSCVabEciVTCLhiiDFke
+         tXhA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass (test mode) header.i=@ideasonboard.com header.s=mail header.b=cQOy8Mka;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id i136-v6si2044826pfe.224.2018.11.07.14.06.07;
+        Wed, 07 Nov 2018 14:06:21 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727760AbeKHHiX (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:38:23 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:33820 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727404AbeKHHiX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:38:23 -0500
+Received: from avalon.localnet (dfj612ybrt5fhg77mgycy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:2e86:4862:ef6a:2804])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A752F561;
+        Wed,  7 Nov 2018 23:05:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1541628360;
+        bh=zfp4WSK5tU04IjMUV1PRH3q88EM03S29/LzCuu47vnw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cQOy8MkaL9k8oO6M3t74aRrluKXjqSs1uuO3817j5g74NL1WgzQsNlV61Nce8E/O/
+         ukBmvKLgVUvmNeSXdDQzFwUqyw389pZEFN1KYF2G81Td9Oz3J5nCh7t8I5OwsKFCdI
+         a2dSVkaSwnTxJPujWqvuPa/5vRiTVRRDqGtlZnpw=
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Daniel Axtens <dja@axtens.net>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <linux-media@destevenson.freeserve.co.uk>,
+        Greg KH <greg@kroah.com>
+Subject: Re: [PATCH v2] [media] uvcvideo: Refactor teardown of uvc on USB disconnect
+Date: Thu, 08 Nov 2018 00:06:11 +0200
+Message-ID: <1686453.Z5aelINeFC@avalon>
+Organization: Ideas on Board Oy
+In-Reply-To: <20170423045349.10292-1-dja@axtens.net>
+References: <20170423045349.10292-1-dja@axtens.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHHTnfYeNb9X8ZAA--.1557S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3Xw1kJFWrAFyfZw47JF47Arb_yoWxGr1Dpa
+	yFka1FyrWDtF4ruw47Z3WqgFy5G3Z2k3y5ZryxJ3s0gr9xGryFkrWkJa4xX34UJ397CF4I
+	v3yYyws7uan5uFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Eb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY02Avz4vEIxC_ZwCY0x0Ix7I2Y4AK64vI
+	r41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JV
+	WxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_
+	Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s
+	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
+	JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20x
+	vaj40_JFI_GrUvcSsGvfC2KfnxnUUI43ZEXa7IUOVq2tUUUUU==
+
+Hi Daniel,
+
+Thank you for the patch.
+
+On Sunday, 23 April 2017 07:53:49 EET Daniel Axtens wrote:
+> Currently, disconnecting a USB webcam while it is in use prints out a
+> number of warnings, such as:
+> 
+> WARNING: CPU: 2 PID: 3118 at
+> /build/linux-ezBi1T/linux-4.8.0/fs/sysfs/group.c:237
+> sysfs_remove_group+0x8b/0x90 sysfs group ffffffffa7cd0780 not found for
+> kobject 'event13'
+> 
+> This has been noticed before. [0]
+> 
+> This is because of the order in which things are torn down.
+> 
+> If there are no streams active during a USB disconnect:
+> 
+>  - uvc_disconnect() is invoked via device_del() through the bus
+>    notifier mechanism.
+> 
+>  - this calls uvc_unregister_video().
+> 
+>  - uvc_unregister_video() unregisters the video device for each
+>    stream,
+> 
+>  - because there are no streams open, it calls uvc_delete()
+> 
+>  - uvc_delete() calls uvc_status_cleanup(), which cleans up the status
+>    input device.
+> 
+>  - uvc_delete() calls media_device_unregister(), which cleans up the
+>    media device
+> 
+>  - uvc_delete(), uvc_unregister_video() and uvc_disconnect() all
+>    return, and we end up back in device_del().
+> 
+>  - device_del() then cleans up the sysfs folder for the camera with
+>    dpm_sysfs_remove(). Because uvc_status_cleanup() and
+>    media_device_unregister() have already been called, this all works
+>    nicely.
+> 
+> If, on the other hand, there *are* streams active during a USB disconnect:
+> 
+>  - uvc_disconnect() is invoked
+> 
+>  - this calls uvc_unregister_video()
+> 
+>  - uvc_unregister_video() unregisters the video device for each
+>    stream,
+> 
+>  - uvc_unregister_video() and uvc_disconnect() return, and we end up
+>    back in device_del().
+> 
+>  - device_del() then cleans up the sysfs folder for the camera with
+>    dpm_sysfs_remove(). Because the status input device and the media
+>    device are children of the USB device, this also deletes their
+>    sysfs folders.
+> 
+>  - Sometime later, the final stream is closed, invoking uvc_release().
+> 
+>  - uvc_release() calls uvc_delete()
+> 
+>  - uvc_delete() calls uvc_status_cleanup(), which cleans up the status
+>    input device. Because the sysfs directory has already been removed,
+>    this causes a WARNing.
+> 
+>  - uvc_delete() calls media_device_unregister(), which cleans up the
+>    media device. Because the sysfs directory has already been removed,
+>    this causes another WARNing.
+> 
+> To fix this, we need to make sure the devices are always unregistered
+> before the end of uvc_disconnect(). To this, move the unregistration
+> into the disconnect path:
+> 
+>  - split uvc_status_cleanup() into two parts, one on disconnect that
+>    unregisters and one on delete that frees.
+> 
+>  - move v4l2_device_unregister() and media_device_unregister() into
+>    the disconnect path.
+> 
+> [0]: https://lkml.org/lkml/2016/12/8/657
+> 
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Dave Stevenson <linux-media@destevenson.freeserve.co.uk>
+> Cc: Greg KH <greg@kroah.com>
+> Signed-off-by: Daniel Axtens <dja@axtens.net>
+> 
+> ---
+> 
+> v2: Move v4l2_device_unregister() as well as media_device_unregister(),
+>     thanks Laurent.
+> 
+> Tested with cheese and yavta.
+> 
+> Laurent, I know you were concerned about race conditions so I plugged
+> and unplugged the camera over a dozen times, with lots of debugging
+> turned on.
+> 
+> In particular:
+>  - KASan was enabled and didn't trigger
+>  - If I unplugged while yavta was running, and replugged *while yatva
+>    was still running*, the video camera came up as video2, not video1.
+>    This indicates that yatva was successfully holding a reference to
+>    video1 - as it should.
+>  - No other debugging triggered any warning.
+
+Thank you for running those tests. I'm still a bit concerned but I'll live 
+with it. The issues are in the MC and V4L2 core anyway, there isn't much we 
+could do here to fix them.
+
+> ---
+>  drivers/media/usb/uvc/uvc_driver.c | 12 ++++++++----
+>  drivers/media/usb/uvc/uvc_status.c |  8 ++++++--
+>  drivers/media/usb/uvc/uvcvideo.h   |  1 +
+>  3 files changed, 15 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_driver.c
+> b/drivers/media/usb/uvc/uvc_driver.c index 46d6be0bb316..0d0541054ce2
+> 100644
+> --- a/drivers/media/usb/uvc/uvc_driver.c
+> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> @@ -1812,11 +1812,7 @@ static void uvc_delete(struct uvc_device *dev)
+>  	usb_put_intf(dev->intf);
+>  	usb_put_dev(dev->udev);
+> 
+> -	if (dev->vdev.dev)
+> -		v4l2_device_unregister(&dev->vdev);
+>  #ifdef CONFIG_MEDIA_CONTROLLER
+> -	if (media_devnode_is_registered(dev->mdev.devnode))
+> -		media_device_unregister(&dev->mdev);
+>  	media_device_cleanup(&dev->mdev);
+>  #endif
+> 
+> @@ -1884,6 +1880,14 @@ static void uvc_unregister_video(struct uvc_device
+> *dev) uvc_debugfs_cleanup_stream(stream);
+>  	}
+> 
+> +	uvc_status_unregister(dev);
+> +	if (dev->vdev.dev)
+> +		v4l2_device_unregister(&dev->vdev);
+> +#ifdef CONFIG_MEDIA_CONTROLLER
+> +	if (media_devnode_is_registered(dev->mdev.devnode))
+> +		media_device_unregister(&dev->mdev);
+> +#endif
+> +
+>  	/* Decrement the stream count and call uvc_delete explicitly if there
+>  	 * are no stream left.
+>  	 */
+> diff --git a/drivers/media/usb/uvc/uvc_status.c
+> b/drivers/media/usb/uvc/uvc_status.c index f552ab997956..95709b23d3b4
+> 100644
+> --- a/drivers/media/usb/uvc/uvc_status.c
+> +++ b/drivers/media/usb/uvc/uvc_status.c
+> @@ -198,12 +198,16 @@ int uvc_status_init(struct uvc_device *dev)
+>  	return 0;
+>  }
+> 
+> -void uvc_status_cleanup(struct uvc_device *dev)
+> +void uvc_status_unregister(struct uvc_device *dev)
+>  {
+>  	usb_kill_urb(dev->int_urb);
+> +	uvc_input_cleanup(dev);
+
+I think it would make sense to rename uvc_input_cleanup() to 
+uvc_input_unregister(). I'll make the change locally so there's no need to 
+resubmit this patch.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+and applied to my tree.
+
+> +}
+> +
+> +void uvc_status_cleanup(struct uvc_device *dev)
+> +{
+>  	usb_free_urb(dev->int_urb);
+>  	kfree(dev->status);
+> -	uvc_input_cleanup(dev);
+>  }
+> 
+>  int uvc_status_start(struct uvc_device *dev, gfp_t flags)
+
+[snip]
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+

@@ -1,0 +1,292 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:03 -0000
+Received: from icoremail.net (unknown [209.85.210.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3wwfG+NbiV9ZAQ--.26542S3;
+	Thu, 08 Nov 2018 01:04:32 +0800 (CST)
+Received: from mail-pf1-f174.google.com (unknown [209.85.210.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3l0McG+NbzXMYAA--.377S3;
+	Thu, 08 Nov 2018 01:04:28 +0800 (CST)
+Received: by mail-pf1-f174.google.com with SMTP id v68-v6so4365345pfk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:04:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=k1VROi3Fzt8PMh4Foh/ntwzaUXF0Nlc1EUSRAR+/Awc=;
+        b=C4rOxH+igWXrXOinyttA1i59muqCuppSK6xjRlMBoYBnwX2JIjCVbKCY//XPeiU2oO
+         5lAZGU+xWyFD/grqfYCpg9/nMC6G7EHb+EncG2bH2ra3o7dwnTaS+8/nYPo4bf3ZcetW
+         DpLpHZzxuE4VBIfJkZjLhUg/ugaI6atDSbUuTmC44ChzdJdVlJvxGZ/NsoF6En0S7TP7
+         h+N7mhfjQMvPCPgaHEC9BQws2WUMDVt3yImsYqvs5ae6CbqO1eTR6POvJBPCVYpdOSPx
+         lHUHNfpM/zH7QaXr2PsSTWrsP5Lm0WRa+brJsKSq5Iz59DIJgOqQdU9rAux1/IZn1iLk
+         n0OA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJY6kgJYbTrk0S5cuWYB4gT3970baSTUVU/QKdejgq+SkugNgRn
+	78PUtZiSGlLgCembjr6IwG0oHGWOe5F5qW50h/Pyd8m6uqm4iLnzmw==
+X-Received: by 2002:a62:5e83:: with SMTP id s125-v6mr983322pfb.232.1541610267942;
+        Wed, 07 Nov 2018 09:04:27 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5489761pjt;
+        Wed, 7 Nov 2018 09:04:27 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fHKsnvjfKTjm6hzpTj6ld16czkHgbG+9kZ24wzGbauclDs/59vepUUlaLCZTz4tpaLwEUR
+X-Received: by 2002:a17:902:a9cb:: with SMTP id b11-v6mr980879plr.219.1541610267105;
+        Wed, 07 Nov 2018 09:04:27 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610267; cv=none;
+        d=google.com; s=arc-20160816;
+        b=TCSRumxO2fO+QytxbPObbFCIwL2zwCt6ZmYk1faQay7OZRS9PCTKUws11T7o2vmVIf
+         WOpZC0GGH4IwcOBqMR8L1+1QNqek/tE1TfBWvX9kEcoRuusQvMhFk5K3r3nlR7IBjSpZ
+         DRef3yF87HmSvxtaJxVvR+eYsuPE5klg4k1K6rqwtbMZNoYE5IGD0XeQdXp9uitqNqEQ
+         MhrALlUaPq14XFmk9jH4YYCFPHRphZjDtOScPWKsXHul/9AgghVu4rEea5gNDfQidZW7
+         vBBQ+4E11m9QrbVSHTAt6YorynLYO8cSKzmKWaQeE6wYSEQHFhKYNHorsTIRZmFjzECQ
+         IukA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=k1VROi3Fzt8PMh4Foh/ntwzaUXF0Nlc1EUSRAR+/Awc=;
+        b=vlr6JF5MXhu8jXEk97LeOvZAPt4O9jbSatAPwVbBSuNboe/pLaCQz+byWiMlV4p5vr
+         RALgEK1jTxxXIpaGKaQKtUjvDVpXv6ft8IrtDsxW1huv1QvWdHXrido0TFxw2yyfTkJw
+         t5POoujbkHUhrx+ZTG4xOyVL2P6dfZ7HJxjgX6lggKlDfeRvBt2yY0kPDkj+2rFZGBbJ
+         6rGc7tz258WUEUgqywbL73gBhAisYPgMTPdLKXqmibmDIr0sxakRrDVmmfNHbND7lsjg
+         2La/3aqwa1MhnSQpKeE+abR95XxoTE29EhgmWR8fWZZ4Va53G91S8zWkF5UOPfHI5/7j
+         Dj6A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id o22-v6si1138904pfi.279.2018.11.07.09.04.10;
+        Wed, 07 Nov 2018 09:04:27 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731478AbeKHCdt (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:33:49 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:46530 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731449AbeKHCdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:33:49 -0500
+X-Virus-Scanned: Nedap ESD1 at mail.skyhub.de
+Received: from mail.skyhub.de ([127.0.0.1])
+        by localhost (blast.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id OKyDOkRbYRiQ; Wed,  7 Nov 2018 18:02:34 +0100 (CET)
+Received: from zn.tnic (p200300EC2BCBE000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2bcb:e000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3025A1EC0291;
+        Wed,  7 Nov 2018 18:02:34 +0100 (CET)
+From: Borislav Petkov <bp@alien8.de>
+To: X86 ML <x86@kernel.org>
+Cc: "Maciej S . Szmigiero" <mail@maciej.szmigiero.name>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH 06/16] x86/microcode/AMD: Concentrate patch verification
+Date: Wed,  7 Nov 2018 18:02:08 +0100
+Message-Id: <20181107170218.7596-7-bp@alien8.de>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107170218.7596-1-bp@alien8.de>
+References: <20181107170218.7596-1-bp@alien8.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3l0McG+NbzXMYAA--.377S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3AFW7ZrWxZF4fCr4xAryUGFg_yoW7CF4xpr
+	sIkF1rtrs8Kw1ftF1Iya1xJFZ0ya1xXr9rtrW3urn2yFn3XwnYqFW8CFyYy3yFqr95ua43
+	XFsFyw4rJw1kJFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPSb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
+	Ij64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xA
+	MxkIecxEwVCI4VW8MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7Jw
+	CYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJVW8Jr1l
+	cIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_JFI_GrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	UOkMa5UUUUU==
+
+From: Borislav Petkov <bp@suse.de>
+
+Add a verify_patch() function which tries to sanity-check many aspects
+of a microcode patch supplied by an outside container before attempting
+a load.
+
+Prepend all sub-functions' names which verify an aspect of a microcode
+patch with "__".
+
+Call it in verify_and_add_patch() *before* looking at the microcode
+header.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ arch/x86/kernel/cpu/microcode/amd.c | 79 ++++++++++++++++++++---------
+ 1 file changed, 54 insertions(+), 25 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+index a94a15aacfe7..8f012a7f88c4 100644
+--- a/arch/x86/kernel/cpu/microcode/amd.c
++++ b/arch/x86/kernel/cpu/microcode/amd.c
+@@ -139,11 +139,15 @@ static bool verify_equivalence_table(const u8 *buf, size_t buf_size, bool early)
+  * Check whether there is a valid, non-truncated microcode patch section at the
+  * beginning of @buf of size @buf_size. Set @early to use this function in the
+  * early path.
++ *
++ * On success, @sh_psize returns the patch size according to the section header,
++ * to the caller.
+  */
+-static bool verify_patch_section(const u8 *buf, size_t buf_size, bool early)
++static bool
++__verify_patch_section(const u8 *buf, size_t buf_size, u32 *sh_psize, bool early)
+ {
++	u32 p_type, p_size;
+ 	const u32 *hdr;
+-	u32 patch_type, patch_size;
+ 
+ 	if (buf_size < SECTION_HDR_SIZE) {
+ 		if (!early)
+@@ -153,24 +157,26 @@ static bool verify_patch_section(const u8 *buf, size_t buf_size, bool early)
+ 	}
+ 
+ 	hdr = (const u32 *)buf;
+-	patch_type = hdr[0];
+-	patch_size = hdr[1];
++	p_type = hdr[0];
++	p_size = hdr[1];
+ 
+-	if (patch_type != UCODE_UCODE_TYPE) {
++	if (p_type != UCODE_UCODE_TYPE) {
+ 		if (!early)
+ 			pr_debug("Invalid type field (0x%x) in container file section header.\n",
+-				patch_type);
++				p_type);
+ 
+ 		return false;
+ 	}
+ 
+-	if (patch_size < sizeof(struct microcode_header_amd)) {
++	if (p_size < sizeof(struct microcode_header_amd)) {
+ 		if (!early)
+-			pr_debug("Patch of size %u too short.\n", patch_size);
++			pr_debug("Patch of size %u too short.\n", p_size);
+ 
+ 		return false;
+ 	}
+ 
++	*sh_psize = p_size;
++
+ 	return true;
+ }
+ 
+@@ -181,7 +187,7 @@ static bool verify_patch_section(const u8 *buf, size_t buf_size, bool early)
+  * header.
+  */
+ static unsigned int
+-verify_patch_size(u8 family, u32 sh_psize, unsigned int buf_size)
++__verify_patch_size(u8 family, u32 sh_psize, unsigned int buf_size)
+ {
+ 	u32 max_size;
+ 
+@@ -212,6 +218,34 @@ verify_patch_size(u8 family, u32 sh_psize, unsigned int buf_size)
+ 	return sh_psize;
+ }
+ 
++static unsigned int
++verify_patch(u8 family, const u8 *buf, unsigned int buf_size, bool early)
++{
++	u32 sh_psize;
++
++	if (!__verify_patch_section(buf, buf_size, &sh_psize, early))
++		return 0;
++	/*
++	 * The section header length is not included in this indicated size
++	 * but is present in the leftover file length so we need to subtract
++	 * it before passing this value to the function below.
++	 */
++	buf_size -= SECTION_HDR_SIZE;
++
++	/*
++	 * Check if the remaining buffer is big enough to contain a patch of
++	 * size sh_psize, as the section claims.
++	 */
++	if (buf_size < sh_psize) {
++		if (!early)
++			pr_debug("Patch of size %u truncated.\n", sh_psize);
++
++		return 0;
++	}
++
++	return __verify_patch_size(family, sh_psize, buf_size);
++}
++
+ /*
+  * This scans the ucode blob for the proper container as we can have multiple
+  * containers glued together. Returns the equivalence ID from the equivalence
+@@ -687,7 +721,7 @@ static void cleanup(void)
+ }
+ 
+ /*
+- * We return the current size even if some of the checks failed so that
++ * Return a non-negative value even if some of the checks failed so that
+  * we can skip over the next patch. If we return a negative value, we
+  * signal a grave error like a memory allocation has failed and the
+  * driver cannot continue functioning normally. In such cases, we tear
+@@ -695,14 +729,20 @@ static void cleanup(void)
+  */
+ static int verify_and_add_patch(u8 family, u8 *fw, unsigned int leftover)
+ {
+-	unsigned int sh_psize, crnt_size, ret;
+ 	struct microcode_header_amd *mc_hdr;
++	unsigned int patch_size, crnt_size;
+ 	struct ucode_patch *patch;
+ 	u32 proc_fam;
+ 	u16 proc_id;
+ 
+-	sh_psize    = *(u32 *)(fw + 4);
+-	crnt_size   = sh_psize + SECTION_HDR_SIZE;
++	patch_size = verify_patch(family, fw, leftover, false);
++	if (!patch_size) {
++		pr_debug("Patch size mismatch.\n");
++		return 1;
++	}
++
++	/* If initial rough pokes pass, we can start looking at the header. */
++	crnt_size   = patch_size + SECTION_HDR_SIZE;
+ 	mc_hdr	    = (struct microcode_header_amd *)(fw + SECTION_HDR_SIZE);
+ 	proc_id	    = mc_hdr->processor_rev_id;
+ 
+@@ -723,24 +763,13 @@ static int verify_and_add_patch(u8 family, u8 *fw, unsigned int leftover)
+ 		return crnt_size;
+ 	}
+ 
+-	/*
+-	 * The section header length is not included in this indicated size
+-	 * but is present in the leftover file length so we need to subtract
+-	 * it before passing this value to the function below.
+-	 */
+-	ret = verify_patch_size(family, sh_psize, leftover - SECTION_HDR_SIZE);
+-	if (!ret) {
+-		pr_err("Patch-ID 0x%08x: size mismatch.\n", mc_hdr->patch_id);
+-		return crnt_size;
+-	}
+-
+ 	patch = kzalloc(sizeof(*patch), GFP_KERNEL);
+ 	if (!patch) {
+ 		pr_err("Patch allocation failure.\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	patch->data = kmemdup(fw + SECTION_HDR_SIZE, sh_psize, GFP_KERNEL);
++	patch->data = kmemdup(fw + SECTION_HDR_SIZE, patch_size, GFP_KERNEL);
+ 	if (!patch->data) {
+ 		pr_err("Patch data allocation failure.\n");
+ 		kfree(patch);
+-- 
+2.19.1

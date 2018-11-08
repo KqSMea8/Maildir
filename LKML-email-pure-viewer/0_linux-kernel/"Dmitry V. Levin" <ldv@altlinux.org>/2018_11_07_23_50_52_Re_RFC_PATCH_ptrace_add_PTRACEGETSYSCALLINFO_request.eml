@@ -1,0 +1,150 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:39 -0000
+Received: from icoremail.net (unknown [209.85.214.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv_r4CeNb_PVYAQ--.26942S3;
+	Wed, 07 Nov 2018 23:51:22 +0800 (CST)
+Received: from mail-pl1-f178.google.com (unknown [209.85.214.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3GET2CeNbVCkYAA--.15S3;
+	Wed, 07 Nov 2018 23:51:19 +0800 (CST)
+Received: by mail-pl1-f178.google.com with SMTP id w24-v6so8043061plq.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:51:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:sender:precedence
+         :list-id;
+        bh=BziXApQ2/QjW0ve169M7g+BhoqaqHgx3FreQyqpCrUk=;
+        b=H4lBZYits1k4QAtmRQNAFu1gvYUPr2SofZusfZOHkiRiXFjEj1qqCrRHe3xOM89keG
+         0aIsRPV5qtAMpdAVi2GUYPxMnVSpCwwzCONPq4j/Jwqriil3tCekuA1nSjnN4WtqoEog
+         uR+eb9Y7DZmnohhwh9Ue0a3xf8qGwk5+29VX2vfMIFc1wpjTsy1IinEUf0M0G4vvID35
+         XOqgK/JpOgg7y0SbErzDfhp9xFE92fMMAChmKllrZ6bJagCsuDQKTbonTUYhKwVJju6i
+         JW0UWHzAVVsN/NCawYNMugYunm3JLI5QIo4SAlnfGVu7oBf0wSYnkZm31atiky/0Uezt
+         +Smw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLRYsc1gh5eWKC2Jn9AfG/UKJ7jx0nBBmSu82VHojZdrv0rmdaZ
+	VSvq0b2P1RPgVbVcG/O7M/gmgc5F9nbZWiXyhA4as6iDJkai1O20sA==
+X-Received: by 2002:a17:902:a9:: with SMTP id a38-v6mr756017pla.7.1541605878784;
+        Wed, 07 Nov 2018 07:51:18 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5407607pjt;
+        Wed, 7 Nov 2018 07:51:17 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dtoSUJyMM4VqkmXtJhhVIh3VRAjVRARit9bP5bVklgWRtPPB+ztD6ScLrj/AWHXpn7PSrk
+X-Received: by 2002:a62:6143:: with SMTP id v64-v6mr725006pfb.125.1541605877923;
+        Wed, 07 Nov 2018 07:51:17 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541605877; cv=none;
+        d=google.com; s=arc-20160816;
+        b=jPwcBC5Gm1sGM6NJEdCp71e8cP4G//+4T0Xej4uKdz41lsXaeao3jVGnlMz+kaYWJH
+         MCkaP/rNqupXZKcCpw+pTDahJXWgp0EO6pfbXFND+TGrKjaZgVxj6QTeZm1cRqYPhS0L
+         biGjtzt3ke6qt3VKtn+wzgg/MiTOlv1fB5WY+IYlfSNlyLmsILSQ89H3rxeXEZkafFHf
+         eYWIs+GRSJxsyhdjOugX/CRlh0YU8vUq1fVL0as0bpz400wgmkuCEM7plwUQ4Ue0yPU5
+         YvgWqg7qrEVLNtFgphXj72dM1TMQuRWYmFNkt62cYWqosv8yXYIKg3t25fhdbposOpAu
+         LERQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:in-reply-to:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date;
+        bh=BziXApQ2/QjW0ve169M7g+BhoqaqHgx3FreQyqpCrUk=;
+        b=kLgjHpJ5v7x6sxPokSFo06eMTywtYSbv/BsgdbGjFnTk5XQkhc+FYlA7K7Edg7wz5a
+         H4Nk/q9JkEEbuFW+E4Z/eSRYTH3GpvQBADCCRU2lKOJFo4rEhDgzaja3qFl1WRWXy1ZM
+         byAPb0+A6RDvbneyqzs+gLZ+wgaC3asM7Ne4Jtw1DU/t5sCdO2/rNPYcxntrOeRA5iqB
+         dGzwlHbbpAn+e3kRW9gONSmviYTK99QzfLOWE+YECgu0XY+l9wfPs9iab4+o3Ac40rsR
+         Kgdp7guVZHKelvpfPKNsM4Y3GIftvw8pNXhazZW0t/vuUrmmX5hyQYufHbm+CF/FQzgP
+         VOng==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id bg3-v6si1035269plb.350.2018.11.07.07.51.02;
+        Wed, 07 Nov 2018 07:51:17 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731134AbeKHBVu (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:21:50 -0500
+Received: from vmicros1.altlinux.org ([194.107.17.57]:41382 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727645AbeKHBVt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:21:49 -0500
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 8EEBA72CA56;
+        Wed,  7 Nov 2018 18:50:52 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 804057CC774; Wed,  7 Nov 2018 18:50:52 +0300 (MSK)
+Date: Wed, 7 Nov 2018 18:50:52 +0300
+From: "Dmitry V. Levin" <ldv@altlinux.org>
+To: Andy Lutomirski <luto@amacapital.net>
+Cc: Elvira Khabirova <lineprinter@altlinux.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Eugene Syromyatnikov <esyr@redhat.com>,
+        linux-kernel@vger.kernel.org, strace-devel@lists.strace.io
+Subject: Re: [RFC PATCH] ptrace: add PTRACE_GET_SYSCALL_INFO request
+Message-ID: <20181107155052.GA27736@altlinux.org>
+Mail-Followup-To: Andy Lutomirski <luto@amacapital.net>,
+        Elvira Khabirova <lineprinter@altlinux.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+        Eugene Syromyatnikov <esyr@redhat.com>,
+        linux-kernel@vger.kernel.org, strace-devel@lists.strace.io
+References: <20181107042751.3b519062@akathisia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107042751.3b519062@akathisia>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3GET2CeNbVCkYAA--.15S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrKFWDKrWfWr47GF1ktr1UKFg_yoWxAwc_Cr
+	s2qw1I9wnYgFyfJ3Wqgr4rJrWUJFy5WFnxXws5Xr18J3y5XFs8GrsYyw13Z34DX3WIgrsr
+	AFWYq347GF12gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbfAYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UMx02cVCv0xWlc7CjxV
+	AKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vEIxC_XrWlc2IjII80
+	xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26rxl6s0DMxvI42IY6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF7vcSsGvfC2KfnxnUUI43ZEXa7IU5HRRtUUUUU==
+
+On Wed, Nov 07, 2018 at 04:27:51AM +0100, Elvira Khabirova wrote:
+[...]
+> The structure was chosen according to [2], except for two changes.
+> First: instead of an arch field with a value of AUDIT_ARCH_*, a boolean
+> is_compat value is returned, because a) not all arches have an AUDIT_ARCH_*
+> defined for them,
+
+To be more specific, here is the list of arch subtrees in v4.20-rc1 that
+invoke tracehook_report_syscall_entry() but do not provide syscall_get_arch():
+
+arch/arc
+arch/c6x
+arch/h8300
+arch/hexagon
+arch/m68k
+arch/nds32
+arch/nios2
+arch/riscv
+arch/um
+arch/xtensa
+
+Among these trees only m68k has its AUDIT_ARCH_M68K constant defined.
+
+
+-- 
+ldv

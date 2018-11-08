@@ -1,0 +1,219 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:55 -0000
+Received: from icoremail.net (unknown [209.85.215.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn31ztQONbE0xaAQ--.27287S3;
+	Thu, 08 Nov 2018 03:45:49 +0800 (CST)
+Received: from mail-pg1-f169.google.com (unknown [209.85.215.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCngj7kQONbVRAZAA--.755S3;
+	Thu, 08 Nov 2018 03:45:40 +0800 (CST)
+Received: by mail-pg1-f169.google.com with SMTP id z10so5872348pgp.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:45:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=SGVh1pRpqxTDJUil1PaJY2qjRkU65DCtN64z6kLuIws=;
+        b=LOW4eB+j2AIfM0jP3T+ke3F9tPrxdBWPpDMH0gLb6w4OOii1Iv+bb1k5Gka6DRsoeX
+         ph0ue2eTlXaTAqz7LZ0+10MGhR9y9RXdUCqmINTlU1nXJQPtlKbPPRSmXfy3Ra5ptULw
+         y1mQQZM11fXvuKCuiX/4z1RyNwybwG7Amupu4kYU7wt2X2uuwHXE4gaNIEmsxOwblGd9
+         Dj04qXP56kK4gcUoJgQ9ycsPtIU3m2f0dPncTDDVmaP/qw+6n8NUEWBcFg5mvsRMNhXq
+         BSiq8uWIDKVHrsaVToJqhX5Z2k2eMRn5HofmlRpio7jT6a8xploCKgGLygeSpHuFYJfN
+         8KaQ==
+X-Gm-Message-State: AGRZ1gJ4y+Q0DwG2IADVTLHfk5xPqtF7+Qd/zDp9zsYjJxrlZMLx7Ij+
+	8aGBc2G2U5Yh+jD8zJ0nC5PRcUP+EXx6Bblhcf4Wj0jcvtfCgCoHcg==
+X-Received: by 2002:a62:c20b:: with SMTP id l11-v6mr1593928pfg.251.1541619940193;
+        Wed, 07 Nov 2018 11:45:40 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5665569pjt;
+        Wed, 7 Nov 2018 11:45:39 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cHQws24B5ocUoUuwQG5WJ8WWZJjkpuJBY5fYtUBsYu5/w81CRsN90q3I3VEztzf0Li/3IY
+X-Received: by 2002:a62:2681:: with SMTP id m123-v6mr1540852pfm.131.1541619938989;
+        Wed, 07 Nov 2018 11:45:38 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541619938; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ofcsqBWIJ4tPpFxnusJV2UmPAeuuSpviZkPM8NmoT6bS6UdSqVHScyy5+AoMlJFuht
+         8aBG16nnuJi1FGFIe74tvzlVLi0k20vkymG+UwmfFzBAy9Zyyh75JFhX0YoBYgLVko4z
+         M3zTfA5aPrqs3IuBV23OGCCIAoio8p9Ty6PNbSjx2Imhja+cIadjULty31RgnpGT7jNt
+         NO3d6v8RKoDFw90dfOrQ/x/DKXuhxMtY7myXB5J5AqhIx8PAzXSzdTG5W/bpb0w1C1kQ
+         mi3OjzdbjGcGsNLI4Lgt/Cws1M/gB/VBm3sIBaxQEzumEbPLZ2jG0TA3RPeFDLsCck9/
+         O1yg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:cc:to:subject
+         :message-id:date:from:in-reply-to:references:mime-version
+         :dkim-signature;
+        bh=SGVh1pRpqxTDJUil1PaJY2qjRkU65DCtN64z6kLuIws=;
+        b=uiZf6q9l5tBboS5EY7xPk7Mi1bTJPeG0W40tY7XhEj7o5D7wPhnV3ArG5OPm2Rx7wi
+         lh0yHot86J4l3pW0iVuXEArRJf1ZmwjZzXl6BupvEIZak9fYPdgWXs3ARDNVIONIh/9v
+         0EwwMyjh6q351SrWXCtt3mlMTAP9Ezc6w89jJAi1sRIy1MhmtWNGVOIGVMzFAzjN/+p2
+         Af8xL118oisDc7+o7hqLng+Vt4/41d+9BqeScVVD5GMZIObuxrKnJgGrAQ6Gp8jTSShX
+         36j4NoOUWf80i6dcAKo6JFVbKzyTe0eN/oUgOOT8LVHrj455oJl0nqmr3nrNcfDdUe2w
+         iv0A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=P87byO+m;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 5-v6si1500429plx.310.2018.11.07.11.45.21;
+        Wed, 07 Nov 2018 11:45:38 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726584AbeKHFQz (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:16:55 -0500
+Received: from mail-qk1-f172.google.com ([209.85.222.172]:41249 "EHLO
+        mail-qk1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725746AbeKHFQy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:16:54 -0500
+Received: by mail-qk1-f172.google.com with SMTP id 189so22515185qkj.8;
+        Wed, 07 Nov 2018 11:45:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=SGVh1pRpqxTDJUil1PaJY2qjRkU65DCtN64z6kLuIws=;
+        b=P87byO+m9jareZqeHanIfDsaL4RTnXQPC+pKn68FyBiLJuUOq3Bvznoj2vw+dh8KUL
+         xEhEb2GP3pg+cT3mYzDLdlvXKYDhdxO+L6Pz3Ii46AVkNtU4cGhEYsNeP/dukk6o9W8E
+         rj03aGogeh6E0cQvG7474iza601VozTlqscPJk8f0x4Y/OgkqJA5XuKIsrQmwypafB4D
+         j7vtEwHNyGDfNJJXJjXAq59LZi7SSkLGiQMnxqkWBOM4GxGiblpUBDHUc+Q3/MeYr//R
+         gx9tGra+F6mRLuWNTazJJ+Nb1fuyPzFwxRvzmoogaT1Qn3G9+Ib5WRtSspRssUhvohKA
+         sYTg==
+X-Received: by 2002:ae9:edd8:: with SMTP id c207mr1483539qkg.184.1541619904850;
+ Wed, 07 Nov 2018 11:45:04 -0800 (PST)
+MIME-Version: 1.0
+References: <CAOesGMgVPsK9YsV2nGoBptWwtHYv=3yMytLx2_tF_ujS5c5p3Q@mail.gmail.com>
+In-Reply-To: <CAOesGMgVPsK9YsV2nGoBptWwtHYv=3yMytLx2_tF_ujS5c5p3Q@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Date: Wed, 7 Nov 2018 13:44:53 -0600
+Message-ID: <CAL_Jsq+4d-0_T68r=PWm5ey=NqsCn5j_j1sQ4Kjp1zBz6zgt6A@mail.gmail.com>
+Subject: Re: [Ksummit-discuss] [TECH TOPIC] SoC maintainer group
+To: Olof Johansson <olof@lixom.net>
+Cc: ksummit-discuss@lists.linuxfoundation.org,
+        Russell King <rmk@armlinux.org.uk>,
+        Kevin Hilman <khilman@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCngj7kQONbVRAZAA--.755S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxZFWxur4DGFy5CFW5GFy5CFg_yoWrZF1xpF
+	y5KrnxCF4DJrW2yas7Ww4YyFyF9a1FvrZ8Jr98G34jya90qF1xtry8ta1j9FZ7urs3GryY
+	vr42vwnIka95ZFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	GVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bL
+	5lnUUUUU=
+
+On Tue, Nov 6, 2018 at 4:17 PM Olof Johansson <olof@lixom.net> wrote:
+>
+> Hi KS organizers (and others),
+>
+> This is a late topic proposal, hopefully there is still time on the agend=
+a.
+>
+> We=E2=80=99ve recently been discussing some maintainer model changes as
+> described below, and would like a slot to discuss the idea and solicit
+> feedback/comments from the others there.
+>
+>
+> This started with Arnd and I finally being in one place at the same
+> time, and talking about how we want to evolve arm-soc maintainership
+> moving forward. We've been independently thinking of ways to expand
+> the group and making it more self-service for everybody, but there's a
+> bunch of tooling needed to make it run smoothly beyond the smaller
+> group we have now.
+>
+> In the end, we ended up looking at it from a slightly different angle:
+> Right now, when contributors show up with new platform support, the
+> first hill they need to climb is figuring out how they need to carve
+> up their platform among all the various maintainers, how to make sure
+> they're all handshaking on keeping things stable, and get code
+> submitted. It's awkward, not well documented and one of the biggest
+> overheads we have on our side as well.
+>
+> When we started talking to other maintainers, we're also realizing
+> that we are currently duplicating a lot of work. In particular, we
+> often all get cc:d on patch series, so we all need to read and filter,
+> and assume that other maintainers spot the right patches, etc.
+>
+> We have discussed a few different options, and it seems like pooling
+> more of the contribution flow to a group of co-maintainers is a useful
+> approach. Initially, we're considering the arm-soc platforms, clock
+> drivers and pinctrl drivers, which all tend to be affected by new
+> platform contributions in this way, and often end up cross-cc:d on
+> everything. Additionally, the flow for successfully merging a new
+> platform or SoC needs to be documented and advertised. This is true
+> whether or not we change the way that maintainers coordinate amongst
+> themselves, or whether or not we change the current workflow used by
+> platform contributors today.
+>
+> So, we're planning to change things up a bit. We're starting a new
+> group that pools current arm-soc, clk and pinctrl drivers and
+> maintainers into one funnel. We'll set up a new mail alias for the
+> maintainer group, and one shared patchwork to collect contributions.
+> We still expect developers to use existing mailing lists, and we still
+> expect for example ARM platform maintainers to keep their workflow of
+> collecting patches for their platform like they do today. Down the
+> road it might make sense to incorporate other driver subsystems as
+> well.
+
+Given that dts files are a large part of what goes into arm-soc, any
+thoughts on changes to the process around them? I think it would be
+good if dts files were a bit more decoupled from kernel code changes.
+Yes, there's the issue with header dependencies to deal with. Ignoring
+that for a moment, keeping the dts files somewhat separate even if
+ultimately in the same tree and the same maintainers would be
+beneficial both for perception and to be able to do validation
+separately. And if we do ever move things out of the kernel tree, then
+it's less of a work-flow change. And I'm happy to help out here in
+whatever way I can.
+
+> Beyond this, we're going to keep a close eye on the drm-misc tree,
+> which is exploring a move to gitlab (and working with gitlab on adding
+> the features they need to move over). If they get a broad maintainer
+> model working well in that environment it could be something we reuse
+> for ourselves too.
+
+AIUI for drm-misc, a major goal there is to have more automated checks
+fed back to submitters which doesn't necessarily have anything to do
+with maintainers. That's something I want to get in front of for DT
+schema so we're not fixing things after we've accepted them. So I've
+been experimenting with gitlab CI and integration with patchwork a bit
+recently. I have gitlab CI running some tests on binding patches
+(checkpatch and schema validation), attaching the results to the DT
+patchwork instance, and updating the patch state. Here is an example
+patch[1], my patchwork related scripts are here[2], and the CI job is
+here[3].
+
+Rob
+
+[1] https://patchwork.ozlabs.org/patch/979613/
+[2] https://gitlab.com/robherring/pw-utils
+[3] https://gitlab.com/robherring/linux/-/jobs

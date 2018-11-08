@@ -1,0 +1,147 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:09 -0000
+Received: from icoremail.net (unknown [209.85.215.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn39zBbuNb4VpbAQ--.27130S3;
+	Thu, 08 Nov 2018 07:01:22 +0800 (CST)
+Received: from mail-pg1-f173.google.com (unknown [209.85.215.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCngj7AbuNbAKkZAA--.1950S3;
+	Thu, 08 Nov 2018 07:01:20 +0800 (CST)
+Received: by mail-pg1-f173.google.com with SMTP id r9-v6so7953491pgv.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 15:01:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=MyXv3/4p6d8UQ4zKhhQaZQbPyfc4tzDHW0Air4GeJsY=;
+        b=QvJlJkKtd+Mzpsvz4F8iRCD9XTVWQxrrZMh1C+hJk5GZFQ14qDctRcLwilB5jdy5Oy
+         GKpYHrmD+Pzz9Fk5ARiLWwndYQgxs44EksE6iaIR/XtBVaqMhbJa9aozUvkVTb5iX8uj
+         efK3X8IkkTI1zat+HNzMkqdpqu8VbnDJaRNDvBZLVKm8TNlv0nexiz9Q6/KE0tid9kTH
+         /WcHEs6w6HtMN1DLBjk4QoNarYXNuXGWwf7MGjfAI7O6ADmwqjAmNBw44CgX8YtwQP6/
+         MI/kxlfx+oMOpyPvgFhaabfOERAfK4eIGo4ivxHhSd267VV0fGyPlRj0pBorWXZ73KlQ
+         k0aQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLFFToV/zyD6UluvHDw/N1V9kANWrBAQeyLd50/12oxZIz0Rims
+	8dhGJWXDiLNxNxw4k2vAoeK65Dv+Lqh5ReSMnaiqjoV0Z513MKOaXg==
+X-Received: by 2002:a63:cd17:: with SMTP id i23mr1844874pgg.13.1541631679590;
+        Wed, 07 Nov 2018 15:01:19 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp103097pjt;
+        Wed, 7 Nov 2018 15:01:18 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cwmT1tjP03pXjFvWC+zq+gzFiNJnLJBW3HLndGsagSriGgV/HUo2q0CzVNdybwcPeLguu0
+X-Received: by 2002:a65:6491:: with SMTP id e17mr1847128pgv.418.1541631678654;
+        Wed, 07 Nov 2018 15:01:18 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541631678; cv=none;
+        d=google.com; s=arc-20160816;
+        b=yRRxB/ryjMQTO5qn+QGhTjCYO/nrNgPuFrVZYZi7tBqt44bBaBqIm5NjNA5CxMxSdJ
+         wNnjUxAZEkyiOMiAwLHAQ0WIxGTPxCk0pX31TRvpmr6UnhZQm6GmP9HRrKNXTXQ8xAcn
+         OfW9TXG0Tc9NvABLhA30KjllYsaoSRMrJxOw6Zrvg1Q3icC0u2iiBuUcZEotX+YquYHC
+         mU18oY0GVjkAPTsPc8mEEibL+xGeimm6Dw5Qt7I0Ep8hMF0M+I1m5Wfdn9YBKAKqPHZo
+         2d3iQ/W6Ho21M7Txcv9+bHVOca210UsSiuBkdStadTeypX/QHyVXRGojYCKjcLY0NRxg
+         NE5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:subject:cc:to:from:date;
+        bh=MyXv3/4p6d8UQ4zKhhQaZQbPyfc4tzDHW0Air4GeJsY=;
+        b=wmS2+OkN9VSqdDb49Ud97uzbqr2tyLPEADM96yVl6OWtex2mGeAXriAmkvC3KEwWL+
+         3FdbohfRM/IMTIcLNdrn+Nm1A/MrWAHwuZnN0pL6lXpwZImmKCpN3jExLVDV9WimKn/p
+         Akg29kgLcWP1I0iXf0ylKNBJKhyedx/xPYP7ip+eUtL7cbPhIejRiIjmq6IgZzO0uxOp
+         NVXGNAbJSXa+Gq4iUA5Jxp1AuYJfRKZjcVGIpOMOM6didnYlsZQRX87h1BGrt8dX1Urd
+         kqIus3Wmn4GX7BN18Jj2MvteALwLv2S9wDcaGekN7Vt3NF22tW52Z8Nbj4YoF77GgF+K
+         +8XQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id j2-v6si2207479pfg.10.2018.11.07.15.01.03;
+        Wed, 07 Nov 2018 15:01:18 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728307AbeKHId2 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:33:28 -0500
+Received: from mail.linuxfoundation.org ([140.211.169.12]:48286 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727744AbeKHId1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:33:27 -0500
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 6FCDB941;
+        Wed,  7 Nov 2018 23:00:53 +0000 (UTC)
+Date: Wed, 7 Nov 2018 15:00:52 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Vitaly Wool <vitalywool@gmail.com>
+Cc: Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Oleksiy.Avramchenko@sony.com, Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] z3fold: encode object length in the handle
+Message-Id: <20181107150052.ed3d26414c3b2f74956a3d42@linux-foundation.org>
+In-Reply-To: <CAMJBoFMWV-HbymH6D0PYF6EJFoLoheDHCwaQgZiadvd7BZSE2w@mail.gmail.com>
+References: <20181025112821.0924423fb9ecc7918896ec2b@gmail.com>
+        <20181025124249.0ba63f1041ed8836ff6e6190@linux-foundation.org>
+        <CAMJBoFMWV-HbymH6D0PYF6EJFoLoheDHCwaQgZiadvd7BZSE2w@mail.gmail.com>
+X-Mailer: Sylpheed 3.6.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCngj7AbuNbAKkZAA--.1950S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7KrWktw4xKryUtr48WrWUCFg_yoW8GF15pr
+	W3KFsxKrykGr4xCas2yan7XrWrZa18CF1rCFyUXryjv3sxXF1F9r4fGayj93WUWa1I9w40
+	qr4SvF93X34DA3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6FWlc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r1I6r4UMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r1I6r4UYxBIdaVFxhVjvjDU0xZFpf9x07bY
+	4SrUUUUU=
+
+On Mon, 29 Oct 2018 13:27:36 +0100 Vitaly Wool <vitalywool@gmail.com> wrote:
+
+> Hi Andrew,
+> 
+> Den tors 25 okt. 2018 kl 21:42 skrev Andrew Morton <
+> akpm@linux-foundation.org>:
+> 
+> > On Thu, 25 Oct 2018 11:28:21 +0200 Vitaly Wool <vitalywool@gmail.com>
+> > wrote:
+> >
+> > > Reclaim and free can race on an object (which is basically ok) but
+> > > in order for reclaim to be able to  map "freed" object we need to
+> > > encode object length in the handle. handle_to_chunks() is thus
+> > > introduced to extract object length from a handle and use it during
+> > > mapping of the last object we couldn't correctly map before.
+> >
+> > What are the runtime effects of this change?
+> >
+> 
+> I haven't observed any adverse impact with this change used in zswap (and
+> in fact, this is a bugfix for zswap operation). There is a slight under 1%
+> impact when z3fold is used with ZRAM but since the support for ZRAM over
+> zpool is still out of tree, I take it doesn't matter at this point, right?
+> 
+
+I mean "runtime effects", not "run time effects" ;)
+
+Apart from wishing to document this change fully, I'm trying to
+understand which kernel version(s) need the fix.  To understand that, I
+need to know the effect upon end-user-visible behaviour.  You say it
+fixes a bug - please describe that bug: how it is triggered, what
+effect is has, etc.
+
+Also, any suggestions as to which kernel versions we should fix is
+always welcome.

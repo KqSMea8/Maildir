@@ -1,0 +1,134 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:51 -0000
+Received: from icoremail.net (unknown [209.85.210.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX_uMEuNbhyxZAQ--.26839S3;
+	Thu, 08 Nov 2018 00:27:57 +0800 (CST)
+Received: from mail-pf1-f170.google.com (unknown [209.85.210.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXOESLEuNbs04YAA--.132S3;
+	Thu, 08 Nov 2018 00:27:55 +0800 (CST)
+Received: by mail-pf1-f170.google.com with SMTP id u13-v6so7913851pfm.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:27:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent:sender:precedence:list-id;
+        bh=Lx+gCM9R33kbB1YyYbFVpD7r8nPCF69gbaiHv4/YgAc=;
+        b=TO8a/H0Qo2z8ILTWJvpprS3vwCNk42ZikXv9Plszu9/+f/pydAizVJqglu+jiI9HCe
+         8x6m3TVdwE9GWnjvUHYtvU3YpoKpN3GGq4naIVNRXr7MIddXccyZo3g0JGpSn5D5+np3
+         NRGFqKjeUefjWVCsjA7CEvszo4TWe2+oi1m1v8Fb2uatJFUBQ5Wmz6XLcTESIG3mDpad
+         MkXrZyzRs0np6oGIqjq9yvVl1gOxxItOzupuyg+l0TU8pWUh3KJuuFRMZBDhcWCaZh0d
+         Q0S1PXO7QNNnpXKc9D80QUWA7MsdI8ECxe7CQtqpI7SB3fM0A4f6juq426nsV9gP2TOi
+         a0JQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gLr9qsb+PfVVI+Qx9pcCa0DP3a1Vd/iyHh/XGLasDI+mWQ+ZVhg
+	PKknPy9BxahQpRC+yj2v3t9HbRy5mJmlsha+utZ0uZmUN85Gl5doQA==
+X-Received: by 2002:a63:3c44:: with SMTP id i4mr742592pgn.286.1541608075105;
+        Wed, 07 Nov 2018 08:27:55 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5450450pjt;
+        Wed, 7 Nov 2018 08:27:54 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dkkpwqjOnyhefna+FWcIiVXUk1XauR/6YL2j5mpi/qsV+TFqH8tazHhgoKP3UQU9oD47UE
+X-Received: by 2002:a62:2944:: with SMTP id p65-v6mr856311pfp.176.1541608074299;
+        Wed, 07 Nov 2018 08:27:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541608074; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Zih35BrT3x0Txxl+Ni2hrDpuoNWeG+avgStJK6YS9i0PNWPlDLqRtPvH99ox91Rpoq
+         ueU9PGe3EubBmkqSrJ8ZbwZYw2QACUbI7ZHwF/IEuqLy6/a4tzY7FjNCt8Fx2V5aIz3z
+         b/QfXPISg0LuJBKtiQPErNPGcgRAAzJ5DwV82O16mKBq3aiKFcjD8zm1EpTDf8flAoGL
+         aieJaiaG3MU4ic3gMQdlgUg04Qu1BhgF7QdK0b/I20ezBxpwGIw0r2U5O5XIwb4LcUSG
+         8Xkd88B8dZ+3+DBlqUPTkJOBLWE8loGQkCQooZfgnKmpYqKM4Z2kE6bbYZt6QG10tNt7
+         Y46g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:content-disposition
+         :mime-version:message-id:subject:cc:to:from:date;
+        bh=Lx+gCM9R33kbB1YyYbFVpD7r8nPCF69gbaiHv4/YgAc=;
+        b=KkYcJlfzjW6mxHluw9uBBRW08azEIjL/xgX8bXvS5uDqf0fwmktNNe6Gh0rAyhoOkI
+         jOFgd5tRGAlCnA/SQFINDdbS4c+k7b5rj+ZVkdwafEX/rAfm3l7zBUGMTvMpG3cNuNWI
+         9G0hHduVIrOMadTEsLzH4eEDoJR926V9adpnnOou0M7CJDBcwQDMTf02k3dJS82p2r93
+         DON0kXAUig6t1jeIwJc2iXtburLOrGaxdiKycZnbHOfrFXDCZlf/n/vOUzRZLjJ9eFkf
+         5foBg6ntazQgmcicaLwFX2lnioilqjAXlCSlmRK2EcvvRREwduZ72lBSxzO52Nmd7DpL
+         Bw6g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id r28-v6si904988pgm.300.2018.11.07.08.27.39;
+        Wed, 07 Nov 2018 08:27:54 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731376AbeKHB4u (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:56:50 -0500
+Received: from mga17.intel.com ([192.55.52.151]:63729 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726752AbeKHB4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:56:49 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 08:25:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,475,1534834800"; 
+   d="scan'208";a="102355181"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 07 Nov 2018 08:25:43 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1gKQeD-000DNw-SP; Thu, 08 Nov 2018 00:25:41 +0800
+Date: Thu, 8 Nov 2018 00:25:28 +0800
+From: kbuild test robot <lkp@intel.com>
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: kbuild-all@01.org, linux-kernel@vger.kernel.org,
+        Andy Gross <andy.gross@linaro.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: sound/soc/qcom/sdm845.c:156:3-4: Unneeded semicolon
+Message-ID: <201811080026.ggtb93Wl%fengguang.wu@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXOESLEuNbs04YAA--.132S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUYt7k0a2IF6w4xM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44l
+	c2xSY4AK6IIF6r1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMx
+	vI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4j6F4UMxvI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xYxBIdaVFxhVjvjDU0xZFpf9x07be
+	iSdUUUUU=
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   8053e5b93eca9b011f7b79bb019bf1eeaaf96c4b
+commit: ccfb464cd106890cfa51070f75921a273e2852e5 soc: qcom: Allow COMPILE_TEST of qcom SoC Kconfigs
+date:   8 weeks ago
+
+
+coccinelle warnings: (new ones prefixed by >>)
+
+>> sound/soc/qcom/sdm845.c:156:3-4: Unneeded semicolon
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation

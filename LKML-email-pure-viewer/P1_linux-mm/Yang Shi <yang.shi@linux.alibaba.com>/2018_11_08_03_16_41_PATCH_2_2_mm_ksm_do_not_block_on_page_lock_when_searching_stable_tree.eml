@@ -1,0 +1,205 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:51 -0000
+Received: from icoremail.net (unknown [209.85.215.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX++_OuNbvilaAQ--.27420S3;
+	Thu, 08 Nov 2018 03:19:28 +0800 (CST)
+Received: from mail-pg1-f182.google.com (unknown [209.85.215.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXNkK9OuNb8PwYAA--.546S3;
+	Thu, 08 Nov 2018 03:19:25 +0800 (CST)
+Received: by mail-pg1-f182.google.com with SMTP id z17-v6so7731245pgv.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:19:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references:sender
+         :precedence:list-id;
+        bh=/KxFt5dloxXubkXGZ1swHl4ZSVHJJLNVYWkuQsyrEjg=;
+        b=hSNe3u6EyS8bsmiDrIkMCdO8ZzshnFTvWRN1VF/esUey4l3IxM/HSEL54TVtUryR5U
+         uOV05nPLCOUTvE2Ms5+KsUB/7gEQxwsOm3CHWljja4BHIfmRebyZH6Hhdka5EKsmnrnD
+         ipRuTjLB6YR6cN0yYTGtQG2XCV0VfcCWO96eiBDHTT5g3z2Q15ut/pK6P59ezht9W3zh
+         8+aDh04ohnSrK5lHTQkBB6dDwr9XbS+LPbhnVy06n+U+OcJtnH8B0iz2PkPEpoM4IiTb
+         Hk0egSc4vHAUTdT23q2+VqkcvEEr/7ZD7ZBkz6IizbG9mPdhZ79WkJJBYw+QAOw49pgB
+         lgCg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=alibaba.com
+X-Gm-Message-State: AGRZ1gKspNHVj+T9fN3jLIYKf/UTvMpFmwAu6Zqk3g7fiJ9IwbX8uaEu
+	Jg4QFiKob4yF/FOdi9a2azBVHr49JJ+0czXioLhMuQGjfyI36d+BBQ==
+X-Received: by 2002:a62:ce8e:: with SMTP id y136-v6mr1480596pfg.201.1541618365086;
+        Wed, 07 Nov 2018 11:19:25 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5640443pjt;
+        Wed, 7 Nov 2018 11:19:24 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cCwjQiL1hL8rXJZZt9rJrWjeiMmsypNN8ud9A4ccLw1JGUv9oOvomHfZvUb1RQg5mVeGz9
+X-Received: by 2002:a17:902:104:: with SMTP id 4-v6mr1540765plb.184.1541618364409;
+        Wed, 07 Nov 2018 11:19:24 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541618364; cv=none;
+        d=google.com; s=arc-20160816;
+        b=eJhGREgeV5oH/p9ke8FrJUSKPyHOIYR6gZXFqxUowMtJJcA9TG7wkm+QUwUw6HSd30
+         +vmaKp2DCvjm0XakEcwnNAhlwpvYYnUpwBHKinXG0jfvjfJGKVdY34y9H/+k3Iux/uSX
+         jUugCZYhitUovJDtMopxTWTPzxRM2Badqniu0SVv+mWfIdwBfJtRYQZeA77IjAxt/yTJ
+         3xGEiaxLnIpFeg4s1eoxRuNXPUngNliL/o7yN2/rgEtkgM9UECKKvkNbXAaDy5hC4p3i
+         3QB7yUpzHxz8b+61AtHaFHe7qejsBmMO6k50OlZ5LAu3cJC7dVljar7IBjcnUv8ViQvE
+         V9yQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from;
+        bh=/KxFt5dloxXubkXGZ1swHl4ZSVHJJLNVYWkuQsyrEjg=;
+        b=jI1RxQrtKO1G2W3AUkkvgpaku5J8Z3yX1+x0vEW3ePZrKu2PTvXnff9jBsZDOLpwzS
+         ExBK/qAwZZFsx+usazYdO1ulTkCQsMxZKudV+0PDhOUVhBrM5PVhKaeYsaOcB0wx9crV
+         UYVTXLbVgNK2kWwb+5G4TFTV0VqKRWfYyhSFcWGN26dH7JGB6GhCOpb2IcT5EWZzJgeF
+         9mY6feKzmQ8afSWvRFeTpPJhWnCZ40vvs+WuRUgzPW7r/YaiylAy/ZsbB2s8Cb5aHQXz
+         SRw9Gftsul+uWqSlL2wyrBl2+U21J6YgJv/AWUno0A5v64F0cNIsm4Or+0nBe/CCgmLJ
+         x6DA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=alibaba.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v18-v6si1587332pfa.3.2018.11.07.11.19.08;
+        Wed, 07 Nov 2018 11:19:24 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730464AbeKHEsr (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:48:47 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:56997 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726926AbeKHEsq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:48:46 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07449;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TCUHVgb_1541618201;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TCUHVgb_1541618201)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 08 Nov 2018 03:16:49 +0800
+From: Yang Shi <yang.shi@linux.alibaba.com>
+To: mhocko@kernel.org, vbabka@suse.cz, hannes@cmpxchg.org,
+        hughd@google.com, akpm@linux-foundation.org
+Cc: yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] mm: ksm: do not block on page lock when searching stable tree
+Date: Thu,  8 Nov 2018 03:16:41 +0800
+Message-Id: <1541618201-120667-2-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1541618201-120667-1-git-send-email-yang.shi@linux.alibaba.com>
+References: <1541618201-120667-1-git-send-email-yang.shi@linux.alibaba.com>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXNkK9OuNb8PwYAA--.546S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxAry7Xw4fAF47Zr4UWFWrGrg_yoW5ZF4kpF
+	4DA34Yv398JFyUWr1xtrsFk34Ygw4ktFWjyryrGw4Yywn8J34Iga109FyfCF15GFykKa15
+	KF4Ut3WDCr4kJrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPqb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x
+	07bo5rcUUUUU=
+
+ksmd need search stable tree to look for the suitable KSM page, but the
+KSM page might be locked for long time due to i.e. KSM page rmap walk.
+
+It sounds not worth waiting for the lock, the page can be skip, then try
+to merge it in the next scan to avoid long stall if its content is
+still intact.
+
+Introduce async mode to get_ksm_page() to not block on page lock, like
+what try_to_merge_one_page() does.
+
+Return -EBUSY if trylock fails, since NULL means not find suitable KSM
+page, which is a valid case.
+
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+---
+ mm/ksm.c | 29 +++++++++++++++++++++++++----
+ 1 file changed, 25 insertions(+), 4 deletions(-)
+
+diff --git a/mm/ksm.c b/mm/ksm.c
+index 5b0894b..576803d 100644
+--- a/mm/ksm.c
++++ b/mm/ksm.c
+@@ -667,7 +667,7 @@ static void remove_node_from_stable_tree(struct stable_node *stable_node)
+ }
+ 
+ /*
+- * get_ksm_page: checks if the page indicated by the stable node
++ * __get_ksm_page: checks if the page indicated by the stable node
+  * is still its ksm page, despite having held no reference to it.
+  * In which case we can trust the content of the page, and it
+  * returns the gotten page; but if the page has now been zapped,
+@@ -685,7 +685,8 @@ static void remove_node_from_stable_tree(struct stable_node *stable_node)
+  * a page to put something that might look like our key in page->mapping.
+  * is on its way to being freed; but it is an anomaly to bear in mind.
+  */
+-static struct page *get_ksm_page(struct stable_node *stable_node, bool lock_it)
++static struct page *__get_ksm_page(struct stable_node *stable_node,
++				   bool lock_it, bool async)
+ {
+ 	struct page *page;
+ 	void *expected_mapping;
+@@ -728,7 +729,14 @@ static struct page *get_ksm_page(struct stable_node *stable_node, bool lock_it)
+ 	}
+ 
+ 	if (lock_it) {
+-		lock_page(page);
++		if (async) {
++			if (!trylock_page(page)) {
++				put_page(page);
++				return ERR_PTR(-EBUSY);
++			}
++		} else
++			lock_page(page);
++
+ 		if (READ_ONCE(page->mapping) != expected_mapping) {
+ 			unlock_page(page);
+ 			put_page(page);
+@@ -751,6 +759,11 @@ static struct page *get_ksm_page(struct stable_node *stable_node, bool lock_it)
+ 	return NULL;
+ }
+ 
++static struct page *get_ksm_page(struct stable_node *stable_node, bool lock_it)
++{
++	return __get_ksm_page(stable_node, lock_it, false);
++}
++
+ /*
+  * Removing rmap_item from stable or unstable tree.
+  * This function will clean the information from the stable/unstable tree.
+@@ -1675,7 +1688,11 @@ static struct page *stable_tree_search(struct page *page)
+ 			 * It would be more elegant to return stable_node
+ 			 * than kpage, but that involves more changes.
+ 			 */
+-			tree_page = get_ksm_page(stable_node_dup, true);
++			tree_page = __get_ksm_page(stable_node_dup, true, true);
++
++			if (PTR_ERR(tree_page) == -EBUSY)
++				return ERR_PTR(-EBUSY);
++
+ 			if (unlikely(!tree_page))
+ 				/*
+ 				 * The tree may have been rebalanced,
+@@ -2062,6 +2079,10 @@ static void cmp_and_merge_page(struct page *page, struct rmap_item *rmap_item)
+ 
+ 	/* We first start with searching the page inside the stable tree */
+ 	kpage = stable_tree_search(page);
++
++	if (PTR_ERR(kpage) == -EBUSY)
++		return;
++
+ 	if (kpage == page && rmap_item->head == stable_node) {
+ 		put_page(kpage);
+ 		return;
+-- 
+1.8.3.1

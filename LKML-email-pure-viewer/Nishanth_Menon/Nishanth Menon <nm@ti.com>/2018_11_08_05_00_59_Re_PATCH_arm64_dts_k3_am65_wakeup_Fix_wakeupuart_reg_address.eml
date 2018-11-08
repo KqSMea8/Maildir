@@ -1,0 +1,161 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:37 -0000
+Received: from icoremail.net (unknown [209.85.210.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHHybcUuNbMrdaAQ--.27581S3;
+	Thu, 08 Nov 2018 05:02:21 +0800 (CST)
+Received: from mail-pf1-f175.google.com (unknown [209.85.210.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBnTUnaUuNbeUsZAA--.1092S3;
+	Thu, 08 Nov 2018 05:02:18 +0800 (CST)
+Received: by mail-pf1-f175.google.com with SMTP id v68-v6so4640499pfk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 13:02:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=RSZFn6Frvjo+D5/sYotY+vtQZafELNl4Oa1C2Z9S/pg=;
+        b=IBxhj9MXNq5BYZh6One6ND9al5vcmH5Yq+v7Foii5ciScBMjtI/g7/NKC3cmJqob5b
+         CrEeoosziLnk5EjOxaqDoq/6owlY1jvCnwUnGJdcDv4d6lemfwcmtwgxEx6FUwerbmU+
+         ZlL5R9hobWUy1z96MnJ/7LXWWULGj7CHKsGNO+5HNvz8KI946K9I1+MvD8rgSC7osZeC
+         vvVSGJrwlZkjBH3x0pEwZvBRYEMdKqs6RKcTXNBwZ/v0KK6BSHR+mS3NbxU9Mqnf5wx+
+         jMZRjxuI/EvzAHkGHIkZiHYB0KOvjmtlmX0Focztpu7LHoMP56n2Shb1JfLPy/Epm+TD
+         048A==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=QUARANTINE sp=NONE dis=NONE) header.from=ti.com
+X-Gm-Message-State: AGRZ1gLUFEKm81cVDPdkKPpbL3un/gzMtHDIRfi0U1oLZ7gWAIDeSYRx
+	o5NINUifHg29ajbgvBtLjHaUJ8zhirp7X9gX1sm0wAdTR+b1hN151Q==
+X-Received: by 2002:a65:45c9:: with SMTP id m9-v6mr1533172pgr.212.1541624538378;
+        Wed, 07 Nov 2018 13:02:18 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:8a16:0:0:0:0 with SMTP id w22-v6csp5904844pjn;
+        Wed, 7 Nov 2018 13:02:17 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ckAX1F0aHorl2rMNChm03f6UJwi8ZOg1AgGqfYxWOkgWexllsS6ME8lFoANy5J9yCmX9Qm
+X-Received: by 2002:a62:c184:: with SMTP id i126-v6mr1849486pfg.53.1541624537326;
+        Wed, 07 Nov 2018 13:02:17 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541624537; cv=none;
+        d=google.com; s=arc-20160816;
+        b=oUEAbg8YFAGXBYzrAsXm++QNzOyZsTbvXYvLIBue8FDCaO96m9+7Sx6L3tOAnp+Oks
+         iLmP+zZwlJFRWHk70yS/D/77xzGx3CD/2x7HvMFZY7EiIY77Em9F8yInKjHqwGUcw5DO
+         auQcyUDbpHrqG0/DgCleXmzF+EG90hIV4RWqi6D1RFD38nYwu/XOcyAyEfzqByljrrJA
+         yksG/OLpaPaR1Om+txO0doabf4pZ8yHaHyvbry90nCnRdMh5HShf17S48myf5xgtoGVs
+         uvkLr9niRoyX4n4jqSghvKg8vY+y+xC0o6lruYY+5BFUazMMQr0edmeDRqFDvWMcmdFk
+         gqbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=RSZFn6Frvjo+D5/sYotY+vtQZafELNl4Oa1C2Z9S/pg=;
+        b=F0lCIvDxXQDPJNR5neAI2LD6QEdIm3YkzllE3lx83r21F7UHzSBRUWu1xcpxlnDI9c
+         WVf1twt/9eumkPv+b5x1y48ulWk88ifEoZfQ16rhM6Eis6o605Dgs4kMbazIBKuR39NF
+         osdfR8a0m1U4NbOAlrcqpMsrfcCFAaNjES6L3rt03sQ+o+osni9t7bHTe7woIHHjL2C9
+         ehaywv/XOP5FEw7hmbYz8Xjxd60qdZ68xQViR2Rqy7rxNVi46woPlj4ge8ccc4VzaVzX
+         jra31gsZEulbVIyASB0NyZy1Gmjll7AqsGgq5Ap0jvdOOAOwKfKgma8s386gIsyyvxPT
+         yWRg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=QUARANTINE sp=NONE dis=NONE) header.from=ti.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id j19-v6si1646475pfh.63.2018.11.07.13.02.00;
+        Wed, 07 Nov 2018 13:02:17 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727232AbeKHGdz (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:33:55 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:38466 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbeKHGdz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:33:55 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id wA7L1AIh050706;
+        Wed, 7 Nov 2018 15:01:10 -0600
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id wA7L1AGc048138
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 7 Nov 2018 15:01:10 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1466.3; Wed, 7 Nov
+ 2018 15:01:10 -0600
+Received: from dlep33.itg.ti.com (157.170.170.75) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1466.3 via Frontend Transport;
+ Wed, 7 Nov 2018 15:01:10 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id wA7L1A2v007051;
+        Wed, 7 Nov 2018 15:01:10 -0600
+Date: Wed, 7 Nov 2018 15:00:59 -0600
+From: Nishanth Menon <nm@ti.com>
+To: "Vutla, Lokesh" <lokeshvutla@ti.com>
+CC: "R, Vignesh" <vigneshr@ti.com>, "Kristo, Tero" <t-kristo@ti.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] arm64: dts: k3-am65-wakeup: Fix wakeup_uart reg address
+Message-ID: <20181107210059.j2wd4v2uawsjniol@kahuna>
+References: <20180927050146.17847-1-vigneshr@ti.com>
+ <8dc7a5d5-3e21-c2be-fde1-3f2bc6396bec@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <8dc7a5d5-3e21-c2be-fde1-3f2bc6396bec@ti.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBnTUnaUuNbeUsZAA--.1092S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWruFWkJFW7JrWxCF1UAFy5Jwb_yoW3CrX_Zw
+	4UZw1DWws8XFs7K3yakr4Fg34UAw1UAF18Ww4avFn7tF15tF9xZa47tr9rC3ZxKw4Yqr9r
+	CF90qFZ0y3ya9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbq8YjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6F4lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUqZYF
+	DUUUU
+
+On 10:10-20181005, Vutla, Lokesh wrote:
+> 
+> 
+> On Thursday 27 September 2018 10:31 AM, Vignesh R wrote:
+> > cbass_wakeup interconnect which is the parent of wakeup_uart node
+> > defines address-cells=1 and size-cells=1, therefore fix up reg property
+> > of wakeup_uart node accordingly. Otherwise, this UART instance fails to
+> > probe if enabled.
+> > 
+> > Fixes: 4201af2544b3 ("arm64: dts: ti: am654: Add uart nodes")
+> > Signed-off-by: Vignesh R <vigneshr@ti.com>
+> 
+> Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+
+Tero:
+
+Could we pick this up for rc2? looks like $subject might be good to fix
+up to:
+arm64: dts: ti: k3-am65-wakeup: Fix wakeup_uart reg address
+instead of
+arm64: dts: k3-am65-wakeup: Fix wakeup_uart reg address
+
+could be fixed locally.
+
+-- 
+Regards,
+Nishanth Menon

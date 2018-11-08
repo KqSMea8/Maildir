@@ -1,0 +1,184 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:16 -0000
+Received: from icoremail.net (unknown [209.85.215.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3__vCdONbpnpbAQ--.27623S3;
+	Thu, 08 Nov 2018 07:26:59 +0800 (CST)
+Received: from mail-pg1-f180.google.com (unknown [209.85.215.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDXsDzAdONbkbkZAA--.1986S3;
+	Thu, 08 Nov 2018 07:26:56 +0800 (CST)
+Received: by mail-pg1-f180.google.com with SMTP id 80so27889pge.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 15:26:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :content-transfer-encoding:to:from:in-reply-to:cc:references
+         :message-id:user-agent:subject:date:sender:precedence:list-id;
+        bh=7CQllaupZfsquwMpAGFh4PE+FiXzFukeli+0LBWulDU=;
+        b=ZquqopyKZMkZovwcb/peOgjB/8tJ7sM48Xbkxzb07P0xyr7J0vVg3CYgBPPxLfMuJI
+         LCJ4JAEdKnht2Sbv2bh2M701RsL1db2AQ5oaaXxyHF+Vr5JhUNCxvNKG8gogLdRTro8X
+         eIqrpfnW/9WXpHiurm0YXZ84Ubabql73aDf+CxQZxgNoWCQn77CEJzPipSW8ABlkMWk7
+         P/8k1FfszsK2a/hdtAZABOaCbHWzHeq9DjEYpHjhFd3yTl+qbaGTq5o7qZO5VMtoQKKe
+         g6d5SYPouLuFHOf6NeXpLbjmfP4xdOH5S/M0jk5hSHwLmJp0NtFyhdjrke0K3iJZJcfX
+         l5ww==
+X-Gm-Message-State: AGRZ1gIx59ige2AYCFee+5ihFuWOn+GKn/JPkPtLNwoYrB7dsMoSBYdk
+	beedRM5xNFd8DIXvOGoVluuRR9Q16ervAe6ll4HfrNbVpJ19vchkMg==
+X-Received: by 2002:a62:c20b:: with SMTP id l11-v6mr2318787pfg.251.1541633216358;
+        Wed, 07 Nov 2018 15:26:56 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp124917pjt;
+        Wed, 7 Nov 2018 15:26:55 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fiSNVXRXTyv6J9m8qotgsGEI0IcKdXTPVIvI7phguQwFtKn/ekusipcDfZJQE4YpE+NLMt
+X-Received: by 2002:a63:741:: with SMTP id 62mr1875455pgh.352.1541633215578;
+        Wed, 07 Nov 2018 15:26:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541633215; cv=none;
+        d=google.com; s=arc-20160816;
+        b=e7ujOpHapOvq883O6OxG3avBZCU2mmBaptf06ZVyVRTUt7otutBGS5xqAAAWegc7WE
+         NXObWKxurJ1jP+XhRXgU0L4ettOhmxAuibcOYiE/VjDyD0AaINc6XCtZfGMZkfb+J2Dp
+         UjlzQpwUcVo1dMxhE9P2v5EpTxNvDj47hxQm7n569+nv15nlXA+sOCxG651CoauBxuuX
+         aSY8tgsvh68AEy5Lp3yXJ14ZWf59iASar+sZhI3MrU/iYxsrpY+pIczEu3XeKUgUMeax
+         W89b4rOtBSGzEMvrgFWFz5bJy7/sEcLKRCiK9t3BtJ/BH1dhmIl0l5gm0Lst/r/z/T4S
+         uZiQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:date:subject:user-agent:message-id
+         :references:cc:in-reply-to:from:to:content-transfer-encoding
+         :mime-version:dkim-signature;
+        bh=7CQllaupZfsquwMpAGFh4PE+FiXzFukeli+0LBWulDU=;
+        b=pvJE8mbywQu3RdHQTRvFNB0QV6LfqON4mTo+jHLBO8ikUpRPjD7zUJuw/QjmbrrNRr
+         VjeP+xAQg+K/ADwxMBgyVcOy/Ey69y7SiVuYLX0J9gEZgvCjBppJCnzZls5mhMJHeBEm
+         P72iUuv9jWGJqSa3UD0F/sD+SBregTeXpOguhPyuDtJB5CUanlDp02nmsHWErtd4pDPy
+         QB5Qg+EEPHITymMayrhRIXl3aHhc0MHoQOl0Ih+YyxUUafjGJgdj9RHHG5W9ngcInxBQ
+         /vUBKbNQdB3rnpbEJQSnIkNa4EpvFyZ0whQEnHacMXvnkmPQoZpoIUXxU5nG+WJDsWyG
+         fzWg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kernel.org header.s=default header.b=iwnUZgM5;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id c3-v6si2209335pll.3.2018.11.07.15.26.37;
+        Wed, 07 Nov 2018 15:26:55 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727495AbeKHI7L (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:59:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48240 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726982AbeKHI7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:59:11 -0500
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 482A82086C;
+        Wed,  7 Nov 2018 23:26:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1541633191;
+        bh=U1g63ixgNDwd1nxsTsKnzcyh7pqfemURLukjBaXsymA=;
+        h=To:From:In-Reply-To:Cc:References:Subject:Date:From;
+        b=iwnUZgM5jVhfEqFAEtUEuwTjOxpN/RZziE0hmkizND/z5qah/PkJqk8wlkMhPdBZm
+         ObgpW8tDiGl60Cni0KzLxVCsRMFVy+XqH3A30m7Tgy9e/6YSOjTz09KB9GAxkAsCK6
+         Tm2L6fbQMlHPvb/ohDDgxAV4vstD/2hLKr0AJyP8=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+To: "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        Andy Tang <andy.tang@nxp.com>
+From: Stephen Boyd <sboyd@kernel.org>
+In-Reply-To: <VI1PR04MB433328F4F568ED75019B2091F3C40@VI1PR04MB4333.eurprd04.prod.outlook.com>
+Cc: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20181031074616.24412-1-andy.tang@nxp.com>
+ <154152509666.88331.15573532526011434275@swboyd.mtv.corp.google.com>
+ <VI1PR04MB433328F4F568ED75019B2091F3C40@VI1PR04MB4333.eurprd04.prod.outlook.com>
+Message-ID: <154163319056.88331.16892071193758893138@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.7
+Subject: RE: [PATCH v3] clk: qoriq: add more chips support
+Date: Wed, 07 Nov 2018 15:26:30 -0800
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDXsDzAdONbkbkZAA--.1986S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxZr48KrWDJFykWr48ZFWfAFb_yoW5WFy3pr
+	Z5AFWDZrWUt34xXF1v9w4UGas5Cw4fGFWxGryxKa1qvayqgF9Ig3W8ury5uFyxAryxZan5
+	tF17JF10kFy2kFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6FWlc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUqD3v
+	UUUUU
+
+Quoting Andy Tang (2018-11-06 16:52:19)
+> Hi Stephen,
+> =
+
+> > -----Original Message-----
+> > From: Stephen Boyd <sboyd@kernel.org>
+> > Sent: 2018=E5=B9=B411=E6=9C=887=E6=97=A5 1:25
+> > To: Andy Tang <andy.tang@nxp.com>; mturquette@baylibre.com
+> > Cc: linux-clk@vger.kernel.org; linux-kernel@vger.kernel.org; Andy Tang
+> > <andy.tang@nxp.com>
+> > Subject: Re: [PATCH v3] clk: qoriq: add more chips support
+> > =
+
+> > Quoting Yuantian Tang (2018-10-31 00:46:16)
+> > > diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c index
+> > > 4c30b6e..5baa9e0 100644
+> > > --- a/drivers/clk/clk-qoriq.c
+> > > +++ b/drivers/clk/clk-qoriq.c
+> > > @@ -1418,12 +1418,23 @@ static void __init clockgen_init(struct
+> > > device_node *np)
+> > >
+> > >  CLK_OF_DECLARE(qoriq_clockgen_1, "fsl,qoriq-clockgen-1.0",
+> > > clockgen_init);  CLK_OF_DECLARE(qoriq_clockgen_2,
+> > > "fsl,qoriq-clockgen-2.0", clockgen_init);
+> > > +CLK_OF_DECLARE(qoriq_clockgen_b4420, "fsl,b4420-clockgen",
+> > > +clockgen_init); CLK_OF_DECLARE(qoriq_clockgen_b4860,
+> > > +"fsl,b4860-clockgen", clockgen_init);
+> > >  CLK_OF_DECLARE(qoriq_clockgen_ls1012a, "fsl,ls1012a-clockgen",
+> > > clockgen_init);  CLK_OF_DECLARE(qoriq_clockgen_ls1021a,
+> > > "fsl,ls1021a-clockgen", clockgen_init);
+> > > CLK_OF_DECLARE(qoriq_clockgen_ls1043a, "fsl,ls1043a-clockgen",
+> > > clockgen_init);  CLK_OF_DECLARE(qoriq_clockgen_ls1046a,
+> > > "fsl,ls1046a-clockgen", clockgen_init);
+> > > CLK_OF_DECLARE(qoriq_clockgen_ls1088a, "fsl,ls1088a-clockgen",
+> > > clockgen_init);  CLK_OF_DECLARE(qoriq_clockgen_ls2080a,
+> > > "fsl,ls2080a-clockgen", clockgen_init);
+> > > +CLK_OF_DECLARE(qoriq_clockgen_p2041, "fsl,p2041-clockgen",
+> > > +clockgen_init); CLK_OF_DECLARE(qoriq_clockgen_p3041,
+> > > +"fsl,p3041-clockgen", clockgen_init);
+> > > +CLK_OF_DECLARE(qoriq_clockgen_p4080, "fsl,p4080-clockgen",
+> > > +clockgen_init); CLK_OF_DECLARE(qoriq_clockgen_p5020,
+> > > +"fsl,p5020-clockgen", clockgen_init);
+> > > +CLK_OF_DECLARE(qoriq_clockgen_p5040, "fsl,p5040-clockgen",
+> > > +clockgen_init); CLK_OF_DECLARE(qoriq_clockgen_t1023,
+> > > +"fsl,t1023-clockgen", clockgen_init);
+> > > +CLK_OF_DECLARE(qoriq_clockgen_t1040, "fsl,t1040-clockgen",
+> > > +clockgen_init); CLK_OF_DECLARE(qoriq_clockgen_t2080,
+> > > +"fsl,t2080-clockgen", clockgen_init);
+> > > +CLK_OF_DECLARE(qoriq_clockgen_t4240, "fsl,t4240-clockgen",
+> > > +clockgen_init);
+> > =
+
+> > Some of these compatibles aren't documented. What happened to the
+> > binding patch to add more compatible strings?
+> Nothing happened. Binding patch will be merged to PowerPC tree soon. But =
+it will take time to
+> get to mainline tree or your tree.
+> =
+
+
+Ok. So I'll just merge this patch into clk-next then. Thanks!

@@ -1,0 +1,133 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:00 -0000
+Received: from icoremail.net (unknown [209.85.214.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv2LCZ+Nb0S5bAQ--.27784S3;
+	Thu, 08 Nov 2018 06:31:31 +0800 (CST)
+Received: from mail-pl1-f173.google.com (unknown [209.85.214.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXeETAZ+Nb65QZAA--.2195S3;
+	Thu, 08 Nov 2018 06:31:28 +0800 (CST)
+Received: by mail-pl1-f173.google.com with SMTP id o19-v6so8500648pll.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:31:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=3sVlVGtN+iaKLjFkQL9d34xMDde8VC80wsvN5kK6wFc=;
+        b=oGgdgQxng6Sp7ti3dwXHhnGKBF4QtRIq3BFk0fyPQ/+eyh2VLapD5KP5GPEh2CjnBf
+         LcPmK2GUnbm7XpAQEms53lTwBmUDS6VpYJkhB4YFZhzc5TH8lqw90D0hFCNvHEJkYZKC
+         H1vMzmtVx4ZJj7xislGOcMfnCfn7Qw+7g/nkZv/tjsAdGc24QQv6lb+75DZR8BjftHMl
+         vLN3V0DaVCs5JBHeswwiYt8rK+g8ML9/26YxWMetJugZ21wsfSWdahlV1s6FcoI0KS1k
+         PLhRHjIg2BHUIsmplNj6izFyNGN/JmImQg2P8/cwxkR4nvWCqSwXi2U4xD4xKwHCWL+f
+         6/hg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLO0mJE0N0VPsI7KDUFUc3qWqEuM+nUdp38K3xzaWgIYz06bX4a
+	UfmwtLoU2+OXyEbOREEtMb9wrAe8DZ2+Mm1fuS1Bswk/05z8Z+ffzA==
+X-Received: by 2002:a17:902:bd4a:: with SMTP id b10-v6mr2066743plx.171.1541629887888;
+        Wed, 07 Nov 2018 14:31:27 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp80041pjt;
+        Wed, 7 Nov 2018 14:31:26 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f/0gTkanItyTYXnFms5ONMILKDDK1w8YKGlU8nwjK8LAWlmIDTa8OrL7oeOwtMRX6mxZSr
+X-Received: by 2002:a17:902:6b46:: with SMTP id g6-v6mr2114897plt.33.1541629886787;
+        Wed, 07 Nov 2018 14:31:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541629886; cv=none;
+        d=google.com; s=arc-20160816;
+        b=VVP9e/m1RTvt2ks7HIuAVLZQPVjO6whoUxK3ihhPDXr0yuehGFxpttRSDSF1sL1iFU
+         GwY+kM4JZm09tx8gO81mS8kHNlMdcEqmXhQMIbk4NPLv09WQXrpBlbG1Tw9vbpZuiT+p
+         HMbWDZmn5VLb9Ioa4WwK8ooRDhst4o0FfrQ3xc9hKCFWfZK8okLSR7W6bXbn1JNaUJBO
+         CmXqjVfsEQe98AIeAK1mVWoaHU2WmmEbZllcbmKOlDSbd/VS3JjKDQZYnTqnWe0Ezwvy
+         hN5VBnoVX8avHJ9EoIqqgpbsh4odNkzjewwnH6psGhBEKKrOsOZQMtLQR4QiQ1jw1obz
+         RVSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :organization:references:in-reply-to:message-id:subject:cc:to:from
+         :date;
+        bh=3sVlVGtN+iaKLjFkQL9d34xMDde8VC80wsvN5kK6wFc=;
+        b=CCAJtlJJePj9HMF6fhF0XvsOwbYtWUlYhxUOQ8pKFdN+qrcYGuqWMwji5TIz+d6Frj
+         QvyfVX1k0k7XyN+bI8fS6Aj/K2A0pzM3Dd22g1ycdcHfVN5dNd6xU/xfIMSjbSn+YkH3
+         ZGsZ2LaTllGHOqi0ROsCKAK+MmdiCthuE5saqRofGWA4+Pvj++MZyIY23dUsA1CeB6mj
+         WeT5TX+RItC6zfqSiMHVfNaUqP3MC3C5oUNzxxBj1boUHSFbHe4NgYNr5BykSsQb/2yr
+         p/4ZSRDbpTWtfmn/LHD50KlWY6Gtl36SiCBVRCeLdTAmc6Jji6ndIwPbSuq4Z9uEENRa
+         yMlw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v23-v6si1580328pgh.581.2018.11.07.14.31.10;
+        Wed, 07 Nov 2018 14:31:26 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727965AbeKHIDc (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:03:32 -0500
+Received: from ms.lwn.net ([45.79.88.28]:45846 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727591AbeKHIDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:03:32 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 3D4642ED;
+        Wed,  7 Nov 2018 22:31:05 +0000 (UTC)
+Date: Wed, 7 Nov 2018 15:31:04 -0700
+From: Jonathan Corbet <corbet@lwn.net>
+To: Colin King <colin.king@canonical.com>
+Cc: Jeremy Kerr <jk@ozlabs.org>, David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Documentation: fix spelling mistake, EACCESS -> EACCES
+Message-ID: <20181107153104.71eddf4d@lwn.net>
+In-Reply-To: <20181026172549.3628-1-colin.king@canonical.com>
+References: <20181026172549.3628-1-colin.king@canonical.com>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXeETAZ+Nb65QZAA--.2195S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUO17k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IY64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY
+	4VCF77xAMxkIecxEwVCI4VW3MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxV
+	W8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8
+	Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42
+	xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2Iq
+	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+	1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2Kfnx
+	nUUI43ZEXa7IU5fDG5UUUUU==
+
+On Fri, 26 Oct 2018 18:25:49 +0100
+Colin King <colin.king@canonical.com> wrote:
+
+> Trivial fix to a spelling mistake of the error access name EACCESS,
+> rename to EACCES
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  Documentation/filesystems/spufs.txt | 2 +-
+>  Documentation/gpu/drm-uapi.rst      | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+
+Applied, thanks.  
+
+This is the first patch to spufs.txt since 2006...I wonder if that stuff
+is being used by anybody...
+
+jon

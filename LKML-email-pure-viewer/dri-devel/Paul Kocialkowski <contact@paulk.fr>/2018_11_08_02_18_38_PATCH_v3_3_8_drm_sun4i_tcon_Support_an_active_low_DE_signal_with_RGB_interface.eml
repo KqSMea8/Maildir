@@ -1,0 +1,179 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:33 -0000
+Received: from icoremail.net (unknown [209.85.215.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH_rWLONbbN1ZAQ--.27018S3;
+	Thu, 08 Nov 2018 02:20:07 +0800 (CST)
+Received: from mail-pg1-f175.google.com (unknown [209.85.215.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3Uz_ULONbTc0YAA--.146S3;
+	Thu, 08 Nov 2018 02:20:05 +0800 (CST)
+Received: by mail-pg1-f175.google.com with SMTP id r9-v6so7655593pgv.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:20:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=4b3OH//ZjmAPdbj16dWpiKmoyFwpeoXSiQvLf6WF7fY=;
+        b=Xp6WmAaxd8IjTzclK/GzVdtTWxVOsCvK3gjtSwjhGn2AgEhHx28r8pDdNmYz/NOfpx
+         UWRB4pQals0oi3EoPKvvDAPjfe1Au7UuArVt5+Hgx2RXJayJv2phqLUyF681wcPj+g2O
+         //DDvqa8o4c9u9FqyjWDbI/O8SInaWUuxUOOekVEGktbNLA4lrvZeBzitINE+CUakVdm
+         JpDpWKznP9spnk7iWM4bIzeSd4WnAGd5qicmcoRg3KoYAZwj4Ptg4pbTJ1Ysba+umhkD
+         Q45x+lfz27S4YskATgfVQDNvjYX4hs62GuCg0hGe62YvntNp8uExAmxa6e1w4T5dYqqs
+         Y05Q==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLNv6ewaWOtYErm9dMavlItEU4tQu2G3JPvQtlBmdGMceXNEPW9
+	KgFWTphIHATr63Hyb5dp1R5qCW463zFUEm/Y6YaoXDuKvi2x+UqiIQ==
+X-Received: by 2002:a62:3687:: with SMTP id d129-v6mr1284421pfa.56.1541614804656;
+        Wed, 07 Nov 2018 10:20:04 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5575393pjt;
+        Wed, 7 Nov 2018 10:20:03 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cy0zdcJDFfjvwwBTiaNTk8Cf3hQ2gXaBbJOZchQ3PjGifTPfC8h6ukKSSqEksvfLrX/sag
+X-Received: by 2002:a17:902:ac86:: with SMTP id h6-v6mr1231360plr.174.1541614803830;
+        Wed, 07 Nov 2018 10:20:03 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541614803; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Q82I5rfBUlAaCsnfW3ZKzGWbs9oqD+ReDrbmROfBDjPe244deJmNqbyWhH+5UX+1PC
+         UkBD4gjzuAf0YF70KjQystNgYAshAzY2UT+rl2tkaVWBZvhpmf9SAsut2QQnCqN7kr9Z
+         BbzpuFB7bwu4c4OJ9dlKXrTi1ZZoyuNugegRk6mvYIB/zJ8IxpBY9Hrg1VY4C5DA4IzF
+         2RWvQuS3DhE4MPJz06v1WxEG2nFEr199LrErt2q/JcYOjPqIqgYYKvZOkKi/vr62dSZM
+         2SuuhpZQhpHIKpmdax5IpTHZK5BSSQjSiPCE4GKNPRJiIZmfo99ebLrpGWxVY1XM72Eh
+         bWeA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=4b3OH//ZjmAPdbj16dWpiKmoyFwpeoXSiQvLf6WF7fY=;
+        b=HUTWX5Vw1ApAshPDmXFjY8x5pK+RGSidb1Z7AsV0Qx+kQfRFUhgay/u4r6A5H5z4Gl
+         th1HyTzMdSPih3qSC4v7aPMrtaek6c2VmM2jER8JoLzvycQZBXqsD+/dPuThChMgi2rz
+         1d+W5MAq3IWrqL2WNZmbikOC6zKRsTcEbFZmx9vFodDOimdV9J9FmpGs/yRedlC1/6Bo
+         CJPWs8+i4gyuF/KcvQLb/pF4Kq1hYYVA56pkfmOJeVKedSqXEsUbCtpPi+UM84D5w51k
+         XM2pmwS1BQVhD22gdjfE3sQJKt3lYZTF88xdgVzZvyUdBGb0+DVlHun5GSsiJgz8uSQe
+         Xa1A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 33-v6si1336942plk.407.2018.11.07.10.19.47;
+        Wed, 07 Nov 2018 10:20:03 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728147AbeKHDut (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:50:49 -0500
+Received: from leonov.paulk.fr ([185.233.101.22]:48908 "EHLO leonov.paulk.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726363AbeKHDut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:50:49 -0500
+Received: from gagarine.paulk.fr (gagarine [192.168.1.127])
+        by leonov.paulk.fr (Postfix) with ESMTPS id 5578CBFCAE;
+        Wed,  7 Nov 2018 19:19:14 +0100 (CET)
+Received: by gagarine.paulk.fr (Postfix, from userid 114)
+        id 3CD18C1082; Wed,  7 Nov 2018 19:19:13 +0100 (CET)
+X-Spam-Checker-Version: SpamAssassin 3.4.1 (2015-04-28) on gagarine.paulk.fr
+X-Spam-Level: 
+X-Spam-Status: No, score=0.0 required=5.0 tests=none autolearn=unavailable
+        autolearn_force=no version=3.4.1
+Received: from localhost.localdomain (collins [192.168.1.129])
+        by gagarine.paulk.fr (Postfix) with ESMTP id 67254C1069;
+        Wed,  7 Nov 2018 19:17:57 +0100 (CET)
+From: Paul Kocialkowski <contact@paulk.fr>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com,
+        Mark Van den Borre <mark@fosdem.org>,
+        Gerry Demaret <gerry@fosdem.org>,
+        Luc Verhaegen <libv@skynet.be>,
+        Paul Kocialkowski <contact@paulk.fr>
+Subject: [PATCH v3 3/8] drm/sun4i: tcon: Support an active-low DE signal with RGB interface
+Date: Wed,  7 Nov 2018 19:18:38 +0100
+Message-Id: <20181107181843.27628-4-contact@paulk.fr>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107181843.27628-1-contact@paulk.fr>
+References: <20181107181843.27628-1-contact@paulk.fr>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3Uz_ULONbTc0YAA--.146S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Aw4xZw1kAr1UtFykAr43KFg_yoW8uF47p3
+	yxJFWIqrykXa9IqFnxAa4UZF13Wa12kF1fCr9rZw1fZ3ZrAFyruryUKFn3GFy8JrnrArW2
+	qryq9r18AasrCaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPSb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U5wBMtUUUUU==
+
+Some panels need an active-low data enable (DE) signal for the RGB
+interface. This requires flipping a bit in the TCON0 polarity register
+when setting up the mode for the RGB interface.
+
+Match the associated bus flag and use it to set the polarity inversion
+bit for the DE signal when required.
+
+Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
+---
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 7 ++++++-
+ drivers/gpu/drm/sun4i/sun4i_tcon.h | 1 +
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index 262ffb6b0f82..0420f5c978b9 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -543,6 +543,9 @@ static void sun4i_tcon0_mode_set_rgb(struct sun4i_tcon *tcon,
+ 	if (mode->flags & DRM_MODE_FLAG_PVSYNC)
+ 		val |= SUN4I_TCON0_IO_POL_VSYNC_POSITIVE;
+ 
++	if (display_info.bus_flags & DRM_BUS_FLAG_DE_LOW)
++		val |= SUN4I_TCON0_IO_POL_DE_NEGATIVE;
++
+ 	/*
+ 	 * On A20 and similar SoCs, the only way to achieve Positive Edge
+ 	 * (Rising Edge), is setting dclk clock phase to 2/3(240°).
+@@ -565,7 +568,9 @@ static void sun4i_tcon0_mode_set_rgb(struct sun4i_tcon *tcon,
+ 		clk_set_phase(tcon->dclk, 0);
+ 
+ 	regmap_update_bits(tcon->regs, SUN4I_TCON0_IO_POL_REG,
+-			   SUN4I_TCON0_IO_POL_HSYNC_POSITIVE | SUN4I_TCON0_IO_POL_VSYNC_POSITIVE,
++			   SUN4I_TCON0_IO_POL_HSYNC_POSITIVE |
++			   SUN4I_TCON0_IO_POL_VSYNC_POSITIVE |
++			   SUN4I_TCON0_IO_POL_DE_NEGATIVE,
+ 			   val);
+ 
+ 	/* Map output pins to channel 0 */
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+index 3d492c8be1fc..b5214d71610f 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+@@ -116,6 +116,7 @@
+ 
+ #define SUN4I_TCON0_IO_POL_REG			0x88
+ #define SUN4I_TCON0_IO_POL_DCLK_PHASE(phase)		((phase & 3) << 28)
++#define SUN4I_TCON0_IO_POL_DE_NEGATIVE			BIT(27)
+ #define SUN4I_TCON0_IO_POL_HSYNC_POSITIVE		BIT(25)
+ #define SUN4I_TCON0_IO_POL_VSYNC_POSITIVE		BIT(24)
+ 
+-- 
+2.19.1

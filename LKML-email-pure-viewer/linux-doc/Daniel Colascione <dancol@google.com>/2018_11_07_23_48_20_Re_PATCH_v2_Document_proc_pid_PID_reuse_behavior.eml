@@ -1,0 +1,161 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:39 -0000
+Received: from icoremail.net (unknown [209.85.214.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX+90CeNbc_NYAQ--.26948S3;
+	Wed, 07 Nov 2018 23:49:12 +0800 (CST)
+Received: from mail-pl1-f171.google.com (unknown [209.85.214.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH7Uh0CeNb8SYYAA--.11415S3;
+	Wed, 07 Nov 2018 23:49:08 +0800 (CST)
+Received: by mail-pl1-f171.google.com with SMTP id p6-v6so8032804pll.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:49:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :in-reply-to:references:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=TrlHarah+TLUgkrwLxYsQP6SLsnTl0xdV5j4cE+KW/k=;
+        b=ZYa7e1M8WgSriXv4kHuNvN8ED2uzuIyNvxp9QNom587bCw3k02snvMA1XYrsys93zO
+         caz6PfDfS/ZKvZDLjaGORKjMhogCeX+dwLL4KLJ2eE8EajbMqc0uReBmu+UcQHgz5ABF
+         4ZH1aA79Ko40ARg7nSqzi+cBWbrN3QrKJM/F+5u4aCT1KyN0nfbwgh0bAiZ3GDuKiazW
+         iZdhifktlpiCT9cUseKsLEo5rss1lM/xnkON6IrbzIL318CXoV6sCucdFE7gNnooNK2T
+         vPy009SMXpqAC2xJ8IfPiIoBDkYc0RHHoaMTC4yz+baTL353r9cILRGcH2cwarsR8Qkl
+         iQjg==
+X-Gm-Message-State: AGRZ1gKMtKsDKmfgY5APxp/JHBsy82ggJjtianrsXXnjHqjaDbbx15I+
+	Y9E5aNUSRMW/pAY0GwVZ67ZlzDvhLHiSx218Htg1oPDZnFp8OVz37A==
+X-Received: by 2002:a17:902:6686:: with SMTP id e6-v6mr720456plk.173.1541605747923;
+        Wed, 07 Nov 2018 07:49:07 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5405223pjt;
+        Wed, 7 Nov 2018 07:49:07 -0800 (PST)
+X-Google-Smtp-Source: AJdET5exZ/RqB0W5LkyXOxLUI7aB+Z6moc4aT+RQMoe2IQeVQLL6+St5qBslHXWlyvOKMgqHMrI3
+X-Received: by 2002:a63:d846:: with SMTP id k6mr617736pgj.251.1541605747128;
+        Wed, 07 Nov 2018 07:49:07 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541605747; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Xf9M11oAlH3gwf0iNqdoNCE6Yfy2hKt9ad+rot9oITObkUPVxDd63GTBFB43beJ385
+         ANfj6m3cJhRQVJOh4dIWy77WLiYJ7kIDcGfK2dzT9JD49/fOeVBjBx4OSfuKzeWAqwZk
+         5Zf3JpXPL73/j6VhN0Dt0j9Y0WttloAMW9LTnw8Ev521ro4u+mnB9F9LcAHHqIQjvtCS
+         5y0YDzAssgYnH8cCKG/vAtWDZHme0+GngJy5LVlRfGcQDJR+UoSHITKZ2Mu89YNsnCxJ
+         32+6+RLSODoYo3whGh8xMsM41QUuNG+IDHGTtAZIiFF6X+FUEmKE7OEpbvbxdhQ8DOfB
+         2fOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :references:in-reply-to:mime-version:dkim-signature;
+        bh=TrlHarah+TLUgkrwLxYsQP6SLsnTl0xdV5j4cE+KW/k=;
+        b=iCZMoRrOkfGPrwKrBaXWAE8lg/a1LxRa1hmw6uMpJX6hvZnxyhqYKnbgmqSKflTRJt
+         XrPwvTLiWCsPKs70G1H7TPpptet9RLWdHwhuJHiCJC0zqBXaLYyEYfbtM/cn77MRmN7Z
+         Y9vdtG7Dtt3MFyUEPWKPA4iW6CO1MOQO0JPjU5KboQXkR+KtbsPWOtEyfvbJhhtg2PKa
+         HfxnrLAG0IUdPF4u7leh5G5WRBwOaoYdmrV8e9dtt0v/KJE/dkRhK/hvwcElNRr39Wfr
+         hvfDZ4bKtjTuWJDd0aqC/U35YL0DFmo5xiukwYFCBex64OYw9NVusBloE6AfIRuG1wEV
+         Fv7w==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@google.com header.s=20161025 header.b=NhWAiKzm;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=google.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id g4-v6si762047pgi.348.2018.11.07.07.48.51;
+        Wed, 07 Nov 2018 07:49:07 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730990AbeKHBTR (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:19:17 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:40660 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728005AbeKHBTR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:19:17 -0500
+Received: by mail-ua1-f66.google.com with SMTP id n7so6013283uao.7
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 07:48:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=TrlHarah+TLUgkrwLxYsQP6SLsnTl0xdV5j4cE+KW/k=;
+        b=NhWAiKzmoKWOSuFAM1ham4fkT1TKE1d4kHiJRT5sdGNeytzeiQSDKcvfvqSmpOiPc7
+         Fidu1K6nGb+SwBQ0xqoMIxVRdMG8/knOSN9/faQ8KpgimWcfaCuRjcGzFvJ/nVy/mF2l
+         28yBUjo4qeK+bSV5Mt8z9leZLDRKS3fylfm+eTCSDmtJJWpdMKXSy5n7a0P1w6zNaotR
+         +XwLcBnkislH72h1p9YOnJ45cojb1kbLD4XniwaZ/gzb9/1cxoXmrmm8VMA/L39Gkunk
+         nBGVc/cgovvndyy9hO6RKUzArySi8Pdo4cSHr70KmBRuvWfUyJOCtq/TkWf5F+CDJq7X
+         X3CQ==
+X-Received: by 2002:ab0:45e2:: with SMTP id u89mr318243uau.13.1541605701622;
+ Wed, 07 Nov 2018 07:48:21 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a67:f48d:0:0:0:0:0 with HTTP; Wed, 7 Nov 2018 07:48:20 -0800 (PST)
+In-Reply-To: <20181106130524.GC2453@dhcp22.suse.cz>
+References: <20181031150625.147369-1-dancol@google.com> <20181105132205.138695-1-dancol@google.com>
+ <20181106130524.GC2453@dhcp22.suse.cz>
+From: Daniel Colascione <dancol@google.com>
+Date: Wed, 7 Nov 2018 15:48:20 +0000
+Message-ID: <CAKOZueu5aDtHDBzp6qKECTHEejjb=dyegQkuHh8NfwgNktzFow@mail.gmail.com>
+Subject: Re: [PATCH v2] Document /proc/pid PID reuse behavior
+To: Michal Hocko <mhocko@kernel.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, rppt@linux.ibm.com,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        "Dennis Zhou (Facebook)" <dennisszhou@gmail.com>,
+        Prashant Dhamdhere <pdhamdhe@redhat.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH7Uh0CeNb8SYYAA--.11415S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7KF4fGw4DGw4kuw18trW8Zwb_yoW8XrWkpa
+	naqw4jyF4kJryv9rWDW3yS9ay8ZFs3GF4UCrn3Zwn0y398Xr1SgayxZa4Y9Fn7GrZakw1j
+	vFWjqa9rJ3s8Za7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBFb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwCjxxvEa2IrMxkF7I
+	0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6ryrMxkI7II2
+	jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW0oVCq3wCYIxAIcVC2z280aVCY1x0267AK
+	xVW0oVCq3wCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4w
+	CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
+	14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVCF04k26c
+	xKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bedgXUUUUU=
+
+On Tue, Nov 6, 2018 at 1:05 PM, Michal Hocko <mhocko@kernel.org> wrote:
+> On Mon 05-11-18 13:22:05, Daniel Colascione wrote:
+>> State explicitly that holding a /proc/pid file descriptor open does
+>> not reserve the PID. Also note that in the event of PID reuse, these
+>> open file descriptors refer to the old, now-dead process, and not the
+>> new one that happens to be named the same numeric PID.
+>
+> This sounds quite obvious
+
+Many people *on* *LKML* were wrong about this behavior. If it's not
+obvious to experienced kernel developers, it's certainly not obvious
+to the public.
+
+> otherwise anybody could simply DoS the system
+> by consuming all available pids.
+
+People can do that today using the instrument of terror widely known
+as fork(2). The only thing standing between fork(2) and a full process
+table is RLIMIT_NPROC. In a world where we really did reserve a
+numeric PID through the lifetime of any struct pid to which it refers
+(i.e., where "cd /proc/$PID" held $PID), we could charge these struct
+pid reservations against RLIMIT_NPROC and achieve behavior as safe as
+what we have today. The details would be subtle (you'd have to take
+pains to avoid double-counting, for example), but it could be made to
+work. Other people, on the various lkml threads about my process API
+improvement proposals, have proposed fixing the longstanding PID race
+problem by making struct pid behave the way people mistakenly believe
+it behaves today. It's a serious idea worth actual consideration.

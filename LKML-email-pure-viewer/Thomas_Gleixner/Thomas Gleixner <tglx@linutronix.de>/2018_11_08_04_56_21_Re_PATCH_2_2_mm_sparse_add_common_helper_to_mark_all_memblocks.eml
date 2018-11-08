@@ -1,0 +1,140 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:36 -0000
+Received: from icoremail.net (unknown [209.85.215.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX_uaUeNbqK9aAQ--.27403S3;
+	Thu, 08 Nov 2018 04:56:59 +0800 (CST)
+Received: from mail-pg1-f177.google.com (unknown [209.85.215.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDXu0eXUeNbqEYZAA--.1056S3;
+	Thu, 08 Nov 2018 04:56:55 +0800 (CST)
+Received: by mail-pg1-f177.google.com with SMTP id z17-v6so7835143pgv.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:56:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version:sender:precedence:list-id;
+        bh=1NKaqVPvnI6Pfxp2TX4Y6YjUGbRt5tgpLmOV4TiHqfo=;
+        b=ghXuQOo7fdmrQiewGdPkK949LzzDTKaAtB3pKwf2zDBkMS6LAx7wccVGF4MV+Y7I71
+         QKTxYzkDpbfmTQ6gPKacPIL5cJMJQO5HuEWsIfWQsk4JP8EhueM0Tu0jwsfbkVsoCKSY
+         sp0pIcmwN4NI83Rjp5gVThIIPHoS/vt3pO8q42MTsrBbWTvZRC5jM0Ysvj2Mrrhi5Aug
+         ymlaQVVhCCNDCM0vi2CiNrkQIXSL/FVokZnBb8+I0evt8Z3aFKvFdNMw9vmRaewhR1cV
+         S0Qp2JjmGW+Ufp/92LOz9C6bVPzdv5GT2VmNfsWwKDDJNmi+SuvSP3TMdTUpnsWJ6qOD
+         nmLA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLqEut3EMjzjIbjfGWK7gopUGENQdlo1dDDLpI0z9o1x4gM0Vyb
+	8DuWimkxI9WwiW7H49/rIpsWqxVbiLI69oPKQkcw8cExaa/AJ0abqw==
+X-Received: by 2002:a63:460a:: with SMTP id t10-v6mr1541170pga.197.1541624215152;
+        Wed, 07 Nov 2018 12:56:55 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5733387pjt;
+        Wed, 7 Nov 2018 12:56:54 -0800 (PST)
+X-Google-Smtp-Source: AJdET5enpWHrmmXTY8M9pJn7TXfwhXbr6P3jRae7wJFggFC1IKvZz30JQ50lHTGDFBRMYRU/yciw
+X-Received: by 2002:a17:902:5c4:: with SMTP id f62-v6mr1877521plf.18.1541624214499;
+        Wed, 07 Nov 2018 12:56:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541624214; cv=none;
+        d=google.com; s=arc-20160816;
+        b=wAsU81Ymnwl1Zd/otdTUlxKRcoQ62N6GSAQXHXXVwb66SBgvyDI4rHmYs2l7yH0h6O
+         2cW+U6bfHBh/8h6TPtOBSywtWUyC230PRmdI3HJMiIwuraQ5HbYyFh9d7j22b++4Fw5C
+         OSdT74O68dOjwYKDHbsnktvl62+Fi7cApWvyX0w4UUcwKAi9tjTzc3rLK1ahbcfJMV6L
+         T/oMZoO4cKhfnXnwf34m4IBXPfGrBHPIFBnUzCA3HyEKWXaoNUpTmrswOqvo4zSNj5Vd
+         mF+cUFHC5Gcc07EPz3U5uGazIJQtksYGooJsZNMPTNDAz5AN+nxK03OtRfw6dqPu3YXu
+         YZ1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:user-agent:references
+         :message-id:in-reply-to:subject:cc:to:from:date;
+        bh=1NKaqVPvnI6Pfxp2TX4Y6YjUGbRt5tgpLmOV4TiHqfo=;
+        b=hxH8hf6HuYDv6+UyTXwaT4QhW3lx5BnogS4xtulUoZ7I+9DPQt36MaZRpld6I7tO+/
+         WxJt+iGMraJ42I1nw51n6Om5eWtWzRsFCTyQsVchIjwksAjsT+Q/j5MOYx3srPvkd1PY
+         H9aBb12u0omg0ovsJTGpighjLpEuLvMxXqJzhCkZWGy0mTGml1annTQOC3lwisirW/CQ
+         BnTo4wolL74K5+AOvdjJ5KJAohCp81JwfKCR4pLlrmeVkq8rwQV0OF9AWB6ZkFe/81xF
+         B4ZQHgk8FwWWTddmjFd3YbMOgXGheF1R+XvHV2N3B2PSS3WNKUcSwPqTk57XP4+obU0X
+         p1kA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id y207-v6si1741488pfb.59.2018.11.07.12.56.38;
+        Wed, 07 Nov 2018 12:56:54 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727305AbeKHG2i (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:28:38 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:42179 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbeKHG2h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:28:37 -0500
+Received: from p4fea46ac.dip0.t-ipconnect.de ([79.234.70.172] helo=nanos.glx-home)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1gKUs9-0008T8-VQ; Wed, 07 Nov 2018 21:56:22 +0100
+Date: Wed, 7 Nov 2018 21:56:21 +0100 (CET)
+From: Thomas Gleixner <tglx@linutronix.de>
+To: Andrew Morton <akpm@linux-foundation.org>
+cc: Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH 2/2] mm/sparse: add common helper to mark all memblocks
+ present
+In-Reply-To: <20181107123838.1b7234c98a87dec5a2b25e67@linux-foundation.org>
+Message-ID: <alpine.DEB.2.21.1811072153590.1666@nanos.tec.linutronix.de>
+References: <20181107173859.24096-1-logang@deltatee.com> <20181107173859.24096-3-logang@deltatee.com> <20181107121207.62cb37cf58484b7cc80a8fd8@linux-foundation.org> <724be9bb-59b6-33f3-7b59-3ca644d59bf7@deltatee.com> <alpine.DEB.2.21.1811072125280.1666@nanos.tec.linutronix.de>
+ <b1cc442e-7314-4a8e-3eec-9adc200d7582@deltatee.com> <20181107123838.1b7234c98a87dec5a2b25e67@linux-foundation.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDXu0eXUeNbqEYZAA--.1056S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrtry3Ar1rWryxCFWkWrWDXFb_yoWxCrX_ur
+	47Zr18Ga1qgF48t3WfCasYqrWDKF1UJw1jva4UJa47tFn3CFy7JF47Kr1Du3W8Wr4FvFnx
+	K3ZIvw4Sq3W2gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbDkYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY02Avz4vEIxC_AwCY0x0Ix7I2Y4AK64vI
+	r41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JV
+	WxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_
+	Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s
+	026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwI
+	xGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IU5bdbUUU
+	UUU==
+
+On Wed, 7 Nov 2018, Andrew Morton wrote:
+> On Wed, 7 Nov 2018 13:36:34 -0700 Logan Gunthorpe <logang@deltatee.com> wrote:
+> 
+> > > Actually if both names suck, then there also is the option to rename both
+> > > instead of adding a comment to explain the suckage.
+> > 
+> > Ok, well, I wasn't expecting to take on a big rename like that as it
+> > would create a patch touching a bunch of arches and mm files... But if
+> > we can come to some agreement on a better name and someone is willing to
+> > take that patch without significant delay then I'd be happy to create
+> > the patch and add it to the start of my series.
+> 
+> Some other time ;)
+
+More precise: Manjana. You live way too close to Mexico :)

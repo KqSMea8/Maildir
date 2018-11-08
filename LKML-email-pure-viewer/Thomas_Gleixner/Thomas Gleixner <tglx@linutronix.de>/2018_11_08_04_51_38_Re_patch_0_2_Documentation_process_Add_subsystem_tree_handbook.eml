@@ -1,0 +1,180 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:33 -0000
+Received: from icoremail.net (unknown [209.85.215.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv_qUUONbGadaAQ--.27568S3;
+	Thu, 08 Nov 2018 04:52:36 +0800 (CST)
+Received: from mail-pg1-f170.google.com (unknown [209.85.215.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHXzuRUONbJUMZAA--.1135S3;
+	Thu, 08 Nov 2018 04:52:33 +0800 (CST)
+Received: by mail-pg1-f170.google.com with SMTP id r9-v6so7820606pgv.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:52:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version:sender:precedence:list-id;
+        bh=vfdDUP7OS/2ZQrrU9WJmRHUs+//kOOjNHW211UUcZfA=;
+        b=EpJK5kQxmxUHfICyry4KcBF95CHON1byKzSIrtj4owgvBGqf74OjN3pvEY9SMh1Ha6
+         XDnd3j/qNBwGpdkx3CsbAwpXVBqp1dDqk/vyWV/dPRjN49qzeOvGarh6THFMLCH7Hgj7
+         RNxPdX8u+x8ZOzKXIl54V2n7rKUQUs6XdjTLmG6MjUjjXxMMper/TU4r3vkIsOPi08vv
+         SHNef5OkfKGAnxyqt1D/oTiIQQnCs0b+XEtGtNUtCgcuLdkCQb9xMSk81NJpgEyVn5aw
+         W0XrLf4risdNESVZcPuK0RNfHKzmkNoxx5sFVF5g8VsIVBbQzs+3GgOuRyHF1KynkZKi
+         2B8A==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIbHMK2DzCtXGVoqPF2ohQHO9PghNn4TLEdZf/Ard+EMZ6DojnH
+	xlI9La4XEytzqFuhRHpmBzpRBmtwakgLtV/VQtfLihPim/5eCw94Iw==
+X-Received: by 2002:a62:35c2:: with SMTP id c185-v6mr1780980pfa.69.1541623953157;
+        Wed, 07 Nov 2018 12:52:33 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5729647pjt;
+        Wed, 7 Nov 2018 12:52:31 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dxiXM9y0LvHn75njvxxOOUTx5ncnoyga8POfx6QrPagEj01VklJZveTUGhEgOmqas1/ncA
+X-Received: by 2002:a17:902:4324:: with SMTP id i33-v6mr1833498pld.253.1541623951917;
+        Wed, 07 Nov 2018 12:52:31 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541623951; cv=none;
+        d=google.com; s=arc-20160816;
+        b=I8oLz/gImrOUnEbpB3MYD3srawYxMefLQfbgxJA1twrmwj9AG7gY1QdWz7zmCUDn5q
+         DwtSndiL1ux9/vsikwodmrq81pdfRHln75mL137ZysOmYlcQsbmVxuwMZzwybIiMdJiu
+         AidnwRto4rQY1VxgXtabg4CvomG03uS6DHWXDI87xQZR2nGCr4YnC8+k/SUT+54iS/uQ
+         K3lGx8+Ei94g1vIBV53JI8tu3sxHttAgiwDMpDoPXrGDHVLShYuNA3+RD7gVONqU2TtO
+         X7PNtzUjzFIPfVomIWn4n9VWE2mRiu/9AqoYEbBE+fT3THtMI/8Z4ysk3imhx6HnMzDu
+         q1wg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:user-agent:references
+         :message-id:in-reply-to:subject:cc:to:from:date;
+        bh=vfdDUP7OS/2ZQrrU9WJmRHUs+//kOOjNHW211UUcZfA=;
+        b=Smdna1DkORGfukl8x+s/Oo99L7oQ9Z5N29jERsYItWTXV9glOWfxzvuLrGSMG5p2Uu
+         5X6pH+PoTiNA1Q7DjnBQGhpTU+SNIQcZhZByP7Xdv8gfBujSXjLosS/Sa85XmsLw6LQ/
+         tRu0WuAhqBEFrJ87AYm1eYR7visRCodke7NBdWinVHIiOtpbZLKcxcCO+uIv77296TF3
+         MU/aV/WnfYgPruoL0AbXJXp9+Oa7p11yjAhjOxLDtAxs4AdeUEsLUvhZhG3agnYSTIam
+         jt90BTuU7kuV5c6vjPGTtz6FZEzlbD7DvZIrmhv4+cbKUEJ4ruvwx0JnMQuOSKQQ2jBk
+         eAyA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id m21-v6si1423403pgh.167.2018.11.07.12.52.14;
+        Wed, 07 Nov 2018 12:52:31 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727124AbeKHGXw (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:23:52 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:42160 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbeKHGXw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:23:52 -0500
+Received: from p4fea46ac.dip0.t-ipconnect.de ([79.234.70.172] helo=nanos.glx-home)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1gKUnb-0008Lo-E8; Wed, 07 Nov 2018 21:51:39 +0100
+Date: Wed, 7 Nov 2018 21:51:38 +0100 (CET)
+From: Thomas Gleixner <tglx@linutronix.de>
+To: Dan Williams <dan.j.williams@intel.com>
+cc: Jonathan Corbet <corbet@lwn.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        john.stultz@linaro.org, acme@redhat.com, frederic@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>, daniel.lezcano@linaro.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [patch 0/2] Documentation/process: Add subsystem/tree handbook
+In-Reply-To: <CAPcyv4goT+7t1foOhEYgGTz2kRV2Oou8QOs38D13rdC-TpfX+Q@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1811072134060.1666@nanos.tec.linutronix.de>
+References: <20181107171010.421878737@linutronix.de> <20181107124855.328133e7@lwn.net> <CAPcyv4goT+7t1foOhEYgGTz2kRV2Oou8QOs38D13rdC-TpfX+Q@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHXzuRUONbJUMZAA--.1135S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxJrW3tF1UXw17ur1xCw47twb_yoW5JFWxpF
+	y5K3sF9F4DJw43urn7Cw47XFnYyr1Sya98tr9YkrWDZr98Cw1xKFWYk398uFyUWr1fua1j
+	vr47KFn5Ca4vv37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW7MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY
+	6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUH58n
+	DUUUU
+
+Dan,
+
+On Wed, 7 Nov 2018, Dan Williams wrote:
+> On Wed, Nov 7, 2018 at 11:49 AM Jonathan Corbet <corbet@lwn.net> wrote:
+> > The stuff that is truly specific to tip seems fairly minimal:
+> >
+> >   - what goes into tip
+> >   - the reverse fir tree thing
+> >   - tail comments, or the distaste thereabouts
+> >   - subject-line prefixes
+> >
+> > Having a tip-specific document that contains only those (plus whatever
+> > else I forgot to list) would, IMO, make it much more likely that readers
+> > would actually notice (and follow) the stuff that's specific to tip.
+> >
+> > See what I'm getting at here?  Am I totally out to lunch on this?
+> 
+> Not at all, and this is one of the thrusts of my talk next week at
+> Plumbers. I *do* want to propose that sub-systems document all their
+> local quirks. Then we can refactor the common ones into a global
+> document, have some discussion fodder if some sub-system specific
+> rules can be unified, and otherwise leave the freedom for individual
+> sub-systems to be different as long as it's documented.
+
+That was the intention here. I know that there is quite some stuff in that
+document which could/should go into common documentation, but I have no
+idea how much of it can be agreed on and how much different other
+subsystems are looking at this. It's a braindump of all the things which
+nag me/us in the daily business of patch juggling.
+
+Jon, I agree that we should aim for as much consistency as we can. Though
+if you look e.g. at comment style to begin with, then there is already
+quite some disagreement. Changelog styles are a similar thing. Even if it's
+somehow documented in the general documentation, some maintainers care and
+others do not. The tip tree - and I have to admit especially myself - cares
+a lot. I truly hate it when I have to look at useless, misleading or
+uncomprehensible changelogs written by that Gleixner dude 10+ years ago.
+
+We surely can spend a lot of time in bike shedding discussions how the
+generally agreed guidelines should look like. But that would still leave
+the contributors standing in the rain for a long time.
+
+So I agree with Dan, that we should collect as much documentation from
+subsystems/maintainers and get it into the tree so we can:
+
+   - give contributors immediate access to subsystem/maintainer specific
+     quirks
+
+   - extract common views and move them into the general guidelines
+
+   - have a clear idea which kind of things need to be discussed and agreed
+     on and what might be left in the susbsystem/maintainer specific
+     interpretation/expectation realm.
+
+Thanks,
+
+	tglx

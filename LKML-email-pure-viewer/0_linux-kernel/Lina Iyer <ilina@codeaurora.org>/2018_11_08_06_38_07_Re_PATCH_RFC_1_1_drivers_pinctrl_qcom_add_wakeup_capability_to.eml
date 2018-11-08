@@ -1,0 +1,218 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:04 -0000
+Received: from icoremail.net (unknown [209.85.215.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH351aeNbtTpbAQ--.27542S3;
+	Thu, 08 Nov 2018 06:38:46 +0800 (CST)
+Received: from mail-pg1-f174.google.com (unknown [209.85.215.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXLTlyaeNbHJsZAA--.90S3;
+	Thu, 08 Nov 2018 06:38:42 +0800 (CST)
+Received: by mail-pg1-f174.google.com with SMTP id f8-v6so7937946pgq.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:38:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:dkim-signature
+         :dmarc-filter:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent:sender
+         :precedence:list-id;
+        bh=WzGhoUhN8Qw3YTPXug/Jo1i0m9BLU/X7I91lqn6y5GM=;
+        b=VDFlz8Pf9i0vjo++kZ5QiJXymxh7etg2cFNc9hgTqBHQ3I8vENowUGpg25JyjwhD+Y
+         an7eEFdMGcaGyjBG/0IH2j+AhxZWW9hjxLvemx0b7G6i6PVSVjZslRm6+OkElhBZWJfy
+         LkQACJt0Mqgw9z8TwDXenRb4dRUVlr4Fn/3DYQWUXIu+ftPVYpLXYi0bQCBVWupag1Wa
+         yaOJkrfeD3yQCfmbgZHAAPARBOUeP4rbXav6sgY/ZcFkJ//YI6tmwGJMFDtD8UwnNCjL
+         wD4JqITzQXKo6Ii6mCodJi2n27BNcTdMCjrr+UoC6yZNO+12XEOVUOBKMBT+u2eu1d2F
+         aiqA==
+X-Gm-Message-State: AGRZ1gICTpmdr/4NFGEE0iEGjJlg1ygXswVnGUik1ElMyQj8vEy/Vq62
+	QBZdyUEIO50NRPovjBiqYo101ZZ3cNnePl1BHnlnD1aksqn9hSBdTQ==
+X-Received: by 2002:a63:40c2:: with SMTP id n185-v6mr1842688pga.116.1541630322213;
+        Wed, 07 Nov 2018 14:38:42 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp85830pjt;
+        Wed, 7 Nov 2018 14:38:41 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ejcuk71wApmFT5YHK18RmyFiSJloxEW4A5i1XLSXKTNhG9aLA2/LpYw4DcyvmgfhvovD8j
+X-Received: by 2002:a17:902:a81:: with SMTP id 1-v6mr2168507plp.75.1541630321204;
+        Wed, 07 Nov 2018 14:38:41 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541630321; cv=none;
+        d=google.com; s=arc-20160816;
+        b=yS1P8tit7gUItdKIjf9bWHScbAUQXiSwbs8LGdbtm6OQn9Iv8FFGdwKZRbToJ6AXyr
+         JKOjWbKpJnkJkYVtF9nlVKCZP1VDtDh6e2gdBoPorj2jHphER9uye+oZftcTHnO1ONLq
+         hsm0r69TRjsoKjkGaLRQnlpymeiwQEkpyFQuth9l/Lk0JUJKHIEm4IeRpFCPUlHP8x7t
+         uPDzjKCwffv3fivWD6E7N7goDVB2UumQIce0eLZL/BBFHo8TFXat6dFa2n6Naf1cuYRQ
+         MPcXpw5xwBfOaC2dz6A8IVTvmzlbbSvYvsOPsxtU2EeUjr1Y+mC64ezHP+NyNkiwS0cE
+         mRXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dmarc-filter:dkim-signature:dkim-signature;
+        bh=WzGhoUhN8Qw3YTPXug/Jo1i0m9BLU/X7I91lqn6y5GM=;
+        b=yzPb9OzaHBciAhSN720Vp+jZd0npJbX57/Lkq2tN3cEX6Cs8JrAvHGpCssSKJI/jOL
+         z/RQRkcziGoj4b/k/R9NbTh6QSiMu/+5DJdtU3xMQrorOXyPDakNyxCHT71pRKFTauQP
+         UlSj6LOXCYa465vMskqq9JwmlTCpIuniVTtvehYGFb1NLWKAp+OLsYrq5diodusi8icA
+         HxeAo4iTlgv5mkhknJN6+nzTzPSAd9pGhnHro+niCQ/xhTfYtznXYo6DuMcQK0ZHNvIo
+         nZZUOCbqiIC7HFwObDuR8MLT7tClkSLkAqmWuBNwWVSaOGyo/QTxhZALzXFj7B27OAii
+         QI/w==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@codeaurora.org header.s=default header.b=IscSacw6;
+       dkim=pass header.i=@codeaurora.org header.s=default header.b=hlELkXPG;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v23-v6si1580328pgh.581.2018.11.07.14.38.26;
+        Wed, 07 Nov 2018 14:38:41 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728203AbeKHIKi (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:10:38 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:49166 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727454AbeKHIKi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:10:38 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3D77D605FD; Wed,  7 Nov 2018 22:38:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1541630289;
+        bh=oAeIIYuxqUCV7KOjdQGmOd5/9Y9AF8PGNZMc3W1TSWg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IscSacw6QGpMYMYs+pLkhwhm4jBPZaaFsuzb0Nlv4TaQ47buk6Pq8789CrTXp47D6
+         R95yOt/OOcFZKrF1HozHJthUGEqCuErmb6s52l7HUWKfdKkl2aJ6fGM7oFoFypfGn7
+         GTsuBH0SSAYTEzLn4O8aA6Siurkv2YYHofL95utc=
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        pdx-caf-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        DKIM_INVALID,DKIM_SIGNED autolearn=no autolearn_force=no version=3.4.0
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 98087603D2;
+        Wed,  7 Nov 2018 22:38:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1541630288;
+        bh=oAeIIYuxqUCV7KOjdQGmOd5/9Y9AF8PGNZMc3W1TSWg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hlELkXPGSmTH9Xpxz5VIJ5DGlMU0mmi51UML+doFRMVp64p5HpMlmifdfkdf0Vg1u
+         KXcXAuOxCivj5QdXenp0LW0ubFcfO6PSJ48+x6HgkSD/GY17C9/nccu3MzDI9HVI9C
+         9ZkEwGBf9BS5X/y4JHEl1wC3FYsYZz5FZ6YVTFq0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 98087603D2
+Date: Wed, 7 Nov 2018 15:38:07 -0700
+From: Lina Iyer <ilina@codeaurora.org>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: linux-kernel@vger.kernel.org, evgreen@chromium.org,
+        marc.zyngier@arm.com
+Subject: Re: [PATCH RFC 1/1] drivers: pinctrl: qcom: add wakeup capability to
+ GPIO
+Message-ID: <20181107223807.GA10557@codeaurora.org>
+References: <20181011002958.2597-1-ilina@codeaurora.org>
+ <20181011002958.2597-2-ilina@codeaurora.org>
+ <154096954339.98144.12348474096990107321@swboyd.mtv.corp.google.com>
+ <20181031164650.GJ17444@codeaurora.org>
+ <154103121313.98144.17090840121035743646@swboyd.mtv.corp.google.com>
+ <20181101171630.GM17444@codeaurora.org>
+ <154148156278.88331.3764949163056562893@swboyd.mtv.corp.google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <154148156278.88331.3764949163056562893@swboyd.mtv.corp.google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXLTlyaeNbHJsZAA--.90S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxGr1ftF1xtFW7WF4DKF45KFg_yoW5Ary3pF
+	W3KF1xursYgr40vwsFkw4xua45Xws5JFW5C34rtr1fZryY9ryvgF18KFy5A393GrWvqr1j
+	q3yFvF1xu3WqvaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW3MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY
+	6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUq8uc
+	DUUUU
+
+On Mon, Nov 05 2018 at 22:19 -0700, Stephen Boyd wrote:
+>Quoting Lina Iyer (2018-11-01 10:16:30)
+>> On Wed, Oct 31 2018 at 18:13 -0600, Stephen Boyd wrote:
+>> >
+[...]
+
+>Ok. I don't see why we need to limit ourselves here. If a GPIO interrupt
+>isn't routed through PDC physically why does it matter? It shouldn't be
+>why we avoid hierarchical irq domains.
+>
+Ok, now that we are not limited by this requirement...
+
+>It doesn't seem like they can be exactly the same because of deep idle
+>wakeup, so I suggest we go back to the beginning:
+>
+> * Split PDC into two domains, one for GIC and one for TLMM and
+>   associate the TLMM one with an irq_domain_bus_token enum so
+>   that TLMM can look it up with irq_find_matching_host()
+>
+The complexity here is that the GPIO and GIC interrupts are intertwined
+at the PDC.
+It would be ugly to describe the GIC interrupts with holes for the GPIOs
+and the other way around as well. A single PDC instance would be best
+way to keep things simple and clean.
+
+Instead, we could have TLMM -> TLMM-PDC -> PDC -> GIC. The TLMM-PDC
+being the interrupt controller that sets up the IRQ parent for the GPIO
+IRQs.
+
+Thanks,
+Lina
+
+> * Set TLMM as the child of the PDC TLMM domain
+>
+> * Allocate irqs from TLMM and have those allocate in the parent domain
+>   if the TLMM is in a hierarchy domain with irq_domain_alloc_irqs()
+>
+> * When allocating an irq in TLMM's irqdomain::alloc function pass a
+>   TLMM specific struct to irq_domain_alloc_irqs_parent() last argument
+>
+>   struct qcom_tlmm_fwspec {
+>      bool mask;
+>      struct irq_fwspec spec;
+>   };
+>
+> * Have the PDC driver set the mask bit and the MPM driver not set the
+>   mask bit in the qcom_tlmm_fwspec above
+>
+> * Have the TLMM driver use the mask bit to figure out if it should mask
+>   or not mask the interrupt in the TLMM hardware
+>
+>This way we can use the last argument to irq_domain_alloc_irqs_parent()
+>to communicate between the PDC/MPM drivers and the TLMM driver about how
+>the irq is being managed by the wakeup domain.
+>
+>There will be some other functions to call for the hierarchy irq calls
+>in the TLMM code, specifically the set_type callback and the set_wake
+>callback need to call up to the parent irq domain so the MPM can trap
+>the set_wake calls to know what to monitor and the PDC can trigger
+>correctly. You can look at what Thierry has done for Tegra[1] and copy a
+>lot of that patch series.
+>
+>The main difference is that on Tegra they have hardware replay the edge
+>vs. on qcom platforms we'll rely on the GIC SPI line for each PDC line
+>to go high and then have the hierarchy replay the interrupt. Also, on
+>Tegra they don't really care to allocate the irq in the GIC, whereas on
+>qcom we'll want to allocate the interrupt in the GIC to get the replay
+>to work. In the MPM design I think we'll need to use the
+>irq_set_irqchip_state() API too so the MPM driver can replay the edge
+>interrupts into the TLMM hardware when the MPM summary irq runs.
+>
+>[1] https://lkml.org/lkml/2018/9/21/471
+>

@@ -1,0 +1,171 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:00 -0000
+Received: from icoremail.net (unknown [209.85.215.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f92TGuNbEFxZAQ--.27015S3;
+	Thu, 08 Nov 2018 01:02:12 +0800 (CST)
+Received: from mail-pg1-f171.google.com (unknown [209.85.215.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAX90KRGuNbQnEYAA--.468S3;
+	Thu, 08 Nov 2018 01:02:09 +0800 (CST)
+Received: by mail-pg1-f171.google.com with SMTP id w7so7546270pgp.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:02:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding
+         :sender:precedence:list-id;
+        bh=LiaTzP4zj8x1w8tfyKN6SLqjIg6wEYUJascYWe7WpXk=;
+        b=Z+WIPnBrvzewIethz/SmYKPI65wJEomINxMj1mNox7SYXDiFlz9hbCSdVNLjKVvOZl
+         qqBMaPDorHPjmKsmmD6Sn1YYOWvxDE37cdfCLBoFr//zKFLE2a25oRzNbQX/xOhBk5wk
+         LVkn4soYftHGMozbIHNmay2CPsh/iytVKFawzXZJHn2z/tRgbldu94C1WX56wBqGJux2
+         XBWhvJV//fUYUEKKsyHrfkL4FTew621imNpqNQnUtbHstskUoc4oNWHXjqojnobGSz4W
+         ofaEjcckpvJUJPYQ6rRh0dNTxOkJ/Z40XIU9IFKnheWRDlR1ZokRpRTznZ/BGis9R24D
+         +cjg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=QUARANTINE sp=NONE dis=NONE) header.from=ti.com
+X-Gm-Message-State: AGRZ1gJLZLOh5Z3q+ug8s3NrkC8qaEfw6wZGfUx7Vo7T9L9K7Cj9Umlg
+	yUlPBASdrjgCHhATuqXSKNQDtsBHvydDzvkxB0abPnBgUJ93SzkbeA==
+X-Received: by 2002:a63:2315:: with SMTP id j21mr826301pgj.297.1541610129439;
+        Wed, 07 Nov 2018 09:02:09 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5486690pjt;
+        Wed, 7 Nov 2018 09:02:08 -0800 (PST)
+X-Google-Smtp-Source: AJdET5flBkTogDVb6R5nTt63dyj4A1uph0lBBvkxIrc/skD+tQ2HEEQ42+MAwWvG5TbsuVIRZwt8
+X-Received: by 2002:a63:cc0b:: with SMTP id x11-v6mr832196pgf.33.1541610128624;
+        Wed, 07 Nov 2018 09:02:08 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610128; cv=none;
+        d=google.com; s=arc-20160816;
+        b=DCHrOiondqFCN7ha4GyNiye7t+YptZtL0i4h0krVc6QD1YS2QmeCfnKjB2WKliKg5S
+         8dd3RJ/e5FuLQ2TDgGF+2zNsEhzYqSZcXJoA/wqjjr/zbhChpy97mk5lqdhVXtUBm9qH
+         P0F39/obnBHiVqg8iLSWWiHUMUyrUiUZsy77WH3pX/IqII6eOgTva27wyFw3VK/kMOak
+         RXX8LFDBci8v/tqBQIzUN4f3lskVKFvcE61D1g5I9z15cvCFXFh6aXTNR73Z6VdOUUrR
+         tIvOT3lO4kF8ORoC08Lzz+frJx9NbKjvcMEVB/ZVrVA/yRs03F4VoxlCP86DPuZoYIQU
+         9nhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject;
+        bh=LiaTzP4zj8x1w8tfyKN6SLqjIg6wEYUJascYWe7WpXk=;
+        b=gcWFTfApw59dNHxJ60/Bg+5PwnIGn6q0B0PRMXY692Mx3oDO7R1BCOux2v9ZtX4jak
+         E+3qPiZo6DukLOep8PNPd+dMJnJJTCEWz+u4n6XiK1qgHmPPzCAyvoV5B/bCwUYZ8bnP
+         Ae9tGP0l8hTJVbltHSEXtE7uTPcFeXhBBYkwq5AoLeJTeHqdQXUd6KxmsDSB+ZreaIhO
+         9/ziqSKkpbHGo5+tG5/6T9tVFp+DLNptQGsn0R4Wh4nnA0p7Eqyt4HHb32Ee6Fch6JDx
+         LXsZsaGMmAlresL2CvDl6y8HP+bQS9mwLR8Gu0qiltPR6jiNIwYtbkSbDnD6HA/zXVpE
+         nubw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=QUARANTINE sp=NONE dis=NONE) header.from=ti.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id w6-v6si1132727pfn.212.2018.11.07.09.01.50;
+        Wed, 07 Nov 2018 09:02:08 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731302AbeKHCch (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:32:37 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58392 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727699AbeKHCch (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:32:37 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id wA7H0WxA110520;
+        Wed, 7 Nov 2018 11:00:32 -0600
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id wA7H0W7S040399
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 7 Nov 2018 11:00:32 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1466.3; Wed, 7 Nov
+ 2018 11:00:31 -0600
+Received: from dlep33.itg.ti.com (157.170.170.75) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1466.3 via Frontend Transport;
+ Wed, 7 Nov 2018 11:00:32 -0600
+Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id wA7H0S3M025400;
+        Wed, 7 Nov 2018 11:00:29 -0600
+Subject: Re: [PATCH v2 0/2] i2c-omap: Enable i2c-omap driver for AM654 SoCs
+To: Wolfram Sang <wsa@the-dreams.de>
+CC: Rob Herring <robh+dt@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "Nori, Sekhar" <nsekhar@ti.com>, "Menon, Nishanth" <nm@ti.com>,
+        Peter Rosin <peda@axentia.se>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Tony Lindgren <tony@atomide.com>
+References: <20180928052557.21663-1-vigneshr@ti.com>
+ <09a6b1d4-f8f4-ea90-f361-bd3a92088430@ti.com> <20181028223450.GK1882@kunai>
+From: Vignesh R <vigneshr@ti.com>
+Message-ID: <c664348b-bb5b-9cba-6ed5-040014515477@ti.com>
+Date: Wed, 7 Nov 2018 22:31:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20181028223450.GK1882@kunai>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAX90KRGuNbQnEYAA--.468S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7XFy8ZF4DAw47Ar1DKF47twb_yoWfJrXEkw
+	18Z3s3Crs8u3s5Kan5trZavrZ0gFWUXrs3GF1rtFW5u3sxXry5tF4DGr93Ar1rWa1fJFn5
+	CF4qvF1FvrnrGjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUb98YjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+	xGrwCjxxvEa2IrMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAKzI0EY4vE52x082I5MxkF
+	s20EY4vE44CYbxCE4x80FwCY02Avz4vEIxC_GwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2I
+	x0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2
+	z280aVAFwI0_Cr0_Gr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJwCF04k20xvY0x
+	0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBI
+	daVFxhVjvjDU0xZFpf9x07bbD73UUUUU=
+
+
+On 29/10/18 4:04 AM, Wolfram Sang wrote:
+> On Sat, Oct 20, 2018 at 01:23:40PM +0530, Vignesh R wrote:
+>>
+>>
+>> On 28-Sep-18 10:55 AM, Vignesh R wrote:
+>>> Couple of patches to enable i2c-omap driver to be used with TI's new
+>>> AM654 platforms.
+>>>
+>>>
+>>> Vignesh R (2):
+>>>   dt-bindings: i2c-omap: Add new compatible for AM654 SoCs
+>>>   i2c: busses: Kconfig: Enable I2C_OMAP for ARCH_K3
+>>>
+>>>  Documentation/devicetree/bindings/i2c/i2c-omap.txt | 8 ++++++--
+>>>  drivers/i2c/busses/Kconfig                         | 2 +-
+>>>  2 files changed, 7 insertions(+), 3 deletions(-)
+>>>
+>>
+>> Gentle ping...
+> 
+> Maintainer tags are missing. Tony is listed for this driver on OMAP2+.
+> Is this his realm? Do we need a specific maintainer for this driver?
+> 
+
+I think this driver needs a separate entry, will send a patch adding my
+name as reviewer for this driver.
+
+-- 
+Regards
+Vignesh

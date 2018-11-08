@@ -1,0 +1,161 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:42 -0000
+Received: from icoremail.net (unknown [209.85.214.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgA3cI64MuNbyP5ZAQ--.30242S3;
+	Thu, 08 Nov 2018 02:45:13 +0800 (CST)
+Received: from mail-pl1-f180.google.com (unknown [209.85.214.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXN0O1MuNbmeIYAA--.853S3;
+	Thu, 08 Nov 2018 02:45:09 +0800 (CST)
+Received: by mail-pl1-f180.google.com with SMTP id t6-v6so8254338plo.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:45:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=GeINo/k3+aADKtUi/bndFuPJ1JmVtBQL/rueuoH+QB0=;
+        b=a0drMt++DpZcVGMZ3Qq3aLXvoWap6SxPssiFfRCvfwcgG+WfX9KuUWb1IisrTelkkM
+         m9VIf6Ll66mdl/SgDRt7MKunzRU0TTu2Mq3wJlnW+wrxgSJNFflatIIz/PHfAJKX1XaT
+         rgBTZhq6ndd4aUaBH7FuRB2Ozgma+z4QWAGXpCWMCXIJzzecLndO+9Ee+gKfoOscFcY3
+         OPAXmekonhXc2G/DFxit19gEYn4crvGTKVJ1iPtEIFGGQO4RDn8uhpyaeXjLbNgtHKih
+         dYpSxDsWQFNCAEpMht26JpF3+Kc0VIWTV21+/l90yCS1RIctbCeGisBnoSS8klAFl3DJ
+         nKDQ==
+X-Gm-Message-State: AGRZ1gJDkg9rWHdyAQAKmvLMy3864Dpp1jsQL7CmY1oC80tMQKhiDgOP
+	8z4Z7tS5WXM7f0C+0ZAees/6r+4jNRtHgs/jXUhuB5utUwWtwXzPrA==
+X-Received: by 2002:a17:902:b789:: with SMTP id e9-v6mr1364129pls.338.1541616309488;
+        Wed, 07 Nov 2018 10:45:09 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5603229pjt;
+        Wed, 7 Nov 2018 10:45:08 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f0NfdzL/6MKpYhBFiFHvOn/lqGpHWhmWl3hfdjHtWWxI7xLEWJkX+qhdE9Bd+Vi5FwVygd
+X-Received: by 2002:a63:5153:: with SMTP id r19mr1121763pgl.281.1541616308469;
+        Wed, 07 Nov 2018 10:45:08 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541616308; cv=none;
+        d=google.com; s=arc-20160816;
+        b=cjbXXP21aL0XUcCKVkI1/EQE8feXkTZnbkKo3Gnuf3GU63y4LhsF40Y8ALG7iBSHFw
+         tgRnand2PlGg6fR/VotruHXOJdODuBI97HNS3/nQNaTwKfSeBphMk61L6umbNvn1DFYR
+         oPA5ILmRWPes92TnnzqiWfYqjR1ozPqlKUiEY1JcR2jSmnAijKVq4LYPGCyNGSBCnJOt
+         1FBqjD7ZueQc06DCtJzLuOGlRRlab0XKfaBIV3Tb4sMJi6OJvBG0lMxXaVCvaj6DB15p
+         OAXHD+h4xTMUkmUc18LOcVPnNZZNFBs+taRoERx6Wgcaxej522Q4rqPUQefPmp1iWw3J
+         tbeA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=GeINo/k3+aADKtUi/bndFuPJ1JmVtBQL/rueuoH+QB0=;
+        b=bjK7mrbho9ffifXYMJvKxfMHX8LW3qSHel8oqzLc9EepPy+hcxqR2Le8gdXazdORA+
+         +H2568Cir3I4wHWGoiv1AazzmsllJB1c/gNm9dOFyKzINlk9e1r8Qq1qdPOko69G7BRR
+         1twDDxaBzJqUKW0nHSmEV0F6W3DU3Iz6w09bPJxEpKK4ei2AL8Ty0srP40gL0g116OFH
+         iu37z84dqxF2KMlhkJwcnhdRFOa03Dp7JwrfnKFrZDHGIhbs04xS2kBcoZrMW8sCwfG9
+         mltYac6A+b/5QhcuKQiNWOBvDeS30q6QDE3lDMypsnWM7tQJEMyVT8wqhb4g7jnABQ/Q
+         xHLg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@chromium.org header.s=google header.b=DZjWOdgp;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=chromium.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v4-v6si1318663plp.247.2018.11.07.10.44.53;
+        Wed, 07 Nov 2018 10:45:08 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728213AbeKHEQU (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:16:20 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39118 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbeKHEQU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:16:20 -0500
+Received: by mail-pg1-f193.google.com with SMTP id r9-v6so7682938pgv.6
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 10:44:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GeINo/k3+aADKtUi/bndFuPJ1JmVtBQL/rueuoH+QB0=;
+        b=DZjWOdgp7V5O9EXMFQQ9dcVpLocqT/AJCaY/dfTVfuPOAITptgW83c0/AADwopFvoW
+         NwcBK+rjP3ldlsT0SIgWxU5gIlDywQOyIMdiWtMamMKxZ1Fn0NUFTKgvokQCCIe13J3W
+         hRZUPn3d7odbIP2zQESrYlJ3hJsHLf29xP86I=
+X-Received: by 2002:a62:250:: with SMTP id 77-v6mr1415929pfc.16.1541616282201;
+        Wed, 07 Nov 2018 10:44:42 -0800 (PST)
+Received: from google.com ([2620:15c:202:1:299d:6b87:5478:d28a])
+        by smtp.gmail.com with ESMTPSA id 196-v6sm4406423pfc.71.2018.11.07.10.44.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 10:44:40 -0800 (PST)
+Date: Wed, 7 Nov 2018 10:44:37 -0800
+From: Brian Norris <briannorris@chromium.org>
+To: lists@nerdbynature.de
+Cc: sky@genki.is, Guenter Roeck <linux@roeck-us.net>,
+        yamada.masahiro@socionext.com,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Revert "scripts/setlocalversion: git: Make -dirty check
+ more robust"
+Message-ID: <20181107184435.GA168339@google.com>
+References: <1541527838-4585-1-git-send-email-linux@roeck-us.net>
+ <20181106.192305.406697677@genki.is>
+ <20181107022156.GA254567@google.com>
+ <alpine.DEB.2.21.999.1811061845161.5308@trent.utfs.org>
+ <CA+ASDXPMMXCBN6PU8qzRm579sC9VBdwnxZdZwRdPY1cBUP8oGQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+ASDXPMMXCBN6PU8qzRm579sC9VBdwnxZdZwRdPY1cBUP8oGQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXN0O1MuNbmeIYAA--.853S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrtry8AF18WrWfXw15Zw15twb_yoWktFcEvF
+	s2qF47Za1Dua18Ja1xGFWUAFyvvanrCrZ5Jw4qqryDZa48WanYqF97ury3Xr1fGrsFkFZx
+	urWfuw1IkryxXjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqkYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	GVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bU
+	nmiUUUUU=
+
+On Tue, Nov 06, 2018 at 08:00:36PM -0800, Brian Norris wrote:
+> On a different tangent: how about the --no-optional-locks (see
+> git(1))? Will this get you your "up-to-date" result without writing to
+> the .git directory? I've only read the documentation, but not tested
+> it.
+
+I think I can add a little to this: that option definitely avoids
+writing to the git index (thus, avoiding the problem that Guenter and I
+are trying to resolve) and the documentation suggests it should still
+get up-to-date index information (thus, avoiding the problem that Genki
+was trying to fix). So something like this would work (on top of the
+revert):
+
+diff --git a/scripts/setlocalversion b/scripts/setlocalversion
+index 71f39410691b..7dfe45badcca 100755
+--- a/scripts/setlocalversion
++++ b/scripts/setlocalversion
+@@ -74,7 +74,7 @@ scm_version()
+ 		fi
+ 
+ 		# Check for uncommitted changes
+-		if git diff-index --name-only HEAD | grep -qv "^scripts/package"; then
++		if git --no-optional-locks status -uno --porcelain | grep -qv '^.. scripts/package'; then
+ 			printf '%s' -dirty
+ 		fi
+ 
+Unfortunately, --no-optional-locks is new as of git 2.14. Dunno how new
+of a git we expect people to use.
+
+Brian

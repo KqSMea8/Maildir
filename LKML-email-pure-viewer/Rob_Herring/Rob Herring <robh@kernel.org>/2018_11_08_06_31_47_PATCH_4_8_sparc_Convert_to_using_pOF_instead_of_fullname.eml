@@ -1,0 +1,517 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:02 -0000
+Received: from icoremail.net (unknown [209.85.214.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHHyYkaONbODFbAQ--.27733S3;
+	Thu, 08 Nov 2018 06:33:09 +0800 (CST)
+Received: from mail-pl1-f171.google.com (unknown [209.85.214.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXekYhaONbGZYZAA--.1755S3;
+	Thu, 08 Nov 2018 06:33:06 +0800 (CST)
+Received: by mail-pl1-f171.google.com with SMTP id n4-v6so8524181plp.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:33:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=tMuQiZ4DDHWnQZuvh39rUeWW6dJtn97BpEgcgzHc3cQ=;
+        b=DTMEC9/iTzhv4jMT4777fMkfRnmQ8Pik87BoQncMFG044dg6i3OXanIcqQXxZTy2ZY
+         pv58q9eZdQseA/K1yFC1Js9vEBwgjbQCT2LVcIpZ1aK1BAb9XWHOBEnqvoL4Mx7Xm1kM
+         XHU7sNP8G05dFPu3xs8Y9dYxjIvfd60Mf1pY8Xi66IIs78F5b4jwHzG+kR5Mt7sFNjPu
+         cTK6eANr+knJacS56c2bMsOXwCXh2c8Y2ZZS4GIxRrQlPH9Bn9x2HXeiD0HZmVPgjl+U
+         jzFDApusjSP3O7d3ULFFaoRk8ErKR0IKIWPnxIKvSkPHcKOPadh8R9TSTQRxJXVAdETO
+         XWfQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+X-Gm-Message-State: AGRZ1gKGcJ0KlcIIinkIM/xHyHgl/GPklXJ4O5iKExFsruodIwXSCAel
+	PUg4u1kmwCKG76L37JX0MiTMY2v7YUUM+sLsnZFnZj9/OnaKzLlCIw==
+X-Received: by 2002:a17:902:6b4b:: with SMTP id g11-v6mr2137175plt.213.1541629985440;
+        Wed, 07 Nov 2018 14:33:05 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp81358pjt;
+        Wed, 7 Nov 2018 14:33:03 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cAkdwo8/10BieWzZ9mGavzUbdZAgE+XjpeKC20+LtwfaBQVFgm62ayC7Z+FTBvu7H2tQLU
+X-Received: by 2002:a17:902:ba83:: with SMTP id k3-v6mr2053081pls.200.1541629983896;
+        Wed, 07 Nov 2018 14:33:03 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541629983; cv=none;
+        d=google.com; s=arc-20160816;
+        b=SNbvkeHaeOHcbGQTSpbH6LPNlY4ZLNCrFFxe7Sk9EHrdXsEf+nl6qu57SUJ/8eomtO
+         8+ZNeqAvCNpu+a3iz1G2/5Lm0Xcd/0lXM5V6mfrQsmOY+f0xgbXOO8nhqD+jnZH6SssF
+         hJmUOspPGU6kdV9cRyxb6Z9WiN1RzzI+NnfJZIeg+zrKDll1U6JRIzjCTPJFJkkjHpS5
+         Msp5JiWdDWEZthsP8BJOMpbORRDhYxGWMp7GWOI6tc14xhsgtSMtygtjXal35BSb31n3
+         BlFghRExzCpNIouJiIofUfwu40W9gIUpJds6HoPOvs+hI9sHeJJg1179arQ+A1wuTL38
+         hQMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=tMuQiZ4DDHWnQZuvh39rUeWW6dJtn97BpEgcgzHc3cQ=;
+        b=GxNSaLNdQL9X2hJ0V3fIgljbjwvIExCSvhZ2j8NQzdC9dNCKT+YPTHQfHyD5jVIDJB
+         IvSdAkDNKNhWe3bsIl3J6DgJFgLUTAha7bV21Lr0GUcuXuxbygQXCo8diupW1IkdGKRM
+         HXV3TQDpi7pun0jCBTLebcURnQcM23Yeq+rhsvODDq91K+o4mdREzOqTBMF45qeht/Na
+         1I9Oqm4UWHwLMi8sgO7w7929e3XL/BBnnHF15vkjuYQ7HA/6qnWYg2gpGYvmriMgPJjB
+         bIPdUjAZPQHFyKr8AHefpzA1wqq9unmD8i77AaSVAdq4E+LSNO/qLLFDgM/mi1TL3Lhx
+         15Dg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id z11-v6si1961722plk.90.2018.11.07.14.32.48;
+        Wed, 07 Nov 2018 14:33:03 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728249AbeKHIE0 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:04:26 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46635 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728184AbeKHIEZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:04:25 -0500
+Received: by mail-ot1-f68.google.com with SMTP id q5so16303343otl.13;
+        Wed, 07 Nov 2018 14:31:58 -0800 (PST)
+X-Received: by 2002:a9d:7059:: with SMTP id x25mr1406185otj.35.1541629917621;
+        Wed, 07 Nov 2018 14:31:57 -0800 (PST)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id f9sm750959oth.17.2018.11.07.14.31.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 14:31:56 -0800 (PST)
+From: Rob Herring <robh@kernel.org>
+To: "David S. Miller" <davem@davemloft.net>
+Cc: Frank Rowand <frowand.list@gmail.com>,
+        linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org
+Subject: [PATCH 4/8] sparc: Convert to using %pOF instead of full_name
+Date: Wed,  7 Nov 2018 16:31:47 -0600
+Message-Id: <20181107223151.14991-5-robh@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107223151.14991-1-robh@kernel.org>
+References: <20181107223151.14991-1-robh@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXekYhaONbGZYZAA--.1755S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvAXoW3ZrWrKr1DZryUKw1rAF4fXwb_yoW8Gw17uo
+	WF9F4a9r1rGrW7GF4qvw1DKFWxX3W2k3Z3WFWvgr4Uu3WxZry5J345GFW5Ga40v3WrGF43
+	uw1Iqw1rC3Z7Grn7n29KB7ZKAUJUUUUU529EdanIXcx71UUUUj7v73VFW2AGmfu7jjvjm3
+	AaLaJ3UjIYCTnIWjp_UUUOn7k0a2IF6w4kM7kC6x804xWl14x267AKxVWUJVW8JwAFIxvE
+	14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
+	v20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vE
+	x4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	GVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_ZwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_JFI_GrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	UOHMKtUUUUU==
+
+Now that we have a custom printf format specifier, convert users of
+full_name to use %pOF instead. This is preparation to remove storing
+of the full path string for each node.
+
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: sparclinux@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ arch/sparc/kernel/auxio_64.c     |  3 +--
+ arch/sparc/kernel/chmc.c         |  8 +++----
+ arch/sparc/kernel/of_device_32.c |  7 +++----
+ arch/sparc/kernel/of_device_64.c | 36 +++++++++++++++-----------------
+ arch/sparc/kernel/pci.c          | 31 +++++++++++++--------------
+ arch/sparc/kernel/prom_32.c      |  4 ++--
+ arch/sparc/kernel/sbus.c         |  4 ++--
+ arch/sparc/kernel/sun4d_irq.c    |  8 +++----
+ arch/sparc/kernel/time_64.c      | 12 +++++------
+ arch/sparc/kernel/vio.c          |  2 +-
+ 10 files changed, 55 insertions(+), 60 deletions(-)
+
+diff --git a/arch/sparc/kernel/auxio_64.c b/arch/sparc/kernel/auxio_64.c
+index 4e8f56c3793c..6145658d915a 100644
+--- a/arch/sparc/kernel/auxio_64.c
++++ b/arch/sparc/kernel/auxio_64.c
+@@ -123,8 +123,7 @@ static int auxio_probe(struct platform_device *dev)
+ 	if (!auxio_register)
+ 		return -ENODEV;
+ 
+-	printk(KERN_INFO "AUXIO: Found device at %s\n",
+-	       dp->full_name);
++	printk(KERN_INFO "AUXIO: Found device at %pOF\n", dp);
+ 
+ 	if (auxio_devtype == AUXIO_TYPE_EBUS)
+ 		auxio_set_led(AUXIO_LED_ON);
+diff --git a/arch/sparc/kernel/chmc.c b/arch/sparc/kernel/chmc.c
+index 0de4bcb8261f..61fe1b951ba3 100644
+--- a/arch/sparc/kernel/chmc.c
++++ b/arch/sparc/kernel/chmc.c
+@@ -464,8 +464,8 @@ static int jbusmc_probe(struct platform_device *op)
+ 
+ 	mc_list_add(&p->list);
+ 
+-	printk(KERN_INFO PFX "UltraSPARC-IIIi memory controller at %s\n",
+-	       op->dev.of_node->full_name);
++	printk(KERN_INFO PFX "UltraSPARC-IIIi memory controller at %pOF\n",
++	       op->dev.of_node);
+ 
+ 	dev_set_drvdata(&op->dev, p);
+ 
+@@ -747,8 +747,8 @@ static int chmc_probe(struct platform_device *op)
+ 
+ 	mc_list_add(&p->list);
+ 
+-	printk(KERN_INFO PFX "UltraSPARC-III memory controller at %s [%s]\n",
+-	       dp->full_name,
++	printk(KERN_INFO PFX "UltraSPARC-III memory controller at %pOF [%s]\n",
++	       dp,
+ 	       (p->layout_size ? "ACTIVE" : "INACTIVE"));
+ 
+ 	dev_set_drvdata(&op->dev, p);
+diff --git a/arch/sparc/kernel/of_device_32.c b/arch/sparc/kernel/of_device_32.c
+index e4abe9b8f97a..ab133e2753ab 100644
+--- a/arch/sparc/kernel/of_device_32.c
++++ b/arch/sparc/kernel/of_device_32.c
+@@ -324,8 +324,8 @@ static void __init build_device_resources(struct platform_device *op,
+ 		memset(r, 0, sizeof(*r));
+ 
+ 		if (of_resource_verbose)
+-			printk("%s reg[%d] -> %llx\n",
+-			       op->dev.of_node->full_name, index,
++			printk("%pOF reg[%d] -> %llx\n",
++			       op->dev.of_node, index,
+ 			       result);
+ 
+ 		if (result != OF_BAD_ADDR) {
+@@ -386,8 +386,7 @@ static struct platform_device * __init scan_one_device(struct device_node *dp,
+ 	op->dev.dma_mask = &op->dev.coherent_dma_mask;
+ 
+ 	if (of_device_register(op)) {
+-		printk("%s: Could not register of device.\n",
+-		       dp->full_name);
++		printk("%pOF: Could not register of device.\n", dp);
+ 		kfree(op);
+ 		op = NULL;
+ 	}
+diff --git a/arch/sparc/kernel/of_device_64.c b/arch/sparc/kernel/of_device_64.c
+index 6df6086968c6..2353cb7bc40f 100644
+--- a/arch/sparc/kernel/of_device_64.c
++++ b/arch/sparc/kernel/of_device_64.c
+@@ -341,9 +341,9 @@ static void __init build_device_resources(struct platform_device *op,
+ 
+ 	/* Prevent overrunning the op->resources[] array.  */
+ 	if (num_reg > PROMREG_MAX) {
+-		printk(KERN_WARNING "%s: Too many regs (%d), "
++		printk(KERN_WARNING "%pOF: Too many regs (%d), "
+ 		       "limiting to %d.\n",
+-		       op->dev.of_node->full_name, num_reg, PROMREG_MAX);
++		       op->dev.of_node, num_reg, PROMREG_MAX);
+ 		num_reg = PROMREG_MAX;
+ 	}
+ 
+@@ -401,8 +401,8 @@ static void __init build_device_resources(struct platform_device *op,
+ 		memset(r, 0, sizeof(*r));
+ 
+ 		if (of_resource_verbose)
+-			printk("%s reg[%d] -> %llx\n",
+-			       op->dev.of_node->full_name, index,
++			printk("%pOF reg[%d] -> %llx\n",
++			       op->dev.of_node, index,
+ 			       result);
+ 
+ 		if (result != OF_BAD_ADDR) {
+@@ -548,8 +548,8 @@ static unsigned int __init build_one_device_irq(struct platform_device *op,
+ 					       dp->irq_trans->data);
+ 
+ 		if (of_irq_verbose)
+-			printk("%s: direct translate %x --> %x\n",
+-			       dp->full_name, orig_irq, irq);
++			printk("%pOF: direct translate %x --> %x\n",
++			       dp, orig_irq, irq);
+ 
+ 		goto out;
+ 	}
+@@ -579,10 +579,9 @@ static unsigned int __init build_one_device_irq(struct platform_device *op,
+ 						   &irq);
+ 
+ 			if (of_irq_verbose)
+-				printk("%s: Apply [%s:%x] imap --> [%s:%x]\n",
+-				       op->dev.of_node->full_name,
+-				       pp->full_name, this_orig_irq,
+-				       of_node_full_name(iret), irq);
++				printk("%pOF: Apply [%pOF:%x] imap --> [%pOF:%x]\n",
++				       op->dev.of_node,
++				       pp, this_orig_irq, iret, irq);
+ 
+ 			if (!iret)
+ 				break;
+@@ -597,10 +596,10 @@ static unsigned int __init build_one_device_irq(struct platform_device *op,
+ 
+ 				irq = pci_irq_swizzle(dp, pp, irq);
+ 				if (of_irq_verbose)
+-					printk("%s: PCI swizzle [%s] "
++					printk("%pOF: PCI swizzle [%pOF] "
+ 					       "%x --> %x\n",
+-					       op->dev.of_node->full_name,
+-					       pp->full_name, this_orig_irq,
++					       op->dev.of_node,
++					       pp, this_orig_irq,
+ 					       irq);
+ 
+ 			}
+@@ -619,8 +618,8 @@ static unsigned int __init build_one_device_irq(struct platform_device *op,
+ 	irq = ip->irq_trans->irq_build(op->dev.of_node, irq,
+ 				       ip->irq_trans->data);
+ 	if (of_irq_verbose)
+-		printk("%s: Apply IRQ trans [%s] %x --> %x\n",
+-		      op->dev.of_node->full_name, ip->full_name, orig_irq, irq);
++		printk("%pOF: Apply IRQ trans [%pOF] %x --> %x\n",
++		      op->dev.of_node, ip, orig_irq, irq);
+ 
+ out:
+ 	nid = of_node_to_nid(dp);
+@@ -656,9 +655,9 @@ static struct platform_device * __init scan_one_device(struct device_node *dp,
+ 
+ 		/* Prevent overrunning the op->irqs[] array.  */
+ 		if (op->archdata.num_irqs > PROMINTR_MAX) {
+-			printk(KERN_WARNING "%s: Too many irqs (%d), "
++			printk(KERN_WARNING "%pOF: Too many irqs (%d), "
+ 			       "limiting to %d.\n",
+-			       dp->full_name, op->archdata.num_irqs, PROMINTR_MAX);
++			       dp, op->archdata.num_irqs, PROMINTR_MAX);
+ 			op->archdata.num_irqs = PROMINTR_MAX;
+ 		}
+ 		memcpy(op->archdata.irqs, irq, op->archdata.num_irqs * 4);
+@@ -680,8 +679,7 @@ static struct platform_device * __init scan_one_device(struct device_node *dp,
+ 	op->dev.dma_mask = &op->dev.coherent_dma_mask;
+ 
+ 	if (of_device_register(op)) {
+-		printk("%s: Could not register of device.\n",
+-		       dp->full_name);
++		printk("%pOF: Could not register of device.\n", dp);
+ 		kfree(op);
+ 		op = NULL;
+ 	}
+diff --git a/arch/sparc/kernel/pci.c b/arch/sparc/kernel/pci.c
+index 17ea16a1337c..45ba2757a1b9 100644
+--- a/arch/sparc/kernel/pci.c
++++ b/arch/sparc/kernel/pci.c
+@@ -431,13 +431,13 @@ static void of_scan_pci_bridge(struct pci_pbm_info *pbm,
+ 	u64 size;
+ 
+ 	if (ofpci_verbose)
+-		pci_info(dev, "of_scan_pci_bridge(%s)\n", node->full_name);
++		pci_info(dev, "of_scan_pci_bridge(%pOF)\n", node);
+ 
+ 	/* parse bus-range property */
+ 	busrange = of_get_property(node, "bus-range", &len);
+ 	if (busrange == NULL || len != 8) {
+-		pci_info(dev, "Can't get bus-range for PCI-PCI bridge %s\n",
+-		       node->full_name);
++		pci_info(dev, "Can't get bus-range for PCI-PCI bridge %pOF\n",
++		       node);
+ 		return;
+ 	}
+ 
+@@ -455,8 +455,8 @@ static void of_scan_pci_bridge(struct pci_pbm_info *pbm,
+ 
+ 	bus = pci_add_new_bus(dev->bus, dev, busrange[0]);
+ 	if (!bus) {
+-		pci_err(dev, "Failed to create pci bus for %s\n",
+-			node->full_name);
++		pci_err(dev, "Failed to create pci bus for %pOF\n",
++			node);
+ 		return;
+ 	}
+ 
+@@ -512,13 +512,13 @@ static void of_scan_pci_bridge(struct pci_pbm_info *pbm,
+ 			res = bus->resource[0];
+ 			if (res->flags) {
+ 				pci_err(dev, "ignoring extra I/O range"
+-					" for bridge %s\n", node->full_name);
++					" for bridge %pOF\n", node);
+ 				continue;
+ 			}
+ 		} else {
+ 			if (i >= PCI_NUM_RESOURCES - PCI_BRIDGE_RESOURCES) {
+ 				pci_err(dev, "too many memory ranges"
+-					" for bridge %s\n", node->full_name);
++					" for bridge %pOF\n", node);
+ 				continue;
+ 			}
+ 			res = bus->resource[i];
+@@ -554,14 +554,14 @@ static void pci_of_scan_bus(struct pci_pbm_info *pbm,
+ 	struct pci_dev *dev;
+ 
+ 	if (ofpci_verbose)
+-		pci_info(bus, "scan_bus[%s] bus no %d\n",
+-			 node->full_name, bus->number);
++		pci_info(bus, "scan_bus[%pOF] bus no %d\n",
++			 node, bus->number);
+ 
+ 	child = NULL;
+ 	prev_devfn = -1;
+ 	while ((child = of_get_next_child(node, child)) != NULL) {
+ 		if (ofpci_verbose)
+-			pci_info(bus, "  * %s\n", child->full_name);
++			pci_info(bus, "  * %pOF\n", child);
+ 		reg = of_get_property(child, "reg", &reglen);
+ 		if (reg == NULL || reglen < 20)
+ 			continue;
+@@ -598,7 +598,7 @@ show_pciobppath_attr(struct device * dev, struct device_attribute * attr, char *
+ 	pdev = to_pci_dev(dev);
+ 	dp = pdev->dev.of_node;
+ 
+-	return snprintf (buf, PAGE_SIZE, "%s\n", dp->full_name);
++	return snprintf (buf, PAGE_SIZE, "%pOF\n", dp);
+ }
+ 
+ static DEVICE_ATTR(obppath, S_IRUSR | S_IRGRP | S_IROTH, show_pciobppath_attr, NULL);
+@@ -698,7 +698,7 @@ struct pci_bus *pci_scan_one_pbm(struct pci_pbm_info *pbm,
+ 	struct device_node *node = pbm->op->dev.of_node;
+ 	struct pci_bus *bus;
+ 
+-	printk("PCI: Scanning PBM %s\n", node->full_name);
++	printk("PCI: Scanning PBM %pOF\n", node);
+ 
+ 	pci_add_resource_offset(&resources, &pbm->io_space,
+ 				pbm->io_offset);
+@@ -714,8 +714,7 @@ struct pci_bus *pci_scan_one_pbm(struct pci_pbm_info *pbm,
+ 	bus = pci_create_root_bus(parent, pbm->pci_first_busno, pbm->pci_ops,
+ 				  pbm, &resources);
+ 	if (!bus) {
+-		printk(KERN_ERR "Failed to create bus for %s\n",
+-		       node->full_name);
++		printk(KERN_ERR "Failed to create bus for %pOF\n", node);
+ 		pci_free_resource_list(&resources);
+ 		return NULL;
+ 	}
+@@ -1111,8 +1110,8 @@ static void pci_bus_slot_names(struct device_node *node, struct pci_bus *bus)
+ 	sp = prop->names;
+ 
+ 	if (ofpci_verbose)
+-		pci_info(bus, "Making slots for [%s] mask[0x%02x]\n",
+-			 node->full_name, mask);
++		pci_info(bus, "Making slots for [%pOF] mask[0x%02x]\n",
++			 node, mask);
+ 
+ 	i = 0;
+ 	while (mask) {
+diff --git a/arch/sparc/kernel/prom_32.c b/arch/sparc/kernel/prom_32.c
+index 30e33b461970..f2835cddf362 100644
+--- a/arch/sparc/kernel/prom_32.c
++++ b/arch/sparc/kernel/prom_32.c
+@@ -261,7 +261,7 @@ void __init of_console_init(void)
+ 		}
+ 		of_console_device = dp;
+ 
+-		strcpy(of_console_path, dp->full_name);
++		sprintf(of_console_path, "%pOF", dp);
+ 		if (!strcmp(type, "serial")) {
+ 			strcat(of_console_path,
+ 			       (skip ? ":b" : ":a"));
+@@ -301,7 +301,7 @@ void __init of_console_init(void)
+ 		of_console_device = dp;
+ 
+ 		if (prom_vers == PROM_V2) {
+-			strcpy(of_console_path, dp->full_name);
++			sprintf(of_console_path, "%pOF", dp);
+ 			switch (*romvec->pv_stdout) {
+ 			case PROMDEV_TTYA:
+ 				strcat(of_console_path, ":a");
+diff --git a/arch/sparc/kernel/sbus.c b/arch/sparc/kernel/sbus.c
+index c133dfc37c5c..41c5deb581b8 100644
+--- a/arch/sparc/kernel/sbus.c
++++ b/arch/sparc/kernel/sbus.c
+@@ -67,8 +67,8 @@ void sbus_set_sbus64(struct device *dev, int bursts)
+ 
+ 	regs = of_get_property(op->dev.of_node, "reg", NULL);
+ 	if (!regs) {
+-		printk(KERN_ERR "sbus_set_sbus64: Cannot find regs for %s\n",
+-		       op->dev.of_node->full_name);
++		printk(KERN_ERR "sbus_set_sbus64: Cannot find regs for %pOF\n",
++		       op->dev.of_node);
+ 		return;
+ 	}
+ 	slot = regs->which_io;
+diff --git a/arch/sparc/kernel/sun4d_irq.c b/arch/sparc/kernel/sun4d_irq.c
+index d869d409fce6..6d266d7dd2b6 100644
+--- a/arch/sparc/kernel/sun4d_irq.c
++++ b/arch/sparc/kernel/sun4d_irq.c
+@@ -361,15 +361,15 @@ static unsigned int sun4d_build_device_irq(struct platform_device *op,
+ 	 * lacks a "board#" property, something is very wrong.
+ 	 */
+ 	if (!bus->parent || strcmp(bus->parent->name, bus_connection)) {
+-		printk(KERN_ERR "%s: Error, parent is not %s.\n",
+-			bus->full_name, bus_connection);
++		printk(KERN_ERR "%pOF: Error, parent is not %s.\n",
++			bus, bus_connection);
+ 		goto err_out;
+ 	}
+ 	board_parent = bus->parent;
+ 	board = of_getintprop_default(board_parent, "board#", -1);
+ 	if (board == -1) {
+-		printk(KERN_ERR "%s: Error, lacks board# property.\n",
+-			board_parent->full_name);
++		printk(KERN_ERR "%pOF: Error, lacks board# property.\n",
++			board_parent);
+ 		goto err_out;
+ 	}
+ 
+diff --git a/arch/sparc/kernel/time_64.c b/arch/sparc/kernel/time_64.c
+index 5f356dc8e178..68a80f9baea7 100644
+--- a/arch/sparc/kernel/time_64.c
++++ b/arch/sparc/kernel/time_64.c
+@@ -445,8 +445,8 @@ static int rtc_probe(struct platform_device *op)
+ {
+ 	struct resource *r;
+ 
+-	printk(KERN_INFO "%s: RTC regs at 0x%llx\n",
+-	       op->dev.of_node->full_name, op->resource[0].start);
++	printk(KERN_INFO "%pOF: RTC regs at 0x%llx\n",
++	       op->dev.of_node, op->resource[0].start);
+ 
+ 	/* The CMOS RTC driver only accepts IORESOURCE_IO, so cons
+ 	 * up a fake resource so that the probe works for all cases.
+@@ -501,8 +501,8 @@ static struct platform_device rtc_bq4802_device = {
+ static int bq4802_probe(struct platform_device *op)
+ {
+ 
+-	printk(KERN_INFO "%s: BQ4802 regs at 0x%llx\n",
+-	       op->dev.of_node->full_name, op->resource[0].start);
++	printk(KERN_INFO "%pOF: BQ4802 regs at 0x%llx\n",
++	       op->dev.of_node, op->resource[0].start);
+ 
+ 	rtc_bq4802_device.resource = &op->resource[0];
+ 	return platform_device_register(&rtc_bq4802_device);
+@@ -565,8 +565,8 @@ static int mostek_probe(struct platform_device *op)
+ 	    strcmp(dp->parent->parent->name, "central") != 0)
+ 		return -ENODEV;
+ 
+-	printk(KERN_INFO "%s: Mostek regs at 0x%llx\n",
+-	       dp->full_name, op->resource[0].start);
++	printk(KERN_INFO "%pOF: Mostek regs at 0x%llx\n",
++	       dp, op->resource[0].start);
+ 
+ 	m48t59_rtc.resource = &op->resource[0];
+ 	return platform_device_register(&m48t59_rtc);
+diff --git a/arch/sparc/kernel/vio.c b/arch/sparc/kernel/vio.c
+index 32bae68e34c1..0b578d03797b 100644
+--- a/arch/sparc/kernel/vio.c
++++ b/arch/sparc/kernel/vio.c
+@@ -193,7 +193,7 @@ show_pciobppath_attr(struct device *dev, struct device_attribute *attr,
+ 	vdev = to_vio_dev(dev);
+ 	dp = vdev->dp;
+ 
+-	return snprintf (buf, PAGE_SIZE, "%s\n", dp->full_name);
++	return snprintf (buf, PAGE_SIZE, "%pOF\n", dp);
+ }
+ 
+ static DEVICE_ATTR(obppath, S_IRUSR | S_IRGRP | S_IROTH,
+-- 
+2.19.1

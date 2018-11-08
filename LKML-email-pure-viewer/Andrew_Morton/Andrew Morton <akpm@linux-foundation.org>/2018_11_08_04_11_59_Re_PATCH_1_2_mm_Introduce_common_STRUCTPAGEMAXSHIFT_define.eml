@@ -1,0 +1,157 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:12 -0000
+Received: from icoremail.net (unknown [209.85.214.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH3osR+Nb_mpaAQ--.26849S3;
+	Thu, 08 Nov 2018 04:12:29 +0800 (CST)
+Received: from mail-pl1-f182.google.com (unknown [209.85.214.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHLEgpR+Nb8iIZAA--.1538S3;
+	Thu, 08 Nov 2018 04:12:25 +0800 (CST)
+Received: by mail-pl1-f182.google.com with SMTP id q19-v6so5358356pll.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:12:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=m9wV/bYhCz24ophtcrmgYX+kXPydL1U6PiamHtK62Ms=;
+        b=tiAu8Awo+57ZQDI8QJ80aAsZ46QCDkCdXPLvC2qPHFsy/e7C6WbzVgEjk40BSKhGaR
+         PY2kgvkzRcJVAFLo8UXTB1a5aw8f7mt/WRQvB3ClLU9lVz0feFEp1KGUNo7UDdDOjwcI
+         /8iCNAz4EHJOvdlvQZWcRHH86t/+jaGQ2quqjJ7wbBYKIhG/oA80obbhSYXyGiZKROY7
+         EOaQVdLGef4fyF28dNL38QSxMSrz+wR3jA5hZOpHP7EIAZ6Liu1iveIC5u9NGDZ4b3Wm
+         t6Pt+R154wSyf9aZlFW+kZIvttsAF0nuIe125bZDAnqwgYDHDqQgWXOhPz6x9fgpAf6g
+         bscQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJzl12vnXThRhTrfT5fG9Pa5y2y5fQTXiLeiBNBANXhQJl8FFAU
+	OsT5RAQ60fbs5sAcqOtNGFe03k2Pug9lP/aBwJLygMDR4M6eTOgpQw==
+X-Received: by 2002:a17:902:9698:: with SMTP id n24-v6mr1711106plp.9.1541621544947;
+        Wed, 07 Nov 2018 12:12:24 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5692488pjt;
+        Wed, 7 Nov 2018 12:12:24 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eCbTbjI5Y8vA6fH59Q9mqJ4Horxb6DkJvT1qW+vOJRf0rNHcyuOpuiBRSguU3BBgL0v5Pl
+X-Received: by 2002:a17:902:aa8d:: with SMTP id d13-v6mr1718206plr.74.1541621544249;
+        Wed, 07 Nov 2018 12:12:24 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541621544; cv=none;
+        d=google.com; s=arc-20160816;
+        b=s7jyiMd/USUiaHMZHVcXXhZf9dXEkP+GNAKOsl8jFpVxdvpSl7GsdxbqH+bzu6xQZN
+         mxFNh708ZltWDprTJAD4qo0gg73/EWWjEiADFpVsCYz8jUV/ODMISMKUTFoarIgZwcGI
+         3Ch4Y+NMGynBAgyOfhbobguotcGOKK4a9RzJqxFB9t1jcQvPZFgAN9QnuAZzXQ3XrJ0g
+         ZN5lzSo2IYy87yPXgJWvMsWFUOuJRVdN7oK6nfayJGg2Bbg4Oo1C29bubbUpMAG/iJnI
+         qcpWH+ztPe2C9mc1hmI0XHQI2qNdPaZML9VYdk2Yeo4Kt2so+daTgLlOV4g+PhEDxJmC
+         WgSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:subject:cc:to:from:date;
+        bh=m9wV/bYhCz24ophtcrmgYX+kXPydL1U6PiamHtK62Ms=;
+        b=I5DSqA6RP+erl9wpqIKnjYrCKJJt9aJArZPzHHLISbnCajRe7aAK5teX0D358HxQjL
+         ehDMK8UHm53bc6nAu/BpnNDjJeG7r4snXHgbCKn14ktrs/mgKbaUZwnfGFnlcjIy8whT
+         9bUTLm3DXUMBDcR2h9epN6q1XOD2mHikPdBnvErS0JEcxljpX/XgKRPgnpWkAhuBhOmN
+         i7bLf0BA076WXjg+cipBaIO62MxIIsnuZ4GxSgC+LWdF/773O1nh2r1TQN8jwcZbVa4X
+         4t+vnOgFqD7so3DJ+L3q89fj3geRMQa/znDrJig/eGuxXOOHGv86Ik2QroU8Ch1mjXiF
+         +R/w==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id k8-v6si1476712pgj.192.2018.11.07.12.12.07;
+        Wed, 07 Nov 2018 12:12:24 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726642AbeKHFn5 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:43:57 -0500
+Received: from mail.linuxfoundation.org ([140.211.169.12]:60562 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbeKHFn5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:43:57 -0500
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id E5BB0AB5;
+        Wed,  7 Nov 2018 20:12:00 +0000 (UTC)
+Date: Wed, 7 Nov 2018 12:11:59 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Logan Gunthorpe <logang@deltatee.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH 1/2] mm: Introduce common STRUCT_PAGE_MAX_SHIFT define
+Message-Id: <20181107121159.b8c9add7c61fb97f48ddd7de@linux-foundation.org>
+In-Reply-To: <20181107173859.24096-2-logang@deltatee.com>
+References: <20181107173859.24096-1-logang@deltatee.com>
+        <20181107173859.24096-2-logang@deltatee.com>
+X-Mailer: Sylpheed 3.6.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHLEgpR+Nb8iIZAA--.1538S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFWktr13GFyDAr4DuF47CFg_yoW8Jw17pa
+	yDGas7KrnYkw17Gw1xKws7Zr4Skw4kuw1jk347W34a9ry5t3WkKrn8KF4fuayrGws5C340
+	gF9Fg398Z34qy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9vb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkI7II2jI8vz4vEwIxGrwCYIxAI
+	cVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42
+	IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK
+	82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JV
+	WrJrUvcSsGvfC2KfnxnUUI43ZEXa7IUnd9N3UUUUU==
+
+On Wed,  7 Nov 2018 10:38:58 -0700 Logan Gunthorpe <logang@deltatee.com> wrote:
+
+> This define is used by arm64 to calculate the size of the vmemmap
+> region. It is defined as the log2 of the upper bound on the size
+> of a struct page.
+> 
+> We move it into mm_types.h so it can be defined properly instead of
+> set and checked with a build bug. This also allows us to use the same
+> define for riscv.
+> 
+> --- a/arch/arm64/include/asm/memory.h
+> +++ b/arch/arm64/include/asm/memory.h
+> @@ -34,15 +34,6 @@
+>   */
+>  #define PCI_IO_SIZE		SZ_16M
+>  
+> -/*
+> - * Log2 of the upper bound of the size of a struct page. Used for sizing
+> - * the vmemmap region only, does not affect actual memory footprint.
+> - * We don't use sizeof(struct page) directly since taking its size here
+> - * requires its definition to be available at this point in the inclusion
+> - * chain, and it may not be a power of 2 in the first place.
+> - */
+> -#define STRUCT_PAGE_MAX_SHIFT	6
+
+Well that was lame.
+
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -206,6 +206,11 @@ struct page {
+>  #endif
+>  } _struct_page_alignment;
+>  
+> +/*
+> + * Used for sizing the vmemmap region on some architectures
+> + */
+> +#define STRUCT_PAGE_MAX_SHIFT	(order_base_2(sizeof(struct page)))
+
+Much better.
+
+Acked-by: Andrew Morton <akpm@linux-foundation.org>

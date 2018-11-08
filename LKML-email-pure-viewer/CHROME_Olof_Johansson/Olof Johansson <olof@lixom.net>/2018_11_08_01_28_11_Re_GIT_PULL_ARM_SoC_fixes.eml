@@ -1,0 +1,157 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:17 -0000
+Received: from icoremail.net (unknown [209.85.210.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv_rdIONbFohZAQ--.27141S3;
+	Thu, 08 Nov 2018 01:29:01 +0800 (CST)
+Received: from mail-pf1-f172.google.com (unknown [209.85.210.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3GkbaIONbLYsYAA--.551S3;
+	Thu, 08 Nov 2018 01:28:59 +0800 (CST)
+Received: by mail-pf1-f172.google.com with SMTP id b11-v6so7987224pfi.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:28:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=9ISKQpqfFPEbdelvqtDI5zwAM3QFY3eZu2pPJjaUU8k=;
+        b=OSyBALrddHYSCYRB/4XrMdqxRRKgIinpV6mbCnA3f1Mlw9Q3uPt/E3x0lZx4aGoGp5
+         cmKHG0h1MdCyhAKpJZDKqGsNt0pFvcz3NSzKOH6QoEiv3qY3EkKyhcDCEuPKVGVacmGc
+         C7KfC5LEHg3L7PGNNhcUtgrKelI6mxXXVC/e6KPE9qlyxBEuLg2Eno9a+z2fnqBTpkxV
+         XcPKku6oobxn/kYPpZKLxzNQnoz2RqBX/WIfrzehBKGU4EKre/lga9b6KyACEfWc8K+N
+         K3SkZy4bqOIEJPvmPWBurE/0X+gpgOJOOJtVy431PECnemAeNwfO5oYhRG/j2Kqyub2Q
+         IngQ==
+X-Gm-Message-State: AGRZ1gL0/5dJlisxxENxNSK88NurK7nliIyQh7lt1ke/gIbSUGe4Mvv0
+	SPZNP4tmlLmgkRmar083Yz2Qa3kEHSXrx1s3WVaxWdgfUYdtDRhfwg==
+X-Received: by 2002:a62:d084:: with SMTP id p126-v6mr1115561pfg.147.1541611738625;
+        Wed, 07 Nov 2018 09:28:58 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5518433pjt;
+        Wed, 7 Nov 2018 09:28:57 -0800 (PST)
+X-Google-Smtp-Source: AJdET5c5OxyLVJeum3y2sv/hf7tcEXoa9jfA3ngi+b4TzjvU9XP4+oszYgOg3YatkCb0qkL5SVaU
+X-Received: by 2002:aa7:804e:: with SMTP id y14-v6mr1046592pfm.73.1541611737906;
+        Wed, 07 Nov 2018 09:28:57 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541611737; cv=none;
+        d=google.com; s=arc-20160816;
+        b=oJRRMBybKrNOitXXKViSnkbmXx+yE7bQaA+V0lwaiqAufw84FmD0DKovOGmLJetUni
+         dfnOYmxXbm8hEu9Hkz3AQsG/67AIww56ugN8kkHARM7IRBuFp/SSI4Zcp75FP1dMMLAv
+         liDB4epLlYiR8N8q/ua2lWEk/I4Yx9fHFvzeVm1Q/FF6vPIaZWYXFIpxlSd0CvuJroSx
+         7n6BQpl71FYWaE7NXDxwjSs203kHWdw9bjGossSLaDmfPrcuFV+1n0KfzzW5gRjk4Roj
+         3LKCldzsOTjWPKnCd2auZWPYPAcPmHKvJws8oF+Dmuw+SGRCdPs8m5eXX3mv2AK8FReB
+         oODw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=9ISKQpqfFPEbdelvqtDI5zwAM3QFY3eZu2pPJjaUU8k=;
+        b=oV2Zs/FjnSak1IBOXyqacb6U5vf702GtoLA+Amm7NxzG67KbmOfF3cG7CJm0Sz85HQ
+         /TfVTVSmaFalXUrLk5yyPRxsq4Y95x+K+Mh4M0ODoeztDIJtniloYMYEx50k8zNMq6nW
+         HcztNp46tOA5kJt1ENEBIuS3+qfpywGWYOvdi8lZpcpC1P73Ng7AmsbYF9bg0xz6rhZn
+         H8SrVMGAIQls8BGR1O6FS7z9x6fvDttPOPQHYwjAjh6r+8oJ0PUo4N4A+Y4zLKyYUJwZ
+         3+3zucdgp7p9LvBuVIzghuu6iqRj6Z2imUHDExQ3ekTuCp7jmDPWLlpBXbZQMediujr3
+         n+lA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@lixom-net.20150623.gappssmtp.com header.s=20150623 header.b=Pvh+EDq6;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id y73si1033260pgd.478.2018.11.07.09.28.41;
+        Wed, 07 Nov 2018 09:28:57 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728112AbeKHC7r (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:59:47 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44513 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbeKHC7q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:59:46 -0500
+Received: by mail-lj1-f193.google.com with SMTP id k19-v6so15453064lji.11
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 09:28:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9ISKQpqfFPEbdelvqtDI5zwAM3QFY3eZu2pPJjaUU8k=;
+        b=Pvh+EDq66fMxTPgpclzXHT4KbLaen5Gk1AoB8MMBQ81HRC001iic2sDYunuAU5UIV1
+         nfPX4DnfYob0+MwnxXelZSqc0TMyrr43gCUIkdH6vwesX6fqGSWeFm8i2wSUKOMzcOdE
+         A4onGaFapjub4n4J7JHuNIpSr8/TMksCRtZDieFaPRm3JOMlyImTv3/y3PvYat2hHCj7
+         dW6+ZSY2Pu+LhfCNPIxujuakkPqRG8OUcw4cusQC+Z/JTc741/ff14kIHYJAc1SOlUJS
+         XVV3SlxgGRwKDpjUzyzaCBX9wYaSEFYlDMTfHLIYs106Z2SEBVI7oVgU8GqrmR1eYc+A
+         si1A==
+X-Received: by 2002:a2e:95c6:: with SMTP id y6-v6mr684843ljh.59.1541611703995;
+ Wed, 07 Nov 2018 09:28:23 -0800 (PST)
+MIME-Version: 1.0
+References: <20181107171023.zoo6qox5eewy3pmk@localhost> <CAHk-=whF7kBo49-BFTUc-by+HB_0qNw_=+d24TydO2mYwwsWMQ@mail.gmail.com>
+In-Reply-To: <CAHk-=whF7kBo49-BFTUc-by+HB_0qNw_=+d24TydO2mYwwsWMQ@mail.gmail.com>
+From: Olof Johansson <olof@lixom.net>
+Date: Wed, 7 Nov 2018 09:28:11 -0800
+Message-ID: <CAOesGMg3uHJ7YB95skjcVK39kudAGGjKo6909d--LDZmqeE1HA@mail.gmail.com>
+Subject: Re: [GIT PULL] ARM: SoC fixes
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: ARM-SoC Maintainers <arm@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        guillaume.tucker@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3GkbaIONbLYsYAA--.551S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gr4fuF4xAr48Wr1kGryxGrg_yoWDZrcEka
+	95urWkGw1jvFWqg3WfZrs8CrWrAa409rsrXa45XF9Iq345Aa12ka4vyryfZ345WFWSgrZr
+	G3yvkwn7Jw43WjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbg8YjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW8MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI
+	42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExV
+	AvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
+	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrx
+	kI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U5773DUUUUU==
+
+On Wed, Nov 7, 2018 at 9:17 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Wed, Nov 7, 2018 at 9:10 AM Olof Johansson <olof@lixom.net> wrote:
+> >
+> > ARM: SoC fixes
+>
+> Pulled.
+>
+> > I was a bit too trigger happy to enable PREEMPT on multi_v7_defconfig,
+> > and it ended up regressing at least BeagleBone XM boards.
+>
+> Odd. Did it hit some "may_sleep()" test in a driver that is hidden by
+> preempt being off? Otherwise I don't see how/why preempt should fail
+> in a board-specific manner..
+
+The board hangs early during boot and the usual way of collecting
+early console doesn't seem to work when attempted (I haven't tried
+personally).
+
+It's one of the major non-SMP platforms covered by tests. I'd be
+surprised if it turns out to be truly _board_ specific (and rather
+specific to OMAP3), but we don't have enough data yet. Chances are it
+either shuffles some timing around or indeed hits a may_sleep() test
+somewhere.
+
+(I just realized I might have missed to attribute Guillaume in the
+revert patch. Sorry about that).
+
+
+-Olof
+
+
+-Olof

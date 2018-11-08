@@ -1,0 +1,200 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:37 -0000
+Received: from icoremail.net (unknown [209.85.210.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3yRhL+Nbw+pZAQ--.27285S3;
+	Thu, 08 Nov 2018 02:30:58 +0800 (CST)
+Received: from mail-pf1-f173.google.com (unknown [209.85.210.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnvztfL+NbAdYYAA--.219S3;
+	Thu, 08 Nov 2018 02:30:56 +0800 (CST)
+Received: by mail-pf1-f173.google.com with SMTP id x2-v6so3971096pfm.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:30:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=Qir1mi0hHMJAP7Lw3MalCFm49tn0u4t4BKJWHobqbRU=;
+        b=Eijq82lZGnsPtlKAY6qX02Lrdu99s6+d+dXzqEiBH4Cp9ZL9ybC/wJr6/b44vCNTaf
+         ZzhVV3yUj+4aYOjUcEeje31RrgwLYSsKqQipDFDS1XRoSxz9CjyPtWZvKvxl/eixkJSC
+         /5pX7D7QHwut8dIGs1rSqPEhaoDKaGgiMXAfW3rn03rYkcKYoEEBi+YqC+Ral4QFj9od
+         1Zncp6IvWYz5Gya5l0f+TQXrfTZOsC6hF1pvsWkJcbz6mYRe8BMoscfWzv5XR1TxI0DT
+         y0Cu/cPzdGSYNSdcKTpjaeR6gvYjyTOTDG1hDvIruaIGj8NmmYDNnmvvEbQsmiXnNyX7
+         qITw==
+X-Gm-Message-State: AGRZ1gJ4+Zf0DVi1O/L7Fz01RLPF0AnehHWcY+lQk6RrtPPlUa6ffAG1
+	nnTZcumSJOwQXCpuZII3xhHqFExQp1QVdyHO0G7Z/3VDcwdUgcy6MA==
+X-Received: by 2002:a62:42dc:: with SMTP id h89-v6mr1367387pfd.0.1541615455619;
+        Wed, 07 Nov 2018 10:30:55 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5587029pjt;
+        Wed, 7 Nov 2018 10:30:54 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d7YgHHAkyWwxNw9/dTwpaIHqjOxg4oEyuP/EVqzOpO20QXOY3txM95WNIfxXfW9WR1URaj
+X-Received: by 2002:a63:ba19:: with SMTP id k25mr1108415pgf.194.1541615454102;
+        Wed, 07 Nov 2018 10:30:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541615454; cv=none;
+        d=google.com; s=arc-20160816;
+        b=VRmKJMKD89ieIlshrz937OyThFRFZwgJozEpAJy4i70vuLfMENfhu4L6bPUszgm9xF
+         ScDeL4lHnrsUrBTUB4zP+rY7JQrFPwvxxEoWQTZC2+LPL5tsc22sZbJiWI0bvdSnqujm
+         ILV/1NbZEV17QpnDkhpvbp+HSPsyq2t7YIAwRtqm7cbDMQ/MVIDekpNgtqlzbDFnUOsr
+         K39+tCpqBZHRzugda79K1fX6gsHtXOvfS2RaqEC4gvjMo7dqDTWLjp6pYy2PDR4GHHzz
+         SS42pzydPUb/fUDZmQFXI43tamkTdKYyAmKScTfpjcsb/QCpwc9b0oebdPGekiRuJVWB
+         3oZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Qir1mi0hHMJAP7Lw3MalCFm49tn0u4t4BKJWHobqbRU=;
+        b=rsdj/jAKF9Byev6Tnlb8OZwaVAjIUotqrCfWB+qm37xR38ye94JL0YuokiVvHk6/6Y
+         sJf9sRbeXWtN9x3wNreyQAJ4mMcNBmofVj5xCxzXmoBDop1PelgqNPldt0awDrRw6XQo
+         5qCMLlMdgE+ZZ4SHS2kqSGT8LJgwh2XUF9XUFKTIhaPGjmFyv7Aypt0WPzURjd2y0ESW
+         gHAEb9CXS4eXDPsy0U7GGpmVu72EkeqOEYLUQvltZzoJ0+pGf0KarKctmhKLsPqddGBX
+         D6uHenH5nakUpTFmsEOGQ45ng2/Oll0nbvepVtX6v9gDN7L5cNfakq0NXv/lb9Ju69R3
+         3vtQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=tf63N5w6;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 3-v6si1399070plm.136.2018.11.07.10.30.37;
+        Wed, 07 Nov 2018 10:30:54 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728257AbeKHEBz (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:01:55 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33358 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbeKHEBz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:01:55 -0500
+Received: by mail-ot1-f65.google.com with SMTP id q1so15724352otk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 10:30:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qir1mi0hHMJAP7Lw3MalCFm49tn0u4t4BKJWHobqbRU=;
+        b=tf63N5w6VuBPxQ5zlL67xSUas37DgpssM1ymwWH8FHvyqVEyDKUi07Bl/GuhLFwUgg
+         GVUpy8VcxftGvoxCFgW79pwkbwNDdeAiVqnaaXrwjHCOksE2K86wrnJX5D3Ho3ltSDmC
+         4/HMLfwUBlYzWBbdYcWV4yxcYny40OA9FQjJHK5SBFoWI9EjM8Li/Hjt+2tY1uqaLtZE
+         29SGGSWyk1INmti7hgzlczMdLs7oOFsLUWKr48fFSIsE8eb5k8H14CEQAmjXJLPc9rJC
+         gPzGZ+sD1ZwLz9o/3kzIHZSyXXuwID0jCt0pGLprucdiJKuQz+2g7cHulGjKtYSflwOt
+         Tqew==
+X-Received: by 2002:a9d:2ea9:: with SMTP id w38mr756772ota.99.1541615415219;
+ Wed, 07 Nov 2018 10:30:15 -0800 (PST)
+MIME-Version: 1.0
+References: <CAK8P3a3JcztCSYBuu5ZJXaV83VNLv_1v3v-EKMR+tC1oOsQesw@mail.gmail.com>
+ <mhng-3c26b2fb-0c11-42f2-9026-1113b200a7b2@palmer-si-x1c4>
+In-Reply-To: <mhng-3c26b2fb-0c11-42f2-9026-1113b200a7b2@palmer-si-x1c4>
+From: David Abdurachmanov <david.abdurachmanov@gmail.com>
+Date: Wed, 7 Nov 2018 19:30:03 +0100
+Message-ID: <CAEn-LTpQ5uTte2bBrEs3uLKtsckkKPUOP+jHw5k-DFAwGCS3WA@mail.gmail.com>
+Subject: Re: [PATCH] riscv: add asm/unistd.h UAPI header
+To: Palmer Dabbelt <palmer@sifive.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, aou@eecs.berkeley.edu,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnvztfL+NbAdYYAA--.219S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxGw4DAF47Jw13WF4kAF17Awb_yoW5CF4DpF
+	s5K3WYyr4DGr1fAFn2vr17AF1Fg34fXFW7XF15XrWkAa4FqF93trsrK3409Fs7Cw1fGrWY
+	vFZ3K3s7Ka98Za7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPab7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6rylc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxU
+	QFoXUUUUU
+
+On Wed, Nov 7, 2018 at 1:08 AM Palmer Dabbelt <palmer@sifive.com> wrote:
+>
+> On Mon, 05 Nov 2018 12:56:15 PST (-0800), Arnd Bergmann wrote:
+> > On 11/5/18, David Abdurachmanov <david.abdurachmanov@gmail.com> wrote:
+> >> Marcin Juszkiewicz reported issues while generating syscall table for riscv
+> >> using 4.20-rc1. The patch refactors our unistd.h files to match some other
+> >> architectures.
+> >>
+> >> - Add asm/unistd.h UAPI header, which has __ARCH_WANT_NEW_STAT
+> >> - Remove asm/syscalls.h UAPI header and merge to asm/unistd.h
+> >> - Adjust kernel asm/unistd.h
+> >>
+> >> So now asm/unistd.h UAPI header should show all syscalls for riscv.
+> >>
+> >> Before this, Makefile simply put `#include <asm-generic/unistd.h>` into
+> >> generated asm/unistd.h UAPI header thus user didn't see:
+> >>
+> >> - __NR_riscv_flush_icache
+> >> - __NR_newfstatat
+> >> - __NR_fstat
+> >>
+> >> which are supported by riscv kernel.
+> >>
+> >> Signed-off-by: David Abdurachmanov <david.abdurachmanov@gmail.com>
+> >> Cc: Arnd Bergmann <arnd@arndb.de>
+> >> Cc: Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
+> >> Cc: Guenter Roeck <linux@roeck-us.net>
+> >
+> > Thanks for addressing this, your patch correctly fixes riscv64, and
+> > I should have noticed the mistake when I originally merged the
+> > broken patch.
+> >
+> > However, looking closer I found another problem with the original
+> > patch that your fix does not address:
+> >
+> > __ARCH_WANT_NEW_STAT should only be set on 64-bit
+> > architectures.
+> >
+> > For a 32-bit architecture, we only want __ARCH_WANT_STAT64 if
+> > any. For 64-bit architectures with compat mode, we still need to
+> > set __ARCH_WANT_STAT64 from the non-uapi file so we get
+> > the syscall implementation.
+> >
+> > If we don't care about the riscv32 ABI changing yet, we can
+> > decide to leave out __ARCH_WANT_STAT64 here, and require
+> > glibc to implement it using statx() like any new architecture.
+> > stat64 is not y2038 safe, and statx replaces it because of that.
+>
+> Thanks for pointing this out.   A while ago we decided the rv32 ABI was
+> "slushy": it can change if it has a good reason to.  Right now the only planned
+> changes are the y2038 changes, which I consider this a part of.  For some
+> reason I thought we'd already done this, but since we haven't then I think it
+> should go in sooner rather than later -- that will help the glibc guys get
+> everything lined up.
+>
+> The target is still the next glibc release (Feb 1st) for a stable RV32I ABI.
+> That's progressing well, with one last blocking issue related to some of our
+> floating-point emulation routines before we can submit the port.  This should
+> give us ample time to line up the ABIs correctly so everything works.
+>
+> So I think the correct answer here is to drop __ARCH_WANT_STAT64 from RISC-V.
+>
+
+Then if you agree I could do and send v2:
+
++#ifdef __LP64__
++#define __ARCH_WANT_NEW_STAT
++#endif /* __LP64__ */
+
+Cannot use CONFIG_64BIT as in user space nothing defines it.
+Alternatively I could
+check for __riscv_xlen == 64.
+
+I found _LP64 and __LP64__ being used in kernel, incl. include/uapi/linux/rseq.h
+
+david

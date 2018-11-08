@@ -1,0 +1,197 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:08 -0000
+Received: from icoremail.net (unknown [209.85.210.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_4+4HONbc2pZAQ--.58648S3;
+	Thu, 08 Nov 2018 01:11:21 +0800 (CST)
+Received: from mail-pf1-f169.google.com (unknown [209.85.210.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnBUG1HONbd3oYAA--.427S3;
+	Thu, 08 Nov 2018 01:11:17 +0800 (CST)
+Received: by mail-pf1-f169.google.com with SMTP id s9-v6so610120pfm.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:11:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:mime-version:content-disposition:user-agent
+         :sender:precedence:list-id;
+        bh=zDIhYkzMY+HCQjf2J5WFnxiR9Vbk2YpGCGFl3l2kxCE=;
+        b=Zy6x02V5saeZ1LiNaUSYnBoLbZEJsinM6wNWDYPJOZjaHYtMBXPimrmSuhTGw2tKN8
+         kuua5BImrBhx/gxrULXEh9lFlPPRFoKKqN0fEzZmjUvBuzGA/Vm1jWNgeScmk7+zyiko
+         FX5wKg9ax8T30lM9II5vLIJDVKyZ7DUm4eDKB9nzhVo4aABNnfFu8D/g9yRLi7HGe2Wz
+         bT/IA8DPp+er5W/+UAjaOi3nAhYRLwA0HuvWqM/mxVA66g4mFXEXM2CHu4MSDoNJdZcd
+         YifmbeMjKuDRSPyJBVGxBVX/dSsBCtJt7ctP3Ijk6rQnbeIbPRk9v/fko4zhXH8hbxBV
+         1hGg==
+X-Gm-Message-State: AGRZ1gLlToC1p65rHcAT2tJtwI66e08L6damd22XZWeDzJoc6/6/4SKE
+	lznXTSquV1n38bp3sM9eSJVFhN/3Vi0lXPbh497MGLmzU6a7143sWQ==
+X-Received: by 2002:a62:35c2:: with SMTP id c185-v6mr998046pfa.69.1541610677413;
+        Wed, 07 Nov 2018 09:11:17 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5498183pjt;
+        Wed, 7 Nov 2018 09:11:16 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eElw0SDKX+tEms+52HZTGQeRegpwLjFywJfsBOymyzBzbYtHWjzm+AUhSZ6a2hUkLwbUNl
+X-Received: by 2002:a63:8d44:: with SMTP id z65mr864105pgd.57.1541610676419;
+        Wed, 07 Nov 2018 09:11:16 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610676; cv=none;
+        d=google.com; s=arc-20160816;
+        b=BjiTcDh5430ZkjsWocqzL/kwxINz0uNRz9m2YElo/pETLj0p1T/0iy6Rd15GRBxHVi
+         kuh5OFE2GicziIdxo1M0U8e6kmAegAuHJiYFA47K0zbOuExjCUO8kKXMIWKrh0pV3zsb
+         1SkrnsN/yb61Ip73IhlfhZfBOu6dGCiz7Wz3FlDXRhqKG9VAG/bL32c7BkjME7OD7/nc
+         gEZGMZ9D/vF/UVmMiEgPgP98Ybs9V06XEjWUJSASl1j0zcuLx7riCcBzrvu4ksnebWSm
+         xSekJrd2YXN9CsRv+o9zP3zEbT5n6CYT66a2pPQIWRhQSkjaQDCUYTcewQ5Yfb9w8g1M
+         +LrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:content-disposition
+         :mime-version:message-id:subject:cc:to:from:date:dkim-signature;
+        bh=zDIhYkzMY+HCQjf2J5WFnxiR9Vbk2YpGCGFl3l2kxCE=;
+        b=Vd9is6UlPx0qDgNeZyI9znkrpCDJIHO4OvXRZY9H4LGbTejBNC3hAaBf3y9ontu9CW
+         QQaHvaIN37Zk6VYcUKYmxSO+ZHJSzwChGlPA5l869suzY61G+jN3svdXx8riKxWsn3xZ
+         jIAIxLEFZOORTi2nERea/Ifa48x2ihEe1mQvVZvrU/G0CLYMlfDa63eP67okPL/ErRKY
+         RPwjzBCBpMUefS9owShVbWHiUeyGrhYwfdgcUk87hxHCJ+scYirtPIoaANbsJh6drrjL
+         oQ9INEMbETGKvmL+btLdwWC0CphRhjV5hmFAndgMb82cyE/ylLE1vnT6llNOrPBG2P8a
+         dk+Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@lixom-net.20150623.gappssmtp.com header.s=20150623 header.b=IXoMOegI;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d37-v6si1114628plb.167.2018.11.07.09.11.01;
+        Wed, 07 Nov 2018 09:11:16 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731495AbeKHClv (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:41:51 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39018 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728057AbeKHClv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:41:51 -0500
+Received: by mail-lf1-f65.google.com with SMTP id n18so12025194lfh.6
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 09:10:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=zDIhYkzMY+HCQjf2J5WFnxiR9Vbk2YpGCGFl3l2kxCE=;
+        b=IXoMOegI+ZfvccEazZyDDwt3xQsszwIqwlxY2v/lITp0I3fkeETHqz2y/SGz/3wpJ3
+         nR/g3H8edRVWM/5/zYhAstc5wibrplaWkAQNRLh2c6B9ZaOFppXaTnB78e3QcSH5/Lgp
+         Ss3hBtR57Gyz9NXoiBoPmUeIMPsHqtqSzlqIhpOZsW516/7RgLakptwp2ijabC4MCX9a
+         75XIGdrKea7zi+zCOWZI9NcJqIvvrwWQS0z+b8hBWaqbWqG6OQLEZa07P2pSaFBqQJCV
+         Cdz9VjiKA8GruygXlUOONN8wB3Hzqk3u7XBAR5SPPn/KZQKoGcIgu3erdudjBOiKtyCr
+         1/+g==
+X-Received: by 2002:a19:1d0d:: with SMTP id d13mr617834lfd.74.1541610633096;
+        Wed, 07 Nov 2018 09:10:33 -0800 (PST)
+Received: from localhost ([85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id l21-v6sm208732ljj.48.2018.11.07.09.10.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 09:10:30 -0800 (PST)
+Date: Wed, 7 Nov 2018 09:10:23 -0800
+From: Olof Johansson <olof@lixom.net>
+To: torvalds@linux-foundation.org
+Cc: olof@lixom.net, arm@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] ARM: SoC fixes
+Message-ID: <20181107171023.zoo6qox5eewy3pmk@localhost>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnBUG1HONbd3oYAA--.427S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxCry5CFyfCF1kAr1xKFykKrg_yoW5GFykpr
+	WakwsrGr48GFyrGw1DWw1kuw15Jw1UJr13ur15JrWFyF98Z3WUXr1S9r1fua47JrW8Gw48
+	tFyruryUt34DZaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcV
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_GwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Cr0_Gr1UMxvI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07b9
+	WrZUUUUU=
+
+Hi Linus,
+
+Please merge. Thanks!
+
+
+-Olof
+
+The following changes since commit 651022382c7f8da46cb4872a545ee1da6d097d2a:
+
+  Linux 4.20-rc1 (2018-11-04 15:37:52 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git tags/armsoc-fixes
+
+for you to fetch changes up to a89f84a56ec95fd66b839bf9c545f8a59a4ffcd5:
+
+  Merge tag 'stratix10_dts_fix_for_v4.20' of git://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/linux into fixes (2018-11-07 08:09:50 -0800)
+
+----------------------------------------------------------------
+ARM: SoC fixes
+
+A few more fixes that have come in, and one revert of a previous fix.
+
+I was a bit too trigger happy to enable PREEMPT on multi_v7_defconfig,
+and it ended up regressing at least BeagleBone XM boards. While we get
+that debugged for next merge window, let's disable it again.
+
+Beyond that:
+
+ - Stratix change to fix multicast filtering
+ - Minor DT fixes for Renesas and i.MX
+ - Ethernet fix for a Renesas board (switching main interfaces)
+ - Ethernet phy regulator fix for i.MX6SX
+
+----------------------------------------------------------------
+Aaro Koskinen (1):
+      arm64: dts: stratix10: fix multicast filtering
+
+Fabrizio Castro (1):
+      dt-bindings: arm: Fix RZ/G2E part number
+
+Kuninori Morimoto (1):
+      arm64: dts: renesas: r8a7795: add missing dma-names on hscif2
+
+Leonard Crestez (1):
+      ARM: dts: imx6sx-sdb: Fix enet phy regulator
+
+Oleksij Rempel (1):
+      ARM: dts: imx6sll: fix typo for fsl,imx6sll-i2c node
+
+Olof Johansson (4):
+      ARM: defconfig: Disable PREEMPT again on  multi_v7
+      Merge tag 'imx-fixes-4.20' of git://git.kernel.org/.../shawnguo/linux into fixes
+      Merge tag 'renesas-fixes-for-v4.20' of https://git.kernel.org/.../horms/renesas into fixes
+      Merge tag 'stratix10_dts_fix_for_v4.20' of git://git.kernel.org/.../dinguyen/linux into fixes
+
+Rob Herring (1):
+      ARM: dts: fsl: Fix improperly quoted stdout-path values
+
+Sergei Shtylyov (1):
+      arm64: dts: renesas: condor: switch from EtherAVB to GEther
+
+ Documentation/devicetree/bindings/arm/shmobile.txt |  2 +-
+ arch/arm/boot/dts/imx53-ppd.dts                    |  2 +-
+ arch/arm/boot/dts/imx6sll.dtsi                     |  2 +-
+ arch/arm/boot/dts/imx6sx-sdb.dtsi                  |  7 +++-
+ arch/arm/boot/dts/vf610m4-colibri.dts              |  4 +-
+ arch/arm/configs/multi_v7_defconfig                |  1 -
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |  3 ++
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi           |  2 +-
+ arch/arm64/boot/dts/renesas/r8a77980-condor.dts    | 47 +++++++++++-----------
+ 9 files changed, 39 insertions(+), 31 deletions(-)

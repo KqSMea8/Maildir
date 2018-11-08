@@ -1,0 +1,139 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:14 -0000
+Received: from icoremail.net (unknown [209.85.215.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f91yHuNbwHdZAQ--.27055S3;
+	Thu, 08 Nov 2018 01:18:43 +0800 (CST)
+Received: from mail-pg1-f178.google.com (unknown [209.85.215.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHKUVsHuNbvoEYAA--.442S3;
+	Thu, 08 Nov 2018 01:18:36 +0800 (CST)
+Received: by mail-pg1-f178.google.com with SMTP id i4-v6so7579040pgq.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:18:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=nu0imVlHQSXCQ13xpKyfZqQYvV6Ml3hZ3UVNGW0yxLg=;
+        b=thY8UizxS0duVKqfZ2xsdi2PtFkVbMDQVtX+2XbklX3FK+pCstMgxHHrYCAxumaayl
+         WCU8pS8HrTRtgHknyiOMQH9fbmfip5AUOVqTQHLG3xODfsovdW/HVpX21Mu6LcqaRFe1
+         WTiRocslUgBkDMFOxnNu8UHboxVtf3YMY4I/iqW2xOyNbpPIKL+P1hLCsy+EcQODPFNk
+         9dX/J7Q9RAIk0ZPdm4D5BHbpCuaWHfxkMZh0KRjhKlQe2HCnJAkT6fjxMVi2VnTF2+mG
+         T+PbwVRzdXstwi6eFLjLBOIYS6sXvzm4eZOK/kgiqepOm+bLo0JKQFWzEyinhx2LEFgs
+         qkzQ==
+X-Gm-Message-State: AGRZ1gIPmlJVnzKQMVqEhWNqrU04n5yhws/YauiznBVj8LdF9h895hYN
+	G1EEXsWIe2+kYoKTS5F0snZcc28vfaAdLnMFrbqItiEfqSUB/Yc7XA==
+X-Received: by 2002:a63:5816:: with SMTP id m22-v6mr884406pgb.332.1541611116326;
+        Wed, 07 Nov 2018 09:18:36 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5506943pjt;
+        Wed, 7 Nov 2018 09:18:35 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dqSTMmbaMO6iAAwNC3+ondyhnmSwCPU2PFUKvNhpO/Epr1zYsGWg23TMc4gS68dH3TfhOU
+X-Received: by 2002:a62:9702:: with SMTP id n2-v6mr1034372pfe.222.1541611115742;
+        Wed, 07 Nov 2018 09:18:35 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541611115; cv=none;
+        d=google.com; s=arc-20160816;
+        b=K13ZaLlncm8G/U8dVCHfcJYrYvDvG4QIlq/H89twnu7MXB6fJ7hw1GHjQNnbST1TU0
+         oLAqHUP98n+FCQA0EHXGLeyyy2InZfQkt7MGPos4T0+pyWX3DBy+3vq4aUbT7zvz07f/
+         RWNbnOQr9cwVThHKoh12d88ojsNyJDQ8OQDbp+5RXkUGtHia8J2ihayGC4/VOgm9z8GB
+         fPT6VTzb52hkFCByPj075YCwPFuZZ+UKQuydfwH78Ncw8qHhwwaxQbndjFDk3xOD93VO
+         BjmeOpeNmjAB0u6PlYfL6I7wXqClw6S6BmTTZA7qiwAGliTi8C/e4d0LGGuPJMO9n6sf
+         2OvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=nu0imVlHQSXCQ13xpKyfZqQYvV6Ml3hZ3UVNGW0yxLg=;
+        b=prh+a0wBTPULtTh4u4UVzdJcQxm0DR1nZz73z0NDsh3eL9EC8WpwHzXDKFcwnZuw38
+         xwNrIkmb+xghM7Kr006T2C+PYtmBAs65Jjss8m0ZYlliQBrPoWT+snjmEXQYdBCa3y0F
+         cWkUcqdQdad0WN/x318C6qwbZApNp8Q2M9VWf6eW6tUAhFtlLWd1AxzBdbIRWiLKZ/QU
+         PvoCLvtwhtHLX/dkhckF+3mKo9JqCcVA+8Wg+t1coyeCR6Nc85ekFIZS3yBiNVAqVz0R
+         QQCIatR141W2BkjPk0GFTsFF4yFFWKF+7RmRyN9xE6IRJPpJ25KHxQ1VLlCQdAOL5J16
+         PPLw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@linux-foundation.org header.s=google header.b=WOD4upa9;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id u2-v6si1039977pgi.329.2018.11.07.09.18.20;
+        Wed, 07 Nov 2018 09:18:35 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731471AbeKHCtF (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:49:05 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41729 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727676AbeKHCtF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:49:05 -0500
+Received: by mail-lj1-f193.google.com with SMTP id z80-v6so15426777ljb.8
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 09:17:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nu0imVlHQSXCQ13xpKyfZqQYvV6Ml3hZ3UVNGW0yxLg=;
+        b=WOD4upa9G6dOvJgFrZPOQjkaQXCyDQe6Jp1+KttKdrbAu8Nx5IYynA3hMkhLVESyT/
+         txi/5+4b46szFAMcRBfmfRk0n7OBwg9Ldxv5bzIqd9jiQhibqmDLpqDeKd1hwncWvI9X
+         YIkk1Lae0FyGjWA/CeOFGYAJ0mHSIsVSi0r2U=
+X-Received: by 2002:a2e:9e81:: with SMTP id f1-v6mr757181ljk.100.1541611064658;
+        Wed, 07 Nov 2018 09:17:44 -0800 (PST)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id m65sm228923lfe.39.2018.11.07.09.17.43
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 09:17:43 -0800 (PST)
+Received: by mail-lj1-f169.google.com with SMTP id e5-v6so11314877lja.4
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 09:17:43 -0800 (PST)
+X-Received: by 2002:a2e:95c6:: with SMTP id y6-v6mr661665ljh.59.1541611063006;
+ Wed, 07 Nov 2018 09:17:43 -0800 (PST)
+MIME-Version: 1.0
+References: <20181107171023.zoo6qox5eewy3pmk@localhost>
+In-Reply-To: <20181107171023.zoo6qox5eewy3pmk@localhost>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 7 Nov 2018 09:17:26 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whF7kBo49-BFTUc-by+HB_0qNw_=+d24TydO2mYwwsWMQ@mail.gmail.com>
+Message-ID: <CAHk-=whF7kBo49-BFTUc-by+HB_0qNw_=+d24TydO2mYwwsWMQ@mail.gmail.com>
+Subject: Re: [GIT PULL] ARM: SoC fixes
+To: Olof Johansson <olof@lixom.net>
+Cc: arm@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHKUVsHuNbvoEYAA--.442S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUYA7k0a2IF6w1UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvEwIxGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY02Avz4vE
+	IxC_GwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Ar0_tr1lcIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2
+	z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52
+	x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
+	xGrwCI42IY6xAIw20EY4v20xvaj40_JFI_GrUvcSsGvfC2KfnxnUUI43ZEXa7IUeXo7tUU
+	UUU==
+
+On Wed, Nov 7, 2018 at 9:10 AM Olof Johansson <olof@lixom.net> wrote:
+>
+> ARM: SoC fixes
+
+Pulled.
+
+> I was a bit too trigger happy to enable PREEMPT on multi_v7_defconfig,
+> and it ended up regressing at least BeagleBone XM boards.
+
+Odd. Did it hit some "may_sleep()" test in a driver that is hidden by
+preempt being off? Otherwise I don't see how/why preempt should fail
+in a board-specific manner..
+
+                  Linus

@@ -1,0 +1,186 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:10 -0000
+Received: from icoremail.net (unknown [209.85.215.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3fyWOb+Nbs15bAQ--.27483S3;
+	Thu, 08 Nov 2018 07:04:47 +0800 (CST)
+Received: from mail-pg1-f170.google.com (unknown [209.85.215.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwD3zTmNb+NbSqsZAA--.1869S3;
+	Thu, 08 Nov 2018 07:04:45 +0800 (CST)
+Received: by mail-pg1-f170.google.com with SMTP id i4-v6so7952662pgq.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 15:04:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version:sender:precedence:list-id;
+        bh=kyEC9KPV+hzzFN5wvGke1bN9fWlZWNKE5zNZhY/0Rd4=;
+        b=GZhntvGRVAEcKp7vzQB1V5Yneno1BI52Rr01zE6SbHQp/ecdAQNkt978gi033f8ILk
+         YXCyj9SE197dQSs2pfpCmzl9fgU7NS4sQEQ6rLSXVyuinhOmbStZhwi//p4Jd7wUFyKN
+         BqIdLhBji1O0kP+pahySPhTNkkFKjXLTny85mmu96N4DDRJkeeMj0zRubOWIua9Vwtul
+         2MnxlEkV2dTsGuiw2XKYVBf9xp5cbCor8uCfwfg12oEV0vuNdmGc4HBda9Ty1Kw6mVSK
+         RR763IXbk5zBt+C/w5WOibvG9VECN6yAG8ZCejsnCpVgL+OQ6pcw3lxlSCrI00hp+NRI
+         2fXw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gI1e8xqtPOH0FtU/8dBSQ9eJmb2Q2h0os0BIQYq9ihk8pjkDduJ
+	q+eotez8DgJRfCFEOEgZ3eVSSxl+4cmlSRwBHCLqaJqXQumBScs/Yw==
+X-Received: by 2002:a63:4044:: with SMTP id n65mr1836921pga.90.1541631884829;
+        Wed, 07 Nov 2018 15:04:44 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp106721pjt;
+        Wed, 7 Nov 2018 15:04:43 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fcSVvUHMXYXuparBj6Ke2wwP3iByaqefcNr0GQGe/cAjPZYTKjT8xRLt+11RysG9HBbkmQ
+X-Received: by 2002:a17:902:1006:: with SMTP id b6-v6mr2142746pla.252.1541631883842;
+        Wed, 07 Nov 2018 15:04:43 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541631883; cv=none;
+        d=google.com; s=arc-20160816;
+        b=SrYrLAqbKXblgIQ4jykdi75u37zwoymxPAAPgX2OIkksBVkdJx0HXeC13OmEFkZ3wC
+         +7S7lgsZZosRSsNAOfKoxIGtYUF223fo2hDZQlc5aOHSvAlF+zowB2BOevEUwNBG5okD
+         tql+9AOCu1pyArQHVhUUYFkX+LwC9fJcd8SzXXNguAoaQvNa8ZGk8j9R82N2ffC0LZ82
+         RfuQeXpu0FFzhxYEtAATBW5hnKnQz3nv2ie8/d9lDP0fBJxsrrGGXLkIwvmhoGL5l0os
+         zv78XvnX4GrDHISuLpuknhnq0sFrjZXwi7L7GL10JytdlmV/QMgI/rhISt+iAGGqLOwW
+         epIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:user-agent:references
+         :message-id:in-reply-to:subject:cc:to:from:date;
+        bh=kyEC9KPV+hzzFN5wvGke1bN9fWlZWNKE5zNZhY/0Rd4=;
+        b=rNRCwiLiDu40+SLUP+Hw5fpo/AtmabC/X3uREiEV80U7UtG3ijNC8HIGiMXBtAbTm0
+         PVH1mqqZBp+EzySNGNez5zp01kdqHhPjSurLpoixYKtCXUKNpdMeNqHpzO65dPoIQYqf
+         xIT+hT/s3M1y6IfPGeVsZFB6Q6sqdeHCaRHtuufjRP1lxijrENQpi867MWOLBkAYnLBK
+         NZcdvYx437kP5VBQScJzaK4m16h6h4tGFySjd9HdKex3hFlKDS3Iwif/a7yQpF34VlQJ
+         C9+xs4c0E91ZpqNbcL3zkaSQDAhiWfLgPeajuSf1t2+LcwE/BxNw6gINrZwTjzylJWLf
+         JDSQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id e129-v6si2197074pfg.205.2018.11.07.15.04.28;
+        Wed, 07 Nov 2018 15:04:43 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727963AbeKHIg6 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:36:58 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:42376 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbeKHIg6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:36:58 -0500
+Received: from p4fea46ac.dip0.t-ipconnect.de ([79.234.70.172] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1gKWrg-00024Z-FO; Thu, 08 Nov 2018 00:04:00 +0100
+Date: Thu, 8 Nov 2018 00:03:59 +0100 (CET)
+From: Thomas Gleixner <tglx@linutronix.de>
+To: Tim Chen <tim.c.chen@linux.intel.com>
+cc: Jiri Kosina <jikos@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Casey Schaufler <casey.schaufler@intel.com>,
+        Asit Mallick <asit.k.mallick@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Jon Masters <jcm@redhat.com>,
+        Waiman Long <longman9394@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [Patch v4 17/18] x86/speculation: Update SPEC_CTRL MSRs of remote
+ CPUs
+In-Reply-To: <e41a9d15-f667-ebb5-3fbb-91f14ae034a3@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.1811072337120.1666@nanos.tec.linutronix.de>
+References: <cover.1540923609.git.tim.c.chen@linux.intel.com> <a14236d8b56dafe6988ce1b266a6e929be5296a8.1540923609.git.tim.c.chen@linux.intel.com> <alpine.DEB.2.21.1811042042060.10744@nanos.tec.linutronix.de> <ea646842-bd32-3615-bf38-27b568a2d81e@linux.intel.com>
+ <alpine.DEB.2.21.1811052326040.1659@nanos.tec.linutronix.de> <81398b26-e1c3-aac3-b44a-2a0982ae74e0@linux.intel.com> <alpine.DEB.2.21.1811060139090.1659@nanos.tec.linutronix.de> <e41a9d15-f667-ebb5-3fbb-91f14ae034a3@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwD3zTmNb+NbSqsZAA--.1869S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7CFW5XFy3WF1Dtr1Dtry3twb_yoW8Ar1xpF
+	Z3AasakFs8Ca4IvF9Fyw18GFyIvw1rXrW3Jr1akrW5Zwn8Wa4fKrW5KayagFWDCFn3u3WS
+	vr4Yqw4kWr17A37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6FWlc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r1I6r4UMxvI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUgxu4
+	UUUUU
+
+Tim,
+
+On Tue, 6 Nov 2018, Tim Chen wrote:
+> >>> 2) Add _TIF_UPDATE_SPEC_CTRL to the SYSCALL_EXIT_WORK_FLAGS and handle it
+> >>>    in the slow work path.
+> >>
+> >> There can be tasks that don't do any syscalls, and it seems like we can
+> >> have MSRs getting out of sync?
+> > 
+> > Setting the TIF flag directly in a remote task is wrong. It needs to be
+> > handled when the _TIF_UPDATE_SPEC_CTRL is evaluated, i.e. the information
+> > needs to be stored process wide e.g. in task->mm.
+> > 
+> > But yes, if the remote task runs in user space forever, it won't
+> > help. Though the point is that dumpable is usually set when the process
+> > starts, so it's probably mostly a theoretical issue.
+> > 
+> 
+> I took a crack to implement what you suggested to update
+> remote task's flag and remote SPEC_CTRL MSR on the syscall exit slow path.
+
+can we please take a step back and look at the problem again?
+
+The goal is to glue the mitigation decision on dumpable. That's debatable,
+but understandable, so let's not go into that discussion.
+
+There are two ways to modify dumpable:
+
+  1) prctl(PR_SET_DUMPABLE)
+
+  2) operations which change UID/GID and end up in commit_creds()
+
+Now the really interesting question is _when_ is any of the above invoked:
+
+  1) When the process is still single threaded ?
+
+  2) When the process has already spawned threads ?
+
+If #2 is just the oddball exception, then why on earth should we go through
+loops and hoops to make it work and add overhead in hot paths for no real
+value?
+
+So what we really want before discussing any potential solutions and their
+pro and cons is an answer to that.
+
+If we don't have that answer, then we might just create a purely academic
+solution which creates more problems than it solves.
+
+Thanks,
+
+	tglx
+
+
+
+
+

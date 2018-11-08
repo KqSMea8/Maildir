@@ -1,0 +1,132 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:06 -0000
+Received: from icoremail.net (unknown [209.85.210.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv37uG+NbwGRZAQ--.27305S3;
+	Thu, 08 Nov 2018 01:07:58 +0800 (CST)
+Received: from mail-pf1-f179.google.com (unknown [209.85.210.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3WkbqG+NbC3cYAA--.15308S3;
+	Thu, 08 Nov 2018 01:07:54 +0800 (CST)
+Received: by mail-pf1-f179.google.com with SMTP id s9-v6so605995pfm.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:07:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=H2wGHpaAGbQ9nPS12o/O/N2QRdjR9/hk/0enhbzH9b0=;
+        b=B8MyvZ+f7kGwXJdohV3DUY9BH4Oyo5JexJgAbEMYDYgIHZ4/tA+0DObteR2QxzI09A
+         tI0+7+e64VdHxVadr328YbAaFlBGNmvCr/WpdEGIoZ+MCfT+O++otASqJPn4wVrr0qF4
+         yl9wpkXcQJOb471KIHq5xH8M6sxJ/93nAwIipbwGZdK5UIWE7vNjR05k9fXP8jv8oxFv
+         4T0tGYWAmTLoK0GoBvW3YCK/yjhLITPwuCfLP6dPjv2EeAQtjEqOcHUn+voBiHLPz4I1
+         KVxqVcwm87G+K0s7GTVOqPqMCGLPNbcFRH1Fpa+F51Ke7wNFwc4gnSYw0iwXYpt70MOv
+         7iMg==
+X-Gm-Message-State: AGRZ1gJLm/AJ0ZwGKhs2JjYelwf4j/QNf12I3NkuR4MCVIuQn0kB1bNU
+	XXXTDzGApS8APC3a7tCNMr+SWj7m4VUoYtqvAWpZe6OLuClyk+WO8g==
+X-Received: by 2002:a62:3301:: with SMTP id z1-v6mr972311pfz.85.1541610473929;
+        Wed, 07 Nov 2018 09:07:53 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5494009pjt;
+        Wed, 7 Nov 2018 09:07:53 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fp4kEHU0dp3DNi9NWC0iVCRssmRXi4Sp4iSM7f8nAbnHssbgpV0yAo65fQh1KE6s+cvH8R
+X-Received: by 2002:a17:902:4324:: with SMTP id i33-v6mr1022283pld.253.1541610473365;
+        Wed, 07 Nov 2018 09:07:53 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610473; cv=none;
+        d=google.com; s=arc-20160816;
+        b=EjXMqiluhLyrtKzp9XyrWI3uSsi4oKLThJZJQBgtZfmKBvYmgvgU01JWIBAeMhWKI0
+         Qg+31bDj4vmny7HLyFrVLcQsfBcM7jq10JQc1jRDtgvspxveiVZkk4amhtAEwG264An2
+         a01b864TPR6ZW547F4YKJb7tkUSfSG1h8miY4M4JZYAe2II0HdqHdAesqOeOLFGd/gEm
+         FRTmEMrxDHLaqX1v9//qjsvZaYWDXSRfC9iADYAF5EtD/DmZObIMd8ueBQ2i6+a5DRS3
+         tVWiDs4NqJHJvnamo8WSupoX2TGLIUIeUMYUfltpBPXon/CocY1+bFWG35SVVHoTS2oF
+         gL1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=H2wGHpaAGbQ9nPS12o/O/N2QRdjR9/hk/0enhbzH9b0=;
+        b=EnWYpS4vmBy5TlPjrfNnFImd29oHrh4KFMoTZ2uxjman6J9nT90McPMIopgj+yesGF
+         Df9zpn8dpfF8rE5H2E3wxkdT8MKJtsIoZ1YGyWS6Ufl2KQF1okDWE/2L0H6yJ7k7wU3j
+         XfJlrDzi2umOBKRv46FjELHzjVsXD09EV3l1+bL7j6CQ1CdW8fDDLrvV6R/D89fTJYXj
+         pMDnOvlq1hi93Ju3P0vP7FTRwKnJRUGPQiUyDKSSc7+zIZGASq90Sb5qKdTl6exM9SQS
+         CoWpRmORczvFP5byp7LkTvnN84eQVwbxvB3Vj5hmq/ZrPh8DV4qH1+1V5dkVHqZjqD+h
+         1Ffw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@linux-foundation.org header.s=google header.b=fGbnFhnh;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d37-v6si1114277plb.167.2018.11.07.09.07.37;
+        Wed, 07 Nov 2018 09:07:53 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731431AbeKHCio (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:38:44 -0500
+Received: from mail-lf1-f53.google.com ([209.85.167.53]:45059 "EHLO
+        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727699AbeKHCio (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:38:44 -0500
+Received: by mail-lf1-f53.google.com with SMTP id b20so11999585lfa.12
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 09:07:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H2wGHpaAGbQ9nPS12o/O/N2QRdjR9/hk/0enhbzH9b0=;
+        b=fGbnFhnhjKlcE0tCGhoh0jGdQq0YiaGIJ3VcVwGmDXSxbozNXe3bwDB6Oe78pBBTRu
+         elhlfuDI/7CeZfMHpWFINOvjMj1tRAlMoQE1eCR2VqtNYsTWeYRff2RmxI3w65snFTEs
+         XYD9Et73HEtTrhGy+bO/cBZ9YyLX7SHxExt8w=
+X-Received: by 2002:ac2:4255:: with SMTP id m21-v6mr642759lfl.6.1541610447117;
+        Wed, 07 Nov 2018 09:07:27 -0800 (PST)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id u27-v6sm260909lfc.36.2018.11.07.09.07.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 09:07:26 -0800 (PST)
+Received: by mail-lf1-f48.google.com with SMTP id i26so12040136lfc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 09:07:26 -0800 (PST)
+X-Received: by 2002:a19:6e0b:: with SMTP id j11mr667546lfc.124.1541610445631;
+ Wed, 07 Nov 2018 09:07:25 -0800 (PST)
+MIME-Version: 1.0
+References: <nycvar.YFH.7.76.1811071125360.21975@cbobk.fhfr.pm>
+In-Reply-To: <nycvar.YFH.7.76.1811071125360.21975@cbobk.fhfr.pm>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 7 Nov 2018 09:07:09 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whwT+ZUnMy9mogUzbPdc=56_4nurGNf=bETMSxMP0c3Sw@mail.gmail.com>
+Message-ID: <CAHk-=whwT+ZUnMy9mogUzbPdc=56_4nurGNf=bETMSxMP0c3Sw@mail.gmail.com>
+Subject: Re: [GIT PULL] HID fixes
+To: Jiri Kosina <jikos@kernel.org>
+Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3WkbqG+NbC3cYAA--.15308S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUOn7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvEwIxGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK
+	6xAEc7vF6xCjj44lc2xSY4AK6IIF6r4lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20x
+	vE14v26ryj6F1UMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE
+	14v26F4j6r4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr1l42xK82IYc2Ij64vIr4
+	1l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l
+	x2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14
+	v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IU5b18PUUUUU==
+
+On Wed, Nov 7, 2018 at 2:31 AM Jiri Kosina <jikos@kernel.org> wrote:
+>
+> HID subsytem fixes
+
+Pulled,
+
+               Linus

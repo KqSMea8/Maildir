@@ -1,0 +1,358 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:47 -0000
+Received: from icoremail.net (unknown [209.85.215.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH97ZD+NbPhlZAQ--.26410S3;
+	Thu, 08 Nov 2018 00:16:28 +0800 (CST)
+Received: from mail-pg1-f182.google.com (unknown [209.85.215.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3mETLD+Nbd0MYAA--.76S3;
+	Thu, 08 Nov 2018 00:16:11 +0800 (CST)
+Received: by mail-pg1-f182.google.com with SMTP id z10so5633501pgp.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:16:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:sender:precedence:list-id;
+        bh=/4Hktkv3BFdVeJzFNAtvQDg/UDXc2wDGcHAiu9SLUl4=;
+        b=P56DzAQPmu653IKf61mOx5gMsGPZT4Az2DL3ypx1RjpZG+jJL9Avf06x5vYrx3B26T
+         8fapb4RcbpvDOhbcfSRDBaJeNILAq9nPHjVkCn8BIFAOtp8wLhsbr4+8YNyL1j2+KH8I
+         +D49LYqwb3Lw0iIlw8pjdmdJbu2+fB/1JlieKkFyNv0yP+YCN2ZpINgvH2kUit0+pFgs
+         pxeZQ4WPwk5lpfP+1K9uc7Cam/XxCkgWVREvE3VRssEVjIaCdxP/XekecsydtdOHg1v5
+         zFyqagF8wpT/C/y0qYZcSn+R5Rb/0A0R6NXsK3BOMHbu8WQjVWikGf7Kk7fJKajwMAp2
+         eqlw==
+X-Gm-Message-State: AGRZ1gKJ1sZO+ASs+cF82LsgtzLfLT7S4Di9gNKqDGQoraGmFRPmiuyt
+	H0EqNSyKWVCZd9p89Shud2t02NZpl4iBEkXSCaLs2sGwvjEttgbXCw==
+X-Received: by 2002:a63:3c44:: with SMTP id i4mr706942pgn.286.1541607370743;
+        Wed, 07 Nov 2018 08:16:10 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5437376pjt;
+        Wed, 7 Nov 2018 08:16:09 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dTI1JqTh38n5ASiWAkwHqdcNpM5QCXawmeCeE0BLjF5IfzSognP4ZOtwvtDxK9d/eD/Rba
+X-Received: by 2002:a17:902:9897:: with SMTP id s23-v6mr851623plp.229.1541607369640;
+        Wed, 07 Nov 2018 08:16:09 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541607369; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Km0GXk/LWVOlLKhqZ03VZlWOe22AU00mwReN0GKURJS3OlVCS6Z6DcmdribCMWhC60
+         j0naVCNCQ/3zfwaYyO9qfDeZM5m0L6tEcHA2lH0Bm3bBYi1/iDfYyH8G4G+Yi8khtWfm
+         a5xZ98qCzoKyzyhX7YvwL8G23ohxsSXh2uM28IzyKftrSF2rGZ+ODRsRQu5flOBai9CE
+         JjQZwtVuj49/h/UCa7f6EYnHbFDnz7KpQoJApxVj/vK83dVHpDornUe84FSnxex+6Hc4
+         1xZV8fPDohoZDS8dzEYETiL7oCzLqFxdcs4nLPAIYsjlM7Kc8Y7nid2OsTSunMz6wXfR
+         MppQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:date:subject:cc:to:from
+         :dkim-signature;
+        bh=/4Hktkv3BFdVeJzFNAtvQDg/UDXc2wDGcHAiu9SLUl4=;
+        b=DzQjfUxkzJCt1eaUP+Veea8d5BVgYlqrgNIe6u55aMXKGlKMcxYPpd42kU/msMWzJX
+         hA2zDIUtOSViQB0plaQ1stEcivz5S67h//S8dpo0L9CkN4YLZ5u07foupb9Wjnj6yxIN
+         O0TROMZjbXA7ONOoPnlBGJinwB5P/Pvy4wOpKiQozhmxNSZu6MbDavOHLSHrmsRIutmw
+         i6rF9QghnVYRHiNd+oRyPvL1lUKkgQZlcQJBOkAPPE53d3RV/5IjJYk3LY0whQaF0I6J
+         kqrSiKVcqWr1whSGCIO+kGRXvbEiXTVlSw+eMFijlRMIwkDbmho7JIlODkU1+9fMK849
+         sFBg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=n6trI+TC;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id e68-v6si1120319plb.172.2018.11.07.08.15.54;
+        Wed, 07 Nov 2018 08:16:09 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731324AbeKHBqa (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:46:30 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43909 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727546AbeKHBqa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:46:30 -0500
+Received: by mail-pg1-f194.google.com with SMTP id n10-v6so7497563pgv.10
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 08:15:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/4Hktkv3BFdVeJzFNAtvQDg/UDXc2wDGcHAiu9SLUl4=;
+        b=n6trI+TCIUWzQXG7Ik4hPkG5lS7APvqYTc2Q78yYy2H53NaM8gK4WkB99iYtfvW2Xu
+         K3M5XtvNSuwqsUDA4pWhE9qyeedtpvWnl/e5oNxrlV0vnbeJNd7cAVl7Pkf4084cq6QX
+         nUY1i93MTWwG82V9p2rKiRcfjEtSiZ7nHDAm470+wAAX3UPdxwmCIMq9TRp74cYXCzp4
+         tSHZHx6Yg70hw33sAHhHctxguAk8z3NbovbTBnJTzdSeyYN4BNs2C7of/N7A5hb9mawM
+         CMvfpU2MOQlWGkx7OUsPJ9ttGav3Mxjk9+eaBLnr+Jq3hKywGLdUdaT6NbsjRk7Uu1J+
+         JsLA==
+X-Received: by 2002:a63:f34b:: with SMTP id t11mr685142pgj.341.1541607328176;
+        Wed, 07 Nov 2018 08:15:28 -0800 (PST)
+Received: from localhost.localdomain ([104.238.150.158])
+        by smtp.gmail.com with ESMTPSA id k129sm993067pgk.29.2018.11.07.08.15.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 08:15:27 -0800 (PST)
+From: Muchun Song <smuchun@gmail.com>
+To: mingo@kernel.org, peterz@infradead.org
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH] sched/rt: Introduce prio_{higher,lower}() helper for comparing RT task prority
+Date: Thu,  8 Nov 2018 00:15:05 +0800
+Message-Id: <20181107161505.42769-1-smuchun@gmail.com>
+X-Mailer: git-send-email 2.17.1
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3mETLD+Nbd0MYAA--.76S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3AF48Cw4kWr1ruF4xKr48Zwb_yoW3ArWrpa
+	1kG3y5tF18ta42qr18ZFWjv343Kan2qFWUtrn3K3y5trn0qw1SkFykArWjqFsxtryFvFWa
+	yF4vkrW5Gr1DuF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1le2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
+	0EwIxGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44l
+	c2xSY4AK6IIF6r1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMx
+	vI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4j6F4UMxvI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bl
+	YFZUUUUU=
+
+We use a value to represent the priority of the RT task. But a smaller
+value corresponds to a higher priority. If there are two RT task A and B,
+their priorities are prio_a and prio_b, respectively. If prio_a is larger
+than prio_b, which means that the priority of RT task A is lower than RT
+task B. It may seem a bit strange.
+
+In rt.c, there are many if condition of priority comparison. We need to
+think carefully about which priority is higher because of this opposite
+logic when read those code. So we introduce prio_{higher,lower}() helper
+for comparing RT task prority, which can make code more readable.
+
+Signed-off-by: Muchun Song <smuchun@gmail.com>
+---
+ kernel/sched/rt.c | 68 ++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 46 insertions(+), 22 deletions(-)
+
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index 9aa3287ce301..adf0f653c963 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -101,6 +101,28 @@ void init_rt_rq(struct rt_rq *rt_rq)
+ 	raw_spin_lock_init(&rt_rq->rt_runtime_lock);
+ }
+ 
++/**
++ * prio_higher(a, b) returns true if the priority a
++ * is higher than the priority b.
++ */
++static inline bool prio_higher(int a, int b)
++{
++	return a < b;
++}
++
++#define prio_lower(a, b)	prio_higher(b, a)
++
++/**
++ * prio_higher_eq(a, b) returns true if the priority a
++ * is higher than or equal to the priority b.
++ */
++static inline bool prio_higher_eq(int a, int b)
++{
++	return a <= b;
++}
++
++#define prio_lower_eq(a, b)	prio_higher_eq(b, a)
++
+ #ifdef CONFIG_RT_GROUP_SCHED
+ static void destroy_rt_bandwidth(struct rt_bandwidth *rt_b)
+ {
+@@ -262,7 +284,7 @@ static void pull_rt_task(struct rq *this_rq);
+ static inline bool need_pull_rt_task(struct rq *rq, struct task_struct *prev)
+ {
+ 	/* Try to pull RT tasks here if we lower this rq's prio */
+-	return rq->rt.highest_prio.curr > prev->prio;
++	return prio_lower(rq->rt.highest_prio.curr, prev->prio);
+ }
+ 
+ static inline int rt_overloaded(struct rq *rq)
+@@ -377,7 +399,7 @@ static void enqueue_pushable_task(struct rq *rq, struct task_struct *p)
+ 	plist_add(&p->pushable_tasks, &rq->rt.pushable_tasks);
+ 
+ 	/* Update the highest prio pushable task */
+-	if (p->prio < rq->rt.highest_prio.next)
++	if (prio_higher(p->prio, rq->rt.highest_prio.next))
+ 		rq->rt.highest_prio.next = p->prio;
+ }
+ 
+@@ -498,7 +520,7 @@ static void sched_rt_rq_enqueue(struct rt_rq *rt_rq)
+ 		else if (!on_rt_rq(rt_se))
+ 			enqueue_rt_entity(rt_se, 0);
+ 
+-		if (rt_rq->highest_prio.curr < curr->prio)
++		if (prio_higher(rt_rq->highest_prio.curr, curr->prio))
+ 			resched_curr(rq);
+ 	}
+ }
+@@ -1044,7 +1066,7 @@ inc_rt_prio_smp(struct rt_rq *rt_rq, int prio, int prev_prio)
+ 	if (&rq->rt != rt_rq)
+ 		return;
+ #endif
+-	if (rq->online && prio < prev_prio)
++	if (rq->online && prio_higher(prio, prev_prio))
+ 		cpupri_set(&rq->rd->cpupri, rq->cpu, prio);
+ }
+ 
+@@ -1079,7 +1101,7 @@ inc_rt_prio(struct rt_rq *rt_rq, int prio)
+ {
+ 	int prev_prio = rt_rq->highest_prio.curr;
+ 
+-	if (prio < prev_prio)
++	if (prio_higher(prio, prev_prio))
+ 		rt_rq->highest_prio.curr = prio;
+ 
+ 	inc_rt_prio_smp(rt_rq, prio, prev_prio);
+@@ -1092,7 +1114,7 @@ dec_rt_prio(struct rt_rq *rt_rq, int prio)
+ 
+ 	if (rt_rq->rt_nr_running) {
+ 
+-		WARN_ON(prio < prev_prio);
++		WARN_ON(prio_higher(prio, prev_prio));
+ 
+ 		/*
+ 		 * This may have been our highest task, and therefore
+@@ -1424,7 +1446,7 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
+ 	 */
+ 	if (curr && unlikely(rt_task(curr)) &&
+ 	    (curr->nr_cpus_allowed < 2 ||
+-	     curr->prio <= p->prio)) {
++	     prio_higher_eq(curr->prio, p->prio))) {
+ 		int target = find_lowest_rq(p);
+ 
+ 		/*
+@@ -1432,7 +1454,7 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
+ 		 * not running a lower priority task.
+ 		 */
+ 		if (target != -1 &&
+-		    p->prio < cpu_rq(target)->rt.highest_prio.curr)
++		    prio_higher(p->prio, cpu_rq(target)->rt.highest_prio.curr))
+ 			cpu = target;
+ 	}
+ 	rcu_read_unlock();
+@@ -1475,7 +1497,7 @@ static void check_preempt_equal_prio(struct rq *rq, struct task_struct *p)
+  */
+ static void check_preempt_curr_rt(struct rq *rq, struct task_struct *p, int flags)
+ {
+-	if (p->prio < rq->curr->prio) {
++	if (prio_higher(p->prio, rq->curr->prio)) {
+ 		resched_curr(rq);
+ 		return;
+ 	}
+@@ -1732,7 +1754,8 @@ static struct rq *find_lock_lowest_rq(struct task_struct *task, struct rq *rq)
+ 
+ 		lowest_rq = cpu_rq(cpu);
+ 
+-		if (lowest_rq->rt.highest_prio.curr <= task->prio) {
++		if (prio_higher_eq(lowest_rq->rt.highest_prio.curr,
++				   task->prio)) {
+ 			/*
+ 			 * Target rq has tasks of equal or higher priority,
+ 			 * retrying does not release any lock and is unlikely
+@@ -1763,7 +1786,7 @@ static struct rq *find_lock_lowest_rq(struct task_struct *task, struct rq *rq)
+ 		}
+ 
+ 		/* If this rq is still suitable use it. */
+-		if (lowest_rq->rt.highest_prio.curr > task->prio)
++		if (prio_lower(lowest_rq->rt.highest_prio.curr, task->prio))
+ 			break;
+ 
+ 		/* try again */
+@@ -1823,7 +1846,7 @@ static int push_rt_task(struct rq *rq)
+ 	 * higher priority than current. If that's the case
+ 	 * just reschedule current.
+ 	 */
+-	if (unlikely(next_task->prio < rq->curr->prio)) {
++	if (unlikely(prio_higher(next_task->prio, rq->curr->prio))) {
+ 		resched_curr(rq);
+ 		return 0;
+ 	}
+@@ -2100,8 +2123,8 @@ static void pull_rt_task(struct rq *this_rq)
+ 		 * logically higher, the src_rq will push this task away.
+ 		 * And if its going logically lower, we do not care
+ 		 */
+-		if (src_rq->rt.highest_prio.next >=
+-		    this_rq->rt.highest_prio.curr)
++		if (prio_lower_eq(src_rq->rt.highest_prio.next,
++				  this_rq->rt.highest_prio.curr))
+ 			continue;
+ 
+ 		/*
+@@ -2121,7 +2144,7 @@ static void pull_rt_task(struct rq *this_rq)
+ 		 * Do we have an RT task that preempts
+ 		 * the to-be-scheduled task?
+ 		 */
+-		if (p && (p->prio < this_rq->rt.highest_prio.curr)) {
++		if (p && prio_higher(p->prio, this_rq->rt.highest_prio.curr)) {
+ 			WARN_ON(p == src_rq->curr);
+ 			WARN_ON(!task_on_rq_queued(p));
+ 
+@@ -2133,7 +2156,7 @@ static void pull_rt_task(struct rq *this_rq)
+ 			 * p if it is lower in priority than the
+ 			 * current task on the run queue
+ 			 */
+-			if (p->prio < src_rq->curr->prio)
++			if (prio_higher(p->prio, src_rq->curr->prio))
+ 				goto skip;
+ 
+ 			resched = true;
+@@ -2167,7 +2190,7 @@ static void task_woken_rt(struct rq *rq, struct task_struct *p)
+ 	    p->nr_cpus_allowed > 1 &&
+ 	    (dl_task(rq->curr) || rt_task(rq->curr)) &&
+ 	    (rq->curr->nr_cpus_allowed < 2 ||
+-	     rq->curr->prio <= p->prio))
++	     prio_higher_eq(rq->curr->prio, p->prio)))
+ 		push_rt_tasks(rq);
+ }
+ 
+@@ -2242,7 +2265,8 @@ static void switched_to_rt(struct rq *rq, struct task_struct *p)
+ 		if (p->nr_cpus_allowed > 1 && rq->rt.overloaded)
+ 			rt_queue_push_tasks(rq);
+ #endif /* CONFIG_SMP */
+-		if (p->prio < rq->curr->prio && cpu_online(cpu_of(rq)))
++		if (prio_higher(p->prio, rq->curr->prio) &&
++		    cpu_online(cpu_of(rq)))
+ 			resched_curr(rq);
+ 	}
+ }
+@@ -2263,18 +2287,18 @@ prio_changed_rt(struct rq *rq, struct task_struct *p, int oldprio)
+ 		 * If our priority decreases while running, we
+ 		 * may need to pull tasks to this runqueue.
+ 		 */
+-		if (oldprio < p->prio)
++		if (prio_higher(oldprio, p->prio))
+ 			rt_queue_pull_task(rq);
+ 
+ 		/*
+ 		 * If there's a higher priority task waiting to run
+ 		 * then reschedule.
+ 		 */
+-		if (p->prio > rq->rt.highest_prio.curr)
++		if (prio_lower(p->prio, rq->rt.highest_prio.curr))
+ 			resched_curr(rq);
+ #else
+ 		/* For UP simply resched on drop of prio */
+-		if (oldprio < p->prio)
++		if (prio_higher(oldprio, p->prio))
+ 			resched_curr(rq);
+ #endif /* CONFIG_SMP */
+ 	} else {
+@@ -2283,7 +2307,7 @@ prio_changed_rt(struct rq *rq, struct task_struct *p, int oldprio)
+ 		 * greater than the current running task
+ 		 * then reschedule.
+ 		 */
+-		if (p->prio < rq->curr->prio)
++		if (prio_higher(p->prio, rq->curr->prio))
+ 			resched_curr(rq);
+ 	}
+ }
+-- 
+2.17.1

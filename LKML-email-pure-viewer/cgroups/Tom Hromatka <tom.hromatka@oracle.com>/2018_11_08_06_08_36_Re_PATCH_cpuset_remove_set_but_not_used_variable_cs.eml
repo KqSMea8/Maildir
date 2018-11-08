@@ -1,0 +1,178 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:54 -0000
+Received: from icoremail.net (unknown [209.85.210.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv_qLYuNbQxFbAQ--.27698S3;
+	Thu, 08 Nov 2018 06:09:16 +0800 (CST)
+Received: from mail-pf1-f174.google.com (unknown [209.85.210.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCnfTmJYuNbSIIZAA--.1585S3;
+	Thu, 08 Nov 2018 06:09:13 +0800 (CST)
+Received: by mail-pf1-f174.google.com with SMTP id e22-v6so8297584pfn.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:09:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:organization:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding
+         :sender:precedence:list-id;
+        bh=o7MXF7SJcrGL2SsNB+CG3fWVQmgawRKvWhfaxdjq4DI=;
+        b=UTSK/4wHUUyyd9P0m/rbDwFyRJTT1HQtlKagzUax7fJIn/aErYDHazpWVrYJKINe6S
+         3Z8I4YEIGtnoPuHslpxqoNh5JTZI//ysF+P3hzvFmLgiau8gpc/5GCcCq7wkbf4Dtg85
+         KIjQvgyJHXVPwqIoG6Wnn9p3kUlL+kc2k9iFmylueyTRyz7M6rrykvJc/nL6yvWYwPYz
+         CiEeH0sHQBE24pgjWaYqcjHrnBemWD7NrokQFAMq+opVoO4Mk8uxbNadFeBD8PbuOpws
+         D/I2sKqjOHk4ViaVjNQ9lH5hz77mwP7jKYI4MwPh1wQf54cBAMrdXEXXy0qCim7YRWqx
+         wyUA==
+X-Gm-Message-State: AGRZ1gKNpwrhCgZWaeL7Yw+pCz62zTg55VmbHObBtEigcu+CRMGpohfI
+	3vjJPdvbXvkVdgPXFAQcO6jJYjJw/PziWgi/uZYpSRkli6ke8mB6aA==
+X-Received: by 2002:a62:da54:: with SMTP id w20-v6mr2082468pfl.106.1541628553205;
+        Wed, 07 Nov 2018 14:09:13 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp61532pjt;
+        Wed, 7 Nov 2018 14:09:12 -0800 (PST)
+X-Google-Smtp-Source: AJdET5epbQCVsci/xODrsgWODi4Pu5hv7aqSR3pxm2xjv34bJEteiytNX3OnjCSpkBlzAL4uGxJt
+X-Received: by 2002:a63:4e18:: with SMTP id c24-v6mr1741930pgb.6.1541628552220;
+        Wed, 07 Nov 2018 14:09:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541628552; cv=none;
+        d=google.com; s=arc-20160816;
+        b=kKVVAAUO3jaoFq6dUnZ/LzHC74edhzB7x+YKepz2m515UACcVsSLaEwVgC0aOaRfYS
+         LbFdznI9mretiTrwP/UDVelvkvtYIi/KZOzKxLgJsqsyFPKXR74dxLIeicINrIvDmDKo
+         P8ZBeVSxcF4Cj+R88priwSq4TdlZ2ugJ8E79Wmj+SlCyzIHxIe9BXpZsODM9ro087zBI
+         dZcnBwJQsxqBRWpdBMuz6SKscOundgcxt6Te0NucnCJh8BQ0F3oxPzXCnIp8ye2xSLT2
+         NgNyyuY/n4HjxJGU2XebQMA+njUvOVXFpbhdde6I3866TtmDJjm89G0w95gwIYP1L2ZE
+         PK1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:organization:from:references:cc:to:subject
+         :dkim-signature;
+        bh=o7MXF7SJcrGL2SsNB+CG3fWVQmgawRKvWhfaxdjq4DI=;
+        b=V26w8P0u4PaIB5EMWbbiNsCXaXKCuRiMIMnfABxfGmWfqDO3gnkoPmMMOiGcyiUVOM
+         +kZ1JKKwrPmf1LkiKZREHiJXrVVHeEjM64+hPYdCkZIBV95UJsearKTTjbJ56Vq22VD3
+         2Zyu88s5f75uZAk2h2Gx4FlilkJhLJb3jZ7Bv+Wg69tvvfRddQ5g2qGZnQKFI8o9qFKN
+         MAawMaEKqg3Ap/AQXRkfaAg8MoF9CWvYBXI3Ek+EIAaRvdZhFKMJEuS4UqtgzeLed6qa
+         vtTLs+ykay2HGhtGvjs7FlrFFSvi8azqZKaXPL+HbMpeOq0uKjmair7hGjSMzmc8Lpny
+         /vxw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@oracle.com header.s=corp-2018-07-02 header.b=fbIL4G2K;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=oracle.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id a18si1842831pgj.77.2018.11.07.14.08.56;
+        Wed, 07 Nov 2018 14:09:12 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727731AbeKHHlI (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:41:08 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:35046 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727127AbeKHHlH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:41:07 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.22/8.16.0.22) with SMTP id wA7M483t060910;
+        Wed, 7 Nov 2018 22:08:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=o7MXF7SJcrGL2SsNB+CG3fWVQmgawRKvWhfaxdjq4DI=;
+ b=fbIL4G2Kh3SwPraFrPIzUwUo02qfEMRiT5fCOuE1OKiHChLHzolnsdwB0u/diX4FKQ4s
+ INhAU7NOUtsuu1j2wj2Y9ytYTfStYWMh+BWSoBj0qWdzP12cA2vkTt/6wKbmsLMM1/ET
+ 9YI0aTDSzYfMG4CiUEU0TY+YEFRUm5144eHKNtkjle3UGrtHLCIYXYEagjZeURoJVXV9
+ dSM14c620+7tqyMrRCNo/D9Y2aZy5+lAnvJzRDG+nD5wBZhVa/XrBZngxj91MG8w/NQ7
+ JF2G4/D7OpTnnftAXl/Ka92GAsrbMJ+ToNkAiUVt8QS8RzzTPnjyN0WjbVcThwjA3U1u nQ== 
+Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
+        by userp2120.oracle.com with ESMTP id 2nh4aqx4yh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 07 Nov 2018 22:08:41 +0000
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id wA7M8eJL001241
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 7 Nov 2018 22:08:40 GMT
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id wA7M8eSP032015;
+        Wed, 7 Nov 2018 22:08:40 GMT
+Received: from [10.175.44.41] (/10.175.44.41)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 07 Nov 2018 14:08:39 -0800
+Subject: Re: [PATCH] cpuset: remove set but not used variable 'cs'
+To: Yi Wang <wang.yi59@zte.com.cn>, lizefan@huawei.com
+Cc: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        zhong.weidong@zte.com.cn
+References: <1541575111-36000-1-git-send-email-wang.yi59@zte.com.cn>
+From: Tom Hromatka <tom.hromatka@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <7ac28cbe-56ec-3564-15fd-94acb4687150@oracle.com>
+Date: Wed, 7 Nov 2018 15:08:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <1541575111-36000-1-git-send-email-wang.yi59@zte.com.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9070 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1807170000 definitions=main-1811070195
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCnfTmJYuNbSIIZAA--.1585S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7JF43JFyUJry5Kr47ZFy7KFg_yoWDXwb_Zw
+	1Sqr1qgr98Zr1I9F1qg3Z3Xa95Kw45AFyvv3yqyF98AF1jyws3Aw1ft34fJrsxZ3WIyFn8
+	AasxGFn5t3WDZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbvAYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	02cVCv0xWlc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0264kExVAvwVAq07x20xylc7Ca8VAv
+	wVCFzxkY4VCF77xAMxkIecxEwVCI4VW3MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2
+	IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv
+	67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64
+	vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
+	CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsG
+	vfC2KfnxnUUI43ZEXa7IU52FAPUUUUU==
+
+On 11/07/2018 12:18 AM, Yi Wang wrote:
+> This fixes the following warning:
+> kernel/cgroup/cpuset.c: In function ‘cpuset_cancel_attach’:
+> kernel/cgroup/cpuset.c:1501:17: warning: variable ‘cs’ set but not used [-Wunused-but-set-variable]
+>    struct cpuset *cs;
+>                   ^
+> 
+> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+
+
+Reviewed-by: Tom Hromatka <tom.hromatka@oracle.com>
+
+
+> ---
+>   kernel/cgroup/cpuset.c | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index 266f10c..784f948 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -1498,10 +1498,8 @@ static int cpuset_can_attach(struct cgroup_taskset *tset)
+>   static void cpuset_cancel_attach(struct cgroup_taskset *tset)
+>   {
+>   	struct cgroup_subsys_state *css;
+> -	struct cpuset *cs;
+>   
+>   	cgroup_taskset_first(tset, &css);
+> -	cs = css_cs(css);
+>   
+>   	mutex_lock(&cpuset_mutex);
+>   	css_cs(css)->attach_in_progress--;
+> 

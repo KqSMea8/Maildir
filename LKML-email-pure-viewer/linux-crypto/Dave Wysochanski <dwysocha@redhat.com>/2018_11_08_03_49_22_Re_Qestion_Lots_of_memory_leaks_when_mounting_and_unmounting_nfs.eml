@@ -1,0 +1,207 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:02 -0000
+Received: from icoremail.net (unknown [209.85.214.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgCHv+RiQuNbylNaAQ--.26927S3;
+	Thu, 08 Nov 2018 03:52:03 +0800 (CST)
+Received: from mail-pl1-f180.google.com (unknown [209.85.214.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBnSERgQuNbwhQZAA--.736S3;
+	Thu, 08 Nov 2018 03:52:00 +0800 (CST)
+Received: by mail-pl1-f180.google.com with SMTP id c13-v6so8316700plz.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:52:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=OomASdO+kpEr0msYFMfrGVRhsBEh4KrHwg5PWeSlNUs=;
+        b=BitW9duJkB9USvcq78zXFLb6eerNIelGN4LTVw4pLFS+WJTGLngWGvs8UPxW8ceVR8
+         QW4Y681UERiALuIpIrzd8C2nKbBe0PZPXv5Qsk6tjZg+rwl7fIdFcbEsHHJWFWVFiEQ9
+         aE7tkndeDuHKXDoR6j0ell0ZbMSZGOwLgl6epSxzt08ju0vHgnFvShzZGoEzVpHnG1a9
+         Zpx2mTCRIKo0+eVMD0jZHKL18cmAfBjYm7m1r5/fRs/+mGG/1DoXfLYtn6Nj1Usw9ABJ
+         gX7YiV36ytepvdHdG8jP5/PEUqcJ3zpjnUstsUqd2IcHnt0Hjn0wdG6KsSN5sYCgWGu5
+         prmg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+X-Gm-Message-State: AGRZ1gJ7k6lF7h+jrrPAxWEWJ89sqqd7aKZ7SttK/CUi+I9mdKn9cGzb
+	6UWHAORm7O1vSzWA0WTvfcwg9w46YmMB3M3S2XqnFfhNvw/NUm0ZqA==
+X-Received: by 2002:a17:902:8e81:: with SMTP id bg1-v6mr1604981plb.192.1541620320063;
+        Wed, 07 Nov 2018 11:52:00 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5671353pjt;
+        Wed, 7 Nov 2018 11:51:58 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dAN55ofWj8E4FnmERTVFCPgyC8UVrVnoST7LszQYt40W19t9Fj7I4eHuD44VFdy/D0yvCy
+X-Received: by 2002:a63:4b18:: with SMTP id y24-v6mr1374394pga.181.1541620318628;
+        Wed, 07 Nov 2018 11:51:58 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620318; cv=none;
+        d=google.com; s=arc-20160816;
+        b=RX91aSAIJ6nSllYSFT35dXkp9NTwsp3jKV/ZJplpB4nhiYETB7s/AZIy074D8y50Zd
+         1vAvUFaSfL1ScCVxwDDHDqdkZXQJD+aSpNOq3Tld1G5alkYt5rYVwcOQxndyXOgp4G3D
+         Rg48hLNcujDCIus/U7iDkGYEXU8i9/F/PBlIBd99a4wS4kWioXnCqJGh1DNaclUAZTTd
+         1c5HEdN4vQtrxPVDwet8Z6ev2ecxza75gukGvGl88MNu4ffJCNZXj80ei2go0e3LOPEh
+         QGu2Gy6e+htYUQA96iAndnd4BUuRhwJzvx8Yb4KRUvqkzYRLztRuhC3QwQs8+4gOZgas
+         QQxA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:date:cc:to:from:subject:message-id;
+        bh=OomASdO+kpEr0msYFMfrGVRhsBEh4KrHwg5PWeSlNUs=;
+        b=zYmJ3kCzOAq+zvDEJcu4otKl6HsSwMV/eNkqD8qWFNpmKDPzy9iBHsQKKXbEaBaxho
+         lOPturBg/i3zOBIK0fwA3jy6rwzKy+EjgypEdRDeaUkuIPG2KD4ijJc8WU0WLYN2eeTs
+         NxmIZvAOmcnAan9gI4ZsO+gG66CTRP7esqOZdtXM1xKlFmro/OBMODZed7Zmu3zMHA65
+         O8mr2ygA768zf7t8IFPF+zfifZYrFbAxNf1u6hdz/3pGVDdJhxsGBQUwWsHrBfmg9lBG
+         WU6h2hJkYL9DVNqFnUNefZaH50ifLZTiTgLo+vTDlZsxg66ewh5XuhAKryvonoWy6SS4
+         RXNg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id i20-v6si1413776pgh.543.2018.11.07.11.51.43;
+        Wed, 07 Nov 2018 11:51:58 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727175AbeKHFWu (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:22:50 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:41351 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727366AbeKHFVO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:21:14 -0500
+Received: by mail-qk1-f196.google.com with SMTP id 189so22539282qkj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 11:49:24 -0800 (PST)
+X-Received: by 2002:aed:36a9:: with SMTP id f38mr1651880qtb.367.1541620164356;
+        Wed, 07 Nov 2018 11:49:24 -0800 (PST)
+Received: from dhcp-12-212-173.gsslab.rdu.redhat.com (nat-pool-rdu-t.redhat.com. [66.187.233.202])
+        by smtp.gmail.com with ESMTPSA id i26sm1289863qtc.13.2018.11.07.11.49.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 11:49:23 -0800 (PST)
+Message-ID: <1541620162.4051.5.camel@redhat.com>
+Subject: Re: [Qestion] Lots of memory leaks when mounting and unmounting nfs
+ client to server continuously.
+From: Dave Wysochanski <dwysocha@redhat.com>
+To: zhong jiang <zhongjiang@huawei.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        herbert@gondor.apana.org.au, trond.myklebust@hammerspace.com,
+        bfields@redhat.com
+Cc: linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-nfs@vger.kernel.org
+Date: Wed, 07 Nov 2018 14:49:22 -0500
+In-Reply-To: <5BD86392.7070200@huawei.com>
+References: <5BD85266.6000301@huawei.com>
+         <1DEE371C-69EB-4D92-8F78-535AA5203007@redhat.com>
+         <5BD86392.7070200@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-14.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBnSERgQuNbwhQZAA--.736S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxZrWrXry5XFWrXF4kKFWDXFb_yoW5CFWxpF
+	W3AFyakrnYkrW8Cw1vyr4q9F1Yqrs5GFyUWr1DAw43ZasrX3sFg3WYgrZ8uryUKw4rWayF
+	krW5Was8Xa4DG37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPSb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	GVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_JFI_GrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U5gXo7UUUUU==
+
+On Tue, 2018-10-30 at 21:58 +0800, zhong jiang wrote:
+> On 2018/10/30 21:06, Benjamin Coddington wrote:
+> > Hi zhong jiang,
+> > 
+> > Try asking in linux-nfs.. but I'll also note that 3.10-stable may
+> > be missing a number of fixes to leaks in the NFS GSS code.
+> > 
+> > I can see a more than a few fixes to memory leaks with:
+> > git log --grep=leak --oneline net/sunrpc/auth_gss/
+> > 
+> 
+> Thanks for your reply.  I has tested some of them in the upsteam as
+> you have said.  but It fails to solve the issue completely.
+> hence, I turn to the relevant experts whether they have happened to
+> the issue or  can give some suggestion or not.
+> 
+> Thanks,
+> zhong jiang
+> > Ben
+> > 
+> > On 30 Oct 2018, at 8:45, zhong jiang wrote:
+> > 
+> > > Hi,   Herbert
+> > > 
+> > > Recently,  I  hit  a memory leak issue when  mounting and
+> > > unmounting nfs with  the way of  krb5.
+> > > The issue happens to the linux-3.10-stable.
+> > > 
+> > > I find that slab-1024 and slab-512 will take up most of the
+> > > memory.  And it can not be freed.
+> > > Meanwhile, it result in rpcsec_gss_krb5 can be unregistered as
+> > > well.
+> > > 
+> > > 
+
+Are you running the latest 3.10-stable?
+
+This sounds very familiar to something I encountered a while ago and it
+was a sunrpc cache related problem.  The patch that fixed it for me is
+in 3.10.106 though.
+
+Can you check if this cache is growing indefinitely?
+/proc/net/rpc/auth.rpcsec.context
+
+If it is large, try to flush explicitly with:
+date +%s  > /proc/net/rpc/auth.rpcsec.context/flush
+
+If all that checks out, you may need the below upstream fix, but it
+went into v3.10.106 as
+6a4a5fd svcrpc: don't leak contexts on PROC_DESTROY
+
+commit 6a4a5fd4c7bc6a06ca26ad7327d046d8d3c0932a
+Author: J. Bruce Fields <bfields@redhat.com>
+Date:   Mon Jan 9 17:15:18 2017 -0500
+
+    svcrpc: don't leak contexts on PROC_DESTROY
+    
+    commit 78794d1890708cf94e3961261e52dcec2cc34722 upstream.
+    
+    Context expiry times are in units of seconds since boot, not unix time.
+    
+    The use of get_seconds() here therefore sets the expiry time decades in
+    the future.  This prevents timely freeing of contexts destroyed by
+    client RPC_GSS_PROC_DESTROY requests.  We'd still free them eventually
+    (when the module is unloaded or the container shut down), but a lot of
+    contexts could pile up before then.
+    
+    Fixes: c5b29f885afe "sunrpc: use seconds since boot in expiry cache"
+    Reported-by: Andy Adamson <andros@netapp.com>
+    Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+    Signed-off-by: Willy Tarreau <w@1wt.eu>
+
+diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
+index 62663a0..e625efe 100644
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -1518,7 +1518,7 @@ static void destroy_use_gss_proxy_proc_entry(struct net *net) {}
+        case RPC_GSS_PROC_DESTROY:
+                if (gss_write_verf(rqstp, rsci->mechctx, gc->gc_seq))
+                        goto auth_err;
+-               rsci->h.expiry_time = get_seconds();
++               rsci->h.expiry_time = seconds_since_boot();
+                set_bit(CACHE_NEGATIVE, &rsci->h.flags);
+                if (resv->iov_len + 4 > PAGE_SIZE)
+                        goto drop;

@@ -1,0 +1,179 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:44 -0000
+Received: from icoremail.net (unknown [209.85.214.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH0L+M+NbMgVaAQ--.26997S3;
+	Thu, 08 Nov 2018 02:50:39 +0800 (CST)
+Received: from mail-pl1-f172.google.com (unknown [209.85.214.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3WET7M+Nb9+YYAA--.335S3;
+	Thu, 08 Nov 2018 02:50:35 +0800 (CST)
+Received: by mail-pl1-f172.google.com with SMTP id g59-v6so8254475plb.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:50:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:date:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=BPVN4bnWxVWD68pt2r0WHkMb4BWmAIrSIvpOqkpnGvs=;
+        b=gPXlSJg6FGb4cs/Kaqw67eciUZQSzyFuxfDcLfLlmtzXY/iIvWOJ4mvvNMiGXa6st/
+         kIw3/xCmSuYjVakO/7mxE4dAT94eBc+UdwU9uVB0nxJKVwnjPKfZRd9jlkoUq42uOYbn
+         LVbM1fn7Fo/0YLgM+yYt5CNuaTeT4k3cSsgYPkLpS5GFQWBPWqLB7Qb4sc6OMHv/REa3
+         vPnf9M/aHMo6s/4MR7DtgENtTHB2VZryDHNBMn6EAxORepy7ErwIvjTwKaxQRFp2NhW4
+         sWLYGKVZbzlXv3UCDG9lKmWQCmJ7edqKyMita4uCx+hhjM05ae+hiUNxsYpEcCCy9ea1
+         2LwQ==
+X-Gm-Message-State: AGRZ1gL6jjNGQZnUWBEJCL94vZwctFEGwd57WDlKgepZ4AjTLKSJHt+Q
+	PUN2DDJppfIbbeNIGD/Gx/FU1WOXGIM4nfp2AMOMWItHNX14BUADdA==
+X-Received: by 2002:a17:902:1026:: with SMTP id b35-v6mr1382967pla.283.1541616635475;
+        Wed, 07 Nov 2018 10:50:35 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5608939pjt;
+        Wed, 7 Nov 2018 10:50:34 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ciGMer0uEsqm8fgjcjD+B40BewfN/KMztML1TOD0h22HXxqLQP9a0Zpa0cD5MHVqPcF1WC
+X-Received: by 2002:a17:902:b598:: with SMTP id a24-v6mr1362856pls.231.1541616634897;
+        Wed, 07 Nov 2018 10:50:34 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541616634; cv=none;
+        d=google.com; s=arc-20160816;
+        b=wVF+2dHhP5ZUCDwd88KalvHERgxjVPHEcvSbUn7MuCpFXeyX7QUFXNnmBtbjSJE+u4
+         wWxFnYCfuL1R1aTdnsYj8DJPPjdMZJ+KZDVIZmKxctFrtPKdTpwcNVT372KJ3o8KqLKT
+         XNe3rqIDZohfM2EfMqZi8Lj4fwuZimz8zGMP2hP5zhdic+kRGG5c0GTasRfe4Hw539+8
+         Wcmj8PEdoCLstmWBEjwD1mz77XQNPMHYcCTYYYHdB1qgR2J7TyipJYYAPWIbJcNehqDP
+         cg+6HQZXdHjaEHYJ3W0LZFAqUF3rYJAuAG1ac4pfdAPCWNBGFPcaSNy7qF4TVipRAPyV
+         b4rg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:date:from:dkim-signature;
+        bh=BPVN4bnWxVWD68pt2r0WHkMb4BWmAIrSIvpOqkpnGvs=;
+        b=J3zOnHrGvlPn+9feMXpl7575l0ncGh4zdIVj2vGEmN198LYZQqzZvkdbCdFykV2IuM
+         Uz+UWg0zLCbxEFx0Lf0NM5X7TsKnNGvr6lpf1EzyvEzvgqd1NBFhUk8DIWlr4Fed7F15
+         Eeodz5HiIQ0PoKXpbgyIgad6fsfxwcDq8e0LOpTlWrERk/6j2syJfWq+KbrrtYD0tYf8
+         rsczDA+ueHrlWM1ZiHYdLWMYtIBcxHv20SB8w1Y0PRpsbDdvV2V5iXdiwLN8P+tUa2Sx
+         C+NPU+Oustk4e4xOxN7T0JhOUIQxMRkDJnHeakEzgNp99j+CQRze01ywFCck+TQmnYFX
+         23aQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=uAOgUk+q;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d33-v6si1354508pla.82.2018.11.07.10.50.18;
+        Wed, 07 Nov 2018 10:50:34 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1729614AbeKHEVX (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:21:23 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43688 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbeKHEVX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:21:23 -0500
+Received: by mail-qk1-f194.google.com with SMTP id r71so22169044qkr.10;
+        Wed, 07 Nov 2018 10:49:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BPVN4bnWxVWD68pt2r0WHkMb4BWmAIrSIvpOqkpnGvs=;
+        b=uAOgUk+qBcusZ7rfoGQZivsnzu+OztW3Wzxayu3vLhen264AC43BiuAC3PfRUmRCWJ
+         1ZNVbV50Ds6Iq1G/Ix8XaXSo8v/lFUZTy21IUSCFADOqGYtOlIi6eFmmlyY3LU0j/28r
+         k7oe+Vp46CYj3V/EFeva00k3fWbBS5Tk33gqZOM81gqEk5zbh9+oXzk330qdQIdnTFnO
+         qRbFPqZhFTb0YbhyocxeLwWZXecaN+xPl9HtIVTK1jD+X5GBniH5C5w56pB1PlN6YkCj
+         RO8fkl/xOsAbzNSs3lLLopTK+evr+cCpc2L20SSTURhQnEGrgV8I11J4SVc8WQTqbMLP
+         GJ3A==
+X-Received: by 2002:a37:6cc3:: with SMTP id h186-v6mr1339141qkc.49.1541616584713;
+        Wed, 07 Nov 2018 10:49:44 -0800 (PST)
+Received: from smtp.gmail.com ([143.107.45.1])
+        by smtp.gmail.com with ESMTPSA id i26sm1164596qtc.13.2018.11.07.10.49.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 10:49:44 -0800 (PST)
+From: Giuliano Belinassi <giuliano.belinassi@gmail.com>
+X-Google-Original-From: Giuliano Belinassi <giuliano.belinassi@usp.br>
+Date: Wed, 7 Nov 2018 16:49:39 -0200
+To: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+        knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
+        renatogeh@gmail.com
+Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: [PATCH 1/3] staging: iio: ad7780: Add is_ad778x flag chip info
+Message-ID: <e7f1b071157abbb92d5cb42f310fb471ea43ff01.1541615978.git.giuliano.belinassi@usp.br>
+References: <cover.1541615978.git.giuliano.belinassi@usp.br>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1541615978.git.giuliano.belinassi@usp.br>
+User-Agent: NeoMutt/20180716
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3WET7M+Nb9+YYAA--.335S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrZw1UGr15KF4xJF45KFW7Jwb_yoWkurg_Gw
+	1Dtw1SgF1DZFy8Ar4UKw1Sv34Sv39Y9ayvvwn8t3s3X3y3J3W3WrykZFs7G3WDWFZrAFy7
+	CrWUCryYyr17JjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbq8YjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW5MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY
+	6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUq5fH
+	UUUUU
+
+This patch allows further checking of whatever the chip is (ad778x or
+ad717x).
+
+Signed-off-by: Giuliano Belinassi <giuliano.belinassi@usp.br>
+---
+ drivers/staging/iio/adc/ad7780.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/staging/iio/adc/ad7780.c b/drivers/staging/iio/adc/ad7780.c
+index 91e016d534ed..6e51bfdb076a 100644
+--- a/drivers/staging/iio/adc/ad7780.c
++++ b/drivers/staging/iio/adc/ad7780.c
+@@ -35,6 +35,7 @@ struct ad7780_chip_info {
+ 	struct iio_chan_spec	channel;
+ 	unsigned int		pattern_mask;
+ 	unsigned int		pattern;
++	u8			is_ad778x;
+ };
+ 
+ struct ad7780_state {
+@@ -135,21 +136,25 @@ static const struct ad7780_chip_info ad7780_chip_info_tbl[] = {
+ 		.channel = AD7780_CHANNEL(12, 24),
+ 		.pattern = 0x5,
+ 		.pattern_mask = 0x7,
++		.is_ad778x = false,
+ 	},
+ 	[ID_AD7171] = {
+ 		.channel = AD7780_CHANNEL(16, 24),
+ 		.pattern = 0x5,
+ 		.pattern_mask = 0x7,
++		.is_ad778x = false,
+ 	},
+ 	[ID_AD7780] = {
+ 		.channel = AD7780_CHANNEL(24, 32),
+ 		.pattern = 0x1,
+ 		.pattern_mask = 0x3,
++		.is_ad778x = true,
+ 	},
+ 	[ID_AD7781] = {
+ 		.channel = AD7780_CHANNEL(20, 32),
+ 		.pattern = 0x1,
+ 		.pattern_mask = 0x3,
++		.is_ad778x = true,
+ 	},
+ };
+ 
+-- 
+2.19.1

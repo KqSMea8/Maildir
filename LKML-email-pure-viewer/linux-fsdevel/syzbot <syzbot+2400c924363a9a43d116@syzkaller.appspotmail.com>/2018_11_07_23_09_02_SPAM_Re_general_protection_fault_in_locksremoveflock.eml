@@ -1,0 +1,188 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:24 -0000
+Received: from icoremail.net (unknown [209.85.214.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv9JEAONbIrpYAQ--.26652S3;
+	Wed, 07 Nov 2018 23:09:57 +0800 (CST)
+Received: from mail-pl1-f174.google.com (unknown [209.85.214.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHakY5AONbg_0XAA--.10875S3;
+	Wed, 07 Nov 2018 23:09:46 +0800 (CST)
+Received: by mail-pl1-f174.google.com with SMTP id p16-v6so7987976plr.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:09:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :mime-version:date:in-reply-to:message-id:subject:from:to:sender
+         :precedence:list-id;
+        bh=fNVyof1T1dkYeZmrzhhMrbWhULudIOEKP2ho/Kz5bZo=;
+        b=FOZ/R5t9/mdVLgXZw8CTD/xF99jK+CtbjSVydaFbm16W7UgnkW/6I+gdAiC+xoyfBX
+         Du98Q69SmPeUJ1hbIZrzJHLW7WAQkMCQgF0PYdiFoGJNYRybRai+cvrgbybQOOv84ZXf
+         rlaOsmQsxYvHjg1GwGO6LufarYA9IU+FU/ycrAHE3gxWKbQoXrkXDgvEW9icnQWwzDTR
+         GOvP1mQ5ovLr0gKwzjYASxBzvHTmzST6Bi9wzievzl4a2Qt4AhOIF8AMjr89APrxpcMH
+         q814qhPt763VKJOcZ75hgaMHnKm3XKO3nU58QiszjjDkpb7Zk5UHesjbUKO2dSUblziD
+         I9CQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=appspotmail.com
+X-Gm-Message-State: AGRZ1gKXq/F8JXYcuk9J7os54UqQUB49aS80o84BNmkfPSRSZiPwOHI4
+	7HHYtlP9ia2eLOY+xPCBlj9ZeKOWyUmqK/BBb2k+qc8YyVLPaPQr/g==
+X-Received: by 2002:a17:902:9698:: with SMTP id n24-v6mr608526plp.9.1541603385509;
+        Wed, 07 Nov 2018 07:09:45 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5361372pjt;
+        Wed, 7 Nov 2018 07:09:44 -0800 (PST)
+X-Google-Smtp-Source: AJdET5e89T/UpMm9bwVP3pXPoct8UFOZQaVEvFNWIAaWF7vQLR7IXP9lxmUij4UW1yJhMECwlr9M
+X-Received: by 2002:a17:902:8a89:: with SMTP id p9-v6mr590766plo.183.1541603384332;
+        Wed, 07 Nov 2018 07:09:44 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541603384; cv=none;
+        d=google.com; s=arc-20160816;
+        b=spGjn9ToVXDeMMVA0cf2Dz8Uanr3rSBq7z+ICvcNogEanX+4jMMfHkvImzHvv9hyoN
+         HWKrxUb8okqH5GORM0kTOI2OrngGtVzIeoCm3FbcW/LBnpek5Fnzd6CCvgct7bA4dDzF
+         7Nw8FqeJBCh+vcBjxR2oWC8fl5Z6vuMAj3syMr72iGqs1aby2cAj+eNvUk8/E/J+JlY+
+         sZNA8TdxULjtSNrdDCwSoBzJNZ6NpbOxVJjdvoXHvgDx98IY6FBwEPJknkv9Tu8Y4k5X
+         126Y8bPQQhqGYGQ92IIEsGwqPFct1erNv1CO3LO3KcSPULTEvD1S4E5WMs3snWEOugrH
+         d8jg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:to:from:subject:message-id:in-reply-to
+         :date:mime-version;
+        bh=fNVyof1T1dkYeZmrzhhMrbWhULudIOEKP2ho/Kz5bZo=;
+        b=mrqDV9kbZ/m5Ob/6gW9+alxa50xK9HZouCSmwG3wRBMCiqZxcromf1onwefvmIbyF3
+         uwkl7i5ImdhMvsLadrSN7U4YZOpUWDM5wokgIxEKNSOs8xFcxQQ6gv3RVJaxbAApOLqj
+         dy/9DqNObhTYQ7hOCOwh4afGGO+1ELwJh7zz0T+YIi47bwwxcgUYM9OSPGEQfRzTZXVQ
+         2Vw/ev/oTZWdH9u4GWXcTKBujr+z6ZeSZkIW983jTh6DEtkkeYe6R3OJR1qzPBGr6Vjj
+         awhVWoShwJ3Pma6eD10Q8LVjoPinYb81QdakQQbfPgVfnJMWHaf2miYv/D6xEVaUf//I
+         TSGA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=appspotmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id x187si727804pgx.241.2018.11.07.07.09.27;
+        Wed, 07 Nov 2018 07:09:44 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731030AbeKHAjs (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:39:48 -0500
+Received: from mail-it1-f197.google.com ([209.85.166.197]:39476 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbeKHAjs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:39:48 -0500
+Received: by mail-it1-f197.google.com with SMTP id r127-v6so22196516itr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 07:09:02 -0800 (PST)
+MIME-Version: 1.0
+X-Received: by 2002:a24:6182:: with SMTP id s124-v6mr376099itc.16.1541603342504;
+ Wed, 07 Nov 2018 07:09:02 -0800 (PST)
+Date: Wed, 07 Nov 2018 07:09:02 -0800
+In-Reply-To: <000000000000da5443057a0c047e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009d6000057a147f19@google.com>
+Subject: [SPAM] Re: general protection fault in locks_remove_flock
+From: syzbot <syzbot+2400c924363a9a43d116@syzkaller.appspotmail.com>
+To: bfields@fieldses.org, jlayton@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHakY5AONbg_0XAA--.10875S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxCw15ur1UAr4rJF18tF4Utwb_yoWruF15pa
+	1UJr4UCr4vqryUJF18Jr1UAr1Utr47Aa1UJrsrXr18t3WrGw1UGr1xtr47Gr1DGr45XF17
+	trn8Xw48tr1UGaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUQSb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2vYz4IE04k24V
+	AvwVAKI4IrM2vYz4IE57IF64xv32x264vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
+	x4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14
+	v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCjxxvEa2IrMxkF7I0E
+	w4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6ryrMxkI7II2jI
+	8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW0oVCq3wCYIxAIcVC2z280aVCY1x0267AKxV
+	W0oVCq3wCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+	v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVCF04k26cxK
+	x2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUkWCGUUUUU
+
+syzbot has found a reproducer for the following crash on:
+
+HEAD commit:    d881de30d29e Add linux-next specific files for 20181107
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=10a0102b400000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=caa433e1c8778437
+dashboard link: https://syzkaller.appspot.com/bug?extid=2400c924363a9a43d116
+compiler:       gcc (GCC) 8.0.1 20180413 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14b42f5b400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=151777e5400000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+2400c924363a9a43d116@syzkaller.appspotmail.com
+
+audit: type=1800 audit(1541602996.121:30): pid=5502 uid=0 auid=4294967295  
+ses=4294967295 subj==unconfined op=collect_data cause=failed(directio)  
+comm="startpar" name="rmnologin" dev="sda1" ino=2423 res=0
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 5657 Comm: syz-executor710 Not tainted  
+4.20.0-rc1-next-20181107+ #107
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:locks_remove_flock+0x216/0x350 fs/locks.c:2567
+Code: 00 0f 85 3a 01 00 00 48 8b 5b 98 48 85 db 74 3a e8 1f 41 92 ff 48 8d  
+7b 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
+85 17 01 00 00 48 8b 5b 08 48 85 db 74 0d e8 f2 40
+RSP: 0018:ffff8801b9dc72c0 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 1ffff100373b8e89 RCX: ffffffff81ed555d
+RDX: 03fffe2006e771d2 RSI: ffffffff81ed5c71 RDI: 1ffff100373b8e91
+RBP: ffff8801b9dc74a0 R08: ffff8801b9dbc480 R09: ffffed003b5e5b67
+R10: ffffed003b5e5b67 R11: ffff8801daf2db3b R12: ffff8801d88f9c80
+R13: ffff8801b9dc7338 R14: 1ffff100373b8e5b R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8801daf00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000002001d000 CR3: 000000000946a000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  locks_remove_file+0x148/0x5c0 fs/locks.c:2607
+  __fput+0x2f0/0xa70 fs/file_table.c:271
+  ____fput+0x15/0x20 fs/file_table.c:312
+  task_work_run+0x1e8/0x2a0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x1ad1/0x26d0 kernel/exit.c:867
+  do_group_exit+0x177/0x440 kernel/exit.c:970
+  __do_sys_exit_group kernel/exit.c:981 [inline]
+  __se_sys_exit_group kernel/exit.c:979 [inline]
+  __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:979
+  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x43ede8
+Code: Bad RIP value.
+RSP: 002b:00007ffe7a46fe78 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043ede8
+RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+RBP: 00000000004beea8 R08: 00000000000000e7 R09: ffffffffffffffd0
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00000000006d1180 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace a84b3ae501385451 ]---
+RIP: 0010:locks_remove_flock+0x216/0x350 fs/locks.c:2567
+Code: 00 0f 85 3a 01 00 00 48 8b 5b 98 48 85 db 74 3a e8 1f 41 92 ff 48 8d  
+7b 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
+85 17 01 00 00 48 8b 5b 08 48 85 db 74 0d e8 f2 40
+RSP: 0018:ffff8801b9dc72c0 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 1ffff100373b8e89 RCX: ffffffff81ed555d
+RDX: 03fffe2006e771d2 RSI: ffffffff81ed5c71 RDI: 1ffff100373b8e91
+RBP: ffff8801b9dc74a0 R08: ffff8801b9dbc480 R09: ffffed003b5e5b67
+R10: ffffed003b5e5b67 R11: ffff8801daf2db3b R12: ffff8801d88f9c80
+R13: ffff8801b9dc7338 R14: 1ffff100373b8e5b R15: dffffc0000000000
+FS:  000000000229b880(0000) GS:ffff8801daf00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000043edbe CR3: 000000000946a000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400

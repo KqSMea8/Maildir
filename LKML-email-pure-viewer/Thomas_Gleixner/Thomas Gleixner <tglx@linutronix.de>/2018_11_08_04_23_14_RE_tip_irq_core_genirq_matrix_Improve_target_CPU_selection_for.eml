@@ -1,0 +1,197 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:19 -0000
+Received: from icoremail.net (unknown [209.85.210.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3fyUdSuNbwH5aAQ--.27218S3;
+	Thu, 08 Nov 2018 04:25:02 +0800 (CST)
+Received: from mail-pf1-f176.google.com (unknown [209.85.210.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnAT0bSuNblC0ZAA--.973S3;
+	Thu, 08 Nov 2018 04:24:59 +0800 (CST)
+Received: by mail-pf1-f176.google.com with SMTP id v9-v6so5887784pff.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:24:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version:sender:precedence:list-id;
+        bh=v01jqwd4UMWafX0wHEtLr6IxVUBIj3RvQxAYVsHvdtI=;
+        b=bAfmqXWB52k2vTm+VcAKta3UPbh5z+DbsITk6sguioVFciEblvPiKFyWDE/JaNDNnk
+         RZOYNBrdzWxRX81tZ8RTx1Dic2bix23QE7x2A7Kw5YzRlVAIbCTpM8LkP7S0GzbzXHSs
+         J+Z1Ddx50RfVz9oA2MK+Qkyz1tPRyg99/aQFW5TC+06eBL0mY7LX2m0m0pE38+tT1Qkz
+         3L2Gp7X5PBSL3v4zPKPnFu3O8oKOn96iym56Ja8iZy97zuCTgT8/4IdYGFrhP+IXro+P
+         IKILS/17yvV53p7ZR0oHJ+tepKsy/QilW8nUQQPaRw4Q1HoAm9d0GagOAx0u9zIKH4Uj
+         E1uw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKA8kJiUdA3ZvGd758EHPvuw8+aE5yo5hxfL7qDp3Kmug5biieW
+	3okdovQyJxk2teXqVOSsC3OYVcszGTFfzBEwGbml3zx5ljAm5FdMWA==
+X-Received: by 2002:a62:3687:: with SMTP id d129-v6mr1755442pfa.56.1541622298871;
+        Wed, 07 Nov 2018 12:24:58 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5705441pjt;
+        Wed, 7 Nov 2018 12:24:58 -0800 (PST)
+X-Google-Smtp-Source: AJdET5e3WfB67GIDMeeILLK7y7dkKz+kHy4ZTjALNtN9dhLZennhtei34ZK77SjDFoYU4lqjy3yE
+X-Received: by 2002:a62:9642:: with SMTP id c63-v6mr1806825pfe.100.1541622298053;
+        Wed, 07 Nov 2018 12:24:58 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541622298; cv=none;
+        d=google.com; s=arc-20160816;
+        b=KSY8CINg7vz4Swm3JsT4T+0wh/TYO4ntEg6SS2Cd2sMNLRYdi+YTRZurmAzyPL7c2d
+         npKKBFgsU3U7MpOnupvmnRmy8m9/ccyAq/Q8ZnX480PQfGk4r8waz5mH46nninP2V6s+
+         qlanfwx4BgBbBUNkL4EK37ENuKTdI7wf/Cpw57+ywVYpUQTsx85/0Y43ZMIFP0ZHdRWJ
+         fM0rNOqOpP8TsFQXOOgI0t4SsW2rqpNP8zZ+MFOdn7c3qRIfl0RqE+v+fjIsZjQPDYUf
+         nT1P1mYReC02QP8Avig+7sQ8JVNBa1mp4BjQ6mYgiSfxLB6E1Y+bKw4zZ83dLEGkExtB
+         gRmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:user-agent:references
+         :message-id:in-reply-to:subject:cc:to:from:date;
+        bh=v01jqwd4UMWafX0wHEtLr6IxVUBIj3RvQxAYVsHvdtI=;
+        b=BfaAcymFCTaRVyfXox7LRtBWcwwgAXPy3+75xedNryqj95GJ1lxLTiEpTnmxDX8Bxi
+         6lg5M7a+6E91KzvDf9gfF3l98eNYn5WxP43MyjTdCblB5TEHgENkhXaEBaNS1cYUkYtM
+         wIVjj7qMSkJ2B0VK6+j0D2X4pyoFzZXTVgkiLpcDGgHUAgPSngA4mq7su6zhLaJwietk
+         dbnVWucfqrRs6GmvDqBt5fijbGGNkis6ozHf6e8mkwIVWs2+/rq7/jfQzG7L04Il/KCP
+         0N8Uq5Ubfg8qrRVSPKjXBYW8Q0bohSRfxXjQ+Y6H+4gNUfwCckOZMpa0HjoOrsHcvhM0
+         uG+Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id u25si1547982pgm.532.2018.11.07.12.24.43;
+        Wed, 07 Nov 2018 12:24:58 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727343AbeKHFzX (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:55:23 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:42064 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726583AbeKHFzW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:55:22 -0500
+Received: from p5492fe24.dip0.t-ipconnect.de ([84.146.254.36] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1gKUMD-0007pL-Oh; Wed, 07 Nov 2018 21:23:22 +0100
+Date: Wed, 7 Nov 2018 21:23:14 +0100 (CET)
+From: Thomas Gleixner <tglx@linutronix.de>
+To: Michael Kelley <mikelley@microsoft.com>
+cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>, Long Li <longli@microsoft.com>
+Subject: RE: [tip:irq/core] genirq/matrix: Improve target CPU selection for
+ managed interrupts.
+In-Reply-To: <CY4PR21MB0773C3A2748B87E9125095F9D7C40@CY4PR21MB0773.namprd21.prod.outlook.com>
+Message-ID: <alpine.DEB.2.21.1811072049070.1666@nanos.tec.linutronix.de>
+References: <20181106040000.27316-1-longli@linuxonhyperv.com> <tip-e8da8794a7fd9eef1ec9a07f0d4897c68581c72b@git.kernel.org> <CY4PR21MB0773C3A2748B87E9125095F9D7C40@CY4PR21MB0773.namprd21.prod.outlook.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnAT0bSuNblC0ZAA--.973S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxGF4kJw4DWr45WFW7WFy3urg_yoWrJw17pF
+	WUKa4UWw1DG3yIgw1xXw48JFySvrZ3W39Ikwn7Gw48u3s8WryfXF9xKa4YqF1rGrs5A3Wj
+	vF4Fv34UuayDAFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6F1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bd
+	D7-UUUUU=
+
+Michael,
+
+On Wed, 7 Nov 2018, Michael Kelley wrote:
+> >  2) Managed interrupts:
+> > 
+> >     Managed interrupts guarantee vector reservation when the MSI/MSI-X
+> >     functionality of a device is enabled, which is achieved by reserving
+> >     vectors in the bitmaps of the possible target CPUs. This reservation
+> >     decrements the available count on each possible target CPU.
+> >
+> 
+> For the curious, could you elaborate on the reservation guarantee for
+> managed interrupts?  What exactly is guaranteed?  I'm trying to
+> understand the benefit of reserving a vector on all possible target CPUs.
+> I can imagine this may be to related hot-remove of CPUs, but I'm not
+> seeing the scenario where reserving on all possible target CPUs solves
+> any fundamental problem.  irq_build_affinity_masks() assigns spreads
+> target CPUs across each IRQ in the batch, so you might get a small handful
+> of possible target CPUs for each IRQ.  But if those small handful of CPUs
+> were to be hot-removed, then all the reserved vectors disappear anyway.
+> So maybe there's another scenario I'm missing.
+
+When managed interrupts are allocated (MSI[-X] enable) then each allocated
+Linux interrupt (virtual irq number) is given an affinity mask in the
+spreading algorithm. The mask contains 1 or more CPUs depending on the
+ratio of queues and possible CPUs.
+
+When the virtual irq and the corresponding data structures are allocated,
+then a vector is reserved on each CPU in the affinity mask.
+
+The device driver and other layers like block-mq rely on the associated
+affinity mask of each interrupt, i.e. they associate a device queue to the
+exact same affinity mask. All I/O on the CPUs in the mask goes through that
+associated device queue.
+
+So if the allocation would not be guaranteed and allowed to fail, then the
+I/O association would not work as expected.
+
+Sure, we could move the interrupt to a random CPU, but that would cause
+performance problems especially when the interrupt affinity moves to a
+different node.
+
+Now you might argue that reserving one vector on one CPU in the mask would
+be sufficient. That's true, if CPU hotplug is disabled and all CPUs are
+online when the device driver is initialized.
+
+But it would break assumptions in the CPU hotplug case. The guaranteed
+reservation on all CPUs in the associated CPU mask guarantees that the
+interrupt can be moved from the outgoing CPU to a still online CPU in the
+mask without violating the affinity association.
+
+There is another interesting property of managed interrupts vs. CPU
+hotplug. When the last CPU in the affinity mask goes offline, then the core
+code shuts down the interrupt and the device driver and related layers
+exclude the associated device queue from I/O. The same applies for CPUs
+which are not online when the device is initialized, i.e. if non of the
+CPUs is online then the interrupt is not started and the I/O queue stays
+disabled.
+
+When the first CPU in the mask comes online (again), then the interrupt is
+reenabled and the device driver and related layers reenable I/O on the
+associated device queue.
+
+If the reservation would not be guaranteed even accross offline/online
+cycles, then again the assumptions of the drivers and the related layers
+would not longer work.
+
+Note, that the affinity of managed interrupts cannot be changed from
+userspace via /proc/irq/$N/affinity for the same reasons.
+
+That was a design decision to simplify the block multi-queue logic in the
+device drivers and the related layers. It removed the whole track affinity
+changes, reallocate data structures and reroute I/O requirements. Some of
+the early multi-queue device drivers implemented horrible hacks to handle
+all those horrors.
+
+Hope that answers your question.
+
+Thanks,
+
+	tglx

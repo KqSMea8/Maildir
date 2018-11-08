@@ -1,0 +1,162 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:19 -0000
+Received: from icoremail.net (unknown [209.85.215.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH_p5IuNbr5FZAQ--.26854S3;
+	Thu, 08 Nov 2018 01:35:54 +0800 (CST)
+Received: from mail-pg1-f179.google.com (unknown [209.85.215.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXP0t4IuNbxZEYAA--.663S3;
+	Thu, 08 Nov 2018 01:35:52 +0800 (CST)
+Received: by mail-pg1-f179.google.com with SMTP id i4-v6so7599252pgq.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:35:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:sender
+         :precedence:list-id;
+        bh=kxiK8t8nrB5BiFSgCypjx4FyMuciPUXkoznEtv5DHSo=;
+        b=uRemTdla8dhch0utfweqmjK8nkBCSxhDU5YkJ1cVeBZ3fAqAEmTdHA12r6N2Hp6SMo
+         Ci/QL76jKcafIF3NoB8NkJATCzZsun/FA4sOozDohXO9jh8bAw3ylFp9xobxpKT3IjeU
+         aTuCjMu5ldQIo/D/0baenovXtFmBMwieuhGKryGEhbGK8YViDJEluRAuBEp0esAg9o9y
+         n/Xfj8OCoMQmHTI/o857jzY1UvXfGYM9w/Tt6OUoYMNN+XCe+VNqvjdV1gdq41UuOhEn
+         6Fr3kf7S21vaC/Pvtendq1RJYNAWxdhKJWzB3eEVveDwCgXrJjw68X75W0r2Ml3Xbjym
+         j0Fw==
+X-Gm-Message-State: AGRZ1gJagkVSTgAUyoLNSYFQVpe12NY2nqqXLz6Ccyz/IcV5xHyGVbp1
+	GxnY3B1mk9Lj5uLsG/HRaqMta+DwxkazW2uhLcVEFuTsMHW/J3HUTQ==
+X-Received: by 2002:a63:1d10:: with SMTP id d16-v6mr915115pgd.228.1541612151950;
+        Wed, 07 Nov 2018 09:35:51 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5526083pjt;
+        Wed, 7 Nov 2018 09:35:50 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d6KGXxkjmAC4Lojb7FuUsSZfdKkXuYxCHswWhCaSryI4Zo+NHvky/wXWVpqhagYW75Ux40
+X-Received: by 2002:a17:902:1744:: with SMTP id i62-v6mr1074471pli.250.1541612150867;
+        Wed, 07 Nov 2018 09:35:50 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541612150; cv=none;
+        d=google.com; s=arc-20160816;
+        b=DMBPhA9GMb49lkWD0jjv32Jsg2aDQOMrFdQuPXoeyMboyfkcaa1tyYt5zuRGL7NX8+
+         YBgNRqxMGKZtNE33IWDvR/tWOkbrsaH2m50uTK88J/cUVjvIhh3ezlKO/gU+KH76/jKM
+         MxwjrKX4Rt4kvpNAzsanb8cVk33bjcFAPOUNK6nJBrPNcro6y8e46GfHeLNPSKFdyYyv
+         LxIBx3Tk4/RQFeTMdP8AKRmPAnr/fvw4v7C6A5vM1PAI5yAyA1CZ4K7dSC/VTTRiUw3u
+         73qPbW5qwAJb9qtNhz1mrWS43t0iKyaSn9Jve8nZE4XvzbaDCvK68wvnAQ1Xx62MPOMN
+         8meQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=kxiK8t8nrB5BiFSgCypjx4FyMuciPUXkoznEtv5DHSo=;
+        b=fLTwDRzgL+PwzIFCcoHcCGxk5ozHXLxP77lON0JpjhFZXa/hWdhiZMjgh9ySuhudgh
+         KWjB+kjqK66zsheIoWG9IWl5f94r7ihMwle9T/ETdX39crU/a2U2rB6UROziHqBHbw8K
+         IBSdjSM/aaMYBgKFALdQIgDMKmZLQ6GPrO6Kh36nJGg2FqN4mgWGn4UEvSDSjqDqyJkg
+         8g+JEMO9ZLkLFm7FOi53bYLlo9uWxGGWac00ofYIwHibcIRnKFykHQx6dfS5CGTmo1ab
+         cD8k6TDeC3W/ljYkMi94wvMh5Uo/fMq1hBnmDWbBZ51x0jF0FUMVa7L+ztLlnez8XvWQ
+         0A9w==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@lixom-net.20150623.gappssmtp.com header.s=20150623 header.b=0cQ87MPg;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id az12-v6si1182155plb.166.2018.11.07.09.35.32;
+        Wed, 07 Nov 2018 09:35:50 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728138AbeKHDGr (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:06:47 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38868 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727648AbeKHDGr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:06:47 -0500
+Received: by mail-lf1-f67.google.com with SMTP id p86so12105739lfg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 09:35:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=kxiK8t8nrB5BiFSgCypjx4FyMuciPUXkoznEtv5DHSo=;
+        b=0cQ87MPgW9Gze993K84WEuJVFgT406flsSE+gadrtkJwsGYqKVNEylVayvPzQ3nBd8
+         3JZj7R5jwThpv3WzHwdPS9k5Dj9vrp1nyMersYlp+i8udzVJg9QlHl+FonyAxtDTnIDX
+         zhoZEdsnLkCekz1tC4XmResoHTKM4Qvpgz4dc4TRmGYlLyUzf3M2tiqwnoYVefOmeO6c
+         jKlEuOhpYFdKHNvNqVzCn9bUoECooGrk31mg+4bDKkrTCBnsoB2KFXXDE4cEo/xG7Q0D
+         /tvo4wrjCd3mU/f2AXhyGpugB/yuPqiQUs9br89I5b2Gp5sJMkB5ULzXJ+CgTTZiUyG1
+         O0HA==
+X-Received: by 2002:a19:df41:: with SMTP id q1mr707154lfj.25.1541612122240;
+ Wed, 07 Nov 2018 09:35:22 -0800 (PST)
+MIME-Version: 1.0
+References: <CAOesGMgVPsK9YsV2nGoBptWwtHYv=3yMytLx2_tF_ujS5c5p3Q@mail.gmail.com>
+ <20181107171723.GI9919@thunk.org>
+In-Reply-To: <20181107171723.GI9919@thunk.org>
+From: Olof Johansson <olof@lixom.net>
+Date: Wed, 7 Nov 2018 09:35:09 -0800
+Message-ID: <CAOesGMheCcvDQCd+7fyh4yOk4BYDfm2QRqsdawqA_fg8s9YYEQ@mail.gmail.com>
+Subject: Re: [TECH TOPIC] SoC maintainer group
+To: Theodore Tso <tytso@mit.edu>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Russell King <rmk@armlinux.org.uk>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXP0t4IuNbxZEYAA--.663S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xw4kXrW3WFy7JFy3XFWrXwb_yoWDGwb_Wa
+	45GryDCw1UXrWxJa12kr4rurZ2vF4DJFy7tw15GrnI9as8ArWUGFZ2kr93Xryjgw4xt3s8
+	ua90qa4S9F13KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbg8YjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW8MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI
+	42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExV
+	AvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
+	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrx
+	kI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U5zOJ5UUUUU==
+
+On Wed, Nov 7, 2018 at 9:17 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+>
+> On Tue, Nov 06, 2018 at 02:16:27PM -0800, Olof Johansson wrote:
+> >
+> > Olof Johansson (arm-soc)
+> > Arnd Bergmann (arm-soc)
+> > Kevin Hilman (arm-soc)
+> > Mike Turquette (clk)
+> > Stephen Boyd (clk)
+> > Linus Walleij (pinctrl + more)
+> > Mike Brown (gpio/regmap + more)
+>
+> Could the poeple listed on this list please list potential schedule conflicts?
+>
+> I'm going to assume we should avoid: Andriod uConf, RISC-V uConf,
+> Device Tree uConf.  What are other potential conflicts.  I'm going to
+> guess this might be "interesting" to schedule.  :-)
+
+Yeah, apologies for adding a bunch of cross-coordination this late too.
+
+It's likely going to be conflict-ridden no matter what we do. RISC-V
+and DT are the main conflicts, Android probably has a bit less.
+
+Tuesday afternoon looks least conflict-y when I squint at the
+schedule, or Thursday afternoon (but ideally not overlapping with
+Daniel's DRM/gitlab session).
+
+
+
+-Olof

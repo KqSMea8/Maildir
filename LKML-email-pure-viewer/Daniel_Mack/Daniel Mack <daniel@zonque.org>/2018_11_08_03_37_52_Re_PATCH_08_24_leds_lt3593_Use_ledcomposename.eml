@@ -1,0 +1,176 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:54 -0000
+Received: from icoremail.net (unknown [209.85.215.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv2JCP+NbvURaAQ--.27456S3;
+	Thu, 08 Nov 2018 03:38:43 +0800 (CST)
+Received: from mail-pg1-f173.google.com (unknown [209.85.215.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHXztAP+Nb+gkZAA--.644S3;
+	Thu, 08 Nov 2018 03:38:40 +0800 (CST)
+Received: by mail-pg1-f173.google.com with SMTP id c10-v6so7746787pgq.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:38:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding
+         :sender:precedence:list-id;
+        bh=vrDEqkfoXU5+E49NHxUgJqsK4+tHd/WEz2xwuVtI3TA=;
+        b=aft0SVprtSyNgkzbcjxE99Zucit79X9zALfUPh2eSP0Pvvg81N/tiRo5agefmoyW/5
+         yJhaq+qt91U793Xg4TRUqys9X4iVYfwcLtzDRK70g4UdXy4mG75IejjRNPSgvpNUMPbP
+         dEb24bUNBHksGgQpsPmIAQ/Ef2ATIkZQ+XXdG2V331heILSs/ytT/g8pe6PUs5K7bnvP
+         r/JWE5wcYOCHBPA3b2Qk+ZyK8Aw7/7MIiXX3UZyzZT08xRwY29612qgVy5ojy2762GHD
+         SvrnpQqFtG9jbJrFLqwwFM9TTNM6Muv28hzGHDlINheo7Rp7vPuS/KvjEk6XYtigC8/7
+         4onQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gK694H75t5TEb48DuRqBML90TRikBhhA4PQpAahxM/nDFOrYvLL
+	GRT5Nv5ZL3FWZOS0lCzHknQLeq1KdtxH8u3FMMyRWa2jiMLwH5Dtpg==
+X-Received: by 2002:a62:22c3:: with SMTP id p64-v6mr1597625pfj.9.1541619520226;
+        Wed, 07 Nov 2018 11:38:40 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5659183pjt;
+        Wed, 7 Nov 2018 11:38:39 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fJtPlHFNoN/dw6tmYeXYIJTzaHc8oYg5pQpYHwrR6PhTzc9FKncjvcl/hd7PsjAXJ8Pj8M
+X-Received: by 2002:a17:902:3a5:: with SMTP id d34-v6mr1590670pld.110.1541619519221;
+        Wed, 07 Nov 2018 11:38:39 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541619519; cv=none;
+        d=google.com; s=arc-20160816;
+        b=X3NFXgRi3LBz7MAt1x5cm7IhDd1qVz9TF3BiDb8S3j+pi8gW6+nVRrlXzImr67k+fj
+         FsDwBCDulmhO9IV/WZ+r0oeD0Bj73Q5/GtPw88O8I0EVRB1JpOgmDQFLQWjSatsbfdL3
+         UlJSzGF3OLzmxRTgLDYo5QOtBVTTe9ZX7i4d7d1Ps1FTofSaQ0g13r+8emkHl8DuU6Jd
+         P1g+TciAyLQBpi/NRP4TaJR3KPUiQTzfO/oeBMG3PEWNSbtwTYBGa5lDP6YRVFeDNkGs
+         6hF1SiXK/zfqkJ2x3l43golfGbXcjh35PPPItaYUu7ZWN5hgmmIafaT7rTgXv+J5kcal
+         zuEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject;
+        bh=vrDEqkfoXU5+E49NHxUgJqsK4+tHd/WEz2xwuVtI3TA=;
+        b=ruewUNM7EytKJMqyU0BnQWolrKXAXCDRCcg+kmKRQ6wolXDQ+QPGpO13bGGqXfbfqK
+         ZdwQyHhJiF1OCfcgk/nSrLkyjGbjd9NNVP7SFIxITAGAc69UbZMXlOZ2NpiUAFXVotiJ
+         /lJBJ9wR0fXG+5GqDLWKG1ecCbPUY0pmknbARCZGTraQRKOhQotZ3yfg7GBnEwj4a2Sf
+         oDR1UM2/BWIwVGfKiowEKOpIcAb7jvsH3vmIgAb3pEYk3ukMOZBRs7MNZ3kml+mQIkqU
+         exX9b/14VUm7B2w0O5MX6yI5CZdYEmLZ7tMLcwxtY8H+O5SkdBLLjvsnWROI8F5LO+un
+         o9SA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 1-v6si1578855plt.225.2018.11.07.11.38.24;
+        Wed, 07 Nov 2018 11:38:39 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727336AbeKHFJl (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:09:41 -0500
+Received: from mail.bugwerft.de ([46.23.86.59]:55032 "EHLO mail.bugwerft.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725953AbeKHFJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:09:41 -0500
+Received: from [192.168.178.170] (pD95EFA86.dip0.t-ipconnect.de [217.94.250.134])
+        by mail.bugwerft.de (Postfix) with ESMTPSA id 3701E2A75B8;
+        Wed,  7 Nov 2018 19:35:32 +0000 (UTC)
+Subject: Re: [PATCH 08/24] leds: lt3593: Use led_compose_name()
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pavel@ucw.cz, robh@kernel.org
+References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
+ <1541542052-10081-9-git-send-email-jacek.anaszewski@gmail.com>
+From: Daniel Mack <daniel@zonque.org>
+Message-ID: <42d68eae-6905-e787-3797-f0f16b0dfb84@zonque.org>
+Date: Wed, 7 Nov 2018 20:37:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <1541542052-10081-9-git-send-email-jacek.anaszewski@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHXztAP+Nb+gkZAA--.644S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF17Ww13tF43Wry7GrykXwb_yoW8Cry5pF
+	W5Aay5Cw45tryvkF10yan8ZFnIga93G34Utay8Ca43ur1j9F9rXrs3t3W5uFykCFWxZF1r
+	ZF4Ut3W09anxXF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmqb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0264kExVAvwVAq07x20xylc7Ca
+	8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VWrMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7
+	IYx2IY67AKxVWUCVW8JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMxvI42IY6I8E
+	87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2
+	Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIY
+	CTnIWIevJa73UjIFyTuYvjxUgkhLUUUUU
+
+On 6/11/2018 11:07 PM, Jacek Anaszewski wrote:
+> Switch to using generic LED support for composing LED class
+> device name.
+
+Thanks for the rework!
+
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> ---
+>   drivers/leds/leds-lt3593.c | 19 ++++++++-----------
+>   1 file changed, 8 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
+> index de3623e..d005abc 100644
+> --- a/drivers/leds/leds-lt3593.c
+> +++ b/drivers/leds/leds-lt3593.c
+> @@ -10,10 +10,10 @@
+>   #include <linux/slab.h>
+>   #include <linux/module.h>
+>   #include <linux/of.h>
+> -#include <uapi/linux/uleds.h>
+> +
+> +#define LED_LT3593_NAME "lt3593"
+>   
+>   struct lt3593_led_data {
+> -	char name[LED_MAX_NAME_SIZE];
+>   	struct led_classdev cdev;
+>   	struct gpio_desc *gpiod;
+>   };
+> @@ -111,6 +111,7 @@ static int lt3593_led_probe(struct platform_device *pdev)
+>   	struct fwnode_handle *child;
+>   	int ret, state = LEDS_GPIO_DEFSTATE_OFF;
+>   	enum gpiod_flags flags = GPIOD_OUT_LOW;
+> +	struct led_init_data init_data;
+>   	const char *tmp;
+>   
+>   	if (dev_get_platdata(dev)) {
+> @@ -138,14 +139,11 @@ static int lt3593_led_probe(struct platform_device *pdev)
+>   		return PTR_ERR(led_data->gpiod);
+>   
+>   	child = device_get_next_child_node(dev, NULL);
+> +	init_data.fwnode = child;
+
+Not quite following. `fwnode' is the only member of that struct that is 
+initialized?
+
+>   
+> -	ret = fwnode_property_read_string(child, "label", &tmp);
+> -	if (ret < 0)
+> -		snprintf(led_data->name, sizeof(led_data->name),
+> -			 "lt3593::");
+> -	else
+> -		snprintf(led_data->name, sizeof(led_data->name),
+> -			 "lt3593:%s", tmp);
+> +	ret = led_compose_name(child, LED_LT3593_NAME, ":", init_data.name);
+
+... and here, a member that wasn't written before is used? What am I 
+missing?
+
+
+Thanks,
+Daniel

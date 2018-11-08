@@ -1,0 +1,127 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:01 -0000
+Received: from icoremail.net (unknown [209.85.214.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv34LaONbqDBbAQ--.27983S3;
+	Thu, 08 Nov 2018 06:32:45 +0800 (CST)
+Received: from mail-pl1-f176.google.com (unknown [209.85.214.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3FUEJaONbzpUZAA--.1719S3;
+	Thu, 08 Nov 2018 06:32:41 +0800 (CST)
+Received: by mail-pl1-f176.google.com with SMTP id o19-v6so8502040pll.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:32:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=gqg6uMzxKDOHDhAs5O/MwtGfMPFu4wiW0q+ApUbzCko=;
+        b=q1+ktr2QCY9Q1kACf69rPVRA55iW5ctPI1c0KOhiM+4sNvII5URcXc+QDvP31H36Bn
+         hy6ZIozyMbV1dZtKAqgmLCn9HzfXPhhhDG9+7E8YdqdHPUKYj+3DAF2NcqqUn/SdglIo
+         CckddC+6cFnUw9zClKggUnex4uWR/KaCYXpWvmVdjKBjFZUpj1UGpbbjuNVu3dauc5DS
+         U6I+erfryF/kZv23WYC9UyT60Y4n9y6Xh3N6feFTYS8OWsbc4Bmbbhd+/1jQ/YrzktS4
+         zeK46uIUfSornUVmFU0H4B7i3Y6iPR/wvejaZLm4Ih1konZ4F/H9N2Gyoq6W6hxhmWHW
+         1NtA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJLzeStmTx8RXt7vhUlTtfKLOXXL84QIMQQ1FvpCyp2K+vraJJw
+	dBCb3J6zKOj3GjDnFLWSfpqe2Oey/0fkRITJCZQptxodYIfKqIzOBQ==
+X-Received: by 2002:a17:902:9698:: with SMTP id n24-v6mr2188312plp.9.1541629961309;
+        Wed, 07 Nov 2018 14:32:41 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp81095pjt;
+        Wed, 7 Nov 2018 14:32:40 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cTb39eW4wnDhjb4BOOLE+uMQlyCIiYCKeWV0n9P1IivAIR1ZwIrcml1lSPJKlcnvemJwQl
+X-Received: by 2002:a17:902:e10f:: with SMTP id cc15-v6mr2170470plb.309.1541629960514;
+        Wed, 07 Nov 2018 14:32:40 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541629960; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Vu03L1c5JS/if3egvnFFoxJSbC7V9ND4ysQ0Hp24gnfgyFfTJgaWOI7dYKFhO/+F/9
+         yvaVestPwI4ZKM68tNYZUTDp+/N+x27NwAFnNXhdkMahth7QvEIg46wW/JovX9F3JAiI
+         q1UUVQB6MgdS1hEhfRrNZoKQWjKBsZim4IN26vDd5cCFF7tBQsYivPKddryNQaWEHH2Y
+         9ULdkItY78w+kT+Xeh28tVNFBH4D5M7hWGgGP+RYvqgQL+BRzr9A7tx2WFDnSCKS4mqH
+         6ysTjSg7A8wIhrmZ4AsfTFyRjCgr4GEQbRj20yTeBa1hfdwOe7x94zkb/hpSJ0TA3BbT
+         EzyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :organization:references:in-reply-to:message-id:subject:cc:to:from
+         :date;
+        bh=gqg6uMzxKDOHDhAs5O/MwtGfMPFu4wiW0q+ApUbzCko=;
+        b=oPekfD3DH2OFbwtk09zCyFTqTzwu5BBADmPYGJBv+SvSIJGBTnPOz9qSGtI/0i/YeF
+         j60Ah5D+/IAv0U7eeHZ6LLMak0YmhduaWwm1RJ7hLR+4vhLnLgAuREFMpyATFhkjv+q5
+         0Ti1FkfeL55Y67h6wSeJ7oqoUNvrRS3JsBPcM0uq844IusEDFCCQBB2XYfVAm+1bEtYX
+         eqlEkUKli2YsDVuVTPBJWefmO7kVdRLjtNIdj9AbgPXGKiGkd0rmRwR3AojHdDck5m0m
+         W3fFlnBzG3DOGVIvfOegZ6faQEdIpCOcCC4SzDM7qhXFCQeAQw8yymNLimy3Ds8UEjIp
+         LMaw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id i33-v6si1876495pld.433.2018.11.07.14.32.25;
+        Wed, 07 Nov 2018 14:32:40 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728401AbeKHIEi (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:04:38 -0500
+Received: from ms.lwn.net ([45.79.88.28]:45874 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728361AbeKHIEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:04:36 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 884462ED;
+        Wed,  7 Nov 2018 22:32:09 +0000 (UTC)
+Date: Wed, 7 Nov 2018 15:32:08 -0700
+From: Jonathan Corbet <corbet@lwn.net>
+To: Joris Gutjahr <joris.gutjahr@gmail.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] doc-guide:kernel-doc.rst: Reference to foobar
+Message-ID: <20181107153208.22c0ac5e@lwn.net>
+In-Reply-To: <20181028192827.19136-1-joris.gutjahr@gmail.com>
+References: <20181028192827.19136-1-joris.gutjahr@gmail.com>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3FUEJaONbzpUZAA--.1719S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUYp7k0a2IF6F1UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IY64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc2xSY4AK6IIF6Fyl
+	c2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20x
+	vEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28Icw
+	CF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
+	3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIx
+	AIcVCF04k26cxKx2IYs7xG6r1I6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0c_-UUUUU=
+
+On Sun, 28 Oct 2018 20:28:28 +0100
+Joris Gutjahr <joris.gutjahr@gmail.com> wrote:
+
+> In the Function documentation Section of kernel-doc.rst
+> there is a function_name() function as an example for
+> how to make a comment about a function.
+> 
+> But at the end of that example there is a reference to foobar 
+> instead of function_name.
+> 
+> I think that should rather be function_name, because that
+> was the placeholder the whole example was using.
+> 
+> Signed-off-by: Joris Gutjahr <joris.gutjahr@gmail.com>
+
+Sure, make sense.  Applied, thanks.
+
+jon

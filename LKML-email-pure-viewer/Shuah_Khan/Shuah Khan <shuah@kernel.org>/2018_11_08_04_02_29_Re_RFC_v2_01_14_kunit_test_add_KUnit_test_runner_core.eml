@@ -1,0 +1,181 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:09 -0000
+Received: from icoremail.net (unknown [209.85.214.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgA3cI4GReNbP19aAQ--.30336S3;
+	Thu, 08 Nov 2018 04:03:19 +0800 (CST)
+Received: from mail-pl1-f174.google.com (unknown [209.85.214.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHHTkEReNbVBwZAA--.808S3;
+	Thu, 08 Nov 2018 04:03:16 +0800 (CST)
+Received: by mail-pl1-f174.google.com with SMTP id o19-v6so8328218pll.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:03:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding:sender:precedence
+         :list-id;
+        bh=kGHczTB3pSJKE41xmQYVhUoRlNzmhCngMS11oUmj+fQ=;
+        b=cZoIRb88Z6jPQlul5t55Yjp8JZAQ4iF9STGo4IX2v8a2X1OyjyMIf0sNx358vQL6YY
+         ciNKjcDJs3cQttVT2yWfswV1neppG0hLlmX60c9/5F6C33a2NaZl2tQSBPAjMai/5yxz
+         Xzcs6GEAF0Dfd6rQMipXAF9cDERhBT/uNjTPtVPOBLIvff3BlpUHBOOeaG02w0wx7Ykg
+         dSpyOW2dmdIglOubWNssobHTYTw8+1SOA+YxM4ZgTZ3eq/xVEI87CvAKRj0mf9r7MQXV
+         q6i1nCcniixeSVkzwML/Y3NPQOceBl/Iq/aONAxMirpfxykm1ooqPRiVLEsRssvqpaEF
+         8lZA==
+X-Gm-Message-State: AGRZ1gJnplKoFexBy/0atDZLPi/E0136vxCPV/museRU2Gydcbev88P3
+	+K2/lKjIHAwDgHtzoO0Yi66nprTBTMiLafk61cARFAnTzz3uDceirg==
+X-Received: by 2002:a17:902:7882:: with SMTP id q2-v6mr1672006pll.188.1541620996006;
+        Wed, 07 Nov 2018 12:03:16 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5682289pjt;
+        Wed, 7 Nov 2018 12:03:15 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d3kl8jKfcp0ISvH+mv7tBXimkoCLs6qtg0DJXkxiMotGRaqbIaITYOxN9Fm7GYy5NpUpwx
+X-Received: by 2002:a17:902:4324:: with SMTP id i33-v6mr1650943pld.253.1541620995016;
+        Wed, 07 Nov 2018 12:03:15 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620994; cv=none;
+        d=google.com; s=arc-20160816;
+        b=SnTj1yEPsoRt6o8z8k/mt2mmR5tEGkA/8ib9jULp8r7bQSA/o1KTVsXxVH/T+iwosB
+         rJ6Jw0lMOrlyAn2cJzC2jPbbvwUbdacepNi2Qo27tCywusPD/6t2E7Ox0SFnEDl63X2O
+         EO9QyAkgyqSchPEozIF3dUJHeMFJZ1TExnriAUTFBpY8S2YPOFJVzKZeYkN9LX5DuPbW
+         agKwIaTvFfGj40n3yovslhtggAeyqGrIIX01Um1CsZXDp7sYN2iFEIRTkKHF8f56oDrK
+         /ac6/qkLIe5NIc6Bd/+lIYu5n+4QyFpLUPH2HqtpYVyJRIywySPcXw+A0yFtULHEpgnl
+         c4pA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:dkim-signature;
+        bh=kGHczTB3pSJKE41xmQYVhUoRlNzmhCngMS11oUmj+fQ=;
+        b=M/sRiC7nOe0mf5DxqAcGo/P+htILXGWHMvpjyuNZfZhcrEDV3wUh1SFvZUabWL6VHO
+         Ka4ZEJAV+GBz5ZZ8iWFWLHuqCuVyVtP4mqFRfjYEzAGHJlYXrnk+sdPfDpTARH/r+Lnk
+         f1JNT4aUvs7RN/T8vsWNzmZLZNgdY2IZlyX96hS4S1WlHdOZk95cp2WUUWuVbkQ2Wcry
+         QlERdNKCLovzvWNPbVhhLS/iExymGxYNqhiK95Lu/eYbHcjeyHRFpMNFdr5t5voBk66b
+         cMjm4QlQVZdtqUQJM1vTV1FLyE8IMfns91GUW8/QqnOe9Z/hKmcZLcUprKCXrND1RZzB
+         oW6g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kernel.org header.s=default header.b=Bj3yar3P;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id i25-v6si1431011pgi.426.2018.11.07.12.02.45;
+        Wed, 07 Nov 2018 12:03:14 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726659AbeKHFeZ (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:34:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbeKHFeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:34:25 -0500
+Received: from [192.168.1.87] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 959EF20818;
+        Wed,  7 Nov 2018 20:02:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1541620951;
+        bh=wTMYW0KJzzpHR61jC1KnlLkuPTJ6PdggDIghMR/gkxw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Bj3yar3PEtsScDZ8o9zccTFwAtnWOdVNsPWDHah/25MuvEHYIwNt29qduaM1G/p/f
+         Cn/uS/0WR6o2mziv4QM/c4YDr06bds8KqslxOFtuZAOO5AujzYxSU5YPjsXIsIb7QF
+         +Y3QfqrZHMjlLNkumlhVl1rhMca/kBOvc1DNl+Rw=
+Subject: Re: [RFC v2 01/14] kunit: test: add KUnit test runner core
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@google.com>, mcgrof@kernel.org,
+        Joel Stanley <joel@jms.id.au>, mpe@ellerman.id.au,
+        joe@perches.com, brakmo@fb.com, rostedt@goodmis.org,
+        Tim.Bird@sony.com, khilman@baylibre.com,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        jdike@addtoit.com, richard@nod.at, linux-um@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, Rob Herring <robh@kernel.org>,
+        dan.j.williams@intel.com, linux-nvdimm@lists.01.org,
+        kieran.bingham@ideasonboard.com, Shuah Khan <shuah@kernel.org>
+References: <20181023235750.103146-1-brendanhiggins@google.com>
+ <20181023235750.103146-2-brendanhiggins@google.com>
+ <017b111f-d960-c1ef-46ae-eb0eb639fe5b@kernel.org>
+ <CAFd5g45KNNGPVh4EBm8vKGdVhqajZZA0TU=CFbceJziYufb0Ug@mail.gmail.com>
+From: Shuah Khan <shuah@kernel.org>
+Message-ID: <0149d343-937c-1a99-10ff-d2bcb546e49b@kernel.org>
+Date: Wed, 7 Nov 2018 13:02:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <CAFd5g45KNNGPVh4EBm8vKGdVhqajZZA0TU=CFbceJziYufb0Ug@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHHTkEReNbVBwZAA--.808S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xr1xurWfGF43AF4UJry5Arb_yoWkXFgEva
+	18uryDCF18Jrsayan8ur13AF1kW3WkZFWDGan5trW3G34DJFyxG3yIkF10qF17Wa1ftFnI
+	qr1j934Sva4j9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUb9xYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	GVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0264kExVAvwVAq07x20xylc7Ca
+	8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VW7MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7
+	IYx2IY67AKxVW5JVW7JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E
+	87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2
+	Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIY
+	CTnIWIevJa73UjIFyTuYvjxUD_gAUUUUU
+
+On 11/06/2018 06:28 PM, Brendan Higgins wrote:
+> On Fri, Nov 2, 2018 at 11:44 AM Shuah Khan <shuah@kernel.org> wrote:
+>>
+>> On 10/23/2018 05:57 PM, Brendan Higgins wrote:
+> <snip>
+>>> + * Example:
+>>> + *
+>>> + * .. code-block:: c
+>>> + *
+>>> + *   void add_test_basic(struct test *test)
+>>> + *   {
+>>> + *           TEST_EXPECT_EQ(test, 1, add(1, 0));
+>>> + *           TEST_EXPECT_EQ(test, 2, add(1, 1));
+>>> + *           TEST_EXPECT_EQ(test, 0, add(-1, 1));
+>>> + *           TEST_EXPECT_EQ(test, INT_MAX, add(0, INT_MAX));
+>>> + *           TEST_EXPECT_EQ(test, -1, add(INT_MAX, INT_MIN));
+>>> + *   }
+>>> + *
+>>> + *   static struct test_case example_test_cases[] = {
+>>> + *           TEST_CASE(add_test_basic),
+>>> + *           {},
+>>> + *   };
+>>> + *
+>>> + */
+>>> +struct test_case {
+>>> +     void (*run_case)(struct test *test);
+>>> +     const char name[256];
+>>> +
+>>> +     /* private: internal use only. */
+>>> +     bool success;
+>>> +};
+>>> +
+>>
+>> Introducing a prefix kunit_* might be a good idea for the API.
+>> This comment applies to the rest of patches as well.
+> 
+> What about kunit_* instead of test_* and kmock_* instead of mock_*?
+> Does that seem reasonable?
+> 
+
+kunit_* would work well.
+
+thanks,
+-- Shuah

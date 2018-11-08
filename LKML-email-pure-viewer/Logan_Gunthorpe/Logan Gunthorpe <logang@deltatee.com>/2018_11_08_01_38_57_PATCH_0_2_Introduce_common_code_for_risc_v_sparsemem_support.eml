@@ -1,0 +1,158 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:20 -0000
+Received: from icoremail.net (unknown [209.85.214.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX_tSI+NbN6VZAQ--.27057S3;
+	Thu, 08 Nov 2018 01:39:31 +0800 (CST)
+Received: from mail-pl1-f170.google.com (unknown [209.85.214.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH5kFNI+NbQqMYAA--.11S3;
+	Thu, 08 Nov 2018 01:39:25 +0800 (CST)
+Received: by mail-pl1-f170.google.com with SMTP id w22-v6so4851968plk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:39:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:date:message-id:mime-version:content-transfer-encoding
+         :subject:sender:precedence:list-id;
+        bh=z7XvUKuvTclZTHbOsAcrJcACdrVSo4XHzvVdzCC1kgY=;
+        b=Cvtl75wMwiLZoBTPIHEyr/r3h771kry9U3LBawJvODXGmI6QiOLwbcuF2PGtKwio/m
+         ZPW9o/r9R6Vhk63YZIfMrXqHVRk4i5n3VzFpOG5IMMgLuW+nauMPWryi/UJnBtpEtTdl
+         n0RFmKuyLe7lZSSOb8Hm/iaI51p3MzwGngbar/vLJhKLvYAq69AKIkIvBfhYFglndsrw
+         o3ztSIEEyJnYMXJswOKwl7k4qiGDAxKFykId3tr6nj9roxIZUAswZnApAiMwd0qqnxPu
+         Xwezgk8MuOhbPJbVxSUnoHBULPiTuA/vPeLVjdPiAhIMK3oJFFhSlO0/ZGJLFONn/p3l
+         j9EQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIq5cRcrVQdNrI0OLDbnTRMP5UTXxkrzHGCKkzUfOdcx7c9WRkl
+	vwRkD2swHr4mYkpd4x4Gxh1Rp8RUEL8eZ85bKh0mgsP3jj3UQ9+i8A==
+X-Received: by 2002:a17:902:bd4a:: with SMTP id b10-v6mr1078844plx.171.1541612365223;
+        Wed, 07 Nov 2018 09:39:25 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5530171pjt;
+        Wed, 7 Nov 2018 09:39:24 -0800 (PST)
+X-Google-Smtp-Source: AJdET5crKn6A/zZLewGiKDTSchL6mabYV48V5XPhpUGwqeV5xt9FchBapYPgZWZ0xQmhckfWb9z6
+X-Received: by 2002:a62:35c2:: with SMTP id c185-v6mr1091025pfa.69.1541612364485;
+        Wed, 07 Nov 2018 09:39:24 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541612364; cv=none;
+        d=google.com; s=arc-20160816;
+        b=wQW9BfW0H5JhmYBs54PsTJvgKfRCBMMh/lJ7eukSXeubzWnum8CdfBNxsEqEM7oyzJ
+         3CEY+sJmXdXgQZVD1foCE3r0yE06UnFf7nmfdnm8ij056jRFUzwm2y6CSYVSOKh9F0WZ
+         APzZ5MO/ozAM7APxYoxcxEZ5yYWX9CGz3sFtS55uh/pxDN0J8axHzPG1S+rA8D40JwmT
+         FG8ftyOYT/f98a6UxF42Lhhr8iaUm1xzraWnDS+KHzlXBiJvgyPGBmcbRWnIO5vWH1QY
+         0PCuodOqAA6ut9iTsOYQVczGhfofcpJX6ErkhZg8w/x+BjmI1IWzQRpE9+ephi7jaUBX
+         gFAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:subject:content-transfer-encoding
+         :mime-version:message-id:date:cc:to:from;
+        bh=z7XvUKuvTclZTHbOsAcrJcACdrVSo4XHzvVdzCC1kgY=;
+        b=o5v3joP8qzeCk8MDt41CBxnA/h2Fa5vJpS1SsdBR1wEsOZOsFEwkiGTp971QoTBiOc
+         k/gK/p7qkAmwwps60B2rSNTA4/12P2ZK8Ykn+qSD5e2/OnrJiJe1PBFwWczS0aAOEp5b
+         4xB1xeVn2oWGpUO6HEfGnSfcVBj7WV5X+Pfnq5n8x6wiI+VWKGsDHJJxoiQnuKv7I6nR
+         8PRdBqfzX0l8BP8AiIaPMU3peVI5su/ubTWTbvexTSAE835eQUCe2x52tqIkO0CRdArX
+         0uM10oa3yBeEp3ZH+WMkjLUWLiUrlCUNWIZOkQQi/omHTYr0o+d/ydnqckJMIl2IVbUl
+         fuFg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id w31-v6si1210440pla.347.2018.11.07.09.39.08;
+        Wed, 07 Nov 2018 09:39:24 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731459AbeKHDK2 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:10:28 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:48316 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728063AbeKHDK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:10:28 -0500
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1gKRnB-0003U4-9G; Wed, 07 Nov 2018 10:39:02 -0700
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1gKRnA-0006HO-C1; Wed, 07 Nov 2018 10:39:00 -0700
+From: Logan Gunthorpe <logang@deltatee.com>
+To: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc: Stephen Bates <sbates@raithlin.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date: Wed,  7 Nov 2018 10:38:57 -0700
+Message-Id: <20181107173859.24096-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.19.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-mm@kvack.org, linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-sh@vger.kernel.org, akpm@linux-foundation.org, sbates@raithlin.com, palmer@sifive.com, aou@eecs.berkeley.edu, hch@lst.de, arnd@arndb.de, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.1 (2015-04-28) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,MYRULES_NO_TEXT autolearn=ham autolearn_force=no
+        version=3.4.1
+Subject: [PATCH 0/2] Introduce common code for risc-v sparsemem support
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH5kFNI+NbQqMYAA--.11S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7GFy7Wr4DKry5ZF4kWw4fGrg_yoWDtFX_C3
+	sava48Ja18WF4fWa9xKFsYqrZrKay2qFyq9F1rt3s7A3sIvw4rt397KrW8uF1xWa1rCrn5
+	Xry8JryIyrnrWjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUUxYxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbgkYjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
+	0EwIxGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44l
+	c2xSY4AK6IIF6r4lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMx
+	vI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1l
+	cIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4
+	C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuY
+	vjxUQ5fHDUUUU
+
+These are the first two common patches in my series to introduce
+sparsemem support to RISC-V. The full series was posted last cycle
+here [1] and the latest version can be found here [2].
+
+As recommended by Palmer, I'd like to get the changes to common code
+merged and then I will pursue the cleanups in the individual arches (arm,
+arm64, and sh) as well as adding the new feature to riscv.
+
+I would suggest we merge these two patches through Andrew's mm tree.
+
+Thanks,
+
+Logan
+
+[1] https://lore.kernel.org/lkml/20181015175702.9036-1-logang@deltatee.com/T/#u
+[2] https://github.com/sbates130272/linux-p2pmem.git riscv-sparsemem-v3
+
+Logan Gunthorpe (2):
+  mm: Introduce common STRUCT_PAGE_MAX_SHIFT define
+  mm/sparse: add common helper to mark all memblocks present
+
+ arch/arm64/include/asm/memory.h |  9 ---------
+ arch/arm64/mm/init.c            |  8 --------
+ include/asm-generic/fixmap.h    |  1 +
+ include/linux/mm_types.h        |  5 +++++
+ include/linux/mmzone.h          |  6 ++++++
+ mm/sparse.c                     | 11 +++++++++++
+ 6 files changed, 23 insertions(+), 17 deletions(-)
+
+--
+2.19.0

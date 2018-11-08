@@ -1,0 +1,129 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:07 -0000
+Received: from icoremail.net (unknown [209.85.214.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH9KYbONblUxbAQ--.27556S3;
+	Thu, 08 Nov 2018 06:52:09 +0800 (CST)
+Received: from mail-pl1-f175.google.com (unknown [209.85.214.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3FECWbONbiqMZAA--.1852S3;
+	Thu, 08 Nov 2018 06:52:06 +0800 (CST)
+Received: by mail-pl1-f175.google.com with SMTP id p6-v6so8535248pll.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:52:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=Z891sWP1BUJBUF6J1MzJ/GgVhwTasMtwcpz4As7+NAI=;
+        b=p6FFZ4QJ6e9CBCv37CbHtuSWKx1mZYrRuU/bj7HrnUgWXMVk/msIWykh3CSqaNLUsa
+         a45g9vpGlA55cNMexkQMXV9fnipRPY4TOn+1UZYKfSQtcz/NGqpLz4ONsf8vu5YfMFc5
+         K71Knkz2biLeA/jeaMllXr4ciVLGU5QLd3EPeMgmp1kAG/g3iKca+oBxgYMQ2X+Mr7Rg
+         j77HLOlXwRSPR4RuCEKFOr3ivYSItrupQoxP1ONjd6QhXBaM3SpmSkx63eiwVtURKY1A
+         +/+f0yrzmpomw9z5tAOyEWcDUm3uFD32TzkgbwsvdxSwpMQN3g2KP3hUgRLs2ZPCzs0Z
+         xtOw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJLtM06GxfVDjFHdZ+eYBMgpAdFcNBX7QEgjd4XO7LbOpImD0i6
+	xZyn67xGj0GR6dt2qiKZuyOgTdJDphVfhrM4r0VgZg1NdUMOTWQKFQ==
+X-Received: by 2002:a17:902:bd4a:: with SMTP id b10-v6mr2113883plx.171.1541631126257;
+        Wed, 07 Nov 2018 14:52:06 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp95957pjt;
+        Wed, 7 Nov 2018 14:52:05 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f2+7GMQxaRvsIyExKQP5VqYp1uKQjfv0TOPjpvDuRRnJtEc7gSBXfvhx9I8SDI8dMYgCL/
+X-Received: by 2002:a62:6801:: with SMTP id d1-v6mr2163378pfc.7.1541631125568;
+        Wed, 07 Nov 2018 14:52:05 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541631125; cv=none;
+        d=google.com; s=arc-20160816;
+        b=l8QulXdKDnsF2/g85ZZ9ZZsy/n8WcRD26HfH6rHZCY1qJwTP3ysuN57LGDu7sju/D2
+         7meqgbe2rWeCDYcwk81/Pi/e5RY9Qj5nQ2Ezevmmu7LVKs55iZ/SgRS3ElxpDdYN72Tx
+         SR9xUTvbFzDPFNqWqGwQrbWEjqvDsgBMvgeGgucPAcUAQS0j81rStK0VM1yrEruRkUv1
+         jMmL5XR/ub313chvxpQKd0QkPdJKwpSi86d3ympTFkL9So4YHVK3Ni5HfzuQaHUmgsoq
+         NHWFFYPASy+RCBfi8dHFLhjub/p0uRqrFh2rM2NwYTpWdnQDJtAEC5/3YbEpKDxyFVS2
+         vi/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :organization:references:in-reply-to:message-id:subject:cc:to:from
+         :date;
+        bh=Z891sWP1BUJBUF6J1MzJ/GgVhwTasMtwcpz4As7+NAI=;
+        b=COGk6imKfD7I5mZVioCYFtXe5JSiDH4Klb/gdXPzzukPZsjv6ESsR1vb7tmHTnMe7p
+         E8zICzLDqSuSg323R+TJ8P6JgXdi0UatBHFiPNLp4ciXtroVcLZbU1uM5bcViwhy9On0
+         Mm2vmO5GaVBsQ7aMBzuyPY6hrVHqOQNQbWIsx6IlwKIiBcrXXeidS5nrhGKvh53vTbLw
+         DYjXOmlBcSoqGWu04n0sFbjgKPD1yy2Uwe4dlU3yze5gA74/ARWMW6iryrf9b59LydKK
+         Z1k379LQ3N/YEPuwr8Lf0LmLuphvuu6/GFOrgNXs3shKA7R586P38gg7+81BpoDhSB7G
+         cgKg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id r4-v6si2129044pfb.43.2018.11.07.14.51.50;
+        Wed, 07 Nov 2018 14:52:05 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727744AbeKHIYM (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:24:12 -0500
+Received: from ms.lwn.net ([45.79.88.28]:45958 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726896AbeKHIYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:24:12 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 2ECF0537;
+        Wed,  7 Nov 2018 22:51:40 +0000 (UTC)
+Date: Wed, 7 Nov 2018 15:51:39 -0700
+From: Jonathan Corbet <corbet@lwn.net>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH resend] Documentation/dev-tools: clean up kselftest.rst
+Message-ID: <20181107155139.52fcbf35@lwn.net>
+In-Reply-To: <67201746-13c6-2b05-7f3d-2b200e4d9af0@infradead.org>
+References: <67201746-13c6-2b05-7f3d-2b200e4d9af0@infradead.org>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3FECWbONbiqMZAA--.1852S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUO17k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IY64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY
+	4VCF77xAMxkIecxEwVCI4VW3MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxV
+	W8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8
+	Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42
+	xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2Iq
+	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+	126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2Kfnx
+	nUUI43ZEXa7IU5fDG5UUUUU==
+
+On Sun, 4 Nov 2018 14:06:23 -0800
+Randy Dunlap <rdunlap@infradead.org> wrote:
+
+> This is a small cleanup to kselftest.rst:
+> 
+> - Fix some language typos in the usage instructions.
+> - Change one non-ASCII space to an ASCII space.
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-kselftest@vger.kernel.org
+> Cc: linux-doc@vger.kernel.org
+
+Applied, thanks.
+
+jon

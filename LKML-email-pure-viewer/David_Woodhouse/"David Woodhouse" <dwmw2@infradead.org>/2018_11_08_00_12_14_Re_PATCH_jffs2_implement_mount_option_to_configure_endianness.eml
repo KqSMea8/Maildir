@@ -1,0 +1,144 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:46 -0000
+Received: from icoremail.net (unknown [209.85.210.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX_sFD+NbZhRZAQ--.26808S3;
+	Thu, 08 Nov 2018 00:12:54 +0800 (CST)
+Received: from mail-pf1-f175.google.com (unknown [209.85.210.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwD33UkAD+NbbkAYAA--.62S3;
+	Thu, 08 Nov 2018 00:12:48 +0800 (CST)
+Received: by mail-pf1-f175.google.com with SMTP id n11-v6so7891499pfb.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:12:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:message-id
+         :in-reply-to:references:date:subject:from:to:cc:user-agent
+         :mime-version:content-transfer-encoding:importance:sender:precedence
+         :list-id;
+        bh=+gSgxp/jjGVdroAmX8r6L3OWD2gV13WJGTrp3WbPx/w=;
+        b=BF/FzMTkepZ25doSAO0Uw+C7+7PIOUGuG21fRh4r8jOo7YmIMWQAjpA5Q6R092yUNH
+         f83d7EwLa/0x8oVlSJlJHOaDEZGP0A4g5qll41PKGWIjI6+ErFmDtde1um6NdRUb7vgU
+         2IYdwQwBw11PmV/UDAkiqofvnZfL0sYtqacDNkuLjjB8xWyuyIOxXWFiL3huuQkdqX6A
+         lKUqEr42dvNyYg5doQPjM1J6OCRBGNoQ+u+/VQNJ3+RMLRM8wHRdlKC+/PSG2DICGVTx
+         jilQTOYERXvUQqc0+Mn6OLFGY9KZNOVaEZVPFHQycK5gWfGZ8946PF7dhnuR7DLA4UKT
+         5pBQ==
+X-Gm-Message-State: AGRZ1gI5lRMqXmwSxm4bcyCBSl4wEFafX4lK51r6+VMxjGPeLgsqFQ3l
+	qzrEV19EwIF3VmdEM7NlAP+NWJs/wRwMyduDU8l6ogk2xuAHVxlKxQ==
+X-Received: by 2002:a63:9402:: with SMTP id m2mr663306pge.93.1541607168535;
+        Wed, 07 Nov 2018 08:12:48 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5433292pjt;
+        Wed, 7 Nov 2018 08:12:47 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f4WtwUhkXzAM3PLFMoElXhmdobAwfxwv9vHWzyH/fyslM0+WSwy8E3CDcoenWH29gLyfkS
+X-Received: by 2002:a62:4e01:: with SMTP id c1-v6mr784460pfb.141.1541607167876;
+        Wed, 07 Nov 2018 08:12:47 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541607167; cv=none;
+        d=google.com; s=arc-20160816;
+        b=BsSVI/w9rPomZ00SQROv0ISyN1/2gg87whqhV2SqB+b+R5OmbD73zQs3CbGguyFnQW
+         9YRrww2Yzls3KYap4cS0qelyVWiHiyj/iVjLmr3GTKPGfeLjjmr15SQAaFyGlBsMsHKu
+         iYlJA6Y23VFB47OS0JrCf7+tTzNfITZC049fYcP1x+yLHpsfMSDzX7u0Sx5HbpNwvYR2
+         tbSg2/BMgu0kATeXbSg4sGeqDUjwdNaVfWjcnGtu4M/VaolsmELgy7dpGtZs5P/pEN3w
+         XNf07bMt5kZzZTrh/U5h8Y7ThV5AzV/dFfPMcNlR+OgNiD3jpDSyjz60WXoFDVQXVLjN
+         s8vw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:importance:content-transfer-encoding
+         :mime-version:user-agent:cc:to:from:subject:date:references
+         :in-reply-to:message-id:dkim-signature;
+        bh=+gSgxp/jjGVdroAmX8r6L3OWD2gV13WJGTrp3WbPx/w=;
+        b=G3D7s3vlTJODYTQS1CACZ3zWl+8vnGQUWT2QH2XPX2BoDNllCM+EfkXwFUd9Py19hX
+         sfgXtj/lKbGyAy9IKCYqhs3P4y+NDOlEWVeUv6rnPgRQ64t9hEOX8RN5xa6qIcnouGBM
+         OyV0SutmSxoRRRZe/jt625gA4ZlcEBGAAUXsAQHh6PnD1JYFNspwrp7wPOqv3h/dPyDf
+         ABh8e63z8aKcu/wmDuWzNuvl6wV04s7e+jwhyTA0qY/926OXPl6b24YnN3ACg18eKztc
+         8cexBn5hAJeFQ8PKnYrcSXi7M1TY8cgAYJCJuZesq5tbhVWYPa//dMrGveVfRCqycgOy
+         NBHw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@infradead.org header.s=twosheds.20170209 header.b=syMXAEnA;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id y16-v6si792667pgk.479.2018.11.07.08.12.31;
+        Wed, 07 Nov 2018 08:12:47 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731349AbeKHBnW (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:43:22 -0500
+Received: from twosheds.infradead.org ([90.155.92.209]:53968 "EHLO
+        twosheds.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbeKHBnV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:43:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=twosheds.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Cc:To:From:Subject:Date:References:In-Reply-To:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+gSgxp/jjGVdroAmX8r6L3OWD2gV13WJGTrp3WbPx/w=; b=syMXAEnALL3PQtA+zOs/PPf73
+        Fiar523bjH4t2/0Fdgh9dXyq0xCQ/WGMPyUOTGV/ycDG0vUo9yFDagq1plzk2+qOXBU3W3X/8n02n
+        TJGxIe/UXEXP3prj53Kq4S5MirvdGaNIjzmCfpjrKhAd4vXn8+c5NQHZeadlrtN5K9qq1NbwMV30n
+        KbIs/rmwcnoa8GKFKNlLQw8F3k6lfGHKnbf70CV/QiX7gq5hi+1213WHudsUROxDd3rLnsClD+EsA
+        XZ7pbTEGzhEd3Yt6+hDYwRyQaOZMzXIew98c9A7lHg5YZu2FEwr5HXH0qxZcmu58a8Ano9DGPao39
+        Nv3FoM6JA==;
+Received: from localhost ([127.0.0.1] helo=twosheds.infradead.org)
+        by twosheds.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1gKQRC-00AZqQ-DV; Wed, 07 Nov 2018 16:12:14 +0000
+Received: from 213.205.242.122
+        (SquirrelMail authenticated user dwmw2)
+        by twosheds.infradead.org with HTTP;
+        Wed, 7 Nov 2018 16:12:14 -0000
+Message-ID: <8b08e8b992093453bb2b9caff8cff08c.squirrel@twosheds.infradead.org>
+In-Reply-To: <1e4c066d1896e2a0b8b146253d34d05cc4f9ab36.camel@infinera.com>
+References: <20181106214928.40020-1-nkela@cisco.com>
+    <921b0f78cf67d7307a0555e1fd6f2c2976310adc.camel@infradead.org>
+    <1e4c066d1896e2a0b8b146253d34d05cc4f9ab36.camel@infinera.com>
+Date: Wed, 7 Nov 2018 16:12:14 -0000
+Subject: Re: [PATCH] jffs2: implement mount option to configure endianness
+From: "David Woodhouse" <dwmw2@infradead.org>
+To: "Joakim Tjernlund" <Joakim.Tjernlund@infinera.com>
+Cc: "nkela@cisco.com" <nkela@cisco.com>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "xe-linux-external@cisco.com" <xe-linux-external@cisco.com>
+User-Agent: SquirrelMail/1.4.22-21.fc27
+MIME-Version: 1.0
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-Priority: 3 (Normal)
+Importance: Normal
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by twosheds.infradead.org. See http://www.infradead.org/rpr.html
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwD33UkAD+NbbkAYAA--.62S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUYC7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8JV
+	W8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6r1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4j6F4UMxvI42IY
+	6I8E87Iv6xkF7I0E14v26r4j6r4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07b8T5dU
+	UUUU=
+
+
+> Yes, this may slow things down. I am not sure I agree with the impl.
+> either.
+> Could one not make cpu_to_je_X/jeX_to_cpu a function ptr which is set to
+> a func. with the correct endian?
+
+On x86 retpoline would make that quite slow.
+
+-- 
+dwmw2

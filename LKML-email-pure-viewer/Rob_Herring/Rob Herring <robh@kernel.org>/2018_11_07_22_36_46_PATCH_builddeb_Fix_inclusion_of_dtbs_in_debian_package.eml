@@ -1,0 +1,156 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:10 -0000
+Received: from icoremail.net (unknown [209.85.215.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_6fZ+eJb1ZRYAQ--.26639S3;
+	Wed, 07 Nov 2018 22:42:37 +0800 (CST)
+Received: from mail-pg1-f169.google.com (unknown [209.85.215.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH7Eem+OJbGtwXAA--.13353S3;
+	Wed, 07 Nov 2018 22:37:27 +0800 (CST)
+Received: by mail-pg1-f169.google.com with SMTP id z10so5522528pgp.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:37:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=VouxqWOT6eWXICQeIhzscdfQgU1z4wiPv+oBxIzj5Dw=;
+        b=C/37oyr9inzQaOgmLXBNzR+ItsjmxfJeFuehmJ1GHlVEgR0A/riJavYmco7Bji+G86
+         GW9WVn6HKe0We3sAnTsuGyefCvLFfYFCDiDGFbiMYY072GnQhlyDAw4RpTLWZm8rED/3
+         lh6AR3DH3VTgrFZVhhUipcBe37fDK7UywFfWZdKFz40Pi0zMMptEetbBhG0cfJeqc95t
+         eoaiYGs/mL9WZvkF01xPwGAe/1KToVQO1lbEhjyFA/DlyPQt1kDXm9ECplHs/Ns8jdO7
+         er+b3Zj9t9K7dPiJV8MO7wNbbMUR3bwKqiUf3Qci5Pgg1PgyTOUObcY1jJEVMFFzNgMq
+         C/CQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+X-Gm-Message-State: AGRZ1gIrhb8eCI0d04lrbRk+4PamoFvBn0XEM71wTGElOEos1qCqtySE
+	lxQkT37jy5WFwkvlyW7pWlYQtU9mDWPXxFv2lNcefJ5Ugs/vrIAYxQ==
+X-Received: by 2002:a65:66ce:: with SMTP id c14mr388265pgw.450.1541601446726;
+        Wed, 07 Nov 2018 06:37:26 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5324402pjt;
+        Wed, 7 Nov 2018 06:37:26 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fOimwVky35DRo1cg6bDYlgFHwNTFpe7gWa4Kwi4qKALBmZUZfiObLpPRjUkHk+YVymZGZw
+X-Received: by 2002:a63:1a4b:: with SMTP id a11mr407042pgm.254.1541601446025;
+        Wed, 07 Nov 2018 06:37:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541601445; cv=none;
+        d=google.com; s=arc-20160816;
+        b=NYmlaMBpgsGGuk+6VzFWjB1rTeQcY2oiFSVR5jtNUWmitbxocbVi3bUtHRU3XvmdCa
+         ee2tffQKB71hjpuoh184Y9wbZDyrqAy7pjmWzsB7rJ2rY5S87c8NDx/1B1SrrzFwz0dJ
+         oSI2KMaOp4gRHqFqjWMoSrBYettbNQ4CA4MMbw3hMjx8G6VXfMBeCXvCIFS2Jjkf5Pda
+         TWOehhuDyyALVhHo2Oz+2XnoCVfZK1y5jbvtMNIKEPbssznGyA+I3Q2tCsL2LO6Ex1h/
+         xsSAvKBW0R726WoEt0BGrM87f6/V6vswftgzHzhM6RMb0KMoF10sfy3RfHQL0qVvVs4D
+         5mLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :message-id:date:subject:cc:to:from;
+        bh=VouxqWOT6eWXICQeIhzscdfQgU1z4wiPv+oBxIzj5Dw=;
+        b=LXBvoigRgSEOBcRdDhNwutCV4p9tnKv1sWr8KcPm/wG8/j2v4qNpT2gvqGPKBOKYb1
+         lOAzpegStPywiEnE4sfHj83yCceWIZiBCmQdjlwEb2DyWvxIwdgFfNjWg/LwGI10gvBC
+         vrexT2UganX6mteq18nIrI3okfOLYPAJem89TE0tjB2NePqUp7vPuVZ0viSVe5/es0Wr
+         QTOzbfWN9QxMxns/7TawBmnPocrXMvU0ZuOy4WzsxztqIRKvGJdi99CNA6m2IqBwFuCA
+         feRNTDW4wc6trDJujJaluZVa/H8+XpQ5FAFSaoBqhYMdJom3Zm30kMfXhgooC9aNF7Yy
+         NoIQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id o1-v6si821612plk.304.2018.11.07.06.36.53;
+        Wed, 07 Nov 2018 06:37:25 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727372AbeKHAH1 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:07:27 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35612 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbeKHAH1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:07:27 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 81so14954381otj.2;
+        Wed, 07 Nov 2018 06:36:49 -0800 (PST)
+X-Received: by 2002:a9d:26ec:: with SMTP id i41mr264773otd.29.1541601408740;
+        Wed, 07 Nov 2018 06:36:48 -0800 (PST)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id x92sm278265ota.55.2018.11.07.06.36.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 06:36:47 -0800 (PST)
+From: Rob Herring <robh@kernel.org>
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org,
+        =?UTF-8?q?Nuno=20Gon=C3=A7alves?= <nunojpg@gmail.com>
+Subject: [PATCH] builddeb: Fix inclusion of dtbs in debian package
+Date: Wed,  7 Nov 2018 08:36:46 -0600
+Message-Id: <20181107143646.27675-1-robh@kernel.org>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH7Eem+OJbGtwXAA--.13353S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7CF1xWryUXryDWr13JF4DXFb_yoW8AFyUp3
+	s7Aw45Gws3KryrA34xCa97uF98Kr4kCry0gwn3X34jyFySgw4xt3429w45WF1xGw4xJa10
+	9F4fZw45ArWUC3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP2b7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW5XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IU53w
+	I3UUUUU==
+
+Commit 37c8a5fafa3b ("kbuild: consolidate Devicetree dtb build rules")
+moved the location of 'dtbs_install' target which caused dtbs to not be
+installed when building debian package with 'bindeb-pkg' target. Update
+the builddeb script to use the same logic that determines if there's a
+'dtbs_install' target which is presence of the arch dts directory. Also,
+use CONFIG_OF_EARLY_FLATTREE instead of CONFIG_OF as that's a better
+indication of whether we are building dtbs.
+
+This commit will also have the side effect of installing dtbs on any
+arch that has dts files. Previously, it was dependent on whether the
+arch defined 'dtbs_install'.
+
+Fixes: 37c8a5fafa3b ("kbuild: consolidate Devicetree dtb build rules")
+Reported-by: Nuno Gonçalves <nunojpg@gmail.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Michal Marek <michal.lkml@markovi.net>
+Cc: linux-kbuild@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ scripts/package/builddeb | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/package/builddeb b/scripts/package/builddeb
+index 90c9a8ac7adb..594b626d83d6 100755
+--- a/scripts/package/builddeb
++++ b/scripts/package/builddeb
+@@ -83,9 +83,9 @@ else
+ fi
+ cp "$($MAKE -s image_name)" "$tmpdir/$installed_image_path"
+ 
+-if grep -q "^CONFIG_OF=y" $KCONFIG_CONFIG ; then
++if grep -q "^CONFIG_OF_EARLY_FLATTREE=y" $KCONFIG_CONFIG ; then
+ 	# Only some architectures with OF support have this target
+-	if grep -q dtbs_install "${srctree}/arch/$SRCARCH/Makefile"; then
++	if [ -d "${srctree}/arch/$SRCARCH/boot/dts" ]; then
+ 		$MAKE KBUILD_SRC= INSTALL_DTBS_PATH="$tmpdir/usr/lib/$packagename" dtbs_install
+ 	fi
+ fi
+-- 
+2.19.1

@@ -1,0 +1,163 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:20 -0000
+Received: from icoremail.net (unknown [209.85.210.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH0K3SuNb+YFaAQ--.27152S3;
+	Thu, 08 Nov 2018 04:27:36 +0800 (CST)
+Received: from mail-pf1-f182.google.com (unknown [209.85.210.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHb0u1SuNbjC8ZAA--.1706S3;
+	Thu, 08 Nov 2018 04:27:33 +0800 (CST)
+Received: by mail-pf1-f182.google.com with SMTP id v9-v6so5890583pff.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:27:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:mime-version:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=oqwrTTqvGsUpLX2SWvD7XWIT2tTdoRIiwxsCG3LUJnc=;
+        b=lH4XEeW0cfaZTRLrmz+jOS3EH15ZJrPjW3Zzc/0fRG4mP2COIsXHshqShEHnc7LO6f
+         Zb4Y6bAb4oZDfkR03owxl4E6g6GrY2xMgWH2FQet5Io8PDAo76dw4hIUnYCZ9FbGOUPa
+         KbQ08iDKNSr3eNu0deWwTHmjy6a7AUpKFI67APMQaoo9cmpPcy1rcotxx09ESP2roSK+
+         oiw9GAdiWxKZ0OiH0nu2A0kFiNzeP4JNtwxhjSreaKVZLotImwDLWpogEY6VznXJSLb2
+         BSFNliuCjP+VZbwT04O0bQPDha05kdxe35bFYj94oKKt9vDw5Q5O/sWJESjwJjk7rj6G
+         fU6g==
+X-Gm-Message-State: AGRZ1gIFbdhM4bhZ8FmSB8Ba2xRzp0wLoTI2YAmEVBVPsQzXJBijo7RV
+	0w4UD5i3wYRRDvu5j42IrN4gBRpbgKQH23fB3KXpIIoJFxZo+BonkA==
+X-Received: by 2002:a63:4044:: with SMTP id n65mr1449255pga.90.1541622453576;
+        Wed, 07 Nov 2018 12:27:33 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5707758pjt;
+        Wed, 7 Nov 2018 12:27:32 -0800 (PST)
+X-Google-Smtp-Source: AJdET5elm5RO+eUDD93gqcND/J3X4QuVGyantN84U1TuvlkorSOw5a04NzjqDd1mMXE5QiDvGZ4M
+X-Received: by 2002:a17:902:a587:: with SMTP id az7-v6mr1770326plb.151.1541622452890;
+        Wed, 07 Nov 2018 12:27:32 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541622452; cv=none;
+        d=google.com; s=arc-20160816;
+        b=LCVT9qD69+1NLsanGlUP+yhgIl4vfQ7sCwwW+UwlAk2bXmoc7p6X+BJF76lCvQDdGa
+         gNlxmX4vmE3TffUhZMen3jTwdzBjRwq/xJB/fx9gE/fMOcwZHhRMrRtvNc1TLmbFFNv0
+         PhplPEf7ZARdyV6oJzTEZLPo6XMST1Cw/bThqfgNY2OeIatyODt0aFxhtzOwYFX0Mfho
+         i9i1I3FeEjb7RFLVYksGQoa0IoTcD6Iw8fu8RbyH5dxlbkBLyqGYnp1j9GLr4U6xkL3u
+         gycGdOyl5dKQrFVNHAV2drFVccwkIJRcMo2yKk+a7ZiVt8EZIjUrEkCWOe8DE6Y0HYDf
+         RZnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :message-id:date:subject:cc:to:from:dkim-signature;
+        bh=oqwrTTqvGsUpLX2SWvD7XWIT2tTdoRIiwxsCG3LUJnc=;
+        b=kov6al6iMY56/VCPxO9YxEL+vEyc1EDuedkcr68ELrXnKExvjAS2Xqftb8PC0olY9D
+         Hg4OTFcc5dDcIa3DRUwfL3u5ARkZv1UJBsdrLWTBIhoGndIY+mbbaTfYsju7NrYtzYsR
+         wc0PL5P7m5APGpoz6dTb9jfevnAB9HKHknx2DtmW51fpWt19VldOnZvlyWgXEvTAu/+w
+         I2E2au3kyjOv+fzLqc98lsXE/hWI5wJzGwxXkisqMoxRNjl977ikLowz84CSAukRz5Ga
+         1ATyyJdkSU3a36YnCYaNpOXUFkTszaqxnxBgOXxOHVrN1L6Ij8fuJz0YvTjy9EBgx3On
+         hjWA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@gmail.com header.s=20161025 header.b=Qxtj3hc2;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 91-v6si1654600plc.409.2018.11.07.12.27.01;
+        Wed, 07 Nov 2018 12:27:32 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727078AbeKHF6q (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:58:46 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42164 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbeKHF6q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:58:46 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y15-v6so18806068wru.9
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 12:26:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oqwrTTqvGsUpLX2SWvD7XWIT2tTdoRIiwxsCG3LUJnc=;
+        b=Qxtj3hc2m3rjDLj86DqFS0SG3/MQwRYZHk2fnZavQnjY7kRIgoVdcmHkInbTaYzn62
+         n6tyvBShSyfofdBwcMWxGhCyKAUTzUH9gdMArubI8XsK8afN/hH8gf3hTEs9HmBPDZ1O
+         14hvQEKJA+ZnP5VRYUQSyXOzYFjbOYyU5CKcbN/JdFt+oGnAIBSZcWxk7ffsmyztu8EX
+         WWUQcfX6okOqya632GNpUA2PSWvGu8w8ZXsCnBnDQypZMEnKiCHwcVvyY6eywwdqdQl8
+         wzD6FxqKl6+6/Zclmj6jgHu02YlsZQ/ycL3iBr482As5ZZfz9m5HdG45GbGfih5P3LIR
+         g5uA==
+X-Received: by 2002:adf:d1c6:: with SMTP id m6-v6mr1575709wri.138.1541622405551;
+        Wed, 07 Nov 2018 12:26:45 -0800 (PST)
+Received: from macbookpro.malat.net (bru31-1-78-225-224-134.fbx.proxad.net. [78.225.224.134])
+        by smtp.gmail.com with ESMTPSA id f67-v6sm1892405wme.22.2018.11.07.12.26.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 12:26:44 -0800 (PST)
+Received: by macbookpro.malat.net (Postfix, from userid 1000)
+        id 129C61142B69; Wed,  7 Nov 2018 21:26:43 +0100 (CET)
+From: Mathieu Malaterre <malat@debian.org>
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Mathieu Malaterre <malat@debian.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc: Mark variable `cpumsr` as unused
+Date: Wed,  7 Nov 2018 21:26:41 +0100
+Message-Id: <20181107202641.7865-1-malat@debian.org>
+X-Mailer: git-send-email 2.11.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHb0u1SuNbjC8ZAA--.1706S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7XFykGw4UtrWDGFyrJFy8uFg_yoWkGFX_uw
+	12q398GrsYgrsF9F1DCw43Xw4DCw12qFsa93Wqvay3tF1Yy3W3JFW3Jas8Crn8GrZ2kFZI
+	ga48GrnIga1IyjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbSxYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkIecxEwVCI4VW7MxkI7II2jI8v
+	z4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804x
+	Wl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8V
+	AvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUDxnYUUUUU
+
+Add gcc attribute unused for `cpumsr` variable.
+
+Fix warnings treated as errors with W=1:
+
+  arch/powerpc/kernel/process.c:231:16: error: variable ‘cpumsr’ set but not used [-Werror=unused-but-set-variable]
+  arch/powerpc/kernel/process.c:296:16: error: variable ‘cpumsr’ set but not used [-Werror=unused-but-set-variable]
+
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+---
+ arch/powerpc/kernel/process.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index 96f34730010f..b9f1a2408738 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -228,7 +228,7 @@ EXPORT_SYMBOL_GPL(flush_fp_to_thread);
+ 
+ void enable_kernel_fp(void)
+ {
+-	unsigned long cpumsr;
++	unsigned long cpumsr __maybe_unused;
+ 
+ 	WARN_ON(preemptible());
+ 
+@@ -293,7 +293,7 @@ EXPORT_SYMBOL(giveup_altivec);
+ 
+ void enable_kernel_altivec(void)
+ {
+-	unsigned long cpumsr;
++	unsigned long cpumsr __maybe_unused;
+ 
+ 	WARN_ON(preemptible());
+ 
+-- 
+2.11.0

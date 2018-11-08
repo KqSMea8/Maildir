@@ -1,0 +1,162 @@
+Return-Path: <kvm-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:06 -0000
+Received: from icoremail.net (unknown [209.85.210.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3ySuauNb9kFbAQ--.27757S3;
+	Thu, 08 Nov 2018 06:43:59 +0800 (CST)
+Received: from mail-pf1-f182.google.com (unknown [209.85.210.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwD32UWpauNb8J4ZAA--.1749S3;
+	Thu, 08 Nov 2018 06:43:53 +0800 (CST)
+Received: by mail-pf1-f182.google.com with SMTP id u13-v6so8344461pfm.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:43:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:sender:precedence:list-id;
+        bh=J116xUkFOxhKimS8bhmRyQlbR415c85ySbnJkvGvWQ8=;
+        b=fHNW8yb+1y11qYFz2ZRywJYYBE/CRFGTQD6vetfh9bZMKgkKcHqpeC0UErGEvqQ8Pp
+         CXRqnJIpL2MmGn0lOypt387KhU3f627+twXPMSTCSkonXRmMRbVhVRIOeX0UK8JujtEl
+         iU/qvjy/hhcTfPghCJWxx5JiuY+oKsdmcSpGY0h0IQbIS+2JrY9QoY1Dlv8dAmjHk4ld
+         xsamXr3732WWSydz7Fnoq/XGzroGbuTN6P/6Ukc0iZzQA1q2UMrKy6Ubdeqcjvr6hWUt
+         dMFa+NLvGXcvh8COashzbI+YpbDEkrPUl8ujQyrqtLwuRweU6UabkJjXDVgMMwA8i13b
+         1hkQ==
+X-Gm-Message-State: AGRZ1gKiBG4MCsy1C6a4mJ4uc1hyN3Zz2GF71lnPbd1eFbv+r6jJ7kzR
+	S/LRqiYLslHtLsqimbg89/zrzKyTi7KBU4tf3ApPuyHlsrqfpKvesQ==
+X-Received: by 2002:a63:1d10:: with SMTP id d16-v6mr1776307pgd.228.1541630633257;
+        Wed, 07 Nov 2018 14:43:53 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp89665pjt;
+        Wed, 7 Nov 2018 14:43:52 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fXlNkTQZnia8pdr9nwLAFXKNekoK0M//tQyay7fRJa1SmcuekhdZePlTdECQaHE6BZ7Pr3
+X-Received: by 2002:a63:ae4d:: with SMTP id e13-v6mr1822313pgp.315.1541630632541;
+        Wed, 07 Nov 2018 14:43:52 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541630632; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ypTEUkiFB6cPdYQimPmLcxDIOBc2OUJ2SqidAPh+SkMyWQVE6Lagn5Fgbpu26pSDxn
+         7cg1fxJcr1GoA9CRNaPBLcU6j2ZaMi+bMps3ENvc6rA0A+FCiF07Co83xBa1NUKdS/8x
+         8wpaCbvmOIv2q1i6plOzwoHQ9uJjZRcAqriloKh37flVtcfzSuVv2cU2XOWmxlyB6gZx
+         P1JTp+nqe5NJqZou8GBoEgIR+uQ8D0PnvVim7VyeISNO1iOX96lsbnm6UVeKNJEBhqGI
+         0taVILiNqJ4AuZkupLBdCdoexbC8Dc0SlJWeDb8NftUwuOFkFEU7J851P5pX5gfoK92y
+         /kNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:date:subject:cc:to:from
+         :dkim-signature;
+        bh=J116xUkFOxhKimS8bhmRyQlbR415c85ySbnJkvGvWQ8=;
+        b=A8RYT0C7Me+bu2y+vaJ9RlqXEDbyJehnYmiu+igYIOr31nzTp/oJ9NPCYoRKxeiCrD
+         Ser0gZQdDEh6EFtWM3nDaVLSorxbpPl08Kw/N6iPjStpmJ1t5N7ksPmlFQ9QvvmJsTJK
+         xRz2i9MMnffUPUwW28iE8G1fl6cZt9A1UphmXBiQ+xucHpMTXsNEgYivAyHYlzKk4gCb
+         VAVXX5YyIo5ZAODHKw3uUYsr2+dpkRHcEG5JeiGRyn5asTzD8z2rgkN0iplwcufO9Dzu
+         fR1HZkjL20XVR/18LjD5yqjB1fVTY7t244jKbm4mlB/e86DXgzbteQLD8E0n1uDe0fdU
+         EW6g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@oracle.com header.s=corp-2018-07-02 header.b=4cbu+auS;
+       spf=pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=kvm-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=oracle.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id j189si1778169pgd.185.2018.11.07.14.43.38;
+        Wed, 07 Nov 2018 14:43:52 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727391AbeKHIP7 (ORCPT <rfc822;fanshuming2011@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:15:59 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:41016 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbeKHIP7 (ORCPT <rfc822;kvm@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:15:59 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.22/8.16.0.22) with SMTP id wA7MYGUW128349;
+        Wed, 7 Nov 2018 22:43:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=J116xUkFOxhKimS8bhmRyQlbR415c85ySbnJkvGvWQ8=;
+ b=4cbu+auS5sG1htJD+Y2xsAjVKL0u78LcL4D8Wyro+zZDgWZ/SyuqTPp513qdTEnedeDL
+ vpQ6tzL3CGuZWZgZ3KvyBFlA6M1EI2ODLDQi02b9BrabutESdhwap4gXK3YzsgZfP5Me
+ ZyL7b7YZVVRao9UsQ1/Spa55d9jMRuBocrhVx0bQd6eOTo2zQtEp8eBi0eIEpFIK8xz/
+ jvls1DJqE/1LtuB79P74yxgTpJti5UhLXKTGcNp/Bahodo82R4HEGXFyn9Vf60HNWql7
+ +h3PwiiVLbs777O3CrIfyo8Yge5TjzUHN2xpzCJZfBl4s706jM3ErG1RsHjmjqVRL1yt 9A== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by userp2130.oracle.com with ESMTP id 2nh33u6d1b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 07 Nov 2018 22:43:27 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id wA7MhQZo002929
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 7 Nov 2018 22:43:27 GMT
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id wA7MhQfb011949;
+        Wed, 7 Nov 2018 22:43:26 GMT
+Received: from spark.ravello.local (/213.57.127.2)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 07 Nov 2018 14:43:26 -0800
+From: Liran Alon <liran.alon@oracle.com>
+To: pbonzini@redhat.com, rkrcmar@redhat.com, kvm@vger.kernel.org
+Cc: idan.brown@oracle.com, Liran Alon <liran.alon@oracle.com>
+Subject: [PATCH] KVM: x86: Fix kernel info-leak in KVM_HC_CLOCK_PAIRING hypercall
+Date: Thu,  8 Nov 2018 00:43:06 +0200
+Message-Id: <20181107224306.87011-1-liran.alon@oracle.com>
+X-Mailer: git-send-email 2.16.1
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9070 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=708
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1807170000 definitions=main-1811070200
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <kvm.vger.kernel.org>
+X-Mailing-List: kvm@vger.kernel.org
+X-CM-TRANSID: AQAAfwD32UWpauNb8J4ZAA--.1749S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWrZFy3CF4kCrWxWr1DuFykXwb_yoW8Jry5pF
+	WakFn7G3y5t348G3WqyanaqrsrXasxK347tr43Cw1qy3yaqFn7GF1xKa9xZryFvw1vyanx
+	Zr98Ww4UJF1DZa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBYb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY02Avz4vEIxC_ZwCY0x0Ix7I2Y4AK
+	64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8
+	Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4
+	v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IUOVq2tUUUUU==
+
+kvm_pv_clock_pairing() allocates local var
+"struct kvm_clock_pairing clock_pairing" on stack and initializes
+all it's fields besides padding (clock_pairing.pad[]).
+
+Because clock_pairing var is written completely (including padding)
+to guest memory, failure to init struct padding results in kernel
+info-leak.
+
+Fix the issue by making sure to also init the padding with zeroes.
+
+Fixes: 55dd00a73a51 ("KVM: x86: add KVM_HC_CLOCK_PAIRING hypercall")
+
+Reported-by: syzbot+a8ef68d71211ba264f56@syzkaller.appspotmail.com
+Reviewed-by: Mark Kanda <mark.kanda@oracle.com>
+Signed-off-by: Liran Alon <liran.alon@oracle.com>
+---
+ arch/x86/kvm/x86.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 6095c8431b11..9db4fb6a372c 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -7034,6 +7034,7 @@ static int kvm_pv_clock_pairing(struct kvm_vcpu *vcpu, gpa_t paddr,
+ 	clock_pairing.nsec = ts.tv_nsec;
+ 	clock_pairing.tsc = kvm_read_l1_tsc(vcpu, cycle);
+ 	clock_pairing.flags = 0;
++	memset(&clock_pairing.pad, 0, sizeof(clock_pairing.pad));
+ 
+ 	ret = 0;
+ 	if (kvm_write_guest(vcpu->kvm, paddr, &clock_pairing,
+-- 
+2.16.1

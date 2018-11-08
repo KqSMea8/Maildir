@@ -1,0 +1,238 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:11 -0000
+Received: from icoremail.net (unknown [209.85.215.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHHyYLHeNbQG1ZAQ--.27131S3;
+	Thu, 08 Nov 2018 01:12:45 +0800 (CST)
+Received: from mail-pg1-f177.google.com (unknown [209.85.215.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3mUUIHeNb_3sYAA--.495S3;
+	Thu, 08 Nov 2018 01:12:40 +0800 (CST)
+Received: by mail-pg1-f177.google.com with SMTP id z17-v6so7586457pgv.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:12:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-filter:dkim-signature:from:to
+         :cc:subject:date:message-id:in-reply-to:cms-type:references:sender
+         :precedence:list-id;
+        bh=BF9hoi/P6lu2L1mT8SlOWIzqeTeONOgqLJnUK9e/KhI=;
+        b=c7nbF7/PO4OFbKfzxPYV03zL0sp8SwwBVCum0BhzaTnzD6XfULI7b5mfG4ZJq7E5Sh
+         dzg1pxtt/ntc1FF0/3UFkERWD0Whucz+pDCcALIgp2wXuIA1x7MeeuiPYyEM+mB80pZb
+         1o8/RiAiCaT37j+59N+ooI3OK/3M20PT2F2H86kIOMmSK7ITU7A5o372x+tkJGlpSdMT
+         IrR2feBYy1vBZZ82m8tlfXttAsZ9FaJGISi325jDFrWmhpoc95F1Eclux3Cui1Fti40/
+         hnaeaRupMgqPbqJIo0Q/mlltNsAALtEfD9NGOuO0wxqKwNGjCXy8cccfh1B8DolaBOSB
+         eHXw==
+X-Gm-Message-State: AGRZ1gKfnGDTmQ25LUiovVGyI4XyyRxpqCC4R0IfpJZ2gvRsWJO92rTj
+	jRzajYgOa8Hx1iieoUrMs9dSFi6EgXpNnD8u4o5FFTIkbN5yyln2hQ==
+X-Received: by 2002:a62:c20b:: with SMTP id l11-v6mr1022586pfg.251.1541610759975;
+        Wed, 07 Nov 2018 09:12:39 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5499927pjt;
+        Wed, 7 Nov 2018 09:12:38 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dVKDtzqFdy8fWgIlFCtAh+2gwsNmTnBfiJogU3v2kOVt7OYDou8q3Xy0HhW7T7WuQp2+e9
+X-Received: by 2002:a63:e655:: with SMTP id p21mr881437pgj.70.1541610758905;
+        Wed, 07 Nov 2018 09:12:38 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610758; cv=none;
+        d=google.com; s=arc-20160816;
+        b=c9QkPDQECNe/8u4qs/iXOf9HQzOeVl55YBZzTaj/buYAFcU0mLx+3mkxz4EG0/Pppl
+         11eC6TOdQYSmSwr82Odi7XBuagcO60liCXCtcNEEEyBTtDOzRCJJ9BEjwaADasUemGD/
+         MJVQ7uo+rCVGeIpfaliOdOaz4BpklHjrRWAf9zBjSPjiE07SHRxNI1jM2t3u6+p2U0VQ
+         5HVCwhSviTH6XgsCDJ6DO+6GYwlZ/LizGrRMFtffLq5qVIZagSkAkAfUbw/FrtuHsKWM
+         ljJ4/C0AypqbsuwXC5ltH2/kZjO6fe+wHzQ9M8fGfdmC0uaMuoXrdIzKWtTuRqza+Xiu
+         MpXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:cms-type:in-reply-to
+         :message-id:date:subject:cc:to:from:dkim-signature:dkim-filter;
+        bh=BF9hoi/P6lu2L1mT8SlOWIzqeTeONOgqLJnUK9e/KhI=;
+        b=crCdNPNpwj8ziNokXUoi7WVkzB3l+q+eKumNr3658/0Ll2wOmlOInmz9HuzVW++xXE
+         7k/d+GDq0SzIA5fcbBCrgc2MGHjmKgAo6O0Sn5/6+YN0O7KbItec25xt4m4BUWgA57/j
+         cV42xC+7AzVdHKVo150cuC5pfjAS4mJfSw74/Gcyd5mXbxaAwHqtYU5jmBn2p6HH3bDq
+         9km9KC7Q68LgIFeK9gAJY5jTgRZ8mSgKQC/8a7T078pSMBKXCUyLAy55cmCdOLcnP2hQ
+         vkQIUGBVgBo+9uhEhIz5pFsosau0pFyY4Yo39TyaY34fIPiTndghOVGJsir8GkVMH9X/
+         Sjaw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@samsung.com header.s=mail20170921 header.b=CCuRQsm1;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=samsung.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 10-v6si1064343pgo.486.2018.11.07.09.12.22;
+        Wed, 07 Nov 2018 09:12:38 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731537AbeKHCmu (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:42:50 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:54863 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731526AbeKHCl5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:41:57 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20181107171040euoutp01b1235081cd3f4436d1b0891e00fb6e4b~k5rWhae5I2252222522euoutp01W
+        for <linux-kernel@vger.kernel.org>; Wed,  7 Nov 2018 17:10:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20181107171040euoutp01b1235081cd3f4436d1b0891e00fb6e4b~k5rWhae5I2252222522euoutp01W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1541610640;
+        bh=BF9hoi/P6lu2L1mT8SlOWIzqeTeONOgqLJnUK9e/KhI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CCuRQsm1xSq7BKr7QlZC0SWfErDz9esIRSZi7HwKMcJ+IexEIYxVD2eVqhbXiejqR
+         A98of7BFkI10SQsLRkNg3TwqgLWIXN+jNGpSs2T0hn7Yik4uI2iKooK+sdzK5g41xl
+         jfJm0SIpxf2B7FGIeQ3SCLShgPDKJVGEo7I9BXs0=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20181107171039eucas1p1f7da3604dfa56e36035b5192c1090cfb~k5rV4loGI2717527175eucas1p1o;
+        Wed,  7 Nov 2018 17:10:39 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 1E.C9.04806.F8C13EB5; Wed,  7
+        Nov 2018 17:10:39 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20181107171038eucas1p1eb5dce12a1f5f7a3587f82f8396fa075~k5rVNCsD63086130861eucas1p1T;
+        Wed,  7 Nov 2018 17:10:38 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20181107171038eusmtrp1a70f419c79491a1bc563b329f56f2a5f~k5rVBLpjv2472724727eusmtrp1j;
+        Wed,  7 Nov 2018 17:10:38 +0000 (GMT)
+X-AuditID: cbfec7f5-367ff700000012c6-0b-5be31c8f5cf6
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 0B.23.04128.E8C13EB5; Wed,  7
+        Nov 2018 17:10:38 +0000 (GMT)
+Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20181107171038eusmtip232ba2cb2ca2ddcc4ff68e8e4b7bc662d~k5rUdVEtr0340803408eusmtip2S;
+        Wed,  7 Nov 2018 17:10:37 +0000 (GMT)
+From: Lukasz Luba <l.luba@partner.samsung.com>
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Cc: rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, corbet@lwn.net, b.zolnierkie@samsung.com,
+        krzk@kernel.org, Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v2 04/11] Doc: thermal: new irq-mode for trip point
+Date: Wed,  7 Nov 2018 18:09:46 +0100
+Message-Id: <1541610593-28542-5-git-send-email-l.luba@partner.samsung.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1541610593-28542-1-git-send-email-l.luba@partner.samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSa0hTYRjHfXd2zo7L6WlqvngLBoJKabcPB4pICjpYUvilaB9y5cHb5mXH
+        S5akRHlLrdTMtHmbYi1FndNseJ2WqDUVp8tL2nQQZovRFAoscp5J337/5/88/+fh5cURYSfq
+        jcclptLyRIlUhPG53e9/6w8/8l0TH9l46kl2VLahpHkwD5A1Nj+ydkSPkrWGOZScnGznkQs5
+        vqR6bUfV5zZyyRntC4y0FY8Assk4zSEf9I3wSLOpBDvjSrXUtADqbdVnHqXsXedQalUBRi3N
+        9WJUZ2M2pSwpQ6mhH70cqkSjApRN7X+Zf41/KpqWxqXT8tDTUfzY70NmTvK28JZpcYmXAxRu
+        hcAZh8QJaMmd5xYCPi4kXgI4+tOKsGITwM2GAcAKG4BrXSu8vZEegw1jjWYAh5+voHZjd0TR
+        7lIIcBwjQmCPKsXe40FUA2jrV/LsAiGWABwvVyL2AXfiLNQatbupXCIAtrbqOXYWEOFwoK8U
+        Ybf5w3l9wS47ExdgzYxlNwgSOh6stg07TjoHzaZOwLI7/DaqcdR94URZEZdlBn7MV2EsZ8G8
+        sR5Hz0k4PDqN2q9GiCDYpg21IyTCYMN9B7rCT5b99mZkB0u7nyFsWQDzc4VsRiDUFE1xWD4A
+        m1sqHNkUXK6ocDxoDYDl1R+wx+Bg1f9ddQCogBedxshiaOZ4Ip0RwkhkTFpiTMjNJJka7Hyl
+        ib+jWz2gf/uGDhA4ELkIprpMYiEqSWcyZToAcUTkISh+vSoWCqIlmbdpedJ1eZqUZnTAB+eK
+        vAR3nL6IhUSMJJVOoOlkWr7ncnBn7xyQcS9l+Ykl4ZW0VeZzxXPxl6IyjBt06F18k37WfcN6
+        BVmNurotHZ99yB+PNGYIrBPeU5luC4F3PSKPBS/KwT4zHeibZTBalzcCjOtf+bmGqgjUTxL/
+        Z0Gx4nZR2SFQKsayw0s164PVKr86rVOXNvtSfUT81pvzgfVOwlRLRYqIy8RKjgYjckbyD2vm
+        eXZGAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsVy+t/xe7p9Mo+jDU7cVrbYOGM9q8WTA+2M
+        FvM+y1rMP3KO1WL+lWusFufPb2C3uNUgY7HpMZC3sG0Ji8XlXXPYLD73HmG0WHr9IpNF694j
+        7BZPHvaxOfB5rJm3htFj56y77B6L97xk8ti0qpPN4861PWwem5fUeyzum8zqcfDdHiaPvi2r
+        GD0+b5IL4IrSsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3S
+        t0vQy3hz8AlTwR+hioe377A3MM7l72Lk5JAQMJHYceUzWxcjF4eQwFJGiR/XfrNBJMQkJu3b
+        zg5hC0v8udYFVfSJUeJn813mLkYODjYBPYkdqwpB4iIC8xkljm66DFbELPCMUWLl9JdMIN3C
+        As4Su67vApvEIqAqsXbtObA4r4CXxP69k5ghNshJ3DzXCWZzCnhLzLv8FqxeCKjm+6z1bBMY
+        +RYwMqxiFEktLc5Nzy020itOzC0uzUvXS87P3cQIjJRtx35u2cHY9S74EKMAB6MSD6/GjofR
+        QqyJZcWVuYcYJTiYlUR4e1c/ihbiTUmsrEotyo8vKs1JLT7EaAp01ERmKdHkfGAU55XEG5oa
+        mltYGpobmxubWSiJ8543qIwSEkhPLEnNTk0tSC2C6WPi4JRqYLThyfe9oTX568T9Kjk9HlV3
+        zbb8yjva8Dr2yOZG9kwW1p/n1lS8POgg5e/LZnisoPuzueDqBZm177c4/GwN9tj5N3aqrcqc
+        E2+rl7xN57yc2WDG3VpfffxKlci5+PB71mKTFx42nVux+tOKLdqOe/wqGouX7msQbBXOcF06
+        TWHnmnD/KcG/A5VYijMSDbWYi4oTASUF5VOqAgAA
+X-CMS-MailID: 20181107171038eucas1p1eb5dce12a1f5f7a3587f82f8396fa075
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20181107171038eucas1p1eb5dce12a1f5f7a3587f82f8396fa075
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20181107171038eucas1p1eb5dce12a1f5f7a3587f82f8396fa075
+References: <1541610593-28542-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20181107171038eucas1p1eb5dce12a1f5f7a3587f82f8396fa075@eucas1p1.samsung.com>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3mUUIHeNb_3sYAA--.495S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ary7CF45CF1UAFy7WF4rXwb_yoW8KF1kpr
+	4SvFZ3tFWkCwnrK3WDAanYyFW0qFW8Zw4UGanakF1UA3s8J3s29rWYyF95AF90kr48JFy5
+	Krn3Krn8AanrurDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBSb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
+	kI7VAKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkIecxEwVCI4VW8MxkI7II2
+	jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW7JVWDJwCYIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E
+	14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x
+	804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42
+	xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUhksgUUUUU
+
+Thermal trip point gets new flag in DT: irq-mode.
+Trip point may have a new explicit flag which indicate
+IRQ support when the temperature is met (so the thermal framework
+deos not need to set polling for it).
+It is useful for 'passive' cooling trip point,
+which now will not be register for polling the temperature.
+
+Update documentation about irq-mode for trip points.
+The new sysfs file shows 1 if the trip point supports IRQ.
+
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: linux-doc@vger.kernel.org
+Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+---
+ Documentation/thermal/sysfs-api.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/Documentation/thermal/sysfs-api.txt b/Documentation/thermal/sysfs-api.txt
+index 9113997..e405724 100644
+--- a/Documentation/thermal/sysfs-api.txt
++++ b/Documentation/thermal/sysfs-api.txt
+@@ -272,6 +272,7 @@ Thermal zone device sys I/F, created once it's registered:
+     |---trip_point_[0-*]_temp:	Trip point temperature
+     |---trip_point_[0-*]_type:	Trip point type
+     |---trip_point_[0-*]_hyst:	Hysteresis value for this trip point
++    |---trip_point_[0-*]_irq:	Trip point supports triggering irq
+     |---emul_temp:		Emulated temperature set node
+     |---sustainable_power:      Sustainable dissipatable power
+     |---k_po:                   Proportional term during temperature overshoot
+@@ -365,6 +366,10 @@ trip_point_[0-*]_type
+ 	thermal zone.
+ 	RO, Optional
+ 
++trip_point_[0-*]_irq
++	Boolean which indicate that the trip point triggers irq.
++	RO, Optional
++
+ trip_point_[0-*]_hyst
+ 	The hysteresis value for a trip point, represented as an integer
+ 	Unit: Celsius
+@@ -544,12 +549,16 @@ method, the sys I/F structure will be built like this:
+     |---available_policies:	step_wise fair_share
+     |---trip_point_0_temp:	100000
+     |---trip_point_0_type:	critical
++    |---trip_point_0_irq:	1
+     |---trip_point_1_temp:	80000
+     |---trip_point_1_type:	passive
++    |---trip_point_1_irq:	1
+     |---trip_point_2_temp:	70000
+     |---trip_point_2_type:	active0
++    |---trip_point_2_irq:	0
+     |---trip_point_3_temp:	60000
+     |---trip_point_3_type:	active1
++    |---trip_point_3_irq:	1
+     |---cdev0:			--->/sys/class/thermal/cooling_device0
+     |---cdev0_trip_point:	1	/* cdev0 can be used for passive */
+     |---cdev0_weight:           1024
+-- 
+2.7.4

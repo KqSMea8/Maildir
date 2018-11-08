@@ -1,0 +1,243 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:02 -0000
+Received: from icoremail.net (unknown [209.85.210.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv97x7uJbFVRYAQ--.26510S3;
+	Wed, 07 Nov 2018 21:56:03 +0800 (CST)
+Received: from mail-pf1-f170.google.com (unknown [209.85.210.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3Wkbu7uJb2LMXAA--.13983S3;
+	Wed, 07 Nov 2018 21:55:58 +0800 (CST)
+Received: by mail-pf1-f170.google.com with SMTP id g7-v6so5463899pfo.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:55:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :in-reply-to:references:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=FGh01L7cooZqcnHrnmambmA0GV3gC0p/DtcaHT2//s4=;
+        b=BBEhNa+elSextEWpCubxAURtxVHG2yy203gUbfHpNH/3ZTB6R3lT6gJ8O151tgnHUy
+         /fN/6AA4DkQ77hJFKH9Wt7kSYa1VAtU45Ju01Zdi3pVYdkzzMbK5vj4uHN27+oaM2bgX
+         5z/UC7syHWf5Kzjr3AdElzgKYclh/+9f1PILhq46R5Xc6c5Nh8s/O78bqCkDrL7iJ3ge
+         WCRh8GWrZBa61Lxo3CuJsB8v3IcenSyHJljsH1z//j3Xze0bymW2YvkM7oMDihisEl3A
+         laqa3pP+Uc2lZ9vlWhTlYtMcYwEiAcN0IVcD02Z4mFHB5Xv7xiqBfybBn0Oncdq8iTnb
+         kNIw==
+X-Gm-Message-State: AGRZ1gJC+Sj9wCzIQHU+FCxncU92sXpGP0UCY7D4uuYr2wc46JpsLjug
+	y7ZaJF4lgKrnH6oaBcSUYPraEUxZzcwTYfVQupao8IWCiETjW3mqzQ==
+X-Received: by 2002:a63:a91a:: with SMTP id u26mr235044pge.349.1541598958293;
+        Wed, 07 Nov 2018 05:55:58 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5273570pjt;
+        Wed, 7 Nov 2018 05:55:57 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cGUVj8AGzEP0b5w74bPJlm4fV0q53Rl5tczd4g1AdfCVcbEUrHoYkDOmP6EbUo5mQe77Fu
+X-Received: by 2002:a17:902:7e4c:: with SMTP id a12-v6mr301560pln.149.1541598957098;
+        Wed, 07 Nov 2018 05:55:57 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541598957; cv=none;
+        d=google.com; s=arc-20160816;
+        b=QGGkhsTlaiEJFwjdeATPgMr2A5y9wSipg0A6dmpt6cUsUZag3gnGxGiiO0coRI6Jxo
+         LX0Ce6NKgR2iLSqo0qnGs0oh9y+SGCV/quXm0UYeNeLKps/kZVbSylv8TAG8oluyNDv8
+         QRlKHl2bW3jJ6G+mV1DC1JxzHyayBKT0rvNK9PTMb2hS9ZlCEk0eVM0IPGI4KTIC7K2V
+         gZZpaS99xYfh4d2/GBgUkREje3hBaQFhd0lcf6aaekeSbEv0bZnDMGuXgAmRJuVfY6Fa
+         sCCT32fczUwaTEmzNJ417P2Y2+/OyIfHTWD6vN2AAPMN6ZMWHdNoWUyBghhY5RbW6/Lb
+         Iv1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :references:in-reply-to:mime-version:dkim-signature;
+        bh=FGh01L7cooZqcnHrnmambmA0GV3gC0p/DtcaHT2//s4=;
+        b=gngT3+Nuro/qgFSL1a/VtIKBQma5h5cSZZgGIy7UqdEuabMKIo/aDbBZRtHShvsFrM
+         hoMs6YgEcHQ2aOAPXTrbcXp8jyZATGb3TWXq97IPefZLncXJ3WjhyNaXS/bnkEkHzCxP
+         A65QYw0Jaj+DE+MwBH+N96z7LerEMj7QPlKTpV2tJJ5oW5uykLDZqb47MecY4hdR0rXi
+         DiiPILYaduhkhWJx6JLBHUMQKjVM/jXE659/KDabD+3oxJlXCi8zKgyt/Cj64SffedyN
+         uWQ1FlN2ptqSIBnkUdhR5MxIiJRGOKmWpEwOhmaex0+pznVaWnMlDfBkIHi0ricZsoT/
+         NUNw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=temperror (no key for signature) header.i=@szeredi.hu header.s=google header.b=HOrTghbs;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id f4-v6si611926pgc.482.2018.11.07.05.55.41;
+        Wed, 07 Nov 2018 05:55:57 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727709AbeKGX0F (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:26:05 -0500
+Received: from mail-it1-f196.google.com ([209.85.166.196]:51419 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726893AbeKGX0F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:26:05 -0500
+Received: by mail-it1-f196.google.com with SMTP id m34-v6so1739826iti.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 05:55:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=FGh01L7cooZqcnHrnmambmA0GV3gC0p/DtcaHT2//s4=;
+        b=HOrTghbscRey9eM5er7N8naaqFu1Hl8dtSgB8b1SxggRlpD2EmkiudI259fqLk4l1h
+         nil6pQg466iWrOdq+DQ7yLRy+6HDKTpHWML2tZLFzpafX7/k2I3L4xjZ1KRlZDZd/Ni2
+         T/o3EuD7yxf91TGpO8U3ryEdh2Y7spR9D8BhI=
+X-Received: by 2002:a24:750f:: with SMTP id y15-v6mr264857itc.1.1541598935418;
+ Wed, 07 Nov 2018 05:55:35 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a6b:ac42:0:0:0:0:0 with HTTP; Wed, 7 Nov 2018 05:55:34 -0800 (PST)
+X-Originating-IP: [212.96.48.140]
+In-Reply-To: <154149666097.17764.12092615786683141764.stgit@localhost.localdomain>
+References: <154149586524.17764.5252013294539109287.stgit@localhost.localdomain>
+ <154149666097.17764.12092615786683141764.stgit@localhost.localdomain>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Wed, 7 Nov 2018 14:55:34 +0100
+Message-ID: <CAJfpeguDTsG7vEAhH=CHp43vJak70VzR8YH8K6=vZAUXCZZeEQ@mail.gmail.com>
+Subject: Re: [PATCH 6/6] fuse: Verify userspace asks to requeue interrupt that
+ we really sent
+To: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3Wkbu7uJb2LMXAA--.13983S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxZFW7KrWUZryfJF18Xw1xGrg_yoWrWF4UpF
+	W3tF4YkFZ8XF4UW3y3JF1Uuw4Sqw18Cwn3Kryxt3W5ArsIqrn8uF1DWFW5Xr1SgF95Xr43
+	Zr4DKrZ3u34UZ3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4wCY1x
+	0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VW5GwCY0x0I
+	x7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804x
+	Wl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8V
+	AvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IUOA8n7UUUUU==
+
+On Tue, Nov 6, 2018 at 10:31 AM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+> When queue_interrupt() is called from fuse_dev_do_write(),
+> it came from userspace directly. Userspace may pass any
+> request id, even the request's we have not interrupted
+> (or even background's request). This patch adds sanity
+> check to make kernel safe against that.
+
+Okay, I understand this far.
+
+> The problem is real interrupt may be queued and requeued
+> by two tasks on two cpus. This case, the requeuer has not
+> guarantees it sees FR_INTERRUPTED bit on its cpu (since
+> we know nothing about the way userspace manages requests
+> between its threads and whether it uses smp barriers).
+
+This sounds like BS.   There's an explicit  smp_mb__after_atomic()
+after the set_bit(FR_INTERRUPTED,...).  Which means FR_INTERRUPTED is
+going to be visible on all CPU's after this, no need to fool around
+with setting FR_INTERRUPTED again, etc...
+
+
+
+>
+> To eliminate this problem, queuer writes FR_INTERRUPTED
+> bit again under fiq->waitq.lock, and this guarantees
+> requeuer will see the bit, when checks it.
+>
+> I try to introduce solution, which does not affect on
+> performance, and which does not force to take more
+> locks. This is the reason, the below solution is worse:
+>
+>    request_wait_answer()
+>    {
+>      ...
+>   +  spin_lock(&fiq->waitq.lock);
+>      set_bit(FR_INTERRUPTED, &req->flags);
+>   +  spin_unlock(&fiq->waitq.lock);
+>      ...
+>    }
+>
+> Also, it does not look a better idea to extend fuse_dev_do_read()
+> with the fix, since it's already a big function:
+>
+>    fuse_dev_do_read()
+>    {
+>      ...
+>      if (test_bit(FR_INTERRUPTED, &req->flags)) {
+>   +      /* Comment */
+>   +      barrier();
+>   +      set_bit(FR_INTERRUPTED, &req->flags);
+>          queue_interrupt(fiq, req);
+>      }
+>      ...
+>    }
+>
+> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> ---
+>  fs/fuse/dev.c |   26 +++++++++++++++++++++-----
+>  1 file changed, 21 insertions(+), 5 deletions(-)
+>
+> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+> index 315d395d5c02..3bfc5ed61c9a 100644
+> --- a/fs/fuse/dev.c
+> +++ b/fs/fuse/dev.c
+> @@ -475,13 +475,27 @@ static void request_end(struct fuse_conn *fc, struct fuse_req *req)
+>         fuse_put_request(fc, req);
+>  }
+>
+> -static void queue_interrupt(struct fuse_iqueue *fiq, struct fuse_req *req)
+> +static int queue_interrupt(struct fuse_iqueue *fiq, struct fuse_req *req)
+>  {
+>         bool kill = false;
+>
+>         if (test_bit(FR_FINISHED, &req->flags))
+> -               return;
+> +               return 0;
+>         spin_lock(&fiq->waitq.lock);
+> +       /* Check for we've sent request to interrupt this req */
+> +       if (unlikely(!test_bit(FR_INTERRUPTED, &req->flags))) {
+> +               spin_unlock(&fiq->waitq.lock);
+> +               return -EINVAL;
+> +       }
+> +       /*
+> +        * Interrupt may be queued from fuse_dev_do_read(), and
+> +        * later requeued on other cpu by fuse_dev_do_write().
+> +        * To make FR_INTERRUPTED bit visible for the requeuer
+> +        * (under fiq->waitq.lock) we write it once again.
+> +        */
+> +       barrier();
+> +       __set_bit(FR_INTERRUPTED, &req->flags);
+> +
+>         if (list_empty(&req->intr_entry)) {
+>                 list_add_tail(&req->intr_entry, &fiq->interrupts);
+>                 /*
+> @@ -492,7 +506,7 @@ static void queue_interrupt(struct fuse_iqueue *fiq, struct fuse_req *req)
+>                 if (test_bit(FR_FINISHED, &req->flags)) {
+>                         list_del_init(&req->intr_entry);
+>                         spin_unlock(&fiq->waitq.lock);
+> -                       return;
+> +                       return 0;
+>                 }
+>                 wake_up_locked(&fiq->waitq);
+>                 kill = true;
+> @@ -500,6 +514,7 @@ static void queue_interrupt(struct fuse_iqueue *fiq, struct fuse_req *req)
+>         spin_unlock(&fiq->waitq.lock);
+>         if (kill)
+>                 kill_fasync(&fiq->fasync, SIGIO, POLL_IN);
+> +       return (int)kill;
+>  }
+>
+>  static void request_wait_answer(struct fuse_conn *fc, struct fuse_req *req)
+> @@ -1959,8 +1974,9 @@ static ssize_t fuse_dev_do_write(struct fuse_dev *fud,
+>                         nbytes = -EINVAL;
+>                 else if (oh.error == -ENOSYS)
+>                         fc->no_interrupt = 1;
+> -               else if (oh.error == -EAGAIN)
+> -                       queue_interrupt(&fc->iq, req);
+> +               else if (oh.error == -EAGAIN &&
+> +                        queue_interrupt(&fc->iq, req) < 0)
+> +                       nbytes = -EINVAL;
+>
+>                 fuse_put_request(fc, req);
+>                 fuse_copy_finish(cs);
+>

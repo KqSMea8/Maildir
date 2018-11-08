@@ -1,0 +1,180 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:16 -0000
+Received: from icoremail.net (unknown [209.85.214.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv9IZIONbsYJZAQ--.26920S3;
+	Thu, 08 Nov 2018 01:25:46 +0800 (CST)
+Received: from mail-pl1-f170.google.com (unknown [209.85.214.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3sEwXIONbUIgYAA--.556S3;
+	Thu, 08 Nov 2018 01:25:43 +0800 (CST)
+Received: by mail-pl1-f170.google.com with SMTP id p6-v6so8154044pll.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:25:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :message-id:user-agent:date:from:to:cc:subject:references
+         :mime-version:content-disposition:sender:precedence:list-id;
+        bh=3I1ln9cvLCh+exEMskxwPTConcusWZxcc3sH1kevS6w=;
+        b=B/N9OGrT5FcpGFGGHnWYZmSnfPnPeYVExC1EU/4O80jdh0jeqwAcXo07z6zsv6T/bv
+         2zvzW1UX13v8XAHEuEMHxsyr+m6NYB55Afa8uLzjjM1rGb0hsrcXed4LqG1ygpzxED/c
+         SyPTFJDwt04fkHG8V9iuo5aV+7TkI9h+zBjIsLrxKDUU8gd/85rG3MEsuf6SDStLiwkN
+         CCV0awcsEEwEy7JwNqB2mG2jAZtTv2o58XgN/88dlS8ELXIyZANAV++FkinpCG9jaNn5
+         Oe4AYWBcFGwm8YjH8LFwQIbCZJlFeII8zMd45JOxyUHxJNn76Y62R9RpYTTDegnYjhD2
+         DSpA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJriLsxol3WeF3RcpMv4g5dsL98peb8jLn61CMmr59X7fBzlQbm
+	iSaQiEcSkORIc2GHtXcZV3kQHJSx+hqUrhNoKb7gQrJvP78xwDDQ9A==
+X-Received: by 2002:a17:902:b598:: with SMTP id a24-v6mr1063557pls.231.1541611542809;
+        Wed, 07 Nov 2018 09:25:42 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5514997pjt;
+        Wed, 7 Nov 2018 09:25:42 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dLW+3tDvR6BJwZpcqu8hEGZRMYdqS4Rokqa61hrsfe7PQxFD6PKXBBg4XxSWQtJD/n8LVj
+X-Received: by 2002:a17:902:684e:: with SMTP id f14-v6mr1092852pln.242.1541611542092;
+        Wed, 07 Nov 2018 09:25:42 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541611542; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ktqEUheQn8F1c8WBe2BjphclkpqCoeBppsZTTOuDvhQ6yuh4VHMiKD3tCaGAP7+l6c
+         YaEtKpHeY/tZIHIrxKHRaUY1o3nZgMjiaVwvLzA0FR0ZGCplINvbtgMX7oE+W28JElDN
+         vUZHoebn4hUuIZZF4Oqv+Xka4AgY+P8fTai7YNotDX82vvFzn+32RoSe0WzLraIG8wAG
+         VlVeozXVSsG7wxa+sEvfDOFVN0vL7yB4OA9uCBI5gOT03KZ+AGUry2Bhf/lRGGXom5e+
+         QTl8r+NLVFfp9kSYFNKFSO7RG2aSVvR2jiJMtOzqhiopVehUIHObFiKy+r/2FApD/oDn
+         mP4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-disposition:mime-version
+         :references:subject:cc:to:from:date:user-agent:message-id;
+        bh=3I1ln9cvLCh+exEMskxwPTConcusWZxcc3sH1kevS6w=;
+        b=hI8pM1meb7l9CP8BfPzwNCJg+rZQ1LSuTbfo7PbY7L+FnTBwBBKsZAgkXiKJC4baOq
+         AUDVjd3SIwednlbfETqsj549XBuUTDUS4+HYg3pHLU1G/af6sHcVVCo8fRNPHvM28EnE
+         ToKzxCVtDIohK/s7+wzKbmAv1+jiMkPziFKHv0tlAuCGuJQ7Y83JHvCLkpuwS8u11+um
+         HzDAlk36Aj1KG4PMKcbCqGEIggr2p9sA8lrZyoL1lDPL53qtygNu2Q+x+rfEXpKupozh
+         S4lEVYW6m+IZMmAOw6ZlDsqZKqrf2DtXRsvD29SdJ2v/nl4vfMHhoO8mQaY3JxGsChOy
+         cbRA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id i34-v6si1110004pgb.71.2018.11.07.09.25.18;
+        Wed, 07 Nov 2018 09:25:42 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731502AbeKHC4Z (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:56:25 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:41498 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728008AbeKHC4Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:56:25 -0500
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1gKRZb-0004R5-L6; Wed, 07 Nov 2018 18:24:59 +0100
+Message-Id: <20181107171149.074948887@linutronix.de>
+User-Agent: quilt/0.65
+Date: Wed, 07 Nov 2018 18:10:11 +0100
+From: Thomas Gleixner <tglx@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [patch 1/2] Documentation/process: Add maintainer handbooks section
+References: <20181107171010.421878737@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline;
+ filename=Documentation-process--Add-maintainer-handbooks-section.patch
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3sEwXIONbUIgYAA--.556S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUj7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUo07k0a2IF6w4kM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	4UJVWxJr1lnx0Ee4C267I2x7xF54xIwI0E7I0Y6sxI4wAS0I0E0xvYzxvE52x082IY62kv
+	0487M2AExVA0xI801c8C04v7Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67
+	AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48I
+	cVAKI48JM4kE6I8I3I0E14AKx2xKxVC2ax8xMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082
+	I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vEIxC_GwCY0x0Ix7I2Y4AK64vIr41lcIIF
+	0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIx
+	AIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAI
+	w28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFV
+	Cjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_Jr0_Jr4l
+	x4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Jr
+	0_JF7vcSsGvfC2KfnxnUUI43ZEXa7IUYdWrtUUUUU==
+
+General rules for patch submission, coding style and related details are
+available, but most subsystems have their sub-system specific extra rules
+which differ or go beyond the common rules.
+
+Mark suggested to add a subsystem/maintainer handbook section, where
+subsystem maintainers can explain their specific quirks.
+
+Add the section and link to it from the submitting-patches document.
+
+Suggested-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ Documentation/process/index.rst                |    1 +
+ Documentation/process/maintainer-handbooks.rst |   14 ++++++++++++++
+ Documentation/process/submitting-patches.rst   |    4 ++++
+ 3 files changed, 19 insertions(+)
+
+--- a/Documentation/process/index.rst
++++ b/Documentation/process/index.rst
+@@ -27,6 +27,7 @@ Below are the essential guides that ever
+    submitting-patches
+    programming-language
+    coding-style
++   maintainer-handbooks
+    maintainer-pgp-guide
+    email-clients
+    kernel-enforcement-statement
+--- /dev/null
++++ b/Documentation/process/maintainer-handbooks.rst
+@@ -0,0 +1,14 @@
++.. _maintainer_handbooks_main:
++
++Subsystem and maintainer tree specific development process notes
++================================================================
++
++The purpose of this document is to provide subsystem specific information
++which is supplementary to the general development process handbook
++:ref:`Documentation/process <development_process_main>`.
++
++Contents:
++
++.. toctree::
++   :numbered:
++   :maxdepth: 2
+--- a/Documentation/process/submitting-patches.rst
++++ b/Documentation/process/submitting-patches.rst
+@@ -18,6 +18,10 @@ submitting code.  If you are submitting
+ for device tree binding patches, read
+ Documentation/devicetree/bindings/submitting-patches.txt.
+ 
++Some subsystems and maintainer trees have additional information about
++their workflow and expectations, see :ref:`Documentation/process
++<maintainer_handbooks_main>`.
++
+ Many of these steps describe the default behavior of the ``git`` version
+ control system; if you use ``git`` to prepare your patches, you'll find much
+ of the mechanical work done for you, though you'll still need to prepare
+

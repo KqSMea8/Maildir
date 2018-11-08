@@ -1,0 +1,152 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:39 -0000
+Received: from icoremail.net (unknown [209.85.215.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f7WKCeNb9vNYAQ--.26420S3;
+	Wed, 07 Nov 2018 23:49:34 +0800 (CST)
+Received: from mail-pg1-f173.google.com (unknown [209.85.215.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwD31kKGCeNbSCcYAA--.7S3;
+	Wed, 07 Nov 2018 23:49:26 +0800 (CST)
+Received: by mail-pg1-f173.google.com with SMTP id z17-v6so7487564pgv.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:49:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :organization:references:date:in-reply-to:message-id:user-agent
+         :mime-version:sender:precedence:list-id;
+        bh=C3090pGuhpk/phm324RxnllFsyWN0pwLZP3cDNfrwmA=;
+        b=BJfX6c4idxMIgUq7AigxZlMH6Z55BwKw+EAvfSqc/HqjgiEewpvE04BykV7Z9oF9r8
+         2LYFzFq4IAnxbsYHvMcFobZ2dPG8Xq4pEd9Pbl3Urt/MOHoccWtPRxMMXCFNhYJnsbrq
+         /A0ZWZftNJaO9nuuLmYPpGFP+MFzJ2kKBL0L4KGS/lRuSjkTuEGIA36ytJHy58DIGTqY
+         K6nhguhNOqn8299KJEHDu6YQzpiC3XZiIUbb6Bs7xgQnPq3DfPKzSBoBFAn6jRlqE/yF
+         4stFR55kOcW/cEjHCbERHvp0rHSOzk7vAUe0XYmQSyiwCO+YQhpjvZ7bc8bD8jK7dGsx
+         SoEw==
+X-Gm-Message-State: AGRZ1gJhNPXMfW/la3tjJigRS1MLwiqjPkjNq4Mke0xqEqjfKmirxY5O
+	H809Vxe6KsEUoXithhV2OlWefeSJWb62FdkAQRCIe6B5OFgUxVOM5w==
+X-Received: by 2002:a65:64d5:: with SMTP id t21-v6mr626350pgv.428.1541605766198;
+        Wed, 07 Nov 2018 07:49:26 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5405576pjt;
+        Wed, 7 Nov 2018 07:49:25 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fuOSt4lDT1vb5a+13AxuAymXa4SitwzOTa/PT8PfPRFrBYdh4Rf3DvWEBpbr0qWsa2Msc2
+X-Received: by 2002:a63:e19:: with SMTP id d25mr622064pgl.272.1541605765310;
+        Wed, 07 Nov 2018 07:49:25 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541605765; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ZvJ1nDHhp3ogBl8tLFDg6E1KyqK6m3PA5Ne1agHpXbr4t/IjEDxMhx3hLuebuRmHBz
+         4vMd4yz9iYlDu9xa7cwGcGDucOjr6tspkWuN70dXk8Bsm+CYe6Zu3gvDTHMrb5ssr85U
+         gkojAhWUJCmVmNDBCcU/MYG2DY8H7EGwC7DgfgdOCMtprGGg6sxA6n5WIn8ZDib9p56n
+         flaNSJ5O+rWFys2kTYNqIAsVq7YeWqDa4yG7cg2En7wjgZBRBqUxHcRv6p/TkGpG73jI
+         cHrkNueOWpeKNKuTneSjv8z0q5pstvJKcPZfIJUzqilTv8M76j7Y0hDYbIB8YDvfg+yE
+         JWDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:user-agent:message-id
+         :in-reply-to:date:references:organization:subject:cc:to:from
+         :dkim-signature;
+        bh=C3090pGuhpk/phm324RxnllFsyWN0pwLZP3cDNfrwmA=;
+        b=g/75/f+jqE54zf5/kjieGuE2ir8Gh4OqoBvOZ4Y8npuwPEjhdRUw17UBLKOMRRbQRl
+         mr2Mqm2Px4P54TjcN8qtGMF5eDRoErwnv7DuvJ+/c7NLwIzfEdQn0ljZP/P7qGILJTXg
+         chl2vhPeOjWm2zkc690XxA1p7J2a5w1R2OivOZpcD9QoRjb1WqAc8Lbwsh3m1CD7jsYH
+         1UPbW/wZLxyY47bdBpcUY3R2mUG5wW1O5ljQ5woJdnzkQ+7C+5mGJE2tr+b1gSFfkmKr
+         qKJFxFYIYH1dyiRRGz7aE2nZgsMfn4S7jsydeIp/SsQWv2ZvVFycXGbDNuHxVTBV/4t9
+         ydGA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@baylibre-com.20150623.gappssmtp.com header.s=20150623 header.b=Lz9ICeRT;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id j22si819118pgj.244.2018.11.07.07.49.09;
+        Wed, 07 Nov 2018 07:49:25 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731083AbeKHBTm (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:19:42 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41266 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727645AbeKHBTm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:19:42 -0500
+Received: by mail-pl1-f193.google.com with SMTP id p16-v6so8035862plr.8
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 07:48:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:organization:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=C3090pGuhpk/phm324RxnllFsyWN0pwLZP3cDNfrwmA=;
+        b=Lz9ICeRTG/FayCFUf4ab5udQhvQN1NOtRDmuhwQSxjkLhsh7B3gY5Z6PYBqOgvj5ke
+         m+610R+h7nx0a4QUICzDk/rjING29Zvc7Y/+fOI3ioNieonl9weHdVgnt2j7U42Bqmdw
+         /2NtBGbZ6mFHC2su9mbmu0EfnyECkQbX1Frw5AYsN4ItA+g9xoNWvUr/PGE6WNud1t0F
+         Drnn5EPhDTn2iL0PL0b3xzL/zOd2q49umsjl+FQDHNsQtyPWycXNH+ZVj0tvfbbSMopM
+         VzV6NW/yar3YiTlnNJ6gDvgnhMLUbXU3gvGS+ZyFLzhK2N6xTPTutroZ1rXdZQ013jxb
+         DX6g==
+X-Received: by 2002:a17:902:aa8d:: with SMTP id d13-v6mr770190plr.74.1541605727210;
+        Wed, 07 Nov 2018 07:48:47 -0800 (PST)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.googlemail.com with ESMTPSA id d126-v6sm1029534pgc.32.2018.11.07.07.48.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 07:48:46 -0800 (PST)
+From: Kevin Hilman <khilman@baylibre.com>
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Weijie Gao <weijie.gao@mediatek.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <stable@vger.kernel.org>
+Subject: Re: [PATCH 1/2] arm64: dts: mt7622: fix console output issue on rfb1
+Organization: BayLibre
+References: <8043d487e7bd20a11b14d832702bda214a9a694f.1541566473.git.ryder.lee@mediatek.com>
+Date: Wed, 07 Nov 2018 07:48:45 -0800
+In-Reply-To: <8043d487e7bd20a11b14d832702bda214a9a694f.1541566473.git.ryder.lee@mediatek.com>
+        (Ryder Lee's message of "Wed, 7 Nov 2018 12:59:43 +0800")
+Message-ID: <7hr2fwevmq.fsf@baylibre.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.2 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwD31kKGCeNbSCcYAA--.7S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrZry3Jr1UGr45Xw4rKry3Arb_yoWxuFcEga
+	ykA3ykJ3sruw40ka4fJw1a9FW7tasayrykGw1vyw4avryqgr98ZF9IkryS9FnrGFWrZ34U
+	ua4DXFyvqw4aqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUb6AYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vE
+	IxC_XrWlc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26rxl6s0DMxvI42IY6I8E
+	87Iv6xkF7I0E14v26rxl6s0DMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082
+	I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrw
+	CI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IU5PDGUUUUUU=
+	=
+
+Ryder Lee <ryder.lee@mediatek.com> writes:
+
+> The issue was introduced by Kernel CI:
+> https://kernelci.org/boot/id/5bbdcbad59b5146fc5b43592/
+
+The issue was *found* by kernelCI, not introduced by kernelCI. ;)
+
+> Fix this by using a 'stdout-path' property that points to the device.
+>
+> Fixes: c0d9f9ad4f76 ("arm64: dts: mt7622: add earlycon to mt7622-rfb1 board")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+
+Tested-by: Kevin Hilman <khilman@baylibre.com>
+
+Note that this patch fixes the problem where there is no more console
+output, but current mainline still doesn't boot as there's another
+crash: http://termbin.com/zitb
+
+Kevin

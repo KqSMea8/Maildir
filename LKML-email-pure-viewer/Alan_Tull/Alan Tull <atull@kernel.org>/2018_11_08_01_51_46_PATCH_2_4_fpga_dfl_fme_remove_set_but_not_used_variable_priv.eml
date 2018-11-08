@@ -1,0 +1,149 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:25 -0000
+Received: from icoremail.net (unknown [209.85.210.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv_qAJuNberxZAQ--.27301S3;
+	Thu, 08 Nov 2018 01:53:05 +0800 (CST)
+Received: from mail-pf1-f172.google.com (unknown [209.85.210.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3l0N+JuNbnLYYAA--.652S3;
+	Thu, 08 Nov 2018 01:53:02 +0800 (CST)
+Received: by mail-pf1-f172.google.com with SMTP id y18-v6so5619661pfn.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:53:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:in-reply-to:references:sender:precedence:list-id;
+        bh=tQqzL01XE2sHRu2DgQxyKulCWQb6CkYjVJsdql3n6SM=;
+        b=PzSnQ84EWfNI7zEe/tR3OYU99KGXFT2JhHaEl8v/YayPydCaEKzotopbiIjbqI1bv/
+         3MHAXEJg+HzTo92lUV848+SScEH1t+cyluLM4SWKB7ocKUUJHcV+BaO1j3TWIH4sO212
+         ZrkQ6AUQBHzi+PICAdzhCk+4dWlN3Z3PHzJTX3BDTWxzWG3Ytew/09UmMi8rbTHV7VEZ
+         /yKrzELdRJSkkGiQVwsgyftAAQ8qcuYL1Cyqop1dF8hvs160y2vEAXRyTa+ErjEo5462
+         fX+q3ZT2d+m8NSJiIdmH5GTy+0QXUEfSU77otpKCNqkGQ01MuMeEwHxsczY/vgOrU+0N
+         7rmg==
+X-Gm-Message-State: AGRZ1gJFP/RUz8dCmbF4rH1xIM6X6xYh2WJnDyIXEdwGrurZTMYbz424
+	pcs2YdqXV3Idgm6x25uVdW1IgC0tNBuKvtYw7zQs/4KqXkv+Ilb8WA==
+X-Received: by 2002:a62:c184:: with SMTP id i126-v6mr1159074pfg.53.1541613182150;
+        Wed, 07 Nov 2018 09:53:02 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5544742pjt;
+        Wed, 7 Nov 2018 09:53:01 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cJyk3Dq/vSJ9/YuR7Lho8WdhCUE3XBlo/21IQ+iajOd3O8Go5J+SpH7l8zTU137ZCe0jcY
+X-Received: by 2002:a17:902:9897:: with SMTP id s23-v6mr1181437plp.229.1541613181598;
+        Wed, 07 Nov 2018 09:53:01 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541613181; cv=none;
+        d=google.com; s=arc-20160816;
+        b=NFWjJcXLZ2QBzKr6he4FJ4TvgaT56b7spVEKglSIH+s29bMBxypRUs94IrU2vrWRQp
+         a9UyHsDQS+GYNhq1NXfSft9i0RAdLwcGhu3QGRdEPZ8SgIYb5VLHewfWmWpj9K6Cqztk
+         VGRXVJ00on0Jv0W6jYtfGdNNPg6Z/ztiVLfo9Fd/mpDEKWNpOuCuTQtU5zBig7lMfYFc
+         pFIK0Dv+NXYqUS/MBTpo2vSNmQdC2eMUrX3O/TQlImnYi9c8Q5ltn9aYSNaVIdiiN+0Z
+         CUKR23fCEFyQY4Az1PYsgqclXgKGYXzjDngrpXBTaEA0Pya3oYU/gBMwGRL17LrtEIQY
+         QWjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from:dkim-signature;
+        bh=tQqzL01XE2sHRu2DgQxyKulCWQb6CkYjVJsdql3n6SM=;
+        b=E6PgocXIVJCJJ5TGN+ag9+YJGQuYgh91KaEvu9geAOatDJrKYGZatVK76qt09Mv4jh
+         Ft/3GXLvEVGHdnD9ce8QNgFP11xhZ2tDhAb/gi4cnXMvc6D36YUgXdHSGzk7u3ssBZk8
+         rvfupgR6/UjboU4v9t4wcfaixq4Gb6Ha+0YTCGECVKVw3kHUz6Ya3+8bt+0964eCIyD2
+         eICn4uBt+zR1U7WGuREGN7kqFkhRQUbLXh3Y5eN+8FErpxqLZzm8+JkqtsD4VUjTcISu
+         n0GddDpZuk2wswBsNrakKBQGEwZkMDAI1Hd71qA9SbZo0xGTL8EiXvW6NSsRf9hibVO8
+         pRLg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kernel.org header.s=default header.b="CFTUkmt/";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id e38-v6si1085414pgm.281.2018.11.07.09.52.46;
+        Wed, 07 Nov 2018 09:53:01 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728296AbeKHDXl (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:23:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731551AbeKHDX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:23:26 -0500
+Received: from localhost.localdomain (rrcs-67-79-197-43.sw.biz.rr.com [67.79.197.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6468920892;
+        Wed,  7 Nov 2018 17:51:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1541613119;
+        bh=FswMzj2KFf8bx3AS6v6fcTeUq9BkBPjAdKkbrO9rUZA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CFTUkmt/baFdB8dI1mK70l8auPIoXY0b6rKSO/RWy3M3ErwHJmZ2GJKaAf4qo7TPG
+         CA6JYJ7Sc/Z0i+KxTuHGfbaXXCDlCmU5cgWfRXx5JDVgbscOe/npl8ORM6Q/uOSGB+
+         RKjt+cn8CVQN2I+/ZenBvsfcnX8z8mtBFUtctIcQ=
+From: Alan Tull <atull@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Moritz Fischer <mdf@kernel.org>, Alan Tull <atull@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH 2/4] fpga: dfl: fme: remove set but not used variable 'priv'
+Date: Wed,  7 Nov 2018 11:51:46 -0600
+Message-Id: <1541613108-29660-3-git-send-email-atull@kernel.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1541613108-29660-1-git-send-email-atull@kernel.org>
+References: <1541613108-29660-1-git-send-email-atull@kernel.org>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3l0N+JuNbnLYYAA--.652S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Wr1rKr4xZFW3Ww4ftFWxXrb_yoWkJFbE9w
+	1vvr4xGr1kWa4DKr42q3W3Za4qkF4jgF4kAF40vasIyry5twn7Z3srtw45Cw1DZr9rCrn3
+	Ar1DAry3twn8GjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbgkYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
+	Ij64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xA
+	MxkIecxEwVCI4VW8MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5Jw
+	CYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1U
+	MxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64
+	kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
+	IYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuY
+	vjxUD5rcDUUUU
+
+From: YueHaibing <yuehaibing@huawei.com>
+
+Fixes gcc '-Wunused-but-set-variable' warning:
+
+drivers/fpga/dfl-fme-pr.c: In function 'pr_mgmt_uinit':
+drivers/fpga/dfl-fme-pr.c:447:18: warning:
+ variable 'priv' set but not used [-Wunused-but-set-variable]
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Moritz Fischer <mdf@kernel.org>
+Acked-by: Wu Hao <hao.wu@intel.com>
+Acked-by: Alan Tull <atull@kernel.org>
+---
+ drivers/fpga/dfl-fme-pr.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/fpga/dfl-fme-pr.c b/drivers/fpga/dfl-fme-pr.c
+index 0b84053..fe5a557 100644
+--- a/drivers/fpga/dfl-fme-pr.c
++++ b/drivers/fpga/dfl-fme-pr.c
+@@ -444,10 +444,8 @@ static void pr_mgmt_uinit(struct platform_device *pdev,
+ 			  struct dfl_feature *feature)
+ {
+ 	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
+-	struct dfl_fme *priv;
+ 
+ 	mutex_lock(&pdata->lock);
+-	priv = dfl_fpga_pdata_get_private(pdata);
+ 
+ 	dfl_fme_destroy_regions(pdata);
+ 	dfl_fme_destroy_bridges(pdata);
+-- 
+2.7.4

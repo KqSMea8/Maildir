@@ -1,0 +1,263 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:29 -0000
+Received: from icoremail.net (unknown [209.85.210.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH+5MKeNbr8pZAQ--.27033S3;
+	Thu, 08 Nov 2018 02:05:02 +0800 (CST)
+Received: from mail-pf1-f180.google.com (unknown [209.85.210.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCnfTlKKeNb+sAYAA--.52S3;
+	Thu, 08 Nov 2018 02:04:58 +0800 (CST)
+Received: by mail-pf1-f180.google.com with SMTP id g7-v6so5758890pfo.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:04:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=Jrf3UjIRgZLX0qSwTeavz5cyKeknX1VS1z8QHfJ1ezc=;
+        b=tep5R3epleYJHWNqNEydD9PqkiU9oIeFTgUovrepaabqs68puoHIe6WXR5wnmGZwYU
+         J+2IVxqGgF4aHQKwC4Hy1jQO2OahtFMSbS/SSh8HcjLMt05X0tUw3z5PIoCKvj9nmDbp
+         Yyc8d2C7E7Nur2SnLUcZO7jbjxUPcbvyQOgDlCvWzI4UB3cKpUIg87av4bD8z6lYy5p8
+         luCl3fIz2DvlkihXRJSNtyFdcygNo4PJUC7pxsb5Da34XC+/dpJoBLREsh7WIyUsVKwt
+         gSrYDzqVsAme1mzL/KwLXtMlFgnGEc4WfNDlRTTYM/SUiBBPS+NoU9RH/go1+nEhkKO7
+         +70Q==
+X-Gm-Message-State: AGRZ1gLrYnQcFNfN/1rBZtlLf6Nua5UqcQRiIT1vzxwdGpnONkbvr0MG
+	aBUoWzJQj4oAeCaqBH7hGFVsgfP3x+vjz3GSR6LWASKEq8Zxho3WTw==
+X-Received: by 2002:a62:c20b:: with SMTP id l11-v6mr1198956pfg.251.1541613897997;
+        Wed, 07 Nov 2018 10:04:57 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5558020pjt;
+        Wed, 7 Nov 2018 10:04:57 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d/LYV9MF2AaCpzLOrtGS1K50pHtYEnhWb3poyF/nFUi+gcmpbzueQvCNE3Pk+uOKHCE6QK
+X-Received: by 2002:a17:902:30f:: with SMTP id 15-v6mr1203433pld.155.1541613897005;
+        Wed, 07 Nov 2018 10:04:57 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541613896; cv=none;
+        d=google.com; s=arc-20160816;
+        b=zxyPp1n7sGIH335Pzd+wDEDPY+ta3nrL1dE8Ducd/eZaEsp1v/F8sUX5QwMMJftaFi
+         9Eaznlb+HW6sxz/f+W/DZTxzzaDprYxR0/rkFVW2ShJrilrnzxm7fPoZfzmg0lvhxamW
+         XJF8LvCXGhRJiHe+94YBu4+ahAB75CI0VpWiK/6jx9YGcDI+lZBIqB22KCKN2YZTkgbW
+         JFCWSk5MPUDFs8ngrc46XRCWbslvK8GpvTZWB3n7DI3JNa8lo5kl8eGlnI6A4DmIyWSb
+         EymspawlbePJ9Z6LeDxTlx6rhk5B28/TTEtp02/UN2Ck6rOpqaCk1/Lp7xYxVEnoXgc+
+         L5Sg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Jrf3UjIRgZLX0qSwTeavz5cyKeknX1VS1z8QHfJ1ezc=;
+        b=EkSuVH+0nHSkk9Yze9SaTtn+18CjE8/ou8QCIHXPkOfJtG/1BNEYrQuME4NbpBzXHe
+         wL8izlhQJSazo1Mukl5XmjGx5wR+f2dirpKFXEPhr4ehD+5jZF2rC/7ph3RIXOao9a3m
+         Pg9nINw9enwkKGzwhaQuyu4omceDqRyjShaAzqloGnWO0NaxrliSo6ndPm8FgDpnASG5
+         1sh9pKhxulL/FUHWz72kJQ213OpctGz9AlLUZpqu0PL1alS4MTPeInZdyEZqUcS3JvW9
+         lHfuZ01qo9g9w6zQZ+CtdKfyuoiQLiXmvR280EZJ0ALj5Xqo++VZvKfsB+U5NoyzO7ji
+         ViEg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@linaro.org header.s=google header.b="OlhO8Q/E";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=linaro.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id c27-v6si1174289pgc.461.2018.11.07.10.04.39;
+        Wed, 07 Nov 2018 10:04:56 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727837AbeKHDdt (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:33:49 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40398 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726858AbeKHDds (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:33:48 -0500
+Received: by mail-io1-f66.google.com with SMTP id a23-v6so12596374iod.7
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 10:02:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jrf3UjIRgZLX0qSwTeavz5cyKeknX1VS1z8QHfJ1ezc=;
+        b=OlhO8Q/Ebfhe0wMnlZWTMX21Gx9/60heaWyJ8gHbSm/Wvylo3LerhWJqNlZSFrXz9o
+         YovUaiGZ8k7fslADO36kJ9PKfpz1tJzdP9kbgYAo0YYzCfiXAMJ461z1irHHeSm0Tn9c
+         YnbVQv+b/cB+IzfJiwH4Ioxzavx2UZxuP/sVY=
+X-Received: by 2002:a6b:244:: with SMTP id 65-v6mr986578ioc.183.1541613737918;
+ Wed, 07 Nov 2018 10:02:17 -0800 (PST)
+MIME-Version: 1.0
+References: <20181016101513.26919-1-quentin.perret@arm.com>
+ <20181016101513.26919-4-quentin.perret@arm.com> <CAKfTPtBN3HpNMrztcmAwkGuW9uHaKBi9KoqdvBEHuxf7=078NA@mail.gmail.com>
+ <20181107170213.yapun7nk5rrjdf55@queper01-lin>
+In-Reply-To: <20181107170213.yapun7nk5rrjdf55@queper01-lin>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Wed, 7 Nov 2018 19:02:06 +0100
+Message-ID: <CAKfTPtCXxp54Gwy4T0bkuwnGXgDrLby+eQvnqpXctv1OMevN9Q@mail.gmail.com>
+Subject: Re: [PATCH v8 03/15] PM: Introduce an Energy Model management framework
+To: Quentin Perret <quentin.perret@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Chris Redpath <chris.redpath@arm.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        viresh kumar <viresh.kumar@linaro.org>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Cc: Steve Muckle" <smuckle@google.com>, adharmap@codeaurora.org,
+        Saravana Kannan <skannan@codeaurora.org>,
+        pkondeti@codeaurora.org, Juri Lelli <juri.lelli@redhat.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        currojerez@riseup.net, Javi Merino <javi.merino@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCnfTlKKeNb+sAYAA--.52S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxGF13try7Wr4xCw4fury8Zrb_yoWrur1Upa
+	9xKFy2kw4DJr17t3srXr1UWry3KryxJry7J3Z8GrySyFn8AFnrtr1Fgw4ruFWUCrW8Gw1j
+	yw1UtasruryYyFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Ib7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0
+	I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I
+	8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IY
+	c2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+	1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3Jb
+	IYCTnIWIevJa73UjIFyTuYvjxU-M5lUUUUU
+
+On Wed, 7 Nov 2018 at 18:02, Quentin Perret <quentin.perret@arm.com> wrote:
+>
+> Hi Vincent,
+>
+> On Wednesday 07 Nov 2018 at 17:32:32 (+0100), Vincent Guittot wrote:
+> > Hi Quentin,
+> >
+> > On Tue, 16 Oct 2018 at 12:15, Quentin Perret <quentin.perret@arm.com> wrote:
+> > >
+> >
+> > > +
+> > > +/**
+> > > + * em_pd_energy() - Estimates the energy consumed by the CPUs of a perf. domain
+> > > + * @pd         : performance domain for which energy has to be estimated
+> > > + * @max_util   : highest utilization among CPUs of the domain
+> > > + * @sum_util   : sum of the utilization of all CPUs in the domain
+> > > + *
+> > > + * Return: the sum of the energy consumed by the CPUs of the domain assuming
+> > > + * a capacity state satisfying the max utilization of the domain.
+> > > + */
+> > > +static inline unsigned long em_pd_energy(struct em_perf_domain *pd,
+> > > +                               unsigned long max_util, unsigned long sum_util)
+> > > +{
+> > > +       unsigned long freq, scale_cpu;
+> > > +       struct em_cap_state *cs;
+> > > +       int i, cpu;
+> > > +
+> > > +       /*
+> > > +        * In order to predict the capacity state, map the utilization of the
+> > > +        * most utilized CPU of the performance domain to a requested frequency,
+> > > +        * like schedutil.
+> > > +        */
+> > > +       cpu = cpumask_first(to_cpumask(pd->cpus));
+> > > +       scale_cpu = arch_scale_cpu_capacity(NULL, cpu);
+> > > +       cs = &pd->table[pd->nr_cap_states - 1];
+> > > +       freq = map_util_freq(max_util, cs->frequency, scale_cpu);
+> > > +
+> > > +       /*
+> > > +        * Find the lowest capacity state of the Energy Model above the
+> > > +        * requested frequency.
+> > > +        */
+> > > +       for (i = 0; i < pd->nr_cap_states; i++) {
+> > > +               cs = &pd->table[i];
+> > > +               if (cs->frequency >= freq)
+> > > +                       break;
+> > > +       }
+> > > +
+> > > +       /*
+> > > +        * The capacity of a CPU in the domain at that capacity state (cs)
+> > > +        * can be computed as:
+> > > +        *
+> > > +        *             cs->freq * scale_cpu
+> > > +        *   cs->cap = --------------------                          (1)
+> > > +        *                 cpu_max_freq
+> > > +        *
+> > > +        * So, ignoring the costs of idle states (which are not available in
+> > > +        * the EM), the energy consumed by this CPU at that capacity state is
+> > > +        * estimated as:
+> > > +        *
+> > > +        *             cs->power * cpu_util
+> > > +        *   cpu_nrg = --------------------                          (2)
+> > > +        *                   cs->cap
+> > > +        *
+> > > +        * since 'cpu_util / cs->cap' represents its percentage of busy time.
+> > > +        *
+> > > +        *   NOTE: Although the result of this computation actually is in
+> > > +        *         units of power, it can be manipulated as an energy value
+> > > +        *         over a scheduling period, since it is assumed to be
+> > > +        *         constant during that interval.
+> > > +        *
+> > > +        * By injecting (1) in (2), 'cpu_nrg' can be re-expressed as a product
+> > > +        * of two terms:
+> > > +        *
+> > > +        *             cs->power * cpu_max_freq   cpu_util
+> > > +        *   cpu_nrg = ------------------------ * ---------          (3)
+> > > +        *                    cs->freq            scale_cpu
+> > > +        *
+> > > +        * The first term is static, and is stored in the em_cap_state struct
+> > > +        * as 'cs->cost'.
+> > > +        *
+> > > +        * Since all CPUs of the domain have the same micro-architecture, they
+> > > +        * share the same 'cs->cost', and the same CPU capacity. Hence, the
+> > > +        * total energy of the domain (which is the simple sum of the energy of
+> > > +        * all of its CPUs) can be factorized as:
+> > > +        *
+> > > +        *            cs->cost * \Sum cpu_util
+> > > +        *   pd_nrg = ------------------------                       (4)
+> > > +        *                  scale_cpu
+> > > +        */
+> > > +       return cs->cost * sum_util / scale_cpu;
+> >
+> > Why do you need to keep scale_cpu outside the cs->cost ? do you expect
+> > arch_scale_cpu_capacity() to change at runtime ?
+>
+> Unfortunately yes, it can. It'll change at least during boot on arm64,
+> for example (see drivers/base/arch_topology.c). And also, userspace can
+> actually set that value via sysfs ...
+
+yes. I had this in mind too but we are also rebuilding sched_domain in
+this case and thought that everything could be changed at the same
+time
+
+>
+> > If the returned value of arch_scale_cpu_capacity() changes, we will
+> > have to rebuild several others things and we can include the update of
+> > cs->cost
+>
+> Yeah, that was the original approach I had actually. Some of the older
+> versions of this patch set were doing just that. The only issue is that,
+> in order to make the cs->cost updatable are run time, you need to
+> introduce some level of protection around that data structure (RCU or
+> something). And that would make it a bit harder for IPA (for example) to
+> access the data -- it doesn't need any kind of RCU to access it's EM at
+> the moment.
+>
+> We can probably do something a bit smarter and introduce RCU protection
+> only for the 'cost' field or something, but I was hoping that we could
+> keep things simple for now and do that kind of small optimization a bit
+> later :-)
+
+Thanks for the explanation
+
+>
+> Thanks,
+> Quentin

@@ -1,0 +1,159 @@
+Return-Path: <xen-devel-bounces@lists.xenproject.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:48 -0000
+Received: from icoremail.net (unknown [209.85.214.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f+1zEONbtx1ZAQ--.26351S3;
+	Thu, 08 Nov 2018 00:19:00 +0800 (CST)
+Received: from mail-pl1-f171.google.com (unknown [209.85.214.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3VUFvEONbwEUYAA--.93S3;
+	Thu, 08 Nov 2018 00:18:55 +0800 (CST)
+Received: by mail-pl1-f171.google.com with SMTP id s5-v6so8056761plq.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:18:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:thread-topic:thread-index:date:message-id:references
+         :in-reply-to:accept-language:content-language:mime-version:subject
+         :precedence:list-id:list-unsubscribe:list-post:list-help
+         :list-subscribe:cc:content-transfer-encoding:errors-to:sender;
+        bh=Fu59wSCGj0LAd4j1ZTarn21dnADydEL50JfJxlrK3z0=;
+        b=LehrWcvffbnbe6mSEz+R6eLNCtDUobsv2/Uq8BDK+LIFxud1WEhCUyrO1C4XopLvbY
+         +ATtohop35C62j6STQeAvOmGnetNiQSSfz0vQGvtJt9Iu5HUQmDW2Vdl/JOqLyh3wzPk
+         V8tiGi4/etoJi8m+MKvytT9I5wSya5Aev7tnB3PiNG7s1O9qf+xGbYcepD2XQgjE7DPV
+         F7/r2caeRjNRTlCTbefloCQt1VUd7Ih6qldwziMt8TLeVwpKEtWZ8Hnx6nd/7mZ4jMUV
+         PJrMfJar3tPa1NkcEEgdZ/zTxj0lYn2YlKTXJdHDQ8uxAn6H8z4NVMF5FgSZb/hTRvkd
+         tl7w==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of xen-devel-bounces@lists.xenproject.org designates 192.237.175.120 as permitted sender) smtp.mailfrom=xen-devel-bounces@lists.xenproject.org
+X-Gm-Message-State: AGRZ1gL2QpqrGBWhV8demXTO5TawOK1bGsZxCE98LDpDX/QcTfop1QqH
+	+oU7JUfuhR6TGOzJ18Nb2uF1VJqZrBCCgf3jp2Fm2WwqTa8A8HKhEA==
+X-Received: by 2002:a17:902:1026:: with SMTP id b35-v6mr848988pla.283.1541607535062;
+        Wed, 07 Nov 2018 08:18:55 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5440631pjt;
+        Wed, 7 Nov 2018 08:18:54 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fDmsgoZrmDPHf9YEOHGx+C/5Df9TXsGynqfN+fRE7WkbKVfMRk/93a0A51yonuC+SPvRUE
+X-Received: by 2002:a81:798d:: with SMTP id u135-v6mr840405ywc.458.1541607533932;
+        Wed, 07 Nov 2018 08:18:53 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541607533; cv=none;
+        d=google.com; s=arc-20160816;
+        b=OX0exwr0H4CDRN9a/IcvI0SBxBkaBqEoiWOJtJIfZHrmYxFNkSK4o0PMyJWNAGB6hM
+         nbQNYMhES09KfQl5Axy6URPOLU5v78Iv1l3l0UblAGk3JaSTGILDOvfsQeYvOYSzk2UT
+         MidRSdVHegRG+0pkxPKj+05HTopSBNMMtAPwWeaidMGFDmUTDoKAeMgQKztcwG5BEQRW
+         x434n5v1j1Hhjb7C/evyq9OmMFHHJEJdQnIV40vOMasSZEyO+Tp2F0cL1hlIckkaaai2
+         q2VHuEry5SP/kmHdpAIEnXeWXCwf1Fsmx8rJWSl0fslFOj2+V2AOEtpJ39P/ZEf1ko+W
+         rCoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=sender:errors-to:content-transfer-encoding:cc:list-subscribe
+         :list-help:list-post:list-unsubscribe:list-id:precedence:subject
+         :mime-version:content-language:accept-language:in-reply-to
+         :references:message-id:date:thread-index:thread-topic:to:from;
+        bh=Fu59wSCGj0LAd4j1ZTarn21dnADydEL50JfJxlrK3z0=;
+        b=j8xHPcrEzxSF43NFBkfOg/z8v7rQgKBRJK1Mx5YqezjpI40Zkkb9wNnvTn0CziWtpv
+         A/xBFcvQCkZkdxaEAeacrFbA3IANiZy0XVf7x/nkedlJC0deLaJ+XWeh9Lxc+t55cxvv
+         PPKemrjJjIQOkk20DdX63SmecM5RoixuDD49yN7JIftGTcBvzBw+FYFNpHwCU2E/Ndgz
+         eIeitUG3CxTaa11I7a03tMNhbLKgv4p+PeOvQFwPcrWs4Bb33oG5TBWj0a7X+pBftKKE
+         2XRDmEsNebvy3fhguXSQTc0C0lluVsMx26blRSGzL9xjPnEgy2FqCyNl/eHgefx1zB1e
+         KAMg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of xen-devel-bounces@lists.xenproject.org designates 192.237.175.120 as permitted sender) smtp.mailfrom=xen-devel-bounces@lists.xenproject.org
+Received: from lists.xenproject.org (lists.xenproject.org. [192.237.175.120])
+        by mx.google.com with ESMTPS id n1-v6si652493ywf.226.2018.11.07.08.18.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 08:18:53 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of xen-devel-bounces@lists.xenproject.org designates 192.237.175.120 as permitted sender) client-ip=192.237.175.120;
+Received: from localhost ([127.0.0.1] helo=lists.xenproject.org)
+	by lists.xenproject.org with esmtp (Exim 4.89)
+	(envelope-from <xen-devel-bounces@lists.xenproject.org>)
+	id 1gKQV7-0001Pa-B2; Wed, 07 Nov 2018 16:16:17 +0000
+Received: from all-amaz-eas1.inumbo.com ([34.197.232.57]
+ helo=us1-amaz-eas2.inumbo.com)
+ by lists.xenproject.org with esmtp (Exim 4.89) (envelope-from
+ <srs0=w2c8=ns=dornerworks.com=stewart.hildebrand@srs-us1.protection.inumbo.net>)
+ id 1gKQV5-0001PV-TC
+ for xen-devel@lists.xenproject.org; Wed, 07 Nov 2018 16:16:15 +0000
+X-Inumbo-ID: 724bd0a6-e2a8-11e8-a866-12d6303a7972
+Received: from webmail.dornerworks.com (unknown [12.207.209.150])
+ by us1-amaz-eas2.inumbo.com (Halon) with ESMTP
+ id 724bd0a6-e2a8-11e8-a866-12d6303a7972;
+ Wed, 07 Nov 2018 16:16:14 +0000 (UTC)
+From: Stewart Hildebrand <Stewart.Hildebrand@dornerworks.com>
+To: Ian Jackson <ian.jackson@citrix.com>
+Thread-Topic: [Xen-devel] preparations for 4.11.1 and 4.8.5
+Thread-Index: AQHUXwfMkcx4gj8DBkOvDSASmtb0TaVDYJowgAGWFQD//610AA==
+Date: Wed, 7 Nov 2018 16:06:10 +0000
+Message-ID: <ea32371df5004f63bb7c1b21f797eeef@dornerworks.com>
+References: <5BBB564202000078001EF950@prv1-mh.provo.novell.com>
+ <700fe05ef18e46f9a05d3f9af0716529@dornerworks.com>
+ <23523.2010.727777.392057@mariner.uk.xensource.com>
+In-Reply-To: <23523.2010.727777.392057@mariner.uk.xensource.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.27.14.26]
+MIME-Version: 1.0
+X-spam-status: No, score=-2.9 required=3.5 tests=ALL_TRUSTED, BAYES_00,
+ MAILSHELL_SCORE_0_4
+X-Spam-Flag: NO
+Subject: Re: [Xen-devel] preparations for 4.11.1 and 4.8.5
+X-BeenThere: xen-devel@lists.xenproject.org
+X-Mailman-Version: 2.1.23
+Precedence: list
+List-Id: Xen developer discussion <xen-devel.lists.xenproject.org>
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Cc: Lars Kurth <lars.kurth@citrix.com>,
+ Stefano Stabellini <sstabellini@kernel.org>, Wei Liu <wei.liu2@citrix.com>,
+ Jan Beulich <JBeulich@suse.com>, Anthony Perard <anthony.perard@citrix.com>,
+ xen-devel <xen-devel@lists.xenproject.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+X-CM-TRANSID: AQAAfwB3VUFvEONbwEUYAA--.93S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWruFW5WFyUtr47uw1xGrW3ZFb_yoWDXwc_uw
+	4UAa4rKF43JF4UtrW3tF1rZ343WanFqFnru3y8CrWIvayrGr4xWanrJ34rWFy3XrW8Jrnr
+	ZF18Zw18tFyfWjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbK8YjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r4UJwAa7VCE64xvF2
+	IEb7IF0Fy264xvF2IEb7IF0Fy264kE64k0F2IE7I0Y6sxI4wAS0I0E0xvYzxvE52x082IY
+	62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7V
+	C2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4xvF2IE
+	b7IF0Fy264kE64k0F24l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzx
+	kY4VCF77xAMxkIecxEwVCI4VWUMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AK
+	xVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxV
+	W8JVWxJwCYIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr1l42xK82IYc2Ij64vIr41l42xK
+	82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2
+	xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
+	WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rV
+	W3JVWrJr1l6VACY4xI67k04243AbIYCTnIWIevJa73UjIFyTuYvjxUf_M3DUUUU
+
+T24gV2VkbmVzZGF5LCBOb3ZlbWJlciA3LCAyMDE4IDEwOjQyIEFNLCBJYW4gSmFja3NvbiB3cm90
+ZToNCj4gQXJlIHRoZXNlIGNvbW1pdGlkcyBmcm9tIHhlbi5naXQjbWFzdGVyIGFuZCB0aGUgY29y
+cmVzcG9uZGluZw0KPiBxZW11LXhlbi5naXQgYnJhbmNoID8NCg0KU29ycnksIG5vLCBhIGZldyBv
+ZiB0aG9zZSB3ZXJlIGZyb20geGVuLmdpdCNzdGFnaW5nLTQuOSBhbmQgcWVtdS14ZW4uZ2l0I3N0
+YWdpbmctNC45Lg0KDQpIZXJlJ3MgdGhlIHNhbWUgbGlzdCwgYnV0IHdpdGggY29tbWl0IGlkcyBm
+b3IgdGhlIHNhbWUgY29tbWl0cyBvbiB4ZW4uZ2l0I21hc3RlcjoNCmY0OWZhNjU4ICAgIHRvb2xz
+Om1pc2M6eGVubG9ja3Byb2Y6IGZpeCBwb3NzaWJsZSBmb3JtYXQgc3RyaW5nIG92ZXJmbG93DQo3
+OTZkZWEzNyAgICB0b29sczogaW5jbHVkZSBzeXMvc3lzbWFjcm9zLmggb24gTGludXgNCjJkNzhm
+NzhhICAgIHRvb2xzOiBmaXggc2V2ZXJhbCAiZm9ybWF0LXRydW5jYXRpb24iIHdhcm5pbmdzIHdp
+dGggR0NDIDcNCg0KQW5kIHFlbXUteGVuLmdpdCNtYXN0ZXI6DQo3NWU1YjcwZSAgICBtZW1mZDog
+Zml4IGNvbmZpZ3VyZSB0ZXN0DQpkZTgxZDcyZCAgICBibGtkZWJ1ZzogQ2F0Y2ggYnMtPmV4YWN0
+X2ZpbGVuYW1lIG92ZXJmbG93DQowNWNjNzU4YSAgICBibGt2ZXJpZnk6IENhdGNoIGJzLT5leGFj
+dF9maWxlbmFtZSBvdmVyZmxvdw0KMTIxODI5Y2IgICAgdXNiOiBGaXggYnVpbGQgd2l0aCBuZXdl
+ciBnY2MNCmY5NWNjOGI2ICAgIHNsaXJwL3NtYjogUmVwbGFjZSBjb25zdGFudCBzdHJpbmdzIGJ5
+IGdsaWIgc3RyaW5nDQoNClRoYW5rcywNClN0ZXcNCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fClhlbi1kZXZlbCBtYWlsaW5nIGxpc3QKWGVuLWRldmVsQGxp
+c3RzLnhlbnByb2plY3Qub3JnCmh0dHBzOi8vbGlzdHMueGVucHJvamVjdC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby94ZW4tZGV2ZWw=

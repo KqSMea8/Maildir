@@ -1,0 +1,145 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:26 -0000
+Received: from icoremail.net (unknown [209.85.215.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH3qxTuNbBJtaAQ--.26905S3;
+	Thu, 08 Nov 2018 04:44:35 +0800 (CST)
+Received: from mail-pg1-f177.google.com (unknown [209.85.215.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXNkKuTuNb5jwZAA--.1055S3;
+	Thu, 08 Nov 2018 04:44:30 +0800 (CST)
+Received: by mail-pg1-f177.google.com with SMTP id z10so5934626pgp.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:44:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:message-id
+         :mime-version:content-transfer-encoding:from:subject:to:cc
+         :in-reply-to:references:sender:precedence:list-id;
+        bh=7kk0dbgvtQa6Kn8uGx1P1uN3nr+4eIq/0WaI9maF7K8=;
+        b=DFT3PkRH1oQfKvJIIppNy/bGZjebBP85W4u26R/1EAjf+tHGChxHn/Q06fNGL9T7ik
+         mE5LvhHGzyeXqUzxgYUdAkbux3t5ual9xdSQgqTodSJp8SowJdYZXWRSQ8pxc+f8Zl1J
+         chjx+OR2XDVPhnZpmcefesN5zMKXJwRLQKXE8wYfLAHQlXQz3zJsDaWJJmlXH1WfDf+7
+         zzPF3FDqu+mP1IgqPl6Cssb6E7RSEq2oMIXWaGime6Zk4KmDROf7Sdo6GZ2aWvRlppZ+
+         iX9de3bBkPVBiiDnTRZ2XGuVYaj3jTl3FPMj/VnBceIi0W3O5jaGStI5TjX1xPq9ALWx
+         3cEA==
+X-Gm-Message-State: AGRZ1gL0/Y1kzKgIPKls6bYOqt/3siMxy8EO5tYS7clZ7VhyWozPo0Uf
+	/pF++Zat4VJ4TiWkG+uUhtyucKW7jJ9ds+Jjq4c/BUCJ9vhr5TCJ8g==
+X-Received: by 2002:a63:2315:: with SMTP id j21mr1504820pgj.297.1541623469932;
+        Wed, 07 Nov 2018 12:44:29 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5722933pjt;
+        Wed, 7 Nov 2018 12:44:29 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dRkSL9qgWDOWkXspGPn164u2tfok3ldJbgOLIaxcVtNWM/kmrA1+6WO/iU593QliGKb/ti
+X-Received: by 2002:a17:902:4c08:: with SMTP id a8-v6mr1775370ple.211.1541623469173;
+        Wed, 07 Nov 2018 12:44:29 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541623469; cv=none;
+        d=google.com; s=arc-20160816;
+        b=gEEjPHNYIA1rgmEtpybF+gTXzcR7XybAToUAQd0Xjou1YPr4RsBQ/ZdkMCKPCzQ/5l
+         ZfCGeF0htKATFetjJglPjUO0jD7yeKpoJn0w223rDx3OOgCvmJTggIZ7InY2m7BDVkml
+         xW0JtIxq/Mfn7b519ZFSYM2NtAOGGRH8D+VOWxKXXwpMPKXVB4fcKPXy2W8Idq0LfjfT
+         d0rEndrNOMFGXEG9rP+ghq3KoucrIokS6nVJITsR4jmhygXmVrcpxCA/f13BRJCZutaQ
+         GrxskAHh9hgQrYXhuVEmz1gikbU/Bg+aeLA1zA2njkMgCtyKP9/bjS1llhgWaQnnrJGi
+         KboA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:cc:to:subject:from
+         :content-transfer-encoding:mime-version:message-id:date
+         :dkim-signature;
+        bh=7kk0dbgvtQa6Kn8uGx1P1uN3nr+4eIq/0WaI9maF7K8=;
+        b=vOHQ3M4iiQTy690QUhRRyOBMc+/miBSCb5ENibzZEX/TD6tzMrS7ZqguXNmHbPUz7X
+         Yzj5L5k3KOtwJxDJ4KzhoHdRRx+btZFZtW+Ck/YsIDAN56mMwmdOZNh7jYjL/mCRJbvh
+         2+R2WexjWlO5/G1r5d406Yuf/0JAJYcBgA290vrz7yKn2dMSZbLbVzK+jFbxWLiQ5bQg
+         hK4WJVE5e+ouVdKRu8MDKMZjtEANC+uxCeofPkApWJEUDUcoEmHOq6GBFp2qoP8+R7dE
+         p9qjxWZ2L65jQdQwz7/fUAlahuXA22k5H3UjNlxo+O/SQJLsKIzPBI4vjPgJBVl+/BMJ
+         KJ6A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@genki.is header.s=dkim header.b=mi3xGCEB;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=genki.is
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id ca18-v6si1841426plb.261.2018.11.07.12.44.13;
+        Wed, 07 Nov 2018 12:44:29 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726906AbeKHGQD (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:16:03 -0500
+Received: from genki.is ([104.200.25.21]:43216 "EHLO genki.is"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726517AbeKHGQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:16:03 -0500
+Received: by genki.is (OpenSMTPD) with ESMTP id 707560a6;
+        Wed, 7 Nov 2018 20:43:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=genki.is; h=date
+        :message-id:mime-version:content-transfer-encoding:content-type
+        :from:subject:to:cc:in-reply-to:references; s=dkim; bh=KC7lH5+j5
+        kdrLgP6UaMw+u32l6s=; b=mi3xGCEBpMZCFBDlKa1nAfQNRVNKVlMceD9pcqhM/
+        vVg5SlNX7gtChr8WrGhESCjivIqklKLQnFAtEcW2vGNP2YwRX/tl/jOh/l25AFqn
+        O79tFWw6gm2xAOdjUK8k8mQ1fsX5BxUz6axZolNm5kFpT2IE4AJ1K4Aia8VKoAmk
+        KbEsZBro7wRU4YqJAARCDb/AoGdw6xZYFH/pom34z/p6e9+RhF5MnMHVv+7oGCo8
+        dOSgGGUVRUS/UWmYw0wIsPslT+iZaIO0UkGFAYab0nAdK7QMFvFVgS/blHdWRXDj
+        wEwPJ2H3cBmB+1BxNK003fCnXLuQcLELTzR/XT5PWhaTg==
+Received: by genki.is (OpenSMTPD) with ESMTPSA id b4859263 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Wed, 7 Nov 2018 20:43:58 +0000 (UTC)
+Date: Wed, 07 Nov 2018 12:43:58 -0800
+Message-ID: <20181107.204358.257636196@genki.is>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+From: Genki Sky <sky@genki.is>
+Subject: Re: [PATCH] Revert "scripts/setlocalversion: git: Make -dirty check
+ more robust"
+To: Brian Norris <briannorris@chromium.org>, lists@nerdbynature.de
+Cc: Guenter Roeck <linux@roeck-us.net>, yamada.masahiro@socionext.com,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+In-Reply-To: <20181107184435.GA168339@google.com>
+References: <1541527838-4585-1-git-send-email-linux@roeck-us.net>
+        <20181106.192305.406697677@genki.is> <20181107022156.GA254567@google.com>
+        <alpine.DEB.2.21.999.1811061845161.5308@trent.utfs.org>
+        <CA+ASDXPMMXCBN6PU8qzRm579sC9VBdwnxZdZwRdPY1cBUP8oGQ@mail.gmail.com>
+        <20181107184435.GA168339@google.com>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXNkKuTuNb5jwZAA--.1055S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrZFW3Ar1kAFykGr1DGw1rJFb_yoWfJrc_WF
+	s7Za1DXFs8Cr48Xw1fKFWUAFZFva15u397X3s3t3yUua4rXFZ8AFZ7XrZF9Fn8tFW0vFya
+	93y3Zw4xCr1aqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbaxYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0
+	cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z2
+	80aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI
+	7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r
+	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+	b7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYx
+	BIdaVFxhVjvjDU0xZFpf9x07jmSoXUUUUU=
+
+On Wed, 7 Nov 2018 10:44:37 -0800, Brian Norris <briannorris@chromium.org> wrote:
+> On Tue, Nov 06, 2018 at 08:00:36PM -0800, Brian Norris wrote:
+> > On a different tangent: how about the --no-optional-locks (see
+> > git(1))? Will this get you your "up-to-date" result without writing to
+> > the .git directory? I've only read the documentation, but not tested
+> > it.
+
+This option definitely seems to be what we want, good find.
+
+> Unfortunately, --no-optional-locks is new as of git 2.14. Dunno how new
+> of a git we expect people to use.
+
+Hmm, I'm not sure who can speak to this.
+
+Though if it's too recent, then based on earlier discussion, it sounds
+like something like this (hack) might work best:
+
+  [ -w .git ] &&
+          touch .git/some-file-here 2>/dev/null &&
+          git update-index --refresh --unmerged >/dev/null
+  if git diff-index --name-only HEAD | ...

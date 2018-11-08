@@ -1,0 +1,162 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:17 -0000
+Received: from icoremail.net (unknown [209.85.210.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv5qmeONbF41bAQ--.27498S3;
+	Thu, 08 Nov 2018 07:43:35 +0800 (CST)
+Received: from mail-pf1-f172.google.com (unknown [209.85.210.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXfkqkeONbqcYZAA--.2074S3;
+	Thu, 08 Nov 2018 07:43:33 +0800 (CST)
+Received: by mail-pf1-f172.google.com with SMTP id b11-v6so8408633pfi.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 15:43:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=qtT9yzn9H7p5563WZFxhEa0p2AjgH73WRHR8aAokm8U=;
+        b=Dd2QB/7/D9glOWJjXQjHJb0tlAfqa5KG6h7xCTNxvsa0LWqxs2HCtPcNrt+F789L6e
+         SMQETA/fdSyUL2k2MpWHhfPQvZManbQyivfnI0VwENfVHiPZmzygfDDupJkp+zh8tBjQ
+         YwtSm9QuzCSQQe81Dl+SqYYPK5+N/39v0F7P4f6umgwkMmffRw2ZOSWK8t3Y02XR8+GP
+         SR+/x+crwbJsb7xiSq7Uxw4OazifMHBFHON5diAmRjUt8qlSfT1IK+deNDKCtitSPoMi
+         myh8yui/hk0B3obAUEhbSKKXUEm0dMgrFOh8sGddBWtATxZrIwsckPiVVoL0RAdwsian
+         K8Pw==
+X-Gm-Message-State: AGRZ1gIyrxE8x1nfd/9gwgKBY7B59WzfIyDmE/7ABFQrTI0Q3MftCRu4
+	/B7byjnS6HHjAEmUufzXaiAXTTmO232TwJUOV4n9xWiO8H0mFc2FDw==
+X-Received: by 2002:a63:9402:: with SMTP id m2mr1880409pge.93.1541634212715;
+        Wed, 07 Nov 2018 15:43:32 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp137989pjt;
+        Wed, 7 Nov 2018 15:43:32 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fk0exr23b8fTCjmQZ3rlWT6ouPBEfSD6ufsfNe59PsaEA/bBCDZEgAN60DstkxxpEqU0RI
+X-Received: by 2002:a17:902:8d83:: with SMTP id v3-v6mr2335581plo.162.1541634211979;
+        Wed, 07 Nov 2018 15:43:31 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541634211; cv=none;
+        d=google.com; s=arc-20160816;
+        b=WQtPqvkBL+D4DL8r1jn3qPWdV+RngcpFAvYFaPQhY/dT3xTWf39c86izS3AtFuuGAi
+         JoMfMr8e7MO7OWBafP0aiwwUEm1M+luvLCF18Yf8u/7n1ERW2DnW+8dg1DnFHJI2GCaK
+         1miKU6pcsNWmWz6xVCRawCeBjmxBGGJnicQNzbqNZtcsug2B2iprFgx3PcXT0HFNZfhg
+         GA5it3f2KIofVs42kRMFALU6E0fBrA/riJ0m08UvmkAA4WsNLMpK2TwU3BtWkStlY5ez
+         gMn8xKP8eKVZdv/elbaLXBoex5sINToq1E7ZW0f5RVf/Sgh7V/swpa6S2Rwv/IaRCEiA
+         IHNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=qtT9yzn9H7p5563WZFxhEa0p2AjgH73WRHR8aAokm8U=;
+        b=vQ6VCBbNX6uNWRIbP5H1MVB7tFYNy9A8WwLc3irmIKCe28c6B/L2qYBzzsdXAmx7UU
+         ZZ1+S6CBhgiDRemnNkpXcPzTmV99NQPdmSkeWWljHZ+IWU223101uXTomSs9SH4ybi6V
+         JFgFxAkoKAZsiT+XyJ6qLzyYSaxPLsPYzs4FZHnWnGZOjYuU1Wh1VdMgN25+TPPADV57
+         O9GUh6E98CMxr+m+XEFWHwreG6KNrgOsBDMRRh6D7yT30iwVH8GJfW3fsewoAm4cuKl+
+         HZMUJ2cUzsDVq9DLA4ExYhGtpAQZ03MaxENdWtQXP8Y+9+UgZP3HoE2n+5T04iyC62Yv
+         E+Lg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kernel.org header.s=default header.b=SDVlyMS5;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id m126-v6si2507266pfc.265.2018.11.07.15.43.17;
+        Wed, 07 Nov 2018 15:43:31 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728015AbeKHJPm (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 04:15:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727260AbeKHJPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 04:15:42 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5746C20882;
+        Wed,  7 Nov 2018 23:42:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1541634179;
+        bh=Z8YQ3I2qLt+41BXs33mAuHv0KaiQsmjD2qPWvfRS8tQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SDVlyMS5KczWmAeUglJGxVaDMRfs2U9Sg06uVAwgd4GYC8KyKIutEIXntxq5m69XT
+         VI1Ma8+Le4aCz8n6aPM1a0Y6nPJ++HZE1PgGJJS9NU2KS/rpYPA6+Up7uPeVNe1QsW
+         IkafT7+N8qKrbrUU2yWbxNLXcrMkQbAWeDE9Xm4U=
+Date: Wed, 7 Nov 2018 17:42:57 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Cc: linux-pci@vger.kernel.org, keith.busch@intel.com,
+        alex_gagniuc@dellteam.com, austin_bolen@dell.com,
+        shyam_iyer@dell.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI/MSI: Don't touch MSI bits when the PCI device is
+ disconnected
+Message-ID: <20181107234257.GC41183@google.com>
+References: <20180918221501.13112-1-mr.nuke.me@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180918221501.13112-1-mr.nuke.me@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXfkqkeONbqcYZAA--.2074S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7WryfAryrAw4fXFyfZw1DKFg_yoW8XrW8pF
+	W0ga15CFWkJw4UWwsrZa1UuF13JFs3JFWxtr1fWw129a9xAF9YgFy5K3WfWw13JFW7Zr42
+	vw1Yqw1kuan8AaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPYb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6FWlc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r1j6r1xMxvI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bnhL8U
+	UUUU=
+
+On Tue, Sep 18, 2018 at 05:15:00PM -0500, Alexandru Gagniuc wrote:
+> When a PCI device is gone, we don't want to send IO to it if we can
+> avoid it. We expose functionality via the irq_chip structure. As
+> users of that structure may not know about the underlying PCI device,
+> it's our responsibility to guard against removed devices.
+> 
+> .irq_write_msi_msg() is already guarded inside __pci_write_msi_msg().
+> .irq_mask/unmask() are not. Guard them for completeness.
+> 
+> For example, surprise removal of a PCIe device triggers teardown. This
+> touches the irq_chips ops some point to disable the interrupts. I/O
+> generated here can crash the system on firmware-first machines.
+> Not triggering the IO in the first place greatly reduces the
+> possibility of the problem occurring.
+> 
+> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+
+Applied to pci/misc for v4.21, thanks!
+
+> ---
+>  drivers/pci/msi.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index f2ef896464b3..f31058fd2260 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -227,6 +227,9 @@ static void msi_set_mask_bit(struct irq_data *data, u32 flag)
+>  {
+>  	struct msi_desc *desc = irq_data_get_msi_desc(data);
+>  
+> +	if (pci_dev_is_disconnected(msi_desc_to_pci_dev(desc)))
+> +		return;
+> +
+>  	if (desc->msi_attrib.is_msix) {
+>  		msix_mask_irq(desc, flag);
+>  		readl(desc->mask_base);		/* Flush write to device */
+> -- 
+> 2.17.1
+> 

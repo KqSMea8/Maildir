@@ -1,0 +1,162 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:01 -0000
+Received: from icoremail.net (unknown [209.85.210.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn36Ta7eJbC09YAQ--.26273S3;
+	Wed, 07 Nov 2018 21:51:23 +0800 (CST)
+Received: from mail-pf1-f173.google.com (unknown [209.85.210.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnC0fY7eJbva8XAA--.6670S3;
+	Wed, 07 Nov 2018 21:51:20 +0800 (CST)
+Received: by mail-pf1-f173.google.com with SMTP id p17-v6so7350956pfj.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:51:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=Xm8rRqXB/dBb8KA0tLVL1PzMuaZ0c31XdcA4++Vrcew=;
+        b=BUaDs9fjT4PDkeOVDvnFcpNWMLpTuhXYj0I3JN+IM0Q8/W3FexEl3O2rCn+F8qf02m
+         WfKRRNtjJIoKeBrrkBFeKUmkRTGpcGKKFFs3tfaMsmycapK1RbihHm+vZhlGbe3mLIIx
+         kSHspbR+RDQeFIcNjJi3N56mQ2GDIlOgokef4dcTHU6/W6GsX9+yHIfb0stlaRZMG+oA
+         fQGebBDLquBanaalrNIhelIRLgUC9JwqycHKaBeLOJQDIw3mG6m/T9KZawymwpenBQ1Q
+         jHoqwDkgycGpRoNlcsewstr0T+p8DdP0JTOnKDUNkxkYcMbU34R5TMKfWfZ3w8gcrmPw
+         tOUA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLLxLoG3f2mH+SKUJZS2vFUYejZ4epF6NBlkrh4L2ILtXRr3/fL
+	0he77WiHDCMbWR6VQANUYBieB5YkHFaBpOI+hySIxdCwSZKRpzGtig==
+X-Received: by 2002:a63:3c44:: with SMTP id i4mr254967pgn.286.1541598680504;
+        Wed, 07 Nov 2018 05:51:20 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5269292pjt;
+        Wed, 7 Nov 2018 05:51:19 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cCt02qpbes/rxRWLzwajWkApIaY24Zo2SVhy1FMMeTOV6ipwLhfgLKiJoM9pZ7ix4qqase
+X-Received: by 2002:a63:ea43:: with SMTP id l3-v6mr228062pgk.427.1541598679826;
+        Wed, 07 Nov 2018 05:51:19 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541598679; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Pt9vCtgb3xNUsCcXzlfzk044NYoDBlVYHc1cAdRptlsab9DJteympuOqKgx0w+vxbR
+         iLQMRpAAxH2CaI7aj/uau9U6Jy8buRkInmSUHjnrzd+ilA7nLfLfru7MbUpNRvR2V8o9
+         vJ2q2PBleGZuI2fc3Hk5D3jnuhBKex50MiUiRkZGizu9ndePJCXkpy57DcvN7g8T3lSq
+         HIKiSCb3lo8hUMCFiL6vO/eytdsiuJkQYJDlmjN2+m0lh/tnASyel412Gqh/YhesJZJ2
+         +Hi31ZClkUNdmBR8kgAsCrNgmQgl6JKDMahBgFTRSH/nTfo60y2w64czbZcgl1bbL8Ox
+         PMLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=Xm8rRqXB/dBb8KA0tLVL1PzMuaZ0c31XdcA4++Vrcew=;
+        b=n2gFwdgzxsOT4PgqbvnyyqeusxjUmU6nFpldgVShh9LohoPNJsE7UO6d73a4nzEfzo
+         XJXfLbdg033W1bK5OECFjaZAmQVXF26oxd7+gVrge7DzcuwE33P+fTzpE13MvpkraMPw
+         JC1VjP7rAfA+0wofnWm0nWL19e/PWXBDHCsYMyugvYAl/ErfCaO7DpxiIVPRhANtKSmL
+         GcyQ0KCsk44OLsgfmUPsiuW1yd7+L/jipXJpKaLON0ZMq3eKlvKOORek2tDbo4ClQmR6
+         cObq3F+6CP/Gc35XRw2vMqInv3rVhTt+NusVy0o5LySw2db16mLt/CNrY3s96xckj70O
+         vlGw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id t126-v6si741300pfd.133.2018.11.07.05.51.04;
+        Wed, 07 Nov 2018 05:51:19 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730931AbeKGXVM (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:21:12 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51188 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727610AbeKGXVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:21:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8F81A78;
+        Wed,  7 Nov 2018 05:50:44 -0800 (PST)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ADAC13F5CF;
+        Wed,  7 Nov 2018 05:50:41 -0800 (PST)
+Date: Wed, 7 Nov 2018 13:50:39 +0000
+From: Patrick Bellasi <patrick.bellasi@arm.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH v5 02/15] sched/core: make sched_setattr able to tune the
+ current policy
+Message-ID: <20181107135039.GD14309@e110439-lin>
+References: <20181029183311.29175-1-patrick.bellasi@arm.com>
+ <20181029183311.29175-3-patrick.bellasi@arm.com>
+ <20181107121126.GN9781@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107121126.GN9781@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnC0fY7eJbva8XAA--.6670S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrtr43tFyfKr15Xw15try3XFb_yoWDuFg_Xr
+	yrWasrKrn8Ja10ya1akrWDZrZ7GF17Jr1rJ347X34Ivr95tFZ5GFs8CryaqryrtFW3X39r
+	W3sIg34fX3s7tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbDxYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6ry8MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW0oVCq3wCYIxAIcVC2
+	z280aVCY1x0267AKxVW0oVCq3wCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij2
+	8IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr4
+	1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUqc4SUUUU
+	U
+
+On 07-Nov 13:11, Peter Zijlstra wrote:
+> On Mon, Oct 29, 2018 at 06:32:56PM +0000, Patrick Bellasi wrote:
+> 
+> > @@ -50,11 +52,13 @@
+> >  #define SCHED_FLAG_RESET_ON_FORK	0x01
+> >  #define SCHED_FLAG_RECLAIM		0x02
+> >  #define SCHED_FLAG_DL_OVERRUN		0x04
+> > -#define SCHED_FLAG_UTIL_CLAMP		0x08
+> > +#define SCHED_FLAG_TUNE_POLICY		0x08
+> > +#define SCHED_FLAG_UTIL_CLAMP		0x10
+> 
+> That seems to suggest you want to do this patch first, but you didn't..
+
+I've kept it here just to better highlight this change, suggested by
+Juri, since we was not entirely sure you are fine with it...
+
+If you think it's ok adding a SCHED_FLAG_TUNE_POLICY behavior to the
+sched_setattr syscall, I can certainly squash into the previous patch,
+which gives more context on why we need it.
+
+Otherwise, if we want to keep these bits better isolated for possible
+future bisects, I can also move it at the beginning of the series.
+
+What do you like best ?
+
+Since we are at that, are we supposed to document some{where,how}
+these API changes ?
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi

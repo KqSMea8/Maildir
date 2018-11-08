@@ -1,0 +1,206 @@
+Return-Path: <kvm-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:08 -0000
+Received: from icoremail.net (unknown [209.85.215.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH0Kv9eJbO3tYAQ--.26385S3;
+	Wed, 07 Nov 2018 22:24:49 +0800 (CST)
+Received: from mail-pg1-f178.google.com (unknown [209.85.215.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXe0d59OJb4MkXAA--.6014S3;
+	Wed, 07 Nov 2018 22:19:38 +0800 (CST)
+Received: by mail-pg1-f178.google.com with SMTP id 32-v6so7388803pgu.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:19:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:subject:to:cc:references:in-reply-to:user-agent
+         :mime-version:content-transfer-encoding:message-id:sender:precedence
+         :list-id;
+        bh=y/V4QO/zwJ6RacM0oTZKfGaPhVlDD2HW+tMP6Ygs3k0=;
+        b=T0jmr+aRrfilrW/hXZqc33wGCdhQ6ZdP8bWbjPpNYuYXEXgRrjarSrf1dm66iE56Vj
+         S+nLymB+YXj20HbmSc/IqPNz/p22HgpnwSW5OVjqZmczR/8njyqyfi1xNMZRO61wFdKY
+         +nYW0sQ05I/CzJyCOys5OdHUHoE/mpWp2a4O41YMDvcj9BUvf8jVYMFQgBE8IyM9TcSu
+         c2gtFPf7X27qmBdppKnTEcsrNsHQbvB9Lcxn2NwIqciA51xS0H45MblzofnE7qCE87qq
+         mK/4MwP1oxxz9eB1xA4pfJJ3gKglBoH769bfi72GvJXL9o7iB7JF9MGN7/lnSvNVC4HI
+         Z8+g==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=kvm-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=ibm.com
+X-Gm-Message-State: AGRZ1gKHg9xQYetP/Y7MW463YaLeR5rIP8NjgCOibazoZYbzAt5aNhZs
+	S8BQ9FotR5s0q+EmTS+gaFB0REt/tVq2EQp4PPgEZ/YxACJN5cvEdQ==
+X-Received: by 2002:a63:460a:: with SMTP id t10-v6mr325221pga.197.1541600377662;
+        Wed, 07 Nov 2018 06:19:37 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5303719pjt;
+        Wed, 7 Nov 2018 06:19:36 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d6Bp5biyWC19SjUkWKiaN0bDcuuHV+GxGXyGt/rwLbiNLqaVW62QWaWr+ZXtzl+9H5ry5r
+X-Received: by 2002:a63:e655:: with SMTP id p21mr351282pgj.70.1541600376724;
+        Wed, 07 Nov 2018 06:19:36 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541600376; cv=none;
+        d=google.com; s=arc-20160816;
+        b=TIKFGzm1uDCnhRiMAfCqHTS1bycW6ucmma/rxHIZdZfD53bhqwT7Dz7IWPJVYtYob7
+         03idtsQ2gu0pmwgbC8hWwMev6k6wJ0TWh8t3Uvup1LaUh9q0N6c0rEeXahMTjUc712dH
+         dq3sLDhKPXX171nWjCtdBeypL5nPAY6iffWbcG5UySQtsZcJAz60qsPs/cC1Tp+2YKvb
+         /CpAyAD6jTq7TiGzRFBXu0E2nk245qYX0NSnqgSRwAfctXfXadl9YElYWHWPJTVtGNne
+         sxm+jGgatXEgwfFPU1mQmDZ/k1CdD3EExhI3CeawPiQLrCVsl024Y7nf8U19JTtykO1f
+         4yCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:content-transfer-encoding
+         :mime-version:user-agent:in-reply-to:references:cc:to:subject:from
+         :date;
+        bh=y/V4QO/zwJ6RacM0oTZKfGaPhVlDD2HW+tMP6Ygs3k0=;
+        b=aprVjMJgKuJSETgBlYrdYS8QxBPHLb14N5vFjyA8BwwQbiq2UFv7BRrNHRORrFfDRo
+         lFd/7Lnzg5vcrnt21q+UREwFXepTWIW7zFpQAhaKKF+Hdd/s9a3McCr7UhIPNemph6Is
+         UoCdStx8YeD7wWRqyWaJrLdUsKM98AYIblt8Jgie4qnwbTbYHVUnENkxUEV+ma8aYHJA
+         gGyaZ3vPo2ZUTUrx3FlUxGmWYuy59jlIw8tM3Uuna4HQVJqmnvWVyNDPGEqYuZnc/OjU
+         1ljFs1Aw9o9PMZBS8ZPVuyWwvhf3Cub3+f4Czf36uSxiakh+v8RirflK5dz67aW5DEut
+         Iv4Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=kvm-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=ibm.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id h23-v6si862257plr.101.2018.11.07.06.19.22;
+        Wed, 07 Nov 2018 06:19:36 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726897AbeKGXtx convert rfc822-to-8bit (ORCPT
+        <rfc822;fanshuming2011@gmail.com> + 99 others);
+        Wed, 7 Nov 2018 18:49:53 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53940 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726830AbeKGXtx (ORCPT
+        <rfc822;kvm@vger.kernel.org>); Wed, 7 Nov 2018 18:49:53 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id wA7EHe9N146647
+        for <kvm@vger.kernel.org>; Wed, 7 Nov 2018 09:19:18 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2nm1pgg2du-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <kvm@vger.kernel.org>; Wed, 07 Nov 2018 09:19:18 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <kvm@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
+        Wed, 7 Nov 2018 14:19:15 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 7 Nov 2018 14:19:11 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id wA7EJA8p50987230
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 7 Nov 2018 14:19:10 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 54CFDA405B;
+        Wed,  7 Nov 2018 14:19:10 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EEE63A4054;
+        Wed,  7 Nov 2018 14:19:09 +0000 (GMT)
+Received: from localhost (unknown [9.79.176.163])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  7 Nov 2018 14:19:09 +0000 (GMT)
+Date: Wed, 07 Nov 2018 19:49:08 +0530
+From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: [PATCH] KVM: PPC: Move and undef TRACE_INCLUDE_PATH/FILE
+To: Alexander Graf <agraf@suse.de>, Scott Wood <oss@buserror.net>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Steven Rostedt <rostedt@goodmis.org>
+References: <20181107014934.26428-1-oss@buserror.net>
+In-Reply-To: <20181107014934.26428-1-oss@buserror.net>
+User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 18110714-0028-0000-0000-000003163872
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 18110714-0029-0000-0000-000023D286B5
+Message-Id: <1541600158.a6gip2ac6c.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2018-11-07_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1807170000 definitions=main-1811070128
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <kvm.vger.kernel.org>
+X-Mailing-List: kvm@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXe0d59OJb4MkXAA--.6014S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7KrWkWr15JF1fAr1fGw1xKrg_yoW8ZFy8p3
+	Wvy3ZIyrs5trWfZ3ZIvws3Xr1Syr4kAryjgayDX398ZFnIqr10yrnavrsrtry7Xr48Ga4F
+	gr1Skw1qvrsrua7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9jb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc2IjII80xcxEwVAKI48JMxvI42IY6xII
+	jxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4
+	A2jsIE14v26rxl6s0DMxvI42IY6I8E87Iv6xkF7I0E14v26rxl6s0DMxAIw28IcxkI7VAK
+	I48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvf
+	C2KfnxnUUI43ZEXa7IUe1rW7UUUUU==
+
+Scott Wood wrote:
+> TRACE_INCLUDE_PATH and TRACE_INCLUDE_FILE are used by
+> <trace/define_trace.h>, so like that #include, they should
+> be outside #ifdef protection.
+> 
+> They also need to be #undefed before defining, in case multiple trace
+> headers are included by the same C file.  This became the case on
+> book3e after commit cf4a6085151a ("powerpc/mm: Add missing tracepoint for
+> tlbie"), leading to the following build error:
+> 
+>    CC      arch/powerpc/kvm/powerpc.o
+> In file included from arch/powerpc/kvm/powerpc.c:51:0:
+> arch/powerpc/kvm/trace.h:9:0: error: "TRACE_INCLUDE_PATH" redefined
+> [-Werror]
+>   #define TRACE_INCLUDE_PATH .
+>   ^
+> In file included from arch/powerpc/kvm/../mm/mmu_decl.h:25:0,
+>                   from arch/powerpc/kvm/powerpc.c:48:
+> ./arch/powerpc/include/asm/trace.h:224:0: note: this is the location of
+> the previous definition
+>   #define TRACE_INCLUDE_PATH asm
+>   ^
+> cc1: all warnings being treated as errors
+> 
+> Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+> Signed-off-by: Scott Wood <oss@buserror.net>
+> ---
+>  arch/powerpc/kvm/trace.h       | 8 ++++++--
+>  arch/powerpc/kvm/trace_booke.h | 9 +++++++--
+>  arch/powerpc/kvm/trace_hv.h    | 9 +++++++--
+>  arch/powerpc/kvm/trace_pr.h    | 9 +++++++--
+>  4 files changed, 27 insertions(+), 8 deletions(-)
+
+Thanks for getting to this. Apart from a small nit below, for this 
+patch:
+Reviewed-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+
+> 
+> diff --git a/arch/powerpc/kvm/trace.h b/arch/powerpc/kvm/trace.h
+> index 491b0f715d6b..ea1d7c808319 100644
+> --- a/arch/powerpc/kvm/trace.h
+> +++ b/arch/powerpc/kvm/trace.h
+> @@ -6,8 +6,6 @@
+> 
+>  #undef TRACE_SYSTEM
+>  #define TRACE_SYSTEM kvm
+> -#define TRACE_INCLUDE_PATH .
+> -#define TRACE_INCLUDE_FILE trace
+
+The convention is to also have the TRACE_SYSTEM macro defined outside 
+and before the header #ifdef. So, that would be good to do as part of 
+this cleanup as well. If not, I can send a patch later.
+
+Thanks,
+Naveen
+

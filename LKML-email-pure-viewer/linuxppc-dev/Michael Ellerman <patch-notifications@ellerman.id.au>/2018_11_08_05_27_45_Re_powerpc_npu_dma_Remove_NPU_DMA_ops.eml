@@ -1,0 +1,123 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:41 -0000
+Received: from icoremail.net (unknown [209.85.214.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH0L9WONbA+BaAQ--.27257S3;
+	Thu, 08 Nov 2018 05:28:30 +0800 (CST)
+Received: from mail-pl1-f172.google.com (unknown [209.85.214.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAX_kn1WONb9GAZAA--.1911S3;
+	Thu, 08 Nov 2018 05:28:22 +0800 (CST)
+Received: by mail-pl1-f172.google.com with SMTP id s5-v6so8429189plq.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 13:28:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :in-reply-to:to:from:cc:subject:message-id:date:sender:precedence
+         :list-id;
+        bh=R7kaAiLhJLkgqwCQcMdxQbjKaC5RmAUHhucgpMkKoss=;
+        b=T6hpyuT6/nFLesF918rhDGl/fMmgRslaQOTBcS5KAcpkImL0p72cNM4U4AtU82V0I4
+         cPh6coen08yKug95JnabCLscjlj349ZmZUuOWC+PGHtEXdHIsk0JwzcyocxjGx/gQYp6
+         E248J1rmZQoSFttI9kS4u+XOMtMD9Yw7ZWBJILN4we1wAY5ig4MNuT/x16S0YBd6d0fb
+         cC0eUmVS0u7RbcTS7NYeJfxWj4TpYASQVs8v/ch8gxrWk7U7fHAMH8kXLmGkuWDUACzG
+         kSUuMC6suLxc5xcqigiAV/qzJ9KNxaa16UI3URTmbTBFHUyC8pYIVJeDPQWhbPzBckPc
+         0SoQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKRAxQCjx5UJaawuwtEEesiuxZg307rSuGEZEpXdxQ0CbjK3NJO
+	dZsJcXU8ArUAnxJdHaBMDh8+l5cH+j7sPRqidAexyP4OYOuccbQ46Q==
+X-Received: by 2002:a17:902:166:: with SMTP id 93-v6mr1901055plb.68.1541626101679;
+        Wed, 07 Nov 2018 13:28:21 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp25423pjt;
+        Wed, 7 Nov 2018 13:28:20 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eazYbtC5aCUo27DZqpQG6W53d8N2b1ABFiYPEW7GY513O2MMykK4yLY94HTj9VOVtbZqip
+X-Received: by 2002:a62:640c:: with SMTP id y12-v6mr1891646pfb.249.1541626100841;
+        Wed, 07 Nov 2018 13:28:20 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541626100; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ZgSrPyaNeRXY4GVNrZOv2HuL+mOsTo8CxGmgFkEuNzr8mdT8WtKSEZ/ZKo8GtJlZQe
+         sjTR48HX7E6T7+HVVtdZVzay75GPqKDFHH3G2MQrM5asHAk/azyPLsJQAA/A6camjrEz
+         gGJAGg1nKLmsUzCUb9CSjIw7GwWnCJzTK+hmsmL+SnnOoHxcqC8W4ON38+E+Vqj1RXLJ
+         ecbd60huiVpvc7OkcKEm4uXj08S8kyMcA1MYqix5UwsFAx8zKGivzMZCrb9PCXMAr59u
+         BKCDkHp1Q0Kz7TP133kFV15b4j4+PmXhsQFVyUw1M4yQ7Hg8xmxTP13ooZZHRHvFGlSU
+         9hkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:date:message-id:subject:cc:from:to
+         :in-reply-to;
+        bh=R7kaAiLhJLkgqwCQcMdxQbjKaC5RmAUHhucgpMkKoss=;
+        b=0cHWbLdw+Pu+o/i7vMBYNVRVFAyIIUlBp/DCxPvruO+zVHZRlllCn3GNH3GWl/0IG4
+         7bks3QYkAY+ufSWQnu7C8JG+YTy5AMSBkZEodbzFPH1s0x8LaN7+LjdD9zZgacX3Kks+
+         BwkHJBxDwrQ5waFxX9GeGmf+ZeGdxJ/z7oXRRLHlUGLQOT+1onHZas5lyIeyInFhNJZy
+         SNkTT5bkTQpKXMgAv6rVgtMrpvkIsFndh6e1Gaz+xxSGjgXhH5kbzlhGUTXzzaKRkFU2
+         CFinyuRoW8gt2XQtTKTUVM5D9DQECvZy3A6PHy1vcZvuuhgEMvlGWidhJeX+h7qWP9wE
+         jHyA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d187-v6si1950413pfa.68.2018.11.07.13.28.03;
+        Wed, 07 Nov 2018 13:28:20 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727497AbeKHHAA (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:00:00 -0500
+Received: from ozlabs.org ([203.11.71.1]:51643 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727223AbeKHHAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:00:00 -0500
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 42qzz607sKz9sCX; Thu,  8 Nov 2018 08:27:45 +1100 (AEDT)
+X-powerpc-patch-notification: thanks
+X-powerpc-patch-commit: 3182215dd0b2120fb942ed88430cfb7c12d583e0
+In-Reply-To: <20181030110203.27257-1-alistair@popple.id.au>
+To: Alistair Popple <alistair@popple.id.au>,
+        linuxppc-dev@lists.ozlabs.org
+From: Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc: Alistair Popple <alistair@popple.id.au>, hch@lst.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: powerpc/npu-dma: Remove NPU DMA ops
+Message-Id: <42qzz607sKz9sCX@ozlabs.org>
+Date: Thu,  8 Nov 2018 08:27:45 +1100 (AEDT)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAX_kn1WONb9GAZAA--.1911S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrZry5JrWrJrWkZr4kJr1xAFb_yoW3Wwb_Ga
+	y09w1vy3WDWrsI9r1a9a1rWr93Jayq9ry7W34vkrZakasaq3yDXFW3Gry3XF1xXa1UAF90
+	ga4rJ34ak3W5ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUUxYxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbSAYjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UMx02cVCv0xWlc7CjxV
+	AKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vEIxC_CwCY0x0Ix7I2
+	Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lcIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVWUJVW8JwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjx
+	CrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw2
+	0EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bJnQbUUUUU=
+
+On Tue, 2018-10-30 at 11:02:03 UTC, Alistair Popple wrote:
+> The NPU IOMMU is setup to mirror the parent PCIe device IOMMU
+> setup. Therefore it does not make sense to call dma operations such as
+> dma_map_page, etc. directly on these devices. The existing dma-ops
+> simply print a warning if they are ever called, however this is
+> unnecessary and the warnings are likely to go unnoticed.
+> 
+> It is instead simpler to remove these operations and let the generic
+> DMA code print warnings (eg. via a NULL pointer deref) in cases of
+> buggy drivers attempting dma operations on NVLink devices.
+> 
+> Signed-off-by: Alistair Popple <alistair@popple.id.au>
+
+Applied to powerpc fixes, thanks.
+
+https://git.kernel.org/powerpc/c/3182215dd0b2120fb942ed88430cfb
+
+cheers

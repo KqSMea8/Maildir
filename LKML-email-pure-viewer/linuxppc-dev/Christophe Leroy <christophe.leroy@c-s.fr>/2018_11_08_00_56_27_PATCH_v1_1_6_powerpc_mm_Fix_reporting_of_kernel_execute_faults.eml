@@ -1,0 +1,150 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:59 -0000
+Received: from icoremail.net (unknown [209.85.215.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv95YGeNbeVVZAQ--.26866S3;
+	Thu, 08 Nov 2018 00:56:58 +0800 (CST)
+Received: from mail-pg1-f175.google.com (unknown [209.85.215.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDHr0tYGeNbf2sYAA--.339S3;
+	Thu, 08 Nov 2018 00:56:56 +0800 (CST)
+Received: by mail-pg1-f175.google.com with SMTP id c10-v6so7561719pgq.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:56:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :message-id:from:subject:to:cc:date:sender:precedence:list-id;
+        bh=BkACKNXaQKYwY1xQnSFrdSlyWTGF/IO9XWPnVviK0lM=;
+        b=ZGIOo6s2bL/sGeQbBnZDkl2jlwqBUtVax5GaGq390YmWjVgkm9YVpciqywnTiOMlqh
+         40B8bAkjgZeoZBv+SK2V36Jqf6xS4KqAYRE3yRWuWpxCYWk3JvY4gB0nMgwaU59Ndfcc
+         QdLXuwC1ittXbo5FE1Isx0aTt8GhbATzIIxBliAzovBhKhtZlLTdYCQ715QnTIbuvkie
+         5LZfkSu5bEzmVZ6QIyJN+w1L3dMCNzJBp/YUEama59sWn0AZCFEajzt/nPT5N5vROxsP
+         OeJYwv96UwSkGNWVxjmVXHK1f6DVepJI+f0Ue9hrEkjExe2iIxWS7id4bGtCTgpEwxuZ
+         Qj4A==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKvMEx2ejM5ZSW1C7OlEI4xQftyw78i2jlXkB3wQ6s5HHF+USDq
+	p30KPKJV/4aeooDbOBviBDwk5jyLrVRuRLW/pGIeH9mCDGCZdUk1EA==
+X-Received: by 2002:a63:4044:: with SMTP id n65mr821227pga.90.1541609815989;
+        Wed, 07 Nov 2018 08:56:55 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5480854pjt;
+        Wed, 7 Nov 2018 08:56:55 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fd5bmcEi+WZeIocsHMvthDvkXaYHU1u4zqXX41/FWA65hEhiYoH1ciTFjR47C4Rfm9NAvw
+X-Received: by 2002:a63:3204:: with SMTP id y4mr813180pgy.41.1541609815314;
+        Wed, 07 Nov 2018 08:56:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541609815; cv=none;
+        d=google.com; s=arc-20160816;
+        b=p3CTLRj3JJnGDcDSoJzk9UuIn9UCPZaw4RtV8yYqp31Y70WiXQnx+fNQpDr7Y9mIKE
+         UbLd+HWKlHkcHSM4V6K7H54t5QiyYsQmNIjar4U1WEHmM81nUuMBbnmAAcgwHxIoOSl5
+         RtxeILDfCYwOqsRHDnVgUb0H/tkoV40XjFIaMUsK+RdweVlnW6a6ipR847K/qgna3P2L
+         XDYMX/o6fbCgpKbP/r95afYs283A/c0mfgTlSqJmxe7nhvgJuNI2r5eMNziVPn+B3bYC
+         7G470wiX3DSPYtzn9ltnWHBgtBKB8IvFBgu8s1w0DQ1VCZwc76FLxeYGq6fMeniRUMXm
+         VO0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:date:cc:to:subject:from:message-id;
+        bh=BkACKNXaQKYwY1xQnSFrdSlyWTGF/IO9XWPnVviK0lM=;
+        b=NWcX4SQyBySPuqnbcKoAPiLoZOD49zywWOmxyPZ7VhhZpVmNbiBl7JgvHFtjHIZR9T
+         dYgZ9c1epZWWuKy6vyD/luHemTfY9ZopV5+ebrYvoPXqhwopM9cg60wqBF/giytXW3sM
+         xtumEBrhJHBznWu16PZ3dcM2kkwa+mruEE4BRCYKFWIQ0K+ikuTBLJE1yvPKTYh3Q/t5
+         SODgIUonoE/lkX2FfATMId4hcizLLJbe95vDp187nmxI++kmeRKprciKpdx7BdRhSmSY
+         xVKq66JZ4op3SVfWdK7Xlymn4Jlj6rUsBNdXJYqlRkw3quSjXi1rb1rRxYVErEQg6WR3
+         eF+Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 84-v6si1115350pfq.180.2018.11.07.08.56.39;
+        Wed, 07 Nov 2018 08:56:55 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731137AbeKHC1l (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:27:41 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:28140 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727699AbeKHC1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:27:41 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 42qsy21xHkz9tvqX;
+        Wed,  7 Nov 2018 17:56:26 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id DwavtyzrjhmB; Wed,  7 Nov 2018 17:56:26 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 42qsy214KPz9tvqG;
+        Wed,  7 Nov 2018 17:56:26 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C2B118B819;
+        Wed,  7 Nov 2018 17:56:27 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id NPCDEcy7A5Ll; Wed,  7 Nov 2018 17:56:27 +0100 (CET)
+Received: from po14163vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.2])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7FFE98B814;
+        Wed,  7 Nov 2018 17:56:27 +0100 (CET)
+Received: by po14163vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 5AE6F6995E; Wed,  7 Nov 2018 16:56:27 +0000 (UTC)
+Message-Id: <ab8fcb458e1a6ad86382767b3ce7f7cc0d5b7121.1541568127.git.christophe.leroy@c-s.fr>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v1 1/6] powerpc/mm: Fix reporting of kernel execute faults
+ on the 8xx
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, ruscur@russell.cc
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date: Wed,  7 Nov 2018 16:56:27 +0000 (UTC)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDHr0tYGeNbf2sYAA--.339S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw13ur15Xw43Xw4xtr15twb_yoWktrXEv3
+	yjvwsxWF90yF9Y9a10vwnxtrn2yrW7Grn5KF10g3yakFy5JF1UAws5tF4rAr1xZw4qyFn8
+	GF92qrn0k3WIyjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbhxYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwCjxxvEa2IrMx
+	kF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6r1lc2Ij
+	II80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26F4j6r4UJwCYIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8Jr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x
+	804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42
+	xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IU5I0P3UUUUU==
+
+On the 8xx, no-execute is set via PPP bits in the PTE. Therefore
+a no-exec fault generates DSISR_PROTFAULT error bits,
+not DSISR_NOEXEC_OR_G.
+
+This patch adds DSISR_PROTFAULT in the test mask.
+
+Fixes: d3ca587404b3 ("powerpc/mm: Fix reporting of kernel execute faults")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/mm/fault.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index 1697e903bbf2..50e5c790d11e 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -226,7 +226,9 @@ static int mm_fault_error(struct pt_regs *regs, unsigned long addr,
+ static bool bad_kernel_fault(bool is_exec, unsigned long error_code,
+ 			     unsigned long address)
+ {
+-	if (is_exec && (error_code & (DSISR_NOEXEC_OR_G | DSISR_KEYFAULT))) {
++	/* NX faults set DSISR_PROTFAULT on the 8xx, DSISR_NOEXEC_OR_G on others */
++	if (is_exec && (error_code & (DSISR_NOEXEC_OR_G | DSISR_KEYFAULT |
++				      DSISR_PROTFAULT))) {
+ 		printk_ratelimited(KERN_CRIT "kernel tried to execute"
+ 				   " exec-protected page (%lx) -"
+ 				   "exploit attempt? (uid: %d)\n",
+-- 
+2.13.3

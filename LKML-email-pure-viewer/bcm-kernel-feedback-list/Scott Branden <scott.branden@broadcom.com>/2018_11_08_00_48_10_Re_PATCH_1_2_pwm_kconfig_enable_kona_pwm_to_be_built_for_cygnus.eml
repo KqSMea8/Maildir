@@ -1,0 +1,167 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:57 -0000
+Received: from icoremail.net (unknown [209.85.210.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn35iHF+Nb0klZAQ--.26683S3;
+	Thu, 08 Nov 2018 00:49:12 +0800 (CST)
+Received: from mail-pf1-f176.google.com (unknown [209.85.210.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAX_kmFF+NbDWQYAA--.277S3;
+	Thu, 08 Nov 2018 00:49:09 +0800 (CST)
+Received: by mail-pf1-f176.google.com with SMTP id e22-v6so7929628pfn.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:49:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:message-id:date:user-agent:mime-version:in-reply-to
+         :content-transfer-encoding:content-language:sender:precedence
+         :list-id;
+        bh=l4MR/yOzdaiu3RpU/lV7h41WnaZXbr8Qd0ZxkXDndnI=;
+        b=uQGDKAZwJynZ6ZuAr7cK0zM9DXTpujXwVr5Uz59Um0JUHaXJ/+2drc/qs65MxKYRQS
+         VCUnTEk/clOdruLGMK0jINGVgiSWNuQtcs46mBCV/Vemm96F7kzk0o0KJsAF0a4R3L8I
+         znc5UOiPFpJ0uRo+x8kzPpy8DL64zWV39UNoHniFHkT79+IbLTIEKnDWgKRliX91e3mo
+         LAdNmOhTge84HRKSiRD652c/JxGX0ALL8MDUBnIXL0uzat7xtx+Qd3ccpMiOk5rAY133
+         8wqLWPpGkO4TQd7Pc/YG/+/nBXJpI2uXS1XBUIgsT+QuBJKmTfOZwYRZCfqmYHSMilcg
+         bwgQ==
+X-Gm-Message-State: AGRZ1gIBoABdvin1H9vVuNkwKjbyrgS4wVuaFIK6HeKNYNKf3/517Z3O
+	bQvckBpOJw/fvKXZPbtLyoe5+STFB7Wb7Vk1R9FWwQxx8ZrF/e37Yg==
+X-Received: by 2002:a65:64d5:: with SMTP id t21-v6mr817331pgv.428.1541609349243;
+        Wed, 07 Nov 2018 08:49:09 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5473125pjt;
+        Wed, 7 Nov 2018 08:49:08 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fVVHWFmNGU/GTdX9bxFodWadNtZC2tgP7h6Fu+W//xANec52208SHfUofiHFIR5oVYet0A
+X-Received: by 2002:a62:2f44:: with SMTP id v65-v6mr906758pfv.235.1541609348374;
+        Wed, 07 Nov 2018 08:49:08 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541609348; cv=none;
+        d=google.com; s=arc-20160816;
+        b=IEVhMR2uZWWwWJkJ1yRRTw5Cx1ftpIkr8jCjLtjExURI3x75WWJpw/sIU862SdxZtZ
+         25jTFcmDmHdUSHnTK2aWN6pB3BbSfYD+wvf7oFGafQJFdA4kGJYYysxNMR8HXKC4eTwo
+         YNAyvuDTpH5WINbHX/4ZIf2hhj38dzZjcaccL++x0Bfw+yt8TnMRRqWilBV9qSf4gnOZ
+         E6dhouI18Iv7GeN1TrkH9P1AczfGgoeE7oPonmKtA6kKKN93w1aJID5aDGCLYSttjgjK
+         Iq670xSccMf6MR+BH7g7nd1gWqcdF5pgqnxTqmRhgg1m0HEND5HcSknhTjHDOVWbzvZf
+         aNDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-language
+         :content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:dkim-signature;
+        bh=l4MR/yOzdaiu3RpU/lV7h41WnaZXbr8Qd0ZxkXDndnI=;
+        b=Vz+xSyQAxE0hHgR0DlzasGvZafIkqIbI1WrGhaJy+K+uVy/glCb3GdddmHnv0qRepN
+         Il3udYor6j/FViSi7RwGWdXRW0rV52FAE2FNk9tLVZV8z4RRYrqFIuejo27qzQQfkG0f
+         Q1pLsmspmwbKc5Mpb+d++vlYiflFg6w5Sops5aVROal+SisrffHwNewraMmc4B9sU4w0
+         5d8JOAfrt+I12/LIijHCAMKphpFUF0p0CrtWvEbVyqeoXb9sQ9BUM0iJY1PWpa0Kc0TI
+         kxy5vfOEns+3zh2p/DZ2KhpejrLHaQhDShDb5UL9uLrnmnaomwsPjeF84IekUz+Yq8HP
+         uxOg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@broadcom.com header.s=google header.b=MHAxmtBd;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=broadcom.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id l24si1007376pgj.171.2018.11.07.08.48.52;
+        Wed, 07 Nov 2018 08:49:08 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731274AbeKHCT1 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:19:27 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:37160 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbeKHCT1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:19:27 -0500
+Received: by mail-yb1-f194.google.com with SMTP id d18-v6so7107138yba.4
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 08:48:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=l4MR/yOzdaiu3RpU/lV7h41WnaZXbr8Qd0ZxkXDndnI=;
+        b=MHAxmtBdrLOpj/+G6QszVt5hzyJJAMuZ9wtPMwwVM73DEAZ7Q7JbE6eRSJdqa94cG9
+         RKtcn8fxOcITsEDvKrSTWXp/kYJFzMVJDm99jdhMNo06KF2jO7Fk3jb11GvI2OXeVO09
+         /UbfTSiNqwEQxkwuy3wFHtqNrBphX9kvgIUCo=
+X-Received: by 2002:a25:c781:: with SMTP id w123-v6mr957761ybe.135.1541609296891;
+        Wed, 07 Nov 2018 08:48:16 -0800 (PST)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id 10-v6sm267894ywt.47.2018.11.07.08.48.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 08:48:16 -0800 (PST)
+Subject: Re: [PATCH 1/2] pwm: kconfig: enable kona pwm to be built for cygnus
+ arch
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20181107093613.26734-1-peron.clem@gmail.com>
+ <20181107161247.sesu2comhes2d4kx@pengutronix.de>
+From: Scott Branden <scott.branden@broadcom.com>
+Message-ID: <dbd99d36-4ff2-8e14-cc54-0896459fdb0e@broadcom.com>
+Date: Wed, 7 Nov 2018 08:48:10 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20181107161247.sesu2comhes2d4kx@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAX_kmFF+NbDWQYAA--.277S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrtw1UKry8CF4fZF1ftF4kXrb_yoWDKwc_Ww
+	4kWFWxXr15JryvkFsxWrWFvry0ya1ruF4vyFnYqF95A3s3Zw4Sq3s5Za1fJ3srG3ZxtFsr
+	u3ySvrZ8Ary0vjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUb9kYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64
+	vIr41l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY
+	1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6r1lc2IjII80xcxEwVAKI48JMxvI42IY6x
+	IIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvE
+	x4A2jsIE14v26F4j6r4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr1l42xK82IYc2
+	Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUv
+	cSsGvfC2KfnxnUUI43ZEXa7IU52dgJUUUUU==
+
+
+On 2018-11-07 8:12 a.m., Uwe Kleine-König wrote:
+> On Wed, Nov 07, 2018 at 10:36:12AM +0100, Clément Péron wrote:
+>> The Cygnus architecture use a Kona PWM. This is already present
+>> in the device tree but can't be built actually. Hence, allow the
+>> Kona PWM to be built for Cygnus arch.
+>>
+>> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+>> ---
+>>   drivers/pwm/Kconfig | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+>> index 763ee50ea57d..76d56fc8b1b7 100644
+>> --- a/drivers/pwm/Kconfig
+>> +++ b/drivers/pwm/Kconfig
+>> @@ -88,7 +88,8 @@ config PWM_BCM_IPROC
+>>   
+>>   config PWM_BCM_KONA
+>>   	tristate "Kona PWM support"
+>> -	depends on ARCH_BCM_MOBILE
+>> +	depends on ARCH_BCM_MOBILE || ARCH_BCM_CYGNUS
+>> +	default ARCH_BCM_CYGNUS
+> Is it possible to build this driver also on other arches? Then you might
+> want to consider
+>
+> 	depends on ARCH_BCM_MOBILE || ARCH_BCM_CYGNUS || COMPILE_TEST
+good idea to add the COMPILE_TEST just to increase compile coverage
+>
+> Best regards
+> Uwe
+>

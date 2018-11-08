@@ -1,0 +1,234 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:38 -0000
+Received: from icoremail.net (unknown [209.85.215.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv97HCONb2e5YAQ--.26713S3;
+	Wed, 07 Nov 2018 23:46:26 +0800 (CST)
+Received: from mail-pg1-f178.google.com (unknown [209.85.215.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnxEDFCONbuCMYAA--.4S3;
+	Wed, 07 Nov 2018 23:46:14 +0800 (CST)
+Received: by mail-pg1-f178.google.com with SMTP id w3-v6so7463091pgs.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:46:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:sender:precedence:list-id;
+        bh=sXcq4ettKneBtmhbOttwpqVqq/1LYnHounLMwOHt5YE=;
+        b=iZtucKbZV6hi4+GjsE2t5qlrLowofKdlPYt6UGRhjh//AgsnSDVxRlUKlXfAgXMu7G
+         ui66gz/SI0s1TXRJWkkOTwSYrMDJNdAc5vUY4EHiekT1ToKC7VmpMXwoVGnQ/MQE+vF5
+         2fth0gMcfCWi+NDJPDL86bSywbQ5OvH1gJ6R6fS2RdcUCRwJDkEeMjQ9HKDY0E+bS1Yg
+         MBwNNQTcz66deCmKpMJ3cawlt1/TiGCjBY4zxZhAyWEBtwq9uf5sd+/7s4obt0MrDAYB
+         MwdoEvJOI4+thOqvakNLnFqV04M92zp5s+VNhYzoWjg9dHzX+Y4ra0KCsaXg9bwzfxOX
+         8Ylw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIHYXrZURaqDMngYnQ+B7ktW1wFJtwmIW81phkFlBPA9NW0nTZ6
+	nrGmYCD+uIpwP9dM1DrWvgaNC0DLP3dNyAYaliS8pyZWRWmgnE6g0Q==
+X-Received: by 2002:a62:da54:: with SMTP id w20-v6mr726956pfl.106.1541605573706;
+        Wed, 07 Nov 2018 07:46:13 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5401889pjt;
+        Wed, 7 Nov 2018 07:46:12 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eD0x0FspZkk0EaDX3iF6F8QXYatLgfPij0ldoE8MJE0oMFXvxMmgPfFfvfWs9JOHqIsuKW
+X-Received: by 2002:a17:902:622:: with SMTP id 31-v6mr732810plg.310.1541605572761;
+        Wed, 07 Nov 2018 07:46:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541605572; cv=none;
+        d=google.com; s=arc-20160816;
+        b=UarHFZzJXHc1En2IldlYCdYLFkFNSbjUtNJ1U2Kq4hk6JKmDGb49zQsLIJuRwlvpFl
+         Zri+R61kDil0cmPz+KCsHOUZwFyewhOCbi5LUzjOy47WXRcZtlelAlOmMGzg9l/DIv8/
+         LkTuMll8PmGGTsf09TIph6Spo7je9jfCaoAXk7dwSIU+VrgAnf6FzY+bHHrQ25108P7J
+         ymYBf4GH/IiG146fWxeeRLiYexpLgFrVcUCD3owMRYLAPpdpV2WV+Np+TaO7Gbp1JZSJ
+         oPO0ZnKY37tKd6mNABaPPmArc+vSq8ozOu4PP8ce6r3DuiFbbg3z8JLwW5jpyjFeyWGA
+         3ONA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:date:subject:cc:to:from;
+        bh=sXcq4ettKneBtmhbOttwpqVqq/1LYnHounLMwOHt5YE=;
+        b=huSMsmMfQdN3Z28KEoPkIPzrF0CctthhQAqcxoeG7XLateM4meAPs8nGvsxgJnhkjc
+         OmkZ7eoSM6WWzYcYcPMgsAFdF3PolsSl1ELOc/sKgaPdDTib74SZibtYuGFvjcZSaQIC
+         HUPv5b1ABgwmNyiILu43KHwith9LGqIDWPmWljIfIbCrZR04l1NUghQvVVhFpHKTziI2
+         BiLoFvMiXRVZPafRzI1bBdvVV2sEN0a8CvNYSEwUo/2f9fNFyYcb+rcW8sw4nWt1v3SL
+         pTZxCA8+P8s37aeNSjMgYzqVt3yF3mebZCXteVrfN0Hho7q+E3VjG76es2qvMeMRCuoz
+         u0JQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id f1-v6si1057621pfg.121.2018.11.07.07.45.57;
+        Wed, 07 Nov 2018 07:46:12 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727803AbeKHBQj (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:16:39 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:45518 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728015AbeKHBQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:16:39 -0500
+Received: from wd0416.dip.tu-dresden.de ([141.76.109.160] helo=phil.dip.tu-dresden.de)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1gKQ1S-0006kG-Rd; Wed, 07 Nov 2018 16:45:38 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: jic23@kernel.org
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, heiko@sntech.de,
+        Heiko Stuebner <heiko.stuebner@bq.com>
+Subject: [PATCH] iio: st-accel: add support for lis3de
+Date: Wed,  7 Nov 2018 16:45:21 +0100
+Message-Id: <20181107154521.32761-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.18.0
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnxEDFCONbuCMYAA--.4S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxJw1Dtr13ZF4xuw48CrW7Jwb_yoWrKF4xpF
+	4kKryDKFyxuan5J340q34UZas0gw43G3y2kw4jq3Wavr43Zr90g3W3K3WrAr1kZr48AF9I
+	qF9rWr45Wr1jvrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Eb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY02Avz4vEIxC_XrWlc2IjII80xcxE
+	wVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26rxl6s0DMxvI42IY6I8E87Iv6xkF7I0E14v26rxl
+	6s0DMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s
+	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
+	JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20x
+	vaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IU5OVy7UUUUU==
+
+From: Heiko Stuebner <heiko.stuebner@bq.com>
+
+This commit add support for STMicroelectronics lis3de accelerometer.
+Datasheet for this device can be found here:
+
+https://www.st.com/resource/en/datasheet/lis3de.pdf
+
+Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
+---
+ Documentation/devicetree/bindings/iio/st-sensors.txt | 1 +
+ drivers/iio/accel/Kconfig                            | 2 +-
+ drivers/iio/accel/st_accel.h                         | 1 +
+ drivers/iio/accel/st_accel_core.c                    | 1 +
+ drivers/iio/accel/st_accel_i2c.c                     | 5 +++++
+ drivers/iio/accel/st_accel_spi.c                     | 5 +++++
+ include/linux/iio/common/st_sensors.h                | 2 +-
+ 7 files changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/st-sensors.txt b/Documentation/devicetree/bindings/iio/st-sensors.txt
+index 6f626f73417e..01c986b84bd4 100644
+--- a/Documentation/devicetree/bindings/iio/st-sensors.txt
++++ b/Documentation/devicetree/bindings/iio/st-sensors.txt
+@@ -48,6 +48,7 @@ Accelerometers:
+ - st,lis3l02dq
+ - st,lis2dw12
+ - st,lis3dhh
++- st,lis3de
+ 
+ Gyroscopes:
+ - st,l3g4200d-gyro
+diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+index 7993a67bd351..898839ca164a 100644
+--- a/drivers/iio/accel/Kconfig
++++ b/drivers/iio/accel/Kconfig
+@@ -223,7 +223,7 @@ config IIO_ST_ACCEL_3AXIS
+ 	  Say yes here to build support for STMicroelectronics accelerometers:
+ 	  LSM303DLH, LSM303DLHC, LIS3DH, LSM330D, LSM330DL, LSM330DLC,
+ 	  LIS331DLH, LSM303DL, LSM303DLM, LSM330, LIS2DH12, H3LIS331DL,
+-	  LNG2DM
++	  LNG2DM, LIS3DE
+ 
+ 	  This driver can also be built as a module. If so, these modules
+ 	  will be created:
+diff --git a/drivers/iio/accel/st_accel.h b/drivers/iio/accel/st_accel.h
+index 2f931e4837e5..fd53258656ca 100644
+--- a/drivers/iio/accel/st_accel.h
++++ b/drivers/iio/accel/st_accel.h
+@@ -56,6 +56,7 @@ enum st_accel_type {
+ #define LNG2DM_ACCEL_DEV_NAME		"lng2dm"
+ #define LIS2DW12_ACCEL_DEV_NAME		"lis2dw12"
+ #define LIS3DHH_ACCEL_DEV_NAME		"lis3dhh"
++#define LIS3DE_ACCEL_DEV_NAME		"lis3de"
+ 
+ /**
+ * struct st_sensors_platform_data - default accel platform data
+diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
+index 3e6fd5a8ac5b..f7b471121508 100644
+--- a/drivers/iio/accel/st_accel_core.c
++++ b/drivers/iio/accel/st_accel_core.c
+@@ -103,6 +103,7 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
+ 			[4] = LSM330DLC_ACCEL_DEV_NAME,
+ 			[5] = LSM303AGR_ACCEL_DEV_NAME,
+ 			[6] = LIS2DH12_ACCEL_DEV_NAME,
++			[7] = LIS3DE_ACCEL_DEV_NAME,
+ 		},
+ 		.ch = (struct iio_chan_spec *)st_accel_12bit_channels,
+ 		.odr = {
+diff --git a/drivers/iio/accel/st_accel_i2c.c b/drivers/iio/accel/st_accel_i2c.c
+index 2ca5d1f6ade0..de8ae4327094 100644
+--- a/drivers/iio/accel/st_accel_i2c.c
++++ b/drivers/iio/accel/st_accel_i2c.c
+@@ -98,6 +98,10 @@ static const struct of_device_id st_accel_of_match[] = {
+ 		.compatible = "st,lis2dw12",
+ 		.data = LIS2DW12_ACCEL_DEV_NAME,
+ 	},
++	{
++		.compatible = "st,lis3de",
++		.data = LIS3DE_ACCEL_DEV_NAME,
++	},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, st_accel_of_match);
+@@ -135,6 +139,7 @@ static const struct i2c_device_id st_accel_id_table[] = {
+ 	{ LIS331DL_ACCEL_DEV_NAME },
+ 	{ LIS3LV02DL_ACCEL_DEV_NAME },
+ 	{ LIS2DW12_ACCEL_DEV_NAME },
++	{ LIS3DE_ACCEL_DEV_NAME },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(i2c, st_accel_id_table);
+diff --git a/drivers/iio/accel/st_accel_spi.c b/drivers/iio/accel/st_accel_spi.c
+index dcc9bd243a52..73bfb5d04e2b 100644
+--- a/drivers/iio/accel/st_accel_spi.c
++++ b/drivers/iio/accel/st_accel_spi.c
+@@ -90,6 +90,10 @@ static const struct of_device_id st_accel_of_match[] = {
+ 		.compatible = "st,lis3dhh",
+ 		.data = LIS3DHH_ACCEL_DEV_NAME,
+ 	},
++	{
++		.compatible = "st,lis3de",
++		.data = LIS3DE_ACCEL_DEV_NAME,
++	},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, st_accel_of_match);
+@@ -143,6 +147,7 @@ static const struct spi_device_id st_accel_id_table[] = {
+ 	{ LIS3LV02DL_ACCEL_DEV_NAME },
+ 	{ LIS2DW12_ACCEL_DEV_NAME },
+ 	{ LIS3DHH_ACCEL_DEV_NAME },
++	{ LIS3DE_ACCEL_DEV_NAME },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(spi, st_accel_id_table);
+diff --git a/include/linux/iio/common/st_sensors.h b/include/linux/iio/common/st_sensors.h
+index f9bd6e8ab138..8092b8e7f37e 100644
+--- a/include/linux/iio/common/st_sensors.h
++++ b/include/linux/iio/common/st_sensors.h
+@@ -40,7 +40,7 @@
+ #define ST_SENSORS_DEFAULT_STAT_ADDR		0x27
+ 
+ #define ST_SENSORS_MAX_NAME			17
+-#define ST_SENSORS_MAX_4WAI			7
++#define ST_SENSORS_MAX_4WAI			8
+ 
+ #define ST_SENSORS_LSM_CHANNELS(device_type, mask, index, mod, \
+ 					ch2, s, endian, rbits, sbits, addr) \
+-- 
+2.18.0

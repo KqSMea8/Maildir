@@ -1,0 +1,173 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:15 -0000
+Received: from icoremail.net (unknown [209.85.215.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn31wySeNbp3daAQ--.27342S3;
+	Thu, 08 Nov 2018 04:21:07 +0800 (CST)
+Received: from mail-pg1-f172.google.com (unknown [209.85.215.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH3zovSeNbNisZAA--.923S3;
+	Thu, 08 Nov 2018 04:21:03 +0800 (CST)
+Received: by mail-pg1-f172.google.com with SMTP id r9-v6so7787890pgv.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:21:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version:subject
+         :from:in-reply-to:date:cc:content-transfer-encoding:message-id
+         :references:to:sender:precedence:list-id;
+        bh=aTSdqSiYp+KdAMuJ0/e9Op27AaHrrLnICcOTCUsBIPw=;
+        b=h9QMkQy7Cr+dfmIbP0biZStabN6lgTIYoJJo32OHfKx7Q7oq4ROibb0/ur3Xiyirmq
+         MuEVo8Gfbej8OXPpKcr2N9VoSgWWgKL2DxM1B2Dc9ZMVyYMVaXbdJFY0ji9DP+Mwpe3L
+         pv40JJHk1dUUTMSenv7J6YfL6rC+R7iJNcnlWkiYRsOJCguOdgDmOz6mRC4BhsXbZQ/k
+         oEWoe2LIbOvRsV1zHVwJGsJIESwgLy/4o53jiGaX/OKpzajdE2Bg9Qc+L4KzeWNeB5x+
+         VT01TQT5w0zOFwDiWJvT64NJB9ir6tJALTw1/wH8MRmvaR983FWKORC1uXDereTsZ8cR
+         hl5A==
+X-Gm-Message-State: AGRZ1gJAEqk5YnzQxBsG4jJoM6HruTtbYsdIz5DcHnH9KwkU3rq5pkDH
+	wdyM5upun9v9BDtsvAica30sMjei9ioH7zvEJhQQxY1NhXCLDdEpAw==
+X-Received: by 2002:a62:5e83:: with SMTP id s125-v6mr1685433pfb.232.1541622063416;
+        Wed, 07 Nov 2018 12:21:03 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5701675pjt;
+        Wed, 7 Nov 2018 12:21:02 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fBj/YPR91GIlPMQ+lmBGFCnUc29zGpcbGIFFK/FLgEeD1FqZPfo9F92xDTc0LAzfwx3wUN
+X-Received: by 2002:a17:902:8bc6:: with SMTP id r6-v6mr1715262plo.194.1541622062525;
+        Wed, 07 Nov 2018 12:21:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541622062; cv=none;
+        d=google.com; s=arc-20160816;
+        b=OSeRqjM0+v5UK0CH5nOmwJ8f75hLRohYDlpHDzE324nlgCVHrtrHY6SXZmJszsDsxc
+         xiRdj1Dqxo7cw+eRKdBkQHvVWffiSSWymhKphx+HnjAVACfO/MtDT0FlDVZ4yhiooMqF
+         mF1Epv2Zr1/Y6bPWiBS16NKMw/kxOPOk5uz9fK+TweQa1bua3QaZ7kFnxpiY4R9Wd8ai
+         62gIjws64myYsMBndQyrxYrkdammqcOO/jeuHUumuTtgBfWJnr/PR3TxFPrvz48jDESS
+         L5K76a8oyOTDfjO55WujEQ1Ue3WdFQax3umWXANF/82mw1sKrjQHrdWb+qG4gu7CaDPa
+         d/tQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:to:references:message-id
+         :content-transfer-encoding:cc:date:in-reply-to:from:subject
+         :mime-version:dkim-signature;
+        bh=aTSdqSiYp+KdAMuJ0/e9Op27AaHrrLnICcOTCUsBIPw=;
+        b=zZaPxZaTFjjTy5H2SY/rynoho5VSLvvkTSRkpkjwnYBtw2NhMLbumfMkbquUElPfgh
+         OKKDbs/dz0ugoP32k8LHebt8NvquPhFkLFNqTGNrD/+E4Sj4PPAe7L7Rxr/aN8Qd+M7Y
+         iw+3CuvQt+WUyOMFSSK3gyKz0b6UvpgcDewtiG+Cin3xPTOZzIYgz0Lk1HvaRzsGxukq
+         kpLXGDXDKkTuMBm8jn0F4MU+zEzF6I2MYgmBQrN1S7aVxar+0o0335zO5gjtMjPCpitW
+         P0i9lSDaJoSQ3amTkN7bHoGQWEQKI9hkbXk3ItEIVcMuWma0WGRUhp8t1j5NuasL6U3r
+         Y2+A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@amacapital-net.20150623.gappssmtp.com header.s=20150623 header.b=2IrFGC3b;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id r5-v6si1841699pli.248.2018.11.07.12.20.39;
+        Wed, 07 Nov 2018 12:21:02 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726947AbeKHFwS (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:52:18 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41239 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbeKHFwS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:52:18 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 70so2210193pgh.8
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 12:20:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=aTSdqSiYp+KdAMuJ0/e9Op27AaHrrLnICcOTCUsBIPw=;
+        b=2IrFGC3bbxEf6URp0PHTh6IhVM/Pr1ruUG3hO05zR9NuQDemmtRDg296DoyCSVZqzZ
+         dx46orFC4FCu94Q3y/aeFwzdeUgirvA7kIugf04dzGN+3L/QzCIDAsk1eWGtrRvDZ39Q
+         VlVW2qvT0k67+/+cRbLgpaOSSWd2x1vaqf7fm2tkLVdG+0nohxqQRX6ETBIo6PcgjyS7
+         V08LFDnr/fcWsUk06If+/EC+Mp2pbp8TNZmQZKiP932m7RikiGtKRG5/gQOOIbeYpZF2
+         YOTm8+flkEqAUVaBflWgq7Vozhzk+mAN1Or0hX/Ieb+BVlnVQEr6NTAfeq4N7J5X9nvk
+         SEqA==
+X-Received: by 2002:a63:6bc1:: with SMTP id g184mr1467614pgc.25.1541622020368;
+        Wed, 07 Nov 2018 12:20:20 -0800 (PST)
+Received: from ?IPv6:2601:646:c200:7429:6091:ffb6:696b:95fe? ([2601:646:c200:7429:6091:ffb6:696b:95fe])
+        by smtp.gmail.com with ESMTPSA id 196-v6sm4714617pfc.71.2018.11.07.12.20.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 12:20:19 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC PATCH] ptrace: add PTRACE_GET_SYSCALL_INFO request
+From: Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16A404)
+In-Reply-To: <20181107164443.GA8726@redhat.com>
+Date: Wed, 7 Nov 2018 12:20:18 -0800
+Cc: Elvira Khabirova <lineprinter@altlinux.org>, rostedt@goodmis.org,
+        mingo@redhat.com, linux-kernel@vger.kernel.org, ldv@altlinux.org,
+        esyr@redhat.com, luto@kernel.org, strace-devel@lists.strace.io
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <35B601B0-4D56-4706-B7A1-C9A522AB2D6F@amacapital.net>
+References: <20181107042751.3b519062@akathisia> <20181107112100.GA20419@redhat.com> <3BDB914D-12F3-4703-A033-EBE02226EC45@amacapital.net> <20181107164443.GA8726@redhat.com>
+To: Oleg Nesterov <oleg@redhat.com>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH3zovSeNbNisZAA--.923S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7tFWUtw4xWrWfZr15CrWkCrg_yoW8GFWfp3
+	yjyanrKa1DJr4Yvr1Ivw1xWFW0yryfJry5Wr90gryrA3s8tr1Yyr1xWa1UCF9I9w1fG3y7
+	ZF4qqaySgF4kZ37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPSb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_AwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U5f73DUUUUU==
+
+
+
+> On Nov 7, 2018, at 8:44 AM, Oleg Nesterov <oleg@redhat.com> wrote:
+>=20
+>> On 11/07, Andy Lutomirski wrote:
+>>=20
+>>=20
+>>>> On Nov 7, 2018, at 3:21 AM, Oleg Nesterov <oleg@redhat.com> wrote:
+>>>>=20
+>>>> On 11/07, Elvira Khabirova wrote:
+>>>>=20
+>>>> In short, if a 64-bit task performs a syscall through int 0x80, its tra=
+cer
+>>>> has no reliable means to find out that the syscall was, in fact,
+>>>> a compat syscall, and misidentifies it.
+>>>> * Syscall-enter-stop and syscall-exit-stop look the same for the tracer=
+.
+>>>=20
+>>> Yes, this was discussed many times...
+>>>=20
+>>> So perhaps it makes sense to encode compat/is_enter in ->ptrace_message,=
+
+>>> debugger can use PTRACE_GETEVENTMSG to get this info.
+>>=20
+>> As I said before, I strongly object to the use of =E2=80=9Ccompat=E2=80=9D=
+ here.
+>=20
+> Not sure I understand you... I do not like "compat" too, but this patch us=
+es
+> is_compat/etc and I agree with any naming.
+
+My point is: returning a value to user code that is:
+
+0 if the kernel and tracee are 32-bit
+0 if the kernel and tracer are 64-but
+1 if the kernel is 64-bit and the tracer is 32-bit
+? If the tracer is arm64 ILP32
+
+Is not a good design.  And 32-bit builds of strace will not appreciate it.
+
+The API should return a value that, at least on a given overall architecture=
+ and preferably globally, indicates the syscall arch.  While oddly named, au=
+dit_arch fits the bill nicely, and we already require it to have the right s=
+emantics for seccomp support.

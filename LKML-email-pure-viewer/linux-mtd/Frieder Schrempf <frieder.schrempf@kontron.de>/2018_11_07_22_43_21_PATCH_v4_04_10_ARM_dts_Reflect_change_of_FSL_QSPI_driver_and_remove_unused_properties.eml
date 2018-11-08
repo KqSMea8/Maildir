@@ -1,0 +1,238 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:12 -0000
+Received: from icoremail.net (unknown [209.85.214.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgCHv+SB+uJbYJhYAQ--.26241S3;
+	Wed, 07 Nov 2018 22:45:23 +0800 (CST)
+Received: from mail-pl1-f182.google.com (unknown [209.85.214.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBnTEh9+uJbdOQXAA--.6407S3;
+	Wed, 07 Nov 2018 22:45:17 +0800 (CST)
+Received: by mail-pl1-f182.google.com with SMTP id b5-v6so7957247pla.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:45:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references:sender
+         :precedence:list-id;
+        bh=4MCTWExgoodnt9M/YOkx2CxqmU6Xf6EJD7Sgv5K4j70=;
+        b=Kbk9E80zGpQyzkKID8ShNAf4tEvNlSlaVxkUwBE3mkb4DYTPqt65DPvJGwf5AUV/+h
+         Ob5JyM46YgxnNbbV+DSfOxBKkI3cvdZxVtjGBvbM2T0sZeehWc/NN4mhmYAE/9Z82H08
+         Ppxqq6OFxsQP2BJizZWtdETtabqsea1m+9Z3Fi3fjnriSpPZSDjdxH0R9WhPDEpgkc/l
+         8nGdU/jEimxJ3bHav4vef79YYTNpERnt8B/8W1r4L8NNt+Z2PWiSVfffqcA8vS5GGPZ7
+         KKyfN/mpHtWqw/mt+MMxmBKtlGRBCvOkpQt7TdVvyenIpjIgDUmWvgaBnDjFIBGOfsv4
+         4McQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKBtYvB68/YN1KE4adjt4x9vD26QGzA8gt2T2FRW/bonupnSzNW
+	YPHBRrqFh5emQOSRPhLZ66ghb0h+eMY37vI+mJR+4mEg4eNXkhwCNw==
+X-Received: by 2002:a17:902:a5cc:: with SMTP id t12-v6mr503811plq.298.1541601917534;
+        Wed, 07 Nov 2018 06:45:17 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5333464pjt;
+        Wed, 7 Nov 2018 06:45:16 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eAMSNAeJsIQCZYLU/dU3wv9GKKq0kB9KK4MhwgppcdRSxMFsz6E4C0FktK9RDFQyAmcwtL
+X-Received: by 2002:a63:7154:: with SMTP id b20mr419671pgn.342.1541601916748;
+        Wed, 07 Nov 2018 06:45:16 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541601916; cv=none;
+        d=google.com; s=arc-20160816;
+        b=TI1/au1ryNyIkyWUh8UhnxMJSMGojav0Pf2N0pm7kb1yrwrK8664F66SOrhbvQtuVb
+         c5C6lpKVI5EKHwQ6Np7Gw/xZJwZGTZsYxCyf8O35bNOnpsKzj1pcuh8eT9zhd1uMF8Uj
+         l7LWI0FvOrjPnuWHYg1qFTQAcTycDRhYMGXDpQBeaV4RHpNph5uz0L1q3WjBCp/Xctj3
+         gG4JGLPDFMKOS2FUycZvq0bsGniGiy4Vb7XU1w/DQwRM49hvXmYU9o4fSk3qgtf9kqBA
+         LN0lTYL6phQQhGXBYmQaNovGsB+P62Pfx3uMxhP1re0NjkZup6G9YiGIkTr8WirhqElH
+         lfjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from;
+        bh=4MCTWExgoodnt9M/YOkx2CxqmU6Xf6EJD7Sgv5K4j70=;
+        b=Mb4vjEgpj+j5Rd8iQCEVdcvNC3cKGWpsyrlnYY5/G0693DRPtrHErj3NoEuK6iaNFg
+         8xFmzrOYq8TdGFCpZlI/20+RsSAsz6HlxnEJmn0r0En9xca40Gxxudnm5JSdBNfDgaA0
+         2IlxdsdmMb6mUNPc0DY+Re0kfZdEFGYqrRx0M/ov3Bxkagqj31t3PF6+GeBFfoT4WACC
+         kZDf5m426jFvsYAlYwbjTGYs/1up4czSKvUVk0gbAx9tYwm2NM0WrFIbpgcdhfqFYSKR
+         VixM5CNsLfoC+4dbCvuJuENkQIO3+pCDC+WZK+Uh4cCCryKmUiV6i+1hK/7MjmCsNB1D
+         PVrg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id f7-v6si815515plb.362.2018.11.07.06.45.01;
+        Wed, 07 Nov 2018 06:45:16 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730906AbeKHAP0 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:15:26 -0500
+Received: from mo4-p05-ob.smtp.rzone.de ([85.215.255.132]:31330 "EHLO
+        mo4-p05-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbeKHAPZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:15:25 -0500
+X-RZG-AUTH: ":LX8JdEmkW/4tAFwMkcNJIloh1hrA5u3owhPk7bdT5Fx22AatU+eLaHfutoZdl+X9BETxn4/4+IVqx7ZdE8mPU5nMS5P2QgHAetWm5FNngAjmE0pFNjw="
+X-RZG-CLASS-ID: mo05
+Received: from fs-work.fritz.box
+        by smtp.strato.de (RZmta 44.3 AUTH)
+        with ESMTPSA id j097e4uA7EiHUQn
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 7 Nov 2018 15:44:17 +0100 (CET)
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
+To: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com,
+        linux-spi@vger.kernel.org
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com,
+        marek.vasut@gmail.com, richard@nod.at, miquel.raynal@bootlin.com,
+        broonie@kernel.org, david.wolfe@nxp.com, fabio.estevam@nxp.com,
+        prabhakar.kushwaha@nxp.com, yogeshnarayan.gaur@nxp.com,
+        han.xu@nxp.com, shawnguo@kernel.org,
+        Frieder Schrempf <frieder.schrempf@exceet.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 04/10] ARM: dts: Reflect change of FSL QSPI driver and remove unused properties
+Date: Wed,  7 Nov 2018 15:43:21 +0100
+Message-Id: <1541601809-16950-5-git-send-email-frieder.schrempf@kontron.de>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1541601809-16950-1-git-send-email-frieder.schrempf@kontron.de>
+References: <1541601809-16950-1-git-send-email-frieder.schrempf@kontron.de>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBnTEh9+uJbdOQXAA--.6407S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxXw15AFWfJr4DWF18ArW7twb_yoW5tF4xpa
+	y7CrZ7JwsagFn0y3yDJr18Kayjyrn5ZF4Sgr95Ga4UJrs8ZayDGr40krnIyryUXF4rtayS
+	gr1fZ3s7Krs8XaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBjb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc2xSY4AK6IIF6ry5MxkI7II2jI8v
+	z4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCYIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMxvI42IY6I8E87Iv67AKxVW0oVCq3wCYIxAIcVC2z280aVCY1x0267AKxVW0
+	oVCq3wCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2
+	IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bjApnUUUUU=
+
+From: Frieder Schrempf <frieder.schrempf@exceet.de>
+
+The FSL QSPI driver was moved to the SPI framework and it now
+acts as a SPI controller. Therefore the subnodes need to set
+spi-[rx/tx]-bus-width = <4>, so quad mode is used just as before.
+
+Also the properties 'bus-num', 'fsl,spi-num-chipselects' and
+'fsl,spi-flash-chipselects' were never read by the driver and
+can be removed.
+
+The 'reg' properties are adjusted to reflect the what bus and
+chipselect the flash is connected to, as the new driver needs
+this information.
+
+The property 'fsl,qspi-has-second-chip' is not needed anymore
+and will be removed after the old driver was disabled to avoid
+breaking ls1021a-moxa-uc-8410a.dts.
+
+Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
+---
+ arch/arm/boot/dts/imx6sx-sdb-reva.dts       | 8 ++++++--
+ arch/arm/boot/dts/imx6sx-sdb.dts            | 8 ++++++--
+ arch/arm/boot/dts/imx6ul-14x14-evk.dtsi     | 2 ++
+ arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts | 5 ++---
+ 4 files changed, 16 insertions(+), 7 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+index 9cc6ff2..9997156 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb-reva.dts
++++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+@@ -132,13 +132,17 @@
+ 		#size-cells = <1>;
+ 		compatible = "spansion,s25fl128s", "jedec,spi-nor";
+ 		spi-max-frequency = <66000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
+ 	};
+ 
+-	flash1: s25fl128s@1 {
+-		reg = <1>;
++	flash1: s25fl128s@2 {
++		reg = <2>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		compatible = "spansion,s25fl128s", "jedec,spi-nor";
+ 		spi-max-frequency = <66000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sdb.dts
+index 6dd9beb..9acfda8 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb.dts
++++ b/arch/arm/boot/dts/imx6sx-sdb.dts
+@@ -117,15 +117,19 @@
+ 		#size-cells = <1>;
+ 		compatible = "micron,n25q256a", "jedec,spi-nor";
+ 		spi-max-frequency = <29000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
+ 		reg = <0>;
+ 	};
+ 
+-	flash1: n25q256a@1 {
++	flash1: n25q256a@2 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		compatible = "micron,n25q256a", "jedec,spi-nor";
+ 		spi-max-frequency = <29000000>;
+-		reg = <1>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
++		reg = <2>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+index 32a0723..c2c9a2a 100644
+--- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
++++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+@@ -176,6 +176,8 @@
+ 		#size-cells = <1>;
+ 		compatible = "micron,n25q256a";
+ 		spi-max-frequency = <29000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
+ 		reg = <0>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
+index d01f64b..6a83f30 100644
+--- a/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
++++ b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
+@@ -203,9 +203,6 @@
+ };
+ 
+ &qspi {
+-	bus-num = <0>;
+-	fsl,spi-num-chipselects = <2>;
+-	fsl,spi-flash-chipselects = <0>;
+ 	fsl,qspi-has-second-chip;
+ 	status = "okay";
+ 
+@@ -214,6 +211,8 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		spi-max-frequency = <20000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
+ 		reg = <0>;
+ 
+ 		partitions@0 {
+-- 
+2.7.4

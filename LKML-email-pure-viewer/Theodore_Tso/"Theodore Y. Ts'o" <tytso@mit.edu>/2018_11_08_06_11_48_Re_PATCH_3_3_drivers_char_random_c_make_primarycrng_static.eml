@@ -1,0 +1,140 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:55 -0000
+Received: from icoremail.net (unknown [209.85.210.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv0J4Y+NbKBdbAQ--.27017S3;
+	Thu, 08 Nov 2018 06:13:13 +0800 (CST)
+Received: from mail-pf1-f182.google.com (unknown [209.85.210.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXbDh0Y+NbgYUZAA--.1558S3;
+	Thu, 08 Nov 2018 06:13:08 +0800 (CST)
+Received: by mail-pf1-f182.google.com with SMTP id u13-v6so8311395pfm.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:13:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:mail-followup-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=3PHX28R6VeX1+w9Gna/v4Io1u+/VtHSvstl4AW246e0=;
+        b=rCrX7IouMLkbXXAca/CfFyFspaua7lbAWwehuhOpgBeoiX9o2kkY7Rwl4WOQCfpgm3
+         04JgsE3NLgofX8Je/A/gRJpjh0C4t0w4cxKDpd0YYLrTwlOf4CQzlBfk6Mz42F3VSBiB
+         70qjxQF5GyAqXzr+pER46tVkNk095w3jvEYmhj7vqxVPt4Orr8RJdTVfyPtEB1W/c7v6
+         J8mM+8aIR7ENcT/zmrus3Q5g9FezhiFUzF7YecJ4AvQJUnkWqmnxzb3eTcB6jNQ+n0/y
+         IDtDnhu7e3ldqyvQBHzawSlgYklUdrbGyyUwkZLgfrwRj1Qs0X6jn26hIMT76PgMEHYF
+         hfGA==
+X-Gm-Message-State: AGRZ1gIgiVW+HUgbCs/YfuUSIgZukru60pyrZE8u1c4y1LCWfFDLE+jy
+	xDUCJQoiqXypVieit7qOk6pAAuADFWO2SD99kIBdSA2XXFtsbQr4wQ==
+X-Received: by 2002:a63:5816:: with SMTP id m22-v6mr1740401pgb.332.1541628788414;
+        Wed, 07 Nov 2018 14:13:08 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp64997pjt;
+        Wed, 7 Nov 2018 14:13:07 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ezpfmq+tZmPFvc7N3mU0TlDNtNhPc6FQbYlRckd0lj/ruuRFbUizMjSi0Rk8TvfBY5SJ+5
+X-Received: by 2002:a62:f24f:: with SMTP id y15-v6mr2062690pfl.25.1541628787686;
+        Wed, 07 Nov 2018 14:13:07 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541628787; cv=none;
+        d=google.com; s=arc-20160816;
+        b=cy3EDQ7fO80ScoK11FJuurNw8XNosBxYQj98USZz2FdMUSHq1I7DWEHAnVoFMTNnyn
+         NnvRqJMBxAHT5xIdXqsPvGfszzd/7jzcVsIZyefZsdRx4zpB1HmbJpXiWub8H8sWdG9y
+         dmqFc/fh1m7O20NBglstxE3/pzKno/NjkcMXG2L09Ix7yS246w1SJcRDlC6vNUXh+X+o
+         JXsGFxhUmSzha0eVOXXm8D0CE9sXLBbTeotSUf+0w8M+u/9boCZjxZFgeO9zfagNZbBV
+         zkTbEQIoeokF+EL7wwD1m2tKzpZyzMW1uo/p22uW9u8bR8avm/Va4/ID/M23p3VMhHjP
+         sQSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:mail-followup-to
+         :message-id:subject:cc:to:from:date:dkim-signature;
+        bh=3PHX28R6VeX1+w9Gna/v4Io1u+/VtHSvstl4AW246e0=;
+        b=wLx55QzvD21wQ0wdJtpOxxaDAYwQOD8XzpGC9WqPa/RG9mOjzXso91Jtr3KRgyxquu
+         PnHASxiBCu4j7xMhXuIgzDf1oaL7FyvBvv1ywNps9jdzoGNPjqvTesbfnI+dhF+OOACq
+         LS0UeQ+f88ssLtM2/ZO5MNRFCbIMf5Tc1ck+yOHRzlpnqGeykD5gsLiF+Qv+LeDvTgEI
+         MuijBz63W89rP2udfUF2Xyz2NkQw/lpOAwbXxUNnrb0QdgUIrNKQ6SN/6qM86TLlO0T9
+         md8hKqulDc3EbNl88sL9mRaJ+4iLX7LYnlVH3djWWZXyzO75dcnja3JSU/VFxJ8k/Ru6
+         M0kg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@thunk.org header.s=ef5046eb header.b=H5s1mfKX;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id n63-v6si2056018pfk.158.2018.11.07.14.12.52;
+        Wed, 07 Nov 2018 14:13:07 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727951AbeKHHoO (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:44:14 -0500
+Received: from imap.thunk.org ([74.207.234.97]:51162 "EHLO imap.thunk.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726653AbeKHHoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:44:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=thunk.org;
+         s=ef5046eb; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=3PHX28R6VeX1+w9Gna/v4Io1u+/VtHSvstl4AW246e0=; b=H5s1mfKX/xHV8by4Aw1H9d3Orb
+        HFh7clDipRnWiSmIkFmOF2EC6QE+Uq3RE3Nki+0Urer8RJvEUajNlrh/gxguWhxvorsHfBrgjO64i
+        c0Q4+9/n5XfLtwQBqPOl7alOqD75pZkzwQ5vPEgz38VncfPz7UnJR2OB/ggeUamKZCwE=;
+Received: from root (helo=callcc.thunk.org)
+        by imap.thunk.org with local-esmtp (Exim 4.89)
+        (envelope-from <tytso@thunk.org>)
+        id 1gKW3B-0003k8-Tl; Wed, 07 Nov 2018 22:11:49 +0000
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id EB79B7A7D27; Wed,  7 Nov 2018 17:11:48 -0500 (EST)
+Date: Wed, 7 Nov 2018 17:11:48 -0500
+From: "Theodore Y. Ts'o" <tytso@mit.edu>
+To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] drivers/char/random.c: make primary_crng static
+Message-ID: <20181107221148.GC17171@thunk.org>
+Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+References: <20181102110447.23121-1-linux@rasmusvillemoes.dk>
+ <20181102110447.23121-3-linux@rasmusvillemoes.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181102110447.23121-3-linux@rasmusvillemoes.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: tytso@thunk.org
+X-SA-Exim-Scanned: No (on imap.thunk.org); SAEximRunCond expanded to false
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXbDh0Y+NbgYUZAA--.1558S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUYy7k0a2IF6FyUM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc2xSY4AK6IIF6Fylc2IjII80xcxEwVAK
+	I48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
+	0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j
+	6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2
+	IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bjrc-UUUUU=
+
+On Fri, Nov 02, 2018 at 12:04:47PM +0100, Rasmus Villemoes wrote:
+> Since the definition of struct crng_state is private to random.c, and
+> primary_crng is neither declared or used elsewhere, there's no reason
+> for that symbol to have external linkage.
+> 
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+
+Thanks, applied.
+
+					- Ted

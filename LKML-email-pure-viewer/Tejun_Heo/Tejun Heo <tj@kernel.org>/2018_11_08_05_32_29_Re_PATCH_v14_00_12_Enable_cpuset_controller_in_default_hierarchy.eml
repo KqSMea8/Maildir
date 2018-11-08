@@ -1,0 +1,175 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:44 -0000
+Received: from icoremail.net (unknown [209.85.215.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH+YZWuNbEeVaAQ--.27081S3;
+	Thu, 08 Nov 2018 05:33:13 +0800 (CST)
+Received: from mail-pg1-f179.google.com (unknown [209.85.215.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnvTkXWuNbUWUZAA--.1334S3;
+	Thu, 08 Nov 2018 05:33:11 +0800 (CST)
+Received: by mail-pg1-f179.google.com with SMTP id z10so5985933pgp.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 13:33:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=ocqIJI97jpN2dVlV1t1A/wPKjhZZa+9X2Rj+z/TPzm0=;
+        b=pHMo6eYQ/57vraSpOrSno+R/eujmQv3hLi9Vd52S1bsVnz3MA7m3qytadZ46kra4UR
+         uZc2IhX23+Xpzeto1UK6P4WT3ep5uCQa/+wfNoLwyCRzABM1lewo7KfEVZhINLBJI6hK
+         +VMN/NKK1EzXg9luJC9QmKqV5uMbFDGxYzHJ4ro5c3PqIy1YfYPY+DOAKvVCr4j/o6kp
+         9VTN85ASeC9xrTLsa1VAGg79nM08W8bmCWw66dsh1SNVdHAej+LK1WufBtJWhFX6U/ac
+         Kfs2K+TgPc0SzRXzg5JfQjnF8NwzNyH/xBCnCj3Wf+85d7W91f/k6Yq6mJ0Uq4vx8WfC
+         +07Q==
+X-Gm-Message-State: AGRZ1gL7MuQ7jcg1NXLlWb78lI7KTKh5vkIrdnjo/PMD3fDbX+y593x6
+	c+Fc+5jnUcfZOhlh007cTcO1tX5OnBXYriuYXzdQoEoGtaLSryJEjw==
+X-Received: by 2002:a62:da54:: with SMTP id w20-v6mr1970993pfl.106.1541626391035;
+        Wed, 07 Nov 2018 13:33:11 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp30200pjt;
+        Wed, 7 Nov 2018 13:33:10 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fhhGVJAYvTnMmACrFuWADswX/ilE921PmGWxHD1oaY0ibI5xxDMmcniFRRpk5F5btYNjWH
+X-Received: by 2002:a17:902:4a0c:: with SMTP id w12-v6mr1932613pld.63.1541626390275;
+        Wed, 07 Nov 2018 13:33:10 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541626390; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ujFgkCktCX7VoO+VQ990sEliwFl7fHED05ZeLv/AncLvQyzkTTtBypENAE8RRJVEtx
+         llovFt4uJA+hl3IV0sfHkC5TctbDeYKERIZlu6W7M1PgFVopWl4HUU7Q+AeEzaFoEqQ9
+         BfNgAX3aZl84DFANPMNZQ5eRhHvaVI3HHapOEfleDB0if9ipy18278452RJ6+zimj3mk
+         BX6qGo999AZKRlUvXS8s07Q7Hw9puLFPoefWjHNsgAnrvV+zO7T83QzD7yu0lU6DpF3E
+         k4P004pZ9+yIWkBy+ie2U8P3WaL3PbU9P2LiN2fFz+HBelyhl51lzr5l3vm72aJyVBZL
+         ff0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=ocqIJI97jpN2dVlV1t1A/wPKjhZZa+9X2Rj+z/TPzm0=;
+        b=lvEqac7avB715InAtZf2OeTORPwBBTRSqyUTWJY9L28kE359vVmi3b1augH3ssIpOi
+         DZ9wTL52QbNeNmoJkwKyFwTtoPzy6YmCC/7lcx89EzLZt04SLkXEjUZjTa1zj1cEbniQ
+         ekE3LKN97z5tHqtXqBRHl14e4s3qtDK6Lp1lt7Ct/jJnBX6vrLPsG7gBIIsO76/QFpxn
+         nWS/+d5lTKQKlIRfflBwVjXz12+P4z8bU6W3+P2qxr2qe2IZgtcvMi5qv2QtUR69XgNl
+         Dug3KKCCDMGv4lZ7rjJ8hv6oyRE1EDRN8b9qQDmim53k4tpRlghHaCv5C7t9E8QfOUaA
+         2p1A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@gmail.com header.s=20161025 header.b=QcliHLl8;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b3si1606687pgh.496.2018.11.07.13.32.53;
+        Wed, 07 Nov 2018 13:33:10 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727556AbeKHHEs (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:04:48 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:39390 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727362AbeKHHEs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:04:48 -0500
+Received: by mail-yw1-f68.google.com with SMTP id v8-v6so5607569ywh.6;
+        Wed, 07 Nov 2018 13:32:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ocqIJI97jpN2dVlV1t1A/wPKjhZZa+9X2Rj+z/TPzm0=;
+        b=QcliHLl8U0U/LckvbdwuWgns7Sys/Ajc/dyupghRVgVL9fjW4dMTC3mmCQ2jviMJXy
+         aJzZA854k8CtKAhWxFBeBDLSjKtmmMUZIiARA6gl+JJc+EL68abLyU9MgZKHKdrbZoLb
+         8Oj/U+soaqUllCN5k+4uBnKsfVx33Kc+7+pTOpLMtcvphgrQ7ney6QRxTo3unQD/BXBD
+         v/PhHifrsNA2C3rP1iHKlFg1TMOhaIuKSSbDqvuihI/KMUcbMDvC84A+DAB4PP0bRl8y
+         0UrF2pC290gBPuN5JyI3WTG1M3ncu9z8YaAlZnun57+HqdHtCbSvxu6s8Sri8Bdt3kzd
+         crkA==
+X-Received: by 2002:a81:b2c8:: with SMTP id q191-v6mr1901532ywh.313.1541626353041;
+        Wed, 07 Nov 2018 13:32:33 -0800 (PST)
+Received: from localhost ([2620:10d:c091:200::7:5ca9])
+        by smtp.gmail.com with ESMTPSA id o66-v6sm1073096ywo.39.2018.11.07.13.32.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 13:32:32 -0800 (PST)
+Date: Wed, 7 Nov 2018 13:32:29 -0800
+From: Tejun Heo <tj@kernel.org>
+To: Waiman Long <longman@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        kernel-team@fb.com, pjt@google.com, luto@amacapital.net,
+        Mike Galbraith <efault@gmx.de>, torvalds@linux-foundation.org,
+        Roman Gushchin <guro@fb.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Tom Hromatka <tom.hromatka@oracle.com>
+Subject: Re: [PATCH v14 00/12] Enable cpuset controller in default hierarchy
+Message-ID: <20181107213229.GB2509588@devbig004.ftw2.facebook.com>
+References: <1539635377-22335-1-git-send-email-longman@redhat.com>
+ <20181105163656.GK4182586@devbig004.ftw2.facebook.com>
+ <20181106115335.GQ22431@hirez.programming.kicks-ass.net>
+ <20181106115558.GB22485@hirez.programming.kicks-ass.net>
+ <8c386375-b801-8adb-602e-40c73a7efedc@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8c386375-b801-8adb-602e-40c73a7efedc@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnvTkXWuNbUWUZAA--.1334S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrury8Jr13tFy7GFWrZw4Utwb_yoWktFb_ur
+	yv9r1kC34DCryxK3ZIkF45ArWDJa4UJ3W8C3Z8JF18AayDXa93J3sIgFyvqr1ftayIq3Zx
+	WFn0v3ySv3W2vjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbDAYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vE
+	IxC_CwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2
+	z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52
+	x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwI
+	xGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bYAwsU
+	UUUU=
+
+Hello,
+
+On Tue, Nov 06, 2018 at 09:06:01AM -0500, Waiman Long wrote:
+> On 11/06/2018 06:55 AM, Peter Zijlstra wrote:
+> > On Tue, Nov 06, 2018 at 12:53:35PM +0100, Peter Zijlstra wrote:
+> >> On Mon, Nov 05, 2018 at 08:36:56AM -0800, Tejun Heo wrote:
+> >>> Hello,
+> >>>
+> >>> So, this looks good to me.  Peter, I'm gonna roll the series into
+> >>> cgroup/for-4.21-cpuset.  Please holler if you have any objections /
+> >>> comments.
+> >> Mostly nits, except I think the interface for cpuset.sched.partition
+> >> needs to find another term for "not a parition", "normal" really doesn't
+> >> work for me.
+> > cpuset.sched.partition: "true", "false", "error"
+> >
+> > makes more sense to me.
+> 
+> The terms "true", "false", "error" look good to me. I can change the
+> patchset to use those if Tejun has no objection. I will fix the other
+> nits you have as well.
+
+How about the following?
+
+Interface file is named "cpuset.cpus.partition" as it's a partition of
+cpus.  The writeable keys are "root" and "member" - a partition root
+and a partition member.  When "root" is requested but can't be
+satisfied it shows "root invalid".  This seems pretty consistent with
+cgroup.type and other cpuset files.
+
+Thanks.
+
+-- 
+tejun

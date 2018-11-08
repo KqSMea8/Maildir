@@ -1,0 +1,137 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:43 -0000
+Received: from icoremail.net (unknown [209.85.210.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXvwqSDONb1QVZAQ--.26735S3;
+	Thu, 08 Nov 2018 00:02:33 +0800 (CST)
+Received: from mail-pf1-f175.google.com (unknown [209.85.210.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3X0uODONbWDYYAA--.6889S3;
+	Thu, 08 Nov 2018 00:02:23 +0800 (CST)
+Received: by mail-pf1-f175.google.com with SMTP id u10-v6so2127923pfn.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:02:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :in-reply-to:references:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=WS9zibSB4iZWTedBoRMKnZJf+/qsJfvPY26Ky9zapvc=;
+        b=eiFIa3Td2gMu8j8gHWbX8hA4bKit4X5a4LEkjWPCViMqHS6shejc4IrFawCX2vmUCO
+         nUj0FB/K+CiPFe5m75xxVasP0pb1pMiaHdHN0ii+CDZJn24OmXr8RIobMfhm+ylAfJrf
+         uA98F8aC0Lp4dkqk3L/iIrLItn5dKU2KhQUwzHHvpCPOib/AbXwdWRa+lh0mg0fudTL4
+         RbOZvACvL+t84Qp9OHjkvELwkJ5qPcSWJekmDelYpoU4YBuax6GMApM/Xzr572J9mqou
+         meCvxjQfrU03hyI1i/tLqTQgNmvbLH3MjOnmfYah2dZ/67NDrk91bqDTieqgsHZ3OWWe
+         2VRA==
+X-Gm-Message-State: AGRZ1gIB+ALg/1GYl4o+UFjv16TM5HPrzloclU3mPpq+5+Pfs1nrmH9v
+	3oPI/WAo17kWh8QPmI9K+Ynd0Jj7IsSMwnO0ozlaro22YXdMuurujw==
+X-Received: by 2002:aa7:87d0:: with SMTP id i16-v6mr784879pfo.20.1541606542793;
+        Wed, 07 Nov 2018 08:02:22 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5419863pjt;
+        Wed, 7 Nov 2018 08:02:22 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dxabVgLks/tsOxr1lvGeXlrLFbjMoRA+8voBlCKK4m3dAIE9H3AczPnq+3FNsh4Q/Raw7Q
+X-Received: by 2002:a65:55ca:: with SMTP id k10mr645250pgs.448.1541606542092;
+        Wed, 07 Nov 2018 08:02:22 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541606542; cv=none;
+        d=google.com; s=arc-20160816;
+        b=xi7UZ6kwzUUrI6PCgiR5is+nJvhTqyKgZOrs6/D9Z4I1YSpC5D5DeAKDzfjSECpBtZ
+         4cMq9l0yADjY0+18BA8CgeXJgvrz9oN5aHwfAM1SYW7T8yC64Fh7O6ehFBQiaKnhrEQX
+         Cj7tesQenw1+tqHoyWka7US2WMJH23EExfiAvSAGob5Req6RIJsEizTmBxosFhpxXJIM
+         yOG7nIdSQ3QYnDMLcwiuIelSw/Ng+QNnPJ2Ehna+eGwyitrIj9yb2csDLV519AK0isqO
+         SiDKUw51wC+7dXBs680qsYxfls7y33tb/ZTGMPd1cG+OA/7YIFeTQ+07/n9pFBndn7dw
+         +oIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :references:in-reply-to:mime-version:dkim-signature;
+        bh=WS9zibSB4iZWTedBoRMKnZJf+/qsJfvPY26Ky9zapvc=;
+        b=k8MLXha9Q6fPOFnz3KMSQ26t2wLHs1k3wEClmOfKPDfPWq1hiqFKASsfQDWD8pJtj3
+         VVV5rS+tPYlTr/BGdu8pNIhduQKIT7tfZdxnJUB8WPj4u//oYeTf4obqLbw3Meo/eJgX
+         9KbMOa6pH0wgvcNVkPz/SGMsAN3ipUeWUP6dInQSrTsMW7DA6x6DyvUC29eQYCpKPeMz
+         FH/TcEE1sqDrTZifoGLd1ePolo7ftwdbc1G+MR+gO53aPKYGUE/CDBV9dhSz+zsaoIiR
+         +I/Nu41617TMZUX+GLaZ7mhIh5al52GmaJL/p+t6S5HKlRbn+aRYLo5v3LjemHRW0MeL
+         091w==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@google.com header.s=20161025 header.b=efilHdXx;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=google.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id t1-v6si969228ply.279.2018.11.07.08.02.05;
+        Wed, 07 Nov 2018 08:02:22 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731267AbeKHBcU (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:32:20 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:36865 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727668AbeKHBcU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:32:20 -0500
+Received: by mail-vs1-f67.google.com with SMTP id h18so9723579vsj.4
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 08:01:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=WS9zibSB4iZWTedBoRMKnZJf+/qsJfvPY26Ky9zapvc=;
+        b=efilHdXx/NjzFvFQPQOyQkmg+ZtlnQw58eJVkWu5P6MFx43vJmPJURAgVzEfihVXzJ
+         J43UgV+MpGQSAtJdCdSSPoWJU+dJHWx2VvBeDHP8Q8PztIOfmDQ9HdwcVpUhTYT10NNq
+         xUlLjSUDGQGKFulIzDimMGzVtzI1JwyPI6DK3cfhfazbkuNnkZqEyGhUiiQ7z7YS6yJQ
+         2QcyCrQF+b8lmCGQZ0wtwHpjsF629pwr43IaRDBgn+6SbxMlOOYQ690MddYgnIXFaf3T
+         vHrk2oYmsbnBFZEeqRbTja5isxWxj2Hxp2vxjmsaTwjlNGGkWVWjRpn6HwjyR7ahcp4H
+         WO2A==
+X-Received: by 2002:a67:6cc1:: with SMTP id h184mr304932vsc.149.1541606481350;
+ Wed, 07 Nov 2018 08:01:21 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a67:f48d:0:0:0:0:0 with HTTP; Wed, 7 Nov 2018 08:01:20 -0800 (PST)
+In-Reply-To: <CAJfpegvs4hafbe9XSgU175+26_ks9oh6iUo5m2tYLA=6MMvMrQ@mail.gmail.com>
+References: <20181029192521.23059-1-dave@stgolabs.net> <CAKOZuevx9beEB-KWz0gRNaJQLfzu0cu7nuMYaB5ZT1O_ooQYAA@mail.gmail.com>
+ <20181106154840.3b448356214afa63dc8cb28c@linux-foundation.org>
+ <CAJfpegsdFiM6QWt3VBEDvGdKHfvsvUnm06MC-ha7z_WPTP9znA@mail.gmail.com>
+ <CAKOZueu=zM_HjeET6SBJaP2zHD6+w7K8ewtk6B8C38Gkm4g0LA@mail.gmail.com> <CAJfpegvs4hafbe9XSgU175+26_ks9oh6iUo5m2tYLA=6MMvMrQ@mail.gmail.com>
+From: Daniel Colascione <dancol@google.com>
+Date: Wed, 7 Nov 2018 16:01:20 +0000
+Message-ID: <CAKOZuesWpDJqqtyMxpVWBhe0ZnS3e=NOm6ZOeizuxX37tk2BbA@mail.gmail.com>
+Subject: Re: [PATCH] fs/proc: introduce /proc/stat2 file
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Davidlohr Bueso <dave@stgolabs.net>, longman@redhat.com,
+        linux-fsdevel@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dbueso@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3X0uODONbWDYYAA--.6889S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUYX7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r1j6r
+	4UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VWUMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWUJVW8JwCYIxAIcVC2
+	z280aVCY1x0267AKxVWUJVW8JwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij2
+	8IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
+	1lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bnZXOUUUUU
+	=
+
+On Wed, Nov 7, 2018 at 3:54 PM, Miklos Szeredi <miklos@szeredi.hu> wrote:
+> On Wed, Nov 7, 2018 at 4:42 PM, Daniel Colascione <dancol@google.com> wrote:
+>
+>> configuration!" is something I've heard more than once. Who's to say
+>> that sysfs is for exposing /proc/pid/stat,
+>
+> Patch is about /proc/stat not /proc/PID/stat.  Please revise your
+> arguments based on that.
+
+My argument stands. The considerations I'm discussing apply to both
+process-specific and system-global information files.

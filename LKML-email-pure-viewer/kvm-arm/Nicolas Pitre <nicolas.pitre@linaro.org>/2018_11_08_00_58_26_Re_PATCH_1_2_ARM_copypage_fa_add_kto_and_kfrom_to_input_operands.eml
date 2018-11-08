@@ -1,0 +1,155 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:00 -0000
+Received: from icoremail.net (unknown [209.85.215.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f+3dGeNbpFdZAQ--.26432S3;
+	Thu, 08 Nov 2018 00:59:11 +0800 (CST)
+Received: from mail-pg1-f177.google.com (unknown [209.85.215.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXNUHWGeNb1W0YAA--.430S3;
+	Thu, 08 Nov 2018 00:59:02 +0800 (CST)
+Received: by mail-pg1-f177.google.com with SMTP id q5-v6so7569639pgv.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:59:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:in-reply-to:message-id:references:user-agent:mime-version
+         :sender:precedence:list-id;
+        bh=U+ReFA8lStBjKrskJnos8Rq1GeNKX0AwYgAKm549ynE=;
+        b=P4iG7ZUAzogG/xe+PLPlC+nIT6FcQhLNzjqseE/xs52P+Y8MSlq2GIiILEiwyf325H
+         xFAbQkcjIYDY0ZAjR7+AJMJ6GwvnlcVg7XHM6fbJ0hLQpulOkDdnox6kaG+WWpk7XmMc
+         Adit6lqaONtjMxJBcqZi8flfjxRdbW2J/3hsO2wWU6snIdXyh9z7dUEVFhMDFha/W5mH
+         uSLE+X2G8gg0NUdTnNF4aZLuhGq3EhqRhDLwb+GcR00Yv/63WSrlJag6VsZ7SlQaWZq/
+         67cH2aXvJGHFiIw1RHRUR+7+tuScB6076tAQew5Pi5bfHn4O0z/zTTsy0npQ1cZAO9KD
+         33WQ==
+X-Gm-Message-State: AGRZ1gJmzXvWkF5E2URT04t2sVLoz7KaGLhrn3jjjeGBFybzYaEHImR2
+	aa3F6Xqepav9/knBHgOiDLgk2gZQ/rxGLEDkJDNeneyMQxrW7Mwjyw==
+X-Received: by 2002:a63:2c0e:: with SMTP id s14mr859576pgs.132.1541609942162;
+        Wed, 07 Nov 2018 08:59:02 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5482970pjt;
+        Wed, 7 Nov 2018 08:59:01 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dYVwpuGIFXhobQ4B4/HAd8xMjwfb2TT91UWYd6jIiSpPixNqPVrffwJohjmS3y837F5IVw
+X-Received: by 2002:a62:1f13:: with SMTP id f19-v6mr983164pff.168.1541609941395;
+        Wed, 07 Nov 2018 08:59:01 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541609941; cv=none;
+        d=google.com; s=arc-20160816;
+        b=VjuH8Dyv13/GtFkNRRLlvyhrf2IUnLwMpXcQgKEshcZpMcVKhar2oyCC0YIB9Zv0R6
+         eLjZ95REjVdr4vdBtawZdNtPh0CnCZghQED4HbDZNFh3V+hJltmK8eWFqILKLQQ1jPa1
+         2bc0dN6KIMbIl6zwvG4Z/7MkxWutNsKmwpnw8KwkK+96gDgNpMW+aDbk9BEywGT4gQRm
+         PJM5FudkPQXID6rle07xF/L1RTtqf6HipcpfaofrZLejB9D6jizKGJ2p3NozKQ1H7uNA
+         KahhEC3GPrnYszeHFboh46AjT/SkVzMGG82voUTNYi/q5SYudEfWMWMOtPmDBdbrJaE+
+         +9oA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:user-agent:references
+         :message-id:in-reply-to:subject:cc:to:from:date:dkim-signature;
+        bh=U+ReFA8lStBjKrskJnos8Rq1GeNKX0AwYgAKm549ynE=;
+        b=CBhdua7SUU5jDtmdUigle+ISSCgBW6YWVWQvVjByBbBBUhSIje/3QSHMr/QchMpQn9
+         yz/YJQDJY3SbQV0/95GyeM2WVILmSJpCFA2TTnEDMgxgLdi0ilHY0CXTNeuOGmV4dMKb
+         3zD22e2XxMQGX/Ab/340bYVFC8sVBxfQr978Je6bv4WFDU9d2vPmeV9UiET/DAgZJ8SB
+         A8+Z+8Z/MPuiS5u93wgoEGPkgfdrJxkOYF+nh6bUtEpKVLIU18S2199KnGbi96dBmYx8
+         4b8j6OUG7iNJfRe7VKkgeyGvHxf/4QCrAH4eFzSbqf6ItCJSIF2WoY+CZrcLFnKG5C2w
+         40VQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@linaro.org header.s=google header.b=MlLHKAAn;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=linaro.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id n9-v6si1172419pfh.96.2018.11.07.08.58.46;
+        Wed, 07 Nov 2018 08:59:01 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731298AbeKHC3k (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:29:40 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46706 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727676AbeKHC3k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:29:40 -0500
+Received: by mail-qt1-f196.google.com with SMTP id c16-v6so6566747qtj.13
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 08:58:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=U+ReFA8lStBjKrskJnos8Rq1GeNKX0AwYgAKm549ynE=;
+        b=MlLHKAAnzILkd6zR7a1ltIyVJLEigwD5Z4mvdbhdSHqFtSZlVvxHnG1NdzqZBLMsEL
+         KpW64/r54HLsAlELM6BX7JSVAhki+endKrkfnX89ClYsyJbEEdDNqIFk6oC9laa1irGK
+         ElhUQ5PJ+wBvzD5RdkJC4VmzCMrWxFUGQHkpQ=
+X-Received: by 2002:aed:25f2:: with SMTP id y47mr959135qtc.217.1541609907930;
+        Wed, 07 Nov 2018 08:58:27 -0800 (PST)
+Received: from xanadu.home (modemcable228.104-82-70.mc.videotron.ca. [70.82.104.228])
+        by smtp.gmail.com with ESMTPSA id u16sm649227qkg.14.2018.11.07.08.58.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 08:58:27 -0800 (PST)
+Date: Wed, 7 Nov 2018 11:58:26 -0500 (EST)
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+To: Stefan Agner <stefan@agner.ch>
+cc: Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+        Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, Roman Yeryomin <roman@advem.lv>
+Subject: Re: [PATCH 1/2] ARM: copypage-fa: add kto and kfrom to input operands
+ list
+In-Reply-To: <806401fd406b1391fd3a9f5e072c107a@agner.ch>
+Message-ID: <nycvar.YSQ.7.76.1811071154590.23219@knanqh.ubzr>
+References: <20181015221629.13924-1-stefan@agner.ch> <CACRpkdaVGKLtE-whhK3oFgY+4xoy1JqWkcBW4UO0-hJs2B-QGg@mail.gmail.com> <20181016084416.GF30658@n2100.armlinux.org.uk> <nycvar.YSQ.7.76.1810161357580.1498@knanqh.ubzr> <fe7595f5d02424c9d92e437cd20361f9@agner.ch>
+ <nycvar.YSQ.7.76.1811052231220.1498@knanqh.ubzr> <806401fd406b1391fd3a9f5e072c107a@agner.ch>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXNUHWGeNb1W0YAA--.430S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xr17trW8Aw18CryDur13CFg_yoW3KFg_ur
+	WDKryDGr4DCrZ5CrnIqws8JrWIva12gr1UX34DAF15ua45trZxJas3tF1v9FWUZayv9347
+	urWkAa15ZF1UWjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbakYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE
+	2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcV
+	C2z280aVAFwI0_Cr0_Gr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJwCF04k20xvY
+	0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
+	67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJb
+	IYCTnIWIevJa73UjIFyTuYvjxUTVbkUUUUU
+
+On Wed, 7 Nov 2018, Stefan Agner wrote:
+
+> On 06.11.2018 05:49, Nicolas Pitre wrote:
+> > So here's the revised patch. It now has full compile-test coverage for 
+> > real this time. Would you mind reviewing it again before I resubmit it 
+> > please?
+> 
+> Compile tested all copypage implementations with the revised patch using
+> Clang too, everything builds fine.
+> 
+> FWIW, I used this defconfigs:
+> copypage-fa.c: moxart_defconfig
+> copypage-feroceon.c: mvebu_v5_defconfig
+> copypage-v4mc.c: h3600_defconfig+CONFIG_AEABI
+> copypage-v4wb.c/v4wt.c: multi_v4t_defconfig
+> copypage-xsc3.c/scale.c: pxa_defconfig-CONFIG_FTRACE
+> 
+> The changes look good to me:
+> 
+> Reviewed-by: Stefan Agner <stefan@agner.ch>
+
+Thanks.  Submitted here:
+
+http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=8805/2
+
+
+Nicolas

@@ -1,0 +1,160 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:04 -0000
+Received: from icoremail.net (unknown [209.85.214.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3_ii7+JblVdYAQ--.26360S3;
+	Wed, 07 Nov 2018 21:58:59 +0800 (CST)
+Received: from mail-pl1-f171.google.com (unknown [209.85.214.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHa0ef7+JbYbYXAA--.12755S3;
+	Wed, 07 Nov 2018 21:58:55 +0800 (CST)
+Received: by mail-pl1-f171.google.com with SMTP id t6-v6so7904436plo.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:58:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:sender:precedence:list-id;
+        bh=mfRb51+fRw+7V+98n+qPMf3jpsb0rubGl46al4KQFDI=;
+        b=mn0Gez1tO5WrmpDmvdZONTHEtyzu/x1YmooSRl+H4LxFBamJYae0XDmFqg+dJCWyfM
+         TJMUryxj9/3V7KCaH/SVjKd9CCJms85zIflKbSLAAqQYaPDOudRaNAEkH6x+iZ8QBI0s
+         KTyTv5mIFnMSM3fiGn29M/hGJNRH6+d59POhEM3GiNQ4mkNjRzum3nnQDXsQq5LU2lTP
+         EO8NKvC1wHek+GdMVAeg3vdIQC9oFfCBqjcF573FT7SZLB/P4fDOYtb5LyEC0J3NCghI
+         6QaO4KnQ3zS9qZ46OG4L2I5KVsU4h6zfOzXx+HLcyshCkmZH/oArT2b5GQ8Saq7+G/EP
+         YJlw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIt2YxS/DbzmVMxsGtwuILk8xbFhb8D3tAhHZFzYvPhU+1rs88L
+	LMiT1CiWm8m3E+NoOL87HSTc0g+ZQ+BEWdLZ9RH/7yocQiFxjAyN6w==
+X-Received: by 2002:a17:902:50e3:: with SMTP id c32-v6mr324212plj.39.1541599135619;
+        Wed, 07 Nov 2018 05:58:55 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5276216pjt;
+        Wed, 7 Nov 2018 05:58:54 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eEDE2mPMIUepZqdnlkB/Ef0EYD/UGzmDRAdXl+q/z0Oyj0UeOWD5DpiwboZhNXRlVklqMr
+X-Received: by 2002:a62:96db:: with SMTP id s88-v6mr298256pfk.109.1541599134795;
+        Wed, 07 Nov 2018 05:58:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541599134; cv=none;
+        d=google.com; s=arc-20160816;
+        b=oKAUmZevSfHYT9rP5+fg3cr/272sca4dWEdTDUG7ZBAfaKtSWVQgLC9V86NKRg3ssm
+         WCZIB2x049pqkVNfkKGWGoy9SqGQpZnM+zrxhB5MommgQfdlUdhczy5zxj/P+4jtPi5R
+         EL3+79EPOuZtkKgC3qfp/1VESUb8m0CKsD5VfilYQgkZz4nxtfaMyXVrGy9SGp+yLFl6
+         07ljGbIPvTiKGpOjsoNDzkzYE4EHlkPguleZXD0f0ur6E489wX2AiOW+IofnzcUydEoW
+         O32RIPsej7rbcMQ0WJLcl8EsFeXGq6b9eU7qMUDfGyCIptRj+NbUjD5KfyVeq3Gp9LFe
+         rMlw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:date:subject:cc:to:from;
+        bh=mfRb51+fRw+7V+98n+qPMf3jpsb0rubGl46al4KQFDI=;
+        b=y/GCdxxg4Im+juSgPEIjtV5vgmUFFCWTsOpQ+evph93caRUQYmUvgoT5aCulg37cSu
+         j0ZbAqSvVWOh1LzD8WqxmD0JUDNyWX6d4n8wTQx2nphrZGDtpGSQ3uXg578+qcOdOmGJ
+         ZqNtQgiYrEogV8YumvH7HD66G0+y3llgGWf+WAT8HzbHTHqHreQhc14ZkSMs7GBS/sAa
+         fEC3ZNtAC/SzJA5WipajKbLSGfgXDeGOk/oUXB4mcgrsXG92ddWWMosa8ufh6ojqWMRd
+         jQUXNkR8DrJcRQ0/mJLnVVPqSXkt4PZz8XHdGWw57JPuh3h20TDm3n290docYyf3PJZ9
+         YroA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id n9-v6si738561pfh.96.2018.11.07.05.58.40;
+        Wed, 07 Nov 2018 05:58:54 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730794AbeKGX2u (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:28:50 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38580 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727168AbeKGX2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:28:49 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay1.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9C782B60B;
+        Wed,  7 Nov 2018 13:58:18 +0000 (UTC)
+From: Johannes Thumshirn <jthumshirn@suse.de>
+To: Jens Axboe <axboe@fb.com>
+Cc: Linux Block Layer Mailinglist <linux-block@vger.kernel.org>,
+        Linux Kernel Mailinglist <linux-kernel@vger.kernel.org>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Jan Kara <jack@suse.cz>, Sagi Grimberg <sagi@grimberg.me>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH v2] block: respect virtual boundary mask in bvecs
+Date: Wed,  7 Nov 2018 14:58:14 +0100
+Message-Id: <20181107135814.15727-1-jthumshirn@suse.de>
+X-Mailer: git-send-email 2.16.4
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHa0ef7+JbYbYXAA--.12755S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF1UuryfZF1rAF15Xr47Arb_yoW8Ww4Upr
+	Z7G3W5CF1xKF4xXFW8XF15Wr95uwsxGwnxWFs5Cw1FvF9xKF1fZ3W0yrW0vw1v9ayfCan0
+	vrn8tryxuF1293DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW5GwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUqc4S
+	UUUUU
+
+With drivers that are settting a virtual boundary constrain, we are
+seeing a lot of bio splitting and smaller I/Os being submitted to the
+driver.
+
+This happens because the bio gap detection code does not account cases
+where PAGE_SIZE - 1 is bigger than queue_virt_boundary() and thus will
+split the bio unnecessarily.
+
+Cc: Jan Kara <jack@suse.cz>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
+Acked-by: Keith Busch <keith.busch@intel.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+
+---
+Changes to v1:
+* Tried to re-phrase the commit message
+* Add reviews
+---
+ block/blk-merge.c | 2 +-
+ block/blk.h       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 6b5ad275ed56..208658a901c6 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -46,7 +46,7 @@ static inline bool bio_will_gap(struct request_queue *q,
+ 		bio_get_first_bvec(prev_rq->bio, &pb);
+ 	else
+ 		bio_get_first_bvec(prev, &pb);
+-	if (pb.bv_offset)
++	if (pb.bv_offset & queue_virt_boundary(q))
+ 		return true;
+ 
+ 	/*
+diff --git a/block/blk.h b/block/blk.h
+index a1841b8ff129..c85e53f21cdd 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -169,7 +169,7 @@ static inline bool biovec_phys_mergeable(struct request_queue *q,
+ static inline bool __bvec_gap_to_prev(struct request_queue *q,
+ 		struct bio_vec *bprv, unsigned int offset)
+ {
+-	return offset ||
++	return (offset & queue_virt_boundary(q)) ||
+ 		((bprv->bv_offset + bprv->bv_len) & queue_virt_boundary(q));
+ }
+ 
+-- 
+2.16.4

@@ -1,0 +1,137 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:18 -0000
+Received: from icoremail.net (unknown [209.85.210.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_49aIeNbN4tZAQ--.58692S3;
+	Thu, 08 Nov 2018 01:31:07 +0800 (CST)
+Received: from mail-pf1-f176.google.com (unknown [209.85.210.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAX+URYIeNbA40YAA--.639S3;
+	Thu, 08 Nov 2018 01:31:05 +0800 (CST)
+Received: by mail-pf1-f176.google.com with SMTP id e22-v6so7980890pfn.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:31:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding
+         :sender:precedence:list-id;
+        bh=kKq+fSgTFQdTr0GvQC7Qt40uLJdz7F6rpuRDZxEwlPk=;
+        b=WU/SyLoH9/G0UgCqWz6YOEFbikja0Wu9oE85GXocCM5JKVN5bGOGXlKscKlkZffV1/
+         t76wVwJ6GHZQYn6dsPXqYeS3kxnForxzFJSE2ywrFshqsaKKJuDaHOxW8kYGZUnnWEc8
+         geXactvjABltfcdUtdqbzHWtYaLG2FTN8WNS490tRoU5cykFU3h6+kNRMtuNjFj/2OWb
+         EWAXB4qQ/UTUfFkXf76DkJUgdcikCDRBjVpSpI4E48eZdd5/dHc0WVIbzmcwT5W4xEHj
+         HyQMhiscFyirdGvoE+7cB6m95NzEF49C3hV7BRAZpoFb3dC5m+knjMCh4Lq+j8DTwN2B
+         Sy9A==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=virtuozzo.com
+X-Gm-Message-State: AGRZ1gKAo/ZCQdxZ7YfBL9/3qyBhr4BN20bWylS0QOxLAlEbqe+vIcEN
+	HUPEjlWXwVimUe9G64TvuYPXE/qjF3LXkqhSXOnq02B0x3p3t07Wbw==
+X-Received: by 2002:a63:2c0e:: with SMTP id s14mr955050pgs.132.1541611864828;
+        Wed, 07 Nov 2018 09:31:04 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5520756pjt;
+        Wed, 7 Nov 2018 09:31:04 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fDLThVfuiowU897omwsIZ+zaM8l8ApAr1UmkFIy7TeLQCWAYUMCZxtTDbNSX9jrEThBpJx
+X-Received: by 2002:a17:902:bb06:: with SMTP id l6-v6mr1104207pls.58.1541611864004;
+        Wed, 07 Nov 2018 09:31:04 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541611863; cv=none;
+        d=google.com; s=arc-20160816;
+        b=GSEEQf9Gq/mzL7N4egs5nMpjkfExpGTGH2szSZ/IjDqwCMzZx/oqCS2dt4J90jg/aN
+         yMG/0dNgf+U0mwr/P3Y2ykiXp9LldhS/TlRZfFe5boF0yPxxxeHJ1qkgLIuBr6nhpNtU
+         1ztRn+xZ493TzGmFZ17fAmrJvhA4cC8iRY6GgHGML2oRFI8gKIRL9+sA29fcOpkDXtqS
+         bvejXlsQUWSyaj+wdoG5ZVqDHZxk6Gf1EkA11ExXVTZ03+zhJndva8DIQuAvXx8u9khb
+         U2iOezVGTE4CnmVZiGibwGNsToYuetA1tpmS4UEiJPR1SIO6Xvp460sYfVBBEXtkSR5a
+         n2Lw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:references:cc:to:subject:from;
+        bh=kKq+fSgTFQdTr0GvQC7Qt40uLJdz7F6rpuRDZxEwlPk=;
+        b=a6ROdpPInw3yhqIbeMhZF9rR/rfncPMYt860weqg6ZMH+DA04fyk/OguxOTLCIPTTj
+         7OhjKA4hgZKPfJsHowfqfCMc4q9GlEpe+GS2sof0cmSNwEvglmapibvamxqq9H3Im3bd
+         o04uSgdXJnF2rgwAtC/X20Q1ZlX7rbbw9VMqueJ3rWNsjY6ECt8KcRbx67/5l9wWbaJU
+         FP4cYZdnR3ATBMlbIO48cnHBAMwynhPTrv8UjoC5TQuT7B6ZGsuHsFuEH2aNaEqRhPqB
+         xNsby2BHEHW98Ygde5Gj2L5NQA9NRtN+txnsWDDF61Jffu/eq1/kQRMBVHW6MzVYuQVw
+         MK/w==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=virtuozzo.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id k8-v6si1209670pll.241.2018.11.07.09.30.48;
+        Wed, 07 Nov 2018 09:31:03 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728137AbeKHDBm (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:01:42 -0500
+Received: from relay.sw.ru ([185.231.240.75]:37756 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727859AbeKHDBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:01:42 -0500
+Received: from [172.16.24.21]
+        by relay.sw.ru with esmtp (Exim 4.90_1)
+        (envelope-from <vvs@virtuozzo.com>)
+        id 1gKRek-0003kL-Ij; Wed, 07 Nov 2018 20:30:18 +0300
+From: Vasily Averin <vvs@virtuozzo.com>
+Subject: [PATCH v2] ext4: lost brelse in __ext4_read_dirblock()
+To: linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+Cc: linux-kernel@vger.kernel.org
+References: <6e5c9e17-5916-7296-35a0-cc0600a79f27@virtuozzo.com>
+Message-ID: <e269cf8c-b5ca-3eed-bd60-a8629378db8b@virtuozzo.com>
+Date: Wed, 7 Nov 2018 20:30:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <6e5c9e17-5916-7296-35a0-cc0600a79f27@virtuozzo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAX+URYIeNbA40YAA--.639S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrKry7CryfJF4rJF4ftw18Zrb_yoWxtrX_Aa
+	4UZryxWrn3XrnakFWrCryxJr4FvF1rAF1DGrW3tF13WFn8ta90y3WDJrWfAF1Dury8GrZ8
+	Cr1rXryag3W5WjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUb9AYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64
+	vIr41l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY
+	1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6r4lc2IjII80xcxEwVAKI48JMxvI42IY6x
+	IIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvE
+	x4A2jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20x
+	vY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkE
+	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyU
+	YxBIdaVFxhVjvjDU0xZFpf9x07b8wZ7UUUUU=
+
+Fixes dc6982ff4db1 ("ext4: refactor code to read directory blocks ...")
+Cc: stable@kernel.org # 3.9
+
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+---
+ fs/ext4/namei.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+index d388cce72db2..6a6b90363ef1 100644
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -126,6 +126,7 @@ static struct buffer_head *__ext4_read_dirblock(struct inode *inode,
+ 	if (!is_dx_block && type == INDEX) {
+ 		ext4_error_inode(inode, func, line, block,
+ 		       "directory leaf block found instead of index block");
++		brelse(bh);
+ 		return ERR_PTR(-EFSCORRUPTED);
+ 	}
+ 	if (!ext4_has_metadata_csum(inode->i_sb) ||
+-- 
+2.17.1

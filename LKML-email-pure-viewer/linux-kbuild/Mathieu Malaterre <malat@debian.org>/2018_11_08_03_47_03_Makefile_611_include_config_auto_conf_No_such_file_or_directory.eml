@@ -1,0 +1,147 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:56 -0000
+Received: from icoremail.net (unknown [209.85.214.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3wyRQeNbC09aAQ--.26928S3;
+	Thu, 08 Nov 2018 03:48:33 +0800 (CST)
+Received: from mail-pl1-f179.google.com (unknown [209.85.214.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXMj6OQeNbHxIZAA--.706S3;
+	Thu, 08 Nov 2018 03:48:30 +0800 (CST)
+Received: by mail-pl1-f179.google.com with SMTP id q19-v6so5330721pll.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:48:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :mime-version:from:date:message-id:subject:to:cc:sender:precedence
+         :list-id;
+        bh=IeEUQE/QIQAqRZEVX4kdlNEKWROD5nBGu5ezQOuTX9Q=;
+        b=FUorzrkBsQHRn0C2G3Mrbh5+e/kEz0H/nkcZUi5TZbYbeMvRnWtu4yhauuSJWBsYrm
+         HWDw2MZy1nct18otb/M7ch8kCkGDQHjawyJm6tl58IUu1r3kRIZoSFIuwqvGcH+rBQb5
+         Jxf6usSgc8VvLCvYEuoGEH8nbZMXvhwkKTgWCyMsBpwMw0/ljYysaXY63wcsNPwgIS7p
+         T5d6EFrbyTN8+5Iw8+xhHK+1QQAXqHB1UVKRYzf4TuieNbloDDu9NPnE6wM30jdt44Vw
+         vWe5zyUSGtU8/jVu7zTRzNxCtegitkukw8d+cPCjknqZGCKD6KabGa3e//8B+0JWhdyf
+         d78Q==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKSkezbNRpnTz9ic6b8STMG15g1FZ7GMd7Lvn4vasfepx1jAeUF
+	/3M+ZnJZG7IHzzlmBmMkMslePbpCAFvij1Dro3+Tt9CbwYKvF81+vA==
+X-Received: by 2002:a17:902:50e3:: with SMTP id c32-v6mr1568118plj.39.1541620110058;
+        Wed, 07 Nov 2018 11:48:30 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5668090pjt;
+        Wed, 7 Nov 2018 11:48:29 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fJH214jMFc8Fl/q0Y89nz4aMrKo++wEj0dB0GDHxy+Ng7nk2uXX1Gk6LBMC9o+/Z7Yowwy
+X-Received: by 2002:a63:2045:: with SMTP id r5-v6mr1338038pgm.328.1541620109260;
+        Wed, 07 Nov 2018 11:48:29 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620109; cv=none;
+        d=google.com; s=arc-20160816;
+        b=y6cG1gH3YX2lhf50E1MQAN0O+TQKx5+/5tWRSZ3ikk+M6Vg6Ahelwtx75IRxmefYD/
+         davDWscqvb2Nr9EUmQnqp47y4rthX9MCU3L70IxEjnitIOitz3fKo4ltcwXagBhqwOTW
+         D3aUz60yw9nAJGl+tOHw4Y5/CPgntyOJCJfkK5+5WOxOZg6nlomtBHCzuIGkRaWaF7We
+         H86YwBeeXl4Npiuk4LBW5mcJxau6LGUkF+b2YiZ0uyVZhQd5J1wStxNmbf9JK8jUoZEE
+         1LZYY3H0Y9vuhPLcTAADeyrpi8AWC15RzAmOMQ/sDo8yxYRIu9JMBxNkEyYkOtjobKP2
+         7b/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :mime-version;
+        bh=IeEUQE/QIQAqRZEVX4kdlNEKWROD5nBGu5ezQOuTX9Q=;
+        b=BEVy1MJTxwe6+XgyeybUZF/TSF6EVBJNxc96xGraUW1Aydj4kuwmZds7aRP3rrPkci
+         J5rylN/mb3F1/NpbFUfjM3C96BxWT8E2+qJybNFHx0seKDwJp2GtDf2Iri6gEd3STYW/
+         toyu/12TXVsGlHY5LR85O3V7vwtvzYKGrNiopJq/aNZwCsYQNxgxmT7qWdKyxm3k5EwZ
+         Zx4M7f2oLUCjAWwJj0GUJyY1FE0j20KUK2yKdfdv7Lq7LLzjjewjt9zChpXDU4Or3utT
+         RPZrMa/cTwSfhjM6cQIM3lxMVMuUraEtpst9q7+ptEX7fEbqtBILf7mLGbU8kQchUbOY
+         RRkg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id u5-v6si1566605plj.98.2018.11.07.11.48.13;
+        Wed, 07 Nov 2018 11:48:29 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726860AbeKHFTF (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:19:05 -0500
+Received: from mail-oi1-f177.google.com ([209.85.167.177]:45129 "EHLO
+        mail-oi1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbeKHFTF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:19:05 -0500
+Received: by mail-oi1-f177.google.com with SMTP id p144-v6so14844243oic.12;
+        Wed, 07 Nov 2018 11:47:16 -0800 (PST)
+X-Received: by 2002:aca:d415:: with SMTP id l21-v6mr987139oig.107.1541620035382;
+ Wed, 07 Nov 2018 11:47:15 -0800 (PST)
+MIME-Version: 1.0
+From: Mathieu Malaterre <malat@debian.org>
+Date: Wed, 7 Nov 2018 20:47:03 +0100
+Message-ID: <CA+7wUsw9a3ecPHtPsMF71zjzmNqyASFP-X6Z_DVa108akVcN-g@mail.gmail.com>
+Subject: Makefile:611: include/config/auto.conf: No such file or directory
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXMj6OQeNbHxIZAA--.706S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7KrWrGr1xurW5tw4xuFWktFb_yoW8XF18pa
+	yvyrs8Kw40qFWrKFZ7JFW8uw18Xrn2ka1F93yUGw1jy343C34IvrsrtryfWF1kW393Xw1f
+	ZryfKFy5twn8uw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bo
+	a93UUUUU=
+
+Hi Yamada-san,
+
+Since commit:
+
+80463f1b7bf9 kbuild: add --include-dir flag only for out-of-tree build
+
+I can no longer run the bindeb-pkg rule. For example:
+
+$ make O=wii ARCH=powerpc wii_defconfig
+$ make -j8 O=wii ARCH=powerpc CROSS_COMPILE=powerpc-linux-gnu- bindeb-pkg
+...
+  WRAP    arch/powerpc/boot/dtbImage.wii
+INFO: Uncompressed kernel (size 0x89aa8c) overlaps the address of the
+wrapper(0x600000)
+INFO: Fixing the link_address of wrapper to (0x900000)
+rm arch/powerpc/boot/wii.dtb
+ fakeroot -u debian/rules binary
+make KERNELRELEASE=4.19.0-rc3-wii+ ARCH=powerpc KBUILD_SRC= intdeb-pkg
+/bin/bash ../scripts/package/builddeb
+Makefile:611: include/config/auto.conf: No such file or directory
+***
+*** Configuration file ".config" not found!
+***
+*** Please run some configurator (e.g. "make oldconfig" or
+*** "make menuconfig" or "make xconfig").
+***
+make[11]: *** [syncconfig] Error 1
+make[10]: *** [syncconfig] Error 2
+make[9]: *** [include/config/auto.conf] Error 2
+make[8]: *** [__sub-make] Error 2
+cp: cannot stat '/tmp/linux/scripts/kconfig/Makefile:69: recipe for
+target '\''syncconfig'\'' failed'$'\n''/tmp/linux/Makefile:555: recipe
+for target '\''syncconfig'\'' failed'$'\n''Makefile:646: recipe for
+target '\''include/config/auto.conf'\'' failed'$'\n''Makefile:24:
+recipe for target '\''__sub-make'\'' failed': No such file or
+directory
+
+Would you be able to provide a patch to fix this ?
+
+Thanks much,

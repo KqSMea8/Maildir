@@ -1,0 +1,250 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:07 -0000
+Received: from icoremail.net (unknown [209.85.215.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f9GkHONbsGlZAQ--.26558S3;
+	Thu, 08 Nov 2018 01:11:01 +0800 (CST)
+Received: from mail-pg1-f178.google.com (unknown [209.85.215.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnx0OdHONbFHoYAA--.430S3;
+	Thu, 08 Nov 2018 01:10:54 +0800 (CST)
+Received: by mail-pg1-f178.google.com with SMTP id k1-v6so7587854pgq.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:10:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-filter:dkim-signature:from:to
+         :cc:subject:date:message-id:cms-type:references:sender:precedence
+         :list-id;
+        bh=iFKZQakylMpviaUmUA83uFWro70KslVTwpF9v5ThIbI=;
+        b=fxN+d9d9Ec0Gwd/iE9g9fJkOPMMlm48FNPBTWJKFuSZSu3kgVk9bugH9IW90pXMddz
+         5gBzQ3kHR7YCNTkJLC7V/WuG8YF8qbw/1KsqHD6LVdGNm2q2M4eBXGslM8yhKQ7rFp5W
+         S6j6GV58MqSzBlGlG1aJvFVKT5wFzhMNQMnvRrNLeMEScYE0wXEGzqQBvGPVTUfymq9Z
+         t/v/PABg6/jA5c1mw8F26bKIRLI3X0Sa4IbbUJmH6CYKGJTWbQywByfbcPnwtxe+zXYm
+         iBzeABknZWPch/W/EQ3PXEd+1wjuhi3k6VBJjOTYwweGn57E97fv33Hb2qPgbG9CgU3f
+         GFFw==
+X-Gm-Message-State: AGRZ1gKiBaOJcXjz7b4vUSwBrOVne076qBHD4Q6C876ZVm8bEOumNOyD
+	L9QPw07pW8VPzeA6/7Uks88YWbqAmH8LHBKRyjN4HYjN2zbtGkCnog==
+X-Received: by 2002:a63:460a:: with SMTP id t10-v6mr859075pga.197.1541610653673;
+        Wed, 07 Nov 2018 09:10:53 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5497721pjt;
+        Wed, 7 Nov 2018 09:10:52 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ct4dV3u1wpVMLdpTv1mUw1/8TdPmJ/wXK76qC6+7gEU+2CXUJRYVRl52wEZrS+IQ1BYE39
+X-Received: by 2002:a17:902:bb07:: with SMTP id l7-v6mr1060961pls.230.1541610652855;
+        Wed, 07 Nov 2018 09:10:52 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610652; cv=none;
+        d=google.com; s=arc-20160816;
+        b=k77UE6F+uav6WvtL/HwGAPzm5IZx2sqqlzpzZ7N0DeaB6ekf12qUDdvCKR0iLCF994
+         jSHeVlyN1oMq1/4L5QmxNkwb8m7PBe9MQYIOCz1uccGYzl5hjgzaGUeKAX4EBymyy6P6
+         Cis47xMOMiKlaNSmg823Huzq3PIEuEXKqoiSXEzQkwYdYO/9XwWnkctCiYom9EhZWmry
+         w3t4TTLgzMsRaS+HCYs8iKjApUKuaeYiGxlJzNSsiUBVrXF5Thc3gB6sh6FJy78SAMGB
+         eoLHXOxc8X4In5iiO2yRnePzAixIk6mAfkskqVHKEYMba1bDAcYJ4qKDb7QDUdjr0Z1K
+         BK9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:cms-type:message-id:date
+         :subject:cc:to:from:dkim-signature:dkim-filter;
+        bh=iFKZQakylMpviaUmUA83uFWro70KslVTwpF9v5ThIbI=;
+        b=w+U+J4ou0KhMusG6qUZhVNi8lgmWEf0rx5hEcDv6vpHXczyyJgYvjRyxMdvD2XMuQv
+         mHkfaRHQfbJ719cNHN9As16ORvk4zT6s7LprKpm/2lJ7EC+BBBpWnU2CNc+vReGnIqkm
+         9S8kIjfyZBQEFM2d53KDSRDecyeGlbiahTDePbfwG4MqmXSEXLDRMUooFJsES0eg3nXM
+         2Mw+t1pM8ZdoQzPOsieBBGN8nAiJA/siJORCCIvSVTySWhdf/nR1PtZuBTivL754oof8
+         LzMod4mf2my59EIdyIEayixTNRZgXygVSfrDLGO72+Ad+3orRI7267sFpfKB0cnCNWeS
+         TSeg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@samsung.com header.s=mail20170921 header.b=BDK9ygP8;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=samsung.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id f2-v6si1117218plr.333.2018.11.07.09.10.36;
+        Wed, 07 Nov 2018 09:10:52 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731007AbeKHCli (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:41:38 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:57118 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbeKHCli (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:41:38 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20181107171021euoutp0229c8b7552bd9e13169b2321c8584f9c9~k5rFFOcbH0448104481euoutp028
+        for <linux-kernel@vger.kernel.org>; Wed,  7 Nov 2018 17:10:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20181107171021euoutp0229c8b7552bd9e13169b2321c8584f9c9~k5rFFOcbH0448104481euoutp028
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1541610621;
+        bh=iFKZQakylMpviaUmUA83uFWro70KslVTwpF9v5ThIbI=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=BDK9ygP8Xe3gNHRFYC5XmqbB2BGZu3Z1MVTUoh3k2myQ1xwb1HKN14DSTyY5Zssoi
+         YMhuagWTZLVfheMjuzBfaWpeCV/627lVksB/t2MHoIcxPJjoxRU1h7JN08zPIq9R4D
+         jzSL5a7JlN7L92ZVvsc424JiKhWQfskhn81Nypag=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20181107171020eucas1p261bf97dcb3947162dd9a8fc6736d3aec~k5rEbzFT52800928009eucas1p23;
+        Wed,  7 Nov 2018 17:10:20 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 33.E9.04441.C7C13EB5; Wed,  7
+        Nov 2018 17:10:20 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20181107171019eucas1p1fcb1f44e00265434548d901479f2ea94~k5rDE5Z4v2714327143eucas1p1Q;
+        Wed,  7 Nov 2018 17:10:19 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20181107171019eusmtrp14b8f102ab933f2b437022ef1d4737b16~k5rC41y4l2472624726eusmtrp1Z;
+        Wed,  7 Nov 2018 17:10:19 +0000 (GMT)
+X-AuditID: cbfec7f2-5e3ff70000001159-47-5be31c7c976a
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 3F.13.04128.B7C13EB5; Wed,  7
+        Nov 2018 17:10:19 +0000 (GMT)
+Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20181107171018eusmtip286bafac1988a4551c134cd1dcb1eefe9~k5rCSAEO_0340803408eusmtip2G;
+        Wed,  7 Nov 2018 17:10:18 +0000 (GMT)
+From: Lukasz Luba <l.luba@partner.samsung.com>
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Cc: rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, corbet@lwn.net, b.zolnierkie@samsung.com,
+        krzk@kernel.org, Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v2 00/11] thermal: add new flag irq-mode for trip point
+Date: Wed,  7 Nov 2018 18:09:42 +0100
+Message-Id: <1541610593-28542-1-git-send-email-l.luba@partner.samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGKsWRmVeSWpSXmKPExsWy7djPc7o1Mo+jDSZ0KVtsnLGe1eLJgXZG
+        i3mfZS3mHznHajH/yjVWi/PnN7Bb3GqQsdj0GMhb2LaExeLyrjlsFp97jzBaLL1+kcmide8R
+        dosnD/vYHPg81sxbw+ixc9Zddo/Fe14yeWxa1cnmcefaHjaPzUvqPRb3TWb1OPhuD5NH35ZV
+        jB6fN8kFcEVx2aSk5mSWpRbp2yVwZXRf3cRSsESmou1+B1sD4xKxLkZODgkBE4nWqRdYuhi5
+        OIQEVjBKfO26zAzhfGGU+Pz1KytIlZDAZ0aJc1+TYTpW7fvGBlG0HCg+p5EFruNSbwtTFyMH
+        B5uAnsSOVYUgcRGB2UCT9i1mB3GYBe4wSpyaspgZZJSwgLtEW+s7RhCbRUBVYtqP/SwgNq+A
+        l8SKWweYINbJSdw81wl2k4TAOnaJjd8Ps0EkXCQOn7jJCGELS7w6voUdwpaROD25hwXCLpY4
+        27EKqr5Gov3kDqgaa4nDxy+yglzKLKApsX6XPogpIeAo8XG1NYTJJ3HjrSBIMTOQOWnbdGaI
+        MK9ER5sQxAwNiS09F6COFJNYvmYa1GwPifdTn7BDwi1W4tfC74wTGOVmIaxawMi4ilE8tbQ4
+        Nz212DAvtVyvODG3uDQvXS85P3cTIzD1nP53/NMOxq+Xkg4xCnAwKvHwXtj6MFqINbGsuDL3
+        EKMEB7OSCG/v6kfRQrwpiZVVqUX58UWlOanFhxilOViUxHmrGR5ECwmkJ5akZqemFqQWwWSZ
+        ODilGhiTXU8KHYkTPiXlsD6oen/jGuPSnPq/PzT9bcqbRfKmWJfM4pI8L3zP9dimlepzTv2J
+        /3x1u6NgzvFTwWasHQulRbwnmWy0W5x7oOmnkuJFPZX5xborGzwt/3Jn3Nf1yQ9Oen11v8/C
+        zv+l8Smqs78WzFeUV67j2jX7yPaw10UfzhvKm87kYVNiKc5INNRiLipOBAA9GluLOQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHLMWRmVeSWpSXmKPExsVy+t/xe7rVMo+jDdYsY7HYOGM9q8WTA+2M
+        FvM+y1rMP3KO1WL+lWusFufPb2C3uNUgY7HpMZC3sG0Ji8XlXXPYLD73HmG0WHr9IpNF694j
+        7BZPHvaxOfB5rJm3htFj56y77B6L97xk8ti0qpPN4861PWwem5fUeyzum8zqcfDdHiaPvi2r
+        GD0+b5IL4IrSsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3S
+        t0vQy+i+uomlYIlMRdv9DrYGxiViXYycHBICJhKr9n1j62Lk4hASWMoocf/3ZjaIhJjEpH3b
+        2SFsYYk/17rA4kICn4CKVgZ1MXJwsAnoSexYVQjSKyIwn1Hi6KbLYIOYBZ4xSqyc/pIJpEFY
+        wF2irfUdI4jNIqAqMe3HfhYQm1fAS2LFrQNMEAvkJG6e62SewMizgJFhFaNIamlxbnpusZFe
+        cWJucWleul5yfu4mRmDYbzv2c8sOxq53wYcYBTgYlXh4NXY8jBZiTSwrrsw9xCjBwawkwtu7
+        +lG0EG9KYmVValF+fFFpTmrxIUZToOUTmaVEk/OBMZlXEm9oamhuYWlobmxubGahJM573qAy
+        SkggPbEkNTs1tSC1CKaPiYNTqoExtvih8vZ7DSksz6onO/t099+QimGcnfdXZrMPE1vZmtN7
+        nY5PTHsVEcOxMl6k8drO119u7jVSWLQue0FtyxJXnT7JBfIH8m9on9nx/b2OzzvFzm2ymeeK
+        MjscrHpcnv5RtFq+Z/cn9XclNxsvWZm63/sw+VHOI0N/i+eH/xw3mdeicDVse/MrJZbijERD
+        Leai4kQAC05W8ZECAAA=
+X-CMS-MailID: 20181107171019eucas1p1fcb1f44e00265434548d901479f2ea94
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20181107171019eucas1p1fcb1f44e00265434548d901479f2ea94
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20181107171019eucas1p1fcb1f44e00265434548d901479f2ea94
+References: <CGME20181107171019eucas1p1fcb1f44e00265434548d901479f2ea94@eucas1p1.samsung.com>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnx0OdHONbFHoYAA--.430S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxGF17XF4rXrW3Zr4DZw1UWrg_yoW5tF45pF
+	4akFZYyr4kGa4rJas7Cw40vFs0vw1vqFW5Xa1fG342k3s8tFyfXryxtF45ta48Gr4fJayY
+	yr15Xr1DJr1DArDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBIb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
+	kI7VAKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkIecxEwVCI4VW8MxkI7II2
+	jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJVW8Jr1lcIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Gr0_Gr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjx
+	CrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw2
+	0EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IUeX18PUUUUU==
+
+Hi all,
+
+This patch set adds a new flag and mechanism in thermal trip points in
+DT.  The old implementation in thermal zone in DT sets the same
+configuration for all internal trip points. It does not work for all
+HW.  There are SoCs which support IRQs for some trip points (i.e.
+Exynos 4 has 4 trip points with IRQs). For additional one defined
+inside the thermal zone there is a need of 'polling'. When developer
+adds polling mode settings inside the thermal zone, all the trip
+points will be registered for polling, even those supporting IRQs,
+which does not make sense. Thus, developers create workarounds, which
+are confusing for some other developers.  To workaround, 
+people declare some trip points as 'active' (those with IRQ support).
+It allows to bypass polling mode in thermal framework applied for 
+all thermal zone's trip points.
+
+Thermal framework defines 4 types of trip points. The 'passive' means
+passive cooling using DVFS, 'active' is designed for fan and other
+devices actively changing the outside conditions. Therefore, a workaround
+mentioned earlier is confusing when someone does not know about the
+framework limitations.
+
+This patch set tries to solve the issue by adding one flag inside the
+trip point: 'irq-mode;'.  The trip point 'passive' declared in DT with
+explicit flag 'irq-mode;' will not register itself as polling mode.
+Thermal framework will skip it during scheduling next read out work.
+The old global-polling-mode-configuration-inside-thermal-zone is still
+valid.  Patch set does not break existing design for trip points which
+do not have 'irq-mode' flag - they will use polling.
+
+As an example please check patch #10 for Exynos4 SoC family, where there
+is 4 HW supported trip points and there is a need of 6. The rest 2 are
+declared as 'passive' without 'irq-mode;' flag, which means polling
+mode needed for them.
+
+Patch #1 is a small cleanup in thermal framework.
+
+Change log:
+v2
+- changed description in cover letter
+- change commit messages according to Krzysztof comments
+- rebase on top of current mainline (v4.20-rc1)
+
+Regards,
+Lukasz Luba
+
+Lukasz Luba (11):
+  thermal: remove unused function parameter
+  thermal: add irq-mode configuration for trip point
+  thermal: add new sysfs file for irq-mode
+  Doc: thermal: new irq-mode for trip point
+  Doc: DT: thermal: new irq-mode for trip point
+  arm64: dts: exynos5433: add support for thermal trip irq-mode
+  arm64: dts: exynos7: add support for thermal trip irq-mode
+  arm: dts: exynos4: add support for thermal trip irq-mode
+  arm: dts: exynos5420: add support for thermal trip irq-mode
+  arm: dts: exynos5422: add support for thermal trip irq-mode
+  arm: dts: exynos5410: add support for thermal trip irq-mode
+
+ .../devicetree/bindings/thermal/thermal.txt        |   7 ++
+ Documentation/thermal/sysfs-api.txt                |   9 ++
+ arch/arm/boot/dts/exynos4-cpu-thermal.dtsi         |  10 +-
+ arch/arm/boot/dts/exynos5410-odroidxu.dts          |  10 +-
+ arch/arm/boot/dts/exynos5420-trip-points.dtsi      |  10 +-
+ arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |  40 +++++---
+ arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi     | 105 ++++++++++++++-------
+ .../arm64/boot/dts/exynos/exynos7-trip-points.dtsi |   8 ++
+ drivers/thermal/of-thermal.c                       |  17 ++++
+ drivers/thermal/thermal_core.c                     |  16 ++--
+ drivers/thermal/thermal_sysfs.c                    |  53 ++++++++++-
+ include/linux/thermal.h                            |   5 +
+ 12 files changed, 226 insertions(+), 64 deletions(-)
+
+-- 
+2.7.4

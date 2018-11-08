@@ -1,0 +1,182 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:02 -0000
+Received: from icoremail.net (unknown [209.85.215.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3fyX77eJbqE9YAQ--.26441S3;
+	Wed, 07 Nov 2018 21:51:56 +0800 (CST)
+Received: from mail-pg1-f181.google.com (unknown [209.85.215.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXe0f67eJbWLAXAA--.5783S3;
+	Wed, 07 Nov 2018 21:51:54 +0800 (CST)
+Received: by mail-pg1-f181.google.com with SMTP id z17-v6so7359967pgv.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:51:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding:sender:precedence
+         :list-id;
+        bh=rucc7aUCdkhJRnn1/uw6PuIgpBic9W5BcUjPz/9T8BQ=;
+        b=lBJVpOVxH395KIoSn2EFEskMZK7tY+nncMWDJSP26QBG6uAlp8NvF7NyO6ZwSI0SO7
+         SMZgyQ5m2pypWTXm093ZhAKdgRcoQbfdYT4T6YTEWkwJmZQ8FfvxDWa8OYXmh4hyauDW
+         9kmS9+YO0Fz/MjGo9upG3UGlU67UjbYi9IPhInuCvQPWkxrd7Eu1Oqff+VPzU7CseOMX
+         eITP0iz6McqHpEd19Yydpc9b+YNJq5wts5Nx+hOX3lhkv10wLkytDPT2wMZRfB9wm+Fl
+         NxB6kLU1PdGg1Nh3DorlGhSTEUOu4zptukou7Km56vDmsfC231x2zSok6Y9mbUmBulvC
+         0vmQ==
+X-Gm-Message-State: AGRZ1gLtHL0lr+eEJzRtKYnOIVWGW3huPSi9NRA+dmeHm/6lvQtSF3TE
+	V2KbY/xhvPSlJZoM957a4kKkHz1b1r1ARRRJ9QTJA0kFYTRa3J+Sdw==
+X-Received: by 2002:a63:2c0e:: with SMTP id s14mr270890pgs.132.1541598714151;
+        Wed, 07 Nov 2018 05:51:54 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5269837pjt;
+        Wed, 7 Nov 2018 05:51:53 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dZWQsFY6ivq2cLvfh8p2JEVN1YY/zVkRTdhBylNzZDFZT88KSvfUJf7bTF5LU5L5kF5TfY
+X-Received: by 2002:a63:cb4a:: with SMTP id m10mr231709pgi.105.1541598712967;
+        Wed, 07 Nov 2018 05:51:52 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541598712; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ZRIndn24kspZSWIqH2090CAjjP4eVUtZrbpAa3TPF47PIHGi9WCHfBvtykRctpMeVm
+         JRJnduVcEIoEqfUd2gTTpAlYVCqry+sjKMbdocgt3yHlNjs2bIoQxOHDCOkC/cpr6xvN
+         dgziaNqlA+xkrbYY6sy//GRQBqPsHp0NjEivf5LnQmOE+0oXZHZorgXER1sUL1ynq38s
+         I4MlT/hlAIlySyyyT5Bn//dZpVRSKz4mkpkv21f5rTRXRoCQemuDTiSuglKfSGLssM5P
+         qlRpTug+nP7V5mxJZHSPyEgRfcXZOXa27hnW0OcwOCSoNjJw+M2SM4F9pP+EEB765i27
+         PBcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:dkim-signature;
+        bh=rucc7aUCdkhJRnn1/uw6PuIgpBic9W5BcUjPz/9T8BQ=;
+        b=zQwi7KLS1PqU9bQScnfexdkdVO01f59O9SxFbN+39WStPJOW1tzSGmUcruvlXdMLBG
+         FAHt/ciEnTwRS0Zq7OWr/x26Mgwo3VtIQJ8MLxbUElKv2F1jDp26p9s4SGlPaZAy6+ev
+         ixxt6jT05m+k9zgPUpipE2/qUVq136KGuIfdSubfPX76DwtwMr/UHt7DQBmGp+/g41mC
+         Da72mz+JsHMxTTJJk+Vy5LW5PyyygV4wBPDJLU9JD4uPytwad/bgBI/8hRyNnIY6Oayv
+         +Kj96TJ/5tsXPR5r02qmUlB52gmUIilB6j9uhfivKqsbKOmCwV1g8ORBm3HxPZ5DzRH0
+         Oziw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@gmail.com header.s=20161025 header.b="RL/MQsaq";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 73-v6si702729pfs.7.2018.11.07.05.51.37;
+        Wed, 07 Nov 2018 05:51:52 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727876AbeKGXVy (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:21:54 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41261 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbeKGXVy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:21:54 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 70so1773267pgh.8;
+        Wed, 07 Nov 2018 05:51:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rucc7aUCdkhJRnn1/uw6PuIgpBic9W5BcUjPz/9T8BQ=;
+        b=RL/MQsaq4LMS9y9LtEYIPHHRoS6WeSHKtHzf/E1o7ZfOP+DSM5ewbipQgxhq7dDdY5
+         JUocp39eu6cvTfN24h5h3SLuYtUbjU61S4nXDI7jCqhMqetzouKNg4iC7b8MXV3yOUVt
+         ulgm6qHgW2GVuRdlb7ptGRB6EdaOS0lPCPGrd7RNayUHffu0lj7Vo9pe0ZF8PL3Z6ffw
+         eJV6bJi/Qj9Q3ob0d5a+9QGe9wN4LqJXGVX58bxkE42eXObOb9sodHF7ybG2bzAwG7xn
+         ayxnN5XSJcMxQSMtDEW7omubPmSNVezRJt1zcga7Fh9wp+FUAfdbrb0s7uDCH8x5mgNv
+         FCCw==
+X-Received: by 2002:a63:1cd:: with SMTP id 196-v6mr264145pgb.152.1541598685573;
+        Wed, 07 Nov 2018 05:51:25 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r81-v6sm1337732pfa.110.2018.11.07.05.51.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 05:51:24 -0800 (PST)
+Subject: Re: [PATCH 2/4] x86/amd_nb: add support for newer PCI topologies
+To: Borislav Petkov <bp@alien8.de>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: "Woods, Brian" <Brian.Woods@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>, Pu Wen <puwen@hygon.cn>,
+        Jia Zhang <qianyue.zj@alibaba-inc.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <20181102181055.130531-1-brian.woods@amd.com>
+ <20181102181055.130531-3-brian.woods@amd.com>
+ <20181102195925.GB160487@google.com> <20181102232948.GC26770@zn.tnic>
+ <20181105214537.GA19420@google.com> <20181105215650.GG26868@zn.tnic>
+ <20181106214256.GA65443@google.com> <20181106220059.GA4139@zn.tnic>
+ <20181106232040.GA85755@google.com> <20181107091838.GA10835@zn.tnic>
+From: Guenter Roeck <linux@roeck-us.net>
+Message-ID: <72f4a144-fe83-dc0d-b839-133873ed589b@roeck-us.net>
+Date: Wed, 7 Nov 2018 05:51:22 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20181107091838.GA10835@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXe0f67eJbWLAXAA--.5783S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7uw13KrW3Xw4UZF18tr1kKrg_yoW8GFy3pF
+	4rKFZFkr1DJF47J3WDur4xZayxJFWjyay5KryxAr1F9F15Z34IgrW3KFy5uas7Cr1kAF1Y
+	yrykKa48Cas8C3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUm2b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik2
+	6cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6ry8MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7
+	IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E
+	87Iv67AKxVW0oVCq3wCYIxAIcVC2z280aVCY1x0267AKxVW0oVCq3wCF04k20xvY0x0EwI
+	xGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
+	AFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVF
+	xhVjvjDU0xZFpf9x07b0YFAUUUUU=
+
+On 11/7/18 1:18 AM, Borislav Petkov wrote:
+> On Tue, Nov 06, 2018 at 05:20:41PM -0600, Bjorn Helgaas wrote:
+>> Or maybe even drivers/acpi/thermal.c, which claims every Thermal Zone
+>> (ACPI 6.2, sec 11), would be sufficient.  I don't know what the
+>> relationship between hwmon and other thermal stuff, e.g.,
+>> Documentation/thermal/sysfs-api.txt is.  acpi/thermal.c looks tied
+>> into the drivers/thermal stuff (it registers "thermal_zone" devices),
+>> but not to hwmon.
+> 
+> Err, I still don't think I'm catching your drift but let me stop you
+> right there: amd_nb is not there only for hwmon/k10temp. It is a small
+> interface glue if you will, which exports the CPU functionality in PCI
+> config space to other consumers.
+> 
+
+Also, thermal and hwmon are orthogonal, just like hwmon and iio. One would
+typically have a driver in one subsystem, in some cases bridging to the
+other subsystem, but one would not have drivers in both subsystems.
+I think Bjorn is suggesting that the k10temp driver should move to the
+thermal subsystem, though I don't really understand what that has to do
+with finding the correct PCI device(s) to query. Or maybe I misunderstand.
+
+Guenter
+
+> So it is not really a driver - it is used by drivers to talk/query CPU
+> settings through it.
+> 
+> With that said, I don't think I understand all that talk about PNP IDs
+> and ACPI methods. But maybe I'm missing something...
+> 
+> So what's up?
+> 

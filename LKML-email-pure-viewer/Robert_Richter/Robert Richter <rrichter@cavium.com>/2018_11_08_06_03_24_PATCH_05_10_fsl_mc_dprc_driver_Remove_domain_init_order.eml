@@ -1,0 +1,270 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:51 -0000
+Received: from icoremail.net (unknown [209.85.214.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f92CYeNb4AtbAQ--.27629S3;
+	Thu, 08 Nov 2018 06:04:52 +0800 (CST)
+Received: from mail-pl1-f176.google.com (unknown [209.85.214.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3W0d+YeNbg34ZAA--.1553S3;
+	Thu, 08 Nov 2018 06:04:46 +0800 (CST)
+Received: by mail-pl1-f176.google.com with SMTP id w22-v6so5164589plk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:04:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :thread-topic:thread-index:date:message-id:references:in-reply-to
+         :accept-language:content-language:spamdiagnosticoutput
+         :spamdiagnosticmetadata:content-transfer-encoding:mime-version
+         :sender:precedence:list-id;
+        bh=1v6kKh3w8DKI6XhxuOY3njcmMYdey+u44Omf1y5S84A=;
+        b=augCgq0ZsFKEwWM1rcWTFcZsGFYNLyuuhr/PaL41IWVoQ2lD2WG8fZKqqsF96vOVa/
+         IpOcc5UQvhVrBWB90VYjtKi8+O5ecKqFlkpnBBqjNPWRHBHrf2biJDBgobYtwyC3z7nz
+         RbMbZH4vM5il3MGDnpqFMCEgzRLdAF7HzGhK1+QSpGmXUsUWF5ZR34Y78Fl0twRhEeQd
+         sRnkZcQ7DpbvWx3kfur6SosG5aUkOEGzSZrUknE0hX91FzBdwPcKwyQ8L3ZP4fkXwlKj
+         72etDDfHDAYouCAVYTAyYM6yuUjVkJDwbslkEe2P4kVgo1xjnpVM8bGzG96e0thBKmYX
+         SVbg==
+X-Gm-Message-State: AGRZ1gL3wAaPa5dd7nVPOM7GZW05KSXfrboHI4H0FfqYSijpe3uxHJ+S
+	KtdbsuiOxaq2oOWlhZKGM7GSHrRfJOSXuhjrkuieYNgoootkmpVP6A==
+X-Received: by 2002:a17:902:b789:: with SMTP id e9-v6mr2050741pls.338.1541628286269;
+        Wed, 07 Nov 2018 14:04:46 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp57085pjt;
+        Wed, 7 Nov 2018 14:04:45 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ce3UVXBqIhIt6rWrD2PRar/5ew0YVZcRZWHPdDPis6kIhYKmbBtEtKRPiaiGF+CxkYbJsN
+X-Received: by 2002:a63:396:: with SMTP id 144mr1769555pgd.68.1541628285447;
+        Wed, 07 Nov 2018 14:04:45 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541628285; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Clv/q371KmwwcPwzC94GMZMWA7/ZCCeycJ8GdHWGJhpKTvcUzQN+lci2B5xkRan9Ts
+         ngqyTIQuNj6vywdmwnVQNMgmnsK4JUavTcxC4vY/4J6iS2gVGWRuRgpZRb29fJRiHyrM
+         FnQ+dTVTCVFbjnHdJwGr88m6aLPtu7Dk4VAYgCIV/3uD/1fgaXffdZADMbDRul81j7zf
+         GawZkywaHElylVBA6eKYM5CQn7CEd1ZwrEwngqOQZ9vdnkh4mPAtTmP8sPFf5kqMYr89
+         tMJUDK9AfByaHGXn8ndp4ftSG0nxCAgLB1WjflCBsnOgI6z9Jqhjagd9uX5qpzzOUeNJ
+         WV9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:content-transfer-encoding
+         :spamdiagnosticmetadata:spamdiagnosticoutput:content-language
+         :accept-language:in-reply-to:references:message-id:date:thread-index
+         :thread-topic:subject:cc:to:from:dkim-signature;
+        bh=1v6kKh3w8DKI6XhxuOY3njcmMYdey+u44Omf1y5S84A=;
+        b=Dx72a0CV5/HPRm4hQESSzOyVv7C3rHpsb+1zWQdNe0DpFv8QRl05sI+JzUqH8aIH04
+         wPrR/rit5mvRdp5rqYKmANdPbQOtwN92huCz/KGDDytp8ghiH7B/ztfmvxQECVxVW9HB
+         oPnsCKTmFpa3lLGdl3mmBpo3bioMwbNEXYuEvAHyBIc+PXNUJ0Qdl3VACurWE+6veVki
+         mTa/WKDxB/oKSoS7lnS08BD0NoHo49Ql16VtYxL9QfSk0TGO8jpjdmWPanX6NYePWV2O
+         ZjE1gAU7uJ/Gfooz79E1bcSb0nCtJGzbG4KQBcH5c8g3x0dad5+UVs1/GHG9hlFFmeTL
+         FwFg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@CAVIUMNETWORKS.onmicrosoft.com header.s=selector1-cavium-com header.b=VQNE2jsA;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id u7-v6si1973638pfu.143.2018.11.07.14.04.21;
+        Wed, 07 Nov 2018 14:04:45 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727992AbeKHHgG (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:36:06 -0500
+Received: from mail-eopbgr730056.outbound.protection.outlook.com ([40.107.73.56]:17664
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727945AbeKHHgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:36:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=CAVIUMNETWORKS.onmicrosoft.com; s=selector1-cavium-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1v6kKh3w8DKI6XhxuOY3njcmMYdey+u44Omf1y5S84A=;
+ b=VQNE2jsAYCp0xeaQG0FbbxhTi2bUzEtob1cptOScM+lAeYJQgoeQuLwiBlw1erunu1Qe26mXpewVUij0VKR3N9djhrkIIQDzzaV88Ug9kYfd+E7VynBL/HOuX8Cck3/YbapmQrR+BFiks+CZIh1dQ2e2YR3dv+2gBTCKa6Wr+aI=
+Received: from SN6PR07MB5326.namprd07.prod.outlook.com (52.135.105.33) by
+ SN6PR07MB5232.namprd07.prod.outlook.com (52.135.120.211) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1294.22; Wed, 7 Nov 2018 22:03:24 +0000
+Received: from SN6PR07MB5326.namprd07.prod.outlook.com
+ ([fe80::f0b9:acf9:7513:c149]) by SN6PR07MB5326.namprd07.prod.outlook.com
+ ([fe80::f0b9:acf9:7513:c149%5]) with mapi id 15.20.1294.034; Wed, 7 Nov 2018
+ 22:03:24 +0000
+From: Robert Richter <rrichter@cavium.com>
+To: Marc Zyngier <marc.zyngier@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+CC: "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        "Richter, Robert" <Robert.Richter@cavium.com>
+Subject: [PATCH 05/10] fsl-mc/dprc-driver: Remove domain init order
+ dependencies
+Thread-Topic: [PATCH 05/10] fsl-mc/dprc-driver: Remove domain init order
+ dependencies
+Thread-Index: AQHUduW0VN1jp84mL0GDuCXIDaS+Ow==
+Date: Wed, 7 Nov 2018 22:03:24 +0000
+Message-ID: <20181107220254.6116-6-rrichter@cavium.com>
+References: <20181107220254.6116-1-rrichter@cavium.com>
+In-Reply-To: <20181107220254.6116-1-rrichter@cavium.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6PR03CA0033.eurprd03.prod.outlook.com (2603:10a6:20b::46)
+ To SN6PR07MB5326.namprd07.prod.outlook.com (2603:10b6:805:73::33)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [77.180.181.154]
+x-ms-publictraffictype: Email
+x-microsoft-exchange-diagnostics: 1;SN6PR07MB5232;6:X8PZ1s7uxwnfYUgTzSFV8x2smH6NSVypUyCUihKNNgVZ85PXprk9AT7HBfeRh7dcI7jeSBYlU8k0a/SWI/MgHH/5h5bvDQ2RvmJdZiSCb6ynasSLnQrQmMCwQwZxXWihaRQxYsJGD992L+EBIanTSGb4vhTtuljz9157ViSnSWHFhvimsnI9FHKjescH1Z6Dnzn4f0rQUCcbQ9/c0SgnMnGYnMiji499SjZ49RQ26XVi0gxSNJf8zVvRVnoLr5QVJdQ08ynyT43O5wRP/Z8ViHf6RNBueeH0TEatobQo4f4fkvrGOIFeTKTEkttU2xgHJAPsmmj3c/WCHJG5VjhfWlMIxiZ5jboYmZqyMNJ7DUYfPPwVgn/ddDVvLLZHZ8XvG0KceI47L0JWW/vzT3Dq2ZlAqubNffvjqHoulQRB2fUL2+CFJ1DKtI4ipFFUiNqnhhX7jhOgWBypRADLN5A4VA==;5:NofFWQ5rt9XOisBnEmsWRWTOi9rwTDgxhchD7DtYe3K78I21vf6j375qVTsj9vrGr6QP2oqftI3Id05juSXt7+xPb5FwhI5kRw5tH/I7PST/R1l3IWFAWEJNGv0Wj2TL0AOnx4fGd1GiPwqVY8MiKywpFqb9mgJ248aMLQ2clkE=;7:NKw+3gpYkLSXndST180P/5ITbWkDvj9A9q30v9OD4LU3dYO5i2dpHyj5P59ERIalFMG8e73rPE3qdj5sc34RkSyiNL/bjBCFsTEmjM/24rG5oLXn19jpCkRYpoq0VOGoCcgYt8yjxhTDhUKn4fLazw==
+x-ms-office365-filtering-correlation-id: 10ac5363-bb9e-4b35-634d-08d644fcd6bf
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(7020095)(4652040)(8989299)(5600074)(711020)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:SN6PR07MB5232;
+x-ms-traffictypediagnostic: SN6PR07MB5232:
+x-microsoft-antispam-prvs: <SN6PR07MB52321691285D20200CA6F19CF1C40@SN6PR07MB5232.namprd07.prod.outlook.com>
+x-exchange-antispam-report-test: UriScan:(269456686620040);
+x-ms-exchange-senderadcheck: 1
+x-exchange-antispam-report-cfa-test: BCL:0;PCL:0;RULEID:(8211001083)(6040522)(2401047)(8121501046)(5005006)(93006095)(93001095)(10201501046)(3002001)(3231382)(944501410)(52105095)(148016)(149066)(150057)(6041310)(20161123564045)(20161123560045)(20161123562045)(20161123558120)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(201708071742011)(7699051)(76991095);SRVR:SN6PR07MB5232;BCL:0;PCL:0;RULEID:;SRVR:SN6PR07MB5232;
+x-forefront-prvs: 08497C3D99
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(39860400002)(346002)(396003)(376002)(189003)(199004)(71200400001)(7736002)(71190400001)(39060400002)(6486002)(3846002)(66066001)(6436002)(186003)(36756003)(476003)(478600001)(2616005)(53936002)(256004)(14444005)(446003)(305945005)(11346002)(6512007)(54906003)(1076002)(316002)(107886003)(25786009)(110136005)(6116002)(2906002)(97736004)(4326008)(6506007)(386003)(72206003)(105586002)(99286004)(486006)(5660300001)(7416002)(8936002)(102836004)(106356001)(68736007)(8676002)(14454004)(81156014)(76176011)(81166006)(2900100001)(52116002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR07MB5232;H:SN6PR07MB5326.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: cavium.com does not designate
+ permitted sender hosts)
+x-microsoft-antispam-message-info: csI32IRMuSOrQkbLos+TufEyBEE4nRBxHKYyOBz5p0SdOVaCb7Wx3iOV0zqS+Pm29tsn1FJip0PqXOrRjigRp8EdBjcYka7brLveVLTXr459YJ2SDhRDUaFvEQcAifsTeuaucBuyqryevUgYueLcWCm8uNAdWe2QfmfFBmy9mMYTp8iC8E60HKNF5PajJ2B9zlqMGGE/1u/L/grrgQTkuPOC+USQ7O+X/WdRYmJleNrSKyUkn+/GmwSUvX5e2gyawzcRghXKR0Jp1jJiRdF8HKqdK0MK+vfFaSzn0mcMKQhqoVSdIleLxIKOw0XLVhUgjAYZkKuDWXIc3fQRXGyg4MtYnuVXdodgokb+G3JuzXU=
+spamdiagnosticoutput: 1:99
+spamdiagnosticmetadata: NSPM
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: cavium.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10ac5363-bb9e-4b35-634d-08d644fcd6bf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2018 22:03:24.8410
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 711e4ccf-2e9b-4bcf-a551-4094005b6194
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR07MB5232
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3W0d+YeNbg34ZAA--.1553S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxZry5Wry7KryfZF4xtr1DJrb_yoW5Cr47pF
+	47ua4rZrW8tw47WrsavFWj9a45t340qayxK34Sk3Z3Zr15tFyDWr4kXFyYgFn7AFZ8X3WY
+	9r1DAa1Uuw48JrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvSb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwCjxxvEa2IrMxkF7I
+	0Ew4C26cxK6c8Ij28IcwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_
+	Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F
+	4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28I
+	cVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+	ZwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43
+	ZEXa7IUe1rW7UUUUU==
+
+Use new irq_domain_request_host_*() interface which allows independent
+parent and child initialization using an irq domain request handler.
+This makes it possible to move its initialization to a later point
+during boot. All domains can be initialized in the same initcall level
+then.
+
+Signed-off-by: Robert Richter <rrichter@cavium.com>
+---
+ drivers/bus/fsl-mc/dprc-driver.c | 41 ++++++++++++++++++++++++++++++++++++=
+++++
+ drivers/bus/fsl-mc/fsl-mc-msi.c  |  6 +-----
+ 2 files changed, 42 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/bus/fsl-mc/dprc-driver.c b/drivers/bus/fsl-mc/dprc-dri=
+ver.c
+index 52c7e15143d6..2f41886c8e00 100644
+--- a/drivers/bus/fsl-mc/dprc-driver.c
++++ b/drivers/bus/fsl-mc/dprc-driver.c
+@@ -10,7 +10,9 @@
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/interrupt.h>
++#include <linux/irqdomain.h>
+ #include <linux/msi.h>
++#include <linux/of.h>
+ #include <linux/fsl/mc.h>
+=20
+ #include "fsl-mc-private.h"
+@@ -575,6 +577,40 @@ static int dprc_setup_irq(struct fsl_mc_device *mc_dev=
+)
+ 	return error;
+ }
+=20
++static int dprc_probe(struct fsl_mc_device *mc_dev);
++
++static int dprc_probe_late(struct irq_domain *parent, void *priv)
++{
++	struct fsl_mc_device *mc_dev =3D priv;
++
++	of_node_put(mc_dev->dev.parent->of_node);
++	of_node_put(irq_domain_get_of_node(parent));
++
++	return dprc_probe(mc_dev);
++}
++
++static int dprc_register_msi_domain(struct fsl_mc_device *mc_dev)
++{
++	struct device_node *mc_of_node, *msi_np;
++	int err =3D -EINVAL;
++
++	mc_of_node =3D of_node_get(mc_dev->dev.parent->of_node);
++
++	msi_np =3D of_parse_phandle(mc_of_node, "msi-parent", 0);
++	if (msi_np && !of_property_read_bool(msi_np, "#msi-cells"))
++		err =3D irq_domain_request_host(msi_np, DOMAIN_BUS_FSL_MC_MSI,
++			dprc_probe_late, mc_dev);
++
++	if (err) {
++		pr_err("Unable to find fsl-mc MSI domain for %pOF\n",
++			mc_of_node);
++		of_node_put(msi_np);
++		of_node_put(mc_of_node);
++	}
++
++	return err;
++}
++
+ /**
+  * dprc_probe - callback invoked when a DPRC is being bound to this driver
+  *
+@@ -641,6 +677,11 @@ static int dprc_probe(struct fsl_mc_device *mc_dev)
+=20
+ 		error =3D fsl_mc_find_msi_domain(parent_dev,
+ 					       &mc_msi_domain);
++
++		if (error =3D=3D -ENOENT)
++			/* initialize later */
++			return dprc_register_msi_domain(mc_dev);
++
+ 		if (error < 0) {
+ 			dev_warn(&mc_dev->dev,
+ 				 "WARNING: MC bus without interrupt support\n");
+diff --git a/drivers/bus/fsl-mc/fsl-mc-msi.c b/drivers/bus/fsl-mc/fsl-mc-ms=
+i.c
+index 8b9c66d7c4ff..550d2ed07f69 100644
+--- a/drivers/bus/fsl-mc/fsl-mc-msi.c
++++ b/drivers/bus/fsl-mc/fsl-mc-msi.c
+@@ -185,12 +185,8 @@ int fsl_mc_find_msi_domain(struct device *mc_platform_=
+dev,
+=20
+ 	msi_domain =3D of_msi_get_domain(mc_platform_dev, mc_of_node,
+ 				       DOMAIN_BUS_FSL_MC_MSI);
+-	if (!msi_domain) {
+-		pr_err("Unable to find fsl-mc MSI domain for %pOF\n",
+-		       mc_of_node);
+-
++	if (!msi_domain)
+ 		return -ENOENT;
+-	}
+=20
+ 	*mc_msi_domain =3D msi_domain;
+ 	return 0;
+--=20
+2.11.0

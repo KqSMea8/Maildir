@@ -1,0 +1,178 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:08 -0000
+Received: from icoremail.net (unknown [209.85.210.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH_oDRONbWltaAQ--.27167S3;
+	Thu, 08 Nov 2018 03:58:59 +0800 (CST)
+Received: from mail-pf1-f177.google.com (unknown [209.85.210.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3W0cARONbjBkZAA--.740S3;
+	Thu, 08 Nov 2018 03:58:57 +0800 (CST)
+Received: by mail-pf1-f177.google.com with SMTP id b11-v6so8161206pfi.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:58:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=u25Hl9nttXsOv9mUmKr2AbGA4/VesCfN1ie9f8ee/nc=;
+        b=WohXs/sA8170iQiLeLydDxfftI22l6Clq3viXqUgecA+a2tfylKCZJTsaOCughUQZh
+         hZ7hGB09wsNjo1Ros83USlvsyQhzXwybYI4WDcjMR/4uK518lzxG/KDKFdrVky1SsWd0
+         Jy55e2DSdSEhM3kZiNGqbdm03psOhmQB3L3o6A5906yJjQkizgPGJ0BXsqpYSriIXqr2
+         7F4tdWyHcfuUnrFn3D5H8ETYWdK94CAGVwXmjWrbrQyYi2+FvICfJ/tg6fGOJX4ffC0z
+         5H/8VcF23kmiMTyYzpsNloq6BOTUfdoLgMj/yNKztCTw/KYSDe+oSY3ZnQ3JFb5jwPn9
+         4Ebw==
+X-Gm-Message-State: AGRZ1gI20wlgzC318zUl2CjrYmhJimC0+vMAXlUQVnyb7ewnYQSZw9KL
+	+OBVae7eam3yA7+edSLMOzwYeaueTvBmFTlJL613ybgwwRdb2E/CEQ==
+X-Received: by 2002:a63:3c44:: with SMTP id i4mr1363284pgn.286.1541620736746;
+        Wed, 07 Nov 2018 11:58:56 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5677646pjt;
+        Wed, 7 Nov 2018 11:58:56 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d0Ii1c6kRXBt977Q6OI+1TtkN5Ffnkn9AxR8YLD+v0VSlglrzNlaQpN0It1LvBfoID0G++
+X-Received: by 2002:a63:6302:: with SMTP id x2mr1338729pgb.183.1541620735955;
+        Wed, 07 Nov 2018 11:58:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620735; cv=none;
+        d=google.com; s=arc-20160816;
+        b=KtMuk1/h0m5lHt7iL1hdmKt1DMtA5Kuc7yBME8/RqzoeghRkhFoozKxIZO9rsQWOGP
+         L0P91dZLoNUm6wO5s4DzXBwX1tkpYS0KcgBtiNRNaRqeWhy71xb8zphc81EI/H52uRTF
+         bNp8dn+SsLvhslC9xFu8lbYb/7y6WIjLMaWP1HLj9KrR/LS/z13Na+o8bOQ111ZO2U7+
+         TkPeqfvXpvy5rdE2mcagq/KafBIK3SBomrJTu2rBAOkQj8bhHHklqb/6nZHZ0FugoA8Z
+         gg0L5GBkIzpVprB06iDtIciRngvGYi2BH/fBAq2wtOhFTzcnS5trSgO2+heKVfRB0xIh
+         xAog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=u25Hl9nttXsOv9mUmKr2AbGA4/VesCfN1ie9f8ee/nc=;
+        b=OVtjH/prxpG2oXTTfrTWDHoY97ymvodWYOG8qhXNKI2TzwYwEgS4++NSS+I/0LLn9Z
+         SFKaz3xGtC89/oHRQOWgLzcb/vWahSY1y2i655Cwec/8FE8QzZ/8shf31BRacKugqWyf
+         vJjuJpMblA9RuAlGqOWIVAemjw+7K2TLt5772/9PYs7axoEGw8OdbwhvmzY1QAPHHZ1A
+         HlossYPqyGFYqutQDMtkzuafkH4Ew/dwSxaOuBoF1426P0DhsJ5NG6y3d07r+qSk1Nwj
+         qXBYa4Spmfds9D1oaWpGSwC1zzp6BcWfAvurV8V9jPLiIqCjMzsoaUFWBEm5E7q/xrqA
+         iCyg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@intel-com.20150623.gappssmtp.com header.s=20150623 header.b=xjUSj6oU;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v33-v6si1271390pga.450.2018.11.07.11.58.40;
+        Wed, 07 Nov 2018 11:58:55 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726722AbeKHFaE (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:30:04 -0500
+Received: from mail-oi1-f170.google.com ([209.85.167.170]:46446 "EHLO
+        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbeKHFaE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:30:04 -0500
+Received: by mail-oi1-f170.google.com with SMTP id k64-v6so14871541oia.13
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 11:58:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u25Hl9nttXsOv9mUmKr2AbGA4/VesCfN1ie9f8ee/nc=;
+        b=xjUSj6oUJ/tXzIfUxeDC2g9JF6xPqKSZlEwIRb+RK08PotmqGdEEkebmeTfQ/V331W
+         8XFYIfN5GPPJLJkb3fepCM3uLn6gyIdg1cKJSmxvSvZ6iqn5rxJNnglcTSiXR1juwQk9
+         eeIL5K0zcpxd+KrFRRKjVPLcnmzCUm7Kug2Ap47RDLfAQ+nLj7AJZJ7FA6Ib1OMh0jc0
+         sgWjMqCqN4XtkJdt/VDaVlr6VlE9Ato01EXVKLiFF02LLyuOCQRlskIksY0qzZDq4FhE
+         7jC34n/ykJsKlqAQQKB8YAl/CKpTd6XeGR7Qa3+HS0rajo7VVyrIGy2lxlPVxYhdPOfg
+         EWZQ==
+X-Received: by 2002:aca:e691:: with SMTP id d139-v6mr942880oih.232.1541620691838;
+ Wed, 07 Nov 2018 11:58:11 -0800 (PST)
+MIME-Version: 1.0
+References: <20181107171010.421878737@linutronix.de> <20181107124855.328133e7@lwn.net>
+In-Reply-To: <20181107124855.328133e7@lwn.net>
+From: Dan Williams <dan.j.williams@intel.com>
+Date: Wed, 7 Nov 2018 11:58:00 -0800
+Message-ID: <CAPcyv4goT+7t1foOhEYgGTz2kRV2Oou8QOs38D13rdC-TpfX+Q@mail.gmail.com>
+Subject: Re: [patch 0/2] Documentation/process: Add subsystem/tree handbook
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        john.stultz@linaro.org, acme@redhat.com, frederic@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>, daniel.lezcano@linaro.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3W0cARONbjBkZAA--.740S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7AF17tr4fGF13XrWrJw1DJrb_yoW8tr1xpa
+	yrKry29Fs5Aa1xurn7Aw18uF15Jw1xtayjvF90yrnrAas8Jr1xKF48Kan0vFyUWr1fuFyU
+	tr47Krn0934kArJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6rWlc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bp
+	uciUUUUU=
+
+On Wed, Nov 7, 2018 at 11:49 AM Jonathan Corbet <corbet@lwn.net> wrote:
+>
+> On Wed, 07 Nov 2018 18:10:10 +0100
+> Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> > Mark recently suggested in one of the ksummit discussions to add subsystem
+> > or tree specific maintainer handbooks to document subsystem/tree specific
+> > development process information.
+> >
+> > The following series adds the general section and the tip tree specific
+> > handbook.
+>
+> So this is an idea that has gone around for a while; developers often get
+> into trouble when wandering into an unfamiliar part of the kernel, so
+> documenting the quaint local customs might help.  Assuming people actually
+> read the documentation, of course.
+>
+> What's here seems generally good, but I do have an overall worry that we
+> may want to consider:
+>
+>   - How much do we want to support and document subsystem-specific quirks
+>     vs. promoting reasonable and consistent rules kernel-wide?
+>
+> There is a *lot* of stuff in the new tip manual.  Much of it, regarding
+> coding style and the writing of changelogs, really seems like it should be
+> global; if we need better documentation of that stuff, I'd really rather
+> see that advice folded into the central documents.  Having two (or more)
+> extensive coding-style documents doesn't seem like it's going to help us.
+>
+> The stuff that is truly specific to tip seems fairly minimal:
+>
+>   - what goes into tip
+>   - the reverse fir tree thing
+>   - tail comments, or the distaste thereabouts
+>   - subject-line prefixes
+>
+> Having a tip-specific document that contains only those (plus whatever
+> else I forgot to list) would, IMO, make it much more likely that readers
+> would actually notice (and follow) the stuff that's specific to tip.
+>
+> See what I'm getting at here?  Am I totally out to lunch on this?
+
+Not at all, and this is one of the thrusts of my talk next week at
+Plumbers. I *do* want to propose that sub-systems document all their
+local quirks. Then we can refactor the common ones into a global
+document, have some discussion fodder if some sub-system specific
+rules can be unified, and otherwise leave the freedom for individual
+sub-systems to be different as long as it's documented.

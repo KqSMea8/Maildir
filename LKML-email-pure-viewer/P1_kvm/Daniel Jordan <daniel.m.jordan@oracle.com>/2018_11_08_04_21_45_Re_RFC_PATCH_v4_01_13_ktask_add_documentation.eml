@@ -1,0 +1,197 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:16 -0000
+Received: from icoremail.net (unknown [209.85.210.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3wiiSeNbj3paAQ--.27665S3;
+	Thu, 08 Nov 2018 04:22:59 +0800 (CST)
+Received: from mail-pf1-f175.google.com (unknown [209.85.210.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB38EyfSeNbVSwZAA--.1699S3;
+	Thu, 08 Nov 2018 04:22:56 +0800 (CST)
+Received: by mail-pf1-f175.google.com with SMTP id x2-v6so4099620pfm.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:22:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=g81bR2VFriFbSeNQT3NitCx+/9tD4imkdee1NLEu8Ek=;
+        b=ARvL2HTOhxStzOKSZvQZ26HKj0gxnFNIIY15OPNWGRHDnM+zP9eVhoBznIzZgGx8L5
+         MbdzOBzZyoiYIpxjrCLELAvfuUTNiRA+OwTL8Hx30sbSE2MQBgEXLFfQXEEUpSwb7dEA
+         U8hZDXkcfsO+qF7e4KxrnzXll3SRSK1FSV3N3Q/RDuaRnNekABkVWx16LK+vFY7DQaZ5
+         5D57KQRvcE58jwAjw0gGpR0DSP0tlky4RIOLnZhx96Etx/WcCVtSxvu8MCkX87mHNQ2+
+         +S8SP7vyP98ikLtcrdA/+7M/8Xd7Fj96RSTBK3lCISnjVccBd/GGuZ3ZLxUZKGfDpEls
+         EgVg==
+X-Gm-Message-State: AGRZ1gI/3hwBUokUqRvRFMIoMuRaFTj9mwULIj2hO9kQpaCg68oJv6RW
+	tta4t9mIR3ohdsDfJtQrlL4/Gelz43Yp56c4qWEpwxXRuXv/Uk2Kzw==
+X-Received: by 2002:a63:3c44:: with SMTP id i4mr1447130pgn.286.1541622175708;
+        Wed, 07 Nov 2018 12:22:55 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5703486pjt;
+        Wed, 7 Nov 2018 12:22:54 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ezzvdWVfX015dv5fFXFDcIeJgITbPQERBUBIrJMzF2YoUxH9uMnujWRLBzHoWoxaPK7eoN
+X-Received: by 2002:a62:4896:: with SMTP id q22-v6mr1727393pfi.248.1541622174893;
+        Wed, 07 Nov 2018 12:22:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541622174; cv=none;
+        d=google.com; s=arc-20160816;
+        b=CBHNbZUhPUE5j5eZZyr+BomrfhFO+ZYXDbqTbQcFD68q/S8F9GZd9Y4MjRLGeorrPy
+         HIb7o/1hylXQ6K3h6lbLHpDEOImwL16SZuiomiHkzVwYICgalWgTzGVdoVOW3vAPpmSM
+         pcwZ1CCIdsATxynG2uGFgvwrwG8imcfWCn0wLaWFIOlxgkiWe+Rbb5YHRn4nJUJgjknC
+         TMGaLcRFvt7OGPhZuURDISgZAWzdlVviHK7FXz4DbG+zprUEkF1hdm0loCB9/m10NF85
+         dmXsUS/jnjJSIS6jb8f1kGCfI3niqTIlBC6/ATl9BYa2LDBcFiumA2ReVez0Hx44iDoY
+         porw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=g81bR2VFriFbSeNQT3NitCx+/9tD4imkdee1NLEu8Ek=;
+        b=eLYCz3FLv8UPa3rsaSO/wsHcbKulXZ94i2VMldLQ8EvJjNUm7FKhhdphBStNPEabQr
+         2bEVCTElvBlS9JTEE/+87rFzfCB8enjLnY+5N7QpolKJ89FbdmIBCHukUOn1LGsBAJlT
+         kqx200v2jrDADOmZ65qdK2oyaFVOAXJI78ogDdF2IXYifHKfEVS4OLim3R8SpJoVbVfP
+         aRV7fsmLHekweb6vUSw9BbphWF3oKZ5bLtVoQTKMpZZvEs0HOWkbi17Gip9bZPV1wUYN
+         SzkVyylQU7G7UsArC+BzyWBQQ1Z57QhDa+PoVZW9nYGp42+6UE2GSn5oRpxhW+Bjldiz
+         HQNA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@oracle.com header.s=corp-2018-07-02 header.b=DRzVpzG9;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=oracle.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id u28si1538945pgn.436.2018.11.07.12.22.28;
+        Wed, 07 Nov 2018 12:22:54 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726941AbeKHFyO (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:54:14 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:42316 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726827AbeKHFyN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:54:13 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.22/8.16.0.22) with SMTP id wA7KIuYY024448;
+        Wed, 7 Nov 2018 20:21:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=g81bR2VFriFbSeNQT3NitCx+/9tD4imkdee1NLEu8Ek=;
+ b=DRzVpzG9d6VfjlY7k/kTiBuT/dnqi2uMQMT6ZJThVhRFFD+F4Ny1YwwPl7+0sKaqYrTh
+ jlucHOpEsPV5DRspwnohxZKswiOO4rvdBUfceoOonls0TJHCIo+bOk5tW7Sb4V62l0JL
+ nBRH7B6amJ/bluoV3pnVLZEH0/iE5M7HTETaLHrd7BrwdWsh6/9K3gE/LjOPCtVySdrt
+ zSJrauhTVY7KdyN2+xuadW3RP2UZ8vPi97W0AxIip5gRG3seJ1/bczCDjoyckRscZdsQ
+ CA2ULtIsrSNZ4n4T9nOZ/ud/WiEIKjbHYFFqB7TzRRX8eFqTrq1J3uDj4i3MuVnL8YJJ IQ== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by userp2130.oracle.com with ESMTP id 2nh33u5thc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 07 Nov 2018 20:21:41 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id wA7KLeoj013863
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 7 Nov 2018 20:21:40 GMT
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id wA7KLcq5014294;
+        Wed, 7 Nov 2018 20:21:38 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 07 Nov 2018 12:21:38 -0800
+Date: Wed, 7 Nov 2018 12:21:45 -0800
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Jason Gunthorpe <jgg@mellanox.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "aarcange@redhat.com" <aarcange@redhat.com>,
+        "aaron.lu@intel.com" <aaron.lu@intel.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "bsd@redhat.com" <bsd@redhat.com>,
+        "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "jwadams@google.com" <jwadams@google.com>,
+        "jiangshanlai@gmail.com" <jiangshanlai@gmail.com>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
+        "Pavel.Tatashin@microsoft.com" <Pavel.Tatashin@microsoft.com>,
+        "prasad.singamsetty@oracle.com" <prasad.singamsetty@oracle.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "steven.sistare@oracle.com" <steven.sistare@oracle.com>,
+        "tim.c.chen@intel.com" <tim.c.chen@intel.com>,
+        "tj@kernel.org" <tj@kernel.org>, "vbabka@suse.cz" <vbabka@suse.cz>
+Subject: Re: [RFC PATCH v4 01/13] ktask: add documentation
+Message-ID: <20181107202145.xvaq3pmqbzyekfan@ca-dmjordan1.us.oracle.com>
+References: <20181105165558.11698-1-daniel.m.jordan@oracle.com>
+ <20181105165558.11698-2-daniel.m.jordan@oracle.com>
+ <20181106084911.GA22504@hirez.programming.kicks-ass.net>
+ <20181106203411.pdce6tgs7dncwflh@ca-dmjordan1.us.oracle.com>
+ <20181106205146.GB30490@mellanox.com>
+ <20181107102752.GK9781@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107102752.GK9781@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180323-268-5a959c
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9070 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=535
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1807170000 definitions=main-1811070181
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB38EyfSeNbVSwZAA--.1699S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jry3Zr1UXFy7uFWDAF45Awb_yoWDtwc_Wr
+	97ur1kCwsxWr98C3WkKrZ8Grnrtan5Jry7Aw4DXr17Z343AFy5WF9YvrWfZF1fGa92vwnx
+	Crn0gFZrWanF9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqxYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_AwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IU5f7
+	3DUUUUU==
+
+On Wed, Nov 07, 2018 at 11:27:52AM +0100, Peter Zijlstra wrote:
+> On Tue, Nov 06, 2018 at 08:51:54PM +0000, Jason Gunthorpe wrote:
+> > On Tue, Nov 06, 2018 at 12:34:11PM -0800, Daniel Jordan wrote:
+> > 
+> > > > What isn't clear is if this calling thread is waiting or not. Only do
+> > > > this inheritance trick if it is actually waiting on the work. If it is
+> > > > not, nobody cares.
+> > > 
+> > > The calling thread waits.  Even if it didn't though, the inheritance trick
+> > > would still be desirable for timely completion of the job.
+> > 
+> > Can you make lockdep aware that this is synchronous?
+> > 
+> > ie if I do
+> > 
+> >   mutex_lock()
+> >   ktask_run()
+> >   mutex_lock()
+> > 
+> > Can lockdep know that all the workers are running under that lock?
+> > 
+> > I'm thinking particularly about rtnl_lock as a possible case, but
+> > there could also make some sense to hold the read side of the mm_sem
+> > or similar like the above.
+> 
+> Yes, the normal trick is adding a fake lock to ktask_run and holding
+> that over the actual job. See lock_map* in flush_workqueue() vs
+> process_one_work().
+
+I'll add that for the next version.

@@ -1,0 +1,220 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:05 -0000
+Received: from icoremail.net (unknown [209.85.215.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXvwoh8uJbrWZYAQ--.26523S3;
+	Wed, 07 Nov 2018 22:09:37 +0800 (CST)
+Received: from mail-pg1-f179.google.com (unknown [209.85.215.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHLEgg8uJbo8AXAA--.6731S3;
+	Wed, 07 Nov 2018 22:09:36 +0800 (CST)
+Received: by mail-pg1-f179.google.com with SMTP id w3-v6so7356625pgs.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:09:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:sender:precedence:list-id;
+        bh=7x9qXIYwWxC9M3xpC7Cw7kQGSB9dv0q2CdIBvxneeLw=;
+        b=VlFA8MHHFOd3OATDfHlJxH9fsBGAZIAIJeurppnbc3IgXSqHk0z7UyfJMCzuwapcFH
+         9+TYwyPwScxJWRNHyx5JTOEw4KDqWtvfjOVNWcVZQ4nFE8Cbyk4egr1etmA1C9yg5nJP
+         niCH6ZtbJiYDM99SXchrHDIXtLu0agteEskpPPQXtaEXE+GGGKvm+2pu0ixRvKp9HX4U
+         wDSG60fypDncW7zxFjmfq97R0HA2/xUrJDwA+Y5LJOunmzjUDLfh5XUK8DY1J9bIoEg3
+         MeYvvEtbEoJZnFJyXQYm2FRFe7cxvbBqsFWQfOU6d9mvPxWOI4Ny8RN4i9lYA06b4ZOw
+         tZSA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJDSK3oB+DrdWBppsLWRmQqlnMMJRQPzcpzoWEBO8hD3suTaKtT
+	3YGAXRKJlyOhn1wCuv/80D/wedi2itX5tCVeueMhUm+Pfhvpu7KFlg==
+X-Received: by 2002:a63:1d10:: with SMTP id d16-v6mr301128pgd.228.1541599776405;
+        Wed, 07 Nov 2018 06:09:36 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5290984pjt;
+        Wed, 7 Nov 2018 06:09:35 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fCbDXstkR54PfcSUAtZ+vxsjH7exS8ZD5adbGgJ6WvaTjN+Fb92hP5I+4bDGP5q9Kn7bCF
+X-Received: by 2002:a62:3406:: with SMTP id b6-v6mr384830pfa.50.1541599775594;
+        Wed, 07 Nov 2018 06:09:35 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541599775; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ngVn6Ph+LeJZI1QpM7NZAe8K5Zn0f1uMqhl3ZUO5faDCv9KOylIGCWRqFywf8tQ4XX
+         sl9bpFRGf9eGrs3ozTLHRwy60290qA/UauAa5P67c6CtQktTSUHzK7dJLtZkbbLReJ88
+         PGLFhQknVhjt2Lx4/VvtrugMMWVCA3rwl0dab+skI1BYhTEU1ylyZy2mMdfd4srUH/k8
+         bcDw2cnC9arFm2TNZl2pLM22xo8Ig++Bk1LHKBrPmFOxUkMeTWt4/jkE3A4BSFAjm5wd
+         bCHPDzfI7ze0GxzvRvqQrrQvp/RneCs7fzx4IG7v4SV4ysX5R1KT6S0EptnA1rMfoeI4
+         ZHEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version;
+        bh=7x9qXIYwWxC9M3xpC7Cw7kQGSB9dv0q2CdIBvxneeLw=;
+        b=nomM2tg315NYMSrIAO+YbwxbWExvXLSwQx7tHYc7BoTUcuO+iEb99osTFKUKTY0viW
+         BuTcCH4FnlC7R9dzYIMlotsxE4mRJA8D5JGeJwpzHoWUreKHAJudTS1X3It5h6NhxxrL
+         1F3mgZdyL++UpcEs4xHKYjOq7CVMcLb3Id+JIwKVW5eDTZTU6tSsgKtvJuAaLRndBsX6
+         S348rqTVoLnb3tCGruUTVs/3Zn5z8MLbgWb62HL1kzATorq3j1GFXZlXqIFsHozULFXR
+         stKnyvsEHRzcgKS+czOafp4JYAQaFGv/781Bt9RXUd/Pqo1pZ95gAd7FpwAlRcXsLarH
+         PUAw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b34-v6si729323pld.276.2018.11.07.06.09.20;
+        Wed, 07 Nov 2018 06:09:35 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727653AbeKGXjj (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:39:39 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:41482 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbeKGXjj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:39:39 -0500
+Received: by mail-qk1-f193.google.com with SMTP id 189so20925524qkj.8;
+        Wed, 07 Nov 2018 06:09:06 -0800 (PST)
+X-Received: by 2002:a0c:d992:: with SMTP id y18mr353635qvj.161.1541599745845;
+ Wed, 07 Nov 2018 06:09:05 -0800 (PST)
+MIME-Version: 1.0
+References: <20181107003250.5832-1-elder@linaro.org> <20181107003250.5832-10-elder@linaro.org>
+In-Reply-To: <20181107003250.5832-10-elder@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Wed, 7 Nov 2018 15:08:46 +0100
+Message-ID: <CAK8P3a0RH4wbigKR0zsbxPzqWDjrLEkYfQk4GNxhGuxs=HJHHw@mail.gmail.com>
+Subject: Re: [RFC PATCH 09/12] soc: qcom: ipa: main IPA source file
+To: Alex Elder <elder@linaro.org>
+Cc: David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Networking <netdev@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-soc@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syadagir@codeaurora.org, mjavid@codeaurora.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHLEgg8uJbo8AXAA--.6731S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxJF1DXF1ftw4DXw1UCFyUZFb_yoW5WF18pF
+	Z5Gr43GrWDXFy2vrWDXFWDCry0krn5A3W3uw1UWF1FvF1YqryqqFWvkFy5Zay3urWkA34S
+	qws5t39Fya1qkaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP0b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW5XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07
+	x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
+	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI4
+	8JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IUOdKs5UU
+	UUU==
+
+On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
+
+> +static void ipa_client_remove_deferred(struct work_struct *work);
+
+Try to avoid forward declarations by reordering the code in call order,
+it will also make it easier to read.
+
+> +static DECLARE_WORK(ipa_client_remove_work, ipa_client_remove_deferred);
+> +
+> +static struct ipa_context ipa_ctx_struct;
+> +struct ipa_context *ipa_ctx = &ipa_ctx_struct;
+
+Global state variables should generally be removed as well, and
+passed around as function arguments.
+
+> +static int hdr_init_local_cmd(u32 offset, u32 size)
+> +{
+> +       struct ipa_desc desc = { };
+> +       struct ipa_dma_mem mem;
+> +       void *payload;
+> +       int ret;
+> +
+> +       if (ipa_dma_alloc(&mem, size, GFP_KERNEL))
+> +               return -ENOMEM;
+> +
+> +       offset += ipa_ctx->smem_offset;
+> +
+> +       payload = ipahal_hdr_init_local_pyld(&mem, offset);
+> +       if (!payload) {
+> +               ret = -ENOMEM;
+> +               goto err_dma_free;
+> +       }
+> +
+> +       desc.type = IPA_IMM_CMD_DESC;
+> +       desc.len_opcode = IPA_IMM_CMD_HDR_INIT_LOCAL;
+> +       desc.payload = payload;
+> +
+> +       ret = ipa_send_cmd(&desc);
+
+You have a bunch of dynamic allocations in here, which you
+then immediately tear down again after the command is complete.
+I can't see at all what you do with the DMA address, since you
+seem to not use the virtual address at all but only store
+the physical address in some kind of descriptor without ever
+writing to it.
+
+Am I missing something here?
+
+> +/* Remoteproc callbacks for SSR events: prepare, start, stop, unprepare */
+> +int ipa_ssr_prepare(struct rproc_subdev *subdev)
+> +{
+> +       printk("======== SSR prepare received ========\n");
+
+I think you mean dev_dbg() here. A plain printk() without a level
+is not correct and we probably don't want those messages to arrive
+on the console for normal users.
+
+> +static int ipa_firmware_load(struct de
+> +
+> +err_clear_dev:
+> +       ipa_ctx->lan_cons_ep_id = 0;
+> +       ipa_ctx->cmd_prod_ep_id = 0;
+> +       ipahal_exit();
+> +err_dma_exit:
+> +       ipa_dma_exit();
+> +err_clear_gsi:
+> +       ipa_ctx->gsi = NULL;
+> +       ipa_ctx->ipa_phys = 0;
+> +       ipa_reg_exit();
+> +err_clear_ipa_irq:
+> +       ipa_ctx->ipa_irq = 0;
+> +err_clear_filter_bitmap:
+> +       ipa_ctx->filter_bitmap = 0;
+> +err_interconnect_exit:
+> +       ipa_interconnect_exit();
+> +err_clock_exit:
+> +       ipa_clock_exit();
+> +       ipa_ctx->dev = NULL;
+> +out_smp2p_exit:
+> +       ipa_smp2p_exit(dev);
+> +
+
+No need to initialize members to zero when you are about
+to free the structure.
+
+> +static struct platform_driver ipa_plat_drv = {
+> +       .probe = ipa_plat_drv_probe,
+> +       .remove = ipa_plat_drv_remove,
+> +       .driver = {
+> +               .name = "ipa",
+> +               .owner = THIS_MODULE,
+> +               .pm = &ipa_pm_ops,
+> +               .of_match_table = ipa_plat_drv_match,
+> +       },
+> +};
+> +
+> +builtin_platform_driver(ipa_plat_drv);
+
+This should be module_platform_driver(), and allow unloading
+the driver.
+
+        Arnd

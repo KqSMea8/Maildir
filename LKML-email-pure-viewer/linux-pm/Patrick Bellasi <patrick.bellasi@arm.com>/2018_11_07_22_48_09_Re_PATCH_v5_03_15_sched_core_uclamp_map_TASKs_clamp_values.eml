@@ -1,0 +1,261 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:13 -0000
+Received: from icoremail.net (unknown [209.85.214.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f7VK++JbSZ1YAQ--.26302S3;
+	Wed, 07 Nov 2018 22:48:43 +0800 (CST)
+Received: from mail-pl1-f174.google.com (unknown [209.85.214.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXf0tJ++Jbo+cXAA--.16486S3;
+	Wed, 07 Nov 2018 22:48:41 +0800 (CST)
+Received: by mail-pl1-f174.google.com with SMTP id f12-v6so6777928plo.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:48:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=BzEZk1Ih8Ri4S1miqsEme+nr/o3S10dA05Vc5YOA5tc=;
+        b=NAnYKOywPDAlLLYNhx1lz61qMk8GC+V+yfvm5SpVpR38AJYQHsiDDcqeB3Q04vF8xM
+         PnyEmH7FAJwSD0vTXLYdYpohone5iJrLxtxnzaV43g8FIaPCog+4RiO7jR37SAnBczPJ
+         o1Pv8OsV8rI4VuYi//4CIeC6/YZxwZws5KchViOkTonz6sxtSdw7rJvSCIBzeiJc9j4Y
+         IqCt8B7KZRebtQF75QsA2VprLafCCXU8A6qrSn7GIGVRy4osIj1D8Mz8W9X+B98ups+L
+         g+Puj21zUYwN1NHipd9RNb14SdalTrBB5bPn+48liJmf2GHzBp1LwUek7M5qe3HgvbBZ
+         SqyA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gI4P+FTRhg91PAfMZNAgKPDL6P24PfYWYPZ3z1XH0l89G2p5aaH
+	hnx38+lE1H+TlgWkqXv78S1PxiJCE7YxQGJCqDY/sdcbcmPKtWPtXQ==
+X-Received: by 2002:a17:902:a5cc:: with SMTP id t12-v6mr516637plq.298.1541602121283;
+        Wed, 07 Nov 2018 06:48:41 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5337108pjt;
+        Wed, 7 Nov 2018 06:48:40 -0800 (PST)
+X-Google-Smtp-Source: AJdET5daOCV45mHqGMrqHoQxsiYIojG+FcNKIw7ymj4ICS1+ZjNhNTmKRZU+eJHjaS4mrMmE75l9
+X-Received: by 2002:a65:6447:: with SMTP id s7mr425478pgv.226.1541602120044;
+        Wed, 07 Nov 2018 06:48:40 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541602120; cv=none;
+        d=google.com; s=arc-20160816;
+        b=PqfQdw8FIxFnoTrdh+vEE2X9i9zFvxsht3lnqWrwnvUd9ir+0X/EXLRQCl0uSOGiZ1
+         BxN1RE14XnujFenDxJwAiY7h/XveY26mKyYc6mODTcqCqNZ3j7VJqrudhnw1GoJTE3ue
+         of7kBsyShhH+I+1pdVQpr+BvicUYviDqo348LcTksvaMzIS8IcFRCoX/NGP+50rsIoV4
+         f0zxG+2sFJXxX+yx1hzL4YugEQqeNzsBOS5WajDRiqCQFNGPG0JN10/BsQxJGCHIu6/S
+         iWTrwlSNJ8NjRsVxMyCPJ8UXpb2jfzHLUdfp+hefKuO215y64WEnulcZdzUdmHXHvYln
+         no+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=BzEZk1Ih8Ri4S1miqsEme+nr/o3S10dA05Vc5YOA5tc=;
+        b=ReB9NeHgEeOIhx/z6tm2aSWAeZdFvPvr6LrSM8BxhgO8UJhYWWYrcb5hPIGlImUQhm
+         XYy5RSMScKo3u8VtfdWhB2wEX6eKbUHac/OHJdovwjz7hLwahe2xdiWC0GrpzbQ8RJTI
+         oqFhIZ8IxhR1HXaM2zpQjzSoo7gutFkxudwgxHEXzQATq+0TP3f68cdyJjgN3xNtTwMR
+         FwY0E0qUDJwMoVwUgIAMqpHYMjCqTDB9V9VCkJGuzRQMZUuviDtoWD1VYuaOox7ZXlad
+         AgoBIk5JC5BpAbHdX/IabLtIofSUb31EZk6Bj3om9gjbJp/87vXNU1IZsJy/iNGB6+AN
+         Fj6A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id s26-v6si675082pgl.584.2018.11.07.06.48.24;
+        Wed, 07 Nov 2018 06:48:40 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727745AbeKHASz (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:18:55 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51942 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726635AbeKHASy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:18:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9D4A80D;
+        Wed,  7 Nov 2018 06:48:14 -0800 (PST)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 070DD3F5BD;
+        Wed,  7 Nov 2018 06:48:11 -0800 (PST)
+Date: Wed, 7 Nov 2018 14:48:09 +0000
+From: Patrick Bellasi <patrick.bellasi@arm.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v5 03/15] sched/core: uclamp: map TASK's clamp values
+ into CPU's clamp groups
+Message-ID: <20181107144809.GH14309@e110439-lin>
+References: <20181029183311.29175-1-patrick.bellasi@arm.com>
+ <20181029183311.29175-4-patrick.bellasi@arm.com>
+ <20181107133504.GQ9781@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107133504.GQ9781@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXf0tJ++Jbo+cXAA--.16486S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxGF1DuF48uF1xCr4rtFW8WFg_yoWrAF4rpr
+	WDZ3y7JFWDKFnrKw4xG3y0qFn5Xw48XwsF9rW7tFyDCasIvr1rur1xtFW7ZFW8AF4kAF1I
+	vF43ur9xuFZ0vFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmFb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW5XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07
+	x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFyl
+	x2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14
+	v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IUOyOJ5UUUUU==
+
+On 07-Nov 14:35, Peter Zijlstra wrote:
+> On Mon, Oct 29, 2018 at 06:32:57PM +0000, Patrick Bellasi wrote:
+> > +/**
+> > + * uclamp_group_get: increase the reference count for a clamp group
+> > + * @uc_se: the utilization clamp data for the task
+> > + * @clamp_id: the clamp index affected by the task
+> > + * @clamp_value: the new clamp value for the task
+> > + *
+> > + * Each time a task changes its utilization clamp value, for a specified clamp
+> > + * index, we need to find an available clamp group which can be used to track
+>You mean se_count overflow ?
+
+> + * this new clamp value. The corresponding clamp group index will be used to
+> > + * reference count the corresponding clamp value while the task is enqueued on
+> > + * a CPU.
+> > + */
+> > +static void uclamp_group_get(struct uclamp_se *uc_se, unsigned int clamp_id,
+> > +			     unsigned int clamp_value)
+> > +{
+> > +	union uclamp_map *uc_maps = &uclamp_maps[clamp_id][0];
+> > +	unsigned int prev_group_id = uc_se->group_id;
+> > +	union uclamp_map uc_map_old, uc_map_new;
+> > +	unsigned int free_group_id;
+> > +	unsigned int group_id;
+> > +	unsigned long res;
+> > +
+> > +retry:
+> > +
+> > +	free_group_id = UCLAMP_GROUPS;
+> > +	for (group_id = 0; group_id < UCLAMP_GROUPS; ++group_id) {
+> > +		uc_map_old.data = atomic_long_read(&uc_maps[group_id].adata);
+> > +		if (free_group_id == UCLAMP_GROUPS && !uc_map_old.se_count)
+> > +			free_group_id = group_id;
+> > +		if (uc_map_old.value == clamp_value)
+> > +			break;
+> > +	}
+> > +	if (group_id >= UCLAMP_GROUPS) {
+> > +#ifdef CONFIG_SCHED_DEBUG
+> > +#define UCLAMP_MAPERR "clamp value [%u] mapping to clamp group failed\n"
+> > +		if (unlikely(free_group_id == UCLAMP_GROUPS)) {
+> > +			pr_err_ratelimited(UCLAMP_MAPERR, clamp_value);
+> > +			return;
+> > +		}
+> > +#endif
+> > +		group_id = free_group_id;
+> > +		uc_map_old.data = atomic_long_read(&uc_maps[group_id].adata);
+> > +	}
+> 
+> You forgot to check for refcount overflow here ;-)
+
+You mean se_count overflow ?
+
+That se_count is (BITS_PER_LONG - SCHED_CAPACITY_SHIFT - 1)
+which makes it able to track up to:
+
+   +2mln  tasks/task_groups on 32bit systems (with SCHED_CAPACITY_SHIFT 10)
+   +10^12 tasks/task_groups on 64bit systems (with SCHED_CAPACITY_SHIFT 20)
+
+I don't expect overflow on 64bit systems, do we ?
+
+It's more likely on 32bit systems, especially if in the future we
+should increase SCHED_CAPACITY_SHIFT.
+
+> And I'm not really a fan of hiding that error in a define like you keep
+> doing.
+
+The #define is not there to mask an overflow, it's there to catch the
+case in which the refcount should be corrupted and we end up violating
+the invariant: "there is always a clamp group available".
+
+NOTE: that invariant is granted once we add
+
+   sched/core: uclamp: add clamp group bucketing support
+
+The warning reports the issue only on CONFIG_SCHED_DEBUG, but...
+it makes sense to keep it always enabled.
+
+While, in case of data corruption, we should just return thus not
+setting the scheduling entity as "mapped" towards the end of the
+function... which makes me see that it's actually wrong to
+conditionally compile the above "return"
+
+
+> What's wrong with something like:
+> 
+> 	if (SCHED_WARN(free_group_id == UCLAMP_GROUPS))
+> 		return;
+
+Right, the flow should be:
+
+  1. try to find a valid clamp group
+  2. if you don't find one, the data structures are corrupted
+     warn once for data corruption
+     do not map this scheduling entity and return
+  3. map the scheduling entity
+
+Is that ok ?
+
+
+> and
+> 
+> > +	uc_map_new.se_count = uc_map_old.se_count + 1;
+> 
+> 	if (SCHED_WARN(!new.se_count))
+> 		new.se_count = -1;
+
+Mmm... not sure we can recover from a corrupted refcount or an
+overflow.
+
+What should we do on these cases, disable uclamp completely ?
+
+
+> > +	uc_map_new.value = clamp_value;
+> > +	res = atomic_long_cmpxchg(&uc_maps[group_id].adata,
+> > +				  uc_map_old.data, uc_map_new.data);
+> > +	if (res != uc_map_old.data)
+> > +		goto retry;
+> > +
+> > +	/* Update SE's clamp values and attach it to new clamp group */
+> > +	uc_se->value = clamp_value;
+> > +	uc_se->group_id = group_id;
+> > +
+> > +	/* Release the previous clamp group */
+> > +	if (uc_se->mapped)
+> > +		uclamp_group_put(clamp_id, prev_group_id);
+> > +	uc_se->mapped = true;
+> > +}
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi

@@ -1,0 +1,203 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:56 -0000
+Received: from icoremail.net (unknown [209.85.210.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_ws6QeNbXk1aAQ--.27153S3;
+	Thu, 08 Nov 2018 03:47:07 +0800 (CST)
+Received: from mail-pf1-f169.google.com (unknown [209.85.210.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwD3zTk4QeNbGBEZAA--.688S3;
+	Thu, 08 Nov 2018 03:47:04 +0800 (CST)
+Received: by mail-pf1-f169.google.com with SMTP id d13-v6so978363pfo.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:47:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:cc:to:from:subject
+         :message-id:date:user-agent:mime-version:content-language
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=WX4o1b9CfavJF7tL72poCIr5V1AP6JICSuMh15MN7FA=;
+        b=mZbdxUhbEuzDI9dcyAdW770mb9TNZU64sRdMTrSaZ+GIWDC36W2JLwA6Td2ty5wGX0
+         x1O5+dDl7B0xsIwXNGcpbzzfv9/mM9vXr2iJQL3Tnk8dqwoTkBKxAqEhekzHDqM2+4dJ
+         h0n0ZKmM5GXFSHOMDg/0MQXsy/Fws4zDKa/N9kNPPa8TE13w4KYotjPwCsFoMkBZfiiy
+         S/qChY7vLxxFcUQ1Fe8GN0MR96tNo/PYaDB2re74fC1e3Uw3gjz3SBheovOIdmLHhGzD
+         ns6f+i47s0VpxjItdLz88v1davYzp1s0TgNkBn4yiAhSTXM4stomneOavizaNJtMsLRO
+         PZGg==
+X-Gm-Message-State: AGRZ1gIKk1AQJIJBgflFU2bzrNpfwP1wLXNsBFpSsIcYISwjoSxjKhmL
+	XvZg2Vo/zd6vKSWaAvmNf9WnEaj6zV+5bLC05lGSwEIB6KW5CSSsQg==
+X-Received: by 2002:a63:5816:: with SMTP id m22-v6mr1329354pgb.332.1541620024189;
+        Wed, 07 Nov 2018 11:47:04 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5666781pjt;
+        Wed, 7 Nov 2018 11:47:03 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fvreqeRv3/61Mi7UnHt0O46g+ks/Ggfz7qrCh8qaKKlAKJYpscxGCczD0FS6jsdMR/ovtl
+X-Received: by 2002:a63:fb41:: with SMTP id w1-v6mr1338145pgj.321.1541620023316;
+        Wed, 07 Nov 2018 11:47:03 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620023; cv=none;
+        d=google.com; s=arc-20160816;
+        b=hJQT6AgIYpiT5CUbbVi+OGQFumX/h030eZ7wiL/P4byy8tLDp3m7BTQ0PZd0y3F/u0
+         R283p247oMO5o8IQQvvadSYQsiQLciw9VOuf8WMvRarE0hnc9s2Ydsm/UFitJ49ztlUr
+         1R1kad7rdJcqql2CtXDNF/nu7ShPTuJXXpUEVvIDroUJBR63apVDrjeC9IU1lPepgOYs
+         349rBqVq9tOCKV/YjoaOx/k5GLvxH+QBhJkzeL5f6Sm/d4+PvFajdtzvDL+QAMGfNiQg
+         /5mONscf34JzhSde5UHM0H11WVdWrVcB+A/B0MyfRqbvr6nYNqO1NDB5A5XQpe+0NFdr
+         vfjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:mime-version:user-agent:date:message-id:subject
+         :from:to:cc:dkim-signature;
+        bh=WX4o1b9CfavJF7tL72poCIr5V1AP6JICSuMh15MN7FA=;
+        b=BmojIIn/+0eWftg/CORfcAkVpAQgjTL6iqL5YegNz6Bu61/sO7wD0bWHeW5waZGzVV
+         pz0FnJLjs2H8ZspyakXZRl/48T/zIAAhdOQ4rHkkxt7mNpM/lrTCGrZk4ijxnvFBU0LW
+         MYKukW3Bll6zIo1OMm7Taq1BHCFLwaLL3BlMFqisXqvpK5/gGJHZC/c6wBA8PvxmwHUE
+         kN+A1i6BACVrARypUSZuKLTC5nhys3bTybufO4bIMuxpRMXG/bPgdWtZpGZgD/rLhPGn
+         OXcwo9o97nO57DiiEMcsCMDu4gfx1L8kOZS9SzCpcOyj5G2TrpBfBXohQ5ZMqZtwz8d/
+         +GyA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b="toGPkD/u";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 5-v6si1500429plx.310.2018.11.07.11.46.47;
+        Wed, 07 Nov 2018 11:47:03 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726760AbeKHFSW (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:18:22 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51441 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbeKHFSV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:18:21 -0500
+Received: by mail-wm1-f66.google.com with SMTP id w7-v6so15211732wmc.1;
+        Wed, 07 Nov 2018 11:46:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=WX4o1b9CfavJF7tL72poCIr5V1AP6JICSuMh15MN7FA=;
+        b=toGPkD/u9gsg5XYh+1AjF+hDC5yB4AYYOI/hIgwSp6LaV5gIj6TAGcxovhEq6l2Vmt
+         AdwEWMmSICVS5svbYv7QvgMEnFI+cO9TYWG95OQHsQ1N7Nd9tEHeUmqXPWCuXi8LpTrR
+         6GQuGbyAQmIjT7VLOCaRfYOCoxUmFqKSJK94nhuIQX8NaEOyZH4ay7fObNflqi8WXji9
+         ouWTFoNKzd3vlUXR+bw744TeG3eN2IaOw+h+uW09I7B915DQ/DlhrvFO5t8pQDJPxCzl
+         QbrLsZwK44f7KcR+/kpJqhLi4J4Ifc4tsDM9zNw1G8d6+fq3UX4/GvKgXcM231t2WFUs
+         Nctw==
+X-Received: by 2002:a1c:bce:: with SMTP id 197-v6mr1254936wml.15.1541619991273;
+        Wed, 07 Nov 2018 11:46:31 -0800 (PST)
+Received: from [10.0.20.223] (mail.jambit.com. [95.157.63.22])
+        by smtp.gmail.com with ESMTPSA id r3-v6sm2437218wmd.25.2018.11.07.11.46.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 11:46:30 -0800 (PST)
+Cc: mtk.manpages@gmail.com,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+To: Tejun Heo <tj@kernel.org>
+From: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Subject: Cgroups v2 bug: incorrect reporting in "domain threaded" cgroup.procs
+ file
+Message-ID: <fdb057a2-342a-d49e-587a-f1ca8680033e@gmail.com>
+Date: Wed, 7 Nov 2018 20:46:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwD3zTk4QeNbGBEZAA--.688S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7KrWrWFy3tF1fJrWxGw45Wrg_yoW8WFyfpa
+	yDJF93JwnxCrn5Awn7Ka4qqrs3urWkXa9rA3s8Zrn8Ja9xGws0qr9avFyUXr12kF15Gr18
+	Xry3ZrWq9r4ktaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmvb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0264kExVAvwVAq07x20xylc7Ca
+	8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VWrMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7
+	IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E
+	87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2
+	Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUv
+	cSsGvfC2KfnxnUUI43ZEXa7IUob2-5UUUUU==
+
+Hello Tejun,
+
+I've discovered what looks to be a bug in the reporting
+of PIDs in the cgroup.procs file in the "domain threaded"
+node at the root of a threaded subtree. The following
+demo is on vanilla kernel 4.19.
+
+Suppose we have the following multithreaded process:
+
+$ ps -L 654
+  PID   LWP TTY      STAT   TIME COMMAND
+  654   654 pts/12   Tl     0:00 ./cpu_multithread_burner 100
+  654   655 pts/12   Tl     0:01 ./cpu_multithread_burner 100
+
+Now suppose we create a threaded subtree in the v2 hierarchy:
+
+# cd /sys/fs/cgroup/unified/
+# mkdir -p x/a/b
+# echo 'threaded' > x/a/cgroup.type
+# echo 'threaded' > x/a/b/cgroup.type
+
+Then we move the multithreaded process into x/a in 
+the threaded subtree:
+
+# echo 654 > x/a/cgroup.procs 
+
+Now we visualize the set-up using my visualization
+program[1]:
+
+# go run ~mtk/lsp/cgroups/view_v2_cgroups.go x
+x [dt]
+    PIDs: {654}
+    a [t]
+        TIDs: {654 655-[654]}
+        b [t]
+
+The above is as I expect.
+
+Now, we move the thread group leader (it has to be the 
+thread group leader to show the bug) to a x/a/b, and again
+use my visualization program:
+
+# echo 654 > x/a/b/cgroup.threads 
+# go run ~mtk/lsp/cgroups/view_v2_cgroups.go x
+x [dt]
+    PIDs: {654 655}
+    a [t]
+        TIDs: {655-[654]}
+        b [t]
+            TIDs: {654}
+
+Note how the *thread ID* of the non-thread-group-leader
+(655) is being reported in the x/cgroup.procs!
+
+And just to verify that this is not a bug in my 
+visualization program:
+
+# cat x/cgroup.procs 
+655
+654
+
+Your thoughts?
+
+Thanks,
+
+Michael
+
+[1] https://www.spinics.net/lists/cgroups/msg20710.html
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/

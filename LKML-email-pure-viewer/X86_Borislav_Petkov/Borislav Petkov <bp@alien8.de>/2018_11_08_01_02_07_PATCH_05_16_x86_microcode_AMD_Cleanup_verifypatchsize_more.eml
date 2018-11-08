@@ -1,0 +1,211 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:03 -0000
+Received: from icoremail.net (unknown [209.85.214.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgCHv+QpG+NbrV9ZAQ--.26521S3;
+	Thu, 08 Nov 2018 01:05:02 +0800 (CST)
+Received: from mail-pl1-f169.google.com (unknown [209.85.214.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHJ0MkG+Nb8HMYAA--.436S3;
+	Thu, 08 Nov 2018 01:04:36 +0800 (CST)
+Received: by mail-pl1-f169.google.com with SMTP id o19-v6so8113494pll.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:04:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=YLoDktnS64p9XrXnZgGbL2jrSSe7bFHES8bdZ35eyvk=;
+        b=t8VALL/O3flBn8VV3PXqPAMKkzw1HeDqH26Vyf/snv/94TpSg7EOfD4fusg4Q7b6re
+         vXPYfg0WGmWYc+ZRbQIIgvNTGLE/lAo2DJFsPOU1orCFAqaPJqKjIgzOgdlkl2JuUZ+n
+         3KWd7GCxbXV7JNoOvyJNdUeYLBu/DebYbQo+RL5FPbYpeN82bQlsuSXYd8szYpvG3yPd
+         o8l4O2F+gjAqlOHnTtjnAVDkBV3IIcQgZMgYKx4HeBO7pR9p7Ac/8YtSN512ODsBwdc8
+         rSSkww9JTiJJfa9ulG1EdRpSpN8GGSQ5Mejq6au69B6zW1zIvYcGdqz01YpjNmoNtFuO
+         y5NQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLNXc5bSJSvuhifm0Lvt3TXtu3N3DFQUBZTSVnIpHc+n6hXrL3Z
+	QaiWLzE/U281o0JkjtQbzh7b7lMnkutHulRI6EXSFxpehLWw4rpdLQ==
+X-Received: by 2002:a17:902:166:: with SMTP id 93-v6mr997329plb.68.1541610275921;
+        Wed, 07 Nov 2018 09:04:35 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5489947pjt;
+        Wed, 7 Nov 2018 09:04:35 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dCRV8ubqDAcWK/qfMF3Sk2vCXPgASpTQq5goM+vOQnsXCA2Ki4DBd1VTDFq3sRRsuEE466
+X-Received: by 2002:a17:902:8ec2:: with SMTP id x2-v6mr1011159plo.157.1541610275093;
+        Wed, 07 Nov 2018 09:04:35 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610275; cv=none;
+        d=google.com; s=arc-20160816;
+        b=aOZdXSFGmCMkRqKwm7ZnC33sL8l9qmrk3UzNTqngAyYPRwL/HN+Yqvj1HPkijFQx2Z
+         t4XikOdEGMLIuP9fcqGwWL5YYBnev1123IeTzt2mhu4OzU+HBEH0lIpGqBQORtUwJnbm
+         /63TDD4b9VTOXn1qEZxMZC4pbf/fH0d+kn0875xH4qVXEKg1OwU3GeWYnSM307d6iRNK
+         ybNQdmNHSQkIrf8ekU65Ukb4W9lkS5Vh0iyFUNSPCLz4tw9HraC03n8KWWgJKk4PUwyf
+         lITVc1J1axqnbgWmu2AIZ4L+JKRpm2fBBq1biTswoB6M7K6uYe0BWJ1H1ZNkS7OcqM9C
+         ZpsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=YLoDktnS64p9XrXnZgGbL2jrSSe7bFHES8bdZ35eyvk=;
+        b=Ns9w5MYpFvCcF80AWINmMnqLzw9p3HfOJqU3JiYFrS/d5Gp9PbPZY2zSwZdJ0Nl+6W
+         hNqcoThTvLTsXLsksS4td1SCp9WyMJltULfh4KOElGrcjz+LChCRq+yeWOTMq7c9KpNn
+         TI/a5uAt06saf6v1jSGvzfRYeB6XG5QyQmc3b5XNqSWKsaAiYvooIkYyCd3az8Pm+nJQ
+         9ELQQuGYMbFgAKB+7WL5EGskDY5r9QDY90eF93zoykxN8OFLY/SbVS6798W7hXUrqDBy
+         1PaXFJu5nCMSPikWx8psTDASvzDnHfqneNM0WpMcLFC69so7xMQ3idLM7bkEowBgQHXt
+         +jVQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id s12-v6si1090210pgr.98.2018.11.07.09.04.19;
+        Wed, 07 Nov 2018 09:04:35 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731460AbeKHCds (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:33:48 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:46510 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731424AbeKHCdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:33:47 -0500
+X-Virus-Scanned: Nedap ESD1 at mail.skyhub.de
+Received: from mail.skyhub.de ([127.0.0.1])
+        by localhost (blast.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id ZrpFoD2EVPYd; Wed,  7 Nov 2018 18:02:33 +0100 (CET)
+Received: from zn.tnic (p200300EC2BCBE000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2bcb:e000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4EC9C1EC0291;
+        Wed,  7 Nov 2018 18:02:33 +0100 (CET)
+From: Borislav Petkov <bp@alien8.de>
+To: X86 ML <x86@kernel.org>
+Cc: "Maciej S . Szmigiero" <mail@maciej.szmigiero.name>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH 05/16] x86/microcode/AMD: Cleanup verify_patch_size() more
+Date: Wed,  7 Nov 2018 18:02:07 +0100
+Message-Id: <20181107170218.7596-6-bp@alien8.de>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107170218.7596-1-bp@alien8.de>
+References: <20181107170218.7596-1-bp@alien8.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHJ0MkG+Nb8HMYAA--.436S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxZr4Dtw17WrykWryftF48Crg_yoW5uF4xpr
+	sFkF1Fqr45KrnFyFyIyrs3AwsxAa18X3srKry7C3s7AF98Xw1FqFW8CFy5CrWIvr95u3W3
+	tFsFqw1rua1ktFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPSb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
+	Ij64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xA
+	MxkIecxEwVCI4VW8MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7Jw
+	CYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJVW8Jr1l
+	cIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U5773DUUUUU==
+
+From: Borislav Petkov <bp@suse.de>
+
+Rename the variable which contains the patch size read out from the
+section header to sh_psize for better differentiation of all the "sizes"
+in that function.
+
+Also, improve the comment above it.
+
+No functional changes.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ arch/x86/kernel/cpu/microcode/amd.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+index bf682deb84e8..a94a15aacfe7 100644
+--- a/arch/x86/kernel/cpu/microcode/amd.c
++++ b/arch/x86/kernel/cpu/microcode/amd.c
+@@ -175,16 +175,18 @@ static bool verify_patch_section(const u8 *buf, size_t buf_size, bool early)
+ }
+ 
+ /*
+- * Check whether the passed remaining file @size is large enough to contain a
+- * patch of the indicated @patch_size (and also whether this size does not
+- * exceed the per-family maximum).
++ * Check whether the passed remaining file @buf_size is large enough to contain
++ * a patch of the indicated @sh_psize (and also whether this size does not
++ * exceed the per-family maximum). @sh_psize is the size read from the section
++ * header.
+  */
+-static unsigned int verify_patch_size(u8 family, u32 patch_size, unsigned int size)
++static unsigned int
++verify_patch_size(u8 family, u32 sh_psize, unsigned int buf_size)
+ {
+ 	u32 max_size;
+ 
+ 	if (family >= 0x15)
+-		return min_t(u32, patch_size, size);
++		return min_t(u32, sh_psize, buf_size);
+ 
+ #define F1XH_MPB_MAX_SIZE 2048
+ #define F14H_MPB_MAX_SIZE 1824
+@@ -202,12 +204,12 @@ static unsigned int verify_patch_size(u8 family, u32 patch_size, unsigned int si
+ 		break;
+ 	}
+ 
+-	if (patch_size > min_t(u32, size, max_size)) {
++	if (sh_psize > min_t(u32, buf_size, max_size)) {
+ 		pr_err("patch size mismatch\n");
+ 		return 0;
+ 	}
+ 
+-	return patch_size;
++	return sh_psize;
+ }
+ 
+ /*
+@@ -693,14 +695,14 @@ static void cleanup(void)
+  */
+ static int verify_and_add_patch(u8 family, u8 *fw, unsigned int leftover)
+ {
++	unsigned int sh_psize, crnt_size, ret;
+ 	struct microcode_header_amd *mc_hdr;
+ 	struct ucode_patch *patch;
+-	unsigned int patch_size, crnt_size, ret;
+ 	u32 proc_fam;
+ 	u16 proc_id;
+ 
+-	patch_size  = *(u32 *)(fw + 4);
+-	crnt_size   = patch_size + SECTION_HDR_SIZE;
++	sh_psize    = *(u32 *)(fw + 4);
++	crnt_size   = sh_psize + SECTION_HDR_SIZE;
+ 	mc_hdr	    = (struct microcode_header_amd *)(fw + SECTION_HDR_SIZE);
+ 	proc_id	    = mc_hdr->processor_rev_id;
+ 
+@@ -726,7 +728,7 @@ static int verify_and_add_patch(u8 family, u8 *fw, unsigned int leftover)
+ 	 * but is present in the leftover file length so we need to subtract
+ 	 * it before passing this value to the function below.
+ 	 */
+-	ret = verify_patch_size(family, patch_size, leftover - SECTION_HDR_SIZE);
++	ret = verify_patch_size(family, sh_psize, leftover - SECTION_HDR_SIZE);
+ 	if (!ret) {
+ 		pr_err("Patch-ID 0x%08x: size mismatch.\n", mc_hdr->patch_id);
+ 		return crnt_size;
+@@ -738,7 +740,7 @@ static int verify_and_add_patch(u8 family, u8 *fw, unsigned int leftover)
+ 		return -EINVAL;
+ 	}
+ 
+-	patch->data = kmemdup(fw + SECTION_HDR_SIZE, patch_size, GFP_KERNEL);
++	patch->data = kmemdup(fw + SECTION_HDR_SIZE, sh_psize, GFP_KERNEL);
+ 	if (!patch->data) {
+ 		pr_err("Patch data allocation failure.\n");
+ 		kfree(patch);
+-- 
+2.19.1

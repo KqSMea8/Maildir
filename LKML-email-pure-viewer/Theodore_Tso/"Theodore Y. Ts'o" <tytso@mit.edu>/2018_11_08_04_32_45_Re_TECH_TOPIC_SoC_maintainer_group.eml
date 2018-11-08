@@ -1,0 +1,171 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:22 -0000
+Received: from icoremail.net (unknown [209.85.215.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH35TTONb_4taAQ--.27328S3;
+	Thu, 08 Nov 2018 04:34:27 +0800 (CST)
+Received: from mail-pg1-f174.google.com (unknown [209.85.215.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCngT1RTONbujUZAA--.1013S3;
+	Thu, 08 Nov 2018 04:34:25 +0800 (CST)
+Received: by mail-pg1-f174.google.com with SMTP id w7so7783541pgp.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:34:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:mail-followup-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=A3YRY3+QRbp9EyiO7Z7sJKOubxpVe9EveUMzGVqq/BI=;
+        b=M0cDUFaV+0bqmuX+1i36sj0HILc1Wxb7z4NCUMrPnEeAZmHeoEonRD2uq4kN5FHBrj
+         yJyPWKv751jlA6aQN8bJy2Pinl7QkRiMY7C5b5URWpqsihBWNxu8iKUnviu7KOVF14ut
+         wtkMj4E8y2z3377WRzMZZhYD0OyEFENSaUDKNljEpzDjQ3vlYyOPn+bfsLSG7XevZC5g
+         X0UcULcJQHEAng6PXPQWZWa6DfsdOC6OR7D7E9YYIapi64PKKGQbU7r533tZKgeL2yW6
+         P7tEu+6haMDwro7PM85xmacI+l/gpQ8ssaU7jSp6g0Hld/yBykqSaRQpxMncR3VAAmxR
+         prcQ==
+X-Gm-Message-State: AGRZ1gKBDDz17rX3UbmbSyv5V0WbEbrhxPgDylQwsQJWhzDa5buN8glC
+	WnKM2cSgXSxkffdECSWZtEzH/JcRbeTU9bUvC6aO1FXu6nodVApLyw==
+X-Received: by 2002:a62:d084:: with SMTP id p126-v6mr1825764pfg.147.1541622864885;
+        Wed, 07 Nov 2018 12:34:24 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5714021pjt;
+        Wed, 7 Nov 2018 12:34:24 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cLZfrdXh1IIMN7Bs3lydz2d+vu1plPRYD53UtoN60uki9GEJMg6y7oWe5nJOLt8/PN3uhv
+X-Received: by 2002:a62:39d2:: with SMTP id u79-v6mr1794793pfj.116.1541622864105;
+        Wed, 07 Nov 2018 12:34:24 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541622864; cv=none;
+        d=google.com; s=arc-20160816;
+        b=rBJ0amwH58J96hcQSBF3LaZro683V/4GpHpxKEqQNscBqkX7WLgu9p6TMf98k9+ZY2
+         59SzMPXKU1w7Ls0HqE7/WrbHRUA9beIE1iTHietRBmMgfcOg3CpCTlea5Oz91d+sgN0S
+         MMKVhbGfket3prxSKdM+efNurmwGFG89TbHHFSRSwBgkWXMoASRvyPXvHl/h847VZUbm
+         YL20F/glbqVgLBqJYsUFCVq9fd9/hsWghQKKVO80jVzuecz1q0Nvq2nwPD54Nt+2VIvO
+         xUpwgcxjofgo1W5pAMRVKy0qsY88zs7CqjSIVTvLsltkK9BKcF9RbiWm0tcOB9V6sc3B
+         8wjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:mail-followup-to
+         :message-id:subject:cc:to:from:date:dkim-signature;
+        bh=A3YRY3+QRbp9EyiO7Z7sJKOubxpVe9EveUMzGVqq/BI=;
+        b=qFaIgYcpceWJfWXqxmLIBQJXRNphS97p8AAQHTQYcC0hLJRFbxqJbZBgqS+A/BCVRj
+         xCb4CV0JWipY/eOS2zbYlXopmXKbmsiepWgNsGRt/1dBsyUfggyu52khBNTjH+Fgx9ff
+         W+MIbVr7Byiewa5mvS3gIt2T3HSBHajUQPh8Hg+nkbB4LtFb6wBfmvCjgcpWWKxPW6qv
+         niQBQtaFIXAH6u1omXPLS8n6VHJoXXfXan9e9+QL9HxVZ+i2DAFGChtAJc2vHHeY8ljG
+         Yxb/kQYVod9I+KV6HMUnQFSDtnTh5luQ5y3pe09uCSimNmOUauV4IimIPPNwBuBTCW2i
+         0ypA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@thunk.org header.s=ef5046eb header.b=NQ9xzH1Z;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id p1-v6si1714602pfa.44.2018.11.07.12.34.06;
+        Wed, 07 Nov 2018 12:34:24 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726934AbeKHGFE (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:05:04 -0500
+Received: from imap.thunk.org ([74.207.234.97]:50714 "EHLO imap.thunk.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbeKHGFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:05:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=thunk.org;
+         s=ef5046eb; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=A3YRY3+QRbp9EyiO7Z7sJKOubxpVe9EveUMzGVqq/BI=; b=NQ9xzH1ZAVXIww9VmeJSDLkLy1
+        xdw41miKoiX+V1VnOzLVIFXFq4aa6U0HA35JOyVWrYJ3lh76zi/P9e684lGsLr1MZ8e2T3XPXus/j
+        EovqAb3kcufarQvINrY+vZdDwuVnU0H95GgW30/DldJqKnIge10LVb9EkrExGeG9edow=;
+Received: from root (helo=callcc.thunk.org)
+        by imap.thunk.org with local-esmtp (Exim 4.89)
+        (envelope-from <tytso@thunk.org>)
+        id 1gKUVK-0002pA-2r; Wed, 07 Nov 2018 20:32:46 +0000
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 4BCAF7A7D27; Wed,  7 Nov 2018 15:32:45 -0500 (EST)
+Date: Wed, 7 Nov 2018 15:32:45 -0500
+From: "Theodore Y. Ts'o" <tytso@mit.edu>
+To: Olof Johansson <olof@lixom.net>
+Cc: ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Russell King <rmk@armlinux.org.uk>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [TECH TOPIC] SoC maintainer group
+Message-ID: <20181107203245.GK9919@thunk.org>
+Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Olof Johansson <olof@lixom.net>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        linux-clk <linux-clk@vger.kernel.org>, linux-gpio@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Russell King <rmk@armlinux.org.uk>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+References: <CAOesGMgVPsK9YsV2nGoBptWwtHYv=3yMytLx2_tF_ujS5c5p3Q@mail.gmail.com>
+ <20181107171723.GI9919@thunk.org>
+ <CAOesGMheCcvDQCd+7fyh4yOk4BYDfm2QRqsdawqA_fg8s9YYEQ@mail.gmail.com>
+ <CAOesGMg+jW7SN2+E_FYbwi8GdNhc8KrEsahB-Nn+AseO6kLGXA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOesGMg+jW7SN2+E_FYbwi8GdNhc8KrEsahB-Nn+AseO6kLGXA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: tytso@thunk.org
+X-SA-Exim-Scanned: No (on imap.thunk.org); SAEximRunCond expanded to false
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCngT1RTONbujUZAA--.1013S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrtFWDArWUGF4xZw1kAr4rGrg_yoW3GrgEgr
+	4jyF97Cw12gF9Fga17trn8CrsxJ3WqqF98WF1Ygrs3J34UGFykJa1kCryUuFyxW3y8Kr18
+	J3y2y3Zayry0qjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbhxYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UMx02cVCv0xWlc7
+	CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vEIxC_AwCY0x0I
+	x7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnV
+	CjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6x
+	AIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IU5DCztUUUUU==
+
+On Wed, Nov 07, 2018 at 10:47:24AM -0800, Olof Johansson wrote:
+> 
+> Can we have 3pm-3:30pm on Thursday? It seems relatively low on
+> embedded-related conflicts and at 3  people would have time to migrate
+> from Daniel Vetter's gitlab talk if needed.
+
+I'd really like to keep the slots all 45 minutes, aligned with the LPC
+referreed paper track, since that's what most MC runners were also
+strongly encouraged to do.  (Although to be fair, it looks like most
+of the MC runners haven't really stuck with that.)
+
+The rooms are all fairly close to one another, and if you want to wait
+a few minutes pack up and move next door or across the hall, that's
+fine.  But it's going to be a lot simpler of we tell people that the
+official starting time is 2:45pm.
+
+						- Ted

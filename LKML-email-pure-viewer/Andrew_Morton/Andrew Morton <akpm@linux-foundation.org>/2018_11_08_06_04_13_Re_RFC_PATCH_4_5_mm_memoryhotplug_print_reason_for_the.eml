@@ -1,0 +1,206 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:52 -0000
+Received: from icoremail.net (unknown [209.85.215.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f92oYeNblQxbAQ--.27630S3;
+	Thu, 08 Nov 2018 06:05:29 +0800 (CST)
+Received: from mail-pg1-f173.google.com (unknown [209.85.215.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3kz+mYeNbL38ZAA--.1541S3;
+	Thu, 08 Nov 2018 06:05:26 +0800 (CST)
+Received: by mail-pg1-f173.google.com with SMTP id r9-v6so7897252pgv.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:05:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=cTvKxq4Z9TT4UWEN6WGrXKgYjThpZG3W78YcLnsgyes=;
+        b=i31mhnf43g1JG9lbtKwiAOvSvNiXWBN8ReOYkLBgdiOj7275gSdYQ1E5AX9VBwdTUE
+         zzOXxd4KxiISjOTMVbLgZP9R2Dc6JZfL/YRLpI0YuyqUmbIiR/UQDTLI4TBjPgfK8enz
+         GDmKmQeXmYJKGmOHBqm8yogV8nm3Nar7v8zcKznkaSNcAZyrF0Q9TAWmBvw2jtVJMpRz
+         A3djexQPe+Ciqdo9fLELox7ka/3ccpDfShsRCM160K+WNr4yafIbdpXOH1/cZda1VpJj
+         XnmwFp79zY55bTCV76MXEfB7VbmJNPhm9nQc31SKnvTRcPxsMswVCWyon6tu7AoUQvLW
+         IY4w==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKmxByTvlcUq3t+Ij2/4CN1AvZAUQY+pFHn0p1qO68pkN9D2NbB
+	UxjYGLoGlOIJKENe+qxjNZR/yVdlybq1e3UgSRnBx/gMXPZgSdbpHQ==
+X-Received: by 2002:a63:1d10:: with SMTP id d16-v6mr1683823pgd.228.1541628326477;
+        Wed, 07 Nov 2018 14:05:26 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp57845pjt;
+        Wed, 7 Nov 2018 14:05:25 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dDVYNJlOEGFDNdciVCpMjtyR25gB9ANh+nRRVZfxE0o2nQgpp8Ifs+rG+1ptGubC2/u40w
+X-Received: by 2002:a63:4a0a:: with SMTP id x10mr1705771pga.237.1541628325331;
+        Wed, 07 Nov 2018 14:05:25 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541628325; cv=none;
+        d=google.com; s=arc-20160816;
+        b=tE5mIYUMOsBUThz65EMwKUqEl91JHM/T7/gfhslho8sIvX/UTiOrbTX6cWH22FapWb
+         /awPd+bplC4FDOaJY/qF2Jdo07vQyUhimeN4OAWLzz2QISKDYxhdbB47JbdJFMzt566L
+         jeSC9pfjsgboERE3ATN6pEQ7Ux/GjNxcyV13pcEsjVtrz5keXMrjR7QgbDScNQYYl0Bu
+         08/+11J3FN0u9mP8kxlkmJaBseIqkbqhyKduPszJT+WHcZYb/8i82WwjUqPAjqlq/Iw4
+         XPVnGe3MXnVZ4eL4/pqpwnUYauBrh4pkDWScqneI7vJAaBcHmnefVrEM4KOOSXYRy554
+         YqFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:subject:cc:to:from:date;
+        bh=cTvKxq4Z9TT4UWEN6WGrXKgYjThpZG3W78YcLnsgyes=;
+        b=e0Et1qZplgsEuzNuFwdGWTQXJfn3uSmRsvRmU/oYrI9+iRn6sGBEK1rD3VKgj4QXYf
+         J4eJ/ro2cVYr9HsYEOL/0LXdilKYmaxNITTndh2d/a6Jnhm3BKEzgh8gmvx7XY1MDsHD
+         hS30bK0cDk6T259U6bL6qlc4OQShkvQLrMKmzmzzfNkkeCMt/ej4NREbMUBda1zf/ZJ1
+         8yiDg/o9ILPRHq+rbFO66yzS+WvILAEwoG36brIIdQrq8uPaoMeSmIF1+zzorAxS5lc8
+         VAPMT2ysGJnCwlTftW0FYBI8dR+hyTk2NuX2MM34YeYH971IhvRzHTTjmvwu7sKFj796
+         YsvQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id f21-v6si1626910pgv.423.2018.11.07.14.05.09;
+        Wed, 07 Nov 2018 14:05:25 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728310AbeKHHgp (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:36:45 -0500
+Received: from mail.linuxfoundation.org ([140.211.169.12]:45572 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727945AbeKHHgf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:36:35 -0500
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id B76EFB09;
+        Wed,  7 Nov 2018 22:04:14 +0000 (UTC)
+Date: Wed, 7 Nov 2018 14:04:13 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Michal Hocko <mhocko@kernel.org>
+Cc: <linux-mm@kvack.org>, Oscar Salvador <OSalvador@suse.com>,
+        Baoquan He <bhe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [RFC PATCH 4/5] mm, memory_hotplug: print reason for the
+ offlining failure
+Message-Id: <20181107140413.2c0061e440123be76bf419bf@linux-foundation.org>
+In-Reply-To: <20181107101830.17405-5-mhocko@kernel.org>
+References: <20181107101830.17405-1-mhocko@kernel.org>
+        <20181107101830.17405-5-mhocko@kernel.org>
+X-Mailer: Sylpheed 3.6.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3kz+mYeNbL38ZAA--.1541S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxWFWfXw4DCryrXFy3Zry7Jrb_yoW5Xw4rp3
+	y7K3Z7K3yDt3yvkF4SvwsrCr10yayUCa42g34fCrnrZF13JryayrZ2vr15GF45Gryqqa1f
+	Aa10g3s7CwsYyaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6Fylc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bl
+	-BiUUUUU=
+
+On Wed,  7 Nov 2018 11:18:29 +0100 Michal Hocko <mhocko@kernel.org> wrote:
+
+> From: Michal Hocko <mhocko@suse.com>
+> 
+> The memory offlining failure reporting is inconsistent and insufficient.
+> Some error paths simply do not report the failure to the log at all.
+> When we do report there are no details about the reason of the failure
+> and there are several of them which makes memory offlining failures
+> hard to debug.
+> 
+> Make sure that the
+> 	memory offlining [mem %#010llx-%#010llx] failed
+> message is printed for all failures and also provide a short textual
+> reason for the failure e.g.
+> 
+> [ 1984.506184] rac1 kernel: memory offlining [mem 0x82600000000-0x8267fffffff] failed due to signal backoff
+> 
+> this tells us that the offlining has failed because of a signal pending
+> aka user intervention.
+> 
+> ...
+
+Some of these messages will come out looking a bit odd.
+
+> @@ -1573,7 +1576,8 @@ static int __ref __offline_pages(unsigned long start_pfn,
+>  				       MIGRATE_MOVABLE, true);
+>  	if (ret) {
+>  		mem_hotplug_done();
+> -		return ret;
+> +		reason = "failed to isolate range";
+
+"memory offlining [mem ...] failed due to failed to isolate range"
+
+> +		goto failed_removal
+>  	}
+>  
+>  	arg.start_pfn = start_pfn;
+> @@ -1582,15 +1586,19 @@ static int __ref __offline_pages(unsigned long start_pfn,
+>  
+>  	ret = memory_notify(MEM_GOING_OFFLINE, &arg);
+>  	ret = notifier_to_errno(ret);
+> -	if (ret)
+> -		goto failed_removal;
+> +	if (ret) {
+> +		reason = "notifiers failure";
+
+"memory offlining [mem ...] failed due to notifiers failure"
+
+> @@ -1607,8 +1615,10 @@ static int __ref __offline_pages(unsigned long start_pfn,
+>  	 * actually in order to make hugetlbfs's object counting consistent.
+>  	 */
+>  	ret = dissolve_free_huge_pages(start_pfn, end_pfn);
+> -	if (ret)
+> -		goto failed_removal;
+> +	if (ret) {
+> +		reason = "fails to disolve hugetlb pages";
+
+"memory offlining [mem ...] failed due to fails to disolve hugetlb pages"
+
+
+Fix:
+
+--- a/mm/memory_hotplug.c~mm-memory_hotplug-print-reason-for-the-offlining-failure-fix
++++ a/mm/memory_hotplug.c
+@@ -1576,7 +1576,7 @@ static int __ref __offline_pages(unsigne
+ 				       MIGRATE_MOVABLE, true);
+ 	if (ret) {
+ 		mem_hotplug_done();
+-		reason = "failed to isolate range";
++		reason = "failure to isolate range";
+ 		goto failed_removal
+ 	}
+ 
+@@ -1587,7 +1587,7 @@ static int __ref __offline_pages(unsigne
+ 	ret = memory_notify(MEM_GOING_OFFLINE, &arg);
+ 	ret = notifier_to_errno(ret);
+ 	if (ret) {
+-		reason = "notifiers failure";
++		reason = "notifier failure";
+ 		goto failed_removal_isolated;
+ 	}
+ 
+@@ -1616,7 +1616,7 @@ repeat:
+ 	 */
+ 	ret = dissolve_free_huge_pages(start_pfn, end_pfn);
+ 	if (ret) {
+-		reason = "fails to disolve hugetlb pages";
++		reason = "failure to dissolve huge pages";
+ 		goto failed_removal_isolated;
+ 	}
+ 	/* check again */
+_

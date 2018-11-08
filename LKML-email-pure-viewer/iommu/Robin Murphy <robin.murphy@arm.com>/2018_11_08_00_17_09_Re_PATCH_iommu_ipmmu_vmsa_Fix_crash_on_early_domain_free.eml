@@ -1,0 +1,142 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:47 -0000
+Received: from icoremail.net (unknown [209.85.210.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn33wpEONbORxZAQ--.26683S3;
+	Thu, 08 Nov 2018 00:17:47 +0800 (CST)
+Received: from mail-pf1-f178.google.com (unknown [209.85.210.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHAE0lEONbu0QYAA--.14263S3;
+	Thu, 08 Nov 2018 00:17:41 +0800 (CST)
+Received: by mail-pf1-f178.google.com with SMTP id u13-v6so7901290pfm.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:17:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding
+         :sender:precedence:list-id;
+        bh=PexRrGUO7yZEXLeooZracu46xQMkvmxBh3s+lyRgeQA=;
+        b=Un6OZiI3qJ+6HE/aa31h7v+//dn9bGncvMJrTJ/+7ksfsLb/YZ97/u94cGyD+AFJM5
+         +gWne+ohOh093KQWZABMqZyWYDK6kn15CiJu2eGWiE0vtg7mik0xs1M6AYfR1X89htIP
+         ZTDoly714Y/kmMP0etekPS0Nm2Z6ZnufCshUHff6eV/aZvo8caMxB54SY+33twZg33+z
+         oqJTVq1Z0h7J220fPHKjUvq0axZzwQn1xp4eGGw6r8/BvyRr6CllEQxjzM20k22qf68z
+         q/Q7h8IckvDE6PCSlqs3s0nTR6c0myUf4DX8GQ884lAhohqsiZxulurcJt+Vzj0iZDGO
+         +w5w==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKeSr/7mpe82+o15u1Qma8BHQJ/KsXNQv5e414fzvdgry3+ef2t
+	Txqy3Fz9CEfRtYAiZUSxBq2haJ4KV2eqjmdAEr8wmLawaBUQu0gTqA==
+X-Received: by 2002:a63:1d10:: with SMTP id d16-v6mr697649pgd.228.1541607461617;
+        Wed, 07 Nov 2018 08:17:41 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5439268pjt;
+        Wed, 7 Nov 2018 08:17:40 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dpgEwIJc70uBm0Ecm/Y/2UhoaYGZxycNeYafiabW2OvMssEDID9H3T65NyS59G8d9XBFV+
+X-Received: by 2002:a17:902:3225:: with SMTP id y34-v6mr808771plb.227.1541607460828;
+        Wed, 07 Nov 2018 08:17:40 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541607460; cv=none;
+        d=google.com; s=arc-20160816;
+        b=giz+EK7aun2+4rt5k//O9yHYY4CO1KHEZzsKnHD6xOGQhzF4AbAk1o9cXpYy8TrF15
+         9li9mBrUtlDQgxCN0MV4Y2Yc7SBX5ywptL6nMI0cDuoCAptRphJcOocHTe/U0We0xMeT
+         i5i4C3XhMQZ+L8Q7V0ZRCff+dSsONH26F20pvbghg2ePY9yH+xkxK49VPu8w4B86q65R
+         7L14jqr3My+Rg4w8WBTyOVjxdKVfz+eZ6dBvzy2PNRFbFu2IowpsiD918lL56tR0I1LU
+         noV7NzIZbbOXcYjt2r9OACvPqdtob6RZuEKlabrWy1wWBw8QY5ePJF1XQL52ymtouPK2
+         +EKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject;
+        bh=PexRrGUO7yZEXLeooZracu46xQMkvmxBh3s+lyRgeQA=;
+        b=GC7yXqGMFr21FymCZkUKaKXWdnZyrBgpvs4hEqCNQ+fMWn9u5+AsgdXx8jlZTMDlp+
+         TjqnkdwaXxFvLDtLrDKQ7FcllgHsWY6DdpYtOJSBJOAS4w2q3agLAIBnL2boZa56VkWL
+         CtxMaE7LdbRTNloSol2Bv67yhAOuyOUiO2c7y0GZm5oCdp36d/d3Vj7AkVBiW6L1ye/C
+         bptsf0S8TBghIsIbQMFORVVxOKio2lZVRqHEN45y4C3nb5eaEP8uKzIe+JaF9+6JhLsR
+         iraNR5uAl2EInBXAQHALjIU543NvBUbGIgtNAtDAPoKHb9fvduI2dW+y2smwJ2O0th7H
+         cc4w==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id t124-v6si996085pfc.262.2018.11.07.08.17.25;
+        Wed, 07 Nov 2018 08:17:40 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731315AbeKHBsU (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:48:20 -0500
+Received: from foss.arm.com ([217.140.101.70]:53780 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727546AbeKHBsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:48:19 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35F1580D;
+        Wed,  7 Nov 2018 08:17:18 -0800 (PST)
+Received: from [192.168.1.123] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A8E03F5BD;
+        Wed,  7 Nov 2018 08:17:15 -0800 (PST)
+Subject: Re: [PATCH] iommu/ipmmu-vmsa: Fix crash on early domain free
+To: Joerg Roedel <joro@8bytes.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20181107131850.11584-1-geert+renesas@glider.be>
+ <e4dcd8b2-768e-b11d-b6de-337b7e942050@arm.com>
+ <20181107153418.cge2dj5zmztahxrf@8bytes.org>
+ <CAMuHMdWPkMtnGrxrtFGmyJ5NEvSSCiMUVXXBWX+NS-J4tQXLAw@mail.gmail.com>
+ <20181107160341.pfpukoqhyhapfzpn@8bytes.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Message-ID: <f8259910-3e07-497b-9f18-6bcb47430cff@arm.com>
+Date: Wed, 7 Nov 2018 16:17:09 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20181107160341.pfpukoqhyhapfzpn@8bytes.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHAE0lEONbu0QYAA--.14263S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xw4fKFWkJFW7ZF1kWryUKFg_yoWfuFcEvr
+	ZF9rW8G3Wvyr4Ivay3XF1YyF1vka1UXryUt34fW39ag34fAFZ8CF9Ygr4kCr17Aayv9Fn8
+	Ar17Zry3tr1DujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbQxYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r4UJwAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0264kExVAvwVAq07x20xylc7Ca
+	8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VWUMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7
+	IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E
+	87Iv67AKxVW8JVWxJwCYIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr1l42xK82IYc2Ij64
+	vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAv
+	wI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IU56KZJUUUUU==
+
+On 2018-11-07 4:03 pm, Joerg Roedel wrote:
+> On Wed, Nov 07, 2018 at 04:50:40PM +0100, Geert Uytterhoeven wrote:
+>> It only got triggered by the combination of commits 6c2fb2ea76361da9
+>> ("of/device: Set bus DMA mask as appropriate") and b4ebe6063204da58
+>> ("dma-direct: implement complete bus_dma_mask handling"), which is being
+>> fixed by "of/device: Really only set bus DMA mask when
+>> appropriate" (https://patchwork.kernel.org/patch/10670177/).
+> 
+> Okay, but the bug is triggered since 6c2fb2ea76361da9, so I took this
+> one for the fixes-tag.
+
+FWIW it looks like it *has* always been possible to hit this crash by 
+allocating a domain and freeing it again without attaching any devices, 
+it's just highly improbable for any sane code to do that explicitly, so 
+the real latent triggers are failure paths in external callers (which in 
+this case are themselves only being reached thanks to my bug elsewhere).
+
+Robin.

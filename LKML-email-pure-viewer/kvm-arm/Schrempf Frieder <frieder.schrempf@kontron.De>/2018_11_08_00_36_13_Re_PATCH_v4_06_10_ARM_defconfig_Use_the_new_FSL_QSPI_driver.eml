@@ -1,0 +1,208 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:53 -0000
+Received: from icoremail.net (unknown [209.85.215.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_6ebFONbtDhZAQ--.26863S3;
+	Thu, 08 Nov 2018 00:36:54 +0800 (CST)
+Received: from mail-pg1-f171.google.com (unknown [209.85.215.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3nEiaFONblFgYAA--.7115S3;
+	Thu, 08 Nov 2018 00:36:43 +0800 (CST)
+Received: by mail-pg1-f171.google.com with SMTP id w3-v6so7522346pgs.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:36:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language:content-id
+         :content-transfer-encoding:mime-version:sender:precedence:list-id;
+        bh=mL4nNpSJ538Nkcpa3EetfNSlyG8GcAfh/cKBZi3fMII=;
+        b=SjQO7JFlI1dZWkCAm1RCcIDo6vTuFciZfAsdCa4ovAp4EqKQXnVMwrE5G604ah/xFn
+         zg1ZUW4tHog2+q7bPr2G9JS/urvU0ArIvbtul3nR2aS4PWBtUP045BbxwYMzYmNP75Mi
+         woj/Mk/ZZldceSoNAQ3nug0q4+Pi0KH2ZFDEP2Kx21J7TzBDA3oSvtDI9ij6zyCVkY9r
+         FrIrNG1LY5Zs3uGFDInvMelxdkANRRUFHM6oF5jPCWJM8TbAWM5z9tywenmnSnuwL547
+         0PQVtNrckZ2iEyPJwoNsGB6ffJ8Ve1KrRFdGaHtD/rTh81Qb2MZu+5pTZRroi09BdxdW
+         3NmQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKLDm8UPTcSMUas5ycUy+5YxYMbuz4rvWUKNtNTLBVbbOGUhm8R
+	nUzGL6P63s7b1t4qkqLDQq/Sp0iUtQDL2Ei5omGkAq1l0FfI3HM+pg==
+X-Received: by 2002:aa7:8498:: with SMTP id u24-v6mr898604pfn.220.1541608602556;
+        Wed, 07 Nov 2018 08:36:42 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5460224pjt;
+        Wed, 7 Nov 2018 08:36:41 -0800 (PST)
+X-Google-Smtp-Source: AJdET5c1kC4ENDQ723tzo0No6KyyDiyJfQ7lY0i0F6cUcf035YFGsrP9YADklVmjR/l8JsUH6vpd
+X-Received: by 2002:a17:902:4643:: with SMTP id o61-v6mr890175pld.43.1541608601741;
+        Wed, 07 Nov 2018 08:36:41 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541608601; cv=none;
+        d=google.com; s=arc-20160816;
+        b=y05hz/Za9fwPW+0GGtxq2qwbMlw64NgNxShkOaZKvEZhkGoI9kz88yPyH5LB2NiIEi
+         AJOt7NRDOn6ty1qj71eOSpCorj+KjavxtwE92TTu6RaTus1aQh5pFnHpmLXvUDwRXWiT
+         NkEovZ0TM1Z/6Vju3MFnZ3Vqebb8Hdf9eLJA1cB2LCyrK1ziC/ibkw7RN/r9ntgDFFMp
+         EP+/ctSfjl4o6TCG1LYFPT0DtiniulnoslEwkeJ/uaooW9EE8kBHdoJM12zad4kWCVhj
+         +cd1HYQQmXZv5r4ybvdWyqRLqWHl3UJIlM4MnhcfI6ShlRTN3ulzzSK83O/2fdkD+WuD
+         1K+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:content-transfer-encoding
+         :content-id:content-language:accept-language:in-reply-to:references
+         :message-id:date:thread-index:thread-topic:subject:cc:to:from;
+        bh=mL4nNpSJ538Nkcpa3EetfNSlyG8GcAfh/cKBZi3fMII=;
+        b=kjeeTiwSAk/FjOanpsoK00tBbIS5O6cSCuuZkmcAQxI/+sxUwYyGDSE4rS+PcHBkaN
+         gcS2KB5ZhGwDfEYFsf82o177t7iJjWpj+Z4Xb/qQo8SQkzUMNeo68Ip/D3UoD+b9jzSG
+         1S+NeqkHWS3yRAxT8EzIz6/1xofoI9rz272/yyCUhNZk+hAieMx0EJt3ccmlZIJtrfHJ
+         rlkMygFOtsjKVj92AO1qNaWdKZDmPUbm/KH3FQqqtAgP+X+Avk/gI9ngCTUggkhiNCY5
+         tvl36JasRLCbNPdtgM3Slp/D/PcjU7Q6qVm8Y6tdvtxY79dX4IVD9Rvj7MqlMx+E4jsG
+         jQKQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id w15-v6si1201987plk.269.2018.11.07.08.36.25;
+        Wed, 07 Nov 2018 08:36:41 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727870AbeKHCH0 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:07:26 -0500
+Received: from skedge03.snt-world.com ([91.208.41.68]:53404 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726886AbeKHCH0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:07:26 -0500
+Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge03.snt-world.com (Postfix) with ESMTPS id 185AA1C75740;
+        Wed,  7 Nov 2018 17:36:14 +0100 (CET)
+Received: from sntmail11s.snt-is.com (10.203.32.181) by sntmail11s.snt-is.com
+ (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Wed, 7 Nov 2018
+ 17:36:13 +0100
+Received: from sntmail11s.snt-is.com ([fe80::b972:ad22:ada5:7c6a]) by
+ sntmail11s.snt-is.com ([fe80::b972:ad22:ada5:7c6a%4]) with mapi id
+ 15.01.1466.003; Wed, 7 Nov 2018 17:36:13 +0100
+From: Schrempf Frieder <frieder.schrempf@kontron.De>
+To: Olof Johansson <olof@lixom.net>
+CC: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "Boris Brezillon" <boris.brezillon@bootlin.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Brian Norris" <computersforpeace@gmail.com>,
+        Mark Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        "david.wolfe@nxp.com" <david.wolfe@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        "prabhakar.kushwaha@nxp.com" <prabhakar.kushwaha@nxp.com>,
+        "yogeshnarayan.gaur@nxp.com" <yogeshnarayan.gaur@nxp.com>,
+        "han.xu@nxp.com" <han.xu@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "Sascha Hauer" <kernel@pengutronix.de>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Eric Anholt <eric@anholt.net>, Stefan Agner <stefan@agner.ch>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Tony Lindgren <tony@atomide.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        "yannick.fertre@st.com" <yannick.fertre@st.com>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 06/10] ARM: defconfig: Use the new FSL QSPI driver
+ under the SPI framework
+Thread-Topic: [PATCH v4 06/10] ARM: defconfig: Use the new FSL QSPI driver
+ under the SPI framework
+Thread-Index: AQHUdqh4fJ7CTSTis0KZzqRTstzHg6VEbX+AgAAEaoA=
+Date: Wed, 7 Nov 2018 16:36:13 +0000
+Message-ID: <b12936f5-871d-a982-13c5-9d894f4a1521@kontron.de>
+References: <1541601809-16950-1-git-send-email-frieder.schrempf@kontron.de>
+ <1541601809-16950-7-git-send-email-frieder.schrempf@kontron.de>
+ <CAOesGMgPwwwmizC+R4W1aLpvgcuVOYQr2qR2Vqb6171zGfarRw@mail.gmail.com>
+In-Reply-To: <CAOesGMgPwwwmizC+R4W1aLpvgcuVOYQr2qR2Vqb6171zGfarRw@mail.gmail.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.42]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E3E8513E95EB0141883D08AD67B99E63@snt-world.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 185AA1C75740.AD0DC
+X-SnT-MailScanner: Found to be clean
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: alexandre.torgue@st.com, arnd@arndb.de,
+        boris.brezillon@bootlin.com, broonie@kernel.org,
+        computersforpeace@gmail.com, david.wolfe@nxp.com,
+        dwmw2@infradead.org, eric@anholt.net, fabio.estevam@nxp.com,
+        frieder.schrempf@exceet.de, geert+renesas@glider.be, han.xu@nxp.com,
+        horms+renesas@verge.net.au, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-spi@vger.kernel.org, linux@armlinux.org.uk,
+        marek.vasut@gmail.com, miquel.raynal@bootlin.com, olof@lixom.net,
+        prabhakar.kushwaha@nxp.com, richard@nod.at, s.hauer@pengutronix.de,
+        shawnguo@kernel.org, stefan.wahren@i2se.com, stefan@agner.ch,
+        tony@atomide.com, yannick.fertre@st.com, yogeshnarayan.gaur@nxp.com
+X-Spam-Status: No
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3nEiaFONblFgYAA--.7115S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7AF45ArW5Xw1kAr17XFWfuFg_yoW8Xry5pF
+	WfuFyftrn7Gr1UKFZ2yw1xKFyFywn3Xr18Krn8tws8Zw1Yk34rXrW3KrWUuay7WF92gw4U
+	KF4rK34qgF1DZF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUdSb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2vj6VCEFc
+	xC0VAYjxAxZF0EFcxC0VAYjxAxZF0Ew4CEw7xC0VCjxxvEa2IrM2AIxVAIcxkEcVAq07x2
+	0xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18Mc
+	Ij6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lFcxC0VAYjxAxZF0Ew4CE
+	w7xC0wCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2
+	xSY4AK6IIF6r1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4j6F4UMxvI42
+	IY6I8E87Iv6xkF7I0E14v26r4j6r4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK
+	6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Wrv_Gr1UMIIYrxkI
+	7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JwCE64xvF2IEb7IF0Fy7YxBIdaVFxh
+	VjvjDU0xZFpf9x07jtHUgUUUUU=
+
+SGkgT2xvZiwNCg0KT24gMDcuMTEuMTggMTc6MjAsIE9sb2YgSm9oYW5zc29uIHdyb3RlOg0KPiBP
+biBXZWQsIE5vdiA3LCAyMDE4IGF0IDY6NDQgQU0gRnJpZWRlciBTY2hyZW1wZg0KPiA8ZnJpZWRl
+ci5zY2hyZW1wZkBrb250cm9uLmRlPiB3cm90ZToNCj4+DQo+PiBGcm9tOiBGcmllZGVyIFNjaHJl
+bXBmIDxmcmllZGVyLnNjaHJlbXBmQGV4Y2VldC5kZT4NCj4+DQo+PiBUaGUgbmV3IGRyaXZlciBh
+dCBzcGkvc3BpLWZzbC1xc3BpLmMgcmVwbGFjZXMgdGhlIG9sZCBTUEkgTk9SIGRyaXZlcg0KPj4g
+YXQgbXRkL2ZzbC1xdWFkc3BpLmMuIFN3aXRjaCB0byB0aGUgbmV3IGRyaXZlciBpbiB0aGUgZGVm
+Y29uZmlncy4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBGcmllZGVyIFNjaHJlbXBmIDxmcmllZGVy
+LnNjaHJlbXBmQGV4Y2VldC5kZT4NCj4gDQo+IEhpIEZyaWVkZXIsDQo+IA0KPiBUaGlzIHBhdGNo
+IGlzIHBhcnQgb2YgYSBzZXJpZXMgdGhhdCBJIGRpZG4ndCBzZWUgdGhlIHJlc3Qgb2YsIGJ1dCBp
+bg0KPiBnZW5lcmFsIHdlIHByZWZlciB0byBtZXJnZSB0aGVzZSB0aHJvdWdoIGFybS1zb2MgZXZl
+biBpZiB0aGUgZHJpdmVyDQo+IGdvZXMgaW4gdGhyb3VnaCBhbm90aGVyIHRyZWUuIFRoZSB3YXkg
+d2UnZCBwcmVmZXIgdG8gaGFuZGxlIGl0IGlzIHRoYXQNCj4gb25jZSB0aGUgZHJpdmVyIGxhbmRz
+LCB3ZSdsbCB0YWtlIHRoZSBjb25maWcgb3B0aW9uIGNoYW5nZSB0byB0dXJuIGl0DQo+IG9uLiBU
+byBhdm9pZCBvdXIgYnJhbmNoZXMgdG8gYnJlYWsgdW50aWwgYm90aCBzaWRlcyBoYXZlIGxhbmRl
+ZCwgaXQNCj4gbWlnaHQgYmUgYSBnb29kIGlkZWEgdG8ga2VlcCBib3RoIGRyaXZlcnMgb24gZm9y
+IGEgc2hvcnQgd2hpbGUgKG9uZQ0KPiByZWxlYXNlKS4NCj4gDQo+IFNvLCBJJ20gbm90IGdvaW5n
+IHRvIGFjayB0aGlzIHNpbmNlIHdlIGF2b2lkIHRha2luZyBkZWZjb25maWcgY2hhbmdlcw0KPiB0
+aHJvdWdoIGRyaXZlciB0cmVlcyAodGhlc2UgdHdvIGRlZmNvbmZpZ3MgdGVuZCB0byBjaHVybiBh
+IGxvdCBhbmQgd2UNCj4gZG9uJ3Qgd2FudCB0byBjcmVhdGUgbWVyZ2UgY29uZmxpY3RzIHdoZXJl
+IHdlIGRvbid0IGhhdmUgdG8pLCBidXQNCj4gd2UnbGwgYmUgaGFwcHkgdG8gcGljayBpdCB1cCB3
+aGVuIHRoZSB0aW1lIGNvbWVzLg0KDQpPaywgdGhhbmsgeW91IGZvciBleHBsYWluaW5nIHRoZSBj
+b21tb24gcHJhY3RpY2UuIEkgd2lsbCBkcm9wIHRoZSBjb25maWcgDQpjaGFuZ2VzIGZvciB0aGUg
+bmV4dCB2ZXJzaW9uIGFuZCBzZW5kIGl0IHNlcGFyYXRlbHkgd2hlbiB0aGUgdGltZSBpcyByZWFk
+eS4NCg0KQm90aCB0aGUgb2xkIGRyaXZlciBhbmQgdGhlIG5ldyBvbmUgdXNlIHRoZSBzYW1lIGNv
+bXBhdGlibGUgc3RyaW5ncyBmb3IgDQpwcm9iaW5nLiBXb3VsZG4ndCB0aGF0IGNhdXNlIHByb2Js
+ZW1zIGlmIGJvdGggZHJpdmVycyBhcmUgZW5hYmxlZCBmb3IgYSANCndoaWxlLCBvciBhbSBJIG1p
+c3Npbmcgc29tZXRoaW5nPw0KDQpUaGFua3MsDQpGcmllZGVyDQoNCj4gDQo+IA0KPiBUaGFua3Ms
+DQo+IA0KPiAtT2xvZg0KPiA=

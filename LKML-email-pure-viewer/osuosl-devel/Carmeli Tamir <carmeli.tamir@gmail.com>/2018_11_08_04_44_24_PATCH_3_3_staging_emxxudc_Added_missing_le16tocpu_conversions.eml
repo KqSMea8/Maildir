@@ -1,0 +1,210 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:29 -0000
+Received: from icoremail.net (unknown [209.85.210.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv9LvTuNbSp1aAQ--.27338S3;
+	Thu, 08 Nov 2018 04:45:36 +0800 (CST)
+Received: from mail-pf1-f177.google.com (unknown [209.85.210.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCngj7tTuNbhz0ZAA--.1118S3;
+	Thu, 08 Nov 2018 04:45:33 +0800 (CST)
+Received: by mail-pf1-f177.google.com with SMTP id p17-v6so7834106pfj.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:45:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:subject:date
+         :message-id:in-reply-to:references:sender:precedence:list-id;
+        bh=PPHu2cuWqaQ4UGNsV5wgdsnUaJifCNeGtC7EVKbzhzE=;
+        b=L0ZMRcu0/TPlLgajdIy3n1OK9mo0snrmakNwhnkOxo0Zvl6SAz32uidjKxBbdifVSx
+         Jnu/2X4MuVmnSAtj8ZgZEN57Sf4enHsjRATEdNwCQTI2lDC2j4i3mypARmM0IEHC8+6L
+         /JXu4JrKvRhzWveAIaAArvr6oBQ715V7crLwa9KPSSPjUl4A7JRLIrrXBvdOEpT7H3TX
+         w3vD3MfpEbN2gLlyCVeYaKabPJ77rvoPOfH2M0JsIdvvLRJA+EuwZB545J3zzHOFUyW2
+         dpPwBdZtcJHqwQ/cUW62m+LqG2Oxiu/ztjYnHqQ59k5NA723iF/YA3TEzSt6OfPRhb6p
+         5Nwg==
+X-Gm-Message-State: AGRZ1gIcgMT28alw1bO4y55HyPHw/cgje2jk3D0PKCgCNKOsGAcIk49f
+	Z1uI4WCkPNBEpXlImCMuX1AQsqMYJlZqgOMoIeti8qbRJNocqDTI+Q==
+X-Received: by 2002:a63:a91a:: with SMTP id u26mr1480664pge.349.1541623533295;
+        Wed, 07 Nov 2018 12:45:33 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5723875pjt;
+        Wed, 7 Nov 2018 12:45:32 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fpIjQuTBDLHIw2QCaGHma/Ipicvm6m6tFkqUNOjQSAMgELPxtqYe9GhX83J5/P2Kd4xFIc
+X-Received: by 2002:a17:902:4624:: with SMTP id o33-v6mr1793759pld.285.1541623532521;
+        Wed, 07 Nov 2018 12:45:32 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541623532; cv=none;
+        d=google.com; s=arc-20160816;
+        b=FgU4/Z9VIv+g9Ww8g/tsPxHriN0CrJ0o4eMJwnOgDGbkra9QA0TCB8abvt3m7ZJUxX
+         2gkNU6E+Xh519ZAaNCPGbKKiO9VhGiT1Jeumd3q8WjESAMptE1naboA+wFY2BuOD50F7
+         keGAdoEGSHG6p7+vHmUauNDemG3UP1tYrF8ULeqoQRCpe3LGKBtg4Tn2j8cHRU1L/Mba
+         VjSX2VcLpEWuqyM5tigo6U7HjFh0mmrSRm8andeStrUPmosIy04Z5aSBTbq+7KkN3PBJ
+         +N4RKzw7SdSKFXnSBTM33m6N+lGcxPr1F0/dE+h5eWO/K4JkG+AkbxfXhg2sbQQo/3nG
+         Vv+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:to:from:dkim-signature;
+        bh=PPHu2cuWqaQ4UGNsV5wgdsnUaJifCNeGtC7EVKbzhzE=;
+        b=URJ6crgQ+2k3vlNKGJjg+eP63PL4ysVj9X0n9/PWzn8cSCEIhAIq7L0MHapzznrq8Q
+         GGjGeC6j7tpqaUJCuvTSgGc6DTWv/39i1Y5Xvh6LB49tr4wOsQHTdCQfbzXrQpn0+923
+         tTa3AKlkhvcaqvLuoOAUh+3wdl2TSJnmskxA7PMNnJW01d0DRyslxE+EmwSZlRgbr316
+         XBg1joASb6HUQ4OoPW1pmcJrOkxRIvtFRxI0A9GV9fzVIKTeBI2ad9x48k6Yzu0bhERY
+         +1STfVusYy+BAqdNdM0xRGko3tv0E6U3AMO+iSQOmoMh0rmDaiP7E6iOwKTsOB4JPeSH
+         XBdw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=QMySEWRa;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id h9-v6si1804469pfe.72.2018.11.07.12.45.17;
+        Wed, 07 Nov 2018 12:45:32 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727277AbeKHGQx (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:16:53 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36630 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727239AbeKHGQw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:16:52 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z13-v6so16489352wrs.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 12:44:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=PPHu2cuWqaQ4UGNsV5wgdsnUaJifCNeGtC7EVKbzhzE=;
+        b=QMySEWRaA81W6bMldJGliyG0Ir6cS/hAs/M8+r0/jzPUgc/ufml0qIBX1qoOsSUW8w
+         flx/9qMERxGfnGOd6dO8rTBIAWyI0yYKmJkfxTyQvTj4TQjo3I+HS8cCuwa0kEjk+1o8
+         OTt1XyuG+XLH4IAGjlGxb6Lj+CWpNe6pudfrtZJLm6mz9Cfc0FJzWYWb9aNGnjw5pfby
+         1r80xiiHbkuUJCEZxuoi1rh4trZyNlRp2375p4yepWpBKUGI76lB+RTa1qhz2lx5bHjt
+         yK2XK/9E/ai4Zx9yWJT7Hvty0DNybDpAag+A4yJ1duMl9g3gRklQ0jn5ssYxkMElgGAF
+         2bwA==
+X-Received: by 2002:a05:6000:10c4:: with SMTP id b4mr1665018wrx.135.1541623486112;
+        Wed, 07 Nov 2018 12:44:46 -0800 (PST)
+Received: from osboxes.localdomain (bzq-79-178-252-231.red.bezeqint.net. [79.178.252.231])
+        by smtp.googlemail.com with ESMTPSA id y2-v6sm3578764wrh.53.2018.11.07.12.44.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 07 Nov 2018 12:44:45 -0800 (PST)
+From: Carmeli Tamir <carmeli.tamir@gmail.com>
+To: carmeli.tamir@gmail.com, gregkh@linuxfoundation.org,
+        natechancellor@gmail.com, chrisadr@gentoo.org,
+        areklis909@gmail.com, dan.carpenter@oracle.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] staging: emxx_udc: Added missing le16_to_cpu conversions
+Date: Wed,  7 Nov 2018 15:44:24 -0500
+Message-Id: <1541623464-49041-4-git-send-email-carmeli.tamir@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1541623464-49041-1-git-send-email-carmeli.tamir@gmail.com>
+References: <1541623464-49041-1-git-send-email-carmeli.tamir@gmail.com>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCngj7tTuNbhz0ZAA--.1118S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxJFykZFWUKrW3WFWfXF43KFg_yoW5uF13pr
+	s3G3y7KrZ7Z3W7Jrs3tw1DuryY9Fy7trykJr15K3Z5CFy3Crn7ZF9ru34kXayrCryxZrW7
+	tFWrKr4Dt3y2ywUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6F1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07b5
+	F4iUUUUU=
+
+Fixed sparse tool warnings due to missing convesion from
+le16 to cpu endienness. 
+
+Signed-off-by: Carmeli Tamir <carmeli.tamir@gmail.com>
+---
+ drivers/staging/emxx_udc/emxx_udc.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/staging/emxx_udc/emxx_udc.c b/drivers/staging/emxx_udc/emxx_udc.c
+index 3504277..bf7c5da 100644
+--- a/drivers/staging/emxx_udc/emxx_udc.c
++++ b/drivers/staging/emxx_udc/emxx_udc.c
+@@ -135,6 +135,7 @@ static void _nbu2ss_ep0_complete(struct usb_ep *_ep, struct usb_request *_req)
+ {
+ 	u8		recipient;
+ 	u16		selector;
++	u16		wIndex;
+ 	u32		test_mode;
+ 	struct usb_ctrlrequest	*p_ctrl;
+ 	struct nbu2ss_udc *udc;
+@@ -149,10 +150,11 @@ static void _nbu2ss_ep0_complete(struct usb_ep *_ep, struct usb_request *_req)
+ 			/*-------------------------------------------------*/
+ 			/* SET_FEATURE */
+ 			recipient = (u8)(p_ctrl->bRequestType & USB_RECIP_MASK);
+-			selector  = p_ctrl->wValue;
++			selector  = le16_to_cpu(p_ctrl->wValue);
+ 			if ((recipient == USB_RECIP_DEVICE) &&
+ 			    (selector == USB_DEVICE_TEST_MODE)) {
+-				test_mode = (u32)(p_ctrl->wIndex >> 8);
++				wIndex = le16_to_cpu(p_ctrl->wIndex);
++				test_mode = (u32)(wIndex >> 8);
+ 				_nbu2ss_set_test_mode(udc, test_mode);
+ 			}
+ 		}
+@@ -1449,8 +1451,8 @@ static inline int _nbu2ss_req_feature(struct nbu2ss_udc *udc, bool bset)
+ {
+ 	u8	recipient = (u8)(udc->ctrl.bRequestType & USB_RECIP_MASK);
+ 	u8	direction = (u8)(udc->ctrl.bRequestType & USB_DIR_IN);
+-	u16	selector  = udc->ctrl.wValue;
+-	u16	wIndex    = udc->ctrl.wIndex;
++	u16	selector  = le16_to_cpu(udc->ctrl.wValue);
++	u16	wIndex    = le16_to_cpu(udc->ctrl.wIndex);
+ 	u8	ep_adrs;
+ 	int	result = -EOPNOTSUPP;
+ 
+@@ -1549,8 +1551,8 @@ static int std_req_get_status(struct nbu2ss_udc *udc)
+ 	if ((udc->ctrl.wValue != 0x0000) || (direction != USB_DIR_IN))
+ 		return result;
+ 
+-	length = min_t(u16, udc->ctrl.wLength, sizeof(status_data));
+-
++	length =
++		min_t(u16, le16_to_cpu(udc->ctrl.wLength), sizeof(status_data));
+ 	switch (recipient) {
+ 	case USB_RECIP_DEVICE:
+ 		if (udc->ctrl.wIndex == 0x0000) {
+@@ -1565,8 +1567,8 @@ static int std_req_get_status(struct nbu2ss_udc *udc)
+ 		break;
+ 
+ 	case USB_RECIP_ENDPOINT:
+-		if (0x0000 == (udc->ctrl.wIndex & 0xFF70)) {
+-			ep_adrs = (u8)(udc->ctrl.wIndex & 0xFF);
++		if (0x0000 == (le16_to_cpu(udc->ctrl.wIndex) & 0xFF70)) {
++			ep_adrs = (u8)(le16_to_cpu(udc->ctrl.wIndex) & 0xFF);
+ 			result = _nbu2ss_get_ep_stall(udc, ep_adrs);
+ 
+ 			if (result > 0)
+@@ -1606,7 +1608,7 @@ static int std_req_set_feature(struct nbu2ss_udc *udc)
+ static int std_req_set_address(struct nbu2ss_udc *udc)
+ {
+ 	int		result = 0;
+-	u32		wValue = udc->ctrl.wValue;
++	u32		wValue = le16_to_cpu(udc->ctrl.wValue);
+ 
+ 	if ((udc->ctrl.bRequestType != 0x00)	||
+ 	    (udc->ctrl.wIndex != 0x0000)	||
+@@ -1628,7 +1630,7 @@ static int std_req_set_address(struct nbu2ss_udc *udc)
+ /*-------------------------------------------------------------------------*/
+ static int std_req_set_configuration(struct nbu2ss_udc *udc)
+ {
+-	u32 config_value = (u32)(udc->ctrl.wValue & 0x00ff);
++	u32 config_value = (u32)(le16_to_cpu(udc->ctrl.wValue) & 0x00ff);
+ 
+ 	if ((udc->ctrl.wIndex != 0x0000)	||
+ 	    (udc->ctrl.wLength != 0x0000)	||
+-- 
+2.7.4

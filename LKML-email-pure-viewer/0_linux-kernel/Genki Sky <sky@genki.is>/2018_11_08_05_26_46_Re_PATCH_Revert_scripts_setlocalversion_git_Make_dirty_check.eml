@@ -1,0 +1,149 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:40 -0000
+Received: from icoremail.net (unknown [209.85.214.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX1+xWONbAd5aAQ--.27415S3;
+	Thu, 08 Nov 2018 05:27:14 +0800 (CST)
+Received: from mail-pl1-f173.google.com (unknown [209.85.214.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHLEivWONbNmAZAA--.1990S3;
+	Thu, 08 Nov 2018 05:27:12 +0800 (CST)
+Received: by mail-pl1-f173.google.com with SMTP id n4-v6so8449171plp.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 13:27:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:message-id
+         :mime-version:content-transfer-encoding:from:subject:to:cc
+         :in-reply-to:references:sender:precedence:list-id;
+        bh=bK6IbnddeX1vaTuccPv6e2tsWyNOIzaumECeoHMPK84=;
+        b=IFPy1X/OvJTquUV/3PqCexLdDLmHyL0xhDktag2dA9Y2vbCBf65Jn5GgEfHPMJP6H5
+         dBekv48GbhG3q33yBHgIDxOYhYB7wMrnbiprLy0j7t795nDkY8ogoKFhpyOsGBf6E8ni
+         fNKpAwJyCE8nZNoJERJ0FQT9De3/rRsFBD3NDjaeZVwiLNw3aBZ/33Yl4gOmC57kTl09
+         +IL4xEN2YasYKeadalgAl3utmowvVYSXEflVMmDNg1IORw943mgLHhKusl1dpWIF9HqQ
+         FMF9j3CSenh8FcryhUJi1CuEbGZX/rebHPQSfDPIaXUOL4FvJSVgln7cPQVBsASg3T20
+         TkZQ==
+X-Gm-Message-State: AGRZ1gIb0ej1pW0ePEKcE0IVzMxKxG34MLSze4AqQhhLZW9MQBP0/8ob
+	OYDoDVm1MoE35y33QdWmD2Al2GfdDeRCv0OcEy5V4HxQan4Z4EmXzg==
+X-Received: by 2002:a17:902:8e81:: with SMTP id bg1-v6mr1941817plb.192.1541626031720;
+        Wed, 07 Nov 2018 13:27:11 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp24323pjt;
+        Wed, 7 Nov 2018 13:27:11 -0800 (PST)
+X-Google-Smtp-Source: AJdET5emJu+4eDeZ//PQ4QJ4rRBGKt9webiCRj6f4F/YiSltZmDaJBqSqI7a1Ig6TYrxb8eObvta
+X-Received: by 2002:a17:902:9698:: with SMTP id n24-v6mr1980084plp.9.1541626031064;
+        Wed, 07 Nov 2018 13:27:11 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541626031; cv=none;
+        d=google.com; s=arc-20160816;
+        b=RIiWOt0TfmR04QWikgLjMZvnY9X0HnBuhMkjZdnUY31Ymwj/AyPv1rjaz9Y50+y0Xt
+         jQjsNrkdOIDKFIGphU0HKDpJQYSmIhfcLHPnO+G/7T1ULtHqrp3euu7PIcPAbSOgYNLf
+         6F8p04hu/3cvnnbO57mYWqqb4Qh/JBpl31npDJxCM+3tkYOBzyACaZ4i2uEvvtLphcY1
+         qYqotesFG4/qqvzV8gMYG6qL4DG5vveykduuyUvjEYsB3Di9DD1pPtsQbtdBmXxFuscO
+         ullRxZflnh1AC64Au2zl1OBosCpcpRfu9wWt78tZZXO+yxPffWLMDMt7JndrNzhOs3w+
+         jG6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:cc:to:subject:from
+         :content-transfer-encoding:mime-version:message-id:date
+         :dkim-signature;
+        bh=bK6IbnddeX1vaTuccPv6e2tsWyNOIzaumECeoHMPK84=;
+        b=fE0o/nK7Vc8XtiQiFnfRo3y1uQqNp50KW/48/P98Bu5H/sZZBWukEaIVgB8wCF2plK
+         2zBPTXsm61usO8f+qLFB05O4gYnArWAg3BR6uXtDRXVFctl4znCGnmxC6xDu9ZALaBe7
+         j0oBL6KqZN5GQu4j6agKK+2SrSeoZfh4lnOTzftRT0Qm1ucfkf44+urvq1mZVZx25UwO
+         3hNnnvF8gUdnOjF18vNpyVmX8nP8Eewy76VyPgI1gTnXJyASEqGQhaVnAN00lLx7JxXn
+         QV2rDYbZ7/w1zMZGfLfFcPoOTZApSAB3SnaQl8l7RApr6ydSHSeIUiAPHCJLpSTkkO61
+         ZlBg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@genki.is header.s=dkim header.b=q4fgoDz7;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=genki.is
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id f91-v6si1853709plf.324.2018.11.07.13.26.56;
+        Wed, 07 Nov 2018 13:27:11 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727468AbeKHG7A (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:59:00 -0500
+Received: from genki.is ([104.200.25.21]:43246 "EHLO genki.is"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726659AbeKHG7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:59:00 -0500
+Received: by genki.is (OpenSMTPD) with ESMTP id f237522d;
+        Wed, 7 Nov 2018 21:26:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=genki.is; h=date
+        :message-id:mime-version:content-transfer-encoding:content-type
+        :from:subject:to:cc:in-reply-to:references; s=dkim; bh=f18bGRbJc
+        6CkaP8Yweuyw9nwDks=; b=q4fgoDz7J9DtWyaSsN3H9CanEgncyUK7PbkkVmvrp
+        S9c6d2xItrBRXic5TlJC7ww/p87dBthrEe01lbfwlFKSqF3Lmryq1/pOtFPHk5rI
+        hWN0dKOG/5LWRaXvrMGYK7PaPzKjvoTxwU8JMJe1D7XomhcOFWCDzFNR5FHpvj/4
+        3lOnZdQhvwm6Es1XA43dZtu19sP0gViVNf6wpjKid3zwsjwzEAuqNyb+NK/sV46F
+        PKHNBI8xqHRUI/bNTVlD+cpEaL8aoSvIOY8iLKTH7CFk47ss7hJ3IIm797ljGF9z
+        2/ZWLjVs82ChyNWk2JENKUFRPb62dRSxomm1xUVWDaG9w==
+Received: by genki.is (OpenSMTPD) with ESMTPSA id e352ddd8 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Wed, 7 Nov 2018 21:26:46 +0000 (UTC)
+Date: Wed, 07 Nov 2018 13:26:46 -0800
+Message-ID: <20181107.212646.134137464@genki.is>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+From: Genki Sky <sky@genki.is>
+Subject: Re: [PATCH] Revert "scripts/setlocalversion: git: Make -dirty check
+ more robust"
+To: Doug Anderson <dianders@chromium.org>
+Cc: Guenter Roeck <linux@roeck-us.net>,
+        Brian Norris <briannorris@chromium.org>, lists@nerdbynature.de,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAD=FV=Wcxf7p1DyJdVEqODbc6TdTtbPiLszWCAS1xC6=4kkLbw@mail.gmail.com>
+References: <1541527838-4585-1-git-send-email-linux@roeck-us.net>
+        <20181106.192305.406697677@genki.is> <20181107022156.GA254567@google.com>
+        <alpine.DEB.2.21.999.1811061845161.5308@trent.utfs.org>
+        <CA+ASDXPMMXCBN6PU8qzRm579sC9VBdwnxZdZwRdPY1cBUP8oGQ@mail.gmail.com>
+        <20181107184435.GA168339@google.com> <20181107.204358.257636196@genki.is>
+        <20181107205514.GB12273@roeck-us.net> <20181107.210731.330601031@genki.is>
+        <CAD=FV=Wcxf7p1DyJdVEqODbc6TdTtbPiLszWCAS1xC6=4kkLbw@mail.gmail.com>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHLEivWONbNmAZAA--.1990S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7XF1xKFy3Ww15WFy8GFWxJFb_yoWDJFg_ur
+	nYvFnrJ3yDGF4Sqay3Gay3Jrs8Crs5uryUXrWkJr1DK34UAFZxZFs7trn3Z3WfKa18tr95
+	CFWSk3WDW34SqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbv8YjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vE
+	IxC_CwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lcIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVWUJVW8JwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2
+	z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52
+	x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17
+	MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
+	AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IU5pwZ5UUUUU==
+
+On Wed, 7 Nov 2018 13:18:19 -0800, Doug Anderson <dianders@chromium.org> wrote:
+> From reading the thread it sounds like Guenter was not even super
+> happy with that based on the principal that you wouldn't expect a
+> kernel build to be doing write operations in your .git directory even
+> if $objtree == $srctree
+
+I see, thanks.
+
+> In theory you could wrap it.  If passing git with
+> "--no-optional-locks" doesn't work you could fall back to the old
+> code?  That would mean only people with newer git would get your new
+> feature and everyone else would stick with the pre-existing behavior.
+>
+> It does seem like any things like this should be done atop Guenter's
+> revert.  AKA: revert first to get things working the way that they
+> were and then start talking about how to make it better.
+
+Okay, it's trading one regression for another, but I guess it's clear
+that yours is much more painful. Sorry to have held up progress here.
+I'll back out of the discussion until this is reverted.

@@ -1,0 +1,246 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:05 -0000
+Received: from icoremail.net (unknown [209.85.215.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv95BauNbIT9bAQ--.27549S3;
+	Thu, 08 Nov 2018 06:42:09 +0800 (CST)
+Received: from mail-pg1-f178.google.com (unknown [209.85.215.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3VkI_auNbbp0ZAA--.1836S3;
+	Thu, 08 Nov 2018 06:42:07 +0800 (CST)
+Received: by mail-pg1-f178.google.com with SMTP id 70so2358268pgh.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:42:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:organization:in-reply-to:references:mime-version
+         :sender:precedence:list-id;
+        bh=Bp5/0rEBHLYpNdxrT1eHAGx9dQn0Jua5dTCJ5SDl0E0=;
+        b=aXFceiuZ5frYKGYQUtvg3RnOkZppMlDutgwtCd5mIee4ztWDk/0LoW641g0QanN2HS
+         R+R7x1wr8vrOc+2lORiqB3H/EXYOz1qTg5sYU0NsweJxv0lv7s5xjr2IRoD1Fo7FDVuh
+         cun9emcHe+GLShHLeBBsDLmPfdA9R+AlYnSWsN6QAbNRPTyscLNi17rTKZHULKjw39ct
+         quJfRa9QUNH0Iw72dnu+qLj0XaQZtMBLawkCBOM+D4J4m/T5KUFeOGM3TQhWMaBBBdff
+         7av7CwBT6z/xYpIulXjAvSgRdI3e/v0Sy6iQnRa9aTGEjRbS6WR6SBwqdPQAIhiP4i9l
+         pXpg==
+X-Gm-Message-State: AGRZ1gLEmD2DSZ1RZ1gLTD/13WmXlz6TW0N8leFcPHTBkTDxy+iras96
+	Pry3X0mIBsmCX+vHbm2qG5P/0KkTuytEJQnGwIaGhqLmowlnl/zQcg==
+X-Received: by 2002:a63:2315:: with SMTP id j21mr1820034pgj.297.1541630526782;
+        Wed, 07 Nov 2018 14:42:06 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp88408pjt;
+        Wed, 7 Nov 2018 14:42:05 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eUTfjR367k2Igp/08fq+2m0Tt6zXG6TQvsBtlotdgUVGOF4DwU8ncMyhBalN9trk6YPQ/d
+X-Received: by 2002:a17:902:7c0b:: with SMTP id x11-v6mr2157691pll.60.1541630525688;
+        Wed, 07 Nov 2018 14:42:05 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541630525; cv=none;
+        d=google.com; s=arc-20160816;
+        b=U4jl0qhKRPCvpMFutGUaeLeFpNRLQ6vBkiPSzVPVTTJH1S+49sciSb2Sj+Z8xKaXi3
+         gb2WROt9zEs0JmSB1l3t1apAiaei4+qNnXtd9gQBYqIRFgtkXPVfRpN+gfLKhBtjVFVa
+         Shg7zfUtljrScKKMQT7c2fhpWiA5FwXVQ73HNO7SxLSy13lCjAHkzqCL92WNdehJS5nR
+         4M1jI6sZIF7DV8N5R2D0kYABmgEQ4dh73QeuM9VCTIxK2ROY05mZApMrbzjMas1P7FuZ
+         psNjvw2JKtwTibiI6PQ2FJqC26PLjNPNzbSdGZZmc1IxUo9z47BZCr70Vri0CgKQqEB8
+         srSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:references:in-reply-to
+         :organization:message-id:date:subject:cc:to:from:dkim-signature;
+        bh=Bp5/0rEBHLYpNdxrT1eHAGx9dQn0Jua5dTCJ5SDl0E0=;
+        b=zP+P1dF6BD79VcL7R+1kNoZ+VjpW1X/lhGH4JYgMsC7iKyDnvC8DNUhpx7QJUObc4Y
+         VEhd2qCP97b8YM0DGVnl+XSLQD32Pg2naslBTyozLUiiDdF474yL5a9BCFp0JkZOS32U
+         uPuTBKgH1iSBiVEyAeNp/NhPQsJbv/6tLtDZDwMUUBIYqVi82x5pBC1IQVBVos6Eb/u5
+         Bn8ThY8pmX9Y33s2ZPuko7aB3pOZF02bwYaO/pqYQjQwKV9BI1UKC4/xRu0FNbiBakBe
+         tePawNBb3YW2bHpuVDuTZ5wwZl5nB3mFxAvV6dkqhxgvtBoJp8mQiyYUdk9ce5GHPHwX
+         Wv/A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kdab.com header.s=dkim header.b=VULOifAt;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=kdab.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d2-v6si2142214pfa.150.2018.11.07.14.41.50;
+        Wed, 07 Nov 2018 14:42:05 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728193AbeKHIOL (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:14:11 -0500
+Received: from mail.kdab.com ([176.9.126.58]:63758 "EHLO mail.kdab.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727760AbeKHIOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:14:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdab.com; h=
+ content-type:content-type:mime-version:references:in-reply-to
+ :organization:message-id:date:date:subject:subject:from:from; s=
+ dkim; t=1541630498; x=1542494499; bh=Bp5/0rEBHLYpNdxrT1eHAGx9dQn
+ 0Jua5dTCJ5SDl0E0=; b=VULOifAtHa7HBvy+t2fCtcU9Kw93LVhxLdC3Ziy53J5
+ peG95RIiLAwZxFhyPYcB1yA4546jfxcWlHyYr9nRs8lU8NcMEqrSLgCq3f8fzVlq
+ SqjfmpBgm1d9OwkWIzUymZMmKdWE0MVX2Y6Zk0X0MvwBSRQQG53cNxpuS3Oyl7jo
+ =
+X-Virus-Scanned: amavisd-new at kdab.com
+From: Milian Wolff <milian.wolff@kdab.com>
+To: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
+        Jiri Olsa <jolsa@kernel.org>, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho <acme@kernel.org>
+Subject: Re: PEBS level 2/3 breaks dwarf unwinding! [WAS: Re: Broken dwarf
+ unwinding - wrong stack pointer register value?]
+Date: Wed, 07 Nov 2018 23:41:31 +0100
+Message-ID: <1584560.aXQ729uQp3@agathebauer>
+Organization: KDAB
+In-Reply-To: <20181106202411.GU6218@tassilo.jf.intel.com>
+References: <2335309.gnWok9HYb4@agathebauer> <2102566.fCj8pZGm78@agathebauer>
+ <20181106202411.GU6218@tassilo.jf.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart2604735.gXIAmy9HsQ";
+ micalg="sha256"; protocol="application/pkcs7-signature"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3VkI_auNbbp0ZAA--.1836S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7KryUGFyUArW3Aw4UGrWxJFb_yoW8uF1xp3
+	yF9ryDGr4DtF4Iyan7Ar48uF1ruFy7Ar4jvr1qyrZaya4F9ry3trsxKryF9FZxGrn2qryY
+	vF4jqrWDuF1DAFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUHYb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lnx0Ee4C267I2x7
+	xF54xIwI0E7I0Y6sxI4wAS0I0E0xvYzxvE52x082IY62kv0487M2AExVA0xI801c8C04v7
+	Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aV
+	AFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx8GY4kS6xII0xvk
+	Mx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkIecxEwVCI4VW3MxkI7II2jI8vz4vEwI
+	xGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJV
+	WxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I
+	3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
+	WUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8I
+	cIk0rVW8JVW3JwCE64xvF2IEb7IF0Fy7YxBIdaVFxhVjvjDU0xZFpf9x07jQwIDUUUUU=
+
+--nextPart2604735.gXIAmy9HsQ
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+
+On Dienstag, 6. November 2018 21:24:11 CET Andi Kleen wrote:
+> > Where would I look for the source to change here? So far, I only
+> > concentrated on the userspace side of perf in tools/perf.
+> 
+> Kind of similar to
+> 
+> a405bad5ad20 perf/x86: Add Haswell specific transaction flag reporting
+> fdfbbd07e91f perf: Add generic transaction flags
+> 
+> Report the original (not overwritten) regs->ip and regs->sp
+
+Thanks a lot Andi! With your help, I have managed to find the exact issue for 
+my scenario. Turns out, it really is "just" the instruction pointer that is 
+wrong. I.e. originally we have IP = 0x7feda32ca68c, but with PEBS we correct 
+that to IP = 7feda32ca688. The SP register value stays the same according to 
+my printk output. Using the original IP value, we can unwind correctly since 
+we point to the correct place in the .eh_frame section. The PEBS IP points to 
+a different position in the .eh_frame section, which is "too early".
+
+That brings up some questions:
+
+- I noticed `perf record --intr-regs`, but the values recorded in the 
+perf.data file are always the same. I.e. comparing uregs and iregs, I always 
+see the same values printed by `perf script`. This smells like a bug to me, 
+but so far I haven't figured out why this happens...
+
+- Independently, when I add a custom printk manually in `arch/x86/events/
+intel/ds.c` at the end of `setup_pebs_sample_data`, then I'm never seeing any 
+differences between SP in iregs/pebs/regs. Shouldn't it also be recorded via 
+PEBS? Or is it just chance that I'm never seeing any difference in 
+setup_pebs_sample_data between iregs->sp and regs->sp?
+
+- Generally, how do we want to handle this bug? If `--intr-regs` would 
+actually record a different IP than stored in uregs in the perf.data file, 
+then we could use that as a fallback for unwinding, when it fails the first 
+time. Or should we always unwind from that IP? How do we mark the "actual" 
+frame/IP then, if that differs?
+
+Thanks
+
+-- 
+Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
+KDAB (Deutschland) GmbH, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt, C++ and OpenGL Experts
+--nextPart2604735.gXIAmy9HsQ
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCDEIw
+ggXmMIIDzqADAgECAhBqm+E4O/8ra58B1dm4p1JWMA0GCSqGSIb3DQEBDAUAMIGFMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYD
+VQQKExFDT01PRE8gQ0EgTGltaXRlZDErMCkGA1UEAxMiQ09NT0RPIFJTQSBDZXJ0aWZpY2F0aW9u
+IEF1dGhvcml0eTAeFw0xMzAxMTAwMDAwMDBaFw0yODAxMDkyMzU5NTlaMIGXMQswCQYDVQQGEwJH
+QjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQK
+ExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGlj
+YXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AL6znlesKHZ1QBbHOAOY08YYdiFQ8yV5C0y1oNF9Olg+nKcxLqf2NHbZhGra0D00SOTq9bus3/mx
+gUsg/Wh/eXQ0pnp8tZ8XZWAnlyKMpjL+qUByRjXCA6RQyDMqVaVUkbIr5SU0RDX/kSsKwer3H1pT
+/HUrBN0X8sKtPTdGX8XAWt/VdMLBrZBlgvnkCos+KQWWCo63OTTqRvaq8aWccm+KOMjTcE6s2mj6
+RkalweyDI7X+7U5lNo6jzC8RTXtVV4/Vwdax720YpMPJQaDaElmOupyTf1Qib+cpukNJnQmwygjD
+8m046DQkLnpXNCAGjuJy1F5NATksUsbfJAr7FLUCAwEAAaOCATwwggE4MB8GA1UdIwQYMBaAFLuv
+fgI9+qbxPISOre44mOzZMjLUMB0GA1UdDgQWBBSCr2yM+MX+lmF86B89K3FIXsSLwDAOBgNVHQ8B
+Af8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADARBgNVHSAECjAIMAYGBFUdIAAwTAYDVR0fBEUw
+QzBBoD+gPYY7aHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2VydGlmaWNhdGlvbkF1
+dGhvcml0eS5jcmwwcQYIKwYBBQUHAQEEZTBjMDsGCCsGAQUFBzAChi9odHRwOi8vY3J0LmNvbW9k
+b2NhLmNvbS9DT01PRE9SU0FBZGRUcnVzdENBLmNydDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3Au
+Y29tb2RvY2EuY29tMA0GCSqGSIb3DQEBDAUAA4ICAQB4XLKBKDRPPO5fVs6fl1bsj6JrF/bz9kkI
+BtTYLzXN30D+03Hj6OxCDBEaIeNmsBhrJmuubvyE7HtoSmR809AgcYboW+rcTNZ/8u/Hv+GTrNI/
+AhqX2/kiQNxmgUPt/eJPs92Qclj0HnVyy9TnSvGkSDU7I5Px+TbO+88G4zipA2psZaWeEykgzClZ
+lPz1FjTCkk77ZXp5cQYYexE6zeeN4/0OqqoAloFrjAF4o50YJafX8mnahjp3I2Y2mkjhk0xQfhNq
+bzlLWPoT3m7j7U26u7zg6swjOq8hITYc3/np5tM5aVyu6t99p17bTbY7+1RTWBviN9YJzK8HxzOb
+XYWBf/L+VGOYNsQDTxAk0Hbvb1j6KjUhg7fO294F29QIhhmiNOr84JHoy+fNLpfvYc/Q9EtFOI5I
+SYgOxLk3nD/whbUe9rmEQXLp8MB933Ij474gwwCPUpwv9mj2PMnXoc7mbrS22XUSeTwxCTP9bcmU
+dp4jmIoWfhQm7X9w/Zgddg+JZ/YnIHOwsGsaTUgj7fIvxqith7DoJC91WJ8Lce3CVJqb1XWeKIJ8
+4F7YLXZN0oa7TktYgDdmQVxYkZo1c5noaDKH9Oq9cbm/vOYRUM1cWcef20Wkyk5S/GFyyPJwG0fR
+1nRas3DqAf4cXxMiEKcff7PNa4M3RGTqH0pWR8p6EjCCBlQwggU8oAMCAQICEAf6KCF9+1doL2oE
+OTPysLwwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1h
+bmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0w
+OwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWls
+IENBMB4XDTE3MDUyMzAwMDAwMFoXDTIwMDUyMjIzNTk1OVowggFZMQswCQYDVQQGEwJTRTEPMA0G
+A1UEERMGNjgzIDMxMRIwEAYDVQQIEwlWYWVybWxhbmQxEDAOBgNVBAcTB0hhZ2ZvcnMxGDAWBgNV
+BAkTD05vcnJpbmdzIHZhZWcgMjEPMA0GA1UEEhMGQm94IDMwMSYwJAYDVQQKDB1LbGFyw6RsdmRh
+bGVucyBEYXRha29uc3VsdCBBQjEdMBsGA1UECxMUQSBLREFCIEdyb3VwIENvbXBhbnkxQzBBBgNV
+BAsMOklzc3VlZCB0aHJvdWdoIEtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCIEUtUEtJIE1h
+bmFnZXIxHzAdBgNVBAsTFkNvcnBvcmF0ZSBTZWN1cmUgRW1haWwxFTATBgNVBAMTDE1pbGlhbiBX
+b2xmZjEkMCIGCSqGSIb3DQEJARYVbWlsaWFuLndvbGZmQGtkYWIuY29tMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEAxrzfNBVvRbiAknuTBXuQnNm9sLIFLo0vbPB6kswk78A3tA++Zn5c
+lQUHhGlQq1cdYxagnUpqwvG3Sod15mPSOLkAPf/mabLN7p+lFbRaUP+97ZkTZtvb4BCC3osIEFI4
+G393OSFWqc2qmIPE/SwSASbAA20Fcaa2M6P1lhOk/ttUh2jIurTPF0wUycIA7lBddrOgaOA8e2m6
+iLTNHtlrfRbBaUX91D5ebY+UWmIjXSQ9+CtutMzBkwnF0rZKririvOkklg9VzEGNQVHrQfDF2s/U
+pOtmtuVSwElauGT/KALyCFuIrYC1pmaKH8S1xODJqiRaf6jH8E+KQzKjyM/ErwIDAQABo4IB1TCC
+AdEwHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFN+m99RtIuA1bSdw
+6b1brOX7X3AJMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
+dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
+LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
+Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
+Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
+KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAgBgNVHREEGTAXgRVtaWxpYW4ud29s
+ZmZAa2RhYi5jb20wDQYJKoZIhvcNAQELBQADggEBABf47LSJADqH+ow9INv3QM1NC/qq2bjxGvsZ
+68iD11VEUAFlsYfsVTgQqUirwPVTYenXtwVBELHZyywsui1JxL7HKQetLQegDDP/RyfjReVaWxhy
+3OpuItsgLVbru9QVgPifnoBFPtfZcwjeJDmeSbLT8oj4Rd0KYBOIve7WKvsfNPsNwfbLwY2zILkE
+LjxZcVi2AwZHDyab+dzL/3YcLuJj1lSawBGn7ilpcdZydlv4aye51pD/MemLIYLcylt+ImrmjnTV
+y+QlAHRF3s5FE8yAr+W1MBD/1bKZCSgFt8VQoAlz3hiQh8QqZp4Zl8WuVL4+mP/mT6VDEWgq/0Bo
+cukxggJuMIICagIBATCBrDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hl
+c3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNV
+BAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EC
+EAf6KCF9+1doL2oEOTPysLwwDQYJYIZIAWUDBAIBBQCggZMwGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgxMTA3MjI0MTMxWjAoBgkqhkiG9w0BCQ8xGzAZMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQgAy08xyRFEPL2fPCM+NANwV7NoqyD
+FZhj/JIJQugQepowDQYJKoZIhvcNAQEBBQAEggEAAZrhIv7b3SbvFGtw3QknDRzfApJ8qhkx2myq
+aFjNern60xw1enUu5bDsONMua++kG3kJEiYP3ewRGlPZVgXk5ThOt4i2AOdiDBxo18iJla2tB3VU
+7CvQlQPPpqB5ibbn+oGCau+AVuFBPyB8WQTkXr6QoCwRLZsFugmx1myEtV7nu8FuL4NpS74wKleW
+TgSvpo6EMpJ3OcASE0GH7IB4D6nymmKQ8EHz6BhFo3Woz7619Resd9H2B/MsCTWvwfsgJodTialb
+2xDAP47ldVu5q7tw+FokNV43RqawSqHtqLkJrY/E3VthcQeRVWQfXoqMlPl42CZu3d7L2TsMiDuS
+0AAAAAAAAA==
+
+
+--nextPart2604735.gXIAmy9HsQ--
+

@@ -1,0 +1,193 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:06 -0000
+Received: from icoremail.net (unknown [209.85.215.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn31yLauNbIkFbAQ--.27586S3;
+	Thu, 08 Nov 2018 06:43:24 +0800 (CST)
+Received: from mail-pg1-f175.google.com (unknown [209.85.215.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCnfTmKauNbkZ4ZAA--.1788S3;
+	Thu, 08 Nov 2018 06:43:22 +0800 (CST)
+Received: by mail-pg1-f175.google.com with SMTP id z17-v6so7946331pgv.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:43:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :thread-topic:thread-index:date:message-id:references:in-reply-to
+         :accept-language:content-language:msip_labels:spamdiagnosticoutput
+         :spamdiagnosticmetadata:content-transfer-encoding:mime-version
+         :sender:precedence:list-id;
+        bh=2CFP9LbR2E+RL7XzZaoteKkbd8xvW7mbFxlP5lhbxbM=;
+        b=DHXftA2Sj5VZ/DjWpzPCQOfQBdm8oGaHjz4FG++X3YbTiHwQy+ePdLm2wYGq7Bfp9Q
+         BZUZrkUrL1TCJ2eXQiKplndFMj781GX22S6aN3ynNoiW/fecIeRH7Z87rZp7x7VHZHAy
+         CWDYxaDBJtAV2QZHc7vyynLS4K9s6BFIHJGk7c7OJ+yfpmhgLn5VDmAXCod9Emqy05JW
+         ohSeQE0K+d3xfChtVqwwHF9lN1ChOgCgsVzFt+OF2zYiJddlXJaka4zayzPRT7xBYDmr
+         OFukCln4S5m8kXrdcTKq6WIo783AqCD01XYssj149jPyxP/zNaefcfJr6MGJSdDmrVMi
+         wQQQ==
+X-Gm-Message-State: AGRZ1gILVvanOokJVkUHBaJB8jC5WOEszjwFXQJR8R7/Fzm1Ypd0UsQW
+	OwLG3cibnGVYKjFHGaNuxaYlLIzk0uqM8EK6qtH6r4MAqQtoMsiTHA==
+X-Received: by 2002:a63:9402:: with SMTP id m2mr1748535pge.93.1541630602176;
+        Wed, 07 Nov 2018 14:43:22 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp89296pjt;
+        Wed, 7 Nov 2018 14:43:21 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fyGlCh5VzA3N6FYppRR2GfIyqZKVJGlsIVa1u8rmDChGelAd8QQJocEvUYLT+DJlMtjA2I
+X-Received: by 2002:a63:460a:: with SMTP id t10-v6mr1830721pga.197.1541630601272;
+        Wed, 07 Nov 2018 14:43:21 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541630601; cv=none;
+        d=google.com; s=arc-20160816;
+        b=n28cgJN31GhlVPsCNpC5BD4wmOAz1aBuHdd1MCX1COFUEF1JptxhAJbhz/4WmFar31
+         aOozeiobJpMaC0IQQ2LtyiHEWD9bXycHAE35aw4hqrp+OOTtBe+Cli6uAB66TqpwkV9Z
+         seZrqFfxLJEz3alOn63Txeetx02hXnN8oxYTpvSp6DIgBltZW97b39BZLOa0eOGt2Gt4
+         xSS9ko4X92a27bVBRDQZNQ0dPRUxtxdhw8C4TiHtG2eX9ud0VKIl5rHLGUVPwPVdlaFt
+         7o9ACLXlWulgFwSO2VvwhTMtUXS+dj6tsrbGHbD4VoHjDiyrXRsIjbvfySU86IxR1xRS
+         Hc/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:content-transfer-encoding
+         :spamdiagnosticmetadata:spamdiagnosticoutput:msip_labels
+         :content-language:accept-language:in-reply-to:references:message-id
+         :date:thread-index:thread-topic:subject:cc:to:from:dkim-signature;
+        bh=2CFP9LbR2E+RL7XzZaoteKkbd8xvW7mbFxlP5lhbxbM=;
+        b=z3C7n3U8iJFf9RjaillxFwKAGhUi4N9OBFyEFhaG5x+CFwZRkn3WSp7H3PWm/Up1JY
+         UTrqQRBe90BYPgvsPjvf4NNqODWhHoZKxSM9QLry/JF+S0NSYSuzPE92xwO+D/cisL47
+         RTtmtD108XFhYHVIvjJPQ+kxrvJT1pYh1EQQYxMt8LruSXTUEjMAMVHIieGzmdR/4k5R
+         G/vjN/KMMp3q/c718Nmm7JHhikI+1uBHPEoWHx80SBjCDd2t1sWYIoyTi1oBcz2y/G54
+         4F/ilK5krXCzKV9oHh8UAg2c1IFWTwGaURK0BCySQFR0qj/OKWXkEBvnMFnWqjFRxI4C
+         SftA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@microsoft.com header.s=selector1 header.b="FuEVU/jF";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=microsoft.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d2-v6si2142214pfa.150.2018.11.07.14.43.06;
+        Wed, 07 Nov 2018 14:43:21 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727300AbeKHIPC (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:15:02 -0500
+Received: from mail-eopbgr700124.outbound.protection.outlook.com ([40.107.70.124]:23584
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726896AbeKHIPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:15:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2CFP9LbR2E+RL7XzZaoteKkbd8xvW7mbFxlP5lhbxbM=;
+ b=FuEVU/jFbMdgVYJauEK9sSpD1YPCIjdQm8zD+jpskiEgCSHREF6FMZwXUpig7j+rliF5+LibmwiP+9vKDxUkIAwPGLZh11FxHRyrokKRygIE9u86g6qKcIgUcZhBP5br0aKuDJFZlrao/9mTyhrXItD6XSGW95wSOFe4ghFl+3A=
+Received: from CY4PR21MB0773.namprd21.prod.outlook.com (10.173.192.19) by
+ CY4PR21MB0792.namprd21.prod.outlook.com (10.175.121.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1339.1; Wed, 7 Nov 2018 22:42:27 +0000
+Received: from CY4PR21MB0773.namprd21.prod.outlook.com
+ ([fe80::d531:216d:20e5:ecf3]) by CY4PR21MB0773.namprd21.prod.outlook.com
+ ([fe80::d531:216d:20e5:ecf3%16]) with mapi id 15.20.1339.009; Wed, 7 Nov 2018
+ 22:42:27 +0000
+From: Michael Kelley <mikelley@microsoft.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>, Long Li <longli@microsoft.com>
+Subject: RE: [tip:irq/core] genirq/matrix: Improve target CPU selection for
+ managed interrupts.
+Thread-Topic: [tip:irq/core] genirq/matrix: Improve target CPU selection for
+ managed interrupts.
+Thread-Index: AQHUdh/7HQUTgxnwQ0ms3OFdp8tfHaVEn4FQgAAjqgCAACXFUA==
+Date: Wed, 7 Nov 2018 22:42:27 +0000
+Message-ID: <CY4PR21MB077370DED982AAC7B40B884CD7C40@CY4PR21MB0773.namprd21.prod.outlook.com>
+References: <20181106040000.27316-1-longli@linuxonhyperv.com>
+ <tip-e8da8794a7fd9eef1ec9a07f0d4897c68581c72b@git.kernel.org>
+ <CY4PR21MB0773C3A2748B87E9125095F9D7C40@CY4PR21MB0773.namprd21.prod.outlook.com>
+ <alpine.DEB.2.21.1811072049070.1666@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1811072049070.1666@nanos.tec.linutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2018-11-07T22:42:25.7938260Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic;
+ Sensitivity=General
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-microsoft-exchange-diagnostics: 1;CY4PR21MB0792;6:loMgnr+a3K4ifQYo6QtRBFxzunDvncBxl8+m6kFexCiuD5A+1EJ9v7P/MUfJjQPzcQdCixClRgsJKjdJs89zL/MuWQszzMERK/DiM/KUyoJPDwetrA1kZajDvRL4RQRQ36u/+PsQNxLC982HLTju1NSrnVrgbgOmyvvi7MeT/39qabDTUt2kMals1+zX63zDlOF+0uYO3z+l0mVKq3SpYAguOVH1l/oZ4K6K9Hit7kKYr8rNrPSSNFOYlIcZMuLdaurJJuMyCnwNVjXy9BXk7HEd1FEgayuNxl7mftormiWIDlzcXuvY+yubzyvy0cl4Q/AXUOFC+XA2Tx92by4ShiGWzisO2y5nvk08hxW1KWG19gR8xwwtYi/av/hlUu7cAkpYqum/eI7l+Lb5LUx/DtZ7OjK+yOPhv4gayX/esS+7P/a7XuKR3LOhACm086DIi5XPGGQvBt0qeTCvoIkBAg==;5:cgxmfFXJYFDlkgxtMslxl7Qy7vMqj/vulAz1J8MU+EpKVZt7H6HsoUzvVwxa2CRQLlp6FuFY7/4G2F5ZRQ4SWDBUFxfHRTs8c01Cx8ujurLFXn+JfzJc5ibVe8ENcmfZNYbzvEV1/0LZ8S5XGFw9iNNPcIbRmy+2G34BtZ3QLLw=;7:0QdpxKitqQWXm5/UQMsGAR76KZntSnqdXzmuxVA/CJqrVTGcnSUhYSoWOtcqfBdJ/Is0emHLpmmI5YuvRcHCM7cT3qYeB0zED1w83nv1z2S4fkrHLWTnpnpUMwgic0RnntkK0ThcgKEHcaV4oyT1JA==
+x-ms-office365-filtering-correlation-id: 0b2e29bb-3e3b-4d4c-cc6a-08d645024b68
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(7020095)(4652040)(8989299)(5600074)(711020)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CY4PR21MB0792;
+x-ms-traffictypediagnostic: CY4PR21MB0792:
+x-ms-exchange-purlcount: -3
+x-microsoft-antispam-prvs: <CY4PR21MB0792CF5F7CC46EC0DD971AB0D7C40@CY4PR21MB0792.namprd21.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-exchange-antispam-report-cfa-test: BCL:0;PCL:0;RULEID:(8211001083)(6040522)(8220035)(2401047)(8121501046)(5005006)(3002001)(3231382)(944501410)(2018427008)(93006095)(93001095)(10201501046)(6055026)(148016)(149066)(150057)(6041310)(20161123558120)(20161123562045)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(20161123560045)(20161123564045)(201708071742011)(7699051)(76991095);SRVR:CY4PR21MB0792;BCL:0;PCL:0;RULEID:;SRVR:CY4PR21MB0792;
+x-forefront-prvs: 08497C3D99
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(39860400002)(376002)(396003)(346002)(189003)(199004)(2906002)(93886005)(76176011)(4326008)(99286004)(486006)(8990500004)(6916009)(33656002)(54906003)(6246003)(22452003)(6116002)(107886003)(2900100001)(7696005)(53936002)(7736002)(305945005)(316002)(9686003)(476003)(229853002)(3846002)(8676002)(68736007)(74316002)(97736004)(10090500001)(81166006)(81156014)(6436002)(26005)(5660300001)(256004)(71190400001)(71200400001)(186003)(10290500003)(478600001)(66066001)(86362001)(86612001)(106356001)(6506007)(8936002)(55016002)(14444005)(105586002)(11346002)(25786009)(14454004)(446003)(102836004);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0792;H:CY4PR21MB0773.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-microsoft-antispam-message-info: 908KygAqJ6QbCnwCqlrhzwmZjURWbB7QbWAJT8QREZvXIyb26z8+je7g6PQ9R1X+3fHl46/Wg9oZAiTppVkQiPPZ+OH/ht4W1XHW76QHRXyg6yJ0ixP9HgsA8b4M2vo2QB2DJikzJFhGatzzIbOSG5fKzX1cufNGD0aVVlDpzPVQxTdK1AFtCzD1eXGV77MThdyrG5Ti4xDRTpphrBOoOBzzrBLnpIZhXv0V4l/BIPc8olejITCaQXHECdTO5z3ytl8YWpxieYuUGc4hpYsygIJ75WInQ5nQn7BU9fauwB+vJk/ZBNmY5JzpjyNfF+jdvBollPfKzDp/j6XOQgl736APeMJTYRfvKBGpyOCleJQ=
+spamdiagnosticoutput: 1:99
+spamdiagnosticmetadata: NSPM
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b2e29bb-3e3b-4d4c-cc6a-08d645024b68
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2018 22:42:27.5352
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0792
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCnfTmKauNbkZ4ZAA--.1788S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7GryUXrW8AFW5AF13ZF43Jrb_yoWfCrcEg3
+	4vyw4DJw1vgrZYvF43tr4UuFn3W3yjgrZ7JF1xXr1Svr1rXr1S9a40grn8XF48W3y2vrZr
+	urZ8tw4fKr1UujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbSAYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UMx02cVCv0xWlc7CjxV
+	AKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vEIxC_ZwCY0x0Ix7I2
+	Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjx
+	CrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw2
+	0EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07be5rcUUUUU=
+
+From: Thomas Gleixner <tglx@linutronix.de>  Sent: Wednesday, November 7, 20=
+18 12:23 PM
+>=20
+> There is another interesting property of managed interrupts vs. CPU
+> hotplug. When the last CPU in the affinity mask goes offline, then the co=
+re
+> code shuts down the interrupt and the device driver and related layers
+> exclude the associated device queue from I/O. The same applies for CPUs
+> which are not online when the device is initialized, i.e. if non of the
+> CPUs is online then the interrupt is not started and the I/O queue stays
+> disabled.
+>=20
+> When the first CPU in the mask comes online (again), then the interrupt i=
+s
+> reenabled and the device driver and related layers reenable I/O on the
+> associated device queue.
+>=20
+
+Thanks!  The transition into and out of the situation when none of the CPUs
+in the affinity mask are online is what I wasn't aware of.  With that piece=
+ of
+the puzzle, it all makes sense.
+
+Michael

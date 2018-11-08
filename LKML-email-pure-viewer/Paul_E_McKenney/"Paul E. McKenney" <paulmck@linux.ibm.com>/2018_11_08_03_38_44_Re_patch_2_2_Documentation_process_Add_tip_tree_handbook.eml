@@ -1,0 +1,368 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:54 -0000
+Received: from icoremail.net (unknown [209.85.214.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX1+CP+NbzUVaAQ--.27216S3;
+	Thu, 08 Nov 2018 03:39:48 +0800 (CST)
+Received: from mail-pl1-f182.google.com (unknown [209.85.214.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3VkKAP+NbnAoZAA--.656S3;
+	Thu, 08 Nov 2018 03:39:44 +0800 (CST)
+Received: by mail-pl1-f182.google.com with SMTP id p16-v6so8320098plr.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:39:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent:message-id:sender
+         :precedence:list-id;
+        bh=hL6ltTWaOqTewPNYoXY18wZJFWSG+oUehMdVq9SsrnM=;
+        b=ca6inVJb2gTewVSPWadpivAQW9gCgLYfHix60vWqRpyHIvGHNuWqOSqUxqZmZlEfQM
+         bpC23ujR4A0agwkeMlx6GrhLRXufO1zSSyKqslHXmznRACfRJZX4PMklQWZsSGgtZwtw
+         kFa5csT/AW8z/atuKdIPFUtU0AqJ0rwkz2VGWpd6MQwj1LNN+CtxGgq4MR/Vb3QnCH4S
+         PHYGvAnLyvdsPlAaxZyBshmlUGnc6mZrTYWLiG7LvtwSe6m+L6iBnM9Q/cWKZ8+f7B7j
+         4SMFTEaCn8nO92bwViHqM8GYQSMvzUwvWbWlf+THV9nD0zvwG8psf5koDUNMwiKl6ww2
+         BFAA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=ibm.com
+X-Gm-Message-State: AGRZ1gIUO5fO9plL8TD2jXLi9gCe7jn+oy4VS6dz/Ct8WTQDw+lRmHMw
+	9oek/H7TdSQNmIn7WKUqO+X5HRVAnJXDfjEnVhdWK0GRKC83KWi9ZQ==
+X-Received: by 2002:a17:902:b598:: with SMTP id a24-v6mr1545845pls.231.1541619584284;
+        Wed, 07 Nov 2018 11:39:44 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5660136pjt;
+        Wed, 7 Nov 2018 11:39:43 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dXsMiD3fLNHH5GipmNnvmkrEJbK3RFHfrJwY5YargdtKaDlqDaD4sIodNQyOFLYe2gkDDQ
+X-Received: by 2002:a63:6506:: with SMTP id z6-v6mr1220591pgb.219.1541619583107;
+        Wed, 07 Nov 2018 11:39:43 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541619583; cv=none;
+        d=google.com; s=arc-20160816;
+        b=qm9TDtkFjJJf4B4p67FCENWrEDTJPMHilCGuQQjBcblTJ+cMhETmsoh0ROwmU+EBAQ
+         skvggUcH/RRQm8/tYuZaSqvvEqWxuE17SvSVtmQx5k2NSj8+gqKSQcrp/vRRcl6nvKSj
+         tpjXTu+Fs8rLUaWMLxnBncD527YQ2aZK5RQh1CndBQ6lzmk4mD4o9SbQ2JubTuZIaCB9
+         GCZW8uHFZGSkCyICTshoaFqd+qvh+ppbLZsAE5iLtf8VUmM1XIr0NuKImhwLxBxsq/s9
+         QnIlZQCWdaP8rkSZd899BzP/wM/z0eT9squsKEb9tfgCPDC9W48ttOmEy/Hb947A0PmI
+         fTAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:user-agent:in-reply-to
+         :content-disposition:mime-version:references:reply-to:subject:cc:to
+         :from:date;
+        bh=hL6ltTWaOqTewPNYoXY18wZJFWSG+oUehMdVq9SsrnM=;
+        b=rPd0HMRfRBCiGw330rNlB7wdghphM4iBgvPl2UTDeK5zcxxxRGayMDV3dqIbvqVg7W
+         p20TIZKNEhHh1GsbOT6DQS5pNrJW98ZvpotfraZc4RM7O3FZvPo9Ga6ERdDGHVqWKX2B
+         zvK7PwlvVSYzg47WVYR4amCi8WCI0pmGGGeyRWpodx1bO2oPt8duzK+DjK9LL/j96now
+         Q0T3I2ZQJo0hghLRb3YziDWDbTka+rkP5ML6nLHUBRJ7nkkkg6EUVLII8R3o+VjAwcLY
+         EMhEA8CVvs/deGBPFQfh896+BVMZj80Rz/H2XMNpB/WTQpLKgUj44WnFer6HNlVLEbL4
+         0QBA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=ibm.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id s9si1451408pgv.397.2018.11.07.11.39.28;
+        Wed, 07 Nov 2018 11:39:43 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726975AbeKHFKk (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:10:40 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45182 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725953AbeKHFKj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:10:39 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id wA7JXosG013852
+        for <linux-kernel@vger.kernel.org>; Wed, 7 Nov 2018 14:38:52 -0500
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2nm57g2w01-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 14:38:52 -0500
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Wed, 7 Nov 2018 19:38:51 -0000
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 7 Nov 2018 19:38:45 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id wA7JciC319988698
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 7 Nov 2018 19:38:44 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6E22DB2065;
+        Wed,  7 Nov 2018 19:38:44 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 43B3EB2067;
+        Wed,  7 Nov 2018 19:38:44 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.190.52])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed,  7 Nov 2018 19:38:44 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 1AD9F16C41EE; Wed,  7 Nov 2018 11:38:44 -0800 (PST)
+Date: Wed, 7 Nov 2018 11:38:44 -0800
+From: "Paul E. McKenney" <paulmck@linux.ibm.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch 2/2] Documentation/process: Add tip tree handbook
+Reply-To: paulmck@linux.ibm.com
+References: <20181107171010.421878737@linutronix.de>
+ <20181107171149.165693799@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107171149.165693799@linutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 18110719-2213-0000-0000-0000031317BF
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010003; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000268; SDB=6.01114102; UDB=6.00577581; IPR=6.00894201;
+ MB=3.00024064; MTD=3.00000008; XFM=3.00000015; UTC=2018-11-07 19:38:49
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 18110719-2214-0000-0000-00005C2CC033
+Message-Id: <20181107193844.GY4170@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2018-11-07_15:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1807170000 definitions=main-1811070174
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3VkKAP+NbnAoZAA--.656S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3Gw1DtrykGry8CFWDWw4rZrb_yoW3AF15pr
+	ZxtrnxCr4DJry2y3Z7Xw1xZF9YkrWrtay7JrykC345AFZ8uF1IqF13ta1rZFW7Cry5C3y2
+	qF42qr1UC3yDAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvvb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UMx02cVCv0xWlc7
+	CjxVAKzI0EY4vE52x082I5MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVWU
+	CVW8JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMxvI42IY6I8E87Iv67AKxVW8Jr
+	0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK
+	82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
+	6rW5MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73Uj
+	IFyTuYvjxU9J73DUUUU
+
+On Wed, Nov 07, 2018 at 06:10:12PM +0100, Thomas Gleixner wrote:
+> Add a document to the subsystem/maintainer handbook section, which explains
+> what the tip tree is, how it operates and what rules and expectations it
+> has.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+
+A few more suggestions below, again to new text.  I have, admittedly
+uncharacteristically, trimmed the patch.  ;-)
+
+Reviewed-by: Paul E. McKenney <paulmck@linux.ibm.com>
+
+> ---
+>  Documentation/process/maintainer-handbooks.rst |    2 
+>  Documentation/process/maintainer-tip.rst       |  796 +++++++++++++++++++++++++
+>  2 files changed, 798 insertions(+)
+> 
+> --- a/Documentation/process/maintainer-handbooks.rst
+> +++ b/Documentation/process/maintainer-handbooks.rst
+> @@ -12,3 +12,5 @@ which is supplementary to the general de
+>  .. toctree::
+>     :numbered:
+>     :maxdepth: 2
+> +
+> +   maintainer-tip
+> --- /dev/null
+> +++ b/Documentation/process/maintainer-tip.rst
+> @@ -0,0 +1,796 @@
+> +The tip tree handbook
+> +=====================
+> +
+> +What is the tip tree?
+> +---------------------
+> +
+> +The tip tree is a collection of several subsystems and areas of
+> +development. The tip tree is both a direct development tree and a
+> +aggregation tree for several sub-maintainer trees. The tip tree gitweb URL
+> +is: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+> +
+> +The tip tree contains the following subsystems:
+> +
+> +   - **x86 architecture**
+> +
+> +     The x86 architecture development takes place in the tip tree except
+> +     for the x86 KVM and XEN specific parts which are maintained in the
+> +     corresponding subsystems and routed directly to mainline from
+> +     there. It's still good practice to Cc the x86 maintainers on
+> +     x86-specific KVM and XEN patches.
+> +
+> +     Some x86 subsystems have their own maintainers in addition to the
+> +     overall x86 maintainers.  Please Cc the overall x86 maintainers on
+> +     patches touching files in arch/x86 even when they are not called out
+> +     by the MAINTAINER file.
+> +
+> +     Note, that ``x86@kernel.org`` is not a mailing list. It is merely a
+> +     mail alias which distributes mails to the x86 top-level maintainer
+> +     team. Please always Cc the Linux Kernel mailing list (LKML)
+> +     ``linux-kernel@vger.kernel.org``, otherwise your mail ends up only in
+> +     the private inboxes of the maintainers.
+> +
+> +   - **Scheduler**
+> +
+> +   - **Locking and atomics**
+> +
+> +   - **Generic interrupt subsystem and interrupt chip drivers**:
+> +
+> +     - interrupt core development happens in the irq/core branch
+> +
+> +     - interrupt chip driver development happens also in the irq/core
+> +       branch, but the patches are mostly applied in a separate maintainer
+
+        - interrupt chip driver development also happens in the irq/core
+          branch, but the patches are usually applied in a separate maintainer
+
+> +       tree and then aggregated into irq/core
+> +
+> +   - **Time, timers, timekeeping, NOHZ and related chip drivers**:
+> +
+> +     - timekeeping, clocksource core, NTP and alarmtimer development
+> +       happens in the timers/core branch, but patches are mostly applied in
+
+          happens in the timers/core branch, but patches are usually applied in
+
+> +       a separate maintainer tree and then aggregated into timers/core
+> +
+> +     - clocksource/event driver development happens in the timers/core
+> +       branch, but patches are mostly applied in a separate maintainer tree
+> +       and then aggregated into timers/core
+> +
+> +   - **Performance counters core, architecture support and tooling**:
+> +
+> +     - perf core and architecture support development happens in the
+> +       perf/core branch
+> +
+> +     - perf tooling development happens in the perf tools maintainer
+> +       tree and is aggregated into the tip tree.
+> +
+> +   - **CPU hotplug core**
+> +
+> +   - **RAS core**
+> +
+> +   - **EFI core**
+> +
+> +     EFI development in the efi git tree. The collected patches are
+> +     aggregated in the tip efi/core branch.
+> +
+> +   - **RCU**
+> +
+> +     RCU development happens in the linux-rcu tree. The resulting changes
+> +     are aggregated into the tip core/rcu branch.
+> +
+> +   - **Various core code components**:
+> +
+> +       - debugobjects
+> +
+> +       - objtool
+> +
+> +       - random bits and pieces
+
+[ . . . ]
+
+> +Backtraces in changelogs
+> +^^^^^^^^^^^^^^^^^^^^^^^^
+> +
+> +Backtraces can be useful to document the call chain which led to a
+> +problem. Though not all back traces are really valuable because the call
+> +chain is unique and obvious, e.g. in early boot code. Just copying the full
+> +dmesg output is adding a lot of distracting information like timestamps,
+> +module lists, register and stack dumps etc.
+
+   Backtraces help document the call chain leading to a problem. However,
+   not all back traces are helpful, for example. early boot call chains
+   are unique and obvious. Furthermore, copying the full dmesg output
+   adds distracting information like timestamps, module lists, register
+   and stack dumps.
+
+> +Reducing the backtrace to the real relevant data helps to concentrate on
+> +the issue and not being distracted by destilling the relevant information
+> +out of the dump. Here is an example of a well trimmed backtrace::
+
+   In constrast, the most useful backtraces distill the relevant
+   information from the dump, which makes it easier to focus on the
+   real issue.  Here is an example of a well-trimmed backtrace::
+
+> +  unchecked MSR access error: WRMSR to 0xd51 (tried to write 0x0000
+> +  000000000064) at rIP: 0xffffffffae059994 (native_write_msr+0x4/0x20)
+> +  Call Trace:
+> +  mba_wrmsr+0x41/0x80
+> +  update_domains+0x125/0x130
+> +  rdtgroup_mkdir+0x270/0x500
+
+[ . . . ]
+
+> +Namespaces
+> +^^^^^^^^^^
+> +
+> +To improve readability and to allow easy grepping for information the usage
+> +of consistent namespaces is important. The namespace should be used as a
+> +prefix for globally visible (inline) functions and variables. A simple rule
+> +for chosing a namespace prefix is to combine the subsystem and the
+> +component name, e.g. 'x86_comp\_', 'sched\_', 'irq\_', 'mutex\_', etc. For
+> +static functions and variables the namespace prefix can be omitted.
+
+   Function/variable namespaces improve readability and allow easy
+   grepping.  These namespaces are prefixes for globally visible function
+   and variable names, including inlines.  These prefixes should combine
+   the subsystem and the component name such as 'x86_comp\_', 'sched\_',
+   'irq\_', and 'mutex\_'.  Namespace prefixes may be omitted for local
+   static functions and variables.
+
+> +Also be careful when using vendor names in namespaces. There is no value of
+> +having 'xxx_vendor\_' or 'vendor_xxx_` as prefix for all static functions
+> +of a vendor specific file as it is already clear that the code is vendor
+> +specific. Aside of that vendor names should only be used when it is really
+> +vendor specific functionality.
+
+   Please note that 'xxx_vendor\_' and 'vendor_xxx_` prefixes are not
+   helpful for static functions in vendor-specific files. After all,
+   it is already clear that the code is vendor specific. In addition,
+   vendor names should only be for truly vendor-specific functionality.
+
+> +As always apply common sense and aim for consistency and readability.
+> +
+> +
+> +Commit notifications
+> +--------------------
+> +
+> +The tip tree is monitored by a bot for new commits. The bot sends an email
+> +for each new commit to a dedicated mailing list
+> +(``linux-tip-commits@vger.kernel.org``) and Cc's all people who are
+> +mentioned in one of the commit tags. It uses the email message id from the
+> +Link tag at the end of the tag list to set the In-Reply-To email header so
+> +the message is properly threaded with the patch submission email.
+> +
+> +The maintainers try to reply to the submitter when merging a patch, but
+> +they sometimes forget or it does not fit the workflow of the moment. While
+> +the bot message is purely mechanical assume it implies a 'Thank you!
+> +Applied.'.
+> 
+> 

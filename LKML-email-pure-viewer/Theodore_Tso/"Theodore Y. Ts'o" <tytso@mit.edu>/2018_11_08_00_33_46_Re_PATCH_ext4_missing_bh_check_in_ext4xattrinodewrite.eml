@@ -1,0 +1,179 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:52 -0000
+Received: from icoremail.net (unknown [209.85.210.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH0IXFONbEzZZAQ--.26639S3;
+	Thu, 08 Nov 2018 00:34:32 +0800 (CST)
+Received: from mail-pf1-f181.google.com (unknown [209.85.210.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3G0cTFONbZFUYAA--.13942S3;
+	Thu, 08 Nov 2018 00:34:27 +0800 (CST)
+Received: by mail-pf1-f181.google.com with SMTP id x2-v6so3830962pfm.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:34:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:mail-followup-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=UaXXjSeX5KEIi27cXQdt86WNOwPjgRtNmZk+P+yUNeQ=;
+        b=nmH5Q4UwQRXOYCXeit08stfZeebBNraqwIvMyQuTmISeQUzc0LjUWvdsphUD44OehU
+         a81ZtvrSMU/XSBgiNIVjchgp3Zt7lHPesxSuLKr9sC0oeyyPgWTVcaU8Yml0zWqyNGW3
+         cYdtHYIgflgs21kJ02CrpBt2CuIgjtIEmzDlqOshWMxXTuwZI5aYe3JffaN0tz7T7CJm
+         EmIvQGyE+vF73ofK4qxTcJ9HsbjCoYlv0vswBAha1B+U4nKtlmqcuZldw/0lEqXbOzKT
+         M0u1/AcvXvx9CSTkXqBhA/Wj4NVBJNz5jLmTGGs6WQ/9+PgXxFhG6CnpE1tyfnuPVO+a
+         /C1Q==
+X-Gm-Message-State: AGRZ1gLBhUze+uUj6kJ3W7Ctu+lUaK16kLzOaZN1fXogUOrKkyMwWKxh
+	Nh82gbwl+cq5b8Z0c/M19eHLhamJxR9mOgc7FiWyY6LMXVwBw4rXmw==
+X-Received: by 2002:a62:22c3:: with SMTP id p64-v6mr915279pfj.9.1541608467431;
+        Wed, 07 Nov 2018 08:34:27 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5457829pjt;
+        Wed, 7 Nov 2018 08:34:26 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dVgFQchAfLhxJPI0c/071+sX5vrMXfcUUA63KHbRGUeY3fzvomHGu2QHvud7ZbKAbZ70pT
+X-Received: by 2002:a62:e30a:: with SMTP id g10-v6mr876382pfh.151.1541608466525;
+        Wed, 07 Nov 2018 08:34:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541608466; cv=none;
+        d=google.com; s=arc-20160816;
+        b=a8uPHRInQktAvlYLJhQM+CrxlAOIQecNLd+C3dL6jfku1TKm2FchdrwkDuOKjT3yng
+         K6uREQheja3x7h/q5iAI0R1Uk/CwW8fG1MNN1tznGTUyIoCNZ11OQEwDKFLxgNslHyZU
+         6QEONv4swnYN8W5tEx5Hm0lzrYT9wg0DGi2IWQRMCWvf74JmhkLn3+pl1Sjc3yoEQviD
+         1QL1iq/dFLzkRTfbLXMSkUXz+JYj1IgaHial7ggPeT/bWscSC8JFyr9NqyOLDoZI5WI8
+         w3zJrX+LxNZpQiLkhWLsFfjGdlo4DKHHTkmjGKfz9QmLfVsPnHQNqGwWHwiknOAMtUyM
+         nDxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:mail-followup-to
+         :message-id:subject:cc:to:from:date:dkim-signature;
+        bh=UaXXjSeX5KEIi27cXQdt86WNOwPjgRtNmZk+P+yUNeQ=;
+        b=qG8+k3Ux/mWOW3vKVgK/sFLAGRPL6/pIz29KAgh1xSa0MH7jTuI3tSprHzZ64t8hAa
+         4ijMYHfvmqu5unXCaKt0XwtQI0Uxun5v3gGmmujySo+oZYM5e1s5pcmitYaX99WXdg+V
+         wAAnaZassRq1HlGt0ZLn82ZTJitqusj9tTHOyLylkm9YfUAhTIavk6Q8H1QfMduUuHPE
+         oSQXonCb/L/MfnPfdTJA8jRzMJsR8Ekb9QRsWw+eHkb91SuBRMykG2e/NIeVW2fB5Aoo
+         spIumEA6lzuSc1tau8O/772BwALNY6WyNsCf0bKahBWYq1CuekQ1dtTxYDdIWbExa7Jt
+         TN8Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@thunk.org header.s=ef5046eb header.b=CK69W+RY;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id r199-v6si1390981pfr.105.2018.11.07.08.34.10;
+        Wed, 07 Nov 2018 08:34:26 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728023AbeKHCEz (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:04:55 -0500
+Received: from imap.thunk.org ([74.207.234.97]:49530 "EHLO imap.thunk.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726752AbeKHCEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:04:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=thunk.org;
+         s=ef5046eb; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=UaXXjSeX5KEIi27cXQdt86WNOwPjgRtNmZk+P+yUNeQ=; b=CK69W+RYUSutJJSptevpZ+yG5m
+        2BB20a4P9ms2MzGhO2aJWCz/v2w7juLILU+L8/6IMXcvxUJnSZ4O+2Wyc9w8H7q/KpP4Kz115YAgg
+        Xlw8CdT9WDpuodDGhzvEnrZgaTkimh14o8z8bsMByYC8bqkCJBFh+zKYzjgiH8V8Y2wE=;
+Received: from root (helo=callcc.thunk.org)
+        by imap.thunk.org with local-esmtp (Exim 4.89)
+        (envelope-from <tytso@thunk.org>)
+        id 1gKQm3-0000dj-Of; Wed, 07 Nov 2018 16:33:47 +0000
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id F023D7A7D18; Wed,  7 Nov 2018 11:33:46 -0500 (EST)
+Date: Wed, 7 Nov 2018 11:33:46 -0500
+From: "Theodore Y. Ts'o" <tytso@mit.edu>
+To: Vasily Averin <vvs@virtuozzo.com>
+Cc: linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ext4: missing !bh check in ext4_xattr_inode_write()
+Message-ID: <20181107163346.GH9919@thunk.org>
+Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Vasily Averin <vvs@virtuozzo.com>, linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-kernel@vger.kernel.org
+References: <710ddac8-eb88-e631-3b27-74410039d15f@virtuozzo.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <710ddac8-eb88-e631-3b27-74410039d15f@virtuozzo.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: tytso@thunk.org
+X-SA-Exim-Scanned: No (on imap.thunk.org); SAEximRunCond expanded to false
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3G0cTFONbZFUYAA--.13942S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr43uF4xCFWktr15Kr1DGFg_yoW8ZFyrpr
+	43tF1DAF1DWrZ7K397uF15t34v9a17KFWUCryYq3s8Zryaqr1SqFy3WFWYvF1F9rWkua1j
+	qF409F9rZ3ZxuFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBSb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4w
+	CY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VWUMxkI
+	7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8JVWxJwCYIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8Jr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x
+	804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42
+	xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUqM7KUUUUU
+
+On Sun, Nov 04, 2018 at 08:29:39PM +0300, Vasily Averin wrote:
+> ext4_getblk() called with map_flags=0 can return NULL,
+> it can lead to oops on bh dereferemce
+> 
+> Fixes e50e5129f384 ("ext4: xattr-in-inode support")
+> Cc: stable@kernel.org # 4.13
+> 
+> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+> ---
+>  fs/ext4/xattr.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
+> index 0b9688683526..6dc6c70828f0 100644
+> --- a/fs/ext4/xattr.c
+> +++ b/fs/ext4/xattr.c
+> @@ -1384,6 +1384,8 @@ static int ext4_xattr_inode_write(handle_t *handle, struct inode *ea_inode,
+>  		bh = ext4_getblk(handle, ea_inode, block, 0);
+>  		if (IS_ERR(bh))
+>  			return PTR_ERR(bh);
+> +		if (!bh)
+> +			return -ENOMEM;
+
+ext4_getblk() should never return NULL here; and if it does, it won't
+be because of ENOMEM.  If we did have a memory allocation problem, we
+would have returned ERR_PTR(-ENOMEM). 
+
+In the while loop above this point, the blocks in ea_inode would have
+been allocated, and so when ext4_getblk() is called with map_flags ==
+0, it will return NULL if there is a hole in the inode --- but we had
+*just* allocated the blocks in question.
+
+The only time that bh could be NULL, then, would be in the case of
+something really going wrong; a programming error elsewhere (perhaps a
+wild pointer dereference) or I/O error causing on-disk file system
+corruption (although that would be highly unlikely given that we had
+*just* allocated the blocks and so the metadata blocks in question
+probably would still be in the cache).
+
+If we do want to handle this case, what we should do is something like
+call WARN_ON_ONCE(1), call ext4_error() since the file system may have
+gotten corrupted, and then return -EFSCORRUPTED.
+
+(Linus has said that there should be no new BUG_ON's, so the
+WARN_ON_ONE is to help debugging, and flaging the file system as
+corrupted is probably the best we could do here, and is marginally
+better than what we do now, which is just let the Oops take place.)
+
+						- Ted

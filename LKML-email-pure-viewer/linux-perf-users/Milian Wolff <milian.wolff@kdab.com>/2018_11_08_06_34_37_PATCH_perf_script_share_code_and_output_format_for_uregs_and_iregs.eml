@@ -1,0 +1,262 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:03 -0000
+Received: from icoremail.net (unknown [209.85.215.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH+ahaONbhzNbAQ--.27199S3;
+	Thu, 08 Nov 2018 06:35:14 +0800 (CST)
+Received: from mail-pg1-f179.google.com (unknown [209.85.215.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXN0OdaONbQ5cZAA--.2243S3;
+	Thu, 08 Nov 2018 06:35:10 +0800 (CST)
+Received: by mail-pg1-f179.google.com with SMTP id k1-v6so7940589pgq.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:35:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:mime-version:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=+St47CVkLCy3scR3OzbCKXkW7eVgZD8rF5Dw+IFH6xM=;
+        b=jIcpd0w5W42cEsXPSPuxA+ezhUl0f0ejBPnC4L7kucaEexXZG/YN8EoAtmAswA1my5
+         Kz4kWe+qYS5TrSkfdt/4kbAarERDSRfO+uaN2lBIjCTXVjyvit8teuNd7yUETXcZbXQy
+         5xpNGHzIQHt/VcexwMjVk/X7aR3wrgR82v547WQdcqvo4NYfBDrA3tDTbIg8mYOejMna
+         JajiQ13qqGnoFO6jO2ZUu2frVzeHPPicDQBvFD0x4LL1yVRW5NI5ZXPns/0p3m8A3pEj
+         YifC4E1rD8s7EgPWLTz4X2wWN2KV0KSc/mdEWkTAiSPQdQ69uzPjmeRD+WmgCFEN1SUQ
+         Pczg==
+X-Gm-Message-State: AGRZ1gLAz0NJhokZuPcT/Tgj3TC8RLJVHun8D+yxmsebpOjRyqQCU/w5
+	g/ehEXdridvRoZ4JKsz9sJCUNdL0N8/1Kkdwuf6oCmpb8BBrky+Unw==
+X-Received: by 2002:a63:40c2:: with SMTP id n185-v6mr1835910pga.116.1541630109607;
+        Wed, 07 Nov 2018 14:35:09 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp83047pjt;
+        Wed, 7 Nov 2018 14:35:08 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cZiC9TTGYJnViXWYkRIptd/2cj/YLk+gVtjP70/+pNptFmCa/VQy4HpqnBUTJ567TqbOI1
+X-Received: by 2002:a63:194f:: with SMTP id 15mr1827034pgz.192.1541630108728;
+        Wed, 07 Nov 2018 14:35:08 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541630108; cv=none;
+        d=google.com; s=arc-20160816;
+        b=BuwqdWZbD/b29JQF5zUTglL8Wux4b6r3v7VxIn14EADAfSJLBlWgU3IG9PdyJR4l5r
+         +lr9C69yGAI/CPBpncQ5K/KKv65tTSTXq7TrL8TCE5Gm9Vxt/e2gHvZMVw/M7QyB3sjW
+         74rUCK9jD1NbdyNOpSNnMhuiznLsic1AscPbdnMI3Q41xbCYZ6KEBnqTkofGG+3tWdCm
+         ipWtJBON1uo6YJvQ/s6+VSlSub2RhHJN7+P8VHWhFnawvy9GKVKvHD8PeAaYxft+q03G
+         C0xRh73ATopIIRfeg+8lpz8w2eipOE0o1h3CoO2KbwhG+kFtlML1Uy0WmHRjicClHOjI
+         Avnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :message-id:date:subject:cc:to:from:dkim-signature;
+        bh=+St47CVkLCy3scR3OzbCKXkW7eVgZD8rF5Dw+IFH6xM=;
+        b=JFIWQGDwN2g8zTFZuF7j/9jeoSetOytp4qtrNWARqXBYLEzNK9eocPJK2O4qDZ0MpW
+         f7RBiUEhGGRPD0K0gJ8BMqV6sh1jTB/+TZdrFj6aPwFaOilaiRnp2af5OWjtPf8Qpaa2
+         cM/zGfQj6PMtq8I4epteVAf+9+W7mY67FZUm+IfCkQTYR2F+Lx8qrZ/XOjpUqIQ9qlRT
+         Dx7P3o8kf3QarchzAjx1kFahEFxvWy8MPSaGbAk2kxlCO7L9tHOdv7OzDrgDlhgD06w+
+         OG03r5yPDe3+1pidjBLWgo1wb3GL6uJd6MWkMoLx8qOqUUtMybZpBQrEAIPoV3H9K/e9
+         khhg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kdab.com header.s=dkim header.b="si/v+yPn";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=kdab.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b1-v6si1561123pgl.235.2018.11.07.14.34.53;
+        Wed, 07 Nov 2018 14:35:08 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728235AbeKHIHM (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:07:12 -0500
+Received: from mail.kdab.com ([176.9.126.58]:60632 "EHLO mail.kdab.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727591AbeKHIHL (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:07:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdab.com; h=
+ content-transfer-encoding:mime-version:message-id:date:date
+ :subject:subject:from:from; s=dkim; t=1541630080; x=1542494081;
+ bh=+St47CVkLCy3scR3OzbCKXkW7eVgZD8rF5Dw+IFH6xM=; b=si/v+yPnTqb/
+ CdetbkLo3UcvWNRqxOlI8hw07GD3w53S4MnuJlCuwpXHwBa0vQPeLUyxyzI2cXY9
+ w6ZIVphcvU5/4kB+MFJFmW3K34OkLxNuZmbsPDUynxOZaagfrRnIwdQljYI5a0we
+ xumhZA1e+8ZAVXr7rd//ltIhVCMZho0=
+X-Virus-Scanned: amavisd-new at kdab.com
+From: Milian Wolff <milian.wolff@kdab.com>
+To: acme@kernel.org, jolsa@kernel.org
+Cc: Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Milian Wolff <milian.wolff@kdab.com>
+Subject: [PATCH] perf script: share code and output format for uregs and iregs
+ output
+Date: Wed,  7 Nov 2018 23:34:37 +0100
+Message-Id: <20181107223437.9071-1-milian.wolff@kdab.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXN0OdaONbQ5cZAA--.2243S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3Xr43Kw18JFyxAFWftr1rCrg_yoWxXw1DpF
+	Wakr13tr13JFn5uw43trn5G3W5Krn2v3yjyw18t3yUXan09FyqqFy8Kry5Cr9xGr13Kr17
+	Gr4kJF4UJ34DJaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
+	6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW3MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY
+	6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUHoa0
+	DUUUU
+
+The iregs output was missing the newline at end as well as the leading
+ABI output. This made it hard to compare the iregs and uregs values.
+Instead, use a single function to output the register values and use
+it for both, iregs and uregs, to ensure the output is consistent.
+
+Before:
+
+```
+perf  7049 [-01]  1343.354347:          1 cycles:ppp:
+        ffffffffa7bc21ce perf_event_exec+0x18e (/lib/modules/4.20.0-rc1pe=
+rf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+        ffffffffa7c7ead3 setup_new_exec+0xf3 (/lib/modules/4.20.0-rc1perf=
+-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+        ffffffffa7cd7be5 load_elf_binary+0x395 (/lib/modules/4.20.0-rc1pe=
+rf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+        ffffffffa7c7e540 search_binary_handler+0x80 (/lib/modules/4.20.0-=
+rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+        ffffffffa7c7f1aa __do_execve_file.isra.13+0x58a (/lib/modules/4.2=
+0.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+        ffffffffa7c7f561 do_execve+0x21 (/lib/modules/4.20.0-rc1perf-deve=
+l-05115-gc0bc98f76e39-dirty/build/vmlinux)
+        ffffffffa7c7f596 __x64_sys_execve+0x26 (/lib/modules/4.20.0-rc1pe=
+rf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+        ffffffffa7a041cb do_syscall_64+0x5b (/lib/modules/4.20.0-rc1perf-=
+devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+        ffffffffa840008c entry_SYSCALL_64+0x7c (/lib/modules/4.20.0-rc1pe=
+rf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+   AX:0x80000000    BX:0x0    CX:0x0    DX:0x7    SI:0xf    DI:0x286    B=
+P:0xffff95bc8213a460    SP:0xffffacbf0ba97d18    IP:0xffffffffa7bc21cd FL=
+AGS:0x28e    CS:0x10    SS:0x18    R8:0x2    R9:0x21440   R10:0x33816fb3b=
+8c   R11:0x1   R12:0xffff95bc8213a460   R13:0xffff95bc8213a400   R14:0xff=
+ff95bc8213a400   R15:0x1  ABI:2    AX:0xffffffffffffffda    BX:0xffffffff=
+ffffffff    CX:0x7f84ad85798b    DX:0x560209699d50    SI:0x7ffe2c7a6820  =
+  DI:0x7ffe2c7a8c9b    BP:0x7ffe2c7a20d0    SP:0x7ffe2c7a2058    IP:0x7f8=
+4ad85798b FLAGS:0x206    CS:0x33    SS:0x2b    R8:0x7ffe2c7a2030    R9:0x=
+7f84ae55f010   R10:0x8   R11:0x206   R12:0xffffffffffffffff   R13:0xfffff=
+fffffffffff   R14:0xffffffffffffffff   R15:0xffffffffffffffff
+
+perf  7049 [-01]  1343.354363:          1 cycles:ppp:
+        ...
+```
+
+After:
+
+```
+perf  7049 [-01]  1343.354347:          1 cycles:ppp:
+        ffffffffa7bc21ce perf_event_exec+0x18e (/lib/modules/4.20.0-rc1pe=
+rf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+        ffffffffa7c7ead3 setup_new_exec+0xf3 (/lib/modules/4.20.0-rc1perf=
+-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+        ffffffffa7cd7be5 load_elf_binary+0x395 (/lib/modules/4.20.0-rc1pe=
+rf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+        ffffffffa7c7e540 search_binary_handler+0x80 (/lib/modules/4.20.0-=
+rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+        ffffffffa7c7f1aa __do_execve_file.isra.13+0x58a (/lib/modules/4.2=
+0.0-rc1perf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+        ffffffffa7c7f561 do_execve+0x21 (/lib/modules/4.20.0-rc1perf-deve=
+l-05115-gc0bc98f76e39-dirty/build/vmlinux)
+        ffffffffa7c7f596 __x64_sys_execve+0x26 (/lib/modules/4.20.0-rc1pe=
+rf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+        ffffffffa7a041cb do_syscall_64+0x5b (/lib/modules/4.20.0-rc1perf-=
+devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+        ffffffffa840008c entry_SYSCALL_64+0x7c (/lib/modules/4.20.0-rc1pe=
+rf-devel-05115-gc0bc98f76e39-dirty/build/vmlinux)
+ ABI:2    AX:0x80000000    BX:0x0    CX:0x0    DX:0x7    SI:0xf    DI:0x2=
+86    BP:0xffff95bc8213a460    SP:0xffffacbf0ba97d18    IP:0xffffffffa7bc=
+21cd FLAGS:0x28e    CS:0x10    SS:0x18    R8:0x2    R9:0x21440   R10:0x33=
+816fb3b8c   R11:0x1   R12:0xffff95bc8213a460   R13:0xffff95bc8213a400   R=
+14:0xffff95bc8213a400   R15:0x1
+ ABI:2    AX:0xffffffffffffffda    BX:0xffffffffffffffff    CX:0x7f84ad85=
+798b    DX:0x560209699d50    SI:0x7ffe2c7a6820    DI:0x7ffe2c7a8c9b    BP=
+:0x7ffe2c7a20d0    SP:0x7ffe2c7a2058    IP:0x7f84ad85798b FLAGS:0x206    =
+CS:0x33    SS:0x2b    R8:0x7ffe2c7a2030    R9:0x7f84ae55f010   R10:0x8   =
+R11:0x206   R12:0xffffffffffffffff   R13:0xffffffffffffffff   R14:0xfffff=
+fffffffffff   R15:0xffffffffffffffff
+
+perf  7049 [-01]  1343.354363:          1 cycles:ppp:
+        ...
+```
+
+Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+---
+ tools/perf/builtin-script.c | 40 ++++++++++++++++---------------------
+ 1 file changed, 17 insertions(+), 23 deletions(-)
+
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index daf73832743e..04913136bac9 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -566,30 +566,10 @@ static int perf_session__check_output_opt(struct pe=
+rf_session *session)
+ 	return 0;
+ }
+=20
+-static int perf_sample__fprintf_iregs(struct perf_sample *sample,
+-				      struct perf_event_attr *attr, FILE *fp)
+-{
+-	struct regs_dump *regs =3D &sample->intr_regs;
+-	uint64_t mask =3D attr->sample_regs_intr;
+-	unsigned i =3D 0, r;
+-	int printed =3D 0;
+-
+-	if (!regs)
+-		return 0;
+-
+-	for_each_set_bit(r, (unsigned long *) &mask, sizeof(mask) * 8) {
+-		u64 val =3D regs->regs[i++];
+-		printed +=3D fprintf(fp, "%5s:0x%"PRIx64" ", perf_reg_name(r), val);
+-	}
+-
+-	return printed;
+-}
+-
+-static int perf_sample__fprintf_uregs(struct perf_sample *sample,
+-				      struct perf_event_attr *attr, FILE *fp)
++static int perf_sample__fprintf_regs(struct regs_dump *regs, uint64_t ma=
+sk,
++				     FILE *fp
++)
+ {
+-	struct regs_dump *regs =3D &sample->user_regs;
+-	uint64_t mask =3D attr->sample_regs_user;
+ 	unsigned i =3D 0, r;
+ 	int printed =3D 0;
+=20
+@@ -608,6 +588,20 @@ static int perf_sample__fprintf_uregs(struct perf_sa=
+mple *sample,
+ 	return printed;
+ }
+=20
++static int perf_sample__fprintf_iregs(struct perf_sample *sample,
++				      struct perf_event_attr *attr, FILE *fp)
++{
++	return perf_sample__fprintf_regs(&sample->intr_regs,
++					 attr->sample_regs_intr, fp);
++}
++
++static int perf_sample__fprintf_uregs(struct perf_sample *sample,
++				      struct perf_event_attr *attr, FILE *fp)
++{
++	return perf_sample__fprintf_regs(&sample->user_regs,
++					 attr->sample_regs_user, fp);
++}
++
+ static int perf_sample__fprintf_start(struct perf_sample *sample,
+ 				      struct thread *thread,
+ 				      struct perf_evsel *evsel,
+--=20
+2.19.1

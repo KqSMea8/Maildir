@@ -1,0 +1,203 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:13 -0000
+Received: from icoremail.net (unknown [209.85.214.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv5q_++JbAqBYAQ--.26520S3;
+	Wed, 07 Nov 2018 22:50:40 +0800 (CST)
+Received: from mail-pl1-f173.google.com (unknown [209.85.214.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3H0t6+uJbZuQXAA--.7097S3;
+	Wed, 07 Nov 2018 22:45:14 +0800 (CST)
+Received: by mail-pl1-f173.google.com with SMTP id o19-v6so7940558pll.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:45:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references:sender
+         :precedence:list-id;
+        bh=eyAMa4jxAybAUfKZyOz03nHzABmuowAaRchxukYjamI=;
+        b=mKdXdF2C6njF+a9lbBMXDnKdzcqcI4mizJv0wbxYaBaoquEVZXDjZGkzrLa1/D9BSX
+         Qbndz+spSYm10APqoMH7o811JnoNgD3COX4s677kzMKw+FipG9CChrvJTc7pCazr1oxA
+         X5mLdz3RSyV9bnI5r7YrF4kC5+pCLkN+7YQumiVs9TIcRjuU2eGz7JItyEWrsbwiY6Pf
+         0f+0W4b0Ks9F0ASp2EMi/pQKI8z9INu3ngzJ1uFnkQINuu2DLZx+s460iWs1THRvT3OY
+         GogLfyGO73XITYhRitAed06P80LA+ZHbMPxsvLTjvCgRDK7Iggdeg4Ma/CBg4dqWCYd+
+         aGDg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKqAJ4S+vfV/ZskvdHmElKTa9fI58G/VxjlYOOj90ve9N9mFHae
+	n8t+/yJQ31QLvDtixBanbU9RqB+LNB9xXxFuuSJvngy0nqyUtWwVvA==
+X-Received: by 2002:a17:902:1026:: with SMTP id b35-v6mr488830pla.283.1541601913922;
+        Wed, 07 Nov 2018 06:45:13 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5333388pjt;
+        Wed, 7 Nov 2018 06:45:13 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dIMeyPghN3Pbf1Pm1NST9Rgy2EkAb3/gwb7JgpF67rFj42XDWxYlzzdLAQ3KzCPxvimAfH
+X-Received: by 2002:a62:1552:: with SMTP id 79-v6mr493216pfv.120.1541601913056;
+        Wed, 07 Nov 2018 06:45:13 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541601913; cv=none;
+        d=google.com; s=arc-20160816;
+        b=lifGuWm4k+HGUrzdHgLurOrRAXrOf4z2Occ52sMwWrpyLYtDPPmwqjhMRq0zpm311d
+         pDIxuIewqZqasXflBf7eEW/qPuMBtg7kC4gkLYsshXjVN9y+mUKJl4in7o685wLEHnqH
+         ineNkpC28qlXSoxWKkWeonNgstAu9rP+LlIoVBl4MdzczqwswWeOQbYAS/K6J8c8rbGS
+         8OyECtklm9wCy36yWT96IPQzBGODGXfnir333Jw857OZ156kk/VyQxTB6B4C3fJf66xt
+         mDI4zlp/eYzzUs5Xb4lE9FuwJUWjUTDPJ3leKbm6njJGmcvwLJvxiVTAwGyiaZix3O4q
+         gykQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from;
+        bh=eyAMa4jxAybAUfKZyOz03nHzABmuowAaRchxukYjamI=;
+        b=AxVChMXAMWGddEJA6lIq5xkRm5/Sv6N77SBa41o+IHXblLTA+1b/hzbfloLeYVsmDB
+         uikl1ilYtbgODeurkf+/C+eLZcTKz/SsjGaZ59XizyTphmhAr8t/2dTXwaaF5E6pNPiI
+         PIIs40i+LxfJXHhy4TIs7Nzi+DsXqcfYmiA9IeQFoxpxvYJgprEyWIx760susBKLYYGB
+         NqjDmQL5g1qaG7FomhWn9jdKzswD5HdkiAeqyH8PTIx/VW2SFhiye5vLwWserJxzAvFX
+         +v8hP7XLYnvDBbC6Xu+chqAMDcoPvUlw1irbzHVzZhdY4CU/LSuno7p4U4JZxYQNbYO2
+         9Ndw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id t64-v6si873154pfd.58.2018.11.07.06.44.58;
+        Wed, 07 Nov 2018 06:45:13 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730583AbeKHAPX (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:15:23 -0500
+Received: from mo4-p05-ob.smtp.rzone.de ([85.215.255.133]:20269 "EHLO
+        mo4-p05-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbeKHAPW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:15:22 -0500
+X-RZG-AUTH: ":LX8JdEmkW/4tAFwMkcNJIloh1hrA5u3owhPk7bdT5Fx22AatU+eLaHfutoZdl+X9BETxn4/4+IVqx7ZdE8mPU5nMS5P2QgHAetWm5FNngAjmE0pFNjw="
+X-RZG-CLASS-ID: mo05
+Received: from fs-work.fritz.box
+        by smtp.strato.de (RZmta 44.3 AUTH)
+        with ESMTPSA id j097e4uA7EiCUQm
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 7 Nov 2018 15:44:12 +0100 (CET)
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
+To: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com,
+        linux-spi@vger.kernel.org
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com,
+        marek.vasut@gmail.com, richard@nod.at, miquel.raynal@bootlin.com,
+        broonie@kernel.org, david.wolfe@nxp.com, fabio.estevam@nxp.com,
+        prabhakar.kushwaha@nxp.com, yogeshnarayan.gaur@nxp.com,
+        han.xu@nxp.com, shawnguo@kernel.org,
+        Frieder Schrempf <frieder.schrempf@exceet.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 03/10] dt-bindings: spi: Adjust the bindings for the FSL QSPI driver
+Date: Wed,  7 Nov 2018 15:43:20 +0100
+Message-Id: <1541601809-16950-4-git-send-email-frieder.schrempf@kontron.de>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1541601809-16950-1-git-send-email-frieder.schrempf@kontron.de>
+References: <1541601809-16950-1-git-send-email-frieder.schrempf@kontron.de>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3H0t6+uJbZuQXAA--.7097S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxGrW8CF4rCr45ArWfury7GFg_yoW5uF4Upa
+	yftrW7tr48tr17C3s2y3W8C3WYk3s3JF42vrn3C3Wavan8WF18Xr4Sg3Z0qFy7GF95ZFZ8
+	tFWxGw1fJr1Dur7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP2b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW5XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IU5F-
+	e5UUUUU==
+
+From: Frieder Schrempf <frieder.schrempf@exceet.de>
+
+Adjust the documentation of the new SPI memory interface based
+driver to reflect the new drivers settings.
+
+The "old" driver was using the "fsl,qspi-has-second-chip" property to
+select one of two dual chip setups (two chips on one bus or two chips
+on separate buses). And it used the order in which the subnodes are
+defined in the dt to select the CS, the chip is connected to.
+
+Both methods are wrong and in fact the "reg" property should be used to
+determine which bus and CS a chip is connected to. This also enables us
+to use different setups than just single chip, or symmetric dual chip.
+
+So the porting of the driver from the MTD to the SPI framework actually
+enforces the use of the "reg" properties and makes
+"fsl,qspi-has-second-chip" superfluous.
+
+As all boards that have "fsl,qspi-has-second-chip" set, also have
+correct "reg" properties, the removal of this property shouldn't lead to
+any incompatibilities.
+
+The only compatibility issues I can see are with imx6sx-sdb.dts and
+imx6sx-sdb-reva.dts, which have their reg properties set incorrectly
+(see explanation here: [2]), all other boards should stay compatible.
+
+Also the "big-endian" flag was removed, as this setting is now selected
+by the driver, depending on which SoC is in use.
+
+Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
+---
+ .../devicetree/bindings/spi/spi-fsl-qspi.txt    | 21 +++++++++-----------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
+index 483e9cf..6d7c9ec 100644
+--- a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
+@@ -3,9 +3,8 @@
+ Required properties:
+   - compatible : Should be "fsl,vf610-qspi", "fsl,imx6sx-qspi",
+ 		 "fsl,imx7d-qspi", "fsl,imx6ul-qspi",
+-		 "fsl,ls1021a-qspi"
++		 "fsl,ls1021a-qspi", "fsl,ls2080a-qspi"
+ 		 or
+-		 "fsl,ls2080a-qspi" followed by "fsl,ls1021a-qspi",
+ 		 "fsl,ls1043a-qspi" followed by "fsl,ls1021a-qspi"
+   - reg : the first contains the register location and length,
+           the second contains the memory mapping address and length
+@@ -14,15 +13,13 @@ Required properties:
+   - clocks : The clocks needed by the QuadSPI controller
+   - clock-names : Should contain the name of the clocks: "qspi_en" and "qspi".
+ 
+-Optional properties:
+-  - fsl,qspi-has-second-chip: The controller has two buses, bus A and bus B.
+-                              Each bus can be connected with two NOR flashes.
+-			      Most of the time, each bus only has one NOR flash
+-			      connected, this is the default case.
+-			      But if there are two NOR flashes connected to the
+-			      bus, you should enable this property.
+-			      (Please check the board's schematic.)
+-  - big-endian : That means the IP register is big endian
++Required SPI slave node properties:
++  - reg: There are two buses (A and B) with two chip selects each.
++	 This encodes to which bus and CS the flash is connected:
++		<0>: Bus A, CS 0
++		<1>: Bus A, CS 1
++		<2>: Bus B, CS 0
++		<3>: Bus B, CS 1
+ 
+ Example:
+ 
+@@ -40,7 +37,7 @@ qspi0: quadspi@40044000 {
+ 	};
+ };
+ 
+-Example showing the usage of two SPI NOR devices:
++Example showing the usage of two SPI NOR devices on bus A:
+ 
+ &qspi2 {
+ 	pinctrl-names = "default";
+-- 
+2.7.4

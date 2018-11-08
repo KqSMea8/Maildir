@@ -1,0 +1,166 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:16 -0000
+Received: from icoremail.net (unknown [209.85.215.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f9H+H+NbC4JZAQ--.26587S3;
+	Thu, 08 Nov 2018 01:25:19 +0800 (CST)
+Received: from mail-pg1-f181.google.com (unknown [209.85.215.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBnRkL5H+Nbz4cYAA--.672S3;
+	Thu, 08 Nov 2018 01:25:13 +0800 (CST)
+Received: by mail-pg1-f181.google.com with SMTP id z10so5715897pgp.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:25:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=u/17kwparF1LuRU9m9iRZcnFHN7sAZHG+ZcPv+Gm12Q=;
+        b=o/ag0zpEbfbmqICh7ugPHAlbu/xhJaZi9fjQxC25WZj/DhYgcwlAKmRsWvuyI//89t
+         pfAIsBiZ2idfC70bOLUZS7mof2oL9aYjlJfbX+5weBfJt+wIlL+ziqmdh0zv8BnOpOnE
+         XyiSup0yCfDNTGp/PUaye1wScYkkoRi9O+1WINYkeduuhukGlmPr9eGvIKmvkY7aoGi7
+         yuHRD7M4Fsn+qPvHAKV43OYHarM2Q38ZsGhlXtlfkN/SNfgtHh4NOsBGX4OrYogVcpP5
+         jFCuUf18bmbD6u/+m3H4IHLBiqpuw0KHUpFTBYrHsfGeXTc5sz1pBYqupZ2j7j4q59xe
+         5g4g==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJ3mMF+1ri4m3Fz1/uvWCd4w1BVcI34kLUh/8FieyjF80Lo+sJC
+	Ms29pRmzQoefNT6XokHS3MorkVxvF362QcU/Ts+RN9pOnjmB0Xa6GQ==
+X-Received: by 2002:a63:40c2:: with SMTP id n185-v6mr927887pga.116.1541611513548;
+        Wed, 07 Nov 2018 09:25:13 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5514411pjt;
+        Wed, 7 Nov 2018 09:25:12 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eRhOy+jMWLZJZMRw1ltnK2Cmrx+GeUGP6yoPNwciLD94PA+GMPuBVhVaNu7FXhuHoAIlx0
+X-Received: by 2002:a17:902:b286:: with SMTP id u6-v6mr1089557plr.89.1541611512797;
+        Wed, 07 Nov 2018 09:25:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541611512; cv=none;
+        d=google.com; s=arc-20160816;
+        b=rs2mpxypsgXRbh/FiT6QSESPYSa31AHiG3x5aiRr20Eg+yZCtocK1BCOuQ/xX1eQAR
+         hJ/Mtqrq+NuwnkRr/eXK+V8fGvAVnLR2ftLJAX9HuGACjl1Q9lceQs/8ojwWJ2TVliWU
+         7qrU2SsOpI7gikiEjh1mK9/Ila4mmL83F0+zJFo4wmKxOhITmzoN682kuMlbvYgwsNXo
+         TVVqygntKiMgQqlFnfSXDg8tznjBF5gkYDzS8cFUgqlvSCj+TzQkcXMGyn6lXTEanCfO
+         Xjbl3RMDroltuTttJpor2wMOYt6mUbA4u9J+1qXZ9PgGWMFojtuOKpZUg0MvIYP2SWXE
+         vzXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=u/17kwparF1LuRU9m9iRZcnFHN7sAZHG+ZcPv+Gm12Q=;
+        b=ONCm+Y2GsHQasEGajz4+Q0IB1FdbJo5zU8YVzM//RqRZ+qniypXHAp3c6V+4fopn7E
+         6NXXt97AFrte6tJwwDg46w2tPPy3tCsGnTOsyqdY5iynMKMHRl2+1Ey7/sXOjCQTQuzv
+         8dPph2DJdcuHjBTUEeb1cCdspjgVxdRrl6TGB/zeWSsPzyvNivfnts1vpnTV103Udtuz
+         lYvxYaZqWzHwZrF1ttPOMPA+DsdMqqV+JxbgqKnf1R9bftZHhGK0g6s/bJCNlCH+yfUh
+         Kkqw5yz9ngCjJPz/4tTMOG5/AeH0fpPuPtqs2RDQKiFqDSyZI3qvvX9GK2DKs0ryREax
+         Ecxw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id k83-v6si1188985pfj.115.2018.11.07.09.24.48;
+        Wed, 07 Nov 2018 09:25:12 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731403AbeKHCzC (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:55:02 -0500
+Received: from mail.bootlin.com ([62.4.15.54]:38053 "EHLO mail.bootlin.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727576AbeKHCzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:55:01 -0500
+Received: by mail.bootlin.com (Postfix, from userid 110)
+        id 06AAE208CB; Wed,  7 Nov 2018 18:23:40 +0100 (CET)
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail.bootlin.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=5.0 tests=ALL_TRUSTED,SHORTCIRCUIT
+        shortcircuit=ham autolearn=disabled version=3.4.2
+Received: from localhost (242.171.71.37.rev.sfr.net [37.71.171.242])
+        by mail.bootlin.com (Postfix) with ESMTPSA id CC4D3208CB;
+        Wed,  7 Nov 2018 18:23:39 +0100 (CET)
+Date: Wed, 7 Nov 2018 18:23:40 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Claudiu.Beznea@microchip.com
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        sre@kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/4] power: reset: at91-poweroff: move shdwc related data
+ to one structure
+Message-ID: <20181107172340.GF21694@piout.net>
+References: <1541416443-4321-1-git-send-email-claudiu.beznea@microchip.com>
+ <1541416443-4321-3-git-send-email-claudiu.beznea@microchip.com>
+ <20181106210933.GU24212@piout.net>
+ <6719a808-e704-3c63-f592-3b90d44ccbfe@microchip.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6719a808-e704-3c63-f592-3b90d44ccbfe@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBnRkL5H+Nbz4cYAA--.672S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7KF4kKF15XF1fKr17GryDJrb_yoW8XFW8pF
+	Z3JF1YkF4kJr4IkryxZr4qvFyF93W7JF4jqF9rWry5tas0g3s3trySkF48WFy8urZYk3Z0
+	ya1YqrWfuFZxC3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcV
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_GwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x
+	07b9WrZUUUUU=
+
+On 07/11/2018 14:54:17+0000, Claudiu.Beznea@microchip.com wrote:
+> Hi Alexandre,
+> 
+> On 06.11.2018 23:09, Alexandre Belloni wrote:
+> > Hi Claudiu,
+> > 
+> > On 05/11/2018 11:14:26+0000, Claudiu.Beznea@microchip.com wrote:
+> >>  static int __init at91_poweroff_probe(struct platform_device *pdev)
+> >> @@ -154,16 +160,22 @@ static int __init at91_poweroff_probe(struct platform_device *pdev)
+> >>  	u32 ddr_type;
+> >>  	int ret;
+> >>  
+> >> +	at91_shdwc = devm_kzalloc(&pdev->dev, sizeof(*at91_shdwc), GFP_KERNEL);
+> >> +	if (!at91_shdwc)
+> >> +		return -ENOMEM;
+> >> +
+> > 
+> > Is there any real benefit that will offset the time lost for that
+> > allocation at boot time?
+> 
+> No, I haven't run benchmarks on this. I only wanted to have them grouped in
+> one structure. Please let me know if you have some tests in mind.
+> 
+
+Well, it is probably not much but small things adds up. Havinf it as a
+global structure is probably good enough.
+
+> > 
+> > I understand you are then testing at91_shdwc to know whether the driver
+> > already probed once. But, the driver will never probe twice as there is
+> > only one shutdown controller on the SoC and anyway, If it was to probe
+> > twice, it will still work as expected.
+> 
+> I had in mind the scenario where the driver would be compiled as module. I
+> know insmod already does this checking. I'm ok to remove this checking. I
+> will do it in next version. With this I will also remove devm_kzalloc() of
+> at91_shdwc.
+> 
+
+Thanks,
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com

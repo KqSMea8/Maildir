@@ -1,0 +1,179 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:14 -0000
+Received: from icoremail.net (unknown [209.85.214.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHHybx_OJbJ6ZYAQ--.26870S3;
+	Wed, 07 Nov 2018 22:55:45 +0800 (CST)
+Received: from mail-pl1-f174.google.com (unknown [209.85.214.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXEE3w_OJbKu4XAA--.611S3;
+	Wed, 07 Nov 2018 22:55:44 +0800 (CST)
+Received: by mail-pl1-f174.google.com with SMTP id q19-v6so4972098pll.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:55:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding:sender:precedence
+         :list-id;
+        bh=L51Xt0giWLtqlH6i1s69vwVGY1Yo0BoONXTZaii8naQ=;
+        b=OLYl2WCpN/Y+NZSV83dEGagRRTw9s6TlHijKR5kIw0BROS7SzqhNwMiFCO7wTGvJ2B
+         0breOz4aiH62Yhd6MUCPBP7VSx5bkH03Lpvkn0cVItu9tEL6JNLTdq9SyPXwPY9J+1xq
+         6dgjlsmuyOgMTRYeTGgd1fy5dRDnzA0qGCkPKCk7VF2gP+ZV6dbJKkZrctJHs7EGdYrl
+         6daULxlDwNTygigtVR2EwkPCMPqlZ0Y+OI5jP8CxccxCyA/VjoB5dk1GGrgiiYmGS2Xy
+         rDE1ZTz0j8RfPQ8Kkl1L9SQ8MoASkr2VtDRTlQq6Xe7mEHoV5/qWDWPYVV1ZuztsbMVW
+         XUqQ==
+X-Gm-Message-State: AGRZ1gLuU8aiQdubbTRn858kRU96NkIaTSJhICWBw/cpdIVU4EW2xiOC
+	iwEvQ00ZCiur5sXESKFBRsS5hJZCeEcw45d3ZtWcRB810DBTJzkmVA==
+X-Received: by 2002:a17:902:bd4a:: with SMTP id b10-v6mr510792plx.171.1541602543935;
+        Wed, 07 Nov 2018 06:55:43 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5344363pjt;
+        Wed, 7 Nov 2018 06:55:43 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d6acGpJX1J4/5nXDZO1Fv+FpERSNmxrv6ZUYky6hB18igx6Bk6hPmqpj3FwJLupyt0OqLp
+X-Received: by 2002:a62:4896:: with SMTP id q22-v6mr530369pfi.248.1541602543066;
+        Wed, 07 Nov 2018 06:55:43 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541602543; cv=none;
+        d=google.com; s=arc-20160816;
+        b=pIYp8R+2wgoXRYNb1Ij0P6sH2x5Sqd5ytnHWV6rL2SUNqkLs+1We9YhqNwXhoHNvNt
+         pHl1NzRkw9SrT5kdGD1xdOEbGpXuFHJ52WNqkb3xmL5Gnf2hpnSXOCtm66bMt9o2gW6w
+         UE2T4VbBxmSgYBTVWPF7u31S5vAmYBmw4/mo5AbYydvqQtZFQEYfpKitUMHirV+iPdPk
+         bW6o1WHNSs1ljpzBT+W6Flx8tPUyLkObz1iGjlJdfs2F7mlyeaWNFeYNjXI5czkkUsC1
+         +mpZABIMLfZkKeun+HCmu6UVVpAQdSto0OqwoxmI4kstQDrEMgC2wpo9DGAJV0E0WFu3
+         /6JA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:dkim-signature;
+        bh=L51Xt0giWLtqlH6i1s69vwVGY1Yo0BoONXTZaii8naQ=;
+        b=iJwDZ3sSqre3nV8FYEnh2kTKsKxNBuXW0g4lME9bwryFcJzlzNAt1AT9B6aRj5EqLp
+         VK1LuJgQIwjT0d7z/TZpS8lkQMz7LMhSP7z8BeTjKPqV3zh4c28e4NU5a8JyaJgNvVzd
+         JcMDEtHRrT9QtmKZDzIwsOyF29r6YXRzQx2BBZTzl0MyiU+cKEEnjUaVIOVhR92YotER
+         kt8+sbSdu7+uFU4H8VNhJ5kFn+Ida4mTcFi62s+l84YY1HRQLIkyALdGqUqrh2WHLrXr
+         qLLX3sUsgPXA7ZiCPcL/HXnXl5+5DXuJxV2wZ7RpQdJT9Wh63IxdN2kNld1JCSqx5Jwj
+         apww==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=F4HZOM8S;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id i12-v6si836583plt.9.2018.11.07.06.55.27;
+        Wed, 07 Nov 2018 06:55:43 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731033AbeKHAZ7 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:25:59 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39607 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727265AbeKHAZ6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:25:58 -0500
+Received: by mail-pl1-f195.google.com with SMTP id b5-v6so7968933pla.6;
+        Wed, 07 Nov 2018 06:55:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=L51Xt0giWLtqlH6i1s69vwVGY1Yo0BoONXTZaii8naQ=;
+        b=F4HZOM8S4btK3nvPf4Mq9sUCWpHzc5nNuyOVw6X5eOnW/1jK72o3w418tYX/NCxn1w
+         9abOLsgHb7V7cHsN3qebOU+nlMGVab0oV46O/QV09SPsttvfGE4b5s8itzNHTtaBo+xP
+         dzNK84voCXzs8gwzXy/Dz9hbtUsMj9j24SHwEf3D957HFRnYtTdyaXF7Z6EiSIN2/3IH
+         zAKq6g9pEJ9+d4LmDa1sasljke+D0bdh6HD9y7Wwf5xRZV3rMrdrgMrmGceY82I7xV8h
+         aYAN4Y2accIKEHLwkxwyP0EdoK8uvY/U2dAXD760U315jWKVMjkQgGxngoYtvcjHcQBZ
+         ss1w==
+X-Received: by 2002:a17:902:bccc:: with SMTP id o12-v6mr524258pls.281.1541602517389;
+        Wed, 07 Nov 2018 06:55:17 -0800 (PST)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id f10-v6sm754782pgp.72.2018.11.07.06.55.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 06:55:16 -0800 (PST)
+Subject: Re: [PATCH v6 07/18] of: dynamic: change type of
+ of_{at,de}tach_node() to void
+To: Michael Ellerman <mpe@ellerman.id.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
+References: <1541431515-25197-1-git-send-email-frowand.list@gmail.com>
+ <1541431515-25197-8-git-send-email-frowand.list@gmail.com>
+ <87tvktqedf.fsf@concordia.ellerman.id.au>
+From: Frank Rowand <frowand.list@gmail.com>
+Message-ID: <6bc78502-7587-eb9c-237f-d3f031979d42@gmail.com>
+Date: Wed, 7 Nov 2018 06:55:14 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <87tvktqedf.fsf@concordia.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXEE3w_OJbKu4XAA--.611S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWrur4ktFyDWF15AF13XFykAFb_yoW8Jr4xpr
+	WfWF9Ykr4kua48Wr1xtFyfurWFyws3Gr4Yqw1DtFWxu3W5Gr40krnrtw1UZa45GrWUCw1Y
+	yrW7W3Wava4DXaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUm2b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
+	6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik2
+	6cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6ry5MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7
+	IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E
+	87Iv67AKxVW0oVCq3wCYIxAIcVC2z280aVCY1x0267AKxVW0oVCq3wCF04k20xvY0x0EwI
+	xGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
+	AFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVF
+	xhVjvjDU0xZFpf9x07b00eQUUUUU=
+
+On 11/7/18 4:08 AM, Michael Ellerman wrote:
+> frowand.list@gmail.com writes:
+> 
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> of_attach_node() and of_detach_node() always return zero, so
+>> their return value is meaningless.
+> 
+> But should they always return zero?
+> 
+> At least __of_attach_node_sysfs() can fail in several ways.
+
+Sigh.  And of_reconfig_notify() can fail.  And at one point in the
+history the return value of of_reconfig_notify() was returned by
+of_attach_node() if of_reconfig_notify() failed.
+
+
+> And there's also this in __of_detach_node() which should probably be
+> returning an error:
+> 
+> 	if (WARN_ON(of_node_check_flag(np, OF_DETACHED)))
+>         	return;
+> 
+> 
+> Seems to me we should instead be fixing these to propagate errors,
+> rather than hiding them?
+
+The history of how of_attach_node() stopped propagating errors is
+a bit more complex than I want to dig into at the moment.  So I'll
+drop this patch from the series and add investigating this onto
+my todo list.  I suspect that the result of investigating will be
+that error return values should not be ignored in of_attach_node()
+and of_detach_node(), but should instead be propagated to the
+callers, as you suggest.
+
+-Frank
+
+> 
+> cheers
+> 

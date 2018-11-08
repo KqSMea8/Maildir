@@ -1,0 +1,199 @@
+Return-Path: <kvm-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:07 -0000
+Received: from icoremail.net (unknown [209.85.214.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3__t09OJbk3NYAQ--.26607S3;
+	Wed, 07 Nov 2018 22:19:37 +0800 (CST)
+Received: from mail-pl1-f179.google.com (unknown [209.85.214.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHLUlA8+Jb+MQXAA--.6778S3;
+	Wed, 07 Nov 2018 22:14:24 +0800 (CST)
+Received: by mail-pl1-f179.google.com with SMTP id c13-v6so7907693plz.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:14:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=VRHFw9ndUESZOMz2Y6x8szuQiJjnb7FN+7i6rLDxVrk=;
+        b=XDZnyhfUIQLqVr6reagXX0ZkFhuRSxPRr1OE/2PRywWV//Th0YEfMs6Ll5kbppgct4
+         huppnENzh0XfujrZ56VhlAyFPX9d1gvg6NGVfqytkJSG1w+ZDx4QxtvDeUeoQ/+RHAir
+         W3nHuOkQygh0GKqOE2QmLWCArNOzjlFF8xz7sYy3f28apwitLQcZU7KcRuyvrfMBjKpI
+         NdWbXxHJoDB9N/9hOuLKfcFWQ8vdMsPK8zkDCJYLIAE3dn9bW+KwqG2Ub3H+YPKkSc+0
+         SijYHnpUvvNF6T2ipk42VDQfmioK/87k3/u896JBhGLiBuGVor2v3aFU1uMTMOcEp5Mh
+         bSsw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=kvm-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+X-Gm-Message-State: AGRZ1gIx7kc0JCp7N6cmL9oqzNHrjd5fZ04equoFmU9wvzGftzNfhX3f
+	mPc/ymhIw2OS7ikHpg/6rsuIp9/6v+QcPZ2R4trUD79roI/hCv8jCw==
+X-Received: by 2002:a17:902:7082:: with SMTP id z2-v6mr414212plk.78.1541600064503;
+        Wed, 07 Nov 2018 06:14:24 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5297127pjt;
+        Wed, 7 Nov 2018 06:14:23 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fgBfsrgPulDsmD9w0xHJpzp6s7N8++zs2eli7jcby5Wx6LjUSBZ6+rt5d50JNkaJTLtB3y
+X-Received: by 2002:a63:801:: with SMTP id 1mr294101pgi.275.1541600063515;
+        Wed, 07 Nov 2018 06:14:23 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541600063; cv=none;
+        d=google.com; s=arc-20160816;
+        b=y2CLaFWFbRI4gYOtbGIIpex6KhM7OF6QUExU2++njH3nuycShqLkhy48uoj7ECi3pd
+         UkrYmykdKvNo71cZXMaDddQ+tmTSu6IonmcAaq0WZC5UVqLBXfXt+4LWOOtNtNm7MmDr
+         6agqTCcSlB8blALFLyvQXN/cLdGB13AWufzF1YRbcp1kwuqyAYbQodPyEe5w0OVVJozv
+         2loHJtYR3MYIGlR067kuyfJJpPTYNe1b0NEo+utnIQix8RXwk8cYcIsOyCfYtN15GQFh
+         Q+4PfmBT5bPGYzHbK50LBwPqvEKsuoGFjnBXWK2wasg7ITmc7sP9mPQ5JUoYHOTQmHMp
+         +7Iw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:subject:cc:to:from:date;
+        bh=VRHFw9ndUESZOMz2Y6x8szuQiJjnb7FN+7i6rLDxVrk=;
+        b=s9+0dPPnUfQzgeXyStLLd6UEkToG+LM1hHJTleSZC86zneo+KmrxIBhli/A51GDDTQ
+         nvD7uRZGFHAkF+7sOPKcfhatkUnBFOhkRAY21cPiixldYOM5tcql6QBX0Wzc0KflXpfA
+         49XDUwtB2j8Opw4vxg3gphLvVeU5oFf4vBdZCtqVSH97IMoafAfNi6d9wgIPvHTFfHAy
+         k9M1lNBjYHAQh3dfwMm2Ko0Wts2U8hmWR9bPZSrdMBtZMFP+grXL87awsXU05HAKRdku
+         G8PtrzCW60pUx3+FVdoxek9bgM4byb7/vmzCSA26wXrrxO9JV2FvypHpV2qXYc2DTuhc
+         rF+Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=kvm-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id m126-v6si802373pfc.265.2018.11.07.06.14.02;
+        Wed, 07 Nov 2018 06:14:23 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726887AbeKGXod (ORCPT <rfc822;fanshuming2011@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:44:33 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:24108 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726830AbeKGXod (ORCPT <rfc822;kvm@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:44:33 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A353A2D7F5
+        for <kvm@vger.kernel.org>; Wed,  7 Nov 2018 14:14:00 +0000 (UTC)
+Received: from doriath (ovpn-117-0.phx2.redhat.com [10.3.117.0])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4580467CFF;
+        Wed,  7 Nov 2018 14:13:59 +0000 (UTC)
+Date: Wed, 7 Nov 2018 09:13:58 -0500
+From: Luiz Capitulino <lcapitulino@redhat.com>
+To: Andrew Jones <drjones@redhat.com>
+Cc: kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH] kvm-unit-tests: really use QEMU_ACCEL
+Message-ID: <20181107091358.415feb96@doriath>
+In-Reply-To: <20181107093321.bvk7lhrizoskkhbd@kamzik.brq.redhat.com>
+References: <20181106113133.51542781@doriath>
+        <20181106164852.ipvlobb7jwcww2kp@kamzik.brq.redhat.com>
+        <20181106120505.43ff92e6@doriath>
+        <20181107093321.bvk7lhrizoskkhbd@kamzik.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 07 Nov 2018 14:14:00 +0000 (UTC)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <kvm.vger.kernel.org>
+X-Mailing-List: kvm@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHLUlA8+Jb+MQXAA--.6778S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxuFy5KFyDZF48Jw17Cw17KFg_yoW5uFy7pF
+	WFgFy7KF1kGF9rCwnFvr4xGr1Sy3yfJr93KF1DAr1q9a98Zr9rur18try5CF92yws3Wa1q
+	vFW8Cas3uwn8Z37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP0b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW5XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07
+	x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
+	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI4
+	8JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IUOdKs5UU
+	UUU==
+
+On Wed, 7 Nov 2018 10:33:21 +0100
+Andrew Jones <drjones@redhat.com> wrote:
+
+> On Tue, Nov 06, 2018 at 12:05:05PM -0500, Luiz Capitulino wrote:
+> > On Tue, 6 Nov 2018 17:48:52 +0100
+> > Andrew Jones <drjones@redhat.com> wrote:
+> >   
+> > > On Tue, Nov 06, 2018 at 11:31:33AM -0500, Luiz Capitulino wrote:  
+> > > > 
+> > > > According to README.md, users can set QEMU_ACCEL to specify
+> > > > kvm or tcg. However, get_qemu_acceletor() uses ACCEL instead,
+> > > > which is wrong since ACCEL is an "internal" variable. The end
+> > > > result is that tests will still run if the user wants to use
+> > > > kvm but kvm is unavailable. Fix get_qemu_acceletor() to use
+> > > > QEMU_ACCEL.    
+> > > 
+> > > Hi Luiz,
+> > > 
+> > > I agree "ACCEL" isn't a very good name for an environment
+> > > variable, which is why I reserved the name QEMU_ACCEL in
+> > > the readme. However, ACCEL doesn't have to *only* be an
+> > > internal variable, i.e. 'ACCEL=tcg ./run_tests.sh' currently
+> > > works, and some users may be used to it now.  
+> > 
+> > For some reason I thought ACCEL=tcg ./run_tests.sh wouldn't
+> > work, but you're right it does.
+> >   
+> > > Can you elaborate on the problem you're solving?  
+> > 
+> > Long story short, I just needed QEMU_ACCEL=kvm ./run_tests.sh
+> > to fail/skip tests if /dev/kvm is not available (instead of
+> > switching to tcg by default). Since ACCEL works, my problem
+> > is solved.
+> > 
+> > IMO we need to update the README.md file or make QEMU_ACCEL
+> > work.
+> >  
+> 
+> We need to clarify the readme, and in general better document what
+> variables do and how to use them. QEMU_ACCEL isn't wrong, it's just
+> not very useful. It's purpose is for the guest code to determine if
+> it's kvm or tcg, not the runtime bash scripts like ACCEL. You can
+> use QEMU_ACCEL like this
+> 
+>  $ cat x86/output-accel.c
+>  #include <libcflat.h>
+>  void main(void)
+>  {
+> 	printf("%s\n", getenv("QEMU_ACCEL"));
+>  }
+> 
+>  $ echo 'QEMU_ACCEL=ANY_STRING' > kvm_unit_tests_env
+> 
+>  $ ACCEL=tcg KVM_UNIT_TESTS_ENV=kvm_unit_tests_env x86/run x86/output-accel.flat
+>  /usr/bin/qemu-system-x86_64 -nodefaults -device pc-testdev -device isa-debug-exit,iobase=0xf4,iosize=0x4 -vnc none -serial stdio -device pci-testdev -machine accel=tcg -kernel x86/output-accel.flat -initrd kvm_unit_tests_env
+>  enabling apic
+>  ANY_STRING
+> 
+> So using the same name for both won't necessarily avoid confusion,
+> as they're actually two different things.
+
+Ohhh, that makes a lot of sense now. Thanks for taking the time to
+explain it!
+
+So, what happened in my case was: due to another bug, the kvm modules
+weren't loaded on my machine so I didn't have /dev/kvm. kvm-unit-tests
+then switched automatically to tcg, which caused some tests to fail. So,
+I went to the readme to see how I could force /dev/kvm usage and fail
+if it wasn't available. This led me to QEMU_ACCEL, not ACCEL.
+
+And I have a second question/request. Even when using ACCEL, if /dev/kvm
+is not available all tests will be skipped but I think it's useful to
+completely fail run_tests.sh instead right at the beginning. Can I add
+an option to run_tests.sh to do that?
+
+> Updating the readme and the wiki have been on my TODO for a long
+> time. I'll really try to bump the priority.
+
+I'd volunteer, but I have to learn more about kvm-unit-tests. But I
+think we probably want to separate documentation for those writing
+unit-tests and for those who just want to run them.

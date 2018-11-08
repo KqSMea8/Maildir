@@ -1,0 +1,220 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:05 -0000
+Received: from icoremail.net (unknown [209.85.215.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f7WZQuNbClVaAQ--.26924S3;
+	Thu, 08 Nov 2018 03:52:57 +0800 (CST)
+Received: from mail-pg1-f179.google.com (unknown [209.85.215.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH5UCXQuNbfRUZAA--.715S3;
+	Thu, 08 Nov 2018 03:52:55 +0800 (CST)
+Received: by mail-pg1-f179.google.com with SMTP id k1-v6so7770137pgq.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:52:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=u0CCbmUwQf0zIIR3n0FHoSED9grc08VkaQZBlrZQHT0=;
+        b=FtkHajfyF+raJY07VyqVfsvw8fJ4dnkdfENKjiy/c65BYMjaNVNWDPMWw4az3jP/G1
+         RtJpGWO+78OfruBDUScP51XCzzmU/4BJO4LAxQe4zpOVtwMPpLcW8gZ1/UHUtvn5/XaK
+         puXtzTHGXmWzC/PUjm/oeZC23/USp9wt1luHmaya13H4C8O6700/alkg0gte5TUVC37f
+         JOm7uBa3R2xwLbrS22qYGEtSLD9v3+7BPvtTJeIzq8d37a6XkG9xYzw6y0yEdmtc0DXT
+         9PeEh2UcF6xdwKLRvwI+E9nVLJUs1LybqQv8wVwxacXgIPWlTpYzM6FVA6q267oCvZSI
+         QHaA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLFm2VmVFD9nkR7Rfkrk4g/vzeGZQkdH1sw386nfjHn/lxOE4he
+	+rQxyYgWPQ7wnB8VWl/4iQua+pWecF4C39ADBSLNf4HNTc/hPFPEPQ==
+X-Received: by 2002:a63:460a:: with SMTP id t10-v6mr1352043pga.197.1541620374955;
+        Wed, 07 Nov 2018 11:52:54 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5672266pjt;
+        Wed, 7 Nov 2018 11:52:54 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dzs6ZCwrgU8km4VqbVHb3S3zsv+rSZ43gGWTufVwq2Gdh323+QajypaZxgL/aQM/9EwL0s
+X-Received: by 2002:a17:902:162:: with SMTP id 89-v6mr1578906plb.293.1541620373996;
+        Wed, 07 Nov 2018 11:52:53 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620373; cv=none;
+        d=google.com; s=arc-20160816;
+        b=hMsv0a8O4HP4cAc2A51+2zCBesQf3jzhEdPwQeivk9y3PJiSlBCAP5QH4o9vtxa3tO
+         OEo4eRyYCqYOfnm/APrs6tCEm8qE0QGO100gHX7gTnYXd+zg1X0y81csWVMRzHq6S8GT
+         XV+lFTpKDckjaykyGl41HY5U5DBVCYLs9cW4J09WebOatnKiMTrgAb8cmDGnzLFSS3kN
+         GRhrjTB2CbFuSQjLJwORYIbUY0GwCmeB6lLH0sBjceLHLKElmZ12k4BxE9yrc9H/zVYj
+         W/RdZ/XCB+8Ojy9L5p+MIKUZaJuk7ysU/wHD+LSrC/200dTTBUtve9x2NkMSgXM0lD8D
+         ix2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=u0CCbmUwQf0zIIR3n0FHoSED9grc08VkaQZBlrZQHT0=;
+        b=PbN6xkPBuIXlcpY4/9yDach72DZO9wMpV2Umizo2u7rOHPYQk66FFuoeMKt2GQbaa0
+         v52EHxY9wNWY0uvE3xnYa9DKmNeLacijHkFYFtQX8F6PpFPPQTlcyfyg9yG+uOBDlAjz
+         KfMh73X8PmMKqcyRm19U0e8sR+5jaa07tg97as1DRSc1+eGXb6Aes6SIr+wDuVBi6xWl
+         ohqCHsitSg0mNteC04L4HybQAQYpjOWMwzec8TGWRzqDSK6Topjl6eDJOBtfp/xWLfBR
+         ig2ZwxNmcxxPFqa3ABihrx4mWbyv1aHam3u8dDLJlqEqubug+owyPAkdnKCvEDUZ4vhX
+         C6mw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id f15-v6si1360062pgd.152.2018.11.07.11.52.39;
+        Wed, 07 Nov 2018 11:52:53 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727042AbeKHFVD (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:21:03 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:41831 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbeKHFVC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:21:02 -0500
+Received: from localhost ([127.0.0.1] helo=bazinga.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1gKTp6-00070Q-3X; Wed, 07 Nov 2018 20:49:08 +0100
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 03/23] x86/fpu: Remove fpu__restore()
+Date: Wed,  7 Nov 2018 20:48:38 +0100
+Message-Id: <20181107194858.9380-4-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107194858.9380-1-bigeasy@linutronix.de>
+References: <20181107194858.9380-1-bigeasy@linutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH5UCXQuNbfRUZAA--.715S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxWw1xCrW8uF1Dury3AFW8Zwb_yoWrCryfpF
+	ZIyrn7JF48W3W0v34xXrW8uryrAwn8C3WfGrykGa4fXa1YvrnrXrnrt3WUZFy5ZrWSkayS
+	qr1qkr4Fyas7JaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
+	0EwIxGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44l
+	c2xSY4AK6IIF6rWlc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMx
+	vI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1l
+	cIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4
+	C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xYxBIdaVFxhVjvjDU0xZFpf9x
+	07bXdbbUUUUU=
+
+There are no users of fpu__restore() so it is time to remove it.
+The comment regarding fpu__restore() and TS bit is stale since commit
+b3b0870ef3ffe ("i387: do not preload FPU state at task switch time") and
+has no meaning since.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ Documentation/preempt-locking.txt   |  1 -
+ arch/x86/include/asm/fpu/internal.h |  1 -
+ arch/x86/kernel/fpu/core.c          | 24 ------------------------
+ arch/x86/kernel/process_32.c        |  4 +---
+ arch/x86/kernel/process_64.c        |  4 +---
+ 5 files changed, 2 insertions(+), 32 deletions(-)
+
+diff --git a/Documentation/preempt-locking.txt b/Documentation/preempt-locking.txt
+index 509f5a422d571..dce336134e54a 100644
+--- a/Documentation/preempt-locking.txt
++++ b/Documentation/preempt-locking.txt
+@@ -52,7 +52,6 @@ preemption must be disabled around such regions.
+ 
+ Note, some FPU functions are already explicitly preempt safe.  For example,
+ kernel_fpu_begin and kernel_fpu_end will disable and enable preemption.
+-However, fpu__restore() must be called with preemption disabled.
+ 
+ 
+ RULE #3: Lock acquire and release must be performed by same task
+diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
+index 5f7290e6e954e..32ea458f13b5c 100644
+--- a/arch/x86/include/asm/fpu/internal.h
++++ b/arch/x86/include/asm/fpu/internal.h
+@@ -28,7 +28,6 @@ extern void fpu__initialize(struct fpu *fpu);
+ extern void fpu__prepare_read(struct fpu *fpu);
+ extern void fpu__prepare_write(struct fpu *fpu);
+ extern void fpu__save(struct fpu *fpu);
+-extern void fpu__restore(struct fpu *fpu);
+ extern int  fpu__restore_sig(void __user *buf, int ia32_frame);
+ extern void fpu__drop(struct fpu *fpu);
+ extern int  fpu__copy(struct fpu *dst_fpu, struct fpu *src_fpu);
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 2ea85b32421a0..9387e0fec7d17 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -305,30 +305,6 @@ void fpu__prepare_write(struct fpu *fpu)
+ 	}
+ }
+ 
+-/*
+- * 'fpu__restore()' is called to copy FPU registers from
+- * the FPU fpstate to the live hw registers and to activate
+- * access to the hardware registers, so that FPU instructions
+- * can be used afterwards.
+- *
+- * Must be called with kernel preemption disabled (for example
+- * with local interrupts disabled, as it is in the case of
+- * do_device_not_available()).
+- */
+-void fpu__restore(struct fpu *fpu)
+-{
+-	fpu__initialize(fpu);
+-
+-	/* Avoid __kernel_fpu_begin() right after fpregs_activate() */
+-	kernel_fpu_disable();
+-	trace_x86_fpu_before_restore(fpu);
+-	fpregs_activate(fpu);
+-	copy_kernel_to_fpregs(&fpu->state);
+-	trace_x86_fpu_after_restore(fpu);
+-	kernel_fpu_enable();
+-}
+-EXPORT_SYMBOL_GPL(fpu__restore);
+-
+ /*
+  * Drops current FPU state: deactivates the fpregs and
+  * the fpstate. NOTE: it still leaves previous contents
+diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
+index 5046a3c9dec2f..d9510452b69a6 100644
+--- a/arch/x86/kernel/process_32.c
++++ b/arch/x86/kernel/process_32.c
+@@ -274,9 +274,7 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
+ 	/*
+ 	 * Leave lazy mode, flushing any hypercalls made here.
+ 	 * This must be done before restoring TLS segments so
+-	 * the GDT and LDT are properly updated, and must be
+-	 * done before fpu__restore(), so the TS bit is up
+-	 * to date.
++	 * the GDT and LDT are properly updated.
+ 	 */
+ 	arch_end_context_switch(next_p);
+ 
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index 0e0b4288a4b2b..cf2c157714594 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -576,9 +576,7 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
+ 	/*
+ 	 * Leave lazy mode, flushing any hypercalls made here.  This
+ 	 * must be done after loading TLS entries in the GDT but before
+-	 * loading segments that might reference them, and and it must
+-	 * be done before fpu__restore(), so the TS bit is up to
+-	 * date.
++	 * loading segments that might reference them.
+ 	 */
+ 	arch_end_context_switch(next_p);
+ 
+-- 
+2.19.1

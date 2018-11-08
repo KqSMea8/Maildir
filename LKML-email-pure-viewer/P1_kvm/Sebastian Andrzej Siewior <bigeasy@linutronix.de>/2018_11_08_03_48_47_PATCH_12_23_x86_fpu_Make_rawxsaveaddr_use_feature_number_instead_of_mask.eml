@@ -1,0 +1,212 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:57 -0000
+Received: from icoremail.net (unknown [209.85.214.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXvwrtQeNb6FBaAQ--.27219S3;
+	Thu, 08 Nov 2018 03:50:06 +0800 (CST)
+Received: from mail-pl1-f178.google.com (unknown [209.85.214.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3VkLoQeNbLBMZAA--.742S3;
+	Thu, 08 Nov 2018 03:50:00 +0800 (CST)
+Received: by mail-pl1-f178.google.com with SMTP id p16-v6so8331956plr.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:50:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=LbOLPgqN2VtbNSmscETPrCxr8NqbfOMu3F9jK0rEraw=;
+        b=RLuF8iM0pQLTvXQ1B7naWh/rdVd3zdzjlM+/9/wRWwg6e+7A7yP2hfD/jQAkrU6Yky
+         huxai5hQ5ahEhG9DOx6qJUhZEmKdlbq1p9K8VBz742QPGh0YydusXDX/jAfCVnwkdg5v
+         YP3vNplkb22S3GDuBYzYY4N0IMN+Gck1j2K5NlSgX6RADYSFLYEJ8Z98E4HcH89a8TjW
+         eWfMM/BlsKRr+s714ucBlZYDxWOvr2fqgjfLe3efvccKGFRM3PJJo/t3YbMQfeBaGEUI
+         VABdWswjy4qpcmQHaf9RaDjezxNSvtemkVF5ZU+hAf/GAD5v8Kbx7DHyPn+3vqeRopvo
+         7sqw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gL48NMIY6hUSBIovZcK8Ab8mgdPzidkw8DX4fH9H/xyr4JCuLQu
+	m7R3ht2WW9i6ZNtsTP8eHysptqaOHKxEt4K3pWa12elpdlOQ7LiOCQ==
+X-Received: by 2002:a17:902:7882:: with SMTP id q2-v6mr1628034pll.188.1541620199951;
+        Wed, 07 Nov 2018 11:49:59 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5669488pjt;
+        Wed, 7 Nov 2018 11:49:59 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dhBNOFA31A/UMsQy7MX+ykSbA8LWj62ge6NARA9YIdNlXW1GrIyzgxLdZ5BngeMahXj6g8
+X-Received: by 2002:a63:cd17:: with SMTP id i23mr1332513pgg.13.1541620199155;
+        Wed, 07 Nov 2018 11:49:59 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620199; cv=none;
+        d=google.com; s=arc-20160816;
+        b=iyoE9FLHo4sjcZdiDUpxozOkHvKsuwcXyaddm+uNqlmrt/ou8WPr2HAp22x0b3XvDm
+         KQ/PJK51TqSovuLW3nbfwgj5bU2o0vtN2mFYRWdnEV0E/Ps4gdGjGd3zH+pWQ9h/u/2P
+         EicfzQqEOjlVC+y2s4OGh5bqcKRu5fhBL9PZcwpxjQislf7GenO2+JeB+7unzrsvj+a7
+         ps5v2tSqI12+SjUHG+uRZ/qkMKS2RXOlsN9xnwMFSd0v9NyuBAunwkuL1HTtLk2TeGVG
+         SHqHBwiH6101UhmJgyy+TTHfJbriLA/0LeyBeprnZntyBhfkChByd/d/2d/DimEgQOSD
+         SbmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=LbOLPgqN2VtbNSmscETPrCxr8NqbfOMu3F9jK0rEraw=;
+        b=HRzL4yiEA5jO+UeNcLx/WH5AsEIRMsFQIyLGd8/eCXKA1e91lNoMopMYcdPScvCK0t
+         SMFvFg1RZz73qHPY+ogl3Ib2rRbR75RLaXCOn2yIcBv+DKUYJVX/qwqenieW0v/bx/D7
+         NuCSa498h2DEUxoeLfKcavB8CB2RGR825YolBJmFDdNGllFgNk0xIUOsRw9G56HsEF2Q
+         FucSK/AuTJC39tMOg/TF8ME7yAiFlSlgux1U1sI2WRzQHe6eJUksZuQsDiZYCBVKrNtl
+         xeg2wQm8DVJUArZbBL2etsS4SoGPcxsHeJZoY0Thlbc9Iea7jFlBTydRUgRAbdMTSCau
+         0Z+w==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id l13-v6si1783611pls.222.2018.11.07.11.49.43;
+        Wed, 07 Nov 2018 11:49:59 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727667AbeKHFVP (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:21:15 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:41908 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727272AbeKHFVO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:21:14 -0500
+Received: from localhost ([127.0.0.1] helo=bazinga.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1gKTpF-00070Q-Di; Wed, 07 Nov 2018 20:49:17 +0100
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 12/23] x86/fpu: Make __raw_xsave_addr() use feature number instead of mask
+Date: Wed,  7 Nov 2018 20:48:47 +0100
+Message-Id: <20181107194858.9380-13-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107194858.9380-1-bigeasy@linutronix.de>
+References: <20181107194858.9380-1-bigeasy@linutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3VkLoQeNbLBMZAA--.742S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxCw1UCr4ktrW7ZFyrurW8Xrb_yoW5ur43pw
+	sYy348Cr47Ar18tayIyr1DXrZYka4kGa1YkFyDAa4FvFyYgr1YkryvyF93Ja98C34Sqr4f
+	t3WfKrnrAan8CFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPSb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	Uob2-5UUUUU==
+
+Most users of __raw_xsave_addr() use a feature number, shift it to a
+mask and then __raw_xsave_addr() shifts it back to the feature number.
+
+Make __raw_xsave_addr() use the feature number as argument.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/x86/kernel/fpu/xstate.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index a2041961f3008..3dfe3627deaf6 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -805,22 +805,20 @@ void fpu__resume_cpu(void)
+ }
+ 
+ /*
+- * Given an xstate feature mask, calculate where in the xsave
++ * Given an xstate feature nr, calculate where in the xsave
+  * buffer the state is.  Callers should ensure that the buffer
+  * is valid.
+  *
+  * Note: does not work for compacted buffers.
+  */
+-void *__raw_xsave_addr(struct xregs_state *xsave, int xstate_feature_mask)
++static void *__raw_xsave_addr(struct xregs_state *xsave, int xfeature_nr)
+ {
+-	int feature_nr = fls64(xstate_feature_mask) - 1;
+-
+-	if (!xfeature_enabled(feature_nr)) {
++	if (!xfeature_enabled(xfeature_nr)) {
+ 		WARN_ON_FPU(1);
+ 		return NULL;
+ 	}
+ 
+-	return (void *)xsave + xstate_comp_offsets[feature_nr];
++	return (void *)xsave + xstate_comp_offsets[xfeature_nr];
+ }
+ /*
+  * Given the xsave area and a state inside, this function returns the
+@@ -842,6 +840,7 @@ void *__raw_xsave_addr(struct xregs_state *xsave, int xstate_feature_mask)
+  */
+ void *get_xsave_addr(struct xregs_state *xsave, int xstate_feature)
+ {
++	int xfeature_nr;
+ 	/*
+ 	 * Do we even *have* xsave state?
+ 	 */
+@@ -869,7 +868,8 @@ void *get_xsave_addr(struct xregs_state *xsave, int xstate_feature)
+ 	if (!(xsave->header.xfeatures & xstate_feature))
+ 		return NULL;
+ 
+-	return __raw_xsave_addr(xsave, xstate_feature);
++	xfeature_nr = fls64(xstate_feature) - 1;
++	return __raw_xsave_addr(xsave, xfeature_nr);
+ }
+ EXPORT_SYMBOL_GPL(get_xsave_addr);
+ 
+@@ -1016,7 +1016,7 @@ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int of
+ 		 * Copy only in-use xstates:
+ 		 */
+ 		if ((header.xfeatures >> i) & 1) {
+-			void *src = __raw_xsave_addr(xsave, 1 << i);
++			void *src = __raw_xsave_addr(xsave, i);
+ 
+ 			offset = xstate_offsets[i];
+ 			size = xstate_sizes[i];
+@@ -1102,7 +1102,7 @@ int copy_xstate_to_user(void __user *ubuf, struct xregs_state *xsave, unsigned i
+ 		 * Copy only in-use xstates:
+ 		 */
+ 		if ((header.xfeatures >> i) & 1) {
+-			void *src = __raw_xsave_addr(xsave, 1 << i);
++			void *src = __raw_xsave_addr(xsave, i);
+ 
+ 			offset = xstate_offsets[i];
+ 			size = xstate_sizes[i];
+@@ -1159,7 +1159,7 @@ int copy_kernel_to_xstate(struct xregs_state *xsave, const void *kbuf)
+ 		u64 mask = ((u64)1 << i);
+ 
+ 		if (hdr.xfeatures & mask) {
+-			void *dst = __raw_xsave_addr(xsave, 1 << i);
++			void *dst = __raw_xsave_addr(xsave, i);
+ 
+ 			offset = xstate_offsets[i];
+ 			size = xstate_sizes[i];
+@@ -1213,7 +1213,7 @@ int copy_user_to_xstate(struct xregs_state *xsave, const void __user *ubuf)
+ 		u64 mask = ((u64)1 << i);
+ 
+ 		if (hdr.xfeatures & mask) {
+-			void *dst = __raw_xsave_addr(xsave, 1 << i);
++			void *dst = __raw_xsave_addr(xsave, i);
+ 
+ 			offset = xstate_offsets[i];
+ 			size = xstate_sizes[i];
+-- 
+2.19.1

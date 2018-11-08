@@ -1,0 +1,226 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:04 -0000
+Received: from icoremail.net (unknown [209.85.210.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv95lG+Nb3WBZAQ--.26877S3;
+	Thu, 08 Nov 2018 01:05:42 +0800 (CST)
+Received: from mail-pf1-f176.google.com (unknown [209.85.210.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHK0diG+Nb_nQYAA--.1414S3;
+	Thu, 08 Nov 2018 01:05:38 +0800 (CST)
+Received: by mail-pf1-f176.google.com with SMTP id d13-v6so789182pfo.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:05:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=Qch9NPtpiB125khMplwTk2vPnS2Gz/1/2d8fvMDc56Q=;
+        b=hkHPkUTafSi29+ji1cnwQ+8WMS0g3dDYRdGo4tc4NvN29EtxvU6J3wk0ateHVk3Nbo
+         aScsuauIncte/OD0CaOXwpLPpgNKVArdbuPOd7FxNFXwkznfx41K1C1Yvv5LI2Msl0rE
+         c7/BVV7y97EKpURq76TwoOTOC5tLGftfTKFPfxJOjzG+O4B350P8Z8NL3bYJTXw0ucK0
+         YAdOoxMsQknbQtrKOtfgZG1E4XtrVOXi9Q7Mjsz2r8F963rK0pf4ui+oixYdvPQLdMG2
+         Oy+gRCNF9fIJUE0qdFxWaon1P+spXhOH8fe5Yanx0bSU5wjI7fVhXr4jQjHRvZfzJAKx
+         I9KQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gL2xsDjahXxj7IqhPwZqEBrBRBmECli5mL8VzNhVkN+Lq9a6l73
+	YsDyyk6p2WnYSZ0aCsOVnZrtZb/8LlgD/6IVcjCo926KZbyEk/oczg==
+X-Received: by 2002:a62:ab05:: with SMTP id p5-v6mr976560pff.211.1541610338480;
+        Wed, 07 Nov 2018 09:05:38 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5491294pjt;
+        Wed, 7 Nov 2018 09:05:37 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eky1zMw9IbhbfNLcnjqO3oT0k1SBRJ/EoPRU1mnscWx2URLdhR7CkUXn2qXUX6MzS0wOfy
+X-Received: by 2002:a63:7e5b:: with SMTP id o27mr850497pgn.214.1541610337502;
+        Wed, 07 Nov 2018 09:05:37 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610337; cv=none;
+        d=google.com; s=arc-20160816;
+        b=i4siNp2ZeqiaZG8dnaE692AYrcnKRmnzC5Y8xiqzv/fCP1T4yGxXyXU+Jir0bSgx1l
+         9UbnPt946pzNErwF33XtXoGy4S4vi7SuZpHiTRzi+cpL1zDlW++rBZgPFcQruoSSngoN
+         Is0p38Mr5Afc704lLnEro7HKIawYz+/xqtMs2nqyPRLnmA1myBw4H40S1nt+iIJPgIBI
+         BZhJtJB+R92GpdWlJxRBrBJecj3q861NJb3CjimkHOdFnxvjoxzDaJW97c+ccdjLTHNm
+         QYsHMXmF2POvuX3j/QVDRXx4CO06Qbe9WoqSE4vIOsgvoM+aYP/QTKkIqbWDuxPQn/Cr
+         5Z1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=Qch9NPtpiB125khMplwTk2vPnS2Gz/1/2d8fvMDc56Q=;
+        b=htMbPBiyaa5ePAVlIqCR+AVn2+VhbNtyalXCIrytH026yvPBpIKone7OQTlBLa6CgS
+         or/kNyIJHzGnH/SDw+RY0q9D7TBEBCYwYoIbue5eK9nN+JZsILFtLFWWdHB0Qg/WZa3t
+         4+jmbSfXg4eUt1rZ4vN2t5fhBnvnOURj8fREj7P16SJffkTpz6F1+IJj+ea9RywopHKB
+         6gEAWN5tIZZmh9/gjpU/TC9qXnaUVug6Kjm+ay5CnwmpE0guuiyrZeGxDQjXKwG6Pxp8
+         x4Va162Y1U6veZKl0DRo9JoCA9eUCJOBLUwnEtyT/VnZ+XbnpGBGMQUWV1+XdOngTxKn
+         emsQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 10-v6si1064343pgo.486.2018.11.07.09.05.18;
+        Wed, 07 Nov 2018 09:05:37 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731660AbeKHCgV (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:36:21 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54684 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727757AbeKHCgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:36:21 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C046FA78;
+        Wed,  7 Nov 2018 09:05:06 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E94AF3F5BD;
+        Wed,  7 Nov 2018 09:05:00 -0800 (PST)
+Date: Wed, 7 Nov 2018 17:04:58 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Andrey Konovalov <andreyknvl@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Dave Martin <dave.martin@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Paul Lawrence <paullawrence@google.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sparse@vger.kernel.org, linux-mm@kvack.org,
+        linux-kbuild@vger.kernel.org, Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Jann Horn <jannh@google.com>,
+        Mark Brand <markbrand@google.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Vishwath Mohan <vishwath@google.com>
+Subject: Re: [PATCH v10 05/22] kasan: add CONFIG_KASAN_GENERIC and
+ CONFIG_KASAN_SW_TAGS
+Message-ID: <20181107170458.jirk2b3tszrcagbt@lakrids.cambridge.arm.com>
+References: <cover.1541525354.git.andreyknvl@google.com>
+ <ea8f0391d7befab4afec34d2a009028cd9e0f326.1541525354.git.andreyknvl@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ea8f0391d7befab4afec34d2a009028cd9e0f326.1541525354.git.andreyknvl@google.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHK0diG+Nb_nQYAA--.1414S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxur45Gr1fWrWrJr4DXFWDArb_yoW5AFyDpF
+	ykK3yfAr40vF43KFW3AF47Wry5Aws7GFW3Gr9xt34Y934xAa43tr1q9ryakrW8XF1xXrW2
+	qF1vkFy5WFnxA37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW8MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJVW8Jr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8Jr1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xYxBIdaVFxhVjvjDU0xZFpf9x07bb
+	_-PUUUUU=
+
+On Tue, Nov 06, 2018 at 06:30:20PM +0100, Andrey Konovalov wrote:
+> This commit splits the current CONFIG_KASAN config option into two:
+> 1. CONFIG_KASAN_GENERIC, that enables the generic KASAN mode (the one
+>    that exists now);
+> 2. CONFIG_KASAN_SW_TAGS, that enables the software tag-based KASAN mode.
+> 
+> The name CONFIG_KASAN_SW_TAGS is chosen as in the future we will have
+> another hardware tag-based KASAN mode, that will rely on hardware memory
+> tagging support in arm64.
+> 
+> With CONFIG_KASAN_SW_TAGS enabled, compiler options are changed to
+> instrument kernel files with -fsantize=kernel-hwaddress (except the ones
+> for which KASAN_SANITIZE := n is set).
+> 
+> Both CONFIG_KASAN_GENERIC and CONFIG_KASAN_SW_TAGS support both
+> CONFIG_KASAN_INLINE and CONFIG_KASAN_OUTLINE instrumentation modes.
+> 
+> This commit also adds empty placeholder (for now) implementation of
+> tag-based KASAN specific hooks inserted by the compiler and adjusts
+> common hooks implementation to compile correctly with each of the
+> config options.
+> 
+> Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> ---
+>  arch/arm64/Kconfig                  |  1 +
+>  include/linux/compiler-clang.h      |  5 +-
+>  include/linux/compiler-gcc.h        |  6 ++
+>  include/linux/compiler_attributes.h | 13 -----
+>  include/linux/kasan.h               | 16 ++++--
+>  lib/Kconfig.kasan                   | 87 +++++++++++++++++++++++------
+>  mm/kasan/Makefile                   |  6 +-
+>  mm/kasan/generic.c                  |  2 +-
+>  mm/kasan/kasan.h                    |  3 +-
+>  mm/kasan/tags.c                     | 75 +++++++++++++++++++++++++
+>  mm/slub.c                           |  2 +-
+>  scripts/Makefile.kasan              | 27 ++++++++-
+>  12 files changed, 201 insertions(+), 42 deletions(-)
+>  create mode 100644 mm/kasan/tags.c
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 787d7850e064..8b331dcfb48e 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -111,6 +111,7 @@ config ARM64
+>  	select HAVE_ARCH_JUMP_LABEL
+>  	select HAVE_ARCH_JUMP_LABEL_RELATIVE
+>  	select HAVE_ARCH_KASAN if !(ARM64_16K_PAGES && ARM64_VA_BITS_48)
+> +	select HAVE_ARCH_KASAN_SW_TAGS if !(ARM64_16K_PAGES && ARM64_VA_BITS_48)
+
+Given this relies on a compiler feature, can we please gate this on
+compiler feature detection? e.g. in some common Kconfig have:
+
+	select CC_HAS_ASAN_HWADDRESS if $(cc-option -fsanitize=kernel-hwaddress)
+
+... and on arm64 we can do:
+
+	select HAVE_ARCH_KASAN_SW_TAGS if !(ARM64_16K_PAGES && ARM64_VA_BITS_48)
+
+... and core KASAN Kconfig can have:
+
+config KASAN_SW_TAGS
+	depends on HAVE_ARCH_KASAN_SW_TAGS
+	depends on CC_HAS_ASAN_HWADDRESS
+
+[...]
+
+> +ifeq ($(call cc-option, $(CFLAGS_KASAN) -Werror),)
+> +    ifneq ($(CONFIG_COMPILE_TEST),y)
+> +        $(warning Cannot use CONFIG_KASAN_SW_TAGS: \
+> +            -fsanitize=hwaddress is not supported by compiler)
+> +    endif
+> +endif
+
+... and then this warning shouldn't be possible, and can go.
+
+Thanks,
+Mark.

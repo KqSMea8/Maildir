@@ -1,0 +1,148 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:48 -0000
+Received: from icoremail.net (unknown [209.85.214.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3__ufEONb8B5ZAQ--.26819S3;
+	Thu, 08 Nov 2018 00:19:43 +0800 (CST)
+Received: from mail-pl1-f182.google.com (unknown [209.85.214.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCnh0OeEONbZEYYAA--.109S3;
+	Thu, 08 Nov 2018 00:19:42 +0800 (CST)
+Received: by mail-pl1-f182.google.com with SMTP id c13-v6so8059493plz.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:19:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=gfsSFh+cSA4fFBE0WrqmGqo2qqdg9KZ1ouvE5EoR+ck=;
+        b=cUTLe1X7vVE8S79HgufOCFbmer0PpWMZEXw4fdiv4HC/a4UvrdoxOORh+RKVt2z8d0
+         /ZTmUxAQrBk9n+F1t1PXH5W0Y2kr0kPZe/q7g77ny+Zx2QERZqslYiKBEonov2y4ne+e
+         TWPsPDK5sfDnmtjBSZzPwe9Pt9VNTVQdBtIgdQHPHdS3FcJ2kCsqyr/3aOP5VxRZf08O
+         HvyZracqERoVu9BPftNhoOm8ItNhk8E5d3pS5qm7m2tDB5Rh2jVjuzaf/8hyGqqzPUGm
+         x7UHmInz6lewuhq7mFxAUJcaJjOb58/9bypCjBXLetIsVjS/PpfVJ1GgJ4mglnMomXr0
+         9qWQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+X-Gm-Message-State: AGRZ1gL1E+6Lru4ph2hY97besXPY4YNWXCeJIKo/ZYVjpuF5wV7ur0va
+	RN2pghsafYC2rFYG7eJ2v5O+dNVm7M8ZLcit2KwKFrN3r1yyj0FwcA==
+X-Received: by 2002:a17:902:a9:: with SMTP id a38-v6mr864481pla.7.1541607582005;
+        Wed, 07 Nov 2018 08:19:42 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5441515pjt;
+        Wed, 7 Nov 2018 08:19:41 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fLZDTDsbVGSxAlLm6uG1qwoxq1E8FJ0D5rOvTkLFKnx/zLPfu+X3QQN+cNn27FxhHuZVTY
+X-Received: by 2002:a62:120b:: with SMTP id a11-v6mr816534pfj.165.1541607581229;
+        Wed, 07 Nov 2018 08:19:41 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541607581; cv=none;
+        d=google.com; s=arc-20160816;
+        b=vls+jmIvfDirfFJfVddCOaj9BQ4N6gFsL5QJiQ8rIYBhS/URORK8QP3Tvt87KGtM/8
+         /EJf3MdhCiucwZiE/cRuLAsAhEIM7ZdrxTKvp9MX7hfTVI7P25OhbjC5jarqU2OIkERD
+         kwYRmrq4RCDz0TRDlWFCvsp0AmR2Pf/h6u5YWvsZa68+xIbX3W+RfW9l1+5yVwW8nPSC
+         QTs+sw4bD5PpyoqfH7MXJZYDIOycyJmXQ7rI3XYj/9weYpg0R1xoYhukvcYhzVq4J7zW
+         AfnxRbiG1Xc+bZ+ESjQHZ1vWSdC4jVBES4nN+NM633482qpLTws1uhqWwwjnEhE97/2h
+         +1+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=gfsSFh+cSA4fFBE0WrqmGqo2qqdg9KZ1ouvE5EoR+ck=;
+        b=wilSQ5w8YFJGp/Dr7oBj15Ax2RMxmiDo1EEUH3yHgxifIeiau1agSSojNJc7okPL1N
+         TXk07mZzWL6sxwZFvbLjo2QiyqxC8VyhcQvpmQ3MTB7G2ZQ9b4XzYjJ2HmSKpruelFnL
+         3hj6/jD2Mt4G7Htu1c6XUVmXRxZ1kDRtfLqzLiLOrfUkt1KA135/ZhXxLIZXEmPLHeY+
+         z7qXon+KwiQ3gMo/NURCkhGGsHJNlFfG4OoyREsiECauaxIqITv+z/DV7QMcsAvTHaUh
+         ete53p7aEWbB2FL/qQdau6JjCAkJdJSruFJzmJszsm/3kbUSDC+PU/C/aZKiNQpHFtEa
+         MloA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id l14si915580pgi.147.2018.11.07.08.19.26;
+        Wed, 07 Nov 2018 08:19:41 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731343AbeKHBuL (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:50:11 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34556 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727312AbeKHBuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:50:11 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 34BC1AE10;
+        Wed,  7 Nov 2018 16:19:07 +0000 (UTC)
+Date: Wed, 7 Nov 2018 17:19:05 +0100
+From: Michal Hocko <mhocko@kernel.org>
+To: Daniel Colascione <dancol@google.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, rppt@linux.ibm.com,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        "Dennis Zhou (Facebook)" <dennisszhou@gmail.com>,
+        Prashant Dhamdhere <pdhamdhe@redhat.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v2] Document /proc/pid PID reuse behavior
+Message-ID: <20181107161905.GJ27423@dhcp22.suse.cz>
+References: <20181031150625.147369-1-dancol@google.com>
+ <20181105132205.138695-1-dancol@google.com>
+ <20181106130524.GC2453@dhcp22.suse.cz>
+ <CAKOZueu5aDtHDBzp6qKECTHEejjb=dyegQkuHh8NfwgNktzFow@mail.gmail.com>
+ <20181107160015.GI27423@dhcp22.suse.cz>
+ <CAKOZuevb-MED0QiL5RWJ0py=yt48=N7bPSq5bFqiwWcqN9L=Xg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKOZuevb-MED0QiL5RWJ0py=yt48=N7bPSq5bFqiwWcqN9L=Xg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCnh0OeEONbZEYYAA--.109S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xw1rGF1xWw1UCry5try8Grg_yoW3JwcE9F
+	WIgr4qk342vrs5CanYgrsIy393Ka1UKFy0qrWvqrW2gF97JF95Jrn3KrZI9F18CaySyr9x
+	Wr93Za1ruw1F9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbDxYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r4UJwAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	GVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkIecxEwVCI4VWUMxkI7II2jI8vz4vE
+	wIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	4j6F4UMxvI42IY6I8E87Iv67AKxVW8JVWxJwCYIxAIcVC2z280aVCY1x0267AKxVW8JVW8
+	Jr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I
+	0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWU
+	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI4
+	8JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxU6QzVUUUU
+	U
+
+On Wed 07-11-18 16:10:01, Daniel Colascione wrote:
+> On Wed, Nov 7, 2018 at 4:00 PM, Michal Hocko <mhocko@kernel.org> wrote:
+[...]
+> > If you really do care about pid space depletion then you
+> > should use pid cgroup controller.
+> 
+> Or that, sure. But since cgroups are optional, the problem with the
+> core model remains. In general, if there's a problem X with the core
+> system API, and you can mitigate X by using a cgroup, X is still a
+> problem.
+
+I am not questioning that. All that I am saying is that there is a way to
+mitigate the issue. This is not the only resource where the standard
+rlimit is not sufficient and there is no other way than cgroups.
+Actually cgroups were introduced to address rlimit limits IIRC.
+
+-- 
+Michal Hocko
+SUSE Labs

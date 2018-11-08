@@ -1,0 +1,141 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:05 -0000
+Received: from icoremail.net (unknown [209.85.215.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHHyanQuNbWFVaAQ--.27481S3;
+	Thu, 08 Nov 2018 03:53:12 +0800 (CST)
+Received: from mail-pg1-f179.google.com (unknown [209.85.215.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCnjEilQuNbohUZAA--.736S3;
+	Thu, 08 Nov 2018 03:53:09 +0800 (CST)
+Received: by mail-pg1-f179.google.com with SMTP id y4so7315814pgc.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:53:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=FP+gJ4sFEBTobzXzyZzULVE9M44lmTDp6/nySWMcfRE=;
+        b=Y+XC9X/PVbJbDUf/pfBYN4nuyn86abeceQvenu3nc1w0LifOG/GloKGZEFWmSMyFCM
+         sVGZl4bxa5ed6VP+TNPHcCxPDvgzWtdakTeVINYJqkos4Lqt/Yj05B8rLunqO9WoFS49
+         eMBFKaKjCnstM/LSkfUeNHmCiMDYdP9ukfD/7CZV37ljhzsUWJ3P7q/cuG2EdmqE++47
+         lVSmLuy9WK0pDQ2RAWYOjHA+hX5OSiDOrXDj42eXTbAAtJ3km2neO0KmSVWXko8ueSZ0
+         csCvqBko+zW/xHMaccJqFnO8OKsv2U2n075FaaedRaBjxe6wF5LcqoaI9XbolvVPbXSf
+         kZ7w==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gL8A/UrdCRinEkXb4mXtjLtaj8UdWr6FwcUiEEy9uJq0VN1C/10
+	0AENUfD9SzqwegsQIKDaPexXcoCaWrWkqViqjaqJygVvXtneUEhMzA==
+X-Received: by 2002:a62:22c3:: with SMTP id p64-v6mr1639963pfj.9.1541620388187;
+        Wed, 07 Nov 2018 11:53:08 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5672494pjt;
+        Wed, 7 Nov 2018 11:53:07 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f66JsIiTlGg7pVbWReftlsJPy0lD63dC6hMZLvkvuZaP+2Uo5xaac7ZcLjqtmla/jgH+cU
+X-Received: by 2002:a63:4b18:: with SMTP id y24-v6mr1377812pga.181.1541620387529;
+        Wed, 07 Nov 2018 11:53:07 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620387; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Dj5Uz5ArBGBYR9BYU2l9hHRbcPUOqlB17LZPNW7lnogYSKwOCirBwy5vwZopKMm2pM
+         H2sOIPr6BRuaksOKMZquf6LXpoO3rXDEvqiDDXmBb3bwsj/QJJehkk+x0OTT9JarMg2K
+         YdgMKN4fRC+uMu+A2dXj+QOB9zRTQZt1IC2zsfQWcvFYVfQhvzpLnd18hxDDtvN+fneI
+         CgyjYxn884lHUNpezwJ5phGfQqTXhGlf/iOn30YegyctVw5udX9W/laIeWM6OB95GLKj
+         O38C+2wUUVcTte7dlMPdrp95OKVdCfCsKC/5kCZ4oGhXcLDfAQ8Tzh9KRJDWo1EwS4XB
+         09Fw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=FP+gJ4sFEBTobzXzyZzULVE9M44lmTDp6/nySWMcfRE=;
+        b=pwUeVwbCnjQotrMsKqAQKtdaHsDN6Ufkcmutj75BYxq5wXVYk7kPsY5gNIJNWBFju4
+         LfHwBrYfYY4AMhNOzS/rpt20Ty3szNQNdiOj732dGaGwLHBUcz4NzrEUTmZV0y08W3bX
+         Tm1eIJehZ1UxFcv9vn2RiS1U07YZ9w/PXRqGANLwIGQ+8aDMVUUazH1/fnlpFwZZNvDc
+         t9lvpRIQJms46L8EebCpo2TYhPnPOVAUhEVEqTzFRZxHHxWigrImZ1WKCNqBmFBmtkIM
+         1uwB4BMo7noF57vtzBIAPPC2qvnIXPI3kduDgYwZ+8zO5+laYj43tD9Pz2Lgbsm4RpPh
+         y4NQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id e92-v6si1578590pld.45.2018.11.07.11.52.52;
+        Wed, 07 Nov 2018 11:53:07 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726958AbeKHFXp (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:23:45 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:41836 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbeKHFVC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:21:02 -0500
+Received: from localhost ([127.0.0.1] helo=bazinga.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1gKTp6-00070Q-UB; Wed, 07 Nov 2018 20:49:09 +0100
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 04/23] x86/entry/32: Remove asm/math_emu.h include
+Date: Wed,  7 Nov 2018 20:48:39 +0100
+Message-Id: <20181107194858.9380-5-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107194858.9380-1-bigeasy@linutronix.de>
+References: <20181107194858.9380-1-bigeasy@linutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCnjEilQuNbohUZAA--.736S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7JFykCF1DZFWDAw4kCr17ZFb_yoWxtwc_Ca
+	47Gw48GrWFyryqqF1xWws2qa12kw17tFyF9F1FqF90yr1DtFn8WaykJr15Jr9Ik3s3trs3
+	X3WqkryjqryakjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbg8YjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U5NL0UUUUUU==
+
+The math_emu.h header files contains the definition of struct
+math_emu_info. It is not used in this file.
+
+Remove asm/math_emu.h include.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/x86/kernel/process_32.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
+index d9510452b69a6..b8a935adc96fc 100644
+--- a/arch/x86/kernel/process_32.c
++++ b/arch/x86/kernel/process_32.c
+@@ -44,9 +44,6 @@
+ #include <asm/processor.h>
+ #include <asm/fpu/internal.h>
+ #include <asm/desc.h>
+-#ifdef CONFIG_MATH_EMULATION
+-#include <asm/math_emu.h>
+-#endif
+ 
+ #include <linux/err.h>
+ 
+-- 
+2.19.1

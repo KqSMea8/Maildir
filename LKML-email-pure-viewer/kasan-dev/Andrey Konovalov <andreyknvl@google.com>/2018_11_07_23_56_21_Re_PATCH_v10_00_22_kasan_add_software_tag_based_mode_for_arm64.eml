@@ -1,0 +1,179 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:43 -0000
+Received: from icoremail.net (unknown [209.85.215.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_2ODDONbIAVZAQ--.26186S3;
+	Thu, 08 Nov 2018 00:02:12 +0800 (CST)
+Received: from mail-pg1-f169.google.com (unknown [209.85.215.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnx0NRC+NbIjAYAA--.31S3;
+	Wed, 07 Nov 2018 23:57:05 +0800 (CST)
+Received: by mail-pg1-f169.google.com with SMTP id n10-v6so7475460pgv.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:57:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :in-reply-to:references:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=UA3nks6dFaGQKahoiLGstMR6jL9rjzjXSjUXCWIc7yo=;
+        b=T8xc14y/NxExjaKbq61vINn9W+SLJSfSy3Sla21qK3H2GFlweHMO/8s9JkRSsMC1+v
+         i+t/lUGWJUDvP027kBT/9qPnIcH9PJw/whRTZcyhO4jPFQAo/2/tNAXIYh8SKQDdJo9X
+         KU0D01/Pmk8hjymb3NFhkxWGifLlOkZRkXzyMzXzDqUyBhkmdXWcqpWVbcBhiM2J1rQ/
+         pnGLEeTh0m5D54qaiRhsUBSZkSZzs6hfpL6lOGuRhHBftTxB7QfAem7ZP7LYKkIguAPq
+         Q3mdAQPhj0d75jNMhDqop44pVGP+4NqWJgeM4ylaAsoFMcVLrujFN0UCjXbmV+RAkpfh
+         xhXw==
+X-Gm-Message-State: AGRZ1gLYQNvURvDKE9nL9cGaGDS1bx4XCsMp1q45jLuNAwrJF8N8iDN3
+	+SkmbV96uEXPwXcSoUge1/hBah89etvQzCdJmYk3LLnYdOoSfs2XXw==
+X-Received: by 2002:a62:42dc:: with SMTP id h89-v6mr798967pfd.0.1541606225249;
+        Wed, 07 Nov 2018 07:57:05 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5413766pjt;
+        Wed, 7 Nov 2018 07:57:04 -0800 (PST)
+X-Google-Smtp-Source: AJdET5e1Rek+xMBzO292RTqDNziZK4WQcxWKFHruabQvk2um8+tZ3EWNT8a0CfJorzkz2PlqN3Rp
+X-Received: by 2002:a17:902:4401:: with SMTP id k1-v6mr741968pld.272.1541606224640;
+        Wed, 07 Nov 2018 07:57:04 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541606224; cv=none;
+        d=google.com; s=arc-20160816;
+        b=cJHVqbViWipXgE/7BHqDoQYiQYcQehKw08bq+U7I2Ni0ocR/bKF/92Qf8ZKxjZr/x8
+         1LBgIZ7m/vEUaja4gvfRhfRTwsexCr56rHsmI8cWswgSdiEZv8yL3LI+vNTQKbTpnM4Q
+         q/jfoyzGxE1tdD9dZcGQZFcEQJKF27nkC7Jk3SbOLeKchDlVrjh5en7Ikvd2CbVopVeu
+         /fMch7C375RjytoI0hGwujQZMWvlVp5o4K/RMboNG5isOuZuHi+q9T+c5FvE+gtE0mvo
+         yTxFVpvcIWTAgGcnN5powd1l+HnK/Jfb4OquOrVwZ6iSysVk5tjnMwG5EkLqYSdBjHPW
+         NXRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :references:in-reply-to:mime-version:dkim-signature;
+        bh=UA3nks6dFaGQKahoiLGstMR6jL9rjzjXSjUXCWIc7yo=;
+        b=AuJ2keTkcWEe6ATSsMTk7IUk5qJI4AiobQ1KqE1Xa7/242kcnsltTSMgf7gPEY2bEb
+         IqRkkQTqU3GGhcfmAk6ImjnHnYVV8+k1wAbGixJznL9fisBAJ2vDjs1CkompnW+TSiw4
+         8RxZGNiFkXR5GtAaRiErH+OUxW28OfHGDCldoSxkbY/DC+H3mzmxyJEwIC+96BvfjrrV
+         +CbM/E1I7+MvWXEEPEsIm/8qLYtakYBPSdLMgGI6iBDdN6Dl3uW2CPptQAx2Y5BLv0zi
+         c1dEWi82K2mKvk1w5lFs78wcFO+1ZElK5LPEO2RwV/d7VPK8o25soPePyYbNLoN/52k8
+         MMHA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@google.com header.s=20161025 header.b=k1C5ofuI;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=google.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d18si924030pgm.212.2018.11.07.07.56.50;
+        Wed, 07 Nov 2018 07:57:04 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731266AbeKHB1T (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:27:19 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35872 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731252AbeKHB1T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:27:19 -0500
+Received: by mail-io1-f68.google.com with SMTP id o19-v6so12245482iod.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 07:56:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=UA3nks6dFaGQKahoiLGstMR6jL9rjzjXSjUXCWIc7yo=;
+        b=k1C5ofuI1ZiKeq9zgy7x6KrBJvutRffx2OvofpS3rMnZtR//wP+F6r1epcmqQeJjCo
+         4875jAeUIIcedUjAz4YIAMBeKY2Rsgqjpw8pNMQu8/ZnGL7E/dRHHMU4qCqGJ2rILXTb
+         PkxHAZHUwKSKaYYlmPSeqJlNO8CtZah/72Fr/sdYNg4g172Jogv2lsOVo+l/IATS9nW+
+         JWTb/7vo0sK72aUWzcFXK8KIuW2enl+P0oUfzEBXFLABa03n1vsoTverXEUoffS2J6Xs
+         cZ2WqL9FfFHzymMoh21S2ZKjS+x1ZyRwMc1rxIPECKoYhoTDf3kHOhmsxGE1ux/skTwO
+         ltrw==
+X-Received: by 2002:a6b:6904:: with SMTP id e4-v6mr636228ioc.119.1541606181670;
+ Wed, 07 Nov 2018 07:56:21 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a02:1846:0:0:0:0:0 with HTTP; Wed, 7 Nov 2018 07:56:21 -0800 (PST)
+In-Reply-To: <20181107153456.GE2623@brain-police>
+References: <cover.1541525354.git.andreyknvl@google.com> <CAAeHK+yOsP7V0gPu7EpqCbJZqbGQMZbAp6q1+=0dNGC24reyWg@mail.gmail.com>
+ <20181107145922.GD2623@brain-police> <CAAeHK+zNgv9WxRpf7N3gmsLYGL6oUALAnyerMzeYZUz1LhoUuA@mail.gmail.com>
+ <20181107153456.GE2623@brain-police>
+From: Andrey Konovalov <andreyknvl@google.com>
+Date: Wed, 7 Nov 2018 16:56:21 +0100
+Message-ID: <CAAeHK+yRAVo5S1Fb__uzK=drpXRBuB8-KvL8yQL8sfUG-Tr1Mw@mail.gmail.com>
+Subject: Re: [PATCH v10 00/22] kasan: add software tag-based mode for arm64
+To: Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Jann Horn <jannh@google.com>,
+        Mark Brand <markbrand@google.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Vishwath Mohan <vishwath@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Dave Martin <dave.martin@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Paul Lawrence <paullawrence@google.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        kasan-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-sparse@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnx0NRC+NbIjAYAA--.31S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7JF45tr43ZF4ktFWkGr18AFb_yoWDXwbEgr
+	n2v393C3yDJF97Za43CFn8Wr93Xa909rW3X3s8Jry3JFyUJrs8JFZakwsa9F43GFWqkrya
+	yrs8GayIq3sIqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqxYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26r1j6r4UM28EF7xvwVC2z280aVCY1x0267AKxVWUJVW8JwAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UMx02cVCv0xWlc7CjxV
+	AKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vEIxC_JwCY0x0Ix7I2
+	Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_
+	Jr0_Gr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I
+	8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26rWY6r4UJwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IU5ya
+	0PUUUUU==
+
+On Wed, Nov 7, 2018 at 4:34 PM, Will Deacon <will.deacon@arm.com> wrote:
+>
+> I would like the patches that touch code under arch/arm64/ to be reviewed by
+> somebody from the arm64 community. Since the core parts have already been
+> reviewed, I was suggesting that you could split them out so that they are
+> not blocked by the architecture code. Is it not possible to preserve the
+> existing KASAN behaviour for arm64 with the core parts merged? I figured it
+> must be, since you're not touching any other architectures here and they
+> assumedly continue to function correctly.
+
+It's possible to split out the core mm part, but it doesn't make much
+sense to merge it separately from the arm64 changes.
+
+> However, if you'd rather keep everything together, please can we give it a
+> couple of weeks so we can at least get the architecture bits reviewed? Most
+> people are out at LPC next week (and I'm at another conference this week).
+
+OK, sounds good!
+
+Catalin, could you take a look at the arm64 specific changes?

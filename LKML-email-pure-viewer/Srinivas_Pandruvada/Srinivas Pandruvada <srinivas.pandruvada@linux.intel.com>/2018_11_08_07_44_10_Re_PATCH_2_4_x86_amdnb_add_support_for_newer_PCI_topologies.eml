@@ -1,0 +1,169 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:18 -0000
+Received: from icoremail.net (unknown [209.85.214.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3__v2eONbvI5bAQ--.27638S3;
+	Thu, 08 Nov 2018 07:44:54 +0800 (CST)
+Received: from mail-pl1-f177.google.com (unknown [209.85.214.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwD3zTn0eONbZ8cZAA--.2087S3;
+	Thu, 08 Nov 2018 07:44:52 +0800 (CST)
+Received: by mail-pl1-f177.google.com with SMTP id q19-v6so5596490pll.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 15:44:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=ikLM0wtmsVkbM5xT89n1bUcuAduqHMV4YoKEPHIFQgY=;
+        b=ZzRrXmw+HuAS6gDt+GKzvFJ1NaUHyDO9VBFKfkL2SbVvh4g61mHuSg3mjDQ9QLQ2zS
+         OBayzI7Z4QZEJoA28s0lGoXx8EdRXnyhWrxZa6AUYFGAXej2knxkniTKCqhit7ln0sk3
+         f1DkZdAHcZ/N3wAdd/fbWOGDHmQ93Ixfcmammqa+F1o4lxR4/MBxsU9y03lTxINZ2Npj
+         jU+fY9gejiu/mOETfWFJ5CmTlYwdG1hf1N4ykMHyJDmlk/fROnESXW2EHsbMFnMxqU3C
+         NGL4Bl9vLtwJroyXetUeoJxoqYogZyxFhHHBBYIYrXCJ1/NkKV9Gk//teujnLxNz1WoH
+         pypw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gKGdQT/ySmg82wRxzHpYyV2el5YLSzb6P0fCduYUXtBBJvwvxAa
+	4ecYk50ZPWsc0GgQsKTEjRCJ0u3xeNt7Kmvv+voi79NJaS4k2OhDOg==
+X-Received: by 2002:a17:902:9698:: with SMTP id n24-v6mr2382160plp.9.1541634292075;
+        Wed, 07 Nov 2018 15:44:52 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp138974pjt;
+        Wed, 7 Nov 2018 15:44:50 -0800 (PST)
+X-Google-Smtp-Source: AJdET5e8Gfwph7QjkkdNmG2oYQAI+5oU0dyc8JBkSePI0QXq/g5Ubb1HMyoSw3iHiNSHVe0wTstJ
+X-Received: by 2002:a17:902:780f:: with SMTP id p15-v6mr2256230pll.197.1541634290395;
+        Wed, 07 Nov 2018 15:44:50 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541634290; cv=none;
+        d=google.com; s=arc-20160816;
+        b=KVccHqJgULoXHrT82h611fvOWnLSne76v7TCfvxyRvLVoFhwKiNmivo7d6pInmlAe5
+         Rwh/6SsU2xSaeFL0FTp7KccHzmS7QL0gaKDv1k7WnyHk5LU/dPsz1ZHEw/PmDrwXjVI8
+         QcFbhdM58g9pwR7HgK6BIW1ipeIJ9C5XK71bxa5RG8U6yzm8ZVLs2Jy4BzCUTAY1Cp5X
+         ByEkWjmCC3NdFo1H7HaU5k3qnIUg1gFQ49p0Fef2Tk9Mk3j7DvudVKReDF0zpjHcYHoF
+         qjgiBNGTLKo3qCWoR0PPTEb9ZXPNd0ZRSAamQi4d4tUWQtzCSYZq+a7wCnv1eQ9lKGCC
+         Qiww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:date:cc:to:from:subject:message-id;
+        bh=ikLM0wtmsVkbM5xT89n1bUcuAduqHMV4YoKEPHIFQgY=;
+        b=JpplyjresZiFXxSRbDCQ9lXq+EeC3xpn8Cyq15esjGmvsswo/hAjAvhPooAuZ+MVOi
+         cxTRWKPzaUk/eX57Zxaa0do9XI9y6IQ8pFBSAjGgFLkJDE7FNQCNNqAo5LshJI/upc3U
+         F02FhZJzAgmP2oDGb5g/S2pJ/Jbi9WVwlHcjPGYdb5JJSr3yhsGPzvVAUI+bwN8AxZfa
+         3QcKfAJp8BKMA/B814ZKfUL08ZtivNG2+oH2ZZzx9VikQYF2xxjjjhf/qwRfm5FgmUGF
+         lQs0CTvE9pPigaCqLVFNTDueghdf54BAs57IrLcEQrTFz18/F3uWLkK84i4BXL+/ve8/
+         hFEw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id y7-v6si2108994plk.174.2018.11.07.15.44.35;
+        Wed, 07 Nov 2018 15:44:50 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728129AbeKHJQz (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 04:16:55 -0500
+Received: from mga02.intel.com ([134.134.136.20]:50932 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727260AbeKHJQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 04:16:54 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 15:44:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,477,1534834800"; 
+   d="scan'208";a="89413487"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.254.10.84])
+  by orsmga006.jf.intel.com with ESMTP; 07 Nov 2018 15:44:10 -0800
+Message-ID: <f854c74c307aa8f7cf482f5e4e63cf03f3dc12ca.camel@linux.intel.com>
+Subject: Re: [PATCH 2/4] x86/amd_nb: add support for newer PCI topologies
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>,
+        "Woods, Brian" <Brian.Woods@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>, Pu Wen <puwen@hygon.cn>,
+        Jia Zhang <qianyue.zj@alibaba-inc.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Date: Wed, 07 Nov 2018 15:44:10 -0800
+In-Reply-To: <9e4da173ba2978e1c16839162dd927c5ea0fdc36.camel@linux.intel.com>
+References: <20181102195925.GB160487@google.com>
+         <20181102232948.GC26770@zn.tnic> <20181105214537.GA19420@google.com>
+         <20181105215650.GG26868@zn.tnic> <20181106214256.GA65443@google.com>
+         <20181106220059.GA4139@zn.tnic> <20181106232040.GA85755@google.com>
+         <75748b089ee696d5cbaa5c0ce68bad228699894c.camel@linux.intel.com>
+         <20181107213103.GA41183@google.com>
+         <baf4b2e9c9b7cb2f827fd3bffce4b72f6d9376a8.camel@linux.intel.com>
+         <20181107231411.GB41183@google.com>
+         <9e4da173ba2978e1c16839162dd927c5ea0fdc36.camel@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-1.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwD3zTn0eONbZ8cZAA--.2087S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWruw1rKr4kXrWrZFy5Jr4Utwb_yoWktrgEgr
+	yfZFs7urykJw4xX3ZxtFn3G3y0939rKrWUWr1DXrWvg3y2gFW5Xrn5Wry0vF4FyFs3KFnx
+	urnxCFW8XrW3KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbvAYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_uwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
+	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsG
+	vfC2KfnxnUUI43ZEXa7IU5vFAJUUUUU==
+
+On Wed, 2018-11-07 at 15:30 -0800, Srinivas Pandruvada wrote:
+> [...]
+> 
+> > Sure, you can't *force* OEMs to supply a given ACPI device, but you
+> > can certainly say "if you want this functionality, supply INT3401
+> > devices."  That's what you do with PNP0A03 (PCI host bridges), for
+> > example.  If an OEM doesn't supply PNP0A03 devices, the system can
+> > boot just fine as long as you don't need PCI.
+> > 
+> > This model of using the PCI IDs forces OS vendors to release
+> > updates
+> > for every new platform.  I guess you must have considered that and
+> > decided whatever benefit you're getting was worth the cost.
+> 
+> Not worth cost. This is a pain. Every release we end up adding a
+> single
+> line change to many drivers adding a PCI device id. 
+> Since there is no unique class_mask for PCI device for these devices,
+> we need to add device_id for each generation even if there is no
+> change.
+> Instead if we have some feature to say don't enumerate for PCI device
+> id < X and a black list, it will save lot of work.
+This still needs some work on our internal PCI device allocation scheme
+, where we can reserve a block of ids for a PCI device for same
+functionality from generation to generation.
+
+Thanks,
+Srinivas
+

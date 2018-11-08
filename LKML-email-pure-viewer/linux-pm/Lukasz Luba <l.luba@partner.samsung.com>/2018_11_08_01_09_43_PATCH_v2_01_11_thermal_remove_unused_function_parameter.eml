@@ -1,0 +1,215 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:08 -0000
+Received: from icoremail.net (unknown [209.85.214.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv2KlHONbzWlZAQ--.27082S3;
+	Thu, 08 Nov 2018 01:11:02 +0800 (CST)
+Received: from mail-pl1-f170.google.com (unknown [209.85.214.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3F0OhHONbJnoYAA--.466S3;
+	Thu, 08 Nov 2018 01:10:57 +0800 (CST)
+Received: by mail-pl1-f170.google.com with SMTP id n4-v6so8146118plp.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:10:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-filter:dkim-signature:from:to
+         :cc:subject:date:message-id:in-reply-to:cms-type:references:sender
+         :precedence:list-id;
+        bh=2Tl0v8vgsqcXWABbqtUZLHvnuhXk5TvAkw69FGiEAx4=;
+        b=AK1kEzL17dXEHo2aRhDaT7uv61+vHtZr/atTZy3R4MGLxVZqPGWDm0roEVokjuEuRi
+         51YdJPnIxapQ5JBCfLbJQ9Tjv5uEtKbzdodrdEIvtmll1XOIJpvUFSb5DxAb2NG3KW02
+         c5/MVqYYzNHpOkid4vDhogs/FoAO/C8K4F9QyZHqvzaNXW3opcBI48K1TdtIeENiJ/uj
+         GWlNd9VzCaGiIbgdo1o+ThgsDceJnfYJXWZ7Xl3+ed9KbM8dcKDC7Ti6BFua6DBIP/Km
+         arSUP2yx4AdN2UKjqvDiXAL5nKXa6vxS11sJ3jpic1u/ZHwC5E2UFwVxQISqYtV/nIR3
+         aSmA==
+X-Gm-Message-State: AGRZ1gLAVLjcWd+MjDz2GM1WxOHXmDy0B9Fk/TX+1DoRWFGrJzMMVGVb
+	wcYN84tcNVIrMXvteMc1BdHuN6T3ktaaBv2nSJuscLPMvC3UlQJXtw==
+X-Received: by 2002:a17:902:166:: with SMTP id 93-v6mr1018595plb.68.1541610657279;
+        Wed, 07 Nov 2018 09:10:57 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5497778pjt;
+        Wed, 7 Nov 2018 09:10:56 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dcWZwrsauz2yELZpCe8jf30swvkCwPf93eP6LTW7de5CFrlzhiMWUiliSwEtbOq/+oRN4b
+X-Received: by 2002:a63:7154:: with SMTP id b20mr867619pgn.342.1541610656130;
+        Wed, 07 Nov 2018 09:10:56 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610656; cv=none;
+        d=google.com; s=arc-20160816;
+        b=SN0fdHwLH0+EQv+64Yt1x6Y8SOJ8zZ7CRqZgkwrHy2ZUPvI1I38XnClwwsWf8nnToE
+         BAfyT0juh/mtRDkriufnJchu0Vy3hAWlf4KF36R8Udtbab1AZtM33/Uwi+lC62oBjCXD
+         QA11/6e0665UFy1Y8pgDiK5T6cjqqUBVU62e10IKdoxwIoAbVdBhnoK4+gYgaWzZb1dD
+         penQGrFWXfbzj8LEvwhPXn97KDi4wp7VIETMovCa1MwwAMKuT4fdYmmB+4jj/wK8MWpV
+         BmtToiQ9dRNh6lKRpNukVIMg71A/MviBhoLaoNXgki1Eiv6GViKID9a7wZchFkNyvqr+
+         0hqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:cms-type:in-reply-to
+         :message-id:date:subject:cc:to:from:dkim-signature:dkim-filter;
+        bh=2Tl0v8vgsqcXWABbqtUZLHvnuhXk5TvAkw69FGiEAx4=;
+        b=NSB3T+OoOOGFet3WnjaxQIheadGteDJyotU2tqtG46WsjoTg6NtNHiO9Jj1qYZA4mD
+         pPb6MTGm8NMe17MhLSognOj1D/HNYtdf0/8COI+If9/V3MuV1+HOPJwdmKZPoJg3yJTJ
+         8TQmOpx4bmmPgA1U/QlsK4WlVKPWFMzSUGACmzfWN4ZLc/Z3Dz1uRGqcrEeyrbQURGdU
+         Mv33UGFi8hGUsW0yE6hWW17L2n4dxCGmSLMnIYKXICbI6ohzDpJadOrSQe2NXZC1Y+Ws
+         XjnJrGkA+N0kUaI+aZ8tuZQ4achWOjkpniA5HrcSn014k8/augZaeAgbfEUkQNG1HfNy
+         8imQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@samsung.com header.s=mail20170921 header.b=IhLNADSL;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=samsung.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id h65-v6si1256295pfc.62.2018.11.07.09.10.40;
+        Wed, 07 Nov 2018 09:10:56 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731485AbeKHClm (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:41:42 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:54753 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727870AbeKHCll (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:41:41 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20181107171023euoutp01c58bc775ba2e32416df613347ea81094~k5rHPmF-f2204222042euoutp01o
+        for <linux-kernel@vger.kernel.org>; Wed,  7 Nov 2018 17:10:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20181107171023euoutp01c58bc775ba2e32416df613347ea81094~k5rHPmF-f2204222042euoutp01o
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1541610623;
+        bh=2Tl0v8vgsqcXWABbqtUZLHvnuhXk5TvAkw69FGiEAx4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IhLNADSLmnKSS25qDx344zLpTZkkl4ttN64971mrLFbui70oEQ/UiSKNLUknYCy0+
+         rl3Khze1aK1R/hE2yPhhmzkAyzXF8D8bfUseW1enPu1v/MtyQSsR2Abmcov/IvN4ha
+         JQtZD7aaFQt1a9GA0rpiLXV80xe/rf5fi1JLW9o4=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20181107171023eucas1p293080dfae19c271a1748c8e22337a83b~k5rGlNAqo2800128001eucas1p2E;
+        Wed,  7 Nov 2018 17:10:23 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 9C.54.04294.E7C13EB5; Wed,  7
+        Nov 2018 17:10:22 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20181107171022eucas1p1c2431f0561d9b1357ab569ab77deca34~k5rFs8C421069210692eucas1p1Z;
+        Wed,  7 Nov 2018 17:10:22 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20181107171021eusmtrp1a8b28f2c742779585f4cd72f7ba758b6~k5rFhCzhn2472724727eusmtrp1X;
+        Wed,  7 Nov 2018 17:10:21 +0000 (GMT)
+X-AuditID: cbfec7f4-84fff700000010c6-99-5be31c7eeb5a
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 71.23.04128.D7C13EB5; Wed,  7
+        Nov 2018 17:10:21 +0000 (GMT)
+Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20181107171021eusmtip2597dad7f16cad0654585ff41af166db2~k5rE_fk-I0120301203eusmtip2d;
+        Wed,  7 Nov 2018 17:10:21 +0000 (GMT)
+From: Lukasz Luba <l.luba@partner.samsung.com>
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Cc: rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, corbet@lwn.net, b.zolnierkie@samsung.com,
+        krzk@kernel.org, Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v2 01/11] thermal: remove unused function parameter
+Date: Wed,  7 Nov 2018 18:09:43 +0100
+Message-Id: <1541610593-28542-2-git-send-email-l.luba@partner.samsung.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1541610593-28542-1-git-send-email-l.luba@partner.samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSWUwTURSGuZ1OO1SLYyFyRJakEYMkLBowE1GDyMNENOFBX+gDVpmwyNph
+        V6FEyxYgIgYQlYqFALUEqGURgbAFAihLMKAsCZsRNQVNiZFEQMqAvn3/f875z8nNJTBJE25H
+        hEfHM4poeaRUIOI392+MuqXZL8k8l7fcqMbSepxa7spCVLnJgVL3jeCU+sMkTo2ONgipaaU9
+        pV/aURWZlXxqou2ZgDLl9yGqamqcR6k6+oTU8kKBwNeK1pXrEP2mbE5Ia9q/8mi9NkdAz062
+        C+jXlem0pqAIp7tX23l0gUGLaJPeMVAUJDoXwkSGJzIKjws3RGHv1EZh7GdR8mBzhVCJHljm
+        IksCSC8orKrDcpGIkJA1CIZ1K0JOrCOYN2p4nDAhMGhasP2RmSIj4grVCNStI+jfyGLnxs48
+        QQhId2jVxpl9G/IpAlOnZjcXI2cRDD3W7EZZk5eg5nsJMjOfdIYvszO4mcXkZdhWvd1b5wif
+        RnJ22ZIMgPIJ424QkP1CGNooxbkmf8hbmEIcW8O3AYOQY3sYLsrjc8zC+2ytgOO7kDXYutfj
+        A70D47j5aow8CfVtHpx9Ecb1ap7ZBtIKPhoPm21sBx81l2CcLYbsTAnX7QKGvDEex0egWle8
+        F05DRXPd3pOWI7j/8xf+EDmV/V/2AiEtsmUS2KhQhj0dzSS5s/IoNiE61P1WTJQe7Xym4a2B
+        9VbU9udmDyIJJD0oHmtakElweSKbEtWDgMCkNuL8V4syiThEnpLKKGKCFQmRDNuDjhF8qa34
+        jsW8TEKGyuOZ2wwTyyj2qzzC0k6JMu4lGrxzk2x4hUcLbavOKqQWYuXx8CcBeX5BL3v9ak8U
+        zAV2xIsPlaitlF3tGXCtMS1g2inVsDbecL7Y67mzdW3++oprpecPf1ltHD9xUJWUQLlc3Vxi
+        3GYi+AtrS+mrnWW+1w/8To7vbjmTuRkhUfmQ3uFN23VXyqa3gx1cVVI+GyY/5YopWPlfknhq
+        vEgDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGIsWRmVeSWpSXmKPExsVy+t/xe7q1Mo+jDToPW1lsnLGe1eLJgXZG
+        i3mfZS3mHznHajH/yjVWi/PnN7Bb3GqQsdj0GMhb2LaExeLyrjlsFp97jzBaLL1+kcmide8R
+        dosnD/vYHPg81sxbw+ixc9Zddo/Fe14yeWxa1cnmcefaHjaPzUvqPRb3TWb1OPhuD5NH35ZV
+        jB6fN8kFcEXp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp
+        2yXoZZyZ/5a94ClXxcltC9kbGFs4uxg5OSQETCRuT37L2MXIxSEksJRR4uD7xUwQCTGJSfu2
+        s0PYwhJ/rnWxgdhCAp8YJb53eHUxcnCwCehJ7FhVCNIrIjCfUeLopstsIA6zwDNGiZXTX4IN
+        EhZwlljxejojiM0ioCrx/M5tVhCbV8BL4n/rbmaIBXISN891gtmcAt4S8y6/ZYdY5iXxfdZ6
+        tgmMfAsYGVYxiqSWFuem5xYb6RUn5haX5qXrJefnbmIExsm2Yz+37GDsehd8iFGAg1GJh1dj
+        x8NoIdbEsuLK3EOMEhzMSiK8vasfRQvxpiRWVqUW5ccXleakFh9iNAU6aiKzlGhyPjCG80ri
+        DU0NzS0sDc2NzY3NLJTEec8bVEYJCaQnlqRmp6YWpBbB9DFxcEo1MHowTz2Z11Gz73nh/bmG
+        VYaTcvI6LqksSF5u3HOl89Hz5iSmenuXp+o+jYkyRoyRV9ieCnGZRBzaGa9Une7KtzQppXjh
+        uh3v7x/7WL5S3HruF5uFWh28D8ysnv+rTN1il7H4ve/idbkT+nlcmF/GBy0/4pSgVnk2+ZzP
+        SwZh9po/f6Kb9lyMUmIpzkg01GIuKk4EAKU767OpAgAA
+X-CMS-MailID: 20181107171022eucas1p1c2431f0561d9b1357ab569ab77deca34
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20181107171022eucas1p1c2431f0561d9b1357ab569ab77deca34
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20181107171022eucas1p1c2431f0561d9b1357ab569ab77deca34
+References: <1541610593-28542-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20181107171022eucas1p1c2431f0561d9b1357ab569ab77deca34@eucas1p1.samsung.com>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3F0OhHONbJnoYAA--.466S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7CF18uw1fCw4xGF45KF1kuFg_yoW8GF43p3
+	4jgryUArWkGF4UX3Wjkrs3XF4Yqa1DtrWIvw4kC398ta98A3sxXFyUGry5t393GFyUXFyY
+	yryqyFy7Cw1UArJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPqb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
+	kI7VAKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80
+	FwCY02Avz4vEIxC_GwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar
+	1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Cr0_Gr1U
+	MxvI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4
+	C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xYxBIdaVFxhVjvjDU0xZFpf9x
+	07bUDGOUUUUU=
+
+Clean unused parameter from internal framework function.
+
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+---
+ drivers/thermal/thermal_core.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index d6ebc1c..39fc812 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -315,9 +315,7 @@ static void monitor_thermal_zone(struct thermal_zone_device *tz)
+ 	mutex_unlock(&tz->lock);
+ }
+ 
+-static void handle_non_critical_trips(struct thermal_zone_device *tz,
+-				      int trip,
+-				      enum thermal_trip_type trip_type)
++static void handle_non_critical_trips(struct thermal_zone_device *tz, int trip)
+ {
+ 	tz->governor ? tz->governor->throttle(tz, trip) :
+ 		       def_governor->throttle(tz, trip);
+@@ -418,7 +416,7 @@ static void handle_thermal_trip(struct thermal_zone_device *tz, int trip)
+ 	if (type == THERMAL_TRIP_CRITICAL || type == THERMAL_TRIP_HOT)
+ 		handle_critical_trips(tz, trip, type);
+ 	else
+-		handle_non_critical_trips(tz, trip, type);
++		handle_non_critical_trips(tz, trip);
+ 	/*
+ 	 * Alright, we handled this trip successfully.
+ 	 * So, start monitoring again.
+-- 
+2.7.4

@@ -1,0 +1,165 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:45 -0000
+Received: from icoremail.net (unknown [209.85.210.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_ydEWuNbd+ZaAQ--.27482S3;
+	Thu, 08 Nov 2018 05:33:56 +0800 (CST)
+Received: from mail-pf1-f179.google.com (unknown [209.85.210.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3DTlCWuNbZWYZAA--.1417S3;
+	Thu, 08 Nov 2018 05:33:54 +0800 (CST)
+Received: by mail-pf1-f179.google.com with SMTP id v68-v6so4675668pfk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 13:33:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=YMramrOUouI84EwAv3jck/VALaB4l5MR7Oa8jTkvGnE=;
+        b=kaLWBwlN9bHygx36nrVWQ2VzN28C0CBUgdeC8ihHt242R9IOy+nAmzkpECkBtSD/Lk
+         7uS0fFwzLi+dKKq1vvduStBr84duNuaeUPYazT9r513WCS6d6R3S8vaLC55ZuI2d+nYf
+         cU94ffu4y2zboTu42iz5G8tyfw1Kp+jdPlNO4rogtUF/5xVJGUWkwxkeDwsThSZPsO79
+         xSSvkF6eFaMsn0V0xTyJxeCrVdavz07qgbzpaASQ3PAOeXlD2yb+RkInNwXwyhMmQ3hY
+         YGnj4SGBntYrVaWxVcmRvEU2WHu21R9MQfpr6wJRcSy2yZSM97eMON4RSU2FRmoV+piw
+         AlhA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKxUUWLE/OlnmVkQ4TWROaavoXxXtoTWAG0W9V+BeqX0EgsLROQ
+	Ux83fqS+WoRZRvf2JFzB16jhwaDmy1mCxi+3yy171LSaBxXsVqwgxQ==
+X-Received: by 2002:a63:3c44:: with SMTP id i4mr1645756pgn.286.1541626434051;
+        Wed, 07 Nov 2018 13:33:54 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp30931pjt;
+        Wed, 7 Nov 2018 13:33:53 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eQgcMNm/kFqKIPDc7nP+7SXLG6dkmXGUp7ryKeMUwbkOdLTSnBnsLknNZf+8VE903anS7L
+X-Received: by 2002:a17:902:e01:: with SMTP id 1-v6mr1865804plw.251.1541626433246;
+        Wed, 07 Nov 2018 13:33:53 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541626433; cv=none;
+        d=google.com; s=arc-20160816;
+        b=0C+rMIX9fu0b7XNlhHuaBBaHbpMPzTYMeDY8pqqQBgclrITrh+TKq32iQYnhVJrqEM
+         Xiq+UF5fB8zPNAj0huvZrp30cSYtXBYP6E9haT6rIS4mFQ5xm/aWlBbtclu4OjY0CII7
+         tB+JQ6uqomszFD5mhfOK4kj6KyUZYEAPPaM5hq6by204N/wHYILNFRzmXepk/D/Fg9LA
+         /f+173xG3mqIRwJ1eDXyQORD5gnrM4Amx94knBTEmUDz+BYwfWbADrp37Ku1gPXh2//d
+         R+W0jhw7OWc+5mTnYkElq2vDyjpJqfs7RT4O6mDvaSVYNINqWAz0tRJMvsrHogv8/TAv
+         CAkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=YMramrOUouI84EwAv3jck/VALaB4l5MR7Oa8jTkvGnE=;
+        b=ohogpEdz2OaJ/xSKI1ZwcMIXiSpbG+9Yvu6Yo9mfZyMsZkuxmIZPFod63JetY7oskh
+         UIw8TDnEnQaZ45+dTZN6A1sMPK7fkWzopvyWSf8C/PtwzNefTKNRHlgmotDSq8XHXY3a
+         XLyuGXGFgIRvxDNUb2kZtSBQw0CE8AOlgpc4zkoCtBhoBNxqrSxSiWEjBG5RA7L5rZFp
+         c3VCzq52q7FPaDCDcW7jc/0KUp5OgqhJcphsdmLKwQj5c5gQz74ZTSJ2QEHYzomZwXaR
+         uijGqbq7LBocpylKgu7RUipDV+dOZFkTju32Kqhf6UIcfuASDOVw+HWPvFJoUz0HzkyT
+         Bhwg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 91-v6si1859569plc.409.2018.11.07.13.33.38;
+        Wed, 07 Nov 2018 13:33:53 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727531AbeKHHFj (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:05:39 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:47582 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727295AbeKHHFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:05:38 -0500
+Received: from ip5f5a905a.dynamic.kabel-deutschland.de ([95.90.144.90] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1gKVRp-0008Df-1X; Wed, 07 Nov 2018 22:33:13 +0100
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: hwmon: tmp108: add optional interrupts and #thermal-sensor-cells
+Date: Wed, 07 Nov 2018 22:33:12 +0100
+Message-ID: <5910167.PXNgySJWA7@diego>
+In-Reply-To: <20181107183958.GB5468@roeck-us.net>
+References: <20181107154708.422-1-heiko@sntech.de> <20181107183958.GB5468@roeck-us.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3DTlCWuNbZWYZAA--.1417S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7CFWxuFWUur4DWw4rCFW8tFb_yoW8AFykpF
+	W8GFW7Cr4kWr13X3yqyF1Yvw4Iqr1UAF43CFnrt3sYgan8ArySqr13Kw15u3W8uF1ruFWI
+	vr1FkryFka1kArJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPYb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6F4lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bnyxiU
+	UUUU=
+
+Hi Guenter,
+
+Am Mittwoch, 7. November 2018, 19:39:58 CET schrieb Guenter Roeck:
+> On Wed, Nov 07, 2018 at 04:47:08PM +0100, Heiko Stuebner wrote:
+> > From: Heiko Stuebner <heiko.stuebner@bq.com>
+> > 
+> > The tmp108 does have an alert output that can be used as interrupt source
+> > and can of course also be used as part of a thermal sensor setup for
+> > things
+> > like thermal-based cpu frequencies, so document the necessary properties.
+> > 
+> > Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
+> 
+> Do you also plan to actually implement interrupt support in the driver ?
+
+Not right now but I'm hoping down the road.
+
+The main argument for including this standard property is that
+the dt-binding is of course a description of the hardware and not the
+state of the linux driver and the tmp108 obviously has that alert output
+pin, hence I'd really like to already have it in the new board-dts I'm
+currently working on so it simply magically works once the driver can
+use it :-) .
+
+
+Heiko
+
+> > ---
+> > 
+> >  Documentation/devicetree/bindings/hwmon/tmp108.txt | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/hwmon/tmp108.txt
+> > b/Documentation/devicetree/bindings/hwmon/tmp108.txt index
+> > 8c4b10df86d9..54d4beed4ee5 100644
+> > --- a/Documentation/devicetree/bindings/hwmon/tmp108.txt
+> > +++ b/Documentation/devicetree/bindings/hwmon/tmp108.txt
+> > 
+> > @@ -7,6 +7,10 @@ Requires node properties:
+> >  - compatible : "ti,tmp108"
+> >  - reg : the I2C address of the device. This is 0x48, 0x49, 0x4a, or 0x4b.
+> > 
+> > +Optional properties:
+> > +- interrupts: Reference to the TMP108 alert interrupt.
+> > +- #thermal-sensor-cells: should be set to 0.
+> > +
+> > 
+> >  Example:
+> >  	tmp108@48 {
+> >  	
+> >  		compatible = "ti,tmp108";
+
+
+

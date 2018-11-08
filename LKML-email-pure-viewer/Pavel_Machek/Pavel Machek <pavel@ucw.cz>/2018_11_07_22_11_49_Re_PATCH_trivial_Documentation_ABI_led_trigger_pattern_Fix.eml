@@ -1,0 +1,145 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:05 -0000
+Received: from icoremail.net (unknown [209.85.215.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHHybM8uJbEWpYAQ--.26782S3;
+	Wed, 07 Nov 2018 22:12:32 +0800 (CST)
+Received: from mail-pg1-f169.google.com (unknown [209.85.215.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBn4Ey_8uJb5cIXAA--.13549S3;
+	Wed, 07 Nov 2018 22:12:15 +0800 (CST)
+Received: by mail-pg1-f169.google.com with SMTP id n10-v6so7360460pgv.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:12:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=SY6bObAI60f/L8DFTWXE5D1Tl/e4W4LfLcHhRGdrHtU=;
+        b=EC9f90IjE2X/fJvpckmIKbnGe2aU3adqE4IWcCF9X/ExBTFUXzG5/ONPp+Dg5QJEWO
+         AThScU5JH4X/MyiHaSDRt9udwnCmdZyAZySBFgx7GYcYZVuPsrEQL3r/YCjR+9rdThsJ
+         gr7TQ9R/seyDT+l/OCh+PWQ+LHRvagBHlx1g3BrMQRfnRgjC63HC8icHESWAoAmaIlXv
+         n1SHII34OWb9OgQqX1XMqvP+KQ3pzD28W5AW0ayOC+1luK/JO5/W5OLRtylB6q4axo7m
+         bIACgx9+lKxbZj11/CVph6YLTylYIfO2gDywrATqa4QV86jLTGt/WoI9Wuh7qN63wl2x
+         00mg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJ9j51uV/GTOs+ap99Vh6nVjh0gQlRKXhyE1LuEtiVLs0KKKPcN
+	ehKiu28z7ejzHav6vQUXGmjXJ8I1FdC4N//DYQkTWi30ID69UtQDsg==
+X-Received: by 2002:a62:da54:: with SMTP id w20-v6mr380950pfl.106.1541599935525;
+        Wed, 07 Nov 2018 06:12:15 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5294519pjt;
+        Wed, 7 Nov 2018 06:12:14 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f1lXUWp2GuIWiEnQ6PO5V5UIAdf+2gjizSgs3NNRlrGe9gGmGTtc8UyfzEWBbKYrgkRBE6
+X-Received: by 2002:a63:c508:: with SMTP id f8-v6mr311101pgd.412.1541599934600;
+        Wed, 07 Nov 2018 06:12:14 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541599934; cv=none;
+        d=google.com; s=arc-20160816;
+        b=mm7W9r2Hlu3vLnKhgKKb0WC+NsDsOKZF1vTCL2UuchDXLg+ogVfyCE4GgK4yz+IYus
+         48QnSqeqECHHfojveX9kogg3r/8Xbq3V9pv8od9DDSFzYkBm4UBztxwbaHuki/MmMGZC
+         Q09fGo7xnMt69ugVaHxkHy6OpaXtYH3Dx81b0YKsiFONO2UQtywZphDiRnSAbPcgeBXa
+         qeEVhPJXEypz05+nEwOWtd5fxczhvbgMeyoA4fcyAHnP6ecg+mmWGP3FphUSqJcD1gpY
+         ZY2zfBgAKVpPGBjFxFBTd3zA/Kldnx0/nAoWlGX6dG4gjw5yLW8EkqZPbHy3mA3YjROw
+         bh3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=SY6bObAI60f/L8DFTWXE5D1Tl/e4W4LfLcHhRGdrHtU=;
+        b=l9V+hc5tklfthU7v28Y3apnVqRKX/AjcWoNepZgOBMLfjyVPAGDtXcuFIptOxMEOw+
+         D927RFrKo4Whm5APir8xg/80b3vOJkE88ouWhnJA4JVZgUUe+gDLBGs73lBmQS3A3mH/
+         rXrALjdLBkGoGxId7yR3Gej96jqXCSnIG52BmCZBrypg/ZkoS1QluWJloFPzsEcgL3R5
+         lagFAr9jR01Z2tf95TiXf/R3zXhaacvccDUKlFTH3IMIOEYE0/bYrSqEEeGGgXuQnuxh
+         ICCV9YrgRsJ9+Cbwamv037Y2zlZ0ZrXY/Y7GzvNeFQR4fItHXNu2PA5PIKBxLL1QafL/
+         RIMA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id m126-v6si802373pfc.265.2018.11.07.06.11.58;
+        Wed, 07 Nov 2018 06:12:14 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727613AbeKGXmZ (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:42:25 -0500
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:48531 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbeKGXmZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:42:25 -0500
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 09EBE80746; Wed,  7 Nov 2018 15:11:47 +0100 (CET)
+Date: Wed, 7 Nov 2018 15:11:49 +0100
+From: Pavel Machek <pavel@ucw.cz>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Jiri Kosina <trivial@kernel.org>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH trivial] Documentation: ABI: led-trigger-pattern: Fix
+ typos
+Message-ID: <20181107141149.GA17276@amd>
+References: <20181107134524.13989-1-geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
+Content-Disposition: inline
+In-Reply-To: <20181107134524.13989-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBn4Ey_8uJb5cIXAA--.13549S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUOh7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAa7VASzI0EjI02j7AqF2xKxVCjxxvEa2IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l
+	e4C267I2x7xF54xIwI1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r
+	1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4wCY
+	1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VW5XwCY0x
+	0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY
+	1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x80
+	4xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK
+	8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IUeOdbUUUUUU==
+
+
+--3MwIy2ne0vdjdPXF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed 2018-11-07 14:45:24, Geert Uytterhoeven wrote:
+>   - Spelling s/brigntess/brightness/,
+>   - Double "use".
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--3MwIy2ne0vdjdPXF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlvi8qUACgkQMOfwapXb+vK2iwCfXYwrKkf+gjzK53oEitCqzggF
+f80AoKsnSdqOM7EGK6Rm2GNuSczCUthI
+=W5YQ
+-----END PGP SIGNATURE-----
+
+--3MwIy2ne0vdjdPXF--

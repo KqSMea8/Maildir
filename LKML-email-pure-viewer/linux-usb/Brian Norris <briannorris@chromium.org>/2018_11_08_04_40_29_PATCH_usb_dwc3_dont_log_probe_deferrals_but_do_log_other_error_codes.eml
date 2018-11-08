@@ -1,0 +1,146 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:25 -0000
+Received: from icoremail.net (unknown [209.85.215.182])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH94LTuNbSJZaAQ--.26974S3;
+	Thu, 08 Nov 2018 04:41:48 +0800 (CST)
+Received: from mail-pg1-f182.google.com (unknown [209.85.215.182])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDXvEgKTuNbJTsZAA--.1029S3;
+	Thu, 08 Nov 2018 04:41:46 +0800 (CST)
+Received: by mail-pg1-f182.google.com with SMTP id f8-v6so7815704pgq.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:41:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:mime-version:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=JR0Rfw9fH1+7vyvtLI1tXlAk1pXgLP73l2sRMfZ7/0w=;
+        b=TRyaXj8XX/OQFzeXqpwiMdjXrQPyGz1S8qFI+4da2RM20HBFyU/78sRkALz5ZiI0D0
+         8XJZmfnc5GiD+NCVuRTwHQYty6+CAB9rP2JXCxsAIIB27HymURhZ9XOmLHh+U2UQbzf2
+         XqmRa33TUIB+hA2AUH1vII5ke6iDIYR45ghGzCqwO5qyA9ghbFXI88NFrtiTlZGB7DKU
+         DDd4rpOqBOkyzaEHKj1VQ82evE9L+lQL8LUZeCNGr3Iy+aPxdb/6GWt/LJLpSiAEh44+
+         NxvIiZc9h/J9msZeh6TLWPfF9nqU+tEnjFpp1bxjescU0XKOMkJ8I8448nYlW5jldV2o
+         HcXw==
+X-Gm-Message-State: AGRZ1gJWixHMDIYU6XQTQxzlVZTbOam+qZG31moIa8N5Xms7HYCrnyUy
+	FcfOjT959/sZcdRJFFgDmsFte8MXC0REwjaQfak1xXrsBesKiq13Qg==
+X-Received: by 2002:a62:da54:: with SMTP id w20-v6mr1796303pfl.106.1541623306140;
+        Wed, 07 Nov 2018 12:41:46 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5720452pjt;
+        Wed, 7 Nov 2018 12:41:45 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dUvQ+9HMitAjrumrJ/zOB/Pdyl6tCY5eOyPiO0pEUrcXR315ntdOcoKp0owr3V/fJOM8j3
+X-Received: by 2002:a17:902:700b:: with SMTP id y11-v6mr1721178plk.323.1541623305563;
+        Wed, 07 Nov 2018 12:41:45 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541623305; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Wej4H9GT+wXzp9fm3l/jaBUv/AXFln2skKRXoImLG9IWy8A3KC26H8MszeWFALVBxS
+         kOzlNcmSV0R55jON0J0Y6qkx5Ekvxs9B2kzPAw1DG8Ei9EFfrShjaRRzf9n2tKMQAdko
+         C3fJOFTUaHvHJdUCU143loXWuqNrpSrmilQxGWFIKBGXWZE3+gk2kFoK0BEEiJ4rqfev
+         88zDks69if6nn3sCIhw5WWPo/9B6MWgG/s08os0XxwM1j0/1ua4ldAQlRaD66uBngCtJ
+         vGHyu8d7gpudpuM5CtyX0adpogQry5xoCNWcUGGAJJEz3OEkmQaEzjhk7Mllsvsw1ygm
+         bu3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :message-id:date:subject:cc:to:from:dkim-signature;
+        bh=JR0Rfw9fH1+7vyvtLI1tXlAk1pXgLP73l2sRMfZ7/0w=;
+        b=vExJcJRSCiFC3FaauUwJdg+/iysxOOwPBkAMzkpotPsB3wk3nn3LDzdJXhOFY3gYOK
+         stHyuao09R97gXcQtq5QbKMxeeOAXBr3cMI+Beij9nak52swthbUW7PYamXptmP2SyNw
+         MmV8cKO06KCaQIIPvDyd106V6LwLfLTtre9Emv3hhSGKorEhCUZPYtFwyZFT5MxPWPEF
+         ItrkI7CDq5DgqhIzA7IentaIBCIcfzYrep4xaNJCuCNnBlqJiDbc92ilE9RFmdrVeOHX
+         we44oKICdNWWzwi47hVLMcwUwSlXmg2FJlwzoM1PJgubtuXVisVVYA2042fOzOs6H4ne
+         IO2Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@chromium.org header.s=google header.b=jue8aUJB;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=chromium.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d9-v6si1667336pfo.108.2018.11.07.12.41.30;
+        Wed, 07 Nov 2018 12:41:45 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726969AbeKHGMy (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:12:54 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36560 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbeKHGMy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:12:54 -0500
+Received: by mail-pl1-f194.google.com with SMTP id w24-v6so8394094plq.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 12:40:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JR0Rfw9fH1+7vyvtLI1tXlAk1pXgLP73l2sRMfZ7/0w=;
+        b=jue8aUJBNKn76Vnp3UeuEaSa+jeaznf7He/qRHEXSHSRfe5Oe7Vr8HNrxZQX1IIGlI
+         bKIiCYJyNPezy7FvFGaWPHm3+mlDjJwCd0GfCL1bUrmhD5HQXOlIPcaEjlpAhBbC5Pgd
+         FB9uGMd4B/JGMSzL7L9b0oAM4E2s4YOiBnElA=
+X-Received: by 2002:a17:902:da8:: with SMTP id 37-v6mr1840319plv.12.1541623251292;
+        Wed, 07 Nov 2018 12:40:51 -0800 (PST)
+Received: from smtp.gmail.com ([2620:15c:202:1:299d:6b87:5478:d28a])
+        by smtp.gmail.com with ESMTPSA id m10-v6sm2118013pfg.180.2018.11.07.12.40.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 12:40:37 -0800 (PST)
+From: Brian Norris <briannorris@chromium.org>
+To: Felipe Balbi <balbi@kernel.org>
+Cc: linux-usb@vger.kernel.org, <linux-kernel@vger.kernel.org>,
+        Brian Norris <briannorris@chromium.org>
+Subject: [PATCH] usb: dwc3: don't log probe deferrals; but do log other error codes
+Date: Wed,  7 Nov 2018 12:40:29 -0800
+Message-Id: <20181107204029.88466-1-briannorris@chromium.org>
+X-Mailer: git-send-email 2.19.1.930.g4563a0d9d0-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDXvEgKTuNbJTsZAA--.1029S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrKw4xAFWDCr43GrykJr4Dtwb_yoW3Wwc_K3
+	WkKa1xXwn5Ga17tr1UA342vryj9w4vvrnY9F4Ig3W3GrW7tw4rAFy8ZrWDJr4DCr4vvr9r
+	CanxKwnxuF4IgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqAYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6F1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxU
+	qwSdDUUUU
+
+It's not very useful to repeat a bunch of probe deferral errors. And
+it's also not very useful to log "failed" without telling the error
+code.
+
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+---
+ drivers/usb/dwc3/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 88c80fcc39f5..1ef346ba6a02 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1482,7 +1482,8 @@ static int dwc3_probe(struct platform_device *pdev)
+ 
+ 	ret = dwc3_core_init(dwc);
+ 	if (ret) {
+-		dev_err(dev, "failed to initialize core\n");
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "failed to initialize core: %d\n", ret);
+ 		goto err4;
+ 	}
+ 
+-- 
+2.19.1.930.g4563a0d9d0-goog

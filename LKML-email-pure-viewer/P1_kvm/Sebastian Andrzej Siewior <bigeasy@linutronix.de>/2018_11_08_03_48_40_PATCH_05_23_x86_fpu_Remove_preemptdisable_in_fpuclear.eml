@@ -1,0 +1,154 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:04 -0000
+Received: from icoremail.net (unknown [209.85.214.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH3qMQuNbl1RaAQ--.26820S3;
+	Thu, 08 Nov 2018 03:52:45 +0800 (CST)
+Received: from mail-pl1-f172.google.com (unknown [209.85.214.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnvTmKQuNbTRUZAA--.712S3;
+	Thu, 08 Nov 2018 03:52:42 +0800 (CST)
+Received: by mail-pl1-f172.google.com with SMTP id p6-v6so8330023pll.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:52:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=mvaSOx+q7BDedqZshy3LpvXTlHUtfxTs0SLogQnFnpU=;
+        b=JMromzsATDNhjUDwUOhQ5sAKMTzI4R7UETpFggPakPXl7hv2jO/+uVLJjPqH6PkPVo
+         q48RYv1LP9IE9sa59Ct++vgPhheMZ28B614suxNBshhLV1DZYJBZPVJpXk6r226KFTX3
+         rxi57yGrJuNIUvfW6Vjby91XkYIkh6Ru83lAOlEgNzcv/PDOWKtMRiKz2pZAb6vCfJrG
+         4e9zdlPjlbH72y5Arj17CmCnNuD3L3TEncXH1HI+/6gH6GINUXGf6/FMId96b7Ln8lj2
+         ctKhcQK5WH4dUP8XD9CWK+pkt5fn5IqF3FzIFsxpJ066y0ty4wEouSB/pgzQed4Glo5W
+         8Sng==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJswN5Rmw/X/jG8LuvvfXP5ba3UjB3/Rv8ebMCe0EIxmF3hovnf
+	G8N2P/GRHTNBJfn1bJ33oVTw4WqgEyPBxMZmOIHQp2XKxiHxlZTjPw==
+X-Received: by 2002:a17:902:7082:: with SMTP id z2-v6mr1634127plk.78.1541620362342;
+        Wed, 07 Nov 2018 11:52:42 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5672055pjt;
+        Wed, 7 Nov 2018 11:52:41 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dw3hGDDjWeSJRV2pxSp90/PgnIUOEuDmff6LV1cX0B7TxOuU2yvQHFf6oK1W/78vdchBm9
+X-Received: by 2002:a17:902:aa03:: with SMTP id be3-v6mr1615300plb.294.1541620361649;
+        Wed, 07 Nov 2018 11:52:41 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620361; cv=none;
+        d=google.com; s=arc-20160816;
+        b=iM5lPMjRGPlBuCF9fbCayP4OkF0Dr1Emi1WGYevhEx23geqOeOYnnYH2U/+tcEgDBu
+         7T8QkUQxSe3bFulonGmjlUM4s8VEb5k/KhdvYePj/JWUPySR8Uaf+pIoi93CS1l06tq6
+         sX9lepZ2roYDKoQsGYSlhuvde79uN5CnUPExoNViy0lfLqByibVhJsV3lu48BJ2SFOVK
+         Pto+lQNZZfnd82DHQaE4x9e28SxyHjd6gyg89X0QRQlODBOOU2p1nGwTekxakYZhNvlz
+         7sI1QuuKFVGNeldkqELvs2Qg//EpcqLl9T1Pv4Y3X5cMmfKLS/uDUVbcnykiM5vim+Wq
+         JvWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=mvaSOx+q7BDedqZshy3LpvXTlHUtfxTs0SLogQnFnpU=;
+        b=z7NHvMxULvt9sD0WVyO2dZ4z4MtzDtJ5SJFFJo/JF550dJt0GQH5XuODZjypiwLxoG
+         021f6u9Uanz9pRiHeqsqxp27Vc8Wa+QGaFrCYfdHji1nuerj8/+A6IJ5nbw1RkUgfez3
+         BtFChy8pVMWLXE0tf+GfwqO84xt2btsthaM44/6yQPtNRnNrAgt9gMHQOOSdRQGSfquS
+         bgzkEF3BB8Q9SBGdlXH8sHazG48z14QH9km1bhrVIcdOE/V4ON8CK+SLb8FFtKTCDk3T
+         JNc1NNbWTlERvTSlSqMpNSXXu87NjweJJxMOuDn4hmLV+cfr/095Ektr2frAfQb8nEwd
+         fL7w==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id c5-v6si1301444pgq.226.2018.11.07.11.52.26;
+        Wed, 07 Nov 2018 11:52:41 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727132AbeKHFVE (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:21:04 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:41841 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbeKHFVD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:21:03 -0500
+Received: from localhost ([127.0.0.1] helo=bazinga.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1gKTp7-00070Q-NO; Wed, 07 Nov 2018 20:49:09 +0100
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 05/23] x86/fpu: Remove preempt_disable() in fpu__clear()
+Date: Wed,  7 Nov 2018 20:48:40 +0100
+Message-Id: <20181107194858.9380-6-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107194858.9380-1-bigeasy@linutronix.de>
+References: <20181107194858.9380-1-bigeasy@linutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnvTmKQuNbTRUZAA--.712S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZrWfGr1rXw1xXw1rZry7KFg_yoW8GFW3pF
+	ZxCFn3GF4UWas8CayfAry8Wry5Ka1kCw1xua4DGFyrZ3yaqrn2qr10yrWfXr1UurWSyryF
+	vF1fZ3yUJa4kAr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPSb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	GVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF7vcSsGvfC2KfnxnUUI43ZEXa7I
+	U5gXo7UUUUU==
+
+The preempt_disable() section was introduced in commit a10b6a16cdad8
+("x86/fpu: Make the fpu state change in fpu__clear() scheduler-atomic")
+and it was said to be temporary.
+
+fpu__initialize() initializes the FPU struct to its "init" value and
+then sets ->initialized to 1. The last part is the important one.
+The content of the `state' does not matter because it gets set via
+copy_init_fpstate_to_fpregs().
+A preemption here has little meaning because the register will always be
+set to the same content after copy_init_fpstate_to_fpregs(). A softirq
+with a kernel_fpu_begin() could also force to save FPU's register after
+fpu__initialize() without changing the outcome here.
+
+Remove the preempt_disable() section in fpu__clear(), preemption here
+does not hurt.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/x86/kernel/fpu/core.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 9387e0fec7d17..b7d9b19ab8116 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -368,11 +368,9 @@ void fpu__clear(struct fpu *fpu)
+ 	 * Make sure fpstate is cleared and initialized.
+ 	 */
+ 	if (static_cpu_has(X86_FEATURE_FPU)) {
+-		preempt_disable();
+ 		fpu__initialize(fpu);
+ 		user_fpu_begin();
+ 		copy_init_fpstate_to_fpregs();
+-		preempt_enable();
+ 	}
+ }
+ 
+-- 
+2.19.1

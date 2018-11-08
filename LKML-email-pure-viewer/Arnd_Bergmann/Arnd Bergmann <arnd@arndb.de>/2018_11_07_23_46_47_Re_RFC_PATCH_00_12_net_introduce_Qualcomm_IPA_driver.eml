@@ -1,0 +1,151 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:38 -0000
+Received: from icoremail.net (unknown [209.85.210.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv5oSCeNbt_BYAQ--.26627S3;
+	Wed, 07 Nov 2018 23:47:32 +0800 (CST)
+Received: from mail-pf1-f173.google.com (unknown [209.85.210.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH70oQCeNbHyUYAA--.91S3;
+	Wed, 07 Nov 2018 23:47:28 +0800 (CST)
+Received: by mail-pf1-f173.google.com with SMTP id p17-v6so7482416pfj.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:47:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:sender:precedence:list-id;
+        bh=yoA0Qb0cOE5SBGWVr1LViBkS93kOkg6Zkg864HfNFSk=;
+        b=o/iY0KwPOyV91IItGMVgHjCqta/gPddRyOQUlecXL11bzLiC3dD7piy+c+6BpALpPe
+         COzN6GiboSU7nSgkVS3iAJSdKSljh7SyL/xJhNxP3H/iEbdyxxZUBCb2cN+3woqRPP66
+         Ue+MIY3yVdmPYv1BsUNMK44n23nPHF9RGS0TMtFsSATihftY2Yg8z19swjfKbnJrtQRY
+         NVk1O1u3bCqZPLBFSzww9LBkjwoAH+tK+3Yx2SxK37WiL3YU1YguN5P5BJsdWkzBmgWk
+         7g02gcZesnlwnXaC1vOL5qQUXfae+l6Dvlq9O1cjlEIf5K1E9TNa86ymGlZGI6IwX4Cw
+         8W6g==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIdKLEz1QvLI9lohAzOCZKHJgJJl1KFFGembssSIAUJwx3RW5yc
+	LEooRXple3Ba8x+v0m88QNsY9mJTmaV8Jtj6xHiifdEZpUFnLKxZXw==
+X-Received: by 2002:a62:ce8e:: with SMTP id y136-v6mr701173pfg.201.1541605647787;
+        Wed, 07 Nov 2018 07:47:27 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5403228pjt;
+        Wed, 7 Nov 2018 07:47:27 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ef7X6d19WJ6Ip7nRAYmf7OkqX0S6Wt1kzo3L29M+cIFHgQMgAtsCuTHAqUwdXuFpRYz9c0
+X-Received: by 2002:a63:588:: with SMTP id 130mr586956pgf.273.1541605647102;
+        Wed, 07 Nov 2018 07:47:27 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541605647; cv=none;
+        d=google.com; s=arc-20160816;
+        b=T/AqhsbPAm1ubFUJt8O3nmrIBvlhJkGDkW/P7K+yLheW78v0LNH7p1y9T5VHPMwuch
+         VARW6z79Z/wBJzbUG1nFZ6VrMMQWyEx9QiyABYx99cbbvaBPt3boYJaWtzFTExPklESt
+         reZfYPvAHLUDiGtKhlooyeEZFffJqQtghZB/t0jLrTgpyzKdldUHQhgKGmE2K3Lf87nh
+         Q2tYsWDByXs/6abSZmOCSPvagpv7CTL9Ju7UxyrUmvandrZrXxI8MfwJqKus9Ye3xpZ7
+         oaDELLoW3sIRTul8v9tY1yIOc6kv+SlXurdFtyAZgHo6nAjyxkXDhlysY1LT34N0FJdd
+         l+EQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version;
+        bh=yoA0Qb0cOE5SBGWVr1LViBkS93kOkg6Zkg864HfNFSk=;
+        b=uR8TGt7TIkYyFDwvyEkrij5+JXWu0bJEZWZxhmxNbFlrmTZD9S2JHuoJNLJwkDDsaG
+         KeUvG/IRNtmJZNjm9iAN1Vax6tDuPh92ib2jZpY5aAPzZbAPITL6bxdCJNvxsfI9DIh9
+         4UnhbzhQjmhonmlAlKeC+pxNj3QXX/rNZxrr77njudewC+nVouu5rFytELOseliqswWQ
+         quOJDi/Hon3wfd5QqMLB2+jWBtvmQGNJr2sN/B02ZWChlqkRE9CyEOVQgRMY/XfGB6XJ
+         tEmyFsgigSC0v4BlI1uLz/x/K0oZgRTYSAJuJJYURQLuHvxe2wiLCvdZcP+86dpiVkm3
+         ak3Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id a5-v6si964351plp.132.2018.11.07.07.47.11;
+        Wed, 07 Nov 2018 07:47:27 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727961AbeKHBR6 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:17:58 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:37629 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726858AbeKHBR6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:17:58 -0500
+Received: by mail-qk1-f193.google.com with SMTP id 131so21560329qkd.4;
+        Wed, 07 Nov 2018 07:47:04 -0800 (PST)
+X-Received: by 2002:ac8:410a:: with SMTP id q10-v6mr712764qtl.96.1541605623368;
+ Wed, 07 Nov 2018 07:47:03 -0800 (PST)
+MIME-Version: 1.0
+References: <20181107003250.5832-1-elder@linaro.org>
+In-Reply-To: <20181107003250.5832-1-elder@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Wed, 7 Nov 2018 16:46:47 +0100
+Message-ID: <CAK8P3a15nTnL0tD4TJgtPVEKFwZRcyNy=m6_Pi3+8Nd0W6FQtQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/12] net: introduce Qualcomm IPA driver
+To: Alex Elder <elder@linaro.org>
+Cc: David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Networking <netdev@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-soc@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syadagir@codeaurora.org, mjavid@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH70oQCeNbHyUYAA--.91S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7tryDWr4UJw18KrykZr15CFg_yoW8Ar17pF
+	ZYgw42ya1kJa42yw1vvF4Iya40qrZ5Jw13G34DW348Cas8tF1vqr1SqFWYv3yUWrn3u3W2
+	vrZ0vw4UCa1YvrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPjb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6ryrMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW0oVCq3wCYIxAIcVC2
+	z280aVCY1x0267AKxVW0oVCq3wCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij2
+	8IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
+	1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUHApeUUUU
+	U
+
+On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
+> The code has undergone considerable rework to prepare it for
+> incorporation into upstream Linux.  Parts of it bear little
+> resemblance to the original driver.  Still, some work remains
+> to be done.  The current code and its design had a preliminary
+> review, and some changes to the data path implementation were
+> recommended.   These have not yet been addressed:
+> - Use NAPI for all interfaces, not just RX (and WAN data) endpoints.
+> - Do more work in the NAPI poll function, including collecting
+>   completed TX requests and posting buffers for RX.
+> - Do not use periodic NOP requests as a way to avoid TX interrupts.
+> - The NAPI context should be associated with the hardware interrupt
+>   (it is now associated with something abstracted from the hardware).
+> - Use threaded interrupts, to avoid the need for using spinlocks and
+>   atomic variables for synchronizing between workqueue and interrupt
+>   context.
+> - Have runtime power management enable and disable IPA clock and
+>   interconnects.
+> Many thanks to Arnd Bergmann, Ilias Apalodimas, and Bjorn Andersson
+> for their early feedback.
+
+Thanks for getting the current version out even with the long TODO
+list. I've had my first deeper look at some of the patches and found
+a few more things that likely require substantial rework. I also think
+there is still significant room for simplifying it further, and getting
+better performance out of it in the process.
+
+Also, despite the criticism in my patch review, I have to say you've
+done a great job at cutting out a lot of the things that were present
+in the past, it's good to see that you have come this far with the
+cleanup!
+
+      Arnd

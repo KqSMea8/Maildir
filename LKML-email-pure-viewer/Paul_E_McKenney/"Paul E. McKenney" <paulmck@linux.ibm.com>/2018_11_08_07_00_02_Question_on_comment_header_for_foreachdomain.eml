@@ -1,0 +1,160 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:09 -0000
+Received: from icoremail.net (unknown [209.85.210.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH+67buNbwVpbAQ--.27518S3;
+	Thu, 08 Nov 2018 07:01:16 +0800 (CST)
+Received: from mail-pf1-f177.google.com (unknown [209.85.210.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3Wka4buNb3KgZAA--.17341S3;
+	Thu, 08 Nov 2018 07:01:12 +0800 (CST)
+Received: by mail-pf1-f177.google.com with SMTP id v68-v6so4770260pfk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 15:01:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:reply-to:mime-version:content-disposition
+         :user-agent:message-id:sender:precedence:list-id;
+        bh=mOBEdbyg6ba50o/vBqZpzbPqvTJ3rwXafWASS67BvK0=;
+        b=fg6/S9PwkMlai+wccCBhrhDXAXbpnGJOXw9figmMCB+evNMyelWcrqwuFk3cM8iRrb
+         iBIbIyigU/fDZuYUM3A21gG6qQJOHPp589OpHr3dbw13SyArUzlfTTrFJ9322ccdhx8x
+         moq2SPkePMDSq/CyQAkc7XYkwMAKXxHOvG/nQT6GEEr9PY1yW3mqQBKItgT0P0yNhmgM
+         nvmhq/rXR8y3su5cOisrQed67kLmnLArqnzW6LfvLY1cl/gylxDMjRGlepMtvBfIkwUy
+         oowE+XE7koNkRNgaJaQiVRfMLtF9UpcnPKoiBXXsXiMZh4fXak0LxwX2N1YYnQUVKuZm
+         IRCg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=ibm.com
+X-Gm-Message-State: AGRZ1gJ1qf4NH4PeSJXdL3GTb1y7wo5r+bW/V2lKf9S7kooDvqSWwtiz
+	bKIBQeT8Um1mP2/vClVTARAUXiDo2EotKXi9xTWjRXfUsElWBvin0Q==
+X-Received: by 2002:a62:5e83:: with SMTP id s125-v6mr2170629pfb.232.1541631672388;
+        Wed, 07 Nov 2018 15:01:12 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp102948pjt;
+        Wed, 7 Nov 2018 15:01:11 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d21BqiejCeXWbIdN6qIckEDnnjUsZX4Yvv1VzMxIB0MhesOUZJUx5VspHvk+MATovnVPKJ
+X-Received: by 2002:a63:4566:: with SMTP id u38mr1867728pgk.4.1541631671675;
+        Wed, 07 Nov 2018 15:01:11 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541631671; cv=none;
+        d=google.com; s=arc-20160816;
+        b=F35ZFuw/bBODjQWs3yguHD3zrbQa92BGc9GN22qtNACcJIJCioJOH6YS2FNzFZpzk+
+         0eeJr66Beby1C+Z0OuF/9EIoebD9ttkB8BieyqjA353pYP9eWHS4bx3vSnKlsIRTK2AH
+         nqHyBoBTyCu6XJZEAFxN5RFOhNM/FJp1mG5wxRn3f/9iDAYmHSBquUWUvVelttwNa/2e
+         ZwseL2YCxsjEND211VAcdPOtXxqWjCQVLwaWp0PERZGauVPsukYYNJGcJnZmpMJnUBgI
+         wGcfWlKeFg2sQ/Hq905u9bHn5NhXBYH/ZTCadUhCft64MAzanCmnHgTkJfn9mT/IU0zM
+         vOaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:user-agent:content-disposition
+         :mime-version:reply-to:subject:cc:to:from:date;
+        bh=mOBEdbyg6ba50o/vBqZpzbPqvTJ3rwXafWASS67BvK0=;
+        b=F84wMVIZ50Wp4qd9pUNcsRs5NIpW9nWLsURaNHNMfImFuqJDJMTVTMNXqtLLijRCtQ
+         S1/4dHhD9xboXH05uypBYEQtELXEAzQlg5T5IHUSwpuZ1Jq2EOz9SLiK6JlrkcZAeX9d
+         32sWyx8FhKH+Dx7i1B2acQRexzR61Y6uK11GVuBnlm3TI0+q5q4UqvtlOTYKtjqMvx32
+         A9a27FM44ueQGxxSJtdKTgcB1w/1SYUV0Hod1TeAzA7vc6/v6qdVfHIT2HLvS909K37H
+         qCJV/9ALL/0jweLiFuowE+iWjBiCXrQWWBE4/4y+FDPF5FAW9jGQyGIRzpFs41ZRN6hu
+         ngPA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=ibm.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b5-v6si2051602ple.64.2018.11.07.15.00.55;
+        Wed, 07 Nov 2018 15:01:11 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728043AbeKHIcm (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:32:42 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43340 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726896AbeKHIcm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:32:42 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.22/8.16.0.22) with SMTP id wA7MspP2088270
+        for <linux-kernel@vger.kernel.org>; Wed, 7 Nov 2018 18:00:08 -0500
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2nm4mybb20-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 18:00:07 -0500
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Wed, 7 Nov 2018 23:00:06 -0000
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 7 Nov 2018 23:00:04 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id wA7N03vb18481222
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 7 Nov 2018 23:00:03 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 22FEAB2076;
+        Wed,  7 Nov 2018 23:00:03 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B458B2074;
+        Wed,  7 Nov 2018 23:00:03 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.190.52])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed,  7 Nov 2018 23:00:02 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 0556D16C5D23; Wed,  7 Nov 2018 15:00:03 -0800 (PST)
+Date: Wed, 7 Nov 2018 15:00:02 -0800
+From: "Paul E. McKenney" <paulmck@linux.ibm.com>
+To: mingo@redhat.com, peterz@infradead.org
+Cc: linux-kernel@vger.kernel.org
+Subject: Question on comment header for for_each_domain()
+Reply-To: paulmck@linux.ibm.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 18110723-0052-0000-0000-000003523404
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010004; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000268; SDB=6.01114169; UDB=6.00577622; IPR=6.00894269;
+ MB=3.00024066; MTD=3.00000008; XFM=3.00000015; UTC=2018-11-07 23:00:05
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 18110723-0053-0000-0000-00005EB0B9D4
+Message-Id: <20181107230002.GA15577@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2018-11-07_19:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=602 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1807170000 definitions=main-1811070203
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3Wka4buNb3KgZAA--.17341S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUYu7k0a2IF6w4xM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VWfMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY
+	6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IU594
+	S5UUUUU==
+
+Hello!
+
+The header comment for for_each_domain() talks about a call to
+synchronize_sched() within detach_destroy_domains(), but I am not
+seeing any such call.  Because synchronize_sched() is now folded into
+synchronize_rcu(), I have a patch that edits the comment, but it looks
+like a larger change is needed.
+
+Or am I blind today?
+
+							Thanx, Paul

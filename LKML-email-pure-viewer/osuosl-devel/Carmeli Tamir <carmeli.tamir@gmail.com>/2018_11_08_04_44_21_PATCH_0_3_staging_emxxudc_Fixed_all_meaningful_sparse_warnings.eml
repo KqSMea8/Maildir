@@ -1,0 +1,135 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:28 -0000
+Received: from icoremail.net (unknown [209.85.215.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f+3bTuNby5xaAQ--.26899S3;
+	Thu, 08 Nov 2018 04:45:15 +0800 (CST)
+Received: from mail-pg1-f171.google.com (unknown [209.85.215.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXN0PZTuNbYz0ZAA--.1582S3;
+	Thu, 08 Nov 2018 04:45:14 +0800 (CST)
+Received: by mail-pg1-f171.google.com with SMTP id f8-v6so7819261pgq.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:45:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:subject:date
+         :message-id:sender:precedence:list-id;
+        bh=xM/gbWN7hEiZbkL0SeP476r6S+Lme431KE+i5Zq7sEE=;
+        b=Da4gWUx8QPR5JSkyZQ62oXX8YqbODxk22mzkiWoKLcIMMtCTCam8ujvVErpwgwFsSz
+         MKaAzSS5PM7UE1EJQOQ7USKCzj0C8rBsGJeLEYA5nFwXi+t+Aw+//1aQeu86hX7pqjvt
+         1q0PLLk7dDnTmCkx7p1iIbtu6qT7UhIM3/2axP0jYHu42vFpBvriWE2iMX2nBI8Gl/jb
+         37Y4xIvPBlC+Qez4i9Y2vERq0iArqFHJKxXnL1M7XmBrz0muQyYkkwNtjzhQUgW0n3Bm
+         ZeEvWoXGBwvK3jmFJ4wFlVDAx7KYFrhHoryv885Vd280R1By/DKhTqRl4TszXoYtmyu6
+         fW0w==
+X-Gm-Message-State: AGRZ1gKXmH7ZK3kL7JClevxK65eHtgaDsQJhe/3BlspfHov3gEjPrt8L
+	AqDWZJPbzxHMeUxmnz37g8sQUE/T/fTC33M08s+FnubtGP97zPgi+Q==
+X-Received: by 2002:a63:40c2:: with SMTP id n185-v6mr1537787pga.116.1541623513654;
+        Wed, 07 Nov 2018 12:45:13 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5723601pjt;
+        Wed, 7 Nov 2018 12:45:12 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cHqnVU4lgtRO4baviqkiLG3WmfF0kK9FfaDTdftzdXBKz6xKkrvVcXxh9je5PMwg3bdMIT
+X-Received: by 2002:a17:902:d806:: with SMTP id a6-v6mr1690416plz.301.1541623512836;
+        Wed, 07 Nov 2018 12:45:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541623512; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Tsg1bN+q2imQKQY9P+A5Is9niuUNF2ZCKQW8fr1HzJ46aFiABOjMsAwgrCH0Jt4ytI
+         vlMnS2Vxipe36g0VBnFYj2zaHLUJfBljfmUAXfb5nAGwl9groKwAagCX8O6gznmhQuS0
+         n+ZHHZE7olREPWhk/lb+dup68J54HtOsoUx6vrFcwGQWiqXWZgJxvdYmWwTgIWGu9IjE
+         eOuzYp9fnLZox5h7/zJe2porzaKk1rwuK44Xq7cmNzW/1di1iR/GDHtRVt/YqbmqFIxi
+         DSfs7HMln+85eLXLqdbBbtrd3TU+oIHCxV4SfOPFPpiPptu5qcq9GJ7h/M7Se3lR0S5M
+         D5yQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:date:subject:to:from
+         :dkim-signature;
+        bh=xM/gbWN7hEiZbkL0SeP476r6S+Lme431KE+i5Zq7sEE=;
+        b=FzJGjSmAKV5GEAOJvN1/jPuEtlHyW0vs82umZa2qsMCL8djIeQcn9lkEffJsOWDKeo
+         /ullGQxGG2EyrGKfrM5D3X8iS1vy2ctbembRmlXFoDqawPM1UOfIDahawlwn6WbXi7+R
+         a0j3b0CY0GExxWo1epu0XmLsgZb7d5kZ3TuVVzmDNBa7a/VJ2I+OxZ28MNmyBc957fye
+         RB+HMLo9BQeIO/eKnE3PoXAuZqScsuAW/aorS8U36DyqDbo/alZ6zrjeJDKYDvpYN0E7
+         RlJDWDfA3A5ePvE7Bf3OjZQbs6VMKK3FfbB+oFDm9nWqS7gytF5AMdezAhNA4q7vGj/W
+         aohQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=TMRSynpT;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id r1-v6si1798984plb.153.2018.11.07.12.44.58;
+        Wed, 07 Nov 2018 12:45:12 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727171AbeKHGQm (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:16:42 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45362 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726517AbeKHGQm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:16:42 -0500
+Received: by mail-wr1-f68.google.com with SMTP id k15-v6so15876140wre.12
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 12:44:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=xM/gbWN7hEiZbkL0SeP476r6S+Lme431KE+i5Zq7sEE=;
+        b=TMRSynpTCKHSNx8igBl1pnKbrmpbz2AaFSftZaPARU1qGpBvQX9xqKLAtv2wEgK5cS
+         xX6tBW2LQgT0B/PnuRSlL3eLaykQ7OnkJvmXdKzlm6BWW1GOu5B3r5FlHNE8ELLOfr5x
+         XrjZYw0BPX8vuCM4WprKvpikWv9VpPwANJ1hKZuuBZWJ2ISM15oGkETGU6FcdtiueZY2
+         VkvASzpggPLOKn4lI7CfYQrw953jgSKzOsRPG242o0dzs4jayRBNwTu3cedKevRMYGJy
+         NgDHBtoW/jHJpPy0neqWAww6xuqMiVHxaWhtZWBfBUyJlIr5vCbv96gGdsRPVLcnoEZV
+         igag==
+X-Received: by 2002:adf:84a4:: with SMTP id 33-v6mr1594307wrg.191.1541623476643;
+        Wed, 07 Nov 2018 12:44:36 -0800 (PST)
+Received: from osboxes.localdomain (bzq-79-178-252-231.red.bezeqint.net. [79.178.252.231])
+        by smtp.googlemail.com with ESMTPSA id y2-v6sm3578764wrh.53.2018.11.07.12.44.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 07 Nov 2018 12:44:35 -0800 (PST)
+From: Carmeli Tamir <carmeli.tamir@gmail.com>
+To: carmeli.tamir@gmail.com, gregkh@linuxfoundation.org,
+        natechancellor@gmail.com, chrisadr@gentoo.org,
+        areklis909@gmail.com, dan.carpenter@oracle.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] staging: emxx_udc: Fixed all meaningful sparse warnings
+Date: Wed,  7 Nov 2018 15:44:21 -0500
+Message-Id: <1541623464-49041-1-git-send-email-carmeli.tamir@gmail.com>
+X-Mailer: git-send-email 2.7.4
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXN0PZTuNbYz0ZAA--.1582S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrGr47Ww13tryxuFy7uw15Jwb_yoWxWrgEkF
+	y8tFyfJr9ru3W8Cay7AF1fA3ySya1rXw40ga17KayUJFW7AF13Xrn3Wr47XFn7XF4fGry7
+	X348Jas5C3ZxtjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqxYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_AwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_JFI_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU5d5
+	r7UUUUU==
+
+This series fixes all meaningful sparse (running make C=2... ) warnings. 
+The number of warnings is reduced from ~280 to 12 (only warnings of type 'expression using sizeof(void)' are left). Resent the series to Greg's request.
+
+Carmeli Tamir (3):
+  staging: emxx_udc: Added static modifier to udc_controller
+  staging: emxx_udc: Added missing __iomem modifier to handle p_regs
+  staging: emxx_udc: Added missing le16_to_cpu conversions
+
+ drivers/staging/emxx_udc/emxx_udc.c | 68 +++++++++++++++++++------------------
+ drivers/staging/emxx_udc/emxx_udc.h |  2 +-
+ 2 files changed, 36 insertions(+), 34 deletions(-)
+
+-- 
+2.7.4

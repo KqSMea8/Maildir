@@ -1,0 +1,411 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:41:26 -0000
+Received: from icoremail.net (unknown [209.85.215.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f0FlheNbpdpbAQ--.27269S3;
+	Thu, 08 Nov 2018 08:37:58 +0800 (CST)
+Received: from mail-pg1-f169.google.com (unknown [209.85.215.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3l0NkheNbp_EZAA--.3097S3;
+	Thu, 08 Nov 2018 08:37:56 +0800 (CST)
+Received: by mail-pg1-f169.google.com with SMTP id q5-v6so8060325pgv.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 16:37:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:in-reply-to:references:mime-version:sender
+         :precedence:list-id;
+        bh=a0fYCBM7u608cstleMPXBusGE1rSnOdtp7B0onzU00c=;
+        b=B8+5O1WUVfqzu9Zt4/opWzpAJaJhGKyepO64XCA9ozubwOZEP00LCrYoy+AglF4a1c
+         x4smFy9n5lUWq3B6zcTjUa43hBImFO2B3msljZHQVDZWsA01k+rIAiHw8iTH+abYs9sy
+         ooAuZriYrscZovOBG21KlO0zdLVijlyPE+ybCyprnTvaAhlEqN3BDZEvzcdgJc8xBaDO
+         cbruXPag2A+nrM0v13A8eAR58uufH/FVQGse6PzwoBh4in9kFkdTRqUe/pp0Xh+31wtD
+         3xl81fzccG9QyjG2fr5gHlRlxn7DntFlNJUf6F72j/lEWE1zkkN1XdLsFW1mz7jNnSKT
+         7dtw==
+X-Gm-Message-State: AGRZ1gLMbzlebxmYoa/kc/tBvIinSKVJJHl8KnJc4LH7Z4F4a/uVEoQf
+	Jx46IYnQSwaSYl9uN5KoW8LRs7mzmOvh4f0tEqfS5qeBElkd8fI8DQ==
+X-Received: by 2002:a63:2315:: with SMTP id j21mr2088831pgj.297.1541637475871;
+        Wed, 07 Nov 2018 16:37:55 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp180032pjt;
+        Wed, 7 Nov 2018 16:37:55 -0800 (PST)
+X-Google-Smtp-Source: AJdET5flEwO2UQFvurcXh57/48NVTCLN+j9fUOAE8hbBbvvM2qDpfetwry2232RdgI6yMRwTaUcZ
+X-Received: by 2002:a17:902:f83:: with SMTP id 3-v6mr2529063plz.254.1541637475009;
+        Wed, 07 Nov 2018 16:37:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541637474; cv=none;
+        d=google.com; s=arc-20160816;
+        b=BZrdohmkadBHYGVXKK8HhMEb0lPGmtlIwGIwmKVmci/6SgXGLFbqzttUT7acIA4OJ7
+         Pvk9PYx4KW3GROcD2q/X9T2PDvstEhdbPwyvtx6dTqQBBGBhYeiZeEegKfnXfjvIneJc
+         ++puxh8R522Yd/Ph50RC9+dx2mg8UN5cw2P11zNdXueXsjELGIMmcyZq3UIpC9NXMrfA
+         qaYWSiG88n5s+XxP1m1JCF6hws8nKyoU9IvEHppoookwzTLMU+BzkKSjTFvonTKY4i6/
+         TNY/jdPRJddO3bmczw0csfNA4G8QN44BSpxDPTlTIUxMZTj73mnFuguXrw9IjevvLC34
+         dPkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:dkim-signature;
+        bh=a0fYCBM7u608cstleMPXBusGE1rSnOdtp7B0onzU00c=;
+        b=WMKVXvIRCbcfJK+VtGiNmWbiw0nQoh6b40BnGb9PXRcr6ip169nWtt4XyjyPVFrP7I
+         38pX3G399wpMUjhoxhD04aK1r4SrNoYKUETrMVFG8rR0pGXqGUjllURvUXv/2mSkIoEg
+         4Z1j0QP3j+BbDi022TPLFSKOhgTOikaiP/n9TAaW0YquDgQlWlv8WU7JF3D+4+euL1zk
+         4ewmGFF+ZzM3Dn4GfFCZHBYa0/VB9FtaQSNqAR+D9wFe57vKgIeo2V7kFA0LHqkrchv4
+         9fQrXrgRAvzelyaMNZKV/F+dZmJHdeKjUCrDxVLIu+au1vwaLeZfQ/uDLnvdFOWAbyrk
+         y7Ew==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@ti.com header.s=ti-com-17Q1 header.b=vU0sYPtL;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=QUARANTINE sp=NONE dis=NONE) header.from=ti.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 33-v6si2369991pls.173.2018.11.07.16.37.39;
+        Wed, 07 Nov 2018 16:37:54 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728438AbeKHKKX (ORCPT <rfc822;yamahata.lkml@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 05:10:23 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48136 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728380AbeKHKKW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 05:10:22 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id wA80aKSV109497;
+        Wed, 7 Nov 2018 18:36:20 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1541637380;
+        bh=a0fYCBM7u608cstleMPXBusGE1rSnOdtp7B0onzU00c=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=vU0sYPtLNXXdjwH3MfWAmIVHQOkXK4YC+NfkAW+UUEOEhzRhs8rt0XlvanbbEKQVv
+         uJhSgffFu7Lc3JLjhLaf7XNO3edqxqTWwCbYlpIz62Kii/TTQolPGymhz8PlCeRk+c
+         wfgDEwjWAzjmu62gcX+HMFzJjQG7Vd0MWPTMPIQQ=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id wA80aKSe029271
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 7 Nov 2018 18:36:20 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1466.3; Wed, 7 Nov
+ 2018 18:36:20 -0600
+Received: from dlep33.itg.ti.com (157.170.170.75) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1466.3 via Frontend Transport;
+ Wed, 7 Nov 2018 18:36:20 -0600
+Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id wA80aKDY017000;
+        Wed, 7 Nov 2018 18:36:20 -0600
+Received: from localhost (uda0226610.dhcp.ti.com [128.247.59.147])
+        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id wA80aJx13160;
+        Wed, 7 Nov 2018 18:36:19 -0600 (CST)
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+To: "David S. Miller" <davem@davemloft.net>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+CC: <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Tony Lindgren <tony@atomide.com>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Antoine Tenart <antoine.tenart@free-electrons.com>,
+        Quentin Schulz <quentin.schulz@bootlin.com>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Carlo Caione <carlo@caione.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH 4/5] phy: mvebu-cp110-comphy: convert to use eth phy mode and submode
+Date: Wed, 7 Nov 2018 18:36:16 -0600
+Message-ID: <20181108003617.10334-5-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.10.5
+In-Reply-To: <20181108003617.10334-1-grygorii.strashko@ti.com>
+References: <20181108003617.10334-1-grygorii.strashko@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3l0NkheNbp_EZAA--.3097S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxtr4rJrW8Kw47Kw1fKF4xXrb_yoWDGF4kpF
+	ZrC3srXasxtr9xCFyvvF1DAFsYv3s2gFn3u34xKw1xA3WDtr17Ja4Fq3y7CFWrAry5Cr1Y
+	yF4UJFWDXwsxXwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP2b7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6w1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r1I6r4UMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIE14v26F4UJVW0owCYIxAI
+	cVC2z280aVCY1x0267AKxVWxJr0_GcWl42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IU5kC
+	zJUUUUU==
+
+Convert mvebu-cp110-comphy PHY driver to use recently introduced
+PHY_MODE_ETHERNET and phy_set_mode_ext().
+
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 21 ++-----
+ drivers/phy/marvell/phy-mvebu-cp110-comphy.c    | 80 +++++++++++++------------
+ 2 files changed, 48 insertions(+), 53 deletions(-)
+
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index 7a37a37..fb28b71 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -1165,28 +1165,17 @@ static void mvpp22_gop_setup_irq(struct mvpp2_port *port)
+  */
+ static int mvpp22_comphy_init(struct mvpp2_port *port)
+ {
+-	enum phy_mode mode;
++	int submode;
+ 	int ret;
+ 
+ 	if (!port->comphy)
+ 		return 0;
+ 
+-	switch (port->phy_interface) {
+-	case PHY_INTERFACE_MODE_SGMII:
+-	case PHY_INTERFACE_MODE_1000BASEX:
+-		mode = PHY_MODE_SGMII;
+-		break;
+-	case PHY_INTERFACE_MODE_2500BASEX:
+-		mode = PHY_MODE_2500SGMII;
+-		break;
+-	case PHY_INTERFACE_MODE_10GKR:
+-		mode = PHY_MODE_10GKR;
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
++	submode = port->phy_interface;
++	if (submode == PHY_INTERFACE_MODE_1000BASEX)
++		submode = PHY_INTERFACE_MODE_SGMII;
+ 
+-	ret = phy_set_mode(port->comphy, mode);
++	ret = phy_set_mode_ext(port->comphy, PHY_MODE_ETHERNET, submode);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+index 79b52c3..3f89cc0 100644
+--- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
++++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+@@ -9,6 +9,7 @@
+ #include <linux/iopoll.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/module.h>
++#include <linux/phy.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+@@ -131,26 +132,26 @@ struct mvebu_comhy_conf {
+ 
+ static const struct mvebu_comhy_conf mvebu_comphy_cp110_modes[] = {
+ 	/* lane 0 */
+-	MVEBU_COMPHY_CONF(0, 1, PHY_MODE_SGMII, 0x1),
+-	MVEBU_COMPHY_CONF(0, 1, PHY_MODE_2500SGMII, 0x1),
++	MVEBU_COMPHY_CONF(0, 1, PHY_INTERFACE_MODE_SGMII, 0x1),
++	MVEBU_COMPHY_CONF(0, 1, PHY_INTERFACE_MODE_2500BASEX, 0x1),
+ 	/* lane 1 */
+-	MVEBU_COMPHY_CONF(1, 2, PHY_MODE_SGMII, 0x1),
+-	MVEBU_COMPHY_CONF(1, 2, PHY_MODE_2500SGMII, 0x1),
++	MVEBU_COMPHY_CONF(1, 2, PHY_INTERFACE_MODE_SGMII, 0x1),
++	MVEBU_COMPHY_CONF(1, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1),
+ 	/* lane 2 */
+-	MVEBU_COMPHY_CONF(2, 0, PHY_MODE_SGMII, 0x1),
+-	MVEBU_COMPHY_CONF(2, 0, PHY_MODE_2500SGMII, 0x1),
+-	MVEBU_COMPHY_CONF(2, 0, PHY_MODE_10GKR, 0x1),
++	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_SGMII, 0x1),
++	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_2500BASEX, 0x1),
++	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_10GKR, 0x1),
+ 	/* lane 3 */
+-	MVEBU_COMPHY_CONF(3, 1, PHY_MODE_SGMII, 0x2),
+-	MVEBU_COMPHY_CONF(3, 1, PHY_MODE_2500SGMII, 0x2),
++	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_SGMII, 0x2),
++	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_2500BASEX, 0x2),
+ 	/* lane 4 */
+-	MVEBU_COMPHY_CONF(4, 0, PHY_MODE_SGMII, 0x2),
+-	MVEBU_COMPHY_CONF(4, 0, PHY_MODE_2500SGMII, 0x2),
+-	MVEBU_COMPHY_CONF(4, 0, PHY_MODE_10GKR, 0x2),
+-	MVEBU_COMPHY_CONF(4, 1, PHY_MODE_SGMII, 0x1),
++	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_SGMII, 0x2),
++	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_2500BASEX, 0x2),
++	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_10GKR, 0x2),
++	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_SGMII, 0x1),
+ 	/* lane 5 */
+-	MVEBU_COMPHY_CONF(5, 2, PHY_MODE_SGMII, 0x1),
+-	MVEBU_COMPHY_CONF(5, 2, PHY_MODE_2500SGMII, 0x1),
++	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_SGMII, 0x1),
++	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1),
+ };
+ 
+ struct mvebu_comphy_priv {
+@@ -163,10 +164,12 @@ struct mvebu_comphy_lane {
+ 	struct mvebu_comphy_priv *priv;
+ 	unsigned id;
+ 	enum phy_mode mode;
++	int submode;
+ 	int port;
+ };
+ 
+-static int mvebu_comphy_get_mux(int lane, int port, enum phy_mode mode)
++static int mvebu_comphy_get_mux(int lane, int port,
++				enum phy_mode mode, int submode)
+ {
+ 	int i, n = ARRAY_SIZE(mvebu_comphy_cp110_modes);
+ 
+@@ -177,7 +180,7 @@ static int mvebu_comphy_get_mux(int lane, int port, enum phy_mode mode)
+ 	for (i = 0; i < n; i++) {
+ 		if (mvebu_comphy_cp110_modes[i].lane == lane &&
+ 		    mvebu_comphy_cp110_modes[i].port == port &&
+-		    mvebu_comphy_cp110_modes[i].mode == mode)
++		    mvebu_comphy_cp110_modes[i].mode == submode)
+ 			break;
+ 	}
+ 
+@@ -187,8 +190,7 @@ static int mvebu_comphy_get_mux(int lane, int port, enum phy_mode mode)
+ 	return mvebu_comphy_cp110_modes[i].mux;
+ }
+ 
+-static void mvebu_comphy_ethernet_init_reset(struct mvebu_comphy_lane *lane,
+-					     enum phy_mode mode)
++static void mvebu_comphy_ethernet_init_reset(struct mvebu_comphy_lane *lane)
+ {
+ 	struct mvebu_comphy_priv *priv = lane->priv;
+ 	u32 val;
+@@ -206,14 +208,14 @@ static void mvebu_comphy_ethernet_init_reset(struct mvebu_comphy_lane *lane,
+ 		 MVEBU_COMPHY_SERDES_CFG0_HALF_BUS |
+ 		 MVEBU_COMPHY_SERDES_CFG0_GEN_RX(0xf) |
+ 		 MVEBU_COMPHY_SERDES_CFG0_GEN_TX(0xf));
+-	if (mode == PHY_MODE_10GKR)
++	if (lane->submode == PHY_INTERFACE_MODE_10GKR)
+ 		val |= MVEBU_COMPHY_SERDES_CFG0_GEN_RX(0xe) |
+ 		       MVEBU_COMPHY_SERDES_CFG0_GEN_TX(0xe);
+-	else if (mode == PHY_MODE_2500SGMII)
++	else if (lane->submode == PHY_INTERFACE_MODE_2500BASEX)
+ 		val |= MVEBU_COMPHY_SERDES_CFG0_GEN_RX(0x8) |
+ 		       MVEBU_COMPHY_SERDES_CFG0_GEN_TX(0x8) |
+ 		       MVEBU_COMPHY_SERDES_CFG0_HALF_BUS;
+-	else if (mode == PHY_MODE_SGMII)
++	else if (lane->submode == PHY_INTERFACE_MODE_SGMII)
+ 		val |= MVEBU_COMPHY_SERDES_CFG0_GEN_RX(0x6) |
+ 		       MVEBU_COMPHY_SERDES_CFG0_GEN_TX(0x6) |
+ 		       MVEBU_COMPHY_SERDES_CFG0_HALF_BUS;
+@@ -243,7 +245,7 @@ static void mvebu_comphy_ethernet_init_reset(struct mvebu_comphy_lane *lane,
+ 	/* refclk selection */
+ 	val = readl(priv->base + MVEBU_COMPHY_MISC_CTRL0(lane->id));
+ 	val &= ~MVEBU_COMPHY_MISC_CTRL0_REFCLK_SEL;
+-	if (mode == PHY_MODE_10GKR)
++	if (lane->submode == PHY_INTERFACE_MODE_10GKR)
+ 		val |= MVEBU_COMPHY_MISC_CTRL0_ICP_FORCE;
+ 	writel(val, priv->base + MVEBU_COMPHY_MISC_CTRL0(lane->id));
+ 
+@@ -261,8 +263,7 @@ static void mvebu_comphy_ethernet_init_reset(struct mvebu_comphy_lane *lane,
+ 	writel(val, priv->base + MVEBU_COMPHY_LOOPBACK(lane->id));
+ }
+ 
+-static int mvebu_comphy_init_plls(struct mvebu_comphy_lane *lane,
+-				  enum phy_mode mode)
++static int mvebu_comphy_init_plls(struct mvebu_comphy_lane *lane)
+ {
+ 	struct mvebu_comphy_priv *priv = lane->priv;
+ 	u32 val;
+@@ -303,13 +304,13 @@ static int mvebu_comphy_init_plls(struct mvebu_comphy_lane *lane,
+ 	return 0;
+ }
+ 
+-static int mvebu_comphy_set_mode_sgmii(struct phy *phy, enum phy_mode mode)
++static int mvebu_comphy_set_mode_sgmii(struct phy *phy)
+ {
+ 	struct mvebu_comphy_lane *lane = phy_get_drvdata(phy);
+ 	struct mvebu_comphy_priv *priv = lane->priv;
+ 	u32 val;
+ 
+-	mvebu_comphy_ethernet_init_reset(lane, mode);
++	mvebu_comphy_ethernet_init_reset(lane);
+ 
+ 	val = readl(priv->base + MVEBU_COMPHY_RX_CTRL1(lane->id));
+ 	val &= ~MVEBU_COMPHY_RX_CTRL1_CLK8T_EN;
+@@ -330,7 +331,7 @@ static int mvebu_comphy_set_mode_sgmii(struct phy *phy, enum phy_mode mode)
+ 	val |= MVEBU_COMPHY_GEN1_S0_TX_EMPH(0x1);
+ 	writel(val, priv->base + MVEBU_COMPHY_GEN1_S0(lane->id));
+ 
+-	return mvebu_comphy_init_plls(lane, PHY_MODE_SGMII);
++	return mvebu_comphy_init_plls(lane);
+ }
+ 
+ static int mvebu_comphy_set_mode_10gkr(struct phy *phy)
+@@ -339,7 +340,7 @@ static int mvebu_comphy_set_mode_10gkr(struct phy *phy)
+ 	struct mvebu_comphy_priv *priv = lane->priv;
+ 	u32 val;
+ 
+-	mvebu_comphy_ethernet_init_reset(lane, PHY_MODE_10GKR);
++	mvebu_comphy_ethernet_init_reset(lane);
+ 
+ 	val = readl(priv->base + MVEBU_COMPHY_RX_CTRL1(lane->id));
+ 	val |= MVEBU_COMPHY_RX_CTRL1_RXCLK2X_SEL |
+@@ -469,7 +470,7 @@ static int mvebu_comphy_set_mode_10gkr(struct phy *phy)
+ 	val |= MVEBU_COMPHY_EXT_SELV_RX_SAMPL(0x1a);
+ 	writel(val, priv->base + MVEBU_COMPHY_EXT_SELV(lane->id));
+ 
+-	return mvebu_comphy_init_plls(lane, PHY_MODE_10GKR);
++	return mvebu_comphy_init_plls(lane);
+ }
+ 
+ static int mvebu_comphy_power_on(struct phy *phy)
+@@ -479,7 +480,8 @@ static int mvebu_comphy_power_on(struct phy *phy)
+ 	int ret, mux;
+ 	u32 val;
+ 
+-	mux = mvebu_comphy_get_mux(lane->id, lane->port, lane->mode);
++	mux = mvebu_comphy_get_mux(lane->id, lane->port,
++				   lane->mode, lane->submode);
+ 	if (mux < 0)
+ 		return -ENOTSUPP;
+ 
+@@ -492,12 +494,12 @@ static int mvebu_comphy_power_on(struct phy *phy)
+ 	val |= mux << MVEBU_COMPHY_SELECTOR_PHY(lane->id);
+ 	regmap_write(priv->regmap, MVEBU_COMPHY_SELECTOR, val);
+ 
+-	switch (lane->mode) {
+-	case PHY_MODE_SGMII:
+-	case PHY_MODE_2500SGMII:
+-		ret = mvebu_comphy_set_mode_sgmii(phy, lane->mode);
++	switch (lane->submode) {
++	case PHY_INTERFACE_MODE_SGMII:
++	case PHY_INTERFACE_MODE_2500BASEX:
++		ret = mvebu_comphy_set_mode_sgmii(phy);
+ 		break;
+-	case PHY_MODE_10GKR:
++	case PHY_INTERFACE_MODE_10GKR:
+ 		ret = mvebu_comphy_set_mode_10gkr(phy);
+ 		break;
+ 	default:
+@@ -517,10 +519,14 @@ static int mvebu_comphy_set_mode(struct phy *phy,
+ {
+ 	struct mvebu_comphy_lane *lane = phy_get_drvdata(phy);
+ 
+-	if (mvebu_comphy_get_mux(lane->id, lane->port, mode) < 0)
++	if (mode != PHY_MODE_ETHERNET)
++		return -EINVAL;
++
++	if (mvebu_comphy_get_mux(lane->id, lane->port, mode, submode) < 0)
+ 		return -EINVAL;
+ 
+ 	lane->mode = mode;
++	lane->submode = submode;
+ 	return 0;
+ }
+ 
+-- 
+2.10.5

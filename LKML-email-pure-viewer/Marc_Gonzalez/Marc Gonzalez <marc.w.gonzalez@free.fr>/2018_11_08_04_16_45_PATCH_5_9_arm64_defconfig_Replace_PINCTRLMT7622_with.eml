@@ -1,0 +1,137 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:17 -0000
+Received: from icoremail.net (unknown [209.85.214.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX+_aSeNbr3xaAQ--.27531S3;
+	Thu, 08 Nov 2018 04:23:55 +0800 (CST)
+Received: from mail-pl1-f177.google.com (unknown [209.85.214.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBnS0fYSeNbBC0ZAA--.902S3;
+	Thu, 08 Nov 2018 04:23:52 +0800 (CST)
+Received: by mail-pl1-f177.google.com with SMTP id n4-v6so8376428plp.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:23:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=RAvr3Yite7jkPOLzbRDutKcBFEssAiH06fsqozZF58s=;
+        b=Dq2gywkID3Pqpn1fZHdIiiis0kzhKHyC/fcJclB4e5vUVHF/n927cNYAA5gF8Sc/J2
+         mDjT7TsZJhc0VcKYuCmDC/ZuwUsmqzQDU/NVrw02W5eCOp8QuOulFcHkvQDfcoHGirox
+         sqtbSBiaFMk4WQSy90HeLTP8KRCKTzZ2NsM2SiM2uKtjCpwMEswzI3RtXrYoP9lHtFpg
+         hRkLf3s0BAAfdqGmnqa+Eb03y9fUr8/dQgCIzKWtdC1IluOxA8jqR9LaZAraAEZj+5wp
+         FP6OODnlyeFC2ivC3zDbF35AKbpxjgFSRvRO3nhleOfZWJVxsJcSQGTj40lWY/BprbdK
+         dudQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLy1Nn64Vqbals3Vt69oSzae6+IrHpAJPjSDiejHN21lEFt99Jh
+	6PQ/TUuxKZz0bXakvtP3dBh0DBszCJvYOOyUWNHGXRuJWjITUSphtw==
+X-Received: by 2002:a17:902:7882:: with SMTP id q2-v6mr1761481pll.188.1541622232321;
+        Wed, 07 Nov 2018 12:23:52 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5704370pjt;
+        Wed, 7 Nov 2018 12:23:51 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dLBKA58++SNM1+M7zELVXeqh/b9MB0aXzSXMsG0E3fJIPaZeFSI1Z9LPMLGYTJ3/QVjU0B
+X-Received: by 2002:a63:d52:: with SMTP id 18-v6mr1452914pgn.107.1541622231377;
+        Wed, 07 Nov 2018 12:23:51 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541622231; cv=none;
+        d=google.com; s=arc-20160816;
+        b=jTNHGj82zZjvL4XH+HPuipMgi7kT1zxAZa6A1wjsD3Nr+fJRMxtIaW8MYrht9LdoA9
+         LlUNKqRmViriP3QkLGlmkBLwxCwx4LxQl0swp8bsMZr5QGTkN610cUJ0HGWLMOQ+Ly+/
+         1bUlYBV7iNuVj05flRUvJSIUE9hOGXcbszi4f/FRXxYsE2wJKaYs5RoxnpmfvAjBHsgR
+         nk1kHyg2vECb4S1yS85v0d8+N6aoA23C+OKIl3PL3Jlu4UwVEg7Z9VFL3ZzIqYKHlvPe
+         7THDdxlyAheJD9PEs9EPMjlhQ3Db4Lc+yWt2EQ0Q+oOWwNuL/JvaXZjBHOM1LdGPgWdP
+         hHTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:in-reply-to
+         :mime-version:user-agent:date:message-id:references:cc:to:from
+         :subject;
+        bh=RAvr3Yite7jkPOLzbRDutKcBFEssAiH06fsqozZF58s=;
+        b=XT3YagkbgL+Sn+3NNQkfbe1FGzbiLCw14NXY34QjoAtg5y4ZituHPJo6rG+bESB+6R
+         YbR3s9+Ft+islgvKzvx80pqW8Q0iR7VKJ+zzHTVHslM+jIiRz5PZwziZZO6Vf3OAGdW6
+         0lbvpvUi6BL18SBhYl1TthuB9fxIsYsnAUB+6Jgc4PcXK4z0Pe4EfpbyWYEZkmNfMpgB
+         LZMvtmVrX677ExN8amPx1avo2cOtWwrApay5IsnG8HtmDGA+YC4VFm5BVMqcLhmKpOGD
+         69DrBFroDP3UYUm3EOZfPyI1uAI/oMlrZJsLQzH/7He8qcuoqoxzNFxonE3xkUxDYW3x
+         XXjw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id q15-v6si1339102pgv.437.2018.11.07.12.23.34;
+        Wed, 07 Nov 2018 12:23:51 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727212AbeKHFyw (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:54:52 -0500
+Received: from smtp4-g21.free.fr ([212.27.42.4]:25670 "EHLO smtp4-g21.free.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726590AbeKHFyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:54:51 -0500
+Received: from [192.168.1.42] (unknown [77.207.133.132])
+        (Authenticated sender: marc.w.gonzalez)
+        by smtp4-g21.free.fr (Postfix) with ESMTPSA id EF0CC19F595;
+        Wed,  7 Nov 2018 21:22:44 +0100 (CET)
+Subject: [PATCH 5/9] arm64: defconfig: Replace PINCTRL_MT7622 with
+ PINCTRL_MTK_MOORE
+From: Marc Gonzalez <marc.w.gonzalez@free.fr>
+To: arm-soc <arm@kernel.org>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <8b49a92b-ca92-1fca-cd09-3bcd7a3dcbb9@free.fr>
+Message-ID: <5889bd19-3717-9592-3473-bf11338007da@free.fr>
+Date: Wed, 7 Nov 2018 21:16:45 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Firefox/52.0 SeaMonkey/2.49.4
+MIME-Version: 1.0
+In-Reply-To: <8b49a92b-ca92-1fca-cd09-3bcd7a3dcbb9@free.fr>
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBnS0fYSeNbBC0ZAA--.902S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF4xCF4Dtw43XFWrAF4kXrb_yoW3Wrc_Jr
+	Z7Gw48ur40yry29w1rXa1FgryqkaySgr1fGr1UXr9xJr42gF13W3yDJa45Gw1rWa1fKrW2
+	va93XasxZrnIyjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUb9xYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0264kExVAvwVAq07x20xylc7Ca
+	8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VW7MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7
+	IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E
+	87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2
+	Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIY
+	CTnIWIevJa73UjIFyTuYvjxUqySoDUUUU
+
+Commit e78d57b2f87c ("pinctrl: mediatek: add pinctrl-moore that implements
+the generic pinctrl dt-bindings")
+
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+---
+ arch/arm64/configs/defconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 6fe418d72337..725b9471b21c 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -369,7 +369,7 @@ CONFIG_PINCTRL_MSM8994=y
+ CONFIG_PINCTRL_MSM8996=y
+ CONFIG_PINCTRL_QDF2XXX=y
+ CONFIG_PINCTRL_QCOM_SPMI_PMIC=y
+-CONFIG_PINCTRL_MT7622=y
++CONFIG_PINCTRL_MTK_MOORE=y
+ CONFIG_GPIO_DWAPB=y
+ CONFIG_GPIO_MB86S7X=y
+ CONFIG_GPIO_PL061=y
+-- 
+2.17.1

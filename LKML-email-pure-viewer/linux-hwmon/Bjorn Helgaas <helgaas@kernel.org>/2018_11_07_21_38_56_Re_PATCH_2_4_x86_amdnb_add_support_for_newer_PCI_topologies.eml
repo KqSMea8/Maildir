@@ -1,0 +1,190 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:31:58 -0000
+Received: from icoremail.net (unknown [209.85.215.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3yQL6+JbAD1YAQ--.26647S3;
+	Wed, 07 Nov 2018 21:39:25 +0800 (CST)
+Received: from mail-pg1-f178.google.com (unknown [209.85.215.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHLUkJ6+Jb+qAXAA--.6493S3;
+	Wed, 07 Nov 2018 21:39:21 +0800 (CST)
+Received: by mail-pg1-f178.google.com with SMTP id f8-v6so7343627pgq.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:39:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=Mh3AFOd/R9g0/J0mk25S2qcQpXUMSuAHFbKCEkDCxd0=;
+        b=qdYdGTD2N6vmFpibgdLjob8OiPwkavfjMKQP6fbIyQuPcon2wlVnfCQJxizIBHFttm
+         FzRIVjnuhEOBs2JEDnHOkyCFh/6xW7QkGZtzAiwA+I1Ga+TJvtUNUYYicfNiMoc+hzGk
+         ae/bphf5+GNsCoKx1OvjzBY6lFuWqgyo5v2uKT17mlOw7ryTn+eORVnClfHvEeXAL/G1
+         uQHRKB7KKmPRiDu5b5x/Mbbmsoyyyyuh8dbPI8u+hEmKix+nFJ+kmz3hmQHAd19vO+8G
+         2re/tN6OwtEhw/YeO7DwRw9ww6BkYXfmPM7dx2wHPry3WzuICO5/Fyc1GloXzAAQU9LH
+         /gsg==
+X-Gm-Message-State: AGRZ1gLxqWxRr3RHYRMMoa1xlPFPI0q1yyueWtjyHM3pJzv1y8isZT5r
+	xVZCwJExZmyO+w1AQ5eutScuw1NXtBdpnh/4ovoaRJbdYL/VRxbKKA==
+X-Received: by 2002:a63:fd53:: with SMTP id m19mr223969pgj.340.1541597961305;
+        Wed, 07 Nov 2018 05:39:21 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5257093pjt;
+        Wed, 7 Nov 2018 05:39:20 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dbV5zmGrNo9fhwc2AIQqZMK1XabKVs7zMsZPSysHFjouJnMzU/evJ3vOYU+RaW8Flnv33T
+X-Received: by 2002:a62:2e04:: with SMTP id u4-v6mr236262pfu.229.1541597960505;
+        Wed, 07 Nov 2018 05:39:20 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541597960; cv=none;
+        d=google.com; s=arc-20160816;
+        b=vvCrUxsoDPnjQBay0q4JRaSHifX9kr8lugR34hcjVVSTEFp06wY8ZrAjmWILH4SKtO
+         rZYyhZcM79yg+E29UWIm94OpIEt9r9Gei49t0oPEPvQGl+zAg2g8UvUEzQ6X4cA+XEqX
+         JIJ/YsMseq51RCsAsfnnMf4pWKvxw4t1kaefWtFPwHzrpInwpMW8jG/8Gdu53mLXViaB
+         QAApV1PgWd7LhPZBt6x9jdfHbnYQCfiGWg4QnmGYkFE7dBKsmObf1YI3/4TZnTjZDPcG
+         QVAeZziuHuHN4hm6d0Ylq7uk+FnE40jSl3cUbw/zigdHLNYMAeivSmWr4nZ+BS7vdg0X
+         yp+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=Mh3AFOd/R9g0/J0mk25S2qcQpXUMSuAHFbKCEkDCxd0=;
+        b=p0j0dGwJEzuE7UQpSQHAHmF2icNGoNUMImjr3bX9dPxP1boNwxci2IFzW+Jvu7fhJc
+         dH4D7V8lJC/HfG5g/SkXWZt+ynXWWJi25HF+XXcVLnelnEwCawqchGdM4In4mdVvddyM
+         Sp6Qs2+3Cnhx9dbq4XiB+CIFusXtrlFGdv1J+WtzPokTCYMCeYml22o+KHA9/bvu0dFU
+         FE3DfL+9oawiN/5uP4scLsTEIUAshOLLzJAiNzpflfKk5Q7ehXhFfeVF6Y0OVaWJQKQD
+         apq0j//wjpXYEEKEnBZxTyICxKkiMATy27zLVDrXCWscFIAG3IoyVgWy7jJ7cSezob/7
+         Twbw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kernel.org header.s=default header.b=UGIhduY6;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id p6-v6si632294pls.159.2018.11.07.05.39.05;
+        Wed, 07 Nov 2018 05:39:20 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727945AbeKGXJY (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:09:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726688AbeKGXJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:09:23 -0500
+Received: from localhost (173-25-171-118.client.mchsi.com [173.25.171.118])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D3FE20827;
+        Wed,  7 Nov 2018 13:38:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1541597938;
+        bh=plqyVMmwSeRWeNQCuL+ZxiUUW6gHULnNniL/ZqnXyDM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UGIhduY6vYBRJrj7VVkLKqSWNwH4hXN9WCvG+nXStAKQUNrmjcmrXL6q65WUMP2O/
+         N9oAgDIz3TL6eQs+nAyrPG0/VrQ1nSDzWc/w1XbGrdZ5w0GnuON7NDn/r6NL8UB89d
+         ei6TNOpqlEQBu+vBE8p22eqGbqXbZ/igjBoI6e9U=
+Date: Wed, 7 Nov 2018 07:38:56 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: "Woods, Brian" <Brian.Woods@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>, Pu Wen <puwen@hygon.cn>,
+        Jia Zhang <qianyue.zj@alibaba-inc.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 2/4] x86/amd_nb: add support for newer PCI topologies
+Message-ID: <20181107133856.GA238955@google.com>
+References: <20181102181055.130531-1-brian.woods@amd.com>
+ <20181102181055.130531-3-brian.woods@amd.com>
+ <20181102195925.GB160487@google.com>
+ <20181102232948.GC26770@zn.tnic>
+ <20181105214537.GA19420@google.com>
+ <20181105215650.GG26868@zn.tnic>
+ <20181106214256.GA65443@google.com>
+ <20181106220059.GA4139@zn.tnic>
+ <20181106232040.GA85755@google.com>
+ <20181107091838.GA10835@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107091838.GA10835@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHLUkJ6+Jb+qAXAA--.6493S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr1UJF1fAr18tr17ZF4kXrb_yoW8trW3pF
+	4rKFW3Cw1DGF1UGwnruw4UuFW3KrWqyFWrKr1kC34F93W5Z34fWFW3K343ua45Ar1rAayY
+	vrWrt348Cas8ZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU90b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc2IjII80xcxEwVAKI48JMxvI42IY6xII
+	jxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4
+	A2jsIE14v26rxl6s0DMxvI42IY6I8E87Iv6xkF7I0E14v26rxl6s0DMxAIw28IcxkI7VAK
+	I48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIda
+	VFxhVjvjDU0xZFpf9x07jJWrAUUUUU=
+
+On Wed, Nov 07, 2018 at 10:18:38AM +0100, Borislav Petkov wrote:
+> On Tue, Nov 06, 2018 at 05:20:41PM -0600, Bjorn Helgaas wrote:
+> > Or maybe even drivers/acpi/thermal.c, which claims every Thermal Zone
+> > (ACPI 6.2, sec 11), would be sufficient.  I don't know what the
+> > relationship between hwmon and other thermal stuff, e.g.,
+> > Documentation/thermal/sysfs-api.txt is.  acpi/thermal.c looks tied
+> > into the drivers/thermal stuff (it registers "thermal_zone" devices),
+> > but not to hwmon.
+> 
+> Err, I still don't think I'm catching your drift but let me stop you
+> right there: amd_nb is not there only for hwmon/k10temp. It is a small
+> interface glue if you will, which exports the CPU functionality in PCI
+> config space to other consumers.
+> 
+> So it is not really a driver - it is used by drivers to talk/query CPU
+> settings through it.
+> 
+> With that said, I don't think I understand all that talk about PNP IDs
+> and ACPI methods. But maybe I'm missing something...
+
+Firmware supplies ACPI namespace.  The namespace contains an abstract
+description of the platform, including devices.  Devices are
+identified by PNP IDs, which are analogous to PCI vendor/device IDs,
+except that a device may have several generic "compatible device IDs"
+in addition to an ID unique to the device.  Devices may also contain
+methods (supplied by firmware as part of the namespace), which are
+essentially bytecode that can be executed by the ACPI interpreter in
+the kernel.  Linux drivers claim ACPI devices based on PNP ID and
+operate them using either ACPI methods (which can decouple the driver
+from device specifics) or the usual direct MMIO/IO port/MSR style.
+
+Here's an outline of how it *could* work:
+
+  - AMD defines "AMD0001" device ID for the CPU temp sensor
+  - BIOS supplies AMD0001 devices in the ACPI namespace
+  - Each AMD0001 device has a _TMP method (supplied by BIOS and
+    specific to the CPU)
+  - Linux driver claims AMD0001 devices
+  - Driver reads temp sensors by executing _TMP methods (Linux ACPI
+    interpreter runs the bytecode)
+
+That way when you release a new platform with different temp sensors,
+you update the BIOS AMD0001 devices and _TMP methods to know about
+them, and the old Linux driver works unchanged.
+
+Bjorn

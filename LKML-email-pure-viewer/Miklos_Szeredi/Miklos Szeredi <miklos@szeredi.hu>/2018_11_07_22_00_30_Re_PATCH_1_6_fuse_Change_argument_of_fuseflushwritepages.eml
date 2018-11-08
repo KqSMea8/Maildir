@@ -1,0 +1,200 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:04 -0000
+Received: from icoremail.net (unknown [209.85.210.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f90m8OJbM1pYAQ--.26666S3;
+	Wed, 07 Nov 2018 22:01:10 +0800 (CST)
+Received: from mail-pf1-f172.google.com (unknown [209.85.210.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3n0sj8OJbWbgXAA--.6026S3;
+	Wed, 07 Nov 2018 22:01:07 +0800 (CST)
+Received: by mail-pf1-f172.google.com with SMTP id b11-v6so7742068pfi.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:01:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :in-reply-to:references:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=CwCH3raObH2S1rhqUVX/A2JT7LcCOiz2vy4oIzv/N+s=;
+        b=NArtAacB7eZ7dHbeCRxHDzUg3lyjaeVBGkkND2CkMCJlVxoEoXrdfCTPDqc8lE0Q7g
+         clLBAVIATsoW8F4zyTYIwbMCKOyp/Yg6UqBx2fO5mioZHJeEfFAewcbvvtATHnysg+yM
+         kLLE2wYdXKspuAzAIeMRy6rSUC0HgrqMwvQcf2P4tWKNGXhmKTyoCw49jnh/rMBM5G6U
+         beL004NVNgICxLH5dAZ83vwTWtGBnxLEHBsxDqiwWhYLKdsQJI76RmBVLaXiIXGpx51Q
+         LEVV9eO2jt2IdFTblV6nhm9y61uzy1+6BHo/FvwvZWZn5hTQ4yS7ETrmzWFSpIm04+zK
+         rzAw==
+X-Gm-Message-State: AGRZ1gKk4EPulBHf1FexyltOwSE8CLMWdrltATZgVJy2s4JDKv0R6ITq
+	OTUPSGa963LQCcTQc0tfHXxUo1wXQMn+EtrONy+iH/FQGCuviYcb2A==
+X-Received: by 2002:a63:1e17:: with SMTP id e23mr285610pge.130.1541599267027;
+        Wed, 07 Nov 2018 06:01:07 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5278931pjt;
+        Wed, 7 Nov 2018 06:01:06 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eQqd1/iitR11qv8/nIkLEjuFf78843TwwDQDcWNsXQaDPfvLdI1osRVX5Ri+f8kkpWuh1m
+X-Received: by 2002:a63:c447:: with SMTP id m7mr268232pgg.27.1541599266222;
+        Wed, 07 Nov 2018 06:01:06 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541599266; cv=none;
+        d=google.com; s=arc-20160816;
+        b=YGjj3zibFw7zDCy9YuF0UuTlk1Yv0I/ZUCX3pr6jn1ILtBh50rJAZUY2WB1XbIkvYb
+         RwtWu3d127EIuje4arVQnnbwrz0Aohy0uPJVFkZQvd3hHFVpbNlspyuiyvFE9Qq27USo
+         BkLTbenXZIC2iqmsXxGhbJ+0eDGWdjYfZGGw3CQCzUugMyzulTY1ebpM+dYm87XlLLFK
+         nNAlVPpxSW5N/zhO6nZQWsRGJX7vvpJ6b4LS8mZMttM3uNNrlC1EwFpNMmkT3aSdBZrq
+         jfb+4Qo1u/skHtgHxrA400LP0Uc2zigRIqvIi9A0Fl6Lc1eWjngvLdWefV2ihFkJjyT0
+         YxUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :references:in-reply-to:mime-version:dkim-signature;
+        bh=CwCH3raObH2S1rhqUVX/A2JT7LcCOiz2vy4oIzv/N+s=;
+        b=NX9fJb4Afa+droZ8s237964D1PvV7fCqPzKpfSGSft60XOSZ4ycuOeH6r4whvOz3xP
+         GYg7CQaUCPn3rMdqTkYBePGArG5jNap8UEpQ9a0ku1VmBNJo3RQGUzQ0gAw29kdUkrv4
+         0jC9nMlWEL/zf2NTLd6hZld8GDTUVEmel+9sFDh2ezeQF3BxRI/t6RWtpZTqLCkO0BiG
+         pqUnRISUqQ8wcLEyerW+vrHIoLj9LQrK+Ycaos7z9N4W6vCqg9jsIRi4vWJcR5pK++Qv
+         ptHm8RXaFIDny8lI2O0mtugKKd0achSG3h5p6yTfacUYkJ7pZGlQnKXPz1+Q1jTxQ2oM
+         9N3g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=temperror (no key for signature) header.i=@szeredi.hu header.s=google header.b=cKLFBNoZ;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v33-v6si570349pga.450.2018.11.07.06.00.49;
+        Wed, 07 Nov 2018 06:01:06 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727807AbeKGXbC (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:31:02 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46589 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726688AbeKGXbC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:31:02 -0500
+Received: by mail-io1-f66.google.com with SMTP id y22-v6so11904217ioj.13
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 06:00:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=CwCH3raObH2S1rhqUVX/A2JT7LcCOiz2vy4oIzv/N+s=;
+        b=cKLFBNoZSmQdOrnNmQk+bp9iKVO/PnjKgU9YVfm4L1lfO215CNYlaQMJ6ebStqPxIe
+         j3dPvwYOcwdnQyaeI80ZPIWGwVarHn//R04UwYZAZ8AJbT6nwVk6SeqEaNcSyPX9U95a
+         ofMXO08dIucMMQeoNMxPrS5Rj7tgufAjki1d8=
+X-Received: by 2002:a5e:8b42:: with SMTP id z2-v6mr236163iom.144.1541599231607;
+ Wed, 07 Nov 2018 06:00:31 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a6b:ac42:0:0:0:0:0 with HTTP; Wed, 7 Nov 2018 06:00:30 -0800 (PST)
+X-Originating-IP: [212.96.48.140]
+In-Reply-To: <154149742122.18189.7228444587279544540.stgit@localhost.localdomain>
+References: <154149673368.18189.14752124997476502777.stgit@localhost.localdomain>
+ <154149742122.18189.7228444587279544540.stgit@localhost.localdomain>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Wed, 7 Nov 2018 15:00:30 +0100
+Message-ID: <CAJfpegsJzRPB0vYJehh4wb6TPai9Bit7=dveTv0ha9eg0UMPDw@mail.gmail.com>
+Subject: Re: [PATCH 1/6] fuse: Change argument of fuse_flush_writepages()
+To: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3n0sj8OJbWbgXAA--.6026S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxAr18uF15Jr1kGFyUKr4rKrg_yoW5WFy8pr
+	y5KF4UJws2qrWUWrnaga1UuF1aqa45Kr4jgrWrJas0vr1rX34S9F1FqFykCF4UZrZ3Wr4a
+	qF4rKr9xXr4DZ37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB2b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4wCY1x
+	0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VW5XwCY0x0I
+	x7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804x
+	Wl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8V
+	AvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUqfgAUUUUU
+
+On Tue, Nov 6, 2018 at 10:43 AM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+> Next patches introduce fuse_inode::lock, which will be used
+> in __releases() and __acquires() instead of fc->lock.
+> This patch makes this function to use argument fuse_inode
+> instead of inode as preparation for that.
+
+This patch seems like perfectly useless, just change fc->lock to
+fi->lock in the next patch and be done with that.
+
+
+>
+> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> ---
+>  fs/fuse/dir.c    |    2 +-
+>  fs/fuse/file.c   |    8 ++++----
+>  fs/fuse/fuse_i.h |    2 +-
+>  3 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+> index 47395b0c3b35..c71f7e9ee0f7 100644
+> --- a/fs/fuse/dir.c
+> +++ b/fs/fuse/dir.c
+> @@ -1360,7 +1360,7 @@ static void __fuse_release_nowrite(struct inode *inode)
+>
+>         BUG_ON(fi->writectr != FUSE_NOWRITE);
+>         fi->writectr = 0;
+> -       fuse_flush_writepages(inode);
+> +       fuse_flush_writepages(fi);
+>  }
+>
+>  void fuse_release_nowrite(struct inode *inode)
+> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> index cc2121b37bf5..d5bd29610875 100644
+> --- a/fs/fuse/file.c
+> +++ b/fs/fuse/file.c
+> @@ -1522,12 +1522,12 @@ __acquires(fc->lock)
+>   *
+>   * Called with fc->lock
+>   */
+> -void fuse_flush_writepages(struct inode *inode)
+> +void fuse_flush_writepages(struct fuse_inode *fi)
+>  __releases(fc->lock)
+>  __acquires(fc->lock)
+>  {
+> +       struct inode *inode = &fi->inode;
+>         struct fuse_conn *fc = get_fuse_conn(inode);
+> -       struct fuse_inode *fi = get_fuse_inode(inode);
+>         size_t crop = i_size_read(inode);
+>         struct fuse_req *req;
+>
+> @@ -1670,7 +1670,7 @@ static int fuse_writepage_locked(struct page *page)
+>         spin_lock(&fc->lock);
+>         list_add(&req->writepages_entry, &fi->writepages);
+>         list_add_tail(&req->list, &fi->queued_writes);
+> -       fuse_flush_writepages(inode);
+> +       fuse_flush_writepages(fi);
+>         spin_unlock(&fc->lock);
+>
+>         end_page_writeback(page);
+> @@ -1728,7 +1728,7 @@ static void fuse_writepages_send(struct fuse_fill_wb_data *data)
+>         req->ff = fuse_file_get(data->ff);
+>         spin_lock(&fc->lock);
+>         list_add_tail(&req->list, &fi->queued_writes);
+> -       fuse_flush_writepages(inode);
+> +       fuse_flush_writepages(fi);
+>         spin_unlock(&fc->lock);
+>
+>         for (i = 0; i < num_pages; i++)
+> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> index e9f712e81c7d..38bd7ca1908a 100644
+> --- a/fs/fuse/fuse_i.h
+> +++ b/fs/fuse/fuse_i.h
+> @@ -995,7 +995,7 @@ void fuse_update_ctime(struct inode *inode);
+>
+>  int fuse_update_attributes(struct inode *inode, struct file *file);
+>
+> -void fuse_flush_writepages(struct inode *inode);
+> +void fuse_flush_writepages(struct fuse_inode *fi);
+>
+>  void fuse_set_nowrite(struct inode *inode);
+>  void fuse_release_nowrite(struct inode *inode);
+>

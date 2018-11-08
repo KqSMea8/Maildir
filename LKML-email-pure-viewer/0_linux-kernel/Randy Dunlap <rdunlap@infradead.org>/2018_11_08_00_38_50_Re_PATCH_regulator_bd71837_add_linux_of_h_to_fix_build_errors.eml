@@ -1,0 +1,190 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:54 -0000
+Received: from icoremail.net (unknown [209.85.215.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv35lFeNbzT1ZAQ--.27261S3;
+	Thu, 08 Nov 2018 00:40:06 +0800 (CST)
+Received: from mail-pg1-f176.google.com (unknown [209.85.215.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAXAExjFeNbAVwYAA--.272S3;
+	Thu, 08 Nov 2018 00:40:03 +0800 (CST)
+Received: by mail-pg1-f176.google.com with SMTP id w7so7520448pgp.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:40:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to
+         :references:from:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding:sender:precedence
+         :list-id;
+        bh=Gw7uGj6ZAppqu3OtWOGrQQi6Ai6iN8JXx0ymuSgV8GY=;
+        b=owRD+CIemkD2xJcRPHafrvGmzvbte5Z5Q9hY6BeOjGswE4z+EapMcDp+oS0vbPpPQ+
+         dEH8hratTuh5SP0NlTsxDNUGVchCUKHcmUX9x5yEevC10kH21Mo5roeKGp2mAo538ZLr
+         //xLFN7enobYP2PiEXXMD8lc30DosRhIRKXsfKKFCSbCQmrCz+qQX92dHMQMEtIGcvBJ
+         CgH+XlkELz7LqdcUnmt6wq3HmOQd9XcKIGlQe2E0YJ7SMaAsU/RMYlnhqrS9zHe5MlIE
+         NtNPzwQYYGMB+I0nppt6I6Rpm2AoXsfzWvLMWOPpoj+raMVx6eCovVO0Dzwqgi6DCnmt
+         WczA==
+X-Gm-Message-State: AGRZ1gKxX6RzGVTuFTIeByhpaOw/87jXohTehP83xpZtV0r0F0GdpCH1
+	UxuinXYcp1y0ljZRUIsWjDdsDSHZMtU23+K5n62xgnCtCupjKXoLog==
+X-Received: by 2002:a63:1d10:: with SMTP id d16-v6mr763272pgd.228.1541608802931;
+        Wed, 07 Nov 2018 08:40:02 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5463753pjt;
+        Wed, 7 Nov 2018 08:40:02 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eOgM36EjCqKYU2Y+MDZs9OQAM0hbfSCYrCQQ/iRRwSusiJ1e2vqZsFTXmfFWRJL464mDnd
+X-Received: by 2002:a63:30c8:: with SMTP id w191-v6mr738529pgw.447.1541608802167;
+        Wed, 07 Nov 2018 08:40:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541608802; cv=none;
+        d=google.com; s=arc-20160816;
+        b=BISbAPKVZ1ZhLHcvGyqVuKiUcMN1eXUkQ5f/+3+qE5UGtAstuPd4+eHPGMrsBxnddr
+         S6UYO9gcTdLwN49Y9P/qPq9g2abivYxSOuivF/miwNYLotXTV25dZEAZ+GZOtEuWVvdh
+         r9pPLJLvMDLvUMne5RpW7PL9KweDnfE9DP/9kHTVz8/8Q5pQmylKy/7oAqRPU371Fyym
+         7EUZriajYBe7rpPuCcCYtreXWk50cE96lvcIa3+Iy2bPp5hJgEBU2gBTSXjE9mG58w6+
+         Zj064VHQG+V0e5Hj2rimslsm2RSMmXaN/Cg+yPioz6yv0yvP/bqQrgPJk8sQC6zrnPtV
+         Hk6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:to:subject:dkim-signature;
+        bh=Gw7uGj6ZAppqu3OtWOGrQQi6Ai6iN8JXx0ymuSgV8GY=;
+        b=yqC0gbz29m98G26zE3nGH9gz4aNDlY1dsp1sJGT8Fa8EfEb016XePA9kozSVHna7VK
+         114qSKcLOdMsAHDqOIo6KWrjzx/KFAV5yBy9nSDQrFAm6XeML5WIbrmmIw1FR5f4j8Yv
+         XZyK9i87MbpkGQRlOjxgbIByNpuDp8xdwCaAeIDDD7cRXkWRbJFWQ92x5PUWU6dD92fY
+         bt1uIp0XZb6oF8c2IxD/lML+hQ76GZtzQ9UE2KGgh6dNg9thwGHjyl6IozwUw47r2nEq
+         ImmYRNsrOES2c1bvM62DyWdPdOphcjXte4J9BUUMh089U0cpdsuunxDC5h8Y9J2TsZEI
+         aDfA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=neutral (body hash did not verify) header.i=@infradead.org header.s=merlin.20170209 header.b=WI1rH4zE;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id cb4-v6si1166933plb.108.2018.11.07.08.39.46;
+        Wed, 07 Nov 2018 08:40:02 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731343AbeKHCKE (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:10:04 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:37066 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727312AbeKHCKE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:10:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=DHAJ0zvB14+CJMMTneQbUri14hu/yYe6nqPTJT8OobI=; b=WI1rH4zEOgXL4vKfjpBV6Yl7k/
+        dAgtVuEmAbQqDXukOeYcB1fipwJbN7y9HqChi4Iti+lVK9pg9xapnOM3R3XVrXwHoS2dx7rk+czrb
+        fC9s6K9RoTHCWpaQO57lwpaz5hcaEVRwwsobFG1eEC3Fw6fWBsH7D8YgZYnPfewyrBwf2MCgXyFZR
+        TaH0yERQ+n/pd6CzjECadi1l4lCpsEQWENoFaEYiicJkMw+eYTUfuM+vv3/79v/+d7coi2j6hpxAJ
+        zwO/J1IaczzB4kZFaFxZJX6Zoz5TZeT2+ap5PxB73W5RSpv5F17YbZSzjLjOSefbrL4HUBPg443+9
+        oPe3+MDQ==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1gKQr0-0007am-La; Wed, 07 Nov 2018 16:38:54 +0000
+Subject: Re: [PATCH] regulator: bd71837: add <linux/of.h> to fix build errors
+To: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+References: <cf89bc2f-f7c0-0ed6-38d8-0c47a05ed706@infradead.org>
+ <042F8805D2046347BB8420BEAE397A4066F1CF4C@WILL-MAIL001.REu.RohmEu.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <6a52ae58-b5d6-d86b-3597-5b8a1fe30e97@infradead.org>
+Date: Wed, 7 Nov 2018 08:38:50 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
+MIME-Version: 1.0
+In-Reply-To: <042F8805D2046347BB8420BEAE397A4066F1CF4C@WILL-MAIL001.REu.RohmEu.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAXAExjFeNbAVwYAA--.272S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7KFyftFy3urW3WF43uryUZFb_yoW8KrWUpa
+	n7ZwnrAr40yFy8Ar4xW34fK3W5Xw1jyasFk348Kw4fZrWj9FnFqrnayFW5CFn7Jr4kCr12
+	yryqqr1fWFyUZrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmqb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcV
+	AKI48JMx02cVCv0xWlc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0264kExVAvwVAq07x20xyl
+	c7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VWUMxkI7II2jI8vz4vEwIxGrwCYIxAIcV
+	C0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY
+	6I8E87Iv67AKxVW8JVWxJwCYIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr1l42xK82IYc2
+	Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIY
+	CTnIWIevJa73UjIFyTuYvjxUqldgDUUUU
+
+On 10/25/18 11:02 PM, Vaittinen, Matti wrote:
+> Hello,
+> 
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+>> Fix build error due to missing header file:
+>>
+>> drivers/regulator/bd71837-regulator.c:242:3: error: implicit declaration of function 'of_match_ptr' [-Werror=implicit-function-declaration]
+>>
+>> Fixes: ba08799e90b5 ("regulator: bd71837: BD71837 PMIC regulator driver")
+> 
+> //snip
+> 
+>> --- lnx-419.orig/drivers/regulator/bd71837-regulator.c
+>> +++ lnx-419/drivers/regulator/bd71837-regulator.c
+>> @@ -9,6 +9,7 @@
+>>  #include <linux/kernel.h>
+>>  #include <linux/mfd/rohm-bd718x7.h>
+>>  #include <linux/module.h>
+>> +#include <linux/of.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/regulator/driver.h>
+>>  #include <linux/regulator/machine.h>
+> 
+> Not sure if this is relevant but if I am not mistaken this should already be fixed by: 
+> df43519eb706edfe951284a825642ce2e1d38d09 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=df43519eb706edfe951284a825642ce2e1d38d09
+> 
+> 
+> Br,
+>     Matti Vaittinen
+> 
+
+Hi,
+
+It seems that this same patch is now needed in
+drivers/regulator/bd718x7-regulator.c:
+
+From linux-next-2018-11-07:
+
+file: drivers/regulator/bd718x7-regulator.c: errors: 109, warnings: 0
+
+This is a small sample of the errors:
+
+  CC [M]  drivers/regulator/bd718x7-regulator.o
+../drivers/regulator/bd718x7-regulator.c:355:4: error: implicit declaration of function ‘of_match_ptr’ [-Werror=implicit-function-declaration]
+    .of_match = of_match_ptr("BUCK1"),
+    ^
+../drivers/regulator/bd718x7-regulator.c:355:4: error: initializer element is not constant
+../drivers/regulator/bd718x7-regulator.c:355:4: error: (near initialization for ‘bd71847_regulators[0].desc.of_match’)
+../drivers/regulator/bd718x7-regulator.c:356:4: error: initializer element is not constant
+    .regulators_node = of_match_ptr("regulators"),
+    ^
+../drivers/regulator/bd718x7-regulator.c:356:4: error: (near initialization for ‘bd71847_regulators[0].desc.regulators_node’)
+../drivers/regulator/bd718x7-regulator.c:379:4: error: initializer element is not constant
+    .of_match = of_match_ptr("BUCK2"),
+    ^
+
+
+thanks,
+-- 
+~Randy

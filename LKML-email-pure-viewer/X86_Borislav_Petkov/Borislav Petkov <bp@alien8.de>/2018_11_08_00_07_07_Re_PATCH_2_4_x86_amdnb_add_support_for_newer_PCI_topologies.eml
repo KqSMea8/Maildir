@@ -1,0 +1,189 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:44 -0000
+Received: from icoremail.net (unknown [209.85.215.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_5vnDeNb1g1ZAQ--.26230S3;
+	Thu, 08 Nov 2018 00:08:08 +0800 (CST)
+Received: from mail-pg1-f175.google.com (unknown [209.85.215.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHb0vlDeNb1TsYAA--.142S3;
+	Thu, 08 Nov 2018 00:08:06 +0800 (CST)
+Received: by mail-pg1-f175.google.com with SMTP id n10-v6so7488895pgv.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:08:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=Mt1I7+P7Hf4Kvtb37u9HCzbpbPmIIfV4daxk6lCceiI=;
+        b=ImeQmbMgCJaeCE3VfnD82p68i70GfszvRZnhFk/NpwrQTHn7UEJXjJrTTbHXijrZEP
+         lGhVcfm31MSegOBcymle39wrB2GzsHBXIh7EQLfCbOp3GfoMASx6oa4Ahfi5DLpvKxNY
+         6i9ySvwI8KcguvkcXEIKfiZyZG8SGJLJKugREuW+64CUrSmyCKopjkMXMF0SbTQ/9NFn
+         d3MWAMoioMt6ITObNm69CmrfnwuA+b+WVzPCABJQl2LSPWj1umiI22Ii9M2f9LznT8Fd
+         fr4UbYREfRUYv9n+kwHdIczR1kAHPeXIIrllDcuIRdHiYuq5jE/BjQpHh+UHkV52bGnL
+         C0Lg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJJZNxhBBgirPEwoCqtpl5e+4wrucWC6sL3rVQlIyLHamOzZsuW
+	5CMb5BD9nsEuOladtqqgNy23vLiFQ78+MPf7H/bGesqWeWjr9fetJw==
+X-Received: by 2002:a62:42dc:: with SMTP id h89-v6mr843648pfd.0.1541606885708;
+        Wed, 07 Nov 2018 08:08:05 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5427286pjt;
+        Wed, 7 Nov 2018 08:08:04 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cwemj7yFdjmStCdsahYemw73PSDBlJnVf6FjPsSz5AZuDCee6kE4hemzID807GwA8i7sDx
+X-Received: by 2002:a62:3046:: with SMTP id w67-v6mr767025pfw.177.1541606884609;
+        Wed, 07 Nov 2018 08:08:04 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541606884; cv=none;
+        d=google.com; s=arc-20160816;
+        b=qLdO/y9GY2dwFWQQPwnSVfdvhG3uJquEvWjZ+drix7hTIg9U0QCSEUUbb9jBzMTEKb
+         BoUdspYzgMgcorYr2QO/pcfuzIFtlBK02MTkNek6hZi9tQEruDR6up/5UiQJOI8xwoSO
+         UCnMbYkSczNJzEHMKvWUrFiBpLjTZOuTwSUwo1vLd+Rq3clEyljUaJQnoiFArB/SBe/Q
+         gx75R6zZRA4SjHM7Y4Ge9UW+nv58R9zQx/AGXLmoSyFtVlSMzINs8Sbyr45/bNDx9YXn
+         NbpuEdoWx7KFOppPuBT/t45aSi2O3kw78ilXDoYy1Z7QtJdtj6wkLRZqU+gJeCAet7Zu
+         3Quw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=Mt1I7+P7Hf4Kvtb37u9HCzbpbPmIIfV4daxk6lCceiI=;
+        b=JxAQVzozkUUY1sr5hsTTKZ1b3cV1vdEsZwopTuEBuTe5WU+1rp8yHH40u88JQWFdH4
+         V+/eKkoVBEu7pNhfdIw5oApdV2k0zInDHV19apyZV58XueB0LVrSafSgFPTbMS/HDkka
+         kydBqDrdmyitKhVN5/5JR5RgI5gvj+Pvan1jBOzd/+XYDc9cPrljn9VcRKFJ8W9wWdn4
+         Luol2QDXyTDvF71PLZGlTdYJjtRn/CC4nquUNsq8abvzqIwZ93XNPFZ6GLg+a6Zk91wb
+         ALHQELoFkGII5LuGbB74gs4ebZOjWP/djTKHPbmmT06KDy7RMdeR51hcD2rv4Zs6JRfS
+         sSKw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id h13-v6si887839pgj.457.2018.11.07.08.07.49;
+        Wed, 07 Nov 2018 08:08:04 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731343AbeKHBiU (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:38:20 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:44498 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727668AbeKHBiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:38:20 -0500
+X-Virus-Scanned: Nedap ESD1 at mail.skyhub.de
+Received: from mail.skyhub.de ([127.0.0.1])
+        by localhost (blast.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id lK5pCVWiX6yr; Wed,  7 Nov 2018 17:07:20 +0100 (CET)
+Received: from zn.tnic (p200300EC2BCBE000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2bcb:e000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 180A51EC0402;
+        Wed,  7 Nov 2018 17:07:20 +0100 (CET)
+Date: Wed, 7 Nov 2018 17:07:07 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Bjorn Helgaas <helgaas@kernel.org>,
+        "Woods, Brian" <Brian.Woods@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>, Pu Wen <puwen@hygon.cn>,
+        Jia Zhang <qianyue.zj@alibaba-inc.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 2/4] x86/amd_nb: add support for newer PCI topologies
+Message-ID: <20181107160707.GA14169@zn.tnic>
+References: <20181102181055.130531-3-brian.woods@amd.com>
+ <20181102195925.GB160487@google.com>
+ <20181102232948.GC26770@zn.tnic>
+ <20181105214537.GA19420@google.com>
+ <20181105215650.GG26868@zn.tnic>
+ <20181106214256.GA65443@google.com>
+ <20181106220059.GA4139@zn.tnic>
+ <20181106232040.GA85755@google.com>
+ <20181107091838.GA10835@zn.tnic>
+ <20181107133856.GA238955@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20181107133856.GA238955@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHb0vlDeNb1TsYAA--.142S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7uFyrtry5Ww4DXw17XF4ktFb_yoW8ZFyUpF
+	WSyFW7G3WDGr1j9rnrZw47ur45CrZ5AayrGwn8G3y5Kan8XryfWa97tFyY9a45Aw1rAaya
+	qFWFqw1kCas0vaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPjb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VWUMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWUJVW8JwCYIxAIcVC2
+	z280aVCY1x0267AKxVWUJVW8JwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij2
+	8IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr4
+	1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUq9miDUUU
+	U
+
+On Wed, Nov 07, 2018 at 07:38:56AM -0600, Bjorn Helgaas wrote:
+> Firmware supplies ACPI namespace.  The namespace contains an abstract
+> description of the platform, including devices.  Devices are
+> identified by PNP IDs, which are analogous to PCI vendor/device IDs,
+> except that a device may have several generic "compatible device IDs"
+> in addition to an ID unique to the device.  Devices may also contain
+> methods (supplied by firmware as part of the namespace), which are
+> essentially bytecode that can be executed by the ACPI interpreter in
+> the kernel.  Linux drivers claim ACPI devices based on PNP ID and
+> operate them using either ACPI methods (which can decouple the driver
+> from device specifics) or the usual direct MMIO/IO port/MSR style.
+> 
+> Here's an outline of how it *could* work:
+> 
+>   - AMD defines "AMD0001" device ID for the CPU temp sensor
+>   - BIOS supplies AMD0001 devices in the ACPI namespace
+>   - Each AMD0001 device has a _TMP method (supplied by BIOS and
+>     specific to the CPU)
+>   - Linux driver claims AMD0001 devices
+>   - Driver reads temp sensors by executing _TMP methods (Linux ACPI
+>     interpreter runs the bytecode)
+
+Thanks for explaining.
+
+> That way when you release a new platform with different temp sensors,
+> you update the BIOS AMD0001 devices and _TMP methods to know about
+> them, and the old Linux driver works unchanged.
+
+So I don't know about temp sensors - I'm talking about amd_nb which is
+something... well, I explained already what it is in my previous mail so
+I won't repeat myself.
+
+Anyway, if there is such a PNP ID device - and I believe I have stumbled
+upon some blurb about it in the BKDGs - which says "this device
+represents the PCI device IDs of a CPU" and if that can be used to
+register amd_nb through it, then sure, I don't see why not.
+
+This way, when new CPU comes out and the same PNP ID device is present,
+amd_nb would load, sure.
+
+Maybe Brian knows more on the subject...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.

@@ -1,0 +1,354 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:00 -0000
+Received: from icoremail.net (unknown [209.85.215.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f7VNQuNbZ1NaAQ--.26922S3;
+	Thu, 08 Nov 2018 03:51:41 +0800 (CST)
+Received: from mail-pg1-f179.google.com (unknown [209.85.215.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXbDhKQuNbfBQZAA--.698S3;
+	Thu, 08 Nov 2018 03:51:38 +0800 (CST)
+Received: by mail-pg1-f179.google.com with SMTP id f8-v6so7761937pgq.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:51:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=qNnUWesGsasRhCNwAs18FwGmrS3uJuUFHSMH3pVWSic=;
+        b=hMQadfzkKtR9Pg6dDcBOtoj02l0FWIstENeCDEAAW/07D+LPlsQBStR/Id7S/I23Hp
+         2NjhPUWacppDZgtLrbMa3KcQ9vQWWWkrEad+TERp3qJ+FHY1ZDbkkzxQDFm8dKrVG0Lx
+         WGQQRCMJh/qqHpD2y6WyvCsdtTySWTiEV7dMsXc4nK+GLhdZLGH6KqbcHY2911yWP3Xy
+         GVheQ7RuNhhBoah0QKtAY0wNlqEu/CepxlZTFl2qM5g28J9kfLtLpDrp55gXQnd9iCh4
+         qOHM0MA7cYNofYnCmHfXOljhUnYTeSe0nCBQV6gkVZRCs3KxVw8vPa2SjLch9hdtvEX+
+         NCGQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIy2Wxc/6VEC6DLq6NDRnNsp6ETqgGWVNnQypqbOAFf/jK0jmgG
+	HE6eL4cgi9qA4DGT8WDmsHm92KXBT/eS4Pqnjo/+r/z7c80FtvIqDA==
+X-Received: by 2002:a62:42dc:: with SMTP id h89-v6mr1667976pfd.0.1541620298514;
+        Wed, 07 Nov 2018 11:51:38 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5671027pjt;
+        Wed, 7 Nov 2018 11:51:37 -0800 (PST)
+X-Google-Smtp-Source: AJdET5e/wrkduwvxNl1XjljAJ86vGBhKyU37k0G3m+pz5XWebQDgbUhZ1wXlU0nv9j+28edXmGYK
+X-Received: by 2002:a17:902:20b:: with SMTP id 11-v6mr1539658plc.147.1541620297534;
+        Wed, 07 Nov 2018 11:51:37 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620297; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ub9snBl90BalUm4PVu6VV4+7alfwCAJQhJDQ8mdtV2jHt9WXunU6AzQAm6zmnR84Cb
+         z1Nr+wUkgfJZdzTYNWhKSpG5J5KgHeh/nKBvXE2/nuyDQlFCNhWOJn/Y7JZa2cHTD5fu
+         oZa3zlCTbMTo5OMIYCx7ARpDbKYm2IpC4sffHm1ZYe7FPzVQ+x/66zy4dRBJD1GhECpQ
+         i/JVJIdtfEC1m+6bRo9YroAnzScACMb0zPjPpe5xyLzwxkjzrTMH0H3320m//GFnXQMZ
+         WcjqMd0wE435bKk4qBfZRQGmOekGt8FEpnECogT5a+KKVIrnEwkWqp9Imhp3Te+QKbvI
+         4D8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=qNnUWesGsasRhCNwAs18FwGmrS3uJuUFHSMH3pVWSic=;
+        b=qp7A857LPGw1PPwgF4IPctsN5hhJGkRDFxaqhJLKcdGWs2e3DrrCAAahVURjaAfzFz
+         kMSaFDv6PVZXxCDbYu/KmfBjPnGIjPu2Lce+m6dFAMLn8YlS/L/z5px9uPa97Lr9Wgz8
+         b/78yL/X+D6HX9AAbVQ/aM+jrBfLBg5hWcRwUdt7WYRn8qdZV9Jf11GJ/FPt8VURKEil
+         ETYkO55PpBoDXpTi3tUo8+OvCtAQ+yf4WNqunBniy+O56m9hJ7VNW3Q36a11JvmPsZWl
+         Gwvx3qY5BqMFh6BArRyaYrz8dFRDbug4fcPP6ARtEA/TjrbzAwcJBU4/ha2G7SJDjZCH
+         IF4g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id i11-v6si1389435pgi.574.2018.11.07.11.51.22;
+        Wed, 07 Nov 2018 11:51:37 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727764AbeKHFVQ (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:21:16 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:41912 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727579AbeKHFVP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:21:15 -0500
+Received: from localhost ([127.0.0.1] helo=bazinga.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1gKTpG-00070Q-PV; Wed, 07 Nov 2018 20:49:19 +0100
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 13/23] x86/fpu: Make get_xsave_field_ptr() and get_xsave_addr() use feature number instead of mask
+Date: Wed,  7 Nov 2018 20:48:48 +0100
+Message-Id: <20181107194858.9380-14-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107194858.9380-1-bigeasy@linutronix.de>
+References: <20181107194858.9380-1-bigeasy@linutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXbDhKQuNbfBQZAA--.698S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3Ww1xXr45KF17KF4xtr48tFb_yoWfXFWfp3
+	ykArZxCw4UJF15A3ZrJrsrXrs8KF1kG3W5CFyDA34rtF1jgrn3Grs2kF93A395X3sYqF1f
+	t3Zaqr90kFs0kFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPSb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	GVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	Uo1CJPUUUUU==
+
+After changing the argument of __raw_xsave_addr() from a mask to number
+Dave suggested to check if it makes sense to do the same for
+get_xsave_addr(). As it turns out it does. Only get_xsave_addr() needs
+the mask to check if the requested feature is part of what is
+support/saved and then uses the number again. The shift operation is
+cheaper compared to "find last bit set". Also, the feature number uses
+less opcode space compared to the mask :)
+
+Make get_xsave_addr() argument a xfeature number instead of mask and fix
+up its callers.
+As part of this use xfeature_nr and xfeature_mask consistently.
+This results in changes to the kvm code as:
+	feature -> xfeature_mask
+	index -> xfeature_nr
+
+Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/x86/include/asm/fpu/xstate.h |  4 ++--
+ arch/x86/kernel/fpu/xstate.c      | 23 +++++++++++------------
+ arch/x86/kernel/traps.c           |  2 +-
+ arch/x86/kvm/x86.c                | 28 ++++++++++++++--------------
+ arch/x86/mm/mpx.c                 |  6 +++---
+ 5 files changed, 31 insertions(+), 32 deletions(-)
+
+diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
+index 48581988d78c7..fbe41f808e5d8 100644
+--- a/arch/x86/include/asm/fpu/xstate.h
++++ b/arch/x86/include/asm/fpu/xstate.h
+@@ -46,8 +46,8 @@ extern void __init update_regset_xstate_info(unsigned int size,
+ 					     u64 xstate_mask);
+ 
+ void fpu__xstate_clear_all_cpu_caps(void);
+-void *get_xsave_addr(struct xregs_state *xsave, int xstate);
+-const void *get_xsave_field_ptr(int xstate_field);
++void *get_xsave_addr(struct xregs_state *xsave, int xfeature_nr);
++const void *get_xsave_field_ptr(int xfeature_nr);
+ int using_compacted_format(void);
+ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int offset, unsigned int size);
+ int copy_xstate_to_user(void __user *ubuf, struct xregs_state *xsave, unsigned int offset, unsigned int size);
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 3dfe3627deaf6..375226055a413 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -832,15 +832,15 @@ static void *__raw_xsave_addr(struct xregs_state *xsave, int xfeature_nr)
+  *
+  * Inputs:
+  *	xstate: the thread's storage area for all FPU data
+- *	xstate_feature: state which is defined in xsave.h (e.g.
+- *	XFEATURE_MASK_FP, XFEATURE_MASK_SSE, etc...)
++ *	xfeature_nr: state which is defined in xsave.h (e.g. XFEATURE_FP,
++ *	XFEATURE_SSE, etc...)
+  * Output:
+  *	address of the state in the xsave area, or NULL if the
+  *	field is not present in the xsave buffer.
+  */
+-void *get_xsave_addr(struct xregs_state *xsave, int xstate_feature)
++void *get_xsave_addr(struct xregs_state *xsave, int xfeature_nr)
+ {
+-	int xfeature_nr;
++	u64 xfeature_mask = 1ULL << xfeature_nr;
+ 	/*
+ 	 * Do we even *have* xsave state?
+ 	 */
+@@ -852,11 +852,11 @@ void *get_xsave_addr(struct xregs_state *xsave, int xstate_feature)
+ 	 * have not enabled.  Remember that pcntxt_mask is
+ 	 * what we write to the XCR0 register.
+ 	 */
+-	WARN_ONCE(!(xfeatures_mask & xstate_feature),
++	WARN_ONCE(!(xfeatures_mask & xfeature_mask),
+ 		  "get of unsupported state");
+ 	/*
+ 	 * This assumes the last 'xsave*' instruction to
+-	 * have requested that 'xstate_feature' be saved.
++	 * have requested that 'xfeature_mask' be saved.
+ 	 * If it did not, we might be seeing and old value
+ 	 * of the field in the buffer.
+ 	 *
+@@ -865,10 +865,9 @@ void *get_xsave_addr(struct xregs_state *xsave, int xstate_feature)
+ 	 * or because the "init optimization" caused it
+ 	 * to not be saved.
+ 	 */
+-	if (!(xsave->header.xfeatures & xstate_feature))
++	if (!(xsave->header.xfeatures & xfeature_mask))
+ 		return NULL;
+ 
+-	xfeature_nr = fls64(xstate_feature) - 1;
+ 	return __raw_xsave_addr(xsave, xfeature_nr);
+ }
+ EXPORT_SYMBOL_GPL(get_xsave_addr);
+@@ -884,13 +883,13 @@ EXPORT_SYMBOL_GPL(get_xsave_addr);
+  * Note that this only works on the current task.
+  *
+  * Inputs:
+- *	@xsave_state: state which is defined in xsave.h (e.g. XFEATURE_MASK_FP,
+- *	XFEATURE_MASK_SSE, etc...)
++ *	@xfeature_nr: state which is defined in xsave.h (e.g. XFEATURE_FP,
++ *	XFEATURE_SSE, etc...)
+  * Output:
+  *	address of the state in the xsave area or NULL if the state
+  *	is not present or is in its 'init state'.
+  */
+-const void *get_xsave_field_ptr(int xsave_state)
++const void *get_xsave_field_ptr(int xfeature_nr)
+ {
+ 	struct fpu *fpu = &current->thread.fpu;
+ 
+@@ -900,7 +899,7 @@ const void *get_xsave_field_ptr(int xsave_state)
+ 	 */
+ 	fpu__save(fpu);
+ 
+-	return get_xsave_addr(&fpu->state.xsave, xsave_state);
++	return get_xsave_addr(&fpu->state.xsave, xfeature_nr);
+ }
+ 
+ #ifdef CONFIG_ARCH_HAS_PKEYS
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 9b7c4ca8f0a73..626853b2ac344 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -455,7 +455,7 @@ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
+ 	 * which is all zeros which indicates MPX was not
+ 	 * responsible for the exception.
+ 	 */
+-	bndcsr = get_xsave_field_ptr(XFEATURE_MASK_BNDCSR);
++	bndcsr = get_xsave_field_ptr(XFEATURE_BNDCSR);
+ 	if (!bndcsr)
+ 		goto exit_trap;
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5cd5647120f2b..75301b439b6e4 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3650,15 +3650,15 @@ static void fill_xsave(u8 *dest, struct kvm_vcpu *vcpu)
+ 	 */
+ 	valid = xstate_bv & ~XFEATURE_MASK_FPSSE;
+ 	while (valid) {
+-		u64 feature = valid & -valid;
+-		int index = fls64(feature) - 1;
+-		void *src = get_xsave_addr(xsave, feature);
++		u64 xfeature_mask = valid & -valid;
++		int xfeature_nr = fls64(xfeature_mask) - 1;
++		void *src = get_xsave_addr(xsave, xfeature_nr);
+ 
+ 		if (src) {
+ 			u32 size, offset, ecx, edx;
+-			cpuid_count(XSTATE_CPUID, index,
++			cpuid_count(XSTATE_CPUID, xfeature_nr,
+ 				    &size, &offset, &ecx, &edx);
+-			if (feature == XFEATURE_MASK_PKRU)
++			if (xfeature_nr == XFEATURE_PKRU)
+ 				memcpy(dest + offset, &vcpu->arch.pkru,
+ 				       sizeof(vcpu->arch.pkru));
+ 			else
+@@ -3666,7 +3666,7 @@ static void fill_xsave(u8 *dest, struct kvm_vcpu *vcpu)
+ 
+ 		}
+ 
+-		valid -= feature;
++		valid -= xfeature_mask;
+ 	}
+ }
+ 
+@@ -3693,22 +3693,22 @@ static void load_xsave(struct kvm_vcpu *vcpu, u8 *src)
+ 	 */
+ 	valid = xstate_bv & ~XFEATURE_MASK_FPSSE;
+ 	while (valid) {
+-		u64 feature = valid & -valid;
+-		int index = fls64(feature) - 1;
+-		void *dest = get_xsave_addr(xsave, feature);
++		u64 xfeature_mask = valid & -valid;
++		int xfeature_nr = fls64(xfeature_mask) - 1;
++		void *dest = get_xsave_addr(xsave, xfeature_nr);
+ 
+ 		if (dest) {
+ 			u32 size, offset, ecx, edx;
+-			cpuid_count(XSTATE_CPUID, index,
++			cpuid_count(XSTATE_CPUID, xfeature_nr,
+ 				    &size, &offset, &ecx, &edx);
+-			if (feature == XFEATURE_MASK_PKRU)
++			if (xfeature_nr == XFEATURE_PKRU)
+ 				memcpy(&vcpu->arch.pkru, src + offset,
+ 				       sizeof(vcpu->arch.pkru));
+ 			else
+ 				memcpy(dest, src + offset, size);
+ 		}
+ 
+-		valid -= feature;
++		valid -= xfeature_mask;
+ 	}
+ }
+ 
+@@ -8704,11 +8704,11 @@ void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+ 		if (init_event)
+ 			kvm_put_guest_fpu(vcpu);
+ 		mpx_state_buffer = get_xsave_addr(&vcpu->arch.guest_fpu.state.xsave,
+-					XFEATURE_MASK_BNDREGS);
++					XFEATURE_BNDREGS);
+ 		if (mpx_state_buffer)
+ 			memset(mpx_state_buffer, 0, sizeof(struct mpx_bndreg_state));
+ 		mpx_state_buffer = get_xsave_addr(&vcpu->arch.guest_fpu.state.xsave,
+-					XFEATURE_MASK_BNDCSR);
++					XFEATURE_BNDCSR);
+ 		if (mpx_state_buffer)
+ 			memset(mpx_state_buffer, 0, sizeof(struct mpx_bndcsr));
+ 		if (init_event)
+diff --git a/arch/x86/mm/mpx.c b/arch/x86/mm/mpx.c
+index 2385538e80656..bcd55cc3050c2 100644
+--- a/arch/x86/mm/mpx.c
++++ b/arch/x86/mm/mpx.c
+@@ -142,7 +142,7 @@ int mpx_fault_info(struct mpx_fault_info *info, struct pt_regs *regs)
+ 		goto err_out;
+ 	}
+ 	/* get bndregs field from current task's xsave area */
+-	bndregs = get_xsave_field_ptr(XFEATURE_MASK_BNDREGS);
++	bndregs = get_xsave_field_ptr(XFEATURE_BNDREGS);
+ 	if (!bndregs) {
+ 		err = -EINVAL;
+ 		goto err_out;
+@@ -190,7 +190,7 @@ static __user void *mpx_get_bounds_dir(void)
+ 	 * The bounds directory pointer is stored in a register
+ 	 * only accessible if we first do an xsave.
+ 	 */
+-	bndcsr = get_xsave_field_ptr(XFEATURE_MASK_BNDCSR);
++	bndcsr = get_xsave_field_ptr(XFEATURE_BNDCSR);
+ 	if (!bndcsr)
+ 		return MPX_INVALID_BOUNDS_DIR;
+ 
+@@ -376,7 +376,7 @@ static int do_mpx_bt_fault(void)
+ 	const struct mpx_bndcsr *bndcsr;
+ 	struct mm_struct *mm = current->mm;
+ 
+-	bndcsr = get_xsave_field_ptr(XFEATURE_MASK_BNDCSR);
++	bndcsr = get_xsave_field_ptr(XFEATURE_BNDCSR);
+ 	if (!bndcsr)
+ 		return -EINVAL;
+ 	/*
+-- 
+2.19.1

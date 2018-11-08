@@ -1,0 +1,167 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:40 -0000
+Received: from icoremail.net (unknown [209.85.214.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3ySdMeNbhfhZAQ--.27298S3;
+	Thu, 08 Nov 2018 02:40:30 +0800 (CST)
+Received: from mail-pl1-f169.google.com (unknown [209.85.214.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3WkaZMeNbgN4YAA--.15776S3;
+	Thu, 08 Nov 2018 02:40:25 +0800 (CST)
+Received: by mail-pl1-f169.google.com with SMTP id n4-v6so8255671plp.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:40:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=3tYg3L3iX9vnDr3Hcweo1P7+NX3L80cpvnFpMnYM21g=;
+        b=ZTHtRoqlgjML/oHAB+Jv080G7Mys+K42gow07b3/YwovVDHiKbBkULZ5PQY6WBwKoj
+         kuIQcxRVayghMNXXx6s81NzqQXGLx1G+Ez1+tUNsS6mOiiTgi6jf/4zyKMopvDsxguj4
+         V0+Oi2JIJyyWIh6UuMvDS2iB0AmOAos84z5+w+/g1yRh6xHYczCdq1wIqKxiXP/RaS/T
+         jnrX3U4Iw/OaajKcf8++1tTHOuQz6+zbSlrt82GWUZGONj7T8e6HITrzW981OPOJZp/l
+         o0tlT9fFA3RMauNnB5r+qv+bLzaV1iSXNSANp5rg65fiiw/JPE0AF5VEVNLSNj/J1dnc
+         j6Bw==
+X-Gm-Message-State: AGRZ1gLy8dImqBJBhfwy5Bzcm5NvAXFxIAi0o1UXwvswuTTBitIg+p4a
+	SdzFgqQPGEUAf+qdwbMuPALQwWCX4YHU2c6RwN2A8Pm9RXiZT6bQow==
+X-Received: by 2002:a17:902:a9:: with SMTP id a38-v6mr1360652pla.7.1541616024807;
+        Wed, 07 Nov 2018 10:40:24 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5598009pjt;
+        Wed, 7 Nov 2018 10:40:24 -0800 (PST)
+X-Google-Smtp-Source: AJdET5e3kWhX1hOp1bnBGkmBXi9xY7TNfwGO1gKmWK+B14zlaxYVcjGtHUaKLldf1rWCkAbRDUXz
+X-Received: by 2002:a17:902:61:: with SMTP id 88-v6mr1356875pla.189.1541616024149;
+        Wed, 07 Nov 2018 10:40:24 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541616024; cv=none;
+        d=google.com; s=arc-20160816;
+        b=OJM+x+rwpJpKU9beSXJhG6onn54ufmxL3ISgNtH3PWHaJCD8LEwT2YPmFrGaLu8il2
+         nmFymABCLneBYY1R4Swwrl7E8Rrr2IzDLs6T3W6kYUV1Q+KSXeSmHNNPsCfHFBgu1Dzh
+         rebME7D9c7kvrdfR1PXxACik0/CFyfPKfAbCOhRostJcH5oDNP1xTm4h+J4f9AglPI0c
+         hxNvomM5fkPP27mU2L6e9cWGZnOfYYH/WvoxJJuc/NBmW9k//5pBb+1crke1rg3Z0jaf
+         2n8gztKn2+8shnKxifijmMlhRCoI3n07Tsxv//JJ8WhOyFSpfLKuNo4O/IDG0J/824kN
+         lqAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=3tYg3L3iX9vnDr3Hcweo1P7+NX3L80cpvnFpMnYM21g=;
+        b=MtmUL2WJd43MTbs7ihz0okrYGVjO1ZVVJripBR4C0153/N55THsTTZhbBTcLHjJXnz
+         mq+57CDviOHtmC2kUHMazOz00BHx9y87pZ6vg3Yo/H6HhYC2VLqxeS7LKYa678ZRru+H
+         YsxDyYa6j9L2lsoKM/pV5SQ4Qo0AD0akcaXo3od8AlArgYq7Hep3qd+TJzULkxtW0DCo
+         Mw3t2/4K3p/b9E++45MirLDdohy39xuMyClDLd8znG5ug948VjF/tuwt7VZL3OI0usmp
+         4PspFqqXWJJ+ZXcAaisUL17FErcLJRi09zBeD2I9DwqGRxDzcVl5hIz0qwLaSOgFmDKP
+         Y/Fw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@gmail.com header.s=20161025 header.b=Lj8691yP;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id z9si1136365pgf.54.2018.11.07.10.40.05;
+        Wed, 07 Nov 2018 10:40:24 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1729335AbeKHELh (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:11:37 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38667 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbeKHELh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:11:37 -0500
+Received: by mail-pl1-f195.google.com with SMTP id p4-v6so5859834plo.5;
+        Wed, 07 Nov 2018 10:40:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3tYg3L3iX9vnDr3Hcweo1P7+NX3L80cpvnFpMnYM21g=;
+        b=Lj8691yPXrlTzy7Dq5opf2cqVVxvqdTjkqpzf+4dDUwGbGeYB3DdN9cGQ3ju4OH/9E
+         lCB2KqY1dK/Yv5XmGnu5Bm1WXaQo+68FN4o2CWdbUIlpZEjDTdgyqhX2kCYyZHPKlWis
+         OcuKjkqj9C5Zr9X9218xmOlFyhgzarHeG+A+Qy89pzNzv4fKAp44dCQG+dK0GwbbHc1+
+         B6UWuorp8nOf4SDag9PfL+PaikSdzZaFtEp/vFXxfmA3Dz+qLC5/sA8gGzj3AhgOtE9t
+         wjmZ/1NwRzzBUnP2lM4ekSoOGVvLqsI1fickUHY3DORiXRT9C0MQ1PnJTjfk0A+Z4d9m
+         AfSA==
+X-Received: by 2002:a17:902:d907:: with SMTP id c7-v6mr1325614plz.198.1541616000391;
+        Wed, 07 Nov 2018 10:40:00 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r1-v6sm1893138pfb.41.2018.11.07.10.39.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 10:39:59 -0800 (PST)
+Date: Wed, 7 Nov 2018 10:39:58 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Heiko Stuebner <heiko.stuebner@bq.com>
+Subject: Re: [PATCH] dt-bindings: hwmon: tmp108: add optional interrupts and
+ #thermal-sensor-cells
+Message-ID: <20181107183958.GB5468@roeck-us.net>
+References: <20181107154708.422-1-heiko@sntech.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107154708.422-1-heiko@sntech.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3WkaZMeNbgN4YAA--.15776S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7JFW8JF17KrW8Zr1kAF1DKFg_yoW8JF1Dpa
+	y8Gay7Jr4kWr12gw1qyF15Zw4xXr1UGF4akF1ktasYgan8ArySqF1Sgwn093W8uF4fuayI
+	yw4FkryFkanxArJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6rylc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xYxBIdaVFxhVjvjDU0xZFpf9x07b8
+	qXdUUUUU=
+
+Hi,
+
+On Wed, Nov 07, 2018 at 04:47:08PM +0100, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@bq.com>
+> 
+> The tmp108 does have an alert output that can be used as interrupt source
+> and can of course also be used as part of a thermal sensor setup for things
+> like thermal-based cpu frequencies, so document the necessary properties.
+> 
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
+
+Do you also plan to actually implement interrupt support in the driver ?
+
+Guenter
+
+> ---
+>  Documentation/devicetree/bindings/hwmon/tmp108.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/tmp108.txt b/Documentation/devicetree/bindings/hwmon/tmp108.txt
+> index 8c4b10df86d9..54d4beed4ee5 100644
+> --- a/Documentation/devicetree/bindings/hwmon/tmp108.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/tmp108.txt
+> @@ -7,6 +7,10 @@ Requires node properties:
+>  - compatible : "ti,tmp108"
+>  - reg : the I2C address of the device. This is 0x48, 0x49, 0x4a, or 0x4b.
+>  
+> +Optional properties:
+> +- interrupts: Reference to the TMP108 alert interrupt.
+> +- #thermal-sensor-cells: should be set to 0.
+> +
+>  Example:
+>  	tmp108@48 {
+>  		compatible = "ti,tmp108";
+> -- 
+> 2.18.0
+> 

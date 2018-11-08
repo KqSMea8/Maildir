@@ -1,0 +1,144 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:11 -0000
+Received: from icoremail.net (unknown [209.85.215.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f92rReNbI2JaAQ--.27411S3;
+	Thu, 08 Nov 2018 04:06:03 +0800 (CST)
+Received: from mail-pg1-f171.google.com (unknown [209.85.215.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBnTUmoReNbUR4ZAA--.766S3;
+	Thu, 08 Nov 2018 04:06:01 +0800 (CST)
+Received: by mail-pg1-f171.google.com with SMTP id 70so2194860pgh.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:06:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding:sender:precedence
+         :list-id;
+        bh=RGlRR0IxOueRFL5tHOTubBMGk8c1XHhzE/wNkZpJwuA=;
+        b=cf0j/0MbOwAhz5kqwSLFqfVBmXh2b+Ma9zPZ75QSoBdx3LxYushFE6nPSpxSmLTg2O
+         VXsTqX3tBeLECE+rF8Hi/HdXuX8YvWgjJ1wD2ANhzciMHCOXjVaq+HsoDUfhEFTJsJx7
+         NGp/0tG8IIyAg7UcpyHapMUT/GKTtm+RbZ+t0n96dUYDSVy4dGR5zIRgLp4Vg9TLE6bx
+         ScCgXLNVT0yn/9VKz7OVmT2iVNFzQN1P0XbwrowKiDrb179TV4OQtl0zURzb3CWDhNa6
+         zHTjZWSY1/2z+NJ+5kXuGVcrMF5c3sgtHbHDGleCv2BWcPq1qBdhVgUmjdpSD/MwWhha
+         Ei0g==
+X-Gm-Message-State: AGRZ1gL97NXLDLLbtRajVXGplUzOdz8PyYiOrcHM0dl6hQ2Rd7BNGSIt
+	zMZZnh7XVwFt4VJ8AeABbEBtiwWCVDFtuwgJ0OFZ9GvvF+p3OPi2YQ==
+X-Received: by 2002:a62:ab05:: with SMTP id p5-v6mr1621979pff.211.1541621160547;
+        Wed, 07 Nov 2018 12:06:00 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5685698pjt;
+        Wed, 7 Nov 2018 12:05:59 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f7F6bE4nubuUoNTjLuQD6ji+F4J37gNUlPYEyygWjAdm0XOKmQJQ0kKUnh6L+qFlwlcODL
+X-Received: by 2002:a63:955a:: with SMTP id t26mr1385596pgn.449.1541621159768;
+        Wed, 07 Nov 2018 12:05:59 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541621159; cv=none;
+        d=google.com; s=arc-20160816;
+        b=YhdhFrW+gwxahFF0STSNQDt20WVVW6IeUOz/yRPyAt+8sncrIqySvFpHvPdJCgRvba
+         fZmVxeWnYrmSpo9lVp99dKhcnjYH+H4WmZn7GNuzHxrKIKpo4fbSr0lwgTXpZKTOX9WW
+         aQzmijy3yUd7y9CADokdvV3VKQgDEjIexDRj2kRnuvCf4GnmiQAnkplh5QwKTiBMkDGF
+         qgroxxzfl+9vjDlU+gLqAguSwhDKneJIP1C4FRXvwcbdzJpqpjpU6DFMnydP1fWVu2Az
+         u5exYRUttxgdKR03v8KchBnkZM9WvjA06m4i5ys3siIZrctX4NNurN7J+W9RCoHzdEv5
+         bDQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:dkim-signature;
+        bh=RGlRR0IxOueRFL5tHOTubBMGk8c1XHhzE/wNkZpJwuA=;
+        b=O9ccb8dOSK34EDliVgiMVWhEW54KLUjqFT6WheaDfZPceEVtkiGl/KJGHJwmeW+1Go
+         5n5Z3QMZ2kkhz5qYcup0TTBr7sPL2IQFIQrgzlSStial0rPvOKlibArqrkTa1685pIL+
+         C9ECvGCJrb9l23FOMAwE54AKXkavKnU9RTrDSplzwR1XoRwVnnHPlCzmwqOo0oiMPUZs
+         zcAduf+KLjkh9kezMYbCv6QiOwj7o94f4i0i6tH3qD/5TLY7/6jORfw42TuXM+3Usosm
+         Mm/MjQOJIQS/yAAdvELnIWTZ3OL/nskFWIWg7RpooUHB+acJDONia91w3MYX8a+4nNPa
+         KA2Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kernel-dk.20150623.gappssmtp.com header.s=20150623 header.b=ZAoR9H76;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id f17si1358467pgj.208.2018.11.07.12.05.44;
+        Wed, 07 Nov 2018 12:05:59 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726659AbeKHFhD (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:37:03 -0500
+Received: from mail-it1-f196.google.com ([209.85.166.196]:40464 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbeKHFhD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:37:03 -0500
+Received: by mail-it1-f196.google.com with SMTP id e11so21344992itl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 12:05:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RGlRR0IxOueRFL5tHOTubBMGk8c1XHhzE/wNkZpJwuA=;
+        b=ZAoR9H76XpG2j6xbZ1WtUpXAockKhAgT4Qq3uqTcIJemwQofmGEuh2QICafEsC5KCc
+         ka8dA5kvhV/W0U8XZTZMroMnTQSSa4d3jXlaUDoqr7QbY/ttLM64LFOVpVesnK+uki8g
+         CXQDnsLlMUo89nMR1VCDhNcuTJEFAFB85nvx49RaDxjlKnmKNg4R7EnnatI1bnCnlV0l
+         Ecj3sKBhnwwmjaLHkXOFreo0I/257etLiSM4RgQw96v3LgbUmKEXfwR3JylXDGZiyV7t
+         9P/04uDbF159+eILjAg7qqkajIyq1VGmZ9q9UkghkSzLNICfdshBME83nCQRu8LNk0a0
+         1zDA==
+X-Received: by 2002:a24:508a:: with SMTP id m132-v6mr1413313itb.19.1541621109022;
+        Wed, 07 Nov 2018 12:05:09 -0800 (PST)
+Received: from ?IPv6:2620:10d:c081:1134::136a? ([2620:10d:c090:180::1:ed44])
+        by smtp.gmail.com with ESMTPSA id u127-v6sm785866ita.10.2018.11.07.12.05.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 12:05:07 -0800 (PST)
+Subject: Re: [PATCH v2] block: respect virtual boundary mask in bvecs
+To: Johannes Thumshirn <jthumshirn@suse.de>
+Cc: Linux Block Layer Mailinglist <linux-block@vger.kernel.org>,
+        Linux Kernel Mailinglist <linux-kernel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>, Sagi Grimberg <sagi@grimberg.me>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>
+References: <20181107135814.15727-1-jthumshirn@suse.de>
+From: Jens Axboe <axboe@kernel.dk>
+Message-ID: <756f1630-f875-4a7c-26cf-9cce7b850ca1@kernel.dk>
+Date: Wed, 7 Nov 2018 13:05:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20181107135814.15727-1-jthumshirn@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBnTUmoReNbUR4ZAA--.766S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUOa7k0a2IF6FyUM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IY64vIr41l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C2
+	6cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6F1lc2IjII80xcxEwV
+	AKI48JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_
+	Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
+	1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+	v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVCF04k26cxK
+	x2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bob18UUUUU=
+
+On 11/7/18 6:58 AM, Johannes Thumshirn wrote:
+> With drivers that are settting a virtual boundary constrain, we are
+> seeing a lot of bio splitting and smaller I/Os being submitted to the
+> driver.
+> 
+> This happens because the bio gap detection code does not account cases
+> where PAGE_SIZE - 1 is bigger than queue_virt_boundary() and thus will
+> split the bio unnecessarily.
+
+Thanks, applied.
+
+-- 
+Jens Axboe

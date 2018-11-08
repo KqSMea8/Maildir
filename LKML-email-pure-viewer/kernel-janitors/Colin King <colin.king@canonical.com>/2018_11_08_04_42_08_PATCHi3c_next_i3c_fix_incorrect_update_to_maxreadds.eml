@@ -1,0 +1,139 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:26 -0000
+Received: from icoremail.net (unknown [209.85.214.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_6c+TuNbPJdaAQ--.27386S3;
+	Thu, 08 Nov 2018 04:42:39 +0800 (CST)
+Received: from mail-pl1-f179.google.com (unknown [209.85.214.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXbDg8TuNbojsZAA--.1021S3;
+	Thu, 08 Nov 2018 04:42:36 +0800 (CST)
+Received: by mail-pl1-f179.google.com with SMTP id w24-v6so8396118plq.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:42:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=qMzvHrdBW9qBcYt9FMJp4MkBwXEuMNza9FXlX6fOKZ0=;
+        b=XKsfgstQ1zCT8fBw4mNRy8XZQhPcyFP4eg9oBIw2ZoXu7iuSO+Frk9TWYycIToX7Sq
+         iWZJ602vOFGeoS+NE4FtzVeeJpHBXxm38/wPgTkKmQzhz9hCMOVBPwUmkfpylaLNsuPX
+         KPwa2JV+dMOHpkS/ZOjQyb+YhR4J2H78LJoSso/EMEPMNY119M+c0IgQUKqKRsozoqA/
+         0MnHXptu7ZrT/0UzoACWzdglfZvayH1adIbA2vA2U2aU2qq2QWKj4UR4rA4EJJSId+dk
+         TVE/zo1wczOl28zCzxvqxJUwmorUYGWtPyO5nmJUR1T75G5PvQVhH0BeAKCH8jX8DrLA
+         ZmwQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=canonical.com
+X-Gm-Message-State: AGRZ1gJKO/1860P/bW7zC1/ZQ809VRY7aCCSMKU9lSa3axk677W5wAT0
+	H4qQ3ckw93RWHMz/pyVT2uXoYvqGkJTJY75IjDiIbcf3p5uXqCalUA==
+X-Received: by 2002:a17:902:a9:: with SMTP id a38-v6mr1798329pla.7.1541623356274;
+        Wed, 07 Nov 2018 12:42:36 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5721194pjt;
+        Wed, 7 Nov 2018 12:42:35 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eZW4aF2blfG8CkYzXsqdUiOUV0CetzxLYadVVX56oMAyTopt4RJcAxpdF56mrT7FzW2xov
+X-Received: by 2002:a65:5a4c:: with SMTP id z12mr1512380pgs.188.1541623355578;
+        Wed, 07 Nov 2018 12:42:35 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541623355; cv=none;
+        d=google.com; s=arc-20160816;
+        b=eXZo77FseMy/u9YJRNb0KYm/tFlpGy/K7RI1Ajh5JHvOl/493PvcArmDhWhZoLWsEe
+         ORklHhebukjcqxHB/xEpqwYGz8teKABELpJsU42oNuEvrNjOtVQl9yJDTK7q8nEAHmP/
+         ZO6oNAjUn1ibXceo1/HiO41uk4CCEo3fl/4Xx+MQsVXkIPlzkwfYkIVyxNlbbNskHEiw
+         Nq7mUXhyeO2AKqL7OHjAClctDZzH6MoS9vr7qPYD/Eh9lWYL876uzM9g7xgEOXtGIqI6
+         uhz4IvnSq8VlJ7gP3EBTfFgstdXXDjXSxJz8PSmRiF3HriTPbw2w698p6wKjuISKIYfv
+         2U3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :message-id:date:subject:cc:to:from;
+        bh=qMzvHrdBW9qBcYt9FMJp4MkBwXEuMNza9FXlX6fOKZ0=;
+        b=kB6Qf8M+t0vp2GmuQ4ZrLjIumVkjUhszMbiWfm9ny0pQeaPVnSyTiFKTobrM45g2Of
+         vZKW+y91HTjohiy+kknGbnfE843RmJAmNd7KCwzdfmovsLvKsNZshg6WGANwjc8MDjvo
+         oaVY36wC0ARWQwC46nVIJqrZPTwygXfi7266FvaabpyW/ltKUvKZy9wMJ2NCrrywJyX5
+         Q+PTOzqGdXZ8sSJZAias/ZIK6Ppxa/fQW6f5LuMBq8/8stc1YXr4Ga80ueGFJAR3Jp4N
+         HwfCTpcrsOSU22G5KiZlNkv465jhSn5kyycv9GvZGYb3U3Nnj+XMiGm4OT3wYvsvl9Kv
+         33mQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=canonical.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d16-v6si1530143pgd.555.2018.11.07.12.42.20;
+        Wed, 07 Nov 2018 12:42:35 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726934AbeKHGOO (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:14:14 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:42402 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726517AbeKHGON (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:14:13 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1gKUeP-0000GJ-91; Wed, 07 Nov 2018 20:42:09 +0000
+From: Colin King <colin.king@canonical.com>
+To: Boris Brezillon <boris.brezillon@bootlin.com>,
+        linux-i3c@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][i3c-next] i3c: fix incorrect update to max_read_ds
+Date: Wed,  7 Nov 2018 20:42:08 +0000
+Message-Id: <20181107204208.7411-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXbDg8TuNbojsZAA--.1021S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrZFW8ury7Ww4UKF1xZryUAwb_yoWDXrcE9F
+	4xArs0yr4UZrWxC3W3u34furWay34YvF95WF4fK3yrGFW7AFnavryjvFW7XFZ7ArnrZF9r
+	Jr1Dtr1Fk3sxAjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqkYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6F1lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bo
+	b18UUUUU=
+
+From: Colin Ian King <colin.king@canonical.com>
+
+Currently max_read_ds is being updated twice, which is incorrect.
+The second assignment should be to max_write_ds instead. Fix this.
+
+Detected by CoverityScan, CID#1475379 ("Unused value")
+
+Fixes: 50cacdabeae1 ("i3c: Add core I3C infrastructure")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/i3c/master.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+index 68d6553dbd75..0ea7bb045fad 100644
+--- a/drivers/i3c/master.c
++++ b/drivers/i3c/master.c
+@@ -1093,7 +1093,7 @@ static int i3c_master_getmxds_locked(struct i3c_master_controller *master,
+ 	}
+ 
+ 	info->max_read_ds = getmaxds->maxrd;
+-	info->max_read_ds = getmaxds->maxwr;
++	info->max_write_ds = getmaxds->maxwr;
+ 	if (dest.payload.len == 5)
+ 		info->max_read_turnaround = getmaxds->maxrdturn[0] |
+ 					    ((u32)getmaxds->maxrdturn[1] << 8) |
+-- 
+2.19.1

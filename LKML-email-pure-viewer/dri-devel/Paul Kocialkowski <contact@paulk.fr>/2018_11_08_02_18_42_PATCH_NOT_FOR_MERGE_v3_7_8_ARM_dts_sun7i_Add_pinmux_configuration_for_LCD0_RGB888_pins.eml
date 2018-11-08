@@ -1,0 +1,158 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:34 -0000
+Received: from icoremail.net (unknown [209.85.210.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX_s1LeNbJd9ZAQ--.27160S3;
+	Thu, 08 Nov 2018 02:21:42 +0800 (CST)
+Received: from mail-pf1-f171.google.com (unknown [209.85.210.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXekYzLeNbjM4YAA--.145S3;
+	Thu, 08 Nov 2018 02:21:39 +0800 (CST)
+Received: by mail-pf1-f171.google.com with SMTP id u13-v6so8051087pfm.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:21:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=pDFK1HaIy59idrGNTcnFyD9euvqiDu/bdKzeblPugbU=;
+        b=hrGG6OtnHYTtBLgKjbPmrcCEjn7qF8TBgbNXJmwWjJ98e4HP2kUPSS14bsrlPPX8OO
+         xjOassQ0W1bCniSuWTK7093SqloVxlF6OImS+CERcONC9nqKlaN02hSdx9vxE5E2JIe9
+         JLNoSWHBiMcGGduKHgMvOA0RWTbpPgQzzdhWNnplE2XvHLtHvfbzr10g7bjJPJ+xCvLY
+         RlSC3MHHr+b3wjlvuQPxT7b37amUFpexBfhq0lNrZQ2e+0S3WEW/t30Kl2aRnukXcKhn
+         Xv6lMORd0iHvKiC7fY/DYzWhGbpywh1NZ1t7gMjKK/FhU1hjXMgN0SwViMozPY9Xc3OX
+         LeRg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLKuqe5I7/8DQynn4h6zLSCh3y8vyLpniwji+rtRcCn/P9hRmJD
+	i/KwHpKaeIeTFSFOSshjMZ5C96fm6Lf3+qNGHoBGOK9rb0KRUC0adg==
+X-Received: by 2002:a62:42dc:: with SMTP id h89-v6mr1328295pfd.0.1541614899267;
+        Wed, 07 Nov 2018 10:21:39 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5577210pjt;
+        Wed, 7 Nov 2018 10:21:38 -0800 (PST)
+X-Google-Smtp-Source: AJdET5epc9PD3eje2O0PExIhSumMiVf2ZKwZdPIHBpVASpVmPDCwvmdzpkM/LMY2by1+cjBLbinN
+X-Received: by 2002:a63:7b06:: with SMTP id w6mr1070393pgc.288.1541614898400;
+        Wed, 07 Nov 2018 10:21:38 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541614898; cv=none;
+        d=google.com; s=arc-20160816;
+        b=VwI1hi+HYIXvSFlVyfuxwCCxnFO7Mx0JLAs+ZAZAwE4DsztsgBkBz6YgjV7V8hUslP
+         uVx/4+SZkJ2yyjqxWOifF9K31Jsp9BvrlS7cGkLOsIElnmY/wwqDa97cvDMZRgzxhZs8
+         uwt5NLB4FHzO/D2WqWpwkjNSIvhfvlX0CUuROUgUx2KO4+P474uXqEx99tdxNQfvxF91
+         isCZaC8VlIin6pDKsrSbuQGlpbFEC+GT1S2M9yTyOGR8QbN1VxhbuZt9sdsReVtIVN4d
+         3sPC1MWfefn7rm9V80VSgdDDWGgALrLa/EdAdsfgr6OxWn+aKKn3EwadnMqiHEyp2Kql
+         BVSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=pDFK1HaIy59idrGNTcnFyD9euvqiDu/bdKzeblPugbU=;
+        b=vdMdx04ugg0Q1jt9PXJfmWdrc5xc4Vl5oEI/Qc8xeUir5LiuHnT4f7VL99T3KYauB/
+         mbHCWlwQLac/JYgazdoecBNVdinD/v9V9O3OHPVyc2Dgqow58KSiSw1D2jRou9zSjumf
+         7IGSR5lGjFZ7ApK+RGEiKOHU+Kz5N9s2DiF2zpqjYhnKfZqNJgenzT/YIjXDZWt8aGT1
+         JdRHsiuj+rHho2LqWZAmkqQiByjNrci8vxEaOT0pQq8x+UzRC2jPwHvPxWkrgGbm4OpR
+         319T3Fm+kXSU/YkJ2gzeoMb5WUqx8Meq4DjC34YxnxBJ2fB6DBoaCc02pw9w+1gRW1lb
+         knEw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id s26-v6si1140315pgl.584.2018.11.07.10.21.22;
+        Wed, 07 Nov 2018 10:21:38 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728616AbeKHDwO (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:52:14 -0500
+Received: from leonov.paulk.fr ([185.233.101.22]:49026 "EHLO leonov.paulk.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727815AbeKHDwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:52:14 -0500
+Received: from gagarine.paulk.fr (gagarine [192.168.1.127])
+        by leonov.paulk.fr (Postfix) with ESMTPS id 32FA3BFCAE;
+        Wed,  7 Nov 2018 19:20:39 +0100 (CET)
+Received: by gagarine.paulk.fr (Postfix, from userid 114)
+        id 4F133C1096; Wed,  7 Nov 2018 19:20:38 +0100 (CET)
+X-Spam-Checker-Version: SpamAssassin 3.4.1 (2015-04-28) on gagarine.paulk.fr
+X-Spam-Level: 
+X-Spam-Status: No, score=0.0 required=5.0 tests=none autolearn=unavailable
+        autolearn_force=no version=3.4.1
+Received: from localhost.localdomain (collins [192.168.1.129])
+        by gagarine.paulk.fr (Postfix) with ESMTP id B03ECC106F;
+        Wed,  7 Nov 2018 19:17:58 +0100 (CET)
+From: Paul Kocialkowski <contact@paulk.fr>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com,
+        Mark Van den Borre <mark@fosdem.org>,
+        Gerry Demaret <gerry@fosdem.org>,
+        Luc Verhaegen <libv@skynet.be>,
+        Paul Kocialkowski <contact@paulk.fr>
+Subject: [PATCH NOT FOR MERGE v3 7/8] ARM: dts: sun7i: Add pinmux configuration for LCD0 RGB888 pins
+Date: Wed,  7 Nov 2018 19:18:42 +0100
+Message-Id: <20181107181843.27628-8-contact@paulk.fr>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107181843.27628-1-contact@paulk.fr>
+References: <20181107181843.27628-1-contact@paulk.fr>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXekYzLeNbjM4YAA--.145S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7GrWrAr18Zr4xAw1rWrWDXFb_yoWfZFc_JF
+	47Ja4UJFZYyFZrtFW8XFsYyrWjkw4UuFWxXF1UXF1kJrn0vanxJrWDWFZ7tF4rCrWjkFZ5
+	JrZxGa97W3WIvjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUUxYxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqAYjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW5MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI
+	42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExV
+	AvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
+	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrx
+	kI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxU
+	QFoXUUUUU
+
+This adds the pin muxing definition for configuring the PD pins in LCD0
+mode for a RGB888 format to the sun7i device-tree.
+
+Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 9c52712af241..26f3714eaad0 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -811,6 +811,17 @@
+ 				function = "ir1";
+ 			};
+ 
++			lcd0_rgb888_pins: lcd0-rgb888 {
++				pins = "PD0", "PD1", "PD2", "PD3",
++				       "PD4", "PD5", "PD6", "PD7",
++				       "PD8", "PD9", "PD10", "PD11",
++				       "PD12", "PD13", "PD14", "PD15",
++				       "PD16", "PD17", "PD18", "PD19",
++				       "PD20", "PD21", "PD22", "PD23",
++				       "PD24", "PD25", "PD26", "PD27";
++				function = "lcd0";
++			};
++
+ 			mmc0_pins_a: mmc0@0 {
+ 				pins = "PF0", "PF1", "PF2",
+ 				       "PF3", "PF4", "PF5";
+-- 
+2.19.1

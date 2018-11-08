@@ -1,0 +1,279 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:08 -0000
+Received: from icoremail.net (unknown [209.85.215.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH+YvRONb51taAQ--.26918S3;
+	Thu, 08 Nov 2018 03:59:43 +0800 (CST)
+Received: from mail-pg1-f175.google.com (unknown [209.85.215.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCnjEgsRONb8xkZAA--.767S3;
+	Thu, 08 Nov 2018 03:59:40 +0800 (CST)
+Received: by mail-pg1-f175.google.com with SMTP id r9-v6so7764550pgv.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:59:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=ip6Vv7oN+oG+4DXXfwdRuhsPy4FFWN6GJndUd+qrdF4=;
+        b=lpTMPKJ2Vzr3d/VTCo6Qvz9o2PKXrjNaXK8fzUMxvKlhOTB3/VQmIdSNY+NMw4tuvq
+         jOIJQUD3F9sJDRpMBgPT05VO1tfG3HotWPjTzUst/ejImfIo5BDV43jhC3+Dz2dFeYA0
+         4UffLXFMD3+smuHCRcnLTcOITwnSJdDTjp6c5I0/pz/CDyhv77VC/JpNQZXPg4I/knQg
+         KtaZZ1wNKFaYUNclLwysjEEOVfepIoGiM+vh/m8yJOF5idcU3JHy+sBCCHy8TBBjHW9u
+         VTdt+s9O0ibwfH8RnyyNdqyv9DOaoaYGcS2IKQDLgRxA2R/pO7oOQcp/4WjPhxpVsPxj
+         OX5w==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gJgNTM3Bq4q16t4bkQFqp1z5j+U9swzZ6w0vgJm2E2FhxMDfhBJ
+	G3V4QbMRoOwAohHVLmNz0yXm9KzU8xkMYtDPPW3L2WwnBrQDrdzqOA==
+X-Received: by 2002:a62:c184:: with SMTP id i126-v6mr1630133pfg.53.1541620780189;
+        Wed, 07 Nov 2018 11:59:40 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5678237pjt;
+        Wed, 7 Nov 2018 11:59:39 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d4kRj/RMaBu4iZkY5/BJcg7qHHPFvjxz5/IFy2gkkVzqV3oJkPZAYjySjYaC9x+JrQicfZ
+X-Received: by 2002:a63:5d55:: with SMTP id o21mr1359578pgm.92.1541620779069;
+        Wed, 07 Nov 2018 11:59:39 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620779; cv=none;
+        d=google.com; s=arc-20160816;
+        b=JV0pxsWfPKVfrFNQEMjTV3BtYFfCm7kN9w6uo3wxzKa5xU/Ep5v105E3lPxnCvEoQ0
+         QfxMocJ2bm35PzUJ4x8Eaf96cGZpNgDFGx0vHqQZXfhTzNysiQLKWNJpHfz5CCIIjllq
+         0mWDYyiRGA4p+zqSbHywp7t9SDrfGsOByLQOFuOkifHlLpyO8XXMCANrNishaTOXjjTR
+         222O3m1AqDpUsKOrcESaOEyp3Fu34qNvr+OQv7L+iF5H1QLCRQHGpGzwAbfLRUGdzsuK
+         Qd91bqfY7XREF/wk47MfsZ4Vle4poHPmIWJSTDEfKN8Pi5YDYa3udbxE4dATRe0s515r
+         O2Lg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :message-id:date:subject:cc:to:from;
+        bh=ip6Vv7oN+oG+4DXXfwdRuhsPy4FFWN6GJndUd+qrdF4=;
+        b=XMZ5d0S9iKzS+H69vrgi9mUZn7TWno48dv3u02zfwPhvBtdmuDgr+w21SsWxRSCB2x
+         XCEoPwvhf6FNn+TPo5Io3Fw9aCPWjMImGR2qQ+py321Eq7wNbsk6N1cmY6EQ1F4oEXtk
+         Luu86S4NSenwg9rg4vNYGhdIgtUkgHVGDPbMU4EI3PwzMwjU3oP51YF3lnqr5F/E8zy3
+         JIGRHptYDrtaKaDa4vhusA6COYf0Udhn7TtfE0tmVMYTyMiXtsXYsg/pW6YE36pTnQvP
+         DN2SbWqXmbWM0m712L5Y/OaZeSObR4o1bkQdy1Qlo4DRdObZxDMGXmMoKDWnaIaQBreU
+         GLvw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 62-v6si1658053plc.282.2018.11.07.11.59.23;
+        Wed, 07 Nov 2018 11:59:39 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726700AbeKHFax (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:30:53 -0500
+Received: from mga11.intel.com ([192.55.52.93]:41325 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725838AbeKHFax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:30:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 11:59:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,476,1534834800"; 
+   d="scan'208";a="102417620"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 07 Nov 2018 11:58:58 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 0A801E6; Wed,  7 Nov 2018 21:58:56 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Brown <broonie@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] PCI: Move Rohm vendor ID to generic list
+Date: Wed,  7 Nov 2018 21:58:56 +0200
+Message-Id: <20181107195856.43223-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCnjEgsRONb8xkZAA--.767S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3Gr45JFyxKFWDtw1fAFW5ZFb_yoW7KrW8pF
+	4ayFZ2yrWUtFW7Xw1Iy3W5uasIyanxKrya9ry293yYvF4rJw48GrW5JFW5Cr9rtFWDXFW2
+	qr1q93yUWasFy3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
+	0EwIxGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44l
+	c2xSY4AK6IIF6rWlc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMx
+	vI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1l
+	cIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4
+	C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x
+	07bWa0QUUUUU=
+
+Move the Rohm vendor ID to pci_ids.h from dozen of drivers.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+
+I believe the best chance to get it merged and be less intrusive to ongoing
+work is through PCI subsystem as a _fix_ for v4.20.
+
+ drivers/dma/pch_dma.c                                | 1 -
+ drivers/gpio/gpio-ml-ioh.c                           | 2 --
+ drivers/gpio/gpio-pch.c                              | 1 -
+ drivers/i2c/busses/i2c-eg20t.c                       | 1 -
+ drivers/misc/pch_phub.c                              | 1 -
+ drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c | 7 ++-----
+ drivers/spi/spi-topcliff-pch.c                       | 1 -
+ drivers/tty/serial/pch_uart.c                        | 2 --
+ drivers/usb/gadget/udc/pch_udc.c                     | 1 -
+ include/linux/pci_ids.h                              | 2 ++
+ 10 files changed, 4 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
+index afd8f27bda96..538b6e0e17bb 100644
+--- a/drivers/dma/pch_dma.c
++++ b/drivers/dma/pch_dma.c
+@@ -972,7 +972,6 @@ static void pch_dma_remove(struct pci_dev *pdev)
+ }
+ 
+ /* PCI Device ID of DMA device */
+-#define PCI_VENDOR_ID_ROHM             0x10DB
+ #define PCI_DEVICE_ID_EG20T_PCH_DMA_8CH        0x8810
+ #define PCI_DEVICE_ID_EG20T_PCH_DMA_4CH        0x8815
+ #define PCI_DEVICE_ID_ML7213_DMA1_8CH	0x8026
+diff --git a/drivers/gpio/gpio-ml-ioh.c b/drivers/gpio/gpio-ml-ioh.c
+index 51c7d1b84c2e..0c076dce9e17 100644
+--- a/drivers/gpio/gpio-ml-ioh.c
++++ b/drivers/gpio/gpio-ml-ioh.c
+@@ -31,8 +31,6 @@
+ 
+ #define IOH_IRQ_BASE		0
+ 
+-#define PCI_VENDOR_ID_ROHM             0x10DB
+-
+ struct ioh_reg_comn {
+ 	u32	ien;
+ 	u32	istatus;
+diff --git a/drivers/gpio/gpio-pch.c b/drivers/gpio/gpio-pch.c
+index ffce0ab912ed..8c7f3d20e30e 100644
+--- a/drivers/gpio/gpio-pch.c
++++ b/drivers/gpio/gpio-pch.c
+@@ -524,7 +524,6 @@ static int pch_gpio_resume(struct pci_dev *pdev)
+ #define pch_gpio_resume NULL
+ #endif
+ 
+-#define PCI_VENDOR_ID_ROHM             0x10DB
+ static const struct pci_device_id pch_gpio_pcidev_id[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x8803) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_ROHM, 0x8014) },
+diff --git a/drivers/i2c/busses/i2c-eg20t.c b/drivers/i2c/busses/i2c-eg20t.c
+index 835d54ac2971..231675b10376 100644
+--- a/drivers/i2c/busses/i2c-eg20t.c
++++ b/drivers/i2c/busses/i2c-eg20t.c
+@@ -177,7 +177,6 @@ static wait_queue_head_t pch_event;
+ static DEFINE_MUTEX(pch_mutex);
+ 
+ /* Definition for ML7213 by LAPIS Semiconductor */
+-#define PCI_VENDOR_ID_ROHM		0x10DB
+ #define PCI_DEVICE_ID_ML7213_I2C	0x802D
+ #define PCI_DEVICE_ID_ML7223_I2C	0x8010
+ #define PCI_DEVICE_ID_ML7831_I2C	0x8817
+diff --git a/drivers/misc/pch_phub.c b/drivers/misc/pch_phub.c
+index 540845651b8c..309703e9c42e 100644
+--- a/drivers/misc/pch_phub.c
++++ b/drivers/misc/pch_phub.c
+@@ -64,7 +64,6 @@
+ #define CLKCFG_UARTCLKSEL			(1 << 18)
+ 
+ /* Macros for ML7213 */
+-#define PCI_VENDOR_ID_ROHM			0x10db
+ #define PCI_DEVICE_ID_ROHM_ML7213_PHUB		0x801A
+ 
+ /* Macros for ML7223 */
+diff --git a/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c b/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c
+index 43c0c10dfeb7..3a4225837049 100644
+--- a/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c
++++ b/drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c
+@@ -27,7 +27,6 @@
+ #define DRV_VERSION     "1.01"
+ const char pch_driver_version[] = DRV_VERSION;
+ 
+-#define PCI_DEVICE_ID_INTEL_IOH1_GBE	0x8802		/* Pci device ID */
+ #define PCH_GBE_MAR_ENTRIES		16
+ #define PCH_GBE_SHORT_PKT		64
+ #define DSC_INIT16			0xC000
+@@ -37,11 +36,9 @@ const char pch_driver_version[] = DRV_VERSION;
+ #define PCH_GBE_PCI_BAR			1
+ #define PCH_GBE_RESERVE_MEMORY		0x200000	/* 2MB */
+ 
+-/* Macros for ML7223 */
+-#define PCI_VENDOR_ID_ROHM			0x10db
+-#define PCI_DEVICE_ID_ROHM_ML7223_GBE		0x8013
++#define PCI_DEVICE_ID_INTEL_IOH1_GBE		0x8802
+ 
+-/* Macros for ML7831 */
++#define PCI_DEVICE_ID_ROHM_ML7223_GBE		0x8013
+ #define PCI_DEVICE_ID_ROHM_ML7831_GBE		0x8802
+ 
+ #define PCH_GBE_TX_WEIGHT         64
+diff --git a/drivers/spi/spi-topcliff-pch.c b/drivers/spi/spi-topcliff-pch.c
+index 97d137591b18..d794180e83dc 100644
+--- a/drivers/spi/spi-topcliff-pch.c
++++ b/drivers/spi/spi-topcliff-pch.c
+@@ -92,7 +92,6 @@
+ #define PCH_MAX_SPBR		1023
+ 
+ /* Definition for ML7213/ML7223/ML7831 by LAPIS Semiconductor */
+-#define PCI_VENDOR_ID_ROHM		0x10DB
+ #define PCI_DEVICE_ID_ML7213_SPI	0x802c
+ #define PCI_DEVICE_ID_ML7223_SPI	0x800F
+ #define PCI_DEVICE_ID_ML7831_SPI	0x8816
+diff --git a/drivers/tty/serial/pch_uart.c b/drivers/tty/serial/pch_uart.c
+index cb85002a10d8..d04108e7503a 100644
+--- a/drivers/tty/serial/pch_uart.c
++++ b/drivers/tty/serial/pch_uart.c
+@@ -192,8 +192,6 @@ enum {
+ #define PCH_UART_HAL_LOOP		(PCH_UART_MCR_LOOP)
+ #define PCH_UART_HAL_AFE		(PCH_UART_MCR_AFE)
+ 
+-#define PCI_VENDOR_ID_ROHM		0x10DB
+-
+ #define BOTH_EMPTY (UART_LSR_TEMT | UART_LSR_THRE)
+ 
+ #define DEFAULT_UARTCLK   1843200 /*   1.8432 MHz */
+diff --git a/drivers/usb/gadget/udc/pch_udc.c b/drivers/usb/gadget/udc/pch_udc.c
+index afaea11ec771..5b6f2b9eaa5f 100644
+--- a/drivers/usb/gadget/udc/pch_udc.c
++++ b/drivers/usb/gadget/udc/pch_udc.c
+@@ -368,7 +368,6 @@ struct pch_udc_dev {
+ #define PCI_DEVICE_ID_INTEL_QUARK_X1000_UDC	0x0939
+ #define PCI_DEVICE_ID_INTEL_EG20T_UDC		0x8808
+ 
+-#define PCI_VENDOR_ID_ROHM		0x10DB
+ #define PCI_DEVICE_ID_ML7213_IOH_UDC	0x801D
+ #define PCI_DEVICE_ID_ML7831_IOH_UDC	0x8808
+ 
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 69f0abe1ba1a..7fc8d79260e6 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -1137,6 +1137,8 @@
+ #define PCI_VENDOR_ID_TCONRAD		0x10da
+ #define PCI_DEVICE_ID_TCONRAD_TOKENRING	0x0508
+ 
++#define PCI_VENDOR_ID_ROHM		0x10db
++
+ #define PCI_VENDOR_ID_NVIDIA			0x10de
+ #define PCI_DEVICE_ID_NVIDIA_TNT		0x0020
+ #define PCI_DEVICE_ID_NVIDIA_TNT2		0x0028
+-- 
+2.19.1

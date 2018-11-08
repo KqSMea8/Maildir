@@ -1,0 +1,416 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:07 -0000
+Received: from icoremail.net (unknown [209.85.215.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH+a38+Jbgm9YAQ--.26169S3;
+	Wed, 07 Nov 2018 22:16:33 +0800 (CST)
+Received: from mail-pg1-f169.google.com (unknown [209.85.215.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHLUmz8+Jbw8YXAA--.6794S3;
+	Wed, 07 Nov 2018 22:16:20 +0800 (CST)
+Received: by mail-pg1-f169.google.com with SMTP id c10-v6so7379285pgq.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:16:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=Rw2HY9oDy9xwO+xoBjdR4y0bo8WgJAgqgvmS8wLM5ek=;
+        b=tmK1HSJZagjpet0K8DBn9zKaUVYENQDA9PdBASJQjlH06wlij0VDwXqnBfuJkoQNlV
+         H/PkvvCqD06XxqFbgqLAGfJ0tGUptUdhmu+tJoZkocKOgXJVUMLhu1ngi8xXETXMPTVN
+         e7hDGQ0jK0ONO7DIAhD7cuz5Bg754vr2wee9AjW2mReguKtO5hGyBwSnV0CPfasdzJK+
+         9H+7YMeuQPJqSok2jfnscSTqLz/mlhD0SzI2544QwAYiIYdKH7fbvMZ/p2ZkQNw6KIQC
+         /coWJvHRlJ/CFnvEA2Zmrk6+BiPzjVBKV4iNaRsB077Qx4xjSAYmgA3LJCOdwv18b5pp
+         PXVQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gL1UyxWwE9/IEsi5EtbG/TToB7qQ9OHurBurPTsRahAxMGcVEVH
+	aW2rvaZV/tm6LD0RO+DoQj4+873rY/tCfllQaKOm617ifbvLfFHSvA==
+X-Received: by 2002:a63:9402:: with SMTP id m2mr304999pge.93.1541600179760;
+        Wed, 07 Nov 2018 06:16:19 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5299484pjt;
+        Wed, 7 Nov 2018 06:16:18 -0800 (PST)
+X-Google-Smtp-Source: AJdET5e+ReVxAZ/CmbE4BMHdr1A4ehdLlqr3dg8wWxwYQnO+llhUuEGFRBW5g36Exr+7QEL7kVl8
+X-Received: by 2002:a63:981:: with SMTP id 123mr324706pgj.444.1541600178658;
+        Wed, 07 Nov 2018 06:16:18 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541600178; cv=none;
+        d=google.com; s=arc-20160816;
+        b=jamFnF5gHhALFEunNZ6Eoorub/dp7bNv4z+IfKWW9byviky42Giw1itFeqDR6cxaYR
+         gdLx4WjjlgwmJ/27Uz7oVEcg9ynktNPJOtXXBnvJKCNF7gn4WRBqnilHVbxnabfP5bAD
+         LCnEeEMD4+Zfp1qjdjpjz3kWPSx7aE8g81gkOvGUFWct8idJTpyRBcmimUDupXN0Ezt8
+         vLg2qi8d5HIvqDZYLWByOvrJ1aKSZCcygRvcllMBQkckAHKGczpwpoTNntIc7EY3G+Ob
+         Js/gUGFrFP9DIGswI7Osss8O6v/UTRiRRteICgrA4wljcKbMwsTI3xZOTC2dXps9FS63
+         IDKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:organization:from:references:cc:to:subject;
+        bh=Rw2HY9oDy9xwO+xoBjdR4y0bo8WgJAgqgvmS8wLM5ek=;
+        b=RftySMu4vk/L0aScQjvvwWc+xgk7xuvBI0zsfdjZS0kz6Bc1kgsBvDFXF9tp1tu9QX
+         20vwp73bouPKnt3/v5euhnequQc5uzvJeNbDnmfPFeFHYhWeHF900MsBTS8w/u9ya89x
+         8kJm9ohpuI0jALXYlPnagS/R01apAi5rIZ2nOM2x2AgbGky2ZaHFuSCxp12lQ113CeVT
+         b8wTDZkATprDcTUEgJhWGPQPSqHhKDkIkD6F0msLpUgM5wONJVpOnmBnlPRtXbRU+GQ2
+         mDAX5AW4HzS2Nrdq/Y7m6ih5vhke6I+BbieJf/0Kuzoqi4pCcjyf3tzH1b0NL58Z0G3Z
+         NE8Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id z7-v6si666607pgc.343.2018.11.07.06.16.02;
+        Wed, 07 Nov 2018 06:16:18 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730906AbeKGXqE (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:46:04 -0500
+Received: from mga06.intel.com ([134.134.136.31]:15477 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726830AbeKGXqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:46:03 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 06:15:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,475,1534834800"; 
+   d="scan'208";a="104203459"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.130]) ([10.237.72.130])
+  by fmsmga004.fm.intel.com with ESMTP; 07 Nov 2018 06:15:27 -0800
+Subject: Re: [PATCH RFC 1/3] mmc: sdhci: add support for using external DMA
+ devices
+To: Chunyan Zhang <zhang.chunyan@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+References: <1541387810-24867-1-git-send-email-zhang.chunyan@linaro.org>
+ <1541387810-24867-2-git-send-email-zhang.chunyan@linaro.org>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <904b3126-59eb-2834-ddcd-8adba00469b0@intel.com>
+Date: Wed, 7 Nov 2018 16:13:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <1541387810-24867-2-git-send-email-zhang.chunyan@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHLUmz8+Jbw8YXAA--.6794S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxuw1DWr1xtFWrKrWUArW5Jrb_yoWfXr1rpF
+	4UJFW3CrWUtF13ur9xWa1UuF4aqr1v934qg3sxG34Fya1DKry7uFnrCayFvF13Zr9rGr1S
+	qFWF9w15u3srJ37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUm2b7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik2
+	6cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6ry5MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7
+	IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E
+	87Iv67AKxVW0oVCq3wCYIxAIcVC2z280aVCY1x0267AKxVW0oVCq3wCF04k20xvY0x0EwI
+	xGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
+	AFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVF
+	xhVjvjDU0xZFpf9x07b1BMtUUUUU=
+
+On 5/11/18 5:16 AM, Chunyan Zhang wrote:
+> Some standard SD host controller can support both external dma
+> controllers as well as ADMA in which the controller acts as
+> DMA master.
+> 
+> Currently the generic SDHCI code supports ADMA/SDMA integrated into
+> the host controller but does not have any support for external DMA
+> controllers implemented using dmaengine meaning that custom code is
+> needed for any systems that use a generic DMA controller with SDHCI.
+
+I have no object to supporting external DMA, but there are a few comments below.
+
+> 
+> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+> ---
+>  drivers/mmc/host/Kconfig |  13 +++++
+>  drivers/mmc/host/sdhci.c | 137 ++++++++++++++++++++++++++++++++++++++++++++++-
+>  drivers/mmc/host/sdhci.h |  12 +++++
+>  3 files changed, 161 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 1b58739..c4745d8 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -977,3 +977,16 @@ config MMC_SDHCI_OMAP
+>  	  If you have a controller with this interface, say Y or M here.
+>  
+>  	  If unsure, say N.
+> +
+> +config MMC_SDHCI_EXTDMA
+> +        bool "Support external DMA in standard SD host controller"
+> +	depends on MMC_SDHCI
+> +	depends on DMA_ENGINE
+> +	help
+> +	  This is an option for using external DMA device via dmaengine
+> +	  framework.
+> +
+> +	  If you have a controller which supports using external DMA device
+> +	  for data transfer, can say Y.
+> +
+> +	  If unsure, say N.
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 99bdae5..ffb1d2b 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -14,6 +14,7 @@
+>   */
+>  
+>  #include <linux/delay.h>
+> +#include <linux/dmaengine.h>
+>  #include <linux/ktime.h>
+>  #include <linux/highmem.h>
+>  #include <linux/io.h>
+> @@ -1309,6 +1310,128 @@ static void sdhci_del_timer(struct sdhci_host *host, struct mmc_request *mrq)
+>  		del_timer(&host->timer);
+>  }
+>  
+> +#if IS_ENABLED(CONFIG_MMC_SDHCI_EXTDMA)
+> +static int sdhci_extdma_init_chan(struct sdhci_host *host)
+
+I would prefer "external_dma" to extdma e.g.
+	CONFIG_MMC_SDHCI_EXTERNAL_DMA
+	sdhci_external_dma_init
+	sdhci_external_dma_channel
+	sdhci_external_dma_setup
+	etc
+
+
+> +{
+> +	int ret = 0;
+> +	struct mmc_host *mmc = host->mmc;
+> +	struct sdhci_extdma *dma = &host->extdma;
+> +
+> +	dma->tx_chan = dma_request_chan(mmc->parent, "tx");
+> +	if (IS_ERR(dma->tx_chan)) {
+> +		ret = PTR_ERR(dma->tx_chan);
+> +		dma->tx_chan = NULL;
+> +		pr_warn("Failed to request TX DMA channel.\n");
+> +		return ret;
+> +	}
+> +
+> +	dma->rx_chan = dma_request_chan(mmc->parent, "rx");
+> +	if (IS_ERR(dma->rx_chan)) {
+> +		ret = PTR_ERR(dma->rx_chan);
+> +		if (ret == -EPROBE_DEFER && dma->tx_chan)
+> +			dma_release_channel(dma->tx_chan);
+> +
+> +		dma->rx_chan = NULL;
+> +		pr_warn("Failed to request RX DMA channel.\n");
+> +	}
+
+I guess the channels need to be released in sdhci_cleanup_host() and
+sdhci_remove_host()
+
+> +
+> +	return ret;
+> +}
+> +
+> +static inline struct dma_chan *
+> +sdhci_extdma_get_chan(struct sdhci_extdma *dma, struct mmc_data *data)
+> +{
+> +	return data->flags & MMC_DATA_WRITE ? dma->tx_chan : dma->rx_chan;
+> +}
+> +
+> +static int sdhci_extdma_setup(struct sdhci_host *host, struct mmc_command *cmd)
+> +{
+> +	int ret = 0, i;
+> +	struct dma_async_tx_descriptor *desc;
+> +	struct mmc_data *data = cmd->data;
+> +	struct dma_chan *chan;
+> +	struct dma_slave_config cfg;
+> +
+> +	if (!host->mapbase)
+> +		return -EINVAL;
+> +
+> +	cfg.src_addr = host->mapbase + SDHCI_BUFFER;
+> +	cfg.dst_addr = host->mapbase + SDHCI_BUFFER;
+> +	cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> +	cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> +	cfg.src_maxburst = data->blksz / 4;
+> +	cfg.dst_maxburst = data->blksz / 4;
+> +
+> +	/* Sanity check: all the SG entries must be aligned by block size. */
+> +	for (i = 0; i < data->sg_len; i++) {
+> +		if ((data->sg + i)->length % data->blksz)
+> +			return -EINVAL;
+> +	}
+> +
+> +	chan = sdhci_extdma_get_chan(&host->extdma, data);
+> +
+> +	ret = dmaengine_slave_config(chan, &cfg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len,
+> +				       mmc_get_dma_dir(data),
+> +				       DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+> +	if (!desc)
+> +		return -EINVAL;
+> +
+> +	desc->callback = NULL;
+> +	desc->callback_param = NULL;
+> +
+> +	dmaengine_submit(desc);
+
+Doesn't the DMA need to be cleaned up somewhere if there are transfer errors?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void sdhci_extdma_prepare_data(struct sdhci_host *host,
+> +				      struct mmc_command *cmd)
+> +{
+> +	host->flags |= SDHCI_REQ_USE_DMA;
+> +	sdhci_prepare_data(host, cmd);
+> +
+> +	if (sdhci_extdma_setup(host, cmd))
+> +		dev_err(mmc_dev(host->mmc), "MMC start dma failure\n");
+> +}
+> +
+> +static void sdhci_extdma_pre_transfer(struct sdhci_host *host,
+> +				      struct mmc_command *cmd)
+> +{
+> +	struct dma_chan *chan = sdhci_extdma_get_chan(&host->extdma, cmd->data);
+> +
+> +	if (cmd->opcode != MMC_SET_BLOCK_COUNT) {
+> +		sdhci_set_timeout(host, cmd);
+> +		dma_async_issue_pending(chan);
+> +	}
+> +}
+> +#else
+> +static int sdhci_extdma_init_chan(struct sdhci_host *host)
+> +{
+> +	return 0;
+> +}
+> +
+> +static void sdhci_extdma_prepare_data(struct sdhci_host *host,
+> +				      struct mmc_command *cmd)
+> +{
+> +	/* If SDHCI_EXTDMA not supported, PIO will be used */
+> +	sdhci_prepare_data(host, cmd);
+> +}
+> +
+> +static void sdhci_extdma_pre_transfer(struct sdhci_host *host,
+> +				      struct mmc_command *cmd)
+> +{}
+> +#endif
+> +
+> +void sdhci_switch_extdma(struct sdhci_host *host, bool en)
+> +{
+> +	host->use_extdma = en;
+> +}
+> +EXPORT_SYMBOL_GPL(sdhci_switch_extdma);
+> +
+>  void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
+>  {
+>  	int flags;
+> @@ -1355,7 +1478,10 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
+>  		host->data_cmd = cmd;
+>  	}
+>  
+> -	sdhci_prepare_data(host, cmd);
+> +	if (host->use_extdma)
+> +		sdhci_extdma_prepare_data(host, cmd);
+> +	else
+> +		sdhci_prepare_data(host, cmd);
+>  
+>  	sdhci_writel(host, cmd->arg, SDHCI_ARGUMENT);
+>  
+> @@ -1397,6 +1523,9 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
+>  		timeout += 10 * HZ;
+>  	sdhci_mod_timer(host, cmd->mrq, timeout);
+>  
+> +	if (host->use_extdma)
+> +		sdhci_extdma_pre_transfer(host, cmd);
+> +
+>  	sdhci_writew(host, SDHCI_MAKE_CMD(cmd->opcode, flags), SDHCI_COMMAND);
+>  }
+>  EXPORT_SYMBOL_GPL(sdhci_send_command);
+> @@ -4133,6 +4262,12 @@ int sdhci_setup_host(struct sdhci_host *host)
+>  			return ret;
+>  	}
+>  
+> +	if (host->use_extdma) {
+> +		ret = sdhci_extdma_init_chan(host);
+> +		if (ret)
+> +			goto unreg;
+> +	}
+> +
+>  	return 0;
+>  
+>  unreg:
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index b001cf4..2d4a3ba 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -361,6 +361,12 @@ enum sdhci_cookie {
+>  	COOKIE_MAPPED,		/* mapped by sdhci_prepare_data() */
+>  };
+>  
+> +struct sdhci_extdma {
+> +	struct sdhci_host	*host;
+> +	struct dma_chan		*rx_chan;
+> +	struct dma_chan		*tx_chan;
+> +};
+
+Is this struct really needed?  Otherwise kernel style is not to nest
+structures. i.e. just put rx/tx_chan in struct sdhci_host.
+
+> +
+>  struct sdhci_host {
+>  	/* Data set by hardware interface driver */
+>  	const char *hw_name;	/* Hardware bus name */
+> @@ -475,6 +481,7 @@ struct sdhci_host {
+>  
+>  	int irq;		/* Device IRQ */
+>  	void __iomem *ioaddr;	/* Mapped address */
+> +	phys_addr_t mapbase;	/* physical address base */
+>  	char *bounce_buffer;	/* For packing SDMA reads/writes */
+>  	dma_addr_t bounce_addr;
+>  	unsigned int bounce_buffer_size;
+> @@ -524,6 +531,7 @@ struct sdhci_host {
+>  	bool pending_reset;	/* Cmd/data reset is pending */
+>  	bool irq_wake_enabled;	/* IRQ wakeup is enabled */
+>  	bool v4_mode;		/* Host Version 4 Enable */
+> +	bool use_extdma;
+>  
+>  	struct mmc_request *mrqs_done[SDHCI_MAX_MRQS];	/* Requests done */
+>  	struct mmc_command *cmd;	/* Current command */
+> @@ -551,6 +559,9 @@ struct sdhci_host {
+>  
+>  	struct timer_list timer;	/* Timer for timeouts */
+>  	struct timer_list data_timer;	/* Timer for data timeouts */
+> +#if IS_ENABLED(CONFIG_MMC_SDHCI_EXTDMA)
+> +	struct sdhci_extdma	extdma;	/* support external DMA */
+> +#endif
+>  
+>  	u32 caps;		/* CAPABILITY_0 */
+>  	u32 caps1;		/* CAPABILITY_1 */
+> @@ -785,5 +796,6 @@ void sdhci_start_tuning(struct sdhci_host *host);
+>  void sdhci_end_tuning(struct sdhci_host *host);
+>  void sdhci_reset_tuning(struct sdhci_host *host);
+>  void sdhci_send_tuning(struct sdhci_host *host, u32 opcode);
+> +void sdhci_switch_extdma(struct sdhci_host *host, bool en);
+>  
+>  #endif /* __SDHCI_HW_H */
+> 

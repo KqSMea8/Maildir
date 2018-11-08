@@ -1,0 +1,143 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:22 -0000
+Received: from icoremail.net (unknown [209.85.210.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH0LbS+NbGIlaAQ--.27167S3;
+	Thu, 08 Nov 2018 04:32:28 +0800 (CST)
+Received: from mail-pf1-f178.google.com (unknown [209.85.210.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3WETaS+NbIzQZAA--.955S3;
+	Thu, 08 Nov 2018 04:32:26 +0800 (CST)
+Received: by mail-pf1-f178.google.com with SMTP id j13-v6so8187140pff.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:32:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=Mn8aRD6+O1akGToMdAlNRHaEmaCqXOkeH/aevoOcaxc=;
+        b=e5Fgiwhxr8T5Yl95u75xOP7pUkBtLxrq5Ieq0or6wyXLd/46RJS2a1oQKp7yxN08Sr
+         sBgY7/tmc2vzUDj4CwsAWCtQSvbeG8gHr4VLxvzgOsA9WZk8hj1D1PL8xkgPkWZFxDW7
+         4X4v+2p70Os2j3AYA1FL+V05syK5inX0vRXiDmYg6pecvnPovc5Rpy6UXtNvwKPAU0QC
+         6N9QK2fgptBy57oCNy/UkTQrcwQyusMPb9WE3GkiCaQYHBmq/Gt4F+pbZdJNf0nZByhd
+         QwR/Jz9pw1fAxL9Vye5vyar/BnQEyrDe6844UJgtzWvP9KfcLMKWcJ9P6eckJJLEF5Vx
+         UIeQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=canonical.com
+X-Gm-Message-State: AGRZ1gKWFo22d9OCBBhYRyJCegwDOGXTPixXQcnMzKaLbD/HDBab967Z
+	Vz/MMt5lTPxuUq6xC4wqqrYD4b+pErocSfwo+5CVTQChGcUJZ2iFwg==
+X-Received: by 2002:a63:cd17:: with SMTP id i23mr1467862pgg.13.1541622746235;
+        Wed, 07 Nov 2018 12:32:26 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5712268pjt;
+        Wed, 7 Nov 2018 12:32:25 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fdv8i7i0pxrUsSi4UwYftJ8W8jy9m2PlPESNbgSUkM1xeLQvkE+mmqB9AHX1sLUE9t/B7I
+X-Received: by 2002:a17:902:8ec2:: with SMTP id x2-v6mr1765693plo.157.1541622745553;
+        Wed, 07 Nov 2018 12:32:25 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541622745; cv=none;
+        d=google.com; s=arc-20160816;
+        b=DcFl7wh02bdiVcwSiLgi/rTSJ6rOG7dkmUtSMVvss7j5/JoiTEUlIbJMi0RwB/pCjp
+         jme085+3PyGUFAS6yVW/sBalcofEpZnNnQzeHDn/AcNqOb+52BkpJmm5U1ixTGwjYvYw
+         MKyVBUfZQrCTTg7Bfq+XwQoBrAQ3urX8xy4F7H638ykMqczjEwaWrxiYaPcgawdyWRh9
+         a+kTzqhU2cKbRr9mitV4sDXh4ey2LmqNMmYHyWEAjVCZgZtJ99KXRruLImXmzYJNbqXQ
+         qO/uEygZajMJ+UPI/ygoO3nZXfJsuC0spkvpEjHnHolGg08Z7uYHVe17IroimXf/GJk+
+         7zRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :message-id:date:subject:cc:to:from;
+        bh=Mn8aRD6+O1akGToMdAlNRHaEmaCqXOkeH/aevoOcaxc=;
+        b=XShXxmuGp5F8Hya8qdM1XIsK/3QRW/HTShz9QgIJWFZF67sSxPRag0dJIwH5rG0E61
+         Hyql6XcmENcO0yTVd1E+4dZ5jGsiOqEji/94AZ49YGVMU8b/jCmHGJp4L68UvJNL8/Wi
+         iNSvL+ECpnR8QWPgOyuz1ubIgICg2F8dKY2g7f5arJRBYiK6z/mWvMXEPDFfX35Li1AJ
+         5JkX6F7T36O9HkrnMhgsXXJ1mLXTuxrd1kvJPAxA2zkqKLB3DZV46hMp+d9W3FxoCZJW
+         iPvj/2xAH1mJd1dBt7gOfZ4/g+ijuWwJI6nSc+rqKsiPfm4UVHdXm9MbFVaocTpO12OV
+         qt6g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=canonical.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b8-v6si1800380plm.190.2018.11.07.12.31.44;
+        Wed, 07 Nov 2018 12:32:25 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726802AbeKHGD1 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:03:27 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:42015 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbeKHGD1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:03:27 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1gKUTy-00088O-QJ; Wed, 07 Nov 2018 20:31:22 +0000
+From: Colin King <colin.king@canonical.com>
+To: David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][drm-next] drm/virtio: fix memory leak of vfpriv on error return path
+Date: Wed,  7 Nov 2018 20:31:22 +0000
+Message-Id: <20181107203122.6861-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3WETaS+NbIzQZAA--.955S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrZFW8ury8tw48XFyfJF48Crg_yoWDZrb_CF
+	WUXr97XrW3KFn293Wjvw1fXFy2va1a9F4rZ3y3Kr95tF9xAry8X3srJr45WF17XF47GFZ8
+	Kws7AF1rZa4fCjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbgxYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	GVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_AwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x
+	07beSoXUUUUU=
+
+From: Colin Ian King <colin.king@canonical.com>
+
+The allocation for vfpriv is being leaked on an error return path,
+fix this by kfree'ing it before returning.
+
+Detected by CoverityScan, CID#1475380 ("Resource Leak")
+
+Fixes: 6a37c49a94a9 ("drm/virtio: Handle context ID allocation errors")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/virtio/virtgpu_kms.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
+index bf609dcae224..f4f995639ed1 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_kms.c
++++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
+@@ -266,8 +266,10 @@ int virtio_gpu_driver_open(struct drm_device *dev, struct drm_file *file)
+ 
+ 	get_task_comm(dbgname, current);
+ 	id = virtio_gpu_context_create(vgdev, strlen(dbgname), dbgname);
+-	if (id < 0)
++	if (id < 0) {
++		kfree(vfpriv);
+ 		return id;
++	}
+ 
+ 	vfpriv->ctx_id = id;
+ 	file->driver_priv = vfpriv;
+-- 
+2.19.1

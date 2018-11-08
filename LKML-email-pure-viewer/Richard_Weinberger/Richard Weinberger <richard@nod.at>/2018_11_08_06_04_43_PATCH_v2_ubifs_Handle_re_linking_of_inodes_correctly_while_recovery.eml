@@ -1,0 +1,196 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:53 -0000
+Received: from icoremail.net (unknown [209.85.214.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH8LiYeNbtw1bAQ--.27528S3;
+	Thu, 08 Nov 2018 06:06:26 +0800 (CST)
+Received: from mail-pl1-f174.google.com (unknown [209.85.214.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnAT3fYeNb+X8ZAA--.1612S3;
+	Thu, 08 Nov 2018 06:06:24 +0800 (CST)
+Received: by mail-pl1-f174.google.com with SMTP id p6-v6so8484542pll.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:06:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=Or8O/GgnMm1/pSt3rbCbm7D+8NGUk9ys2+jpoAARBHQ=;
+        b=U4tQQ38h+6rLR81BBn+/dKQ5FwqUo4gKmkpWaQ3tUO6oPoSyRIti8+U/TUCqO/x+nx
+         YLWIDrgSBESTR4AJfddQ/coEsAtZgFuyDtlvOndI14NNOQXm6b18yHjUcXgfpbGeekY+
+         TTpAR3ka59b2a1hz0SqX6Iq/1VJ8EEpzPgsorGWDJ3NUvfyAo8qQOkLwVPLPgovt+pFn
+         S8P3h0h8FwynqWsluLlPe6mJZlcB/O2E1GQy9LGPAEKjeDAuig55h8/IiQOcocA/Oz2H
+         ojjDtcDvJJXy/Fs7TOqGVSWSKmBLKq55MBxUXY7gdSfb/PAgS/WbpUP488uWuKyHI3vZ
+         DEOA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLOh2sCcfYAEsG2lS6OMJ+bWjqCAp2XFCg+gvkIIjkuGy9mdSin
+	tI8zkUh1HiKdg/TUdwu0avW4kft7zTDFTotRWD69pOhmDzLGSY2FcQ==
+X-Received: by 2002:a17:902:a9:: with SMTP id a38-v6mr2072691pla.7.1541628383695;
+        Wed, 07 Nov 2018 14:06:23 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp58852pjt;
+        Wed, 7 Nov 2018 14:06:22 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cF5BL465u9tViWnNpr82h1cHBYnM+uaSpSHOzOdJbl6GLQoQ9S+RiriiwJkxza8xg/OE9H
+X-Received: by 2002:a63:f34b:: with SMTP id t11mr1724050pgj.341.1541628382723;
+        Wed, 07 Nov 2018 14:06:22 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541628382; cv=none;
+        d=google.com; s=arc-20160816;
+        b=PZZk8Vrm7u0Tv3JcEbp4LpY4DVZxcLEeNmrBUKIPy2ArUPyHyXCESBNASYe/3x7ufG
+         M/qQ5kT0iBAvAMz1e4f8xn/cI8YgM8DEk4j7QAZkfs5xh8Jmq9NYj+hxmYlobByz/AAX
+         urpQtX5y4EshWXrhP9LjXJ03QBGCdKSOM1TTPXqkE4g4QSzzNFzDqEDcUGHQNz7fUG8B
+         EeSvEh4vHyRN1nqdhiuUB508sR8ghaNL3rtWhMfJ1gvW+ofsvshfuMGipnXLkp4Pw4I1
+         2jgcCQkxw7GrkNssTcB62pOxv437876x1ZoGAnbBn97GYBRG9DXSqkTaTPPSQtZAEdeX
+         FYjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :message-id:date:subject:cc:to:from;
+        bh=Or8O/GgnMm1/pSt3rbCbm7D+8NGUk9ys2+jpoAARBHQ=;
+        b=JFQz9+Rg0GTzz1KW/EuVHc+yWOMijmAL935mXE4nf1gRAvG+vxKzYvoj51qiiYZfm2
+         J0g0vA6NdSjALUeis0aKNPZAimziIYmfZ0Ox4fxF2UeAjjVvgG15ZNxYXbO6Zz6Mz5ah
+         FTmlOTom6EaX5BbEHrrWa+1ZIImgqEFbmQm3poO+q+mijXp3z4lNhY4pIghO4HkYIFYp
+         bUuV2yfIIzk6f89cmqoQVnzvXDeHYMNfhS1C8ewkgwa55WiyM0WYvMaVktuC9t/ISK76
+         eBoChwz8KOm58kNnZcrEB8+LX6c8O6TpmYAXy7NYhF+aXUCO89OA/7RQ5kXzYAWnaVeQ
+         LfJA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b3si1683394pgh.496.2018.11.07.14.06.07;
+        Wed, 07 Nov 2018 14:06:22 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728342AbeKHHhW convert rfc822-to-8bit (ORCPT
+        <rfc822;wanghaifine@gmail.com> + 99 others);
+        Thu, 8 Nov 2018 02:37:22 -0500
+Received: from lilium.sigma-star.at ([109.75.188.150]:37812 "EHLO
+        lilium.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727945AbeKHHhW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:37:22 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by lilium.sigma-star.at (Postfix) with ESMTP id 6EAE3180230CE;
+        Wed,  7 Nov 2018 23:04:59 +0100 (CET)
+From: Richard Weinberger <richard@nod.at>
+To: linux-mtd@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Richard Weinberger <richard@nod.at>,
+        stable@vger.kernel.org, Russell Senior <russell@personaltelco.net>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH v2] ubifs: Handle re-linking of inodes correctly while recovery
+Date: Wed,  7 Nov 2018 23:04:43 +0100
+Message-Id: <20181107220443.29573-1-richard@nod.at>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnAT3fYeNb+X8ZAA--.1612S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxZF4rJF4DZw4fCF4kKw1fXrb_yoW5Ww4Upa
+	y5G3W5KrW8GryIgF1fJ3WkZF4avF1vgrW5Ca43Gr9YyayfXr4qyryUK34Y9ry8AFs5Gw1j
+	qF10qrW0kayUJrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6Fylc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bl
+	-BiUUUUU=
+
+UBIFS's recovery code strictly assumes that a deleted inode will never
+come back, therefore it removes all data which belongs to that inode
+as soon it faces an inode with link count 0 in the replay list.
+Before O_TMPFILE this assumption was perfectly fine. With O_TMPFILE
+it can lead to data loss upon a power-cut.
+
+Consider a journal with entries like:
+0: inode X (nlink = 0) /* O_TMPFILE was created */
+1: data for inode X /* Someone writes to the temp file */
+2: inode X (nlink = 0) /* inode was changed, xattr, chmod, … */
+3: inode X (nlink = 1) /* inode was re-linked via linkat() */
+
+Upon replay of entry #2 UBIFS will drop all data that belongs to inode X,
+this will lead to an empty file after mounting.
+
+As solution for this problem, scan the replay list for a re-link entry
+before dropping data.
+
+Fixes: 474b93704f32 ("ubifs: Implement O_TMPFILE")
+Cc: stable@vger.kernel.org
+Cc: Russell Senior <russell@personaltelco.net>
+Cc: Rafał Miłecki <zajec5@gmail.com>
+Reported-by: Russell Senior <russell@personaltelco.net>
+Reported-by: Rafał Miłecki <zajec5@gmail.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
+---
+ fs/ubifs/replay.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+diff --git a/fs/ubifs/replay.c b/fs/ubifs/replay.c
+index 75f961c4c044..cb1f23459553 100644
+--- a/fs/ubifs/replay.c
++++ b/fs/ubifs/replay.c
+@@ -212,6 +212,38 @@ static int trun_remove_range(struct ubifs_info *c, struct replay_entry *r)
+ 	return ubifs_tnc_remove_range(c, &min_key, &max_key);
+ }
+ 
++/**
++ * inode_still_linked - check whether inode in question will be re-linked.
++ * @c: UBIFS file-system description object
++ * @rino: replay entry to test
++ *
++ * O_TMPFILE files can be re-linked, this means link count goes from 0 to 1.
++ * This case needs special care, otherwise all references to the inode will
++ * be removed upon the first replay entry of an inode with link count 0
++ * is found.
++ */
++static bool inode_still_linked(struct ubifs_info *c, struct replay_entry *rino)
++{
++	struct replay_entry *r;
++
++	ubifs_assert(c, rino->deletion);
++	ubifs_assert(c, key_type(c, &rino->key) == UBIFS_INO_KEY);
++
++	/*
++	 * Find the most recent entry for the inode behind @rino and check
++	 * whether it is a deletion.
++	 */
++	list_for_each_entry_reverse(r, &c->replay_list, list) {
++		ubifs_assert(c, r->sqnum >= rino->sqnum);
++		if (key_inum(c, &r->key) == key_inum(c, &rino->key))
++			return r->deletion == 0;
++
++	}
++
++	ubifs_assert(c, 0);
++	return false;
++}
++
+ /**
+  * apply_replay_entry - apply a replay entry to the TNC.
+  * @c: UBIFS file-system description object
+@@ -239,6 +271,11 @@ static int apply_replay_entry(struct ubifs_info *c, struct replay_entry *r)
+ 			{
+ 				ino_t inum = key_inum(c, &r->key);
+ 
++				if (inode_still_linked(c, r)) {
++					err = 0;
++					break;
++				}
++
+ 				err = ubifs_tnc_remove_ino(c, inum);
+ 				break;
+ 			}
+-- 
+2.19.1

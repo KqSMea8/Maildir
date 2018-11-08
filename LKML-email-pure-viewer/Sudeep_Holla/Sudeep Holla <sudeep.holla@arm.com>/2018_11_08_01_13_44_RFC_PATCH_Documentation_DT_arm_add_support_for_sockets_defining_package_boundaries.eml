@@ -1,0 +1,265 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:12 -0000
+Received: from icoremail.net (unknown [209.85.210.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv0JyHeNb3HFZAQ--.26418S3;
+	Thu, 08 Nov 2018 01:14:27 +0800 (CST)
+Received: from mail-pf1-f173.google.com (unknown [209.85.210.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXeERsHeNbmH0YAA--.397S3;
+	Thu, 08 Nov 2018 01:14:20 +0800 (CST)
+Received: by mail-pf1-f173.google.com with SMTP id v68-v6so4377599pfk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:14:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:sender:precedence:list-id;
+        bh=axu4fyezYFs2ecWA8Y9wseCyGvoMNBJeZL3Ag63xHEI=;
+        b=ufqQxqpyQszo/aQfLCtUBlCn+YmwTcbLUZJjyOwTtAZbBYCajn7oVTDy9M0dhX6EUt
+         MXMf9JbulAU6kz2iUaXxuF2NL6JaNQVlilzRBtBQGOafeBILEDliXB8JIE3V67INPd6K
+         m8IWjETqFBDq/HniBCmPjm0/9eetJZu9i9QZuNlb4SP78PMGA55n241IUzFH6f3SUbiq
+         lNUTkw90C+lG5IQDxwxY0sY8U/94qTKvnQIov+OZeDRlneU8mIq39dxaJ9lHmA7CrnXF
+         tGP/hzONKWpnM5maEsQHnlwsBDVmyZgrmg0WbhIf+F2lmZo18YX5pzw0Buwg7oFdRJu5
+         YIUA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJ+XPxiEAqdIaPDBLOYsohyvU9LdIeNH5sdrKAcGy1Xr6izpRiE
+	a4taWr4fNeE+BG8CLExdD7CLdA7G6yXnQ0a+Y/SW0S90bExvaR2jVg==
+X-Received: by 2002:a63:1e17:: with SMTP id e23mr875157pge.130.1541610860250;
+        Wed, 07 Nov 2018 09:14:20 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5501826pjt;
+        Wed, 7 Nov 2018 09:14:19 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eCkNb8avCt1jy+RQGroLWx4FYYBETPxjQxg13qnTyY2skQ2FuVZ12p6eNP/egFG3KxKG60
+X-Received: by 2002:a17:902:4083:: with SMTP id c3-v6mr1039369pld.181.1541610859348;
+        Wed, 07 Nov 2018 09:14:19 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610859; cv=none;
+        d=google.com; s=arc-20160816;
+        b=OB89cLUFV6RcPmqESwsvzCTBtPZ8FMjhfJGdn0zOSEi0Q4wvI0sFeccPUe+H7ijZ3Y
+         UhpFn6G8Mw4HwJVD8pTuXqxjXbT4Bt39fCwLPIV7C8nAwaxiBfKPn7k3a+d/5Vm9xdOI
+         S+fV2yYndkotmInwBsI1QV18KXlejXPu6h7ZeX6dZ3bu340T1ndY7rTE4hgCiEtYRkrq
+         HJS99TySLdm4yqL5rO9eACgBkMnvG9ZTg2AGl1sSoZ1rldBmsWwVMlplF5ofeIlyr7Gb
+         sIjASXnK3s1TwLYU6ODKrkwGyHRXCHXkzEe939i41pL66tJzlYrmgNyZv/0ljWzr9roj
+         X5pA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:date:subject:cc:to:from;
+        bh=axu4fyezYFs2ecWA8Y9wseCyGvoMNBJeZL3Ag63xHEI=;
+        b=g8JcpSfMguQKi4R+f8nvRQlNHZCHecHy7om2vCBHPP5deBD/9zrcFupdflMyslRENI
+         lrmWGHMdOlfqNOj4WtT0Rp4wjsumS6JBay5B4vDvl44kLqDRB+wpzfJfacyyqATYi8mU
+         xjr5tWfd8xczLy0yUw4+iSfZhbVf4hOOgaJ3skURi2HUvL18rtFu3+lttm1Gm2SeFE8K
+         a1MOjjDMTGXzxwGyVYUjBpVVm/VIIjH+mNXKfJgwUUzu+oPws1Yxy1s9Q187Abkpu9Xk
+         s15UxUeE//KFjR+YB9KdJgVAtxSCp739kD2i6CwYkLaH1zbVrGmd0HB9FDmqVl/sOSiP
+         MUtg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d32-v6si1186877pld.238.2018.11.07.09.14.03;
+        Wed, 07 Nov 2018 09:14:19 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728091AbeKHCpL (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:45:11 -0500
+Received: from foss.arm.com ([217.140.101.70]:55122 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727772AbeKHCpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:45:11 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53535A78;
+        Wed,  7 Nov 2018 09:13:54 -0800 (PST)
+Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 40A8D3F5CF;
+        Wed,  7 Nov 2018 09:13:52 -0800 (PST)
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
+        palmer@sifive.com, anup@brainfault.org, Damien.LeMoal@wdc.com,
+        mick@ics.forth.gr, atish.patra@wdc.com, mark.rutland@arm.com,
+        zong@andestech.com, alankao@andestech.com
+Subject: [RFC PATCH] Documentation: DT: arm: add support for sockets defining package boundaries
+Date: Wed,  7 Nov 2018 17:13:44 +0000
+Message-Id: <20181107171344.983-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXeERsHeNbmH0YAA--.397S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3Jw4kAw47Zr1rury3tr4fXwb_yoW7tF1rpr
+	s2kFyftr4DJr97uw48Kan7XryfZF1UJa1UJ348Wr1xCws8Wr48Gr1ftF15ZF1UCr1rCr1q
+	qF1UKw18ur9xAF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPmb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
+	kI7VAKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80
+	FwCY02Avz4vEIxC_GwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Ar0_tr
+	1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4U
+	JwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcV
+	AKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
+	CIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZE
+	Xa7IUOTrW3UUUUU==
+
+The current ARM DT topology description provides the operating system
+with a topological view of the system that is based on leaf nodes
+representing either cores or threads (in an SMT system) and a
+hierarchical set of cluster nodes that creates a hierarchical topology
+view of how those cores and threads are grouped.
+
+However this hierarchical representation of clusters does not allow to
+describe what topology level actually represents the physical package or
+the socket boundary, which is a key piece of information to be used by
+an operating system to optimize resource allocation and scheduling.
+
+Lets add a new "socket" node type in the cpu-map node to describe the
+same.
+
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ .../devicetree/bindings/arm/topology.txt      | 52 ++++++++++++++-----
+ 1 file changed, 39 insertions(+), 13 deletions(-)
+
+(Note patch generated with -b option to avoid 60+ of whitespace changes)
+
+Hi Rob,
+
+You had expressed your interest to generalise the CPU topology bindings
+accross multiple architectures. Do you want to move to the generic
+bindings before adding this $subject socket support or is it OK to
+finalise on this and then move the majority(based on the agreement)
+to generic binding.
+
+Regards,
+Sudeep
+
+diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
+index de9eb0486630..668483554cca 100644
+--- a/Documentation/devicetree/bindings/arm/topology.txt
++++ b/Documentation/devicetree/bindings/arm/topology.txt
+@@ -9,6 +9,7 @@ ARM topology binding description
+ In an ARM system, the hierarchy of CPUs is defined through three entities that
+ are used to describe the layout of physical CPUs in the system:
+
++- socket
+ - cluster
+ - core
+ - thread
+@@ -63,21 +64,23 @@ nodes are listed.
+
+ 	The cpu-map node's child nodes can be:
+
+-	- one or more cluster nodes
++	- one or more cluster nodes or
++	- one or more socket nodes in a multi-socket system
+
+ 	Any other configuration is considered invalid.
+
+-The cpu-map node can only contain three types of child nodes:
++The cpu-map node can only contain 4 types of child nodes:
+
++- socket node
+ - cluster node
+ - core node
+ - thread node
+
+ whose bindings are described in paragraph 3.
+
+-The nodes describing the CPU topology (cluster/core/thread) can only
+-be defined within the cpu-map node and every core/thread in the system
+-must be defined within the topology.  Any other configuration is
++The nodes describing the CPU topology (socket/cluster/core/thread) can
++only be defined within the cpu-map node and every core/thread in the
++system must be defined within the topology.  Any other configuration is
+ invalid and therefore must be ignored.
+
+ ===========================================
+@@ -85,26 +88,44 @@ invalid and therefore must be ignored.
+ ===========================================
+
+ cpu-map child nodes must follow a naming convention where the node name
+-must be "clusterN", "coreN", "threadN" depending on the node type (ie
+-cluster/core/thread) (where N = {0, 1, ...} is the node number; nodes which
+-are siblings within a single common parent node must be given a unique and
++must be "socketN", "clusterN", "coreN", "threadN" depending on the node type
++(ie socket/cluster/core/thread) (where N = {0, 1, ...} is the node number; nodes
++which are siblings within a single common parent node must be given a unique and
+ sequential N value, starting from 0).
+ cpu-map child nodes which do not share a common parent node can have the same
+ name (ie same number N as other cpu-map child nodes at different device tree
+ levels) since name uniqueness will be guaranteed by the device tree hierarchy.
+
+ ===========================================
+-3 - cluster/core/thread node bindings
++3 - socket/cluster/core/thread node bindings
+ ===========================================
+
+-Bindings for cluster/cpu/thread nodes are defined as follows:
++Bindings for socket/cluster/cpu/thread nodes are defined as follows:
++
++- socket node
++
++	 Description: must be declared within a cpu-map node, one node
++		      per physical socket in the system. A system can
++		      contain single or multiple physical socket.
++		      The association of sockets and NUMA nodes is beyond
++		      the scope of this bindings, please refer [2] for
++		      NUMA bindings.
++
++	This node is optional for a single socket system.
++
++	The socket node name must be "socketN" as described in 2.1 above.
++	A socket node can not be a leaf node.
++
++	A socket node's child nodes must be one or more cluster nodes.
++
++	Any other configuration is considered invalid.
+
+ - cluster node
+
+ 	 Description: must be declared within a cpu-map node, one node
+ 		      per cluster. A system can contain several layers of
+-		      clustering and cluster nodes can be contained in parent
+-		      cluster nodes.
++		      clustering within a single physical socket and cluster
++		      nodes can be contained in parent cluster nodes.
+
+ 	The cluster node name must be "clusterN" as described in 2.1 above.
+ 	A cluster node can not be a leaf node.
+@@ -164,13 +185,15 @@ levels) since name uniqueness will be guaranteed by the device tree hierarchy.
+ 4 - Example dts
+ ===========================================
+
+-Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters):
++Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters in a single
++physical socket):
+
+ cpus {
+ 	#size-cells = <0>;
+ 	#address-cells = <2>;
+
+ 	cpu-map {
++		socket0 {
+ 			cluster0 {
+ 				cluster0 {
+ 					core0 {
+@@ -253,6 +276,7 @@ cpus {
+ 				};
+ 			};
+ 		};
++	};
+
+ 	CPU0: cpu@0 {
+ 		device_type = "cpu";
+@@ -473,3 +497,5 @@ cpus {
+ ===============================================================================
+ [1] ARM Linux kernel documentation
+     Documentation/devicetree/bindings/arm/cpus.txt
++[2] Devicetree NUMA binding description
++    Documentation/devicetree/bindings/numa.txt
+--
+2.17.1

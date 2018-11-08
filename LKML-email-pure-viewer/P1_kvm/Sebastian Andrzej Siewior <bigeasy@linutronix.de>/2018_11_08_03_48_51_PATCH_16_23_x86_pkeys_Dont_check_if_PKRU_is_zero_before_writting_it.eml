@@ -1,0 +1,146 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:00 -0000
+Received: from icoremail.net (unknown [209.85.210.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH+5CQuNbPlNaAQ--.27187S3;
+	Thu, 08 Nov 2018 03:51:31 +0800 (CST)
+Received: from mail-pf1-f171.google.com (unknown [209.85.210.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3X0s_QuNbYxQZAA--.773S3;
+	Thu, 08 Nov 2018 03:51:27 +0800 (CST)
+Received: by mail-pf1-f171.google.com with SMTP id s9-v6so796999pfm.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:51:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=FVKIwwM4HJh42puQZJjvobQg2RHnpLTqtIS5jWoOQ9E=;
+        b=YEyNBgH38S1+Y02UKoucu/qtG/EE2sdAyMXzvAZjaQYSrcudRB6GG/9mMIHNa2do3i
+         SxV+QyDz6uF+JPzDoeW5Y+Q/Ye7mFLuh74xE9nF+2zit/SZpRuqd1yB2AWi+zv4RMMct
+         /beRwbNe15OnYa1amsgd6h/cRrK+KTZNirZsDRXLiAAQs5cmA6vXj708g06ime9II+yK
+         qqGDCshmPa5eapIbiseScaPVPxCLWIkTwu0zhHak3K5atsKvNeFW2KDp+/enGyud+veH
+         MnzFvVQ6G93bwKRN+qUhdaC3aDxrn3GUUq/EVkoWIR0HH5pcFO0+FyLsWOQwGBaRQrOz
+         cK2g==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLxWFiR2J3xlZTEeP63SBBNGXgUa+ZPWie6isDEZXAJ7GxI+8E7
+	nMwwfgYBy8+nNCHbZyq23C0rktwfMVmsWrENIV6Xx4RQOOgl5kCUxQ==
+X-Received: by 2002:a63:2315:: with SMTP id j21mr1341994pgj.297.1541620287169;
+        Wed, 07 Nov 2018 11:51:27 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5670848pjt;
+        Wed, 7 Nov 2018 11:51:26 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dXvxeZBJ+u2FV5vPpzGtYeP/pHCNVU+tP2W2lCYwXQmJMpGPuLxlFwX2wuTLrvn/erzJFd
+X-Received: by 2002:a62:9f42:: with SMTP id g63-v6mr1574485pfe.144.1541620286537;
+        Wed, 07 Nov 2018 11:51:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620286; cv=none;
+        d=google.com; s=arc-20160816;
+        b=vfSWRRBkbQhcvqcUhXv6KLG3Lql4VkHBgGyqADIjm2g+QcNd/qIByqrkjNTTRFhxNl
+         WEbn2SrbrckBopzwWAO/fytidPyzHAUn4XGpcmv4kCBuKze7VzM9benAZTn8iNluCuYv
+         995oC+CBYMe7TwNDGLjW7JDW1cD2cBfgod/OeM0IBVdMOA82GfsmU+6QkXhC0dK/+hr4
+         k8ZVQ5ijIoQeiWx1+MM4s7hSxLeZ9E4lL0ic6nxG5hx1fvORQD894zk4oXDOMTXDk0Ko
+         Ts/KcK9iYDyS/jAunK9jiHFMquHmv0F1SEFFgq2S4rQTiTCqui/uYXaTlZQ6l9EXfKZ9
+         KGnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=FVKIwwM4HJh42puQZJjvobQg2RHnpLTqtIS5jWoOQ9E=;
+        b=XMvxaXAvdjDMnZd/vWd5p9sOW0eoou0wXd+6VIxwVrJ7y2XcO79/DZzRdGE7U4vQxn
+         3laWTHe/q60kA437DjgzoYb2dS/CbQwMhIgHh5Y9kWWt4bGRWnd/mxmNwFa9UPXVt+Kn
+         gas/unmy/aLtSGrvFGk883bT6oq+6u9tb8WeE77lhi1tDp9fWs6IGjk/pWUhhBpgGdns
+         7NcQZEJLnODNBUqq/4AMZq2/DSm5SZz+VDpopLApkb4tsjd+LrUhm4h1tDvuBHFaM2jl
+         NT5/oVGK/AR8JWGidoI06vHtQkdj6upvteBmadxzWsZWfaSosRYrKHj2EK/z2SPrUlU2
+         aUlg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id i63si1401651pge.515.2018.11.07.11.51.10;
+        Wed, 07 Nov 2018 11:51:26 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727879AbeKHFVT (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:21:19 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:41941 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727694AbeKHFVR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:21:17 -0500
+Received: from localhost ([127.0.0.1] helo=bazinga.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1gKTpK-00070Q-Gd; Wed, 07 Nov 2018 20:49:23 +0100
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 16/23] x86/pkeys: Don't check if PKRU is zero before writting it
+Date: Wed,  7 Nov 2018 20:48:51 +0100
+Message-Id: <20181107194858.9380-17-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107194858.9380-1-bigeasy@linutronix.de>
+References: <20181107194858.9380-1-bigeasy@linutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3X0s_QuNbYxQZAA--.773S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrKF48JF1rur13AFWrArWDurg_yoWkJwcEga
+	4kAFZ8GwsYgw43Gws2gF42v3yxXan3Xr1rZw1kKw43X3yrtry5Xr4kJa48Xw17WFyjy39x
+	X3srXw1fG3sIkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUUxYxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqAYjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VWrMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI
+	42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExV
+	AvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
+	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrx
+	kI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxU
+	dY0PDUUUU
+
+write_pkru() checks if the current value is the same as the expected
+value. So instead just checking if the current and new value is zero
+(and skip the write in such a case) we can benefit from that.
+
+Remove the zero check of PKRU, write_pkru() provides a similar check.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/x86/mm/pkeys.c | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/arch/x86/mm/pkeys.c b/arch/x86/mm/pkeys.c
+index 05bb9a44eb1c3..50f65fc1b9a3f 100644
+--- a/arch/x86/mm/pkeys.c
++++ b/arch/x86/mm/pkeys.c
+@@ -142,13 +142,6 @@ u32 init_pkru_value = PKRU_AD_KEY( 1) | PKRU_AD_KEY( 2) | PKRU_AD_KEY( 3) |
+ void copy_init_pkru_to_fpregs(void)
+ {
+ 	u32 init_pkru_value_snapshot = READ_ONCE(init_pkru_value);
+-	/*
+-	 * Any write to PKRU takes it out of the XSAVE 'init
+-	 * state' which increases context switch cost.  Avoid
+-	 * writing 0 when PKRU was already 0.
+-	 */
+-	if (!init_pkru_value_snapshot && !read_pkru())
+-		return;
+ 	/*
+ 	 * Override the PKRU state that came from 'init_fpstate'
+ 	 * with the baseline from the process.
+-- 
+2.19.1

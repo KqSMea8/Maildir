@@ -1,0 +1,151 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:36 -0000
+Received: from icoremail.net (unknown [209.85.215.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_2MYLuNbcONZAQ--.26557S3;
+	Thu, 08 Nov 2018 02:25:28 +0800 (CST)
+Received: from mail-pg1-f176.google.com (unknown [209.85.215.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHLEjkLONbfM0YAA--.827S3;
+	Thu, 08 Nov 2018 02:20:20 +0800 (CST)
+Received: by mail-pg1-f176.google.com with SMTP id k1-v6so7668715pgq.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:20:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=5dJLxsIlNFDBiQIXLIyX5S+lMNNyAKT2i8Y/8HFUu1U=;
+        b=WBGuyDgDsWUpKYB6Kb5NaGoYvdvTosxnkE85kaxXLO1qFckx7F5i3x0umLrS23MijY
+         +1k5w1c4J0RqrBKi18GFX9+m9KFfcmcEFBxyY/bUz/m3w+XhapSazQMQzQgPOvYXcvcZ
+         4izMC7HgChVLnK/nltDsbQf7pOAlRgx8iOAFXb5mdSfYDpGALQJReOrfqctv/nvEuV1x
+         CUjAyDsE77WIfuc3TwG0/tq60j6JHRlBgwT8F1dvFN02+I+fV3KXplSQ0UAj5C8fb4lM
+         rt+qU7r+WMyBFOuXMQch/p7nnt5eEPiR4omHKv00FJs5l7gQQ9FOCcUiMjifZOwpBa1z
+         pAiA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gK/BL9xf67ZcuHLQOnRldrP2KFfFrDTYEEKZJ5XHIAMQF9kfXvi
+	5wrzwBtxnZ+b1Ls0VsWseapLXhfXHSq67/qFQ7ZN3HsyCsLSX+P92g==
+X-Received: by 2002:a62:22c3:: with SMTP id p64-v6mr1290244pfj.9.1541614820297;
+        Wed, 07 Nov 2018 10:20:20 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5575698pjt;
+        Wed, 7 Nov 2018 10:20:19 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fOFc0mx4Ug9zftwTx7H1N/e/Yqar9i8MQuH/4dcdlhTzK6Bb6jahQ9wuZNWly30G7bk13K
+X-Received: by 2002:a17:902:404:: with SMTP id 4-v6mr1269650ple.331.1541614819219;
+        Wed, 07 Nov 2018 10:20:19 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541614819; cv=none;
+        d=google.com; s=arc-20160816;
+        b=qINe8Qy0cTKrBSJUTtyyT+YNrjTKJz/S6fBhF57CtHy/ZtUJ/lUSt95Hu+nMZT1xdi
+         yJK95ceD9MG1xSgkFrAyAHHmrY2muY4ktCyeOUYk+z3jkTTGNHzH0XCn3ea2dkuYGMmB
+         AfGcpsL6Tjh0LzHeeFWdyGlufEp6EUe1huSecvp0FuI9Jdbbx/CHImUPPcA1eiOT7+TV
+         BFZ3svV5J8/xfrUBVsMeK/Qjsg8NOKlP1flvi8GwgUqqWW9UAPjbHZjuyh8QZxyhAs52
+         qOKw5Ik1gTlmARWcQCMEX44BInr56zQGZHMeIMAPPKo8i/E+UlO1FaMM2HFeOacTk84z
+         YXSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=5dJLxsIlNFDBiQIXLIyX5S+lMNNyAKT2i8Y/8HFUu1U=;
+        b=JD0xUVoXK+PCwEi5yJpe85z++HWFNmSr7eGHTt1Rm6aSC2uiZod0DipWn9PZie7qCy
+         vzZDFCy8u6xK1R53oU8RlXiWNraEgMpQIgpzSazH6qZnZpHsmjvnVJaYXfqkAP8iAS1L
+         Q7Td0Mmy1pRnaV4CwtJ+ASGrb9dCNV+dj18GbzRKwtB99KcNL9aWDhb83Lae2wp5YnD3
+         G3nZGass5BGKXDjWVQaq83qW0BrWyzZpMvigBPJ1zWngMDtHfl5QTPOLtq7mDFYRG9tN
+         dbPMAJCTLh9r20/XzSfWCahKGc24CvOdfq6lzgODgVtJey8K0WRlfC3brfN5xbbVVgdb
+         P4MQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b11-v6si1271469plk.406.2018.11.07.10.20.02;
+        Wed, 07 Nov 2018 10:20:19 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728236AbeKHDvH (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:51:07 -0500
+Received: from leonov.paulk.fr ([185.233.101.22]:48930 "EHLO leonov.paulk.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726363AbeKHDvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:51:07 -0500
+Received: from gagarine.paulk.fr (gagarine [192.168.1.127])
+        by leonov.paulk.fr (Postfix) with ESMTPS id 76588BFE1D;
+        Wed,  7 Nov 2018 19:19:32 +0100 (CET)
+Received: by gagarine.paulk.fr (Postfix, from userid 114)
+        id 09F13C1089; Wed,  7 Nov 2018 19:19:31 +0100 (CET)
+X-Spam-Checker-Version: SpamAssassin 3.4.1 (2015-04-28) on gagarine.paulk.fr
+X-Spam-Level: 
+X-Spam-Status: No, score=0.0 required=5.0 tests=none autolearn=unavailable
+        autolearn_force=no version=3.4.1
+Received: from localhost.localdomain (collins [192.168.1.129])
+        by gagarine.paulk.fr (Postfix) with ESMTP id B4F7CC106A;
+        Wed,  7 Nov 2018 19:17:57 +0100 (CET)
+From: Paul Kocialkowski <contact@paulk.fr>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com,
+        Mark Van den Borre <mark@fosdem.org>,
+        Gerry Demaret <gerry@fosdem.org>,
+        Luc Verhaegen <libv@skynet.be>,
+        Paul Kocialkowski <contact@paulk.fr>
+Subject: [PATCH v3 4/8] dt-bindings: Add vendor prefix for LeMaker
+Date: Wed,  7 Nov 2018 19:18:39 +0100
+Message-Id: <20181107181843.27628-5-contact@paulk.fr>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107181843.27628-1-contact@paulk.fr>
+References: <20181107181843.27628-1-contact@paulk.fr>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHLEjkLONbfM0YAA--.827S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF1DCFWxArWruw1rXw1xuFg_yoWDJFc_X3
+	yxAr1DZw43JrWIgw4YyFsrGw15tr1akFWrua4FqaykAa4UJa9xtaykX3yfAr1xCF4xuF1U
+	Z3s3GrWDXw1xGjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbgxYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x
+	07b13kZUUUUU=
+
+This introduces a new device-tree binding vendor prefix for Shenzhen
+LeMaker Technology Co., Ltd.
+
+This vendor was already in use but it was not documented until now.
+
+Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
+Reviewed-by: Rob Hering <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 0f5453d1823c..4eecfbf866a4 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -206,6 +206,7 @@ laird	Laird PLC
+ lantiq	Lantiq Semiconductor
+ lattice	Lattice Semiconductor
+ lego	LEGO Systems A/S
++lemaker	Shenzhen LeMaker Technology Co., Ltd.
+ lenovo	Lenovo Group Ltd.
+ lg	LG Corporation
+ libretech	Shenzhen Libre Technology Co., Ltd
+-- 
+2.19.1

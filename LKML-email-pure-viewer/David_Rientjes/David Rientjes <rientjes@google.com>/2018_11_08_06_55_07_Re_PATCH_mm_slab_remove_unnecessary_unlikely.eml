@@ -1,0 +1,134 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:08 -0000
+Received: from icoremail.net (unknown [209.85.214.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn31xqbeNbIVJbAQ--.27599S3;
+	Thu, 08 Nov 2018 06:55:39 +0800 (CST)
+Received: from mail-pl1-f180.google.com (unknown [209.85.214.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCngj5lbeNbVqUZAA--.1921S3;
+	Thu, 08 Nov 2018 06:55:33 +0800 (CST)
+Received: by mail-pl1-f180.google.com with SMTP id n4-v6so8548351plp.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:55:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:in-reply-to:message-id:references:user-agent:mime-version
+         :sender:precedence:list-id;
+        bh=LRUOrVbOmo16PNyJZh9N/4ctCvpsTGWiKoWhsLjwS/I=;
+        b=lz51yAnOgHGKIgQ8jM5TBmHh6xZBD9Nhig2hzcvNOP8bVoK2cLaeaCcZrndP0Bm+y8
+         I40WcUPBT7Rd39TJTD7FIpb0bQzCGxnTJsFOC2W5CeQWP71Ei2CU5ppIxF0Ls/nNPjTx
+         GYHGdcvNm786JnClXnwBAtLBhMPPKgsQaWvoqB9X1f6yC84kTNXQCQTof/DQB28CnC6+
+         n6xYgsnnlr5rJ/j299Aexwm7P7Q0GXJC3uEwHAd4t2t1i+finUzcYwzc4Hclsi1Qq3Cl
+         +ZSXyhOlHKnQS7qJOHO2qnEnYktp9duHZ//Mp6sWuPgp7LUH7y1y3C/tbj7fkljZ74XL
+         ILAA==
+X-Gm-Message-State: AGRZ1gI6m6yCdk1HIVmzueWbvPMg4y8z9OARlJxUedn0KHXajUq3p+7G
+	IkWwOTUb+EFnAI2KXZJcAOwyPPCTHZeDPt8ZKNt1uDYLUkts0JAMKw==
+X-Received: by 2002:a17:902:a9:: with SMTP id a38-v6mr2207457pla.7.1541631333054;
+        Wed, 07 Nov 2018 14:55:33 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp98418pjt;
+        Wed, 7 Nov 2018 14:55:32 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eZZUmPrqr6RRuBKQkTkyFaRhgTdGWCn5Y02gMGO1XsumoOLaymmuU9RwKnM3ACCZL9DZQa
+X-Received: by 2002:a17:902:9b84:: with SMTP id y4-v6mr2241263plp.332.1541631332423;
+        Wed, 07 Nov 2018 14:55:32 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541631332; cv=none;
+        d=google.com; s=arc-20160816;
+        b=L37M6Yxj/DISlNslLfdXDr7gZT78v/vGFoPenx5Cef0pqs6oOr1tWMvz+HjhtFhOZo
+         h4WR3LKx71hLlGpukb7vAV3/3r+eo+HkZQzef6FaD5RSGa/kHAtlWX16vWzWrFqevJN3
+         S9V6BxbYL8EIMIrBSNOA6xa7xeXQrdcISIoZnj7bu2Pf28TYt/IFZsp1GTyUB16XZRO4
+         vfuRKGwA3fNnlBU9BGAIUzEnRMMy89uUOKvEMgLOiU0REPmGxrIV4lV6OL5IPTHZEIod
+         2JO/4IP9c0p/WI0v8nYCYMn3S/9ecx6wfYMGTeFS36cQHQdmVOEbFmSwN+b8tY9NUCo4
+         m/ig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:user-agent:references
+         :message-id:in-reply-to:subject:cc:to:from:date:dkim-signature;
+        bh=LRUOrVbOmo16PNyJZh9N/4ctCvpsTGWiKoWhsLjwS/I=;
+        b=ed6x3/k37WdNO0KOKmhZSkcvj5onvDc85fNRQjcrOfQlZ179MNFRndr5BXCep2EftB
+         njltyJqvh1wNPrmEZnYSmrquCrxIs0oQ2FjDeNE38LP9HswrEbE64O+Wg3/puUUE/61n
+         Emjkcha/i75EMsdNRhjDK0U4qki6RhqJxxzTP2GNCbfNu71EhUgy6bObWtO/DSzSxPw/
+         xRZ/wbSaKLkMonQ5WOed793EG2FRoQxSoUcolqMvDC9+5FNrXKoNqqrEuBS8XYWlc5l+
+         6k9fmA77wKEoHPAOkmQ2fho2ZHC/nMvZpJLvBAckMsZloH7QkCCqjjq3ptkjpLa69z/j
+         CcIg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@google.com header.s=20161025 header.b=KA2rizEj;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=google.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id l186si1872689pge.205.2018.11.07.14.55.15;
+        Wed, 07 Nov 2018 14:55:32 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727525AbeKHI1n (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:27:43 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41246 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727257AbeKHI1n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:27:43 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 70so2371031pgh.8
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 14:55:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=LRUOrVbOmo16PNyJZh9N/4ctCvpsTGWiKoWhsLjwS/I=;
+        b=KA2rizEj5jCCrUTZ+ljWGhNlhPUqsaJ1AXbldp2dAEz3tbXDFj6/ZjmLNKezpvVFtA
+         BUmejKG1fnh5gErnyS7qD5uZHgZd+3ia2Od7YP1deP0xR/t/b4fVb16B+etSqo1b3aN8
+         8QZlFvzj5mMSn95rSr/swiEExM5mvwkvwROTrIkxJq61EgL3BrxkSa71WA120/5pl8zs
+         aC8TXTrwqjWVVNRf2mZn6T7w+io/k6/0KToLmbamKAGDAsEq8oqe8jilX20YZA1VCqds
+         mCGoJcV9ZpGEU4wkRS2LYg91opF8mKAhKx+hbt6ueE+TuybH43ctJyPhQjDAV70qpipa
+         VNIA==
+X-Received: by 2002:a63:d048:: with SMTP id s8-v6mr1793655pgi.311.1541631310019;
+        Wed, 07 Nov 2018 14:55:10 -0800 (PST)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id r124-v6sm2015695pfr.151.2018.11.07.14.55.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 14:55:08 -0800 (PST)
+Date: Wed, 7 Nov 2018 14:55:07 -0800 (PST)
+From: David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To: Yangtao Li <tiny.windzz@gmail.com>
+cc: cl@linux.com, penberg@kernel.org, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm, slab: remove unnecessary unlikely()
+In-Reply-To: <20181104125028.3572-1-tiny.windzz@gmail.com>
+Message-ID: <alpine.DEB.2.21.1811071454580.230996@chino.kir.corp.google.com>
+References: <20181104125028.3572-1-tiny.windzz@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCngj5lbeNbVqUZAA--.1921S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUO17k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IY64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY
+	4VCF77xAMxkIecxEwVCI4VW3MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxV
+	WUCVW8JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMxvI42IY6I8E87Iv67AKxVW8
+	Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42
+	xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2Iq
+	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+	1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2Kfnx
+	nUUI43ZEXa7IU5fDG5UUUUU==
+
+On Sun, 4 Nov 2018, Yangtao Li wrote:
+
+> WARN_ON() already contains an unlikely(), so it's not necessary to use
+> unlikely.
+> 
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+
+Acked-by: David Rientjes <rientjes@google.com>

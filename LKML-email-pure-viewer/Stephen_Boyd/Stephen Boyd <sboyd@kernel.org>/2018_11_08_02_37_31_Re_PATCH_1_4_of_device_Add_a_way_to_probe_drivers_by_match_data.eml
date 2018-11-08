@@ -1,0 +1,213 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:38 -0000
+Received: from icoremail.net (unknown [209.85.214.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX9MSMeNba_VZAQ--.27043S3;
+	Thu, 08 Nov 2018 02:38:11 +0800 (CST)
+Received: from mail-pl1-f171.google.com (unknown [209.85.214.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBnS0cNMeNbJNwYAA--.261S3;
+	Thu, 08 Nov 2018 02:38:05 +0800 (CST)
+Received: by mail-pl1-f171.google.com with SMTP id w24-v6so8250173plq.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:38:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :content-transfer-encoding:to:from:in-reply-to:cc:references
+         :message-id:user-agent:subject:date:sender:precedence:list-id;
+        bh=2niGyxZn4OVqu+wNjRqSAWJIolqG7NIJuwv7yjv2SOw=;
+        b=tDyr8+h7f2wi0MzsUQZX4J/j+cF9qXPhL9xhdefBQCX4l5Gl1aaMhoi3ot0l0MhY0y
+         E3pFk5vQyQZZEyJaAyi6IQhvbj4YVynXMnF7nrGFLDTotpTEYXRXMQMjqJOXP3bGFO03
+         21Z8oPuLXeJY9x13fLHC7G3G6vhbSNFMDQAz+z26HMbw7Oy/zNmY8ULw4ydIjLzO89Ce
+         1kEvDamgFSJ3QGC7he/21llsNPxHhfer1zc3iewvSBekH7AbgR87bJiyS1L7LqMOL4Vz
+         mqS8koeiT/QVPq/TNC4UWqHA+E8MhctTtf9YFbZbgrbHg0O5JM+NK5MziqB5De8CGPzS
+         8F5A==
+X-Gm-Message-State: AGRZ1gLFIAfqD2B6q0yGu/3iCeNoULy7g2KYKZdO/iz3MMQgxOOLtRX7
+	ESqgIgujzUBDuXgIhqhl/CNepEqvDTcxSpYhCI8UG6MDSDvAKbGvgg==
+X-Received: by 2002:a17:902:a9:: with SMTP id a38-v6mr1351710pla.7.1541615884824;
+        Wed, 07 Nov 2018 10:38:04 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5595411pjt;
+        Wed, 7 Nov 2018 10:38:03 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fLLi5r56XUiIt0V/oCRwUGMY05XWsQfiBzbBbkg2JiB4q0q8WjcxWpOZpfpGqU4b6Ft9BP
+X-Received: by 2002:a62:c20b:: with SMTP id l11-v6mr1341594pfg.251.1541615883567;
+        Wed, 07 Nov 2018 10:38:03 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541615883; cv=none;
+        d=google.com; s=arc-20160816;
+        b=xnoCgMDMtGTio2ZVJn+bkVDa4lhXvNJxzN+jYx6+DC68cUJ9QztlwFwlcstT2P8qGZ
+         dzfh0zVhHIQZKJDiYdTvGMDBx0WjXQOkfZbD6dwYniCJS7lXPmJ5r2R4yON/Kkb6Y4eA
+         DczL1BfI9u5cXz7iO/DAooISiXoAHTP0Qesj11RGNzWsy0eJTLelSsCnPbET96K5Qv+m
+         dstTVbJpNWihaGqWo1NlksdlxXUKuvb3mnVB/BANX6IGI7HxqF5pdCVAxnl4JYl/YwP5
+         pA8xlEB0l535ZUHnXbmttLoIh7L4TEpw+SgYzDtPoMEpZcIWszyI3qKmCQWfzvlos7ar
+         Y/Hg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:date:subject:user-agent:message-id
+         :references:cc:in-reply-to:from:to:content-transfer-encoding
+         :mime-version:dkim-signature;
+        bh=2niGyxZn4OVqu+wNjRqSAWJIolqG7NIJuwv7yjv2SOw=;
+        b=IVbBsZ78R1ApSoVrOoe0y8nrL/SiwXyzNAWDvlh1PDBBt8+QbSXOLVLJoBdTc6lFVL
+         v1b7hu0+JRdi9882LYD+uFnpM28EgFHmHd8yCc/NpPiHXeaPVx6ZaecsKf72N3VX0UpE
+         ApMiEMCMSpivA5a15+oG1RqIL3xok3nwEVEKYXbwupTMUS2eeHvhx4seQdL4y4BV+/88
+         OOlQfTaUoEbSLHgrqpEIe1xFvD6btSe2SDPzZkyt7Re1UxwSpFpS+fPnVfbD09zt2T1f
+         wHM4SqMqy9/2WcVkyHQJA6R70taVFNKSUh2wx34ifkBILZbIKCWD896aXKk9vU32LTAy
+         o86Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kernel.org header.s=default header.b=WVw21bB6;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v4-v6si1318663plp.247.2018.11.07.10.37.38;
+        Wed, 07 Nov 2018 10:38:03 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730583AbeKHEJJ (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:09:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726726AbeKHEJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:09:09 -0500
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BEFE20818;
+        Wed,  7 Nov 2018 18:37:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1541615852;
+        bh=eu6uLDaEC4qHMh7z0ygUHSxPL7rvOUOusfO7PYlR++Y=;
+        h=To:From:In-Reply-To:Cc:References:Subject:Date:From;
+        b=WVw21bB6lt9iwhAFJAxfI0GcGgf7+Wrss69BrFaiFiyjEom66qUcR4KL2XRLOK8z+
+         Paei2X3S/DNtr4uE2GOwIqtLlXKzgI4/QrWnC4z0TdVXSozHeN8ylLHJAQSzIKjd0L
+         noH1LH4Ug5zl6ml5esdAVlLBqZdrfxUexZaF5UbM=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+To: Rob Herring <robh+dt@kernel.org>
+From: Stephen Boyd <sboyd@kernel.org>
+In-Reply-To: <CAL_JsqLvKWcJUYDyWOg3rMeEWv7JV4zw7-YkOUWiL5rfXgVRvQ@mail.gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Frank Rowand <frowand.list@gmail.com>
+References: <20181106183609.207702-1-sboyd@kernel.org>
+ <20181106183609.207702-2-sboyd@kernel.org>
+ <CAL_JsqLvKWcJUYDyWOg3rMeEWv7JV4zw7-YkOUWiL5rfXgVRvQ@mail.gmail.com>
+Message-ID: <154161585170.88331.1822872519370217248@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.7
+Subject: Re: [PATCH 1/4] of/device: Add a way to probe drivers by match data
+Date: Wed, 07 Nov 2018 10:37:31 -0800
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBnS0cNMeNbJNwYAA--.261S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxZr1UAw4UAry3trW7Gw18Grg_yoW5AF15p3
+	Z5Ka4akF4DGr4I9347Xw48AFySyr48Z3W3Kr1UWw1I93yrXr1IvFs2krWFy3ZxJr4vkw13
+	tF1jqFy8CFZxZFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPab7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6rylc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r1I6r4UMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxU
+	qyxRDUUUU
+
+Quoting Rob Herring (2018-11-06 12:44:52)
+> On Tue, Nov 6, 2018 at 12:36 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > We have a handful of clk drivers that have a collection of slightly
+> > variant device support keyed off of the compatible string. In each of
+> > these drivers, we demux the variant and then call the "real" probe
+> > function based on whatever is stored in the match data for that
+> > compatible string. Let's generalize this function so that it can be
+> > re-used as the platform_driver probe function directly.
+> =
+
+> This looks really hacky to me. It sounds kind of general, but really
+> only works if we have match data that's a single function and we lose
+> any type checking on the function.
+
+I don't know what this means. Are you saying that we lose the ability to
+type check the function pointer stored in the data member? I don't have
+a good answer for this besides it's not any worse than the status quo
+for the mediatek drivers.
+
+One alternative is to add a DT only array to the platform_driver struct
+that has the platform driver probe function type and matches the index
+in the of_device_id table. Then we can add some logic into
+platform_drv_probe() to look for this table being set and find the probe
+function to call. Then we still have match data for anything that wants
+that (maybe it could be passed in to the probe function) at the cost of
+having another array. I don't have a use-case for this right now so I'm
+not sure this is a great idea.
+
+  struct of_platform_driver_probe_func {
+  	int (*probe)(struct platform_device *pdev);
+  };
+
+  struct of_platform_driver_probe_func mtk_probes[] =3D {
+  	mtk_probe1,
+	mtk_probe2,
+	mtk_probe3,
+  };
+
+  struct platform_driver mtk_driver =3D {
+  	.of_probes =3D &mtk_probes;
+  	.driver =3D {
+		.name =3D "mtk-foo";
+		.of_match_table =3D mtk_match_table,
+	},
+  };
+
+> What about things other than
+> platform devices?
+> =
+
+
+I suppose those would need similar functions that take the right struct
+type and match the driver probe function signature. To make the above
+more generic we could try to figure out a way to put the 'of_probes'
+array inside struct device_driver. That would require dropping
+platform_device specifically from the probe functions and having those
+take a plain 'struct device' that those probe functions turn into the
+appropriate structure with to_platform_device() or to_i2c_client()?
+
+So the example would become
+
+  struct of_driver_probe_func {
+  	int (*probe)(struct device *dev);
+  };
+
+  struct of_driver_probe_func mtk_probes[] =3D {
+  	mtk_probe1,
+	mtk_probe2,
+	mtk_probe3,
+  };
+
+  struct platform_driver mtk_driver =3D {
+  	.driver =3D {
+		.name =3D "mtk-foo";
+		.of_match_table =3D mtk_match_table,
+		.of_probes =3D &mtk_probes;
+	},
+  };
+
+And the probe functions might need to container_of() the device pointer
+to get the struct they know they need. The probe function could also be
+added to of_device_id and then we would have to look and see if that
+pointer is populated when the device is matched in generic device code.

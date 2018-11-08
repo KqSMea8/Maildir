@@ -1,0 +1,160 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:46 -0000
+Received: from icoremail.net (unknown [209.85.210.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f0FYD+NbVxZZAQ--.26368S3;
+	Thu, 08 Nov 2018 00:14:17 +0800 (CST)
+Received: from mail-pf1-f177.google.com (unknown [209.85.210.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXeUVYD+NbwUEYAA--.6834S3;
+	Thu, 08 Nov 2018 00:14:16 +0800 (CST)
+Received: by mail-pf1-f177.google.com with SMTP id e22-v6so7887206pfn.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:14:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent:sender:precedence:list-id;
+        bh=3WteVgwrBFeCCFoC4VTszgCJly8jWcUY64Q5zBRol1k=;
+        b=aMohJhNMhUQ1oEsqdRwQDlwIwbTdElJFkhkq4g+U11ifpDTxc/TDwdjjNFxCpqpjS2
+         ABZBH8gZEea+Awwi+vCirNbleOreSqhmZZMaw4iUcymBVlS9qpw/leGXyor5n7hboPLk
+         39PMqLFrvPt1ed5vKVSPJwjTQmcTqdth5WgEbjMwBZyoz+PMcCeKnh59k8YPAe46j7R7
+         UsMPMzwvOPfNybAZWqoTa8Thb7QGjbVHlYlKopppYnnAHks1UDX2orwIVZqsZNFRFw//
+         z6uuKJ//xx4bOhEun7IS45GXIf9FalOZLlGLEw82iy/zDGCXcslwE9VX5/ME6Tw97HnX
+         v55w==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKJYVz65s0tu/6bjl+fxZZiJsGkffOh+Aq2pDNPdcdYGLShjRrU
+	eqV4x0CERqRAoZz9MhoAep1HHr6Bsh8NWSvTCExSPyRzmwFMUaSCvw==
+X-Received: by 2002:a63:1e17:: with SMTP id e23mr702938pge.130.1541607255492;
+        Wed, 07 Nov 2018 08:14:15 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5435215pjt;
+        Wed, 7 Nov 2018 08:14:14 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d93izQQ6lj1/GK5Ok+p+oD2X/Y1B4UCn254F3uqvpqj5yANTPinCPLAjJ4jjf3SEXdagN/
+X-Received: by 2002:a62:60c6:: with SMTP id u189-v6mr792376pfb.191.1541607254653;
+        Wed, 07 Nov 2018 08:14:14 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541607254; cv=none;
+        d=google.com; s=arc-20160816;
+        b=GzHooMXI0d4e5nHJN/SyXprzKXkpC2KuHYR97t0YDflKmHzj47Z1kZAE5328Eqy6Rh
+         OkuLv38Cy2jjYKtMjuiZZYW/rtaD1Gbq1HFmHsk80WuP9aoCw/TXaqy0bngq8EQ+yo5O
+         e05WwZ6VOQoRVxAl7fVxu0Mdu4mnpDzzVogFEo9K7Cri7CL07iWKVjFvIM2wBs06Dmk2
+         RU4bW0Hi6u7ib0RJNgXhE8S/MelQSUeYdSlvbxNKlbL2SREqLSYi++RKrvZEQeTNAe6e
+         geqpqC/9izeIUnhTF2dVv317Tdj1U65Bw2nuDmZfPWKlKb+2/tMG3c828RGpHFfBxerR
+         mAIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-transfer-encoding:content-disposition:mime-version
+         :references:message-id:subject:cc:to:from:date;
+        bh=3WteVgwrBFeCCFoC4VTszgCJly8jWcUY64Q5zBRol1k=;
+        b=hBAdayKmtYb5920PHxCSf96RJnxXq7glbC2AyBSZDU4yLNco75Upge7y0cklPG8yTK
+         zFOcBw55CMLLA1qxIqlYXNcsnNuY88bAZNSC35vRcwVCI0BQtofAKPs1v/MVONvH0t2n
+         vHAYKlM/uT8uVODBZKxjThvzH1NPwZi713nqWwjJoQjXZAbmEiIXTHp8gyEfl/f2C7qQ
+         VYnPjcy+Yn2ec/WxZg789NHy+unedvXEPnd3sGq0PTThQUwfDy+lC7SiGVzIQoAQoojC
+         VZtz243s53fGyCjhk66Momr9wDTWeZLMWcWhMLm03y1rBb44xvJxA6G8fzDJJiBWN/tn
+         DpiQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id j129-v6si1032053pfb.201.2018.11.07.08.13.57;
+        Wed, 07 Nov 2018 08:14:14 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731391AbeKHBnv (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:43:51 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40609 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731379AbeKHBnv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:43:51 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1gKQRk-0003xI-CG; Wed, 07 Nov 2018 17:12:48 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1gKQRj-0006sF-Qz; Wed, 07 Nov 2018 17:12:47 +0100
+Date: Wed, 7 Nov 2018 17:12:47 +0100
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] pwm: kconfig: enable kona pwm to be built for cygnus
+ arch
+Message-ID: <20181107161247.sesu2comhes2d4kx@pengutronix.de>
+References: <20181107093613.26734-1-peron.clem@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20181107093613.26734-1-peron.clem@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXeUVYD+NbwUEYAA--.6834S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7GFyxGF1DJFW3uw1xtw47Arb_yoWDCFX_Ww
+	4kWry7Xr15Gr9YkF13Xr4rZFy0ya1ruF4kKF1FqF1rZ3s3Z3yaq3s8Zws5J3srW3ZxJanr
+	u39ayryrAryYqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbSkYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4wCY1x
+	0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VWUMxkI7II2
+	jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8JVWxJwCYIxAIcVC2z280aVCY1x0267AK
+	xVW8JVW8Jr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804x
+	Wl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8V
+	AvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IU5TT5PUUUUU==
+
+On Wed, Nov 07, 2018 at 10:36:12AM +0100, Clément Péron wrote:
+> The Cygnus architecture use a Kona PWM. This is already present
+> in the device tree but can't be built actually. Hence, allow the
+> Kona PWM to be built for Cygnus arch.
+> 
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> ---
+>  drivers/pwm/Kconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 763ee50ea57d..76d56fc8b1b7 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -88,7 +88,8 @@ config PWM_BCM_IPROC
+>  
+>  config PWM_BCM_KONA
+>  	tristate "Kona PWM support"
+> -	depends on ARCH_BCM_MOBILE
+> +	depends on ARCH_BCM_MOBILE || ARCH_BCM_CYGNUS
+> +	default ARCH_BCM_CYGNUS
+
+Is it possible to build this driver also on other arches? Then you might
+want to consider
+
+	depends on ARCH_BCM_MOBILE || ARCH_BCM_CYGNUS || COMPILE_TEST
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |

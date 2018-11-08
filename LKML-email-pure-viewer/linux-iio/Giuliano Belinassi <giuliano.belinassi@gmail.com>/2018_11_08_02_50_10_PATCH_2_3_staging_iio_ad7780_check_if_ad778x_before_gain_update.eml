@@ -1,0 +1,160 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:45 -0000
+Received: from icoremail.net (unknown [209.85.214.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX98GNONbVgVaAQ--.26968S3;
+	Thu, 08 Nov 2018 02:50:48 +0800 (CST)
+Received: from mail-pl1-f176.google.com (unknown [209.85.214.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXN0MENONbEecYAA--.894S3;
+	Thu, 08 Nov 2018 02:50:44 +0800 (CST)
+Received: by mail-pl1-f176.google.com with SMTP id p16-v6so8262639plr.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:50:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:date:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=aUmnHASi5VAienY0hiyzBD+kiBDa50KR9QnFaLrop4c=;
+        b=UWRUiqNwBZ8pOknK8q1laR6u2L3icfY0/4JipNkkmu9bvkdDOp0v3/ltBAFVaEFmdA
+         yjqgA2ARxriDjoP/Jpa0lZ/EGcecPxPHRzoXrpOD/gNluw+GjBphZwKURD14umhSZtcL
+         SCHBpdrjzeel8dwflj9lGBFe3h4sw5uNbarRygOoGVJKAJF6EkWhfBYtu4YgkgzGjMDk
+         14/EH4a/LKGbO9cm1+kZG9OiCiBa+vVTkhqYqPYI/OwniZQn2OKRKeyOHyuQiBiKQ7tm
+         z5BIrtW4nN/75A7edAAdXu2FnD2DkD2P0Jtrdsc09FLGAE2XdBqTxvtL4o/dWjOtM0Ap
+         K7eA==
+X-Gm-Message-State: AGRZ1gI30EoKoaI4uV8iSB5FuLG6sF7MmmbK2lCwkgOpbltfj6P1BlMJ
+	DUHS1HVnayoDXJ1QwMCVemcsvmFPMY5iHyiS4NHm5D/z0c4ghNTm5A==
+X-Received: by 2002:a17:902:a5cc:: with SMTP id t12-v6mr1382388plq.298.1541616644304;
+        Wed, 07 Nov 2018 10:50:44 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5609078pjt;
+        Wed, 7 Nov 2018 10:50:43 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f4sI4beQgyVLk1datyp8aLgcsNthH6oJnmgPRFHQ7q6pd1xSO9EvFTOVjn4F8NAD+Kao1o
+X-Received: by 2002:a17:902:a717:: with SMTP id w23-v6mr1387906plq.24.1541616643697;
+        Wed, 07 Nov 2018 10:50:43 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541616643; cv=none;
+        d=google.com; s=arc-20160816;
+        b=sr7PvPN7QJrVWzPippRmdLlM9SEQJyE3CXD6P0XGudpdE1P3SWhVl4hVwryIyJRzWM
+         FN5I5P2DpKD/LiHljMk24Dwm3bRnpMj4TP/gqRboQPpA6izbJXypj7LrUauM90K1ewC3
+         GkDPlB+Qrozozi9TZbTnjd02JIUG0t6opJE80t9sQbKqAt7yzt6wjNGG0hfQRkR+vXt+
+         rcywgp81sQHVmfnRjMP0i8iluTbqCb3aEsGhV9BjcbYbrVGO7tB/mbXlWl8XrACsbp3G
+         tj44sLdFnAyLWfNPzXMAndRmoWgoPInSDo4XHNeAuAjOilagKt2kgyhCZwytL/YawtEw
+         ioxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:date:from:dkim-signature;
+        bh=aUmnHASi5VAienY0hiyzBD+kiBDa50KR9QnFaLrop4c=;
+        b=zX4rrR58ixfFx2VHVfidGm6Kx1BUuSjB8kUPgo8OF6FLJptL/z1qfecVcj2TFcYaNp
+         Yg0d5kqzMzwno12K446zWAkxAoxSckv6MhnmqYUi8BvQPHqB1ehUkQUEincXSJOpyT+R
+         EbLqFkuWWtDnffinNegDjLnj7KrT6yxTLZTqN7K0ktz/BBasqrvVeLSaG/QFiBjJkxK0
+         CzJ7SYoWyhZL6bGzEm64MbLkcxV9Nn8H+CQPST9jogYiLovzkD0RHIDQ8GXzPeEIIK0C
+         SoISA/liZa3StAtNkKdJdXdQn2k6UUhlq+wvAQowGkKMTbr2k3Eu9DzJWCRBX5OD6zhy
+         t0fQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=YeCywS48;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id j135-v6si1470762pfd.243.2018.11.07.10.50.28;
+        Wed, 07 Nov 2018 10:50:43 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1729195AbeKHEV5 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:21:57 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33762 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbeKHEV5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:21:57 -0500
+Received: by mail-qk1-f196.google.com with SMTP id o89so22278527qko.0;
+        Wed, 07 Nov 2018 10:50:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aUmnHASi5VAienY0hiyzBD+kiBDa50KR9QnFaLrop4c=;
+        b=YeCywS48uAwP1TAyM+sgynRgPNVY7PsaSOZbwGfvynI7S6qo6K8T+TXclD1MQyQEH6
+         hvB7rsC7TLly8p4tZ8aT1V8i/v6SbWdchiwoGii4FTfNLMb/RZcCgbT49CR8pS+3WsBb
+         4gjOUxOeHXG9VPLMSjLYKvZvVUlTVzEPfaxNAFNRKj2WKM9+WwPKur7d7gVmL4NLrvEL
+         uyEcBa3+7w/EzbWSmh3xssqi2aitnW7smkNA2r87yR9qS9I/ss1eo20T/yE2Ajz5KBFy
+         xKY4DtaIfIkAmveAhHz0gK5jMtQpYI2AXC9sFxry/Wa0z3Tsbz92UQLGJAwK4ywmIe+f
+         fbAQ==
+X-Received: by 2002:a37:d1c5:: with SMTP id o66mr1356715qkl.293.1541616618385;
+        Wed, 07 Nov 2018 10:50:18 -0800 (PST)
+Received: from smtp.gmail.com ([143.107.45.1])
+        by smtp.gmail.com with ESMTPSA id f30-v6sm1163673qtf.50.2018.11.07.10.50.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 10:50:18 -0800 (PST)
+From: Giuliano Belinassi <giuliano.belinassi@gmail.com>
+X-Google-Original-From: Giuliano Belinassi <giuliano.belinassi@usp.br>
+Date: Wed, 7 Nov 2018 16:50:10 -0200
+To: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+        knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
+        renatogeh@gmail.com
+Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: [PATCH 2/3] staging: iio: ad7780: check if ad778x before gain update
+Message-ID: <2a521e5f036eb74b684f368a6227509cac93fe0d.1541615978.git.giuliano.belinassi@usp.br>
+References: <cover.1541615978.git.giuliano.belinassi@usp.br>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1541615978.git.giuliano.belinassi@usp.br>
+User-Agent: NeoMutt/20180716
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXN0MENONbEecYAA--.894S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7JF1DuFW5WF4DJFWfKw4UArb_yoWfGrb_uw
+	n2q3WxZryqkF48Ar1DtF48Z3sayFZ7XrsY9F4Yq393Kr98AF4rXr9rZr4DGa4UXFZrCa47
+	Aw48uryrKr1akjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbakYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0
+	I7IYx2IY67AKxVW5JVW7JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I
+	8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IY
+	c2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+	1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVWUCVW8Jb
+	IYCTnIWIevJa73UjIFyTuYvjxU-Vc_DUUUU
+
+Only the ad778x have the 'gain' status bit. Check it before updating.
+
+Signed-off-by: Giuliano Belinassi <giuliano.belinassi@usp.br>
+---
+ drivers/staging/iio/adc/ad7780.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/staging/iio/adc/ad7780.c b/drivers/staging/iio/adc/ad7780.c
+index 6e51bfdb076a..0a473aae52f2 100644
+--- a/drivers/staging/iio/adc/ad7780.c
++++ b/drivers/staging/iio/adc/ad7780.c
+@@ -114,10 +114,12 @@ static int ad7780_postprocess_sample(struct ad_sigma_delta *sigma_delta,
+ 	    ((raw_sample & chip_info->pattern_mask) != chip_info->pattern))
+ 		return -EIO;
+ 
+-	if (raw_sample & AD7780_GAIN)
+-		st->gain = 1;
+-	else
+-		st->gain = 128;
++	if (chip_info->is_ad778x) {
++		if (raw_sample & AD7780_GAIN)
++			st->gain = 1;
++		else
++			st->gain = 128;
++	}
+ 
+ 	return 0;
+ }
+-- 
+2.19.1

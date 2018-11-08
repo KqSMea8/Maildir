@@ -1,0 +1,156 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:41:26 -0000
+Received: from icoremail.net (unknown [209.85.214.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH9K8heNblNxbAQ--.27704S3;
+	Thu, 08 Nov 2018 08:39:24 +0800 (CST)
+Received: from mail-pl1-f180.google.com (unknown [209.85.214.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3ET26heNbz_IZAA--.2445S3;
+	Thu, 08 Nov 2018 08:39:22 +0800 (CST)
+Received: by mail-pl1-f180.google.com with SMTP id p16-v6so8658644plr.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 16:39:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding:sender:precedence
+         :list-id;
+        bh=x9LxQBvKk7eGbwMtTmg1iKKKB1N/oKSn8a0wHRp5HHQ=;
+        b=j7hn6FF0cYNdjjYTndW/oVONSHaw3WhnxT5gV5a72SyGabFSLy75cKMT3ti1Ag05ZT
+         eZHGml5ZPZ7swm8g7mZ0YAfr/sCPio7OHcdme387LRM5J7seZqSe+p4yf3RsSN+Wbcsc
+         IVavbmcmrHNYS8e9az7kj4+nCZGmfi50UZ42Fnrb6ErTmW0EtNqCEk44LMd+UCVBiXCx
+         jdXdNVK96/u6hLjI2GQsEPAU/UXypvtBqS+dk8IwhwznLpfzGYPbR2dD8PMDCRv6uew8
+         6Iqo9kSx8iRPGwDKZNzwfV+XvsKC8vdIYwtyG0hk0qIupH0aOwpJvus0qZGC1Z8mAs1C
+         c9mw==
+X-Gm-Message-State: AGRZ1gL77wpZRCGe2HWQUx8dlLhmc4H8wXF+LYOHZ8Db9ZYi6BwstzIT
+	mYo3fZsk7UcCID/CCdd7VjP9XW2Wv77eq1/2MqZOgS2Yb9q7y9uOEQ==
+X-Received: by 2002:a17:902:8e81:: with SMTP id bg1-v6mr2477068plb.192.1541637562481;
+        Wed, 07 Nov 2018 16:39:22 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp181095pjt;
+        Wed, 7 Nov 2018 16:39:21 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d/OJsOuvXHGFPzgTReGn11SS1i6cvHADvXb5TmdfXWog9eXlGmCtwyRMeFHkcx72KxD6Vh
+X-Received: by 2002:a65:638a:: with SMTP id h10-v6mr2129139pgv.136.1541637561550;
+        Wed, 07 Nov 2018 16:39:21 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541637561; cv=none;
+        d=google.com; s=arc-20160816;
+        b=lOnHgr5E9T4+I8cWtz6nkkoDylZxrDyDBn/FssM14cDGBN32kdqCCQK5lKZc3w4tg/
+         FWMqq1rPbyijlTmMvkAc2pTrLD5ZeqTbD2KVBRhTJ/eINvtqeexDeICP95XQrkbf06lc
+         byeTXZSAQ0K475SvwMUBrSbpBTcwfwx81txu6oO/4QKqnf4E7hqjzANHmleVOAKy6W0S
+         WxIrqlgFmKJTEE0MjKwqtV+pcc818CxmroX0bU64eSUx/3XYP7C9Zs9j/NwgzvTrVsVe
+         cmCd5veHevEgrZG4foWnXhB1saSgv1IjKT92MQ76azao4n0SYgLjbxj/r7LnsBLtknHA
+         dLqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:dkim-signature;
+        bh=x9LxQBvKk7eGbwMtTmg1iKKKB1N/oKSn8a0wHRp5HHQ=;
+        b=0z9+yQfM70diruFouco7EFZhlxeTaA4qOG3CHKW99Lv8EkXZ4L6+RLSyYGr8x/kZ2b
+         uSoSz1V+UY5PooXGtz0b0QSdPlIMj/04c8Lc1xtZQjujbo0wxlfVhdU9pfqNSpn9cac6
+         xhMDHifQIPTz63OMz0Oet+MRuxcjLED65kMueJktfYkiQtvpQgJR3+shuJFOkTDa1dqq
+         JZOJWuT0t2HouWEE7wJV01sk57nelfvLcmLKo2PVkudwD5RjkHXUP7AV91ORgMt7RNfE
+         qzR6xAAsfdhLJyvq50LB9T+kNPirHmzB18UAFn8l09Q11I47TdHVW5JIZk5cFI+4fgIA
+         wSaQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@ozlabs.org header.s=201707 header.b="jKLOt57/";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id l186si2121291pge.205.2018.11.07.16.39.06;
+        Wed, 07 Nov 2018 16:39:21 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728493AbeKHKLP (ORCPT <rfc822;yamahata.lkml@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 05:11:15 -0500
+Received: from ozlabs.org ([203.11.71.1]:60385 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727816AbeKHKLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 05:11:15 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.org (Postfix) with ESMTPSA id 42r4Bx3kTxz9s8F;
+        Thu,  8 Nov 2018 11:38:17 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
+        t=1541637501; bh=6AOs0MPrpbhYm3CVi0be+MvcPV9W1lEqIQGPbZZcjhg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jKLOt57/b2Sdo77Kf53XZAk+5FN7nV1amNHW7ZZCTNS00SUU5pwByVmp0QrQYHB0O
+         MqlbMonNh2Vhz0X9wtXc98MU9R6DqDUhL0sIEefd3X0ECkoMx5srYy43QFNJkGGJIQ
+         XktI4RNXUFkGmA3zIkkXqRSnXDleNMnfaxLe1hV46HMqcJF+5CpvAo091hi7o6WTVx
+         iBOcOsTNSVj6336qUcyHP4ZicTfclsKnwilTNR7YlFRaM/NeAw9NND59HVjDd6aAnQ
+         vX10lzWH0ld/CHjjN5zxfCRGHQtxWflS88JmrQ7PA9e9rbM5Ii/GjtLoe72kbpY2Ft
+         538go9HG8C/JQ==
+Subject: Re: [PATCH] Documentation: fix spelling mistake, EACCESS -> EACCES
+To: Jonathan Corbet <corbet@lwn.net>,
+        Colin King <colin.king@canonical.com>
+Cc: David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Ellerman <michael@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org
+References: <20181026172549.3628-1-colin.king@canonical.com>
+ <20181107153104.71eddf4d@lwn.net>
+From: Jeremy Kerr <jk@ozlabs.org>
+Message-ID: <d1048515-239a-2686-e897-fb2a2b8d180f@ozlabs.org>
+Date: Thu, 8 Nov 2018 08:38:15 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20181107153104.71eddf4d@lwn.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3ET26heNbz_IZAA--.2445S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7JryxWFy8JFWkCw17Zr18Zrb_yoWxZwbEkr
+	yrJan7Jw4rAr4vv3WrCF43Gr47uaya9r1UGFyjvw4Fvry3ArWDCFWDGay8Ar4xWa9akryD
+	GFs8ZF93Za4xJjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbvxYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	02cVCv0xWlc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0264kExVAvwVAq07x20xylc7Ca8VAv
+	wVCFzxkY4VCF77xAMxkIecxEwVCI4VWDMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2
+	IY67AKxVWUCVW8JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMxvI42IY6I8E87Iv
+	67AKxVWxJr0_GcWlcIIF0xvEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdMxAIw28IcxkI7VAKI4
+	8JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4U
+	MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
+	AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVF
+	xhVjvjDU0xZFpf9x07b50PfUUUUU=
+
+Hi Jon,
+
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>> ---
+>>   Documentation/filesystems/spufs.txt | 2 +-
+>>   Documentation/gpu/drm-uapi.rst      | 4 ++--
+>>   2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> Applied, thanks.
+> 
+> This is the first patch to spufs.txt since 2006...I wonder if that stuff
+> is being used by anybody...
+
+Anyone who is using the vector processors on the Cell BE processors will
+be using it. However, that hardware is becoming pretty rare now.
+
+We'll want to remove the spufs bits if/when we drop support for the cell
+platforms (IBM QSxx, PS3, celleb). mpe: any ides on that? Do you have a 
+policy for dropping platform support?
+
+Cheers,
+
+
+Jeremy

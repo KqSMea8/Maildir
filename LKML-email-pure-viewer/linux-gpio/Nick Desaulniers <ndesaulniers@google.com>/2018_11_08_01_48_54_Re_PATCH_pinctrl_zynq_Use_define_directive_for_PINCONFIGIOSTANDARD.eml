@@ -1,0 +1,169 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:22 -0000
+Received: from icoremail.net (unknown [209.85.214.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH8K1JeNb27hZAQ--.27114S3;
+	Thu, 08 Nov 2018 01:49:43 +0800 (CST)
+Received: from mail-pl1-f171.google.com (unknown [209.85.214.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCXbjqzJeNberMYAA--.68S3;
+	Thu, 08 Nov 2018 01:49:39 +0800 (CST)
+Received: by mail-pl1-f171.google.com with SMTP id p6-v6so8184184pll.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:49:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=PIFLZL5b1Tl6mFxyEsZDWQUuh+4alBjnBASE2IvM76o=;
+        b=DSjyFHDBFktbZVtJ3/CgEiVFkOOkrfpGNLNCs/fuHCc/+Yif4Uqvv2RgviWx/8dlQm
+         yroU2U3S0f1ZZLX1l0wCCOAbOfEt2eKdc0aTL92OoOhwAhCW+SaIH7CKU+o18jfavS+Q
+         JuEgsRfmdEMk6pM0QbySpTly55jRRrwOJrkVA5nxHCQ+bT5Vbp3U2phKwtUr8dUUMAMN
+         UNxxamBzyR4C9QEnK/LMX3wccE7CvLbc6wYjXkmmVeuuqqYccoLmwIwap04R2mPeFMMb
+         mYdF+YzdDD93M++Xalpg6psUYza04vHCMUiYMgd8T8Fblxp6ufhZRmrt3HbImvq1+vT4
+         MCyQ==
+X-Gm-Message-State: AGRZ1gLEosu59El1NSUGxjUqYAAKeGuI3ygAj/GNC6asSHTCxaltLknB
+	dY4Do6ibk67OVWe89vAVdh0Ibj4tOoxG4sSm+yHqiVZQiGivGr65Sw==
+X-Received: by 2002:a17:902:b789:: with SMTP id e9-v6mr1153305pls.338.1541612979089;
+        Wed, 07 Nov 2018 09:49:39 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5541254pjt;
+        Wed, 7 Nov 2018 09:49:38 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dyzYJSQFoWSH4mHTBl+KXFiBms3Rm7tOpQpMafEIwWqnwNH2tvhxnBme9NuiOC8p/w+iY/
+X-Received: by 2002:a17:902:bd8d:: with SMTP id q13-v6mr1153218pls.167.1541612978369;
+        Wed, 07 Nov 2018 09:49:38 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541612978; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ngmSIrXfS1Rbiw/aYT2GAW22WNOyKiWNl9o4wrgllvo1mLfZQBcxpC+KM1UHbfIXgP
+         UtcCqZScAFf5hHGyWmlLeBgH2IYJOmJpOZvyjpSgXW3Oxtz6h7SuxevyOfTOQqjaWoTn
+         zNA8dUvYObTLWVvNGItLi78r3JnF/BE0Iz4Y2pblv6oxIAI2EG8Yv1HgVw58TG2Aaltl
+         EYOgxRXxR6VZHJuJUhLJlzzBESXixc4oTuqTv4TfaRGl7fe1nxnLLvtbEn00oiCH5u7p
+         e4sbrZr1MuWUoDlNH5wNKOjc7n6ecUDwWh9tjmAtClNE2t6hP+7rtMrrPvh40QyD+Tel
+         isxA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=PIFLZL5b1Tl6mFxyEsZDWQUuh+4alBjnBASE2IvM76o=;
+        b=e/DUojYyqSC/2fmY9M17OA22bh/j857K22LWS619GEyyKaxHkIWHVRCs87R0cjaUAH
+         wMBz1RhEMjPlP1LNizG6v5sJ8yQE3k3NpBjp5acbZnVDDaGI3HYjW+DHjalTZIP8/RLV
+         jgaNhk9wBbLOVfACzM6BEf6NqKcMa+6FtV1BSbOPF0HGqod8VNi6AgnfhVueqr3b4Ofh
+         oswcNQdU6MK2LvFtmfgKAiwBzvrK0660Tusp32lfQX6sfsjvFAcUL5NQng1b7BT2z2Gq
+         c0AQZxD6+yYRpiD+4WFPCyMGAe/XqxbeS/rdw87GAbtFXRP+kyuqOqnLoEN2oEkoAugn
+         3E9g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@google.com header.s=20161025 header.b=emQqRC0V;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=google.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id t11-v6si1264611plq.280.2018.11.07.09.49.22;
+        Wed, 07 Nov 2018 09:49:38 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S2387668AbeKHDUd (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:20:33 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42931 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728161AbeKHDUd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:20:33 -0500
+Received: by mail-pl1-f194.google.com with SMTP id t6-v6so8186827plo.9
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 09:49:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PIFLZL5b1Tl6mFxyEsZDWQUuh+4alBjnBASE2IvM76o=;
+        b=emQqRC0VR2fJIspzzrRyU7XiRfQNG9X0jYb7yZzkgGRiBU7JGlErcSHbTtT6L5hFpH
+         Eo4rlA6jvAEu7B6nXgwqmPmvObZ6gV/w1608/H3kMQkELHadOP7ilu254LtFzRX1rNkk
+         EmoZbeK51nl9fFfI39d50N9cAI0UgpPMISkR2Q20sQfyLC1KmYS5Op3ia2w2AOaumfXt
+         zFQ67mmEc7fjZvQcmZ1diiG/7HK2GvAsM/0Xo4DJeoKOvbsOAWlIJG/jBX3rMTIU0DAj
+         QrtKibbV2xjrRQWu+Nm9ZkAR/Qn4bIdfgwoDq4IUATiRZe58b1xhmcNIQVUfHZUSEey6
+         ZJTQ==
+X-Received: by 2002:a17:902:1347:: with SMTP id r7-v6mr1149358ple.238.1541612946112;
+ Wed, 07 Nov 2018 09:49:06 -0800 (PST)
+MIME-Version: 1.0
+References: <20181101005724.9622-1-natechancellor@gmail.com>
+ <68ae935a-aec3-915c-bfe6-d69bfb93d702@xilinx.com> <20181107085503.GA31517@flashbox>
+ <9d52cd84-440f-9a40-d0ec-1397abb24c98@xilinx.com>
+In-Reply-To: <9d52cd84-440f-9a40-d0ec-1397abb24c98@xilinx.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
+Date: Wed, 7 Nov 2018 09:48:54 -0800
+Message-ID: <CAKwvOdmkC1LqMokhQUebpEZRoWWWwtQnbm8xGwiwdBy9UOMT5Q@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: zynq: Use define directive for PIN_CONFIG_IO_STANDARD
+To: michal.simek@xilinx.com
+Cc: Nathan Chancellor <natechancellor@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCXbjqzJeNberMYAA--.68S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr18Cr4UAF1rtw1DWF1UAwb_yoW8Zr4fpF
+	WUJF1vkFWkJr15AFZFyw1kKFyYyws7G3yjkF1UJw17JFnxZry8Wr15Kr4Y9ryqgr4Yqr4j
+	qw10va47GF17J3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPSb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcV
+	AKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY
+	02Avz4vEIxC_GwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCY
+	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U54pB3UUUUU==
+
+On Wed, Nov 7, 2018 at 1:01 AM Michal Simek <michal.simek@xilinx.com> wrote:
+>
+> On 07. 11. 18 9:55, Nathan Chancellor wrote:
+> > On Wed, Nov 07, 2018 at 09:46:12AM +0100, Michal Simek wrote:
+> >> On 01. 11. 18 1:57, Nathan Chancellor wrote:
+> >>> Clang warns when one enumerated type is implicitly converted to another:
+> >>>
+> >>> drivers/pinctrl/pinctrl-zynq.c:985:18: warning: implicit conversion from
+> >>> enumeration type 'enum zynq_pin_config_param' to different enumeration
+> >>> type 'enum pin_config_param' [-Wenum-conversion]
+> >>>         {"io-standard", PIN_CONFIG_IOSTANDARD, zynq_iostd_lvcmos18},
+> >>>         ~               ^~~~~~~~~~~~~~~~~~~~~
+> >>> drivers/pinctrl/pinctrl-zynq.c:990:16: warning: implicit conversion from
+> >>> enumeration type 'enum zynq_pin_config_param' to different enumeration
+> >>> type 'enum pin_config_param' [-Wenum-conversion]
+> >>>         = { PCONFDUMP(PIN_CONFIG_IOSTANDARD, "IO-standard", NULL, true),
+> >>>             ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >>> ./include/linux/pinctrl/pinconf-generic.h:163:11: note: expanded from
+> >>> macro 'PCONFDUMP'
+> >>>         .param = a, .display = b, .format = c, .has_arg = d     \
+> >>>                  ^
+> >>> 2 warnings generated.
+> >>
+> >> This is interesting. I have never tried to use llvm for building the
+> >> kernel. Do you have any description how this can be done?
+> >>
+> >
+> > Depending on what version of Clang you have access to, it is usually just as
+> > simple as running 'make ARCH=arm CC=clang CROSS_COMPILE=arm-linux-gnueabi-'.
+> >
+> > Clang 7.0+ is recommended but 6.0 might work too.
+>
+> TBH I would expect to download container and run this there to make sure
+> that I don't break anything else.
+
+This is the first request we've had for a container in order to test a
+patch.  If it comes up again from other folks, I think it makes sense
+to create one.  Until then, its nice to have.  It's definitely
+overkill for this patch.
+
+-- 
+Thanks,
+~Nick Desaulniers

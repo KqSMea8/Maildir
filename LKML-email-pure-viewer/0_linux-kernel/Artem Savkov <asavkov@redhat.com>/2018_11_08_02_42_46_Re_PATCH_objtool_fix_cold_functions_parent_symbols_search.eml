@@ -1,0 +1,188 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:42 -0000
+Received: from icoremail.net (unknown [209.85.215.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3__tBMuNbifxZAQ--.27176S3;
+	Thu, 08 Nov 2018 02:43:14 +0800 (CST)
+Received: from mail-pg1-f176.google.com (unknown [209.85.215.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3Uz8+MuNbwOAYAA--.297S3;
+	Thu, 08 Nov 2018 02:43:10 +0800 (CST)
+Received: by mail-pg1-f176.google.com with SMTP id 32-v6so7689731pgu.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:43:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=I50WRanm2l9fdkvfUMCkwoM4MahFuAfDiAPrm4i0vhQ=;
+        b=SIYuwP3t4XwFF0cdu+TLA+HMi341mGpKWIiLl4wvv4RhZpNojE+n/rREvtZ4Fv1wne
+         nDM5fWDflbfB7VugTQeLuUA85IDQ3u0G/GfzGnIxMpVWKrt6HKvbl3iTJY4+iuMHRAdM
+         iUeFo8skeMZdgUaVk2tAc67b9Whue+1W3tLiGt/fWKNEdTE3wc/K7a4N+iY5G9+zZHK2
+         z4lWVjPDYH55aSQace0YKvMSSgHDYcDp7qTuxQ7xeXKmkbHaZyH28z1vas1Coj9qWMIq
+         XEmJpOj8XU5ViHByU3+T4usZl0aaXDeHQAj5zu61cpDugCOA30xPt0Ff1UWRdzZPXXzP
+         oZuQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+X-Gm-Message-State: AGRZ1gKIci18OdhzXxu18HQBWsy8q/PEPB8/0hLpVStKCk/8C54kaucf
+	LR5g0k5D3+zW3XM3nEDCb22lpSBkJRu/s1kOJDIqVv24CB/oxZkKtg==
+X-Received: by 2002:a65:64d5:: with SMTP id t21-v6mr1165675pgv.428.1541616190335;
+        Wed, 07 Nov 2018 10:43:10 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5601043pjt;
+        Wed, 7 Nov 2018 10:43:09 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dn/8btVJj62k94UbudDVR0Q78JNZv8yIeBXB4R5b79ydLi/yHp5nVzhqYrMeq61ySTzIT9
+X-Received: by 2002:a17:902:8214:: with SMTP id x20-v6mr1302538pln.224.1541616189242;
+        Wed, 07 Nov 2018 10:43:09 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541616189; cv=none;
+        d=google.com; s=arc-20160816;
+        b=JPKHeJQkd478aflSaraDgS+/SRWg7yhoDVs3EEq0KGs5RlcQpMBuf9TBpPBDIMMT36
+         ighoXEkhTp42CC4x6OAu8aApHlzLlUJy4PSA37RcQXhkmB3Z/3+aG+Oxca/8yEkM5cgc
+         GkDqrHHjZ1jh80rLYskq4YBDj9oxfZl0be4bUefr7VyRyHavNmpK1bW3x3ORv5++V3UR
+         ENV3Keo577UZFh/NfgT+saUTXbmR5j17RsK+vh+mljPyaMe81cFoHCqARpQdAn279EEj
+         kLO/pcZ0ObswTB1N22nOndJtm/HyVAxkF8DwQS20Q/b7oTtRyhOdVNr6EQKZeZdJPn1Q
+         tdUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=I50WRanm2l9fdkvfUMCkwoM4MahFuAfDiAPrm4i0vhQ=;
+        b=0V+hFOmWILoH4CXr5AuKlrl3wiV+0OM57u7CDwq/K3+wRrp8cmuBJ7tpulpR6J24dt
+         rBty1uy1hEel2DowxqGY3QZBl9ATAKs1FmTc4fr2RTyhbHKk76mf5eyNAkd22FMkmscD
+         4mn2VUARb0Q4vY33dAVpXsuTqJ10L6V2GnwKj/982qRfLDKtO+cqvZR94yOUoTDDIcmZ
+         uD5AO6D4cBlX//KDjTx9hilmC6YDnrN91I277jgXVZtUf1E5SRs8RRmQUZhO3lgOq59Q
+         vow7/Sm9kuf4Wd/jSNHTeEUVsQMyYsHOrFhmvjNmvZ5NCoojfoExTTb91wMCQBf9BW1m
+         djPw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id t75-v6si1438282pfi.221.2018.11.07.10.42.52;
+        Wed, 07 Nov 2018 10:43:09 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728923AbeKHEOY (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:14:24 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:49964 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726915AbeKHEOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:14:24 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 97D063001DCC;
+        Wed,  7 Nov 2018 18:42:47 +0000 (UTC)
+Received: from shodan.usersys.redhat.com (unknown [10.43.17.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5F12F5D6A6;
+        Wed,  7 Nov 2018 18:42:47 +0000 (UTC)
+Received: by shodan.usersys.redhat.com (Postfix, from userid 1000)
+        id B1BF42C1A13; Wed,  7 Nov 2018 19:42:46 +0100 (CET)
+Date: Wed, 7 Nov 2018 19:42:46 +0100
+From: Artem Savkov <asavkov@redhat.com>
+To: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] objtool: fix .cold. functions parent symbols search
+Message-ID: <20181107184246.GC11183@shodan.usersys.redhat.com>
+References: <20181107140559.28504-1-asavkov@redhat.com>
+ <20181107170856.usgyzckfirem5qh7@treble>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20181107170856.usgyzckfirem5qh7@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 07 Nov 2018 18:42:47 +0000 (UTC)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3Uz8+MuNbwOAYAA--.297S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr47Kw15Cr17Cry8uw4kZwb_yoW8Kw4Dpr
+	WYkF9rCr48Xry5C3W8tF1kKry3WwsrXr47Grn8tay8Za1qqrn2gFZ7Kr1Ykas7trW293WF
+	qFW09FZ3uF1qyaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBvb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwCjxxvEa2IrMx
+	kF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6rylc2Ij
+	II80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7Cj
+	xVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72
+	vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
+	CF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bb_M3UUUUU=
+
+On Wed, Nov 07, 2018 at 11:08:56AM -0600, Josh Poimboeuf wrote:
+> On Wed, Nov 07, 2018 at 03:05:59PM +0100, Artem Savkov wrote:
+> > The way it is currently done it is possible for read_symbols() to find the
+> > same symbol as parent for ".cold" functions.
+> 
+> I seem to remember having this discussion for kpatch-build, but I forget
+> the details.  Can you explain how this can happen (and also add that
+> detail to the commit message)?
+
+find_symbol_by_name() traverses the same lists as read_symbols and when
+we change sym->name in place without copying it it changes in the list
+as well. So if child function is before parent in sec->symbol_list the
+same function will be returned as "parent". It is hard for me to put it
+into words worthy to be included into commit message.
+
+> I haven't seen any bug reports, is it purely theoretical?
+
+No, 4.20-rc1 (actually anything after 4a60aa05a063 "objtool: Support
+per-function rodata sections", before that add_switch_table() doesn't
+seem to be called for those .cold. funcs) fails to build for mewith
+KCFLAGS="-ffunction-sections -fdata-sections" because objtool is
+segfaulting.
+
+> > This leads to a bunch of
+> > complications such as func length being set to 0 and a segfault in
+> > add_switch_table(). Fix by copying the search string instead of modifying
+> > it in place.
+> > 
+> > Signed-off-by: Artem Savkov <asavkov@redhat.com>
+> > ---
+> >  tools/objtool/elf.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+> > index 6dbb9fae0f9d..781c8afb29b9 100644
+> > --- a/tools/objtool/elf.c
+> > +++ b/tools/objtool/elf.c
+> > @@ -298,6 +298,7 @@ static int read_symbols(struct elf *elf)
+> >  	/* Create parent/child links for any cold subfunctions */
+> >  	list_for_each_entry(sec, &elf->sections, list) {
+> >  		list_for_each_entry(sym, &sec->symbol_list, list) {
+> > +			char *pname;
+> >  			if (sym->type != STT_FUNC)
+> >  				continue;
+> >  			sym->pfunc = sym->cfunc = sym;
+> > @@ -305,9 +306,9 @@ static int read_symbols(struct elf *elf)
+> >  			if (!coldstr)
+> >  				continue;
+> >  
+> > -			coldstr[0] = '\0';
+> > -			pfunc = find_symbol_by_name(elf, sym->name);
+> > -			coldstr[0] = '.';
+> > +			pname = strndup(sym->name, coldstr - sym->name);
+> > +			pfunc = find_symbol_by_name(elf, pname);
+> > +			free(pname);
+> >  
+> >  			if (!pfunc) {
+> >  				WARN("%s(): can't find parent function",
+> > -- 
+> > 2.17.2
+> > 
+> 
+> -- 
+> Josh
+
+-- 
+Regards,
+  Artem

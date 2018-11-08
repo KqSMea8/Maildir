@@ -1,0 +1,148 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:11 -0000
+Received: from icoremail.net (unknown [209.85.215.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXvwq4cONbRmRbAQ--.27544S3;
+	Thu, 08 Nov 2018 07:09:45 +0800 (CST)
+Received: from mail-pg1-f176.google.com (unknown [209.85.215.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXN0O3cONbva4ZAA--.2444S3;
+	Thu, 08 Nov 2018 07:09:43 +0800 (CST)
+Received: by mail-pg1-f176.google.com with SMTP id z10so6084277pgp.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 15:09:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:in-reply-to:references:sender:precedence:list-id;
+        bh=a54bpJWkTONWX4xBh3sap+Bcri1qS8QIiPLNgbLvU28=;
+        b=kgmcZp/d1obh54xpoYq4e8k0meQdHdMyFTd+421qHlPRGkWZejpKLQl4zNwtJqZLry
+         MozSMaBI1IrzgQ2MhzUQkmU9Tt1hLPe3fO3x8M2hNKe114M9r2Jf03JD/XB9teV35ZI/
+         4sYPzUSWwDrkqTV7M4IcKmIXv678FuzhTq/kRBL5d+ad7nH4N20xVyQ6CWfvmw53jXEL
+         g7xFwp9pSXHFwejb0I/lQ1dXhTVKrzm1uUI2hmL+BRjSKvbMKfVj5tpnVfXBojnkwaki
+         oaZMbMZQUWV9UWaKrwm8jZ/m43Stwembr097py1REuroee3Bsc8c+LkdUbVafDoRGcvi
+         vqXA==
+X-Gm-Message-State: AGRZ1gKWkFZ1tmagz2FtAGyD/KY+AyjWITES8u0KlM2Tc23gFgR0sn1j
+	HccH/CcJItlgKXbXKaRZ8fq9eedIz6QtrTRvJxv9gITDr97G/lqVZA==
+X-Received: by 2002:a63:3c44:: with SMTP id i4mr1874626pgn.286.1541632183512;
+        Wed, 07 Nov 2018 15:09:43 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp111206pjt;
+        Wed, 7 Nov 2018 15:09:42 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f75/YPl/pwa8A8gYDMfWhxBC/midQsfi5WYpYscfpP5O6gu96qbOEapR/vcd2saMgsX2mO
+X-Received: by 2002:a65:530c:: with SMTP id m12mr1864404pgq.224.1541632182663;
+        Wed, 07 Nov 2018 15:09:42 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541632182; cv=none;
+        d=google.com; s=arc-20160816;
+        b=hhxxW2yW/mOxx8rrCSYHLQq6K1tHR+FsDtHv5CPCzGrtE5JNX7nYyHezFX0GhJsSyb
+         kSrSZUfQYrJmXScWWpTU/JMRDdzr8y/WC2zHbiSwiNXN8vpYNvJGj3z1xLvAY66uUgsw
+         QbNR+viMa+yRnBre7h7esKN++4GIGxi1fyyfM1arswlJHjRuDWebf9wpHD4bwme/hIBN
+         +1cGnM+vPHvuVr/stjvYEk10+eCD5EIS0I7NxubaXO0hB07O/Mnz9VPIo3D9d/EGNt+5
+         Y6jZhP0mGpzgbiaKMX68daop485Nv2thdA6OSUOfT09lhbagaT4AVtJ3nmaSEZ2v3Gpo
+         jWQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from:dkim-signature;
+        bh=a54bpJWkTONWX4xBh3sap+Bcri1qS8QIiPLNgbLvU28=;
+        b=e/rDU30REmqfBBBvaFSUAWHMbIqxxQzPdeFDG5AfuuxxRPD3xnze+QC80oj1u7VVBi
+         qh2QBq5ETpn1PPbWp33MTCAyZiKKRWtCyhkMrkI+LuzIKp9ozNXxfyJ/nkcIsOks0bjY
+         mqO78iViqhOFUQhkuhi7ejrzpzRUugdP2/1BwCJiM0VHyyvpe9vrpiiM7XMeUpkEq/Q5
+         B+/pGtWvmc+Ln+snrxQAOEMQKA0uLBAVDdd6JDAR4GmrhJ5rQCDxvn3WqSKu3J1Rams3
+         kvbdwPryclDtf/bb8BFxQfBM4wTmhfSEEpCLnnP5wSW1Js/BQqjV0CBUuMLOryUQ8F7q
+         s6cQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@linaro.org header.s=google header.b="AwZL/D5d";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=linaro.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id a28si2016335pgl.530.2018.11.07.15.09.27;
+        Wed, 07 Nov 2018 15:09:42 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728341AbeKHIld (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:41:33 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35976 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727374AbeKHIld (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:41:33 -0500
+Received: by mail-pf1-f194.google.com with SMTP id d13-v6so1201320pfo.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 15:08:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=a54bpJWkTONWX4xBh3sap+Bcri1qS8QIiPLNgbLvU28=;
+        b=AwZL/D5dLy8phDigaMDGifD0erJIZ1zZs17j10a1S2Wl9x2zrDCMOxv9zAtFQhLSIV
+         bk6jqEYxmJY7WT8BWaw/e51xYAo9YqgAlauZFLAPZdLTqieu3i4LXT1XxRZNBEqSeMkb
+         EqSbDShuUBvk9T8TybIQXX2uDXWRvzyiks4dk=
+X-Received: by 2002:a62:8208:: with SMTP id w8-v6mr2219657pfd.150.1541632137587;
+        Wed, 07 Nov 2018 15:08:57 -0800 (PST)
+Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id e70-v6sm1802034pfb.113.2018.11.07.15.08.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 07 Nov 2018 15:08:56 -0800 (PST)
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: linux-arm-kernel@lists.infradead.org
+Cc: alexander.shishkin@linux.intel.com, leo.yan@linaro.org,
+        suzuki.poulose@arm.com, coresight@lists.linaro.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/4] coresight: etf: Release CLAIM tag after disabling the HW
+Date: Wed,  7 Nov 2018 16:08:50 -0700
+Message-Id: <1541632132-1252-3-git-send-email-mathieu.poirier@linaro.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1541632132-1252-1-git-send-email-mathieu.poirier@linaro.org>
+References: <1541632132-1252-1-git-send-email-mathieu.poirier@linaro.org>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXN0O3cONbva4ZAA--.2444S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw1DZF43uFW3XFW8AFWUJwb_yoWktFb_Aw
+	1vqrZru348Gr9IkFnrGrWfJFn8CF4v9Fs8XFW8trWSqr9rZw4Fvr18KrZFva95uw18tFZ5
+	Ga4DCFn5ZrsFkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbqxYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_uwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IU5vF
+	AJUUUUU==
+
+This patch rectifies the sequence of events in function
+tmc_etb_disable_hw() by disabling the HW first and then releasing the
+CLAIM tag.  Otherwise we could be corrupting the configuration done by an
+external agent that would have claimed the device after we have released
+it.
+
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ drivers/hwtracing/coresight/coresight-tmc-etf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+index 5864ac55e275..a5f053f2db2c 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+@@ -86,8 +86,8 @@ static void __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+ 
+ static void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+ {
+-	coresight_disclaim_device(drvdata->base);
+ 	__tmc_etb_disable_hw(drvdata);
++	coresight_disclaim_device(drvdata->base);
+ }
+ 
+ static void __tmc_etf_enable_hw(struct tmc_drvdata *drvdata)
+-- 
+2.7.4

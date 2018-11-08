@@ -1,0 +1,194 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:04 -0000
+Received: from icoremail.net (unknown [209.85.215.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_6djG+NbzWBZAQ--.26935S3;
+	Thu, 08 Nov 2018 01:05:40 +0800 (CST)
+Received: from mail-pg1-f177.google.com (unknown [209.85.215.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnyERdG+Nb5nQYAA--.450S3;
+	Thu, 08 Nov 2018 01:05:33 +0800 (CST)
+Received: by mail-pg1-f177.google.com with SMTP id n10-v6so7556780pgv.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:05:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc
+         :references:in-reply-to:subject:date:message-id:mime-version
+         :content-transfer-encoding:content-language:thread-index:sender
+         :precedence:list-id;
+        bh=tu8Ssuiu+NXtVJdalQqYTtsZninnOPWtYWp2jzzAJls=;
+        b=ZXQhez4mMw1I+3HG9gQTBF6L74n/jqSIZTD/OLepn4+U0UmiwigkWx0VKbycf4N86v
+         YDeZoQEf9vsSZziKxfEw5KGhBF/orGPEzZ1s6jMv3uiD8q+dietR3ofnFAsYf2Vgko7A
+         3Bchixxj87J6LBUJ8dkuZlMUz1PfzDoKhy/u/ciXx8tbuN5uHwVlHMpRBHO6+9sTXeiT
+         2vYdwc25YlddEtPbUq5Izuh7LtJj62chBREMOaw47FBg9+cJ/3IJbcZ1U9n9/2gii8+x
+         0jrr3ZvKi+D4cZiJCW4dcYvyblfLlMbBn+0fJcc1HsNdAE557gFGbFHZi18Z3HoxA623
+         jWbw==
+X-Gm-Message-State: AGRZ1gJ3lv3pog8o+U8MtMkxKDBocelvMQMaHKdwCPZQmexy03gkg21u
+	wMvieIPbuOVSS/dkE2CrtRjCEh5rOX4873NIqvFAI77F3CyfRI//pQ==
+X-Received: by 2002:aa7:8498:: with SMTP id u24-v6mr994811pfn.220.1541610333337;
+        Wed, 07 Nov 2018 09:05:33 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5491173pjt;
+        Wed, 7 Nov 2018 09:05:32 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dd4mxkyhfMzw/LJCncmA6WA6NR3HT4HrdcGZN1FZRIike1EsP4cAEfnnv2f51IeW1M4qmT
+X-Received: by 2002:a17:902:6909:: with SMTP id j9-v6mr952502plk.221.1541610332369;
+        Wed, 07 Nov 2018 09:05:32 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610332; cv=none;
+        d=google.com; s=arc-20160816;
+        b=HUNVC0gw0ePOajIvO9naTq3SRZfd3JPUlvMN7elTCl/zGbY8WpOWiwYEuUWnqKlqBC
+         fl1bkihRbvUb0WLrdM3MoPhtUctWCTi+FhlXi7Fk6KsiB1gCnFuhMCddqC1vRqZcsiv9
+         xjNQnLRMckjo0hHhnifY8yQyvrbWYEmj/2GxLA0KpXSsIzsPSo7i4i6830EJknBRuPv4
+         yz+1V1hw8rsGnmbP7vzQOskLWGIu8JgwI1Iov3c/K+oTIzG2qyDzQBeDsHSR9tQO78hA
+         DsPhIjOqyJwVrNwCzBRE+mwI5QM7k8QP1+3AfZzkO48BU9DEbAQXzGYbbYy+bC9KXu4R
+         XoXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:thread-index:content-language
+         :content-transfer-encoding:mime-version:message-id:date:subject
+         :in-reply-to:references:cc:to:from:dkim-signature;
+        bh=tu8Ssuiu+NXtVJdalQqYTtsZninnOPWtYWp2jzzAJls=;
+        b=r5LoX0IIBFilsl/nb8gSLqU17vtE49aWto3u2XhCORXcRvN/KI/L9uOfElTxkWLKhM
+         S0lBjQBPv3Ja1q9MjR53w5zhayyn1hTKaZejyexRQyXtJsBZqQc08SNltoRrRhVWDwOO
+         TbiuE9wwFbnwMIwFuGWEcQvNdqqqOEbNQjuoe6T+L65gAUqn1/9j9giiHHyuUI1eJYjg
+         azPj5bbRrrqmYLrOH4Xtkev/Y6wd3beJbHDZT/jHk0MKpd3u+E6820SAsbO80oJeVYzd
+         M/UlGyme7ViOiZ1o8Hn7BcUjpMhlssA1yUXlIPTTorzUZjWVk/+cOCB0RT2CSBSZNyhV
+         kXVg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass (test mode) header.i=@telus.net header.s=neo header.b=QwlXSaGP;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=telus.net
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id l65si1183528pfj.230.2018.11.07.09.05.13;
+        Wed, 07 Nov 2018 09:05:32 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731652AbeKHCfg (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:35:36 -0500
+Received: from cmta20.telus.net ([209.171.16.93]:57463 "EHLO cmta20.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731007AbeKHCfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:35:36 -0500
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id KRFWgjkwOVltLKRFXgPdv6; Wed, 07 Nov 2018 10:04:21 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1541610261; bh=tu8Ssuiu+NXtVJdalQqYTtsZninnOPWtYWp2jzzAJls=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=QwlXSaGPWUwC2RTU+0Qdo/0DOiFy5t2Vj5j64ZujMtN0BXMCccUW2gYUEHrRVyhYe
+         TvANYkZ58Q1zn4OFbBTmrGWsmQ2fz1OU4MSxPOmT4b7M9q+EgN7O6pk2uundnXR9Lr
+         Eiafc2NHxu31KJcDJeAdp80/BF1FGlLrh+JOvLF/OkRierAz5ODYb7AF4zgfl/siel
+         f1Bunsj/jTu8iGD+HZVv4GA17Bd29PHpO9YpCq0ZRFwgL8uYpFv4TMhLbz9BQGibDp
+         xm7h7zKkcD7UQ3oewo1v96StZcaaXf/Spila4CjtMKLuAuXoz69McBquRa8UAGi60I
+         C7MDhsSqAUMzg==
+X-Authority-Analysis: v=2.3 cv=d60kNirE c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=kj9zAlcOel0A:10 a=gu6fZOg2AAAA:8
+ a=FGbulvE0AAAA:8 a=iN15FHMp_3KkhuB6-PYA:9 a=CjuIK1q_8ugA:10 a=5JIPC4SmUL4A:10
+ a=eM4ghy-HDjkA:10 a=-FEs8UIgK8oA:10 a=NWVoK91CQyQA:10
+ a=2RSlZUUhi9gRBrsHwhhZ:22 a=svzTaB3SJmTkU8mK-ULk:22
+From: "Doug Smythies" <dsmythies@telus.net>
+To: "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>
+Cc: "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Frederic Weisbecker'" <frederic@kernel.org>,
+        "'Mel Gorman'" <mgorman@suse.de>,
+        "'Daniel Lezcano'" <daniel.lezcano@linaro.org>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>,
+        "Doug Smythies" <dsmythies@telus.net>
+References: JLIjge0NMDhAwJLIogChPj
+In-Reply-To: JLIjge0NMDhAwJLIogChPj
+Subject: RE: [RFC/RFT][PATCH v3] cpuidle: New timer events oriented governor for tickless systems
+Date: Wed, 7 Nov 2018 09:04:12 -0800
+Message-ID: <000001d476bb$ec964520$c5c2cf60$@net>
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdR0W8vD4oREAbGoTFqO9uyL0vrNhgCWrS2w
+X-CMAE-Envelope: MS4wfMmcUveOHpGm1O0kPJ+EksIg6JNnfGtP4RqcTo8c4uYY2UjxxlPANPjqXfMZ+5PAQfwrEwa094cj881h/E0qVzX1ZkSA1FUlYtDotesnj70hgKzDvpos
+ 0F7rCFA10/Ab6aj2u+gwr0+1jLh4DWWiH7UaXslqh+DJo2zQCwqidyEIfnhxiOlLEmvuZnuCd1S32a7mKBvcA4cxUmf+tP79SyfMVvatq7pFPXE7GBkOtni4
+ X68gND87jIWruOkVAEH9jx4sleiNYeR6oHFD5wZzMiXcRTGs0/9OJoxWnuwdWYh6FZ6raXohhGDI8arjkA2xjh8ZqOxL6l/oZH4zaX2xYtlQ+Rvzw1+/9BsO
+ oi+QF4Q3NK9WLzme0ML73kxVc5h1yKehg6jknfNUW2id0XWsVrSNJ9LmgLBu/yklrkM0teb6pdrj1ICGjDeU5DGEKlJ5+T9K+nCQrCyz9g2+b2QeatrDR6KB
+ YkGKI32V1mj/NVJh
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnyERdG+Nb5nQYAA--.450S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7ur13JF17Gr1DAry8XFyrWFg_yoW8trWfpF
+	WUXF1UKws8JFy8Cw1xKw45XwnYqrZ3t3WUur93ur90yry3Gr9F9F97KrWruay7WrZ5C3W7
+	AF10vF1xGayUZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
+	Ij64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc2xSY4AK6IIF6r4lc2IjII80
+	xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMxvI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26F4j6r4UJwCYIxAIcVC2z280aVCY1x0267AK
+	xVW8JVW8Jr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804x
+	Wl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8V
+	AvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUPT5lDUUUU
+
+On 2018.11.04 08:31 Rafael J. Wysocki wrote:
+
+> v2 -> v3:
+> * Simplify the pattern detection code and make it return a value
+>	lower than the time to the closest timer if the majority of recent
+>	idle intervals are below it regardless of their variance (that should
+>	cause it to be slightly more aggressive).
+> * Do not count wakeups from state 0 due to the time limit in poll_idle()
+>    as non-timer.
+>
+> Note: I will be mostly offline tomorrow, so this goes slightly early.
+> I have tested it only very lightly, but it is not so much different from
+> the previous one.
+> 
+> It requires the same additional patches to apply as the previous one too.
+
+Even though this v3 has now been superseded by v4, I completed some test
+work in progress for v3 anyhow.
+
+The main reason to complete the work, and write up, was because, and for my
+own interest as much as anything, I wanted to specifically test for the
+influence of running trace on the system under test.
+Reference: https://marc.info/?l=linux-kernel&m=154145580925439&w=2
+
+The Phoronix dbench test was run under the option to run all
+the tests, instead of just one number of clients. This was done
+with a reference/baseline kernel of 4.20-rc1, and also with this
+TEO version 3 patch. The tests were also repeated with trace
+enabled for 5000 seconds. Idle information and processor
+package power were sampled once per minute in all test runs.
+
+The results are:
+http://fast.smythies.com/linux-pm/k420/k420-dbench-teo3.htm
+http://fast.smythies.com/linux-pm/k420/histo_compare.htm
+
+Conclusion: trace has negligible effect, until the system gets
+severely overloaded.
+
+There are some odd long idle durations with TEOv3 for idle
+states 1, 2, and 3 that I'll watch for with v4 testing.
+
+Other information:
+Processor: Intel(R) Core(TM) i7-2600K CPU @ 3.40GHz
+The kernels were 1000 Hz.
+Idle latency/residency info:
+STATE: state0   DESC: CPUIDLE CORE POLL IDLE    NAME: POLL      LATENCY: 0      RESIDENCY: 0
+STATE: state1   DESC: MWAIT 0x00        NAME: C1        LATENCY: 2      RESIDENCY: 2
+STATE: state2   DESC: MWAIT 0x01        NAME: C1E       LATENCY: 10     RESIDENCY: 20
+STATE: state3   DESC: MWAIT 0x10        NAME: C3        LATENCY: 80     RESIDENCY: 211
+STATE: state4   DESC: MWAIT 0x20        NAME: C6        LATENCY: 104    RESIDENCY: 345
+
+... Doug
+ 

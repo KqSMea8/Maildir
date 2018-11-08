@@ -1,0 +1,163 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:23 -0000
+Received: from icoremail.net (unknown [209.85.210.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn31zfTONbQ49aAQ--.27370S3;
+	Thu, 08 Nov 2018 04:36:48 +0800 (CST)
+Received: from mail-pf1-f181.google.com (unknown [209.85.210.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBnTUnbTONb2zcZAA--.958S3;
+	Thu, 08 Nov 2018 04:36:43 +0800 (CST)
+Received: by mail-pf1-f181.google.com with SMTP id d13-v6so1035593pfo.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:36:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=UQqIK9I6IQwn6HTxr9A7OedHTnU4tG76lWFSpzRPvaM=;
+        b=neJm9MPmADtAAtYmlCeN8TQ8G8SoyJOuQ6ytNY50eB5SIXhkLahlm38/ihqzDtW4bU
+         v2dUTiBlnqq9pX8kjF179eVggxqLprRbIm95+Xye2sRynG2IiS/8e6gIip1dw1LfSBwN
+         goDosJG05snRkzKKuMdYo+6jrZ4Wv120yMOBUvIik9aB/7uH7GvIDu3RYiSHyLEaSgJe
+         K4fiAQ47elp7vCJJ9oU7xj0UlkPclwwWTJOvM/ZKO7BjHwhZBUjq7lZ3zXmDlymxEvAD
+         2Ky+ItINhRpFl2VO1ru4FfjcMSkXhJUXJ4P9PY1xp3OMwcBLpPOBLv79Ko4miJfQMS3M
+         q5gg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIt3BeyQS/YdJNAEItQ32yNa7/ZZe1BTcGurJUzTtGwtup1CsaE
+	uR8vUB38ZhVsa8htBYnWejsbelZGHqwmxudsLfTCbc/gAQncvFd0JA==
+X-Received: by 2002:a62:3687:: with SMTP id d129-v6mr1796823pfa.56.1541623003326;
+        Wed, 07 Nov 2018 12:36:43 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5716050pjt;
+        Wed, 7 Nov 2018 12:36:42 -0800 (PST)
+X-Google-Smtp-Source: AJdET5clUtRDKeiyCucKTMkLS9gMrUIMgfoyE+VsvLIiKFOcyiSACmuSWXW2AEnsJ+5F6bBrT5ID
+X-Received: by 2002:a63:b81a:: with SMTP id p26mr1487372pge.433.1541623002600;
+        Wed, 07 Nov 2018 12:36:42 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541623002; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Sa825jmIwz2l6nA5WB0ydJPGkPrlowlxYt3po1IAKqvbr2x0AiFhYLNXwP7BWytOvk
+         TcP9cn8yTwPZMMkz5RO6StS6D7Px3rmOAJUuBMTWwOAMmffyiASkTWKWmxEpLTkFIS3i
+         dRXvijPQCJrbiHyryBZkfUWT2Ruq6N16R8INAbhGbN2fqdiE+BVHQG6jX0Wjr8qFmDGo
+         rmFpLMQwdRLw07U1XuCyIyWNTHnDm9tc7L2jBjJ8BEcziTTct4WJ+lV5FGj6AS1lRo58
+         yjdZkMU/2FHZ9y7Cref8f+UO0zm6NuHoXa2ZxKE6Bi+G1AiMI+WQ4MbqOFY5EIpsD6qp
+         AWow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=UQqIK9I6IQwn6HTxr9A7OedHTnU4tG76lWFSpzRPvaM=;
+        b=LXecRkbxvyrSfFblAqen3fjxAirNBqoYl2ZG1EQriwmMs0t44uo2N3+c+HckOCpU/0
+         Tx83mKGY1cMv6S5t8jPbgzZDgs0aFe6+2MvhQ/KLe7gEEo6u1Gvx/tR64DJMCTN6aJ10
+         xD3RQP57GVW2ReHUvxgbsP4H2jxElAg3jGBaKUEOhxPzMqxWMy9SyC9N9c1s1cfrlVS9
+         hISy3lRq7Zr69kEQItSAZzTvzEFerT/Xwli5lIxHMkDwiBi7VmAMy1UegOQpSX9PCkak
+         zSQn5s6yiG9Mb5uyah6K9pHSwaCVjCFXu9G9uyVHCFFMqe1MwE+qJe+nQDrSDwR8ZWtl
+         OiOA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id j189si1485883pgd.185.2018.11.07.12.36.25;
+        Wed, 07 Nov 2018 12:36:42 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726932AbeKHGIM (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:08:12 -0500
+Received: from mail.bootlin.com ([62.4.15.54]:44597 "EHLO mail.bootlin.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726517AbeKHGIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:08:11 -0500
+Received: by mail.bootlin.com (Postfix, from userid 110)
+        id A91A2207B8; Wed,  7 Nov 2018 21:36:08 +0100 (CET)
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail.bootlin.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=5.0 tests=ALL_TRUSTED,SHORTCIRCUIT
+        shortcircuit=ham autolearn=disabled version=3.4.2
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.bootlin.com (Postfix) with ESMTPSA id 768D020712;
+        Wed,  7 Nov 2018 21:36:08 +0100 (CET)
+Date: Wed, 7 Nov 2018 21:36:08 +0100
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-sunxi@googlegroups.com,
+        Loic Poulain <loic.poulain@gmail.com>,
+        linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/15] Bluetooth: hci_bcm: Add BCM20702A1 variant
+Message-ID: <20181107203608.ff32gmb4u54kcvep@flea>
+References: <20181107101308.7626-1-wens@csie.org>
+ <20181107101308.7626-12-wens@csie.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mf6se6s5b6tdxb5f"
+Content-Disposition: inline
+In-Reply-To: <20181107101308.7626-12-wens@csie.org>
+User-Agent: NeoMutt/20180716
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBnTUnbTONb2zcZAA--.958S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUOL7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWlnx0Ee4C267I2x7xF54xIwI0E7I0Y6sxI4wAS0I0E0xvYzxvE52x082IY62kv0487
+	M2AExVA0xI801c8C04v7Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxV
+	WUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAK
+	I48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02
+	Avz4vEIxC_AwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIx
+	AIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0E
+	Y4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+	0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07
+	jJVysUUUUU=
+
+
+--mf6se6s5b6tdxb5f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+On Wed, Nov 07, 2018 at 06:13:04PM +0800, Chen-Yu Tsai wrote:
+> From: Maxime Ripard <maxime.ripard@free-electrons.com>
+>=20
+> The BCM20702A1 chip is a single-chip Bluetooth 4.0 controller and
+> transceiver. It is found in the AMPAK AP6210 WiFi+BT package.
+>=20
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+
+if you resubmit it, could you do s/free-electrons/bootlin/ ?
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--mf6se6s5b6tdxb5f
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW+NMuAAKCRDj7w1vZxhR
+xZ9TAP0XC5cSi5OLifkzszkxT84RBo2POjE1FhBS++2wQWay/gEA0MR7BCtk6Lgp
+6H2yoSMYiB0AQzDrmt7nKTzJX5PrmAI=
+=mfGb
+-----END PGP SIGNATURE-----
+
+--mf6se6s5b6tdxb5f--

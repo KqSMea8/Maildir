@@ -1,0 +1,157 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:04 -0000
+Received: from icoremail.net (unknown [209.85.215.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_2Pw7+JbE1lYAQ--.25976S3;
+	Wed, 07 Nov 2018 22:00:17 +0800 (CST)
+Received: from mail-pg1-f173.google.com (unknown [209.85.215.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH7Uju7+JbhbcXAA--.10622S3;
+	Wed, 07 Nov 2018 22:00:14 +0800 (CST)
+Received: by mail-pg1-f173.google.com with SMTP id k1-v6so7371246pgq.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:00:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=g1Cc55/NFGdHb8WrTVr+a3leEar1rISPsmKYjkIg9/E=;
+        b=d3W+Sh80cpqo4e1A9POWsUsZL5OdS2jRR/CMFrdiH4LhqwnBv0xmmO10WXB70jV0Ip
+         g3TH9VlobnpU8IBMaNJU14qWa06GEP7F9ZjfJHrYduT2aODOr8x3+5ASuC2JNi0vdVCk
+         jRI/8L2YjIv80HJgEjS7Ns4s0ghiavlR6Rl/FJg5YneW8Zf6jqc2q+xMbWf0d7axJHiy
+         zdHRO3DdhKSm6ZVhce5iIwZ5Tsjt3rT8G7XTy6//PNRlERYM2LV3KgtzHyIBJFfboSG0
+         kBY4CRMw7mNn8TG/22cIqFrv7bxHFA0SuUhRZY4DgBksU0xZrIKC5FWfrFG4yxN6aWTi
+         r21w==
+X-Gm-Message-State: AGRZ1gJYrdQe5OUGfjgRl3NcrkOg4f62bsVRf6h5KVjoczHy5M0CooyD
+	l6Bq3KalUGuLERMZ8vB9+elbPZh5LgRAhwpoJCj6hZLx1NzhoyKpGw==
+X-Received: by 2002:a63:cd17:: with SMTP id i23mr265437pgg.13.1541599213903;
+        Wed, 07 Nov 2018 06:00:13 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5277457pjt;
+        Wed, 7 Nov 2018 06:00:12 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fqUkB7Ejx34/vrikDpxacP+BXyO8mU4uaVJPgQhVZxQvnPB+hzERt1SBJwRp6/Xs8uLVP0
+X-Received: by 2002:a63:6848:: with SMTP id d69-v6mr265386pgc.113.1541599212920;
+        Wed, 07 Nov 2018 06:00:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541599212; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ECbfSSAKFHFsW0MIV+hadvy+hcHDaZreY3wCfy11lNt/EGQPNVX7oNMFnrqqSqrmZ9
+         /NXMhurjFCP6wnqHC33TADAhHO/Sq3evKfu4PIpaZ6WxKtdWRqQt4yERgW3ThqOHysCA
+         FCqUyj1/r6v8rHmgU49vF7f5erXVneGe+klOjJAZzf7ZZTDsOvxY1n2i2GMOPf8KeiGP
+         J6xzlo5ibitvV6oLL24xU3eKy1VUJhU2yZcBLHBi4fYcLPPnrnO4qZH4r0yMJUa80LM0
+         B1+wZtX0iNl4Vf4gBkXr11MRL78+V3+ZN510qiA7DCGLqv+eUk7+LB5J4ZbWcZdUCYDT
+         gU1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-transfer-encoding:content-disposition:mime-version
+         :references:message-id:subject:cc:to:from:date:dkim-signature;
+        bh=g1Cc55/NFGdHb8WrTVr+a3leEar1rISPsmKYjkIg9/E=;
+        b=nBLUr1nhjmaWiTzzJW32XWcLiXPM6fP2LWczaBfG6UyNgQssoKPkpDUGJwoTvNdPSA
+         HRGSwx2XmARSGBE/ZNdcz7w8vcLEgp36gbYSHqUnIRg6iHk6YReIOyO807dTCD1Lzpx3
+         HBAaHU0LkDDtZuNv6AxQNEVFb3TEuzW4EoGMI9FKlMXYEqGIARA7qbLXbIodH2POyExM
+         GmWyxdso5n6E2vYU9Ng3Iejc72AehR1ZOGyIO0ANEt0ZwPs0XP0gaBOYTcJj6haYnxSU
+         qLQUdKWJ+PZ969OXPM4chkTwlUogVnBKREKDcNkNxkkcuD0v8OU1W0ufKFHVH5tG3BHw
+         JSsQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kernel.org header.s=default header.b=Wj9tEFq4;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id m7si604550pgi.547.2018.11.07.05.59.56;
+        Wed, 07 Nov 2018 06:00:12 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727693AbeKGXaR (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:30:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726825AbeKGXaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:30:17 -0500
+Received: from localhost (unknown [104.153.224.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CD262085B;
+        Wed,  7 Nov 2018 13:59:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1541599187;
+        bh=9RT93D5eu/JKlNHDMo1cWfHDAAwDqs/ydW8HvB+/gGE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Wj9tEFq4Tn5+AATzawPiSEXTraJWEFwJgQiiXjMNiv58JPPQctz1Lt7cgjZWEevxo
+         uENlq46qEURJpNJUHpE9QxO1h3tWxwPCdmD8Wctxnd1xPiEtjUqXIJGD7P004eM8st
+         2EAfNOidteTGqY9Kj+yHzb+GYzkZ2cViKiQ70zHA=
+Date: Wed, 7 Nov 2018 14:59:11 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: srinivas.kandagatla@linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] slimbus: ngd: QCOM_QMI_HELPERS has to be selected
+Message-ID: <20181107135911.GA23393@kroah.com>
+References: <20181015183218.GA16900@kroah.com>
+ <20181015194441.10475-1-niklas.cassel@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20181015194441.10475-1-niklas.cassel@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH7Uju7+JbhbcXAA--.10622S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr43JrWkXr1UKFyfJFWUurg_yoW8GF47p3
+	s3Kws8t3WjvF40yanavrySqr1ruF17X348XayUAayvyrW3uwn2yr92gw1xuFyDu397Z3WD
+	Kw40gw1YgF98urDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP0b7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
+	6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW5XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07
+	x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
+	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI4
+	8JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IU57MaUUU
+	UUU==
+
+On Mon, Oct 15, 2018 at 09:44:41PM +0200, Niklas Cassel wrote:
+> QCOM_QMI_HELPERS is a hidden kconfig, so the proper usage is
+> to select it, not depend upon it.
+> 
+> Because of this change, we now also need to depend on the same
+> Kconfigs as QCOM_QMI_HELPERS depends on.
+> 
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+> Hello Greg, Srini,
+> 
+> I'm sorry for this.
+> (Although I'm a bit curious why 0-day test bot didn't catch this.)
+> 
+> Considering that I've just changed QCOM_QMI_HELPERS in:
+> ccfb464cd106 ("soc: qcom: Allow COMPILE_TEST of qcom SoC Kconfigs")
+> which is currently in linux-next, and that this Kconfig should
+> depend on the same Kconfigs as QCOM_QMI_HELPERS depends on,
+> I chose to have this Kconfig match the QCOM_QMI_HELPERS that is
+> currently in linux-next.
+
+Really?  I do this and then I get this build error on x86:
+
+drivers/slimbus/qcom-ngd-ctrl.c: In function ‘of_qcom_slim_ngd_register’:
+drivers/slimbus/qcom-ngd-ctrl.c:1333:63: warning: dereferencing ‘void *’ pointer
+  data = of_match_node(qcom_slim_ngd_dt_match, parent->of_node)->data;
+                                                               ^~
+drivers/slimbus/qcom-ngd-ctrl.c:1333:63: error: request for member ‘data’ in something not a structure or union
+
+
+So I can't take this, something else must be wrong here...
+
+thanks,
+
+greg k-h

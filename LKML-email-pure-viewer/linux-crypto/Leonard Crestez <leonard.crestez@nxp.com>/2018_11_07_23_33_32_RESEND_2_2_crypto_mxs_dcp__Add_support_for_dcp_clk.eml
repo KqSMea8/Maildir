@@ -1,0 +1,284 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:33 -0000
+Received: from icoremail.net (unknown [209.85.215.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn35jsBeNb0NtYAQ--.26528S3;
+	Wed, 07 Nov 2018 23:34:05 +0800 (CST)
+Received: from mail-pg1-f178.google.com (unknown [209.85.215.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3nUnqBeNb+xYYAA--.969S3;
+	Wed, 07 Nov 2018 23:34:03 +0800 (CST)
+Received: by mail-pg1-f178.google.com with SMTP id 70so1884967pgh.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:34:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :thread-topic:thread-index:date:message-id:references:in-reply-to
+         :accept-language:content-language:spamdiagnosticoutput
+         :spamdiagnosticmetadata:content-transfer-encoding:mime-version
+         :sender:precedence:list-id;
+        bh=an8U3VRPbhjqVtfaFbm5zPzkH/aKI0GGHhq44Ic8kKk=;
+        b=V1NU7NPBqMmj5Uxd/qDZL7Yw3j6JQkI92/ZDE2Lbq+1c8oC6qHHW1pyFWjpseOsn9v
+         5D9S9nTcq3Fo9Mov+GBHt1m0eR9T1+w/Up99DiLdtsAOACraVP6vOLzcAEtnleWSQ/1+
+         Sj2k0NxSG22rNkAJLrv0lUcosHRkH58ivizzq+AtStYcYUTpCfKxkbBm3PqjuouXMtOL
+         R3t9JpahnuWGniP7ALDvPuejqJZ5bDlU8AJfdbpI1LGLmuWoj7YgAIJNUfR02fEZbU6r
+         Lb7N/BULP6iAAz8aOFKMhAezEiWYEIfV5Y3sBSM3rOPth5KYUMmmIDfOToYUMj+UMy95
+         nIsw==
+X-Gm-Message-State: AGRZ1gJxlFFi5aD0MxmTWKk2jvRuHM/SjT2ZgdVDjrBKdLJvaHPA1c3Z
+	hEDVkWbnM2vhlmlPunATiZOAb77Rqx3xqxa6676xVTOx2FfPJl9etA==
+X-Received: by 2002:a62:3687:: with SMTP id d129-v6mr692179pfa.56.1541604842630;
+        Wed, 07 Nov 2018 07:34:02 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5389202pjt;
+        Wed, 7 Nov 2018 07:34:01 -0800 (PST)
+X-Google-Smtp-Source: AJdET5e/zeD2VsknFK1Y+5WZZh7pNS1zBrMr1OaZTS9AgYseoCzUl5ZBLlSDiNEn1PaHA8fU6mG1
+X-Received: by 2002:a63:907:: with SMTP id 7-v6mr560086pgj.121.1541604841831;
+        Wed, 07 Nov 2018 07:34:01 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541604841; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Zsetj9oa3pqMo99UoP3Db983thS2rkeBw6v4LKrU/mRvGQpqvB7VT7rsZcM2a/uxcQ
+         iB6MQAIn8sPoUwS4JPwFkupDs4tPvnfir481GfwtN33fTf04w9BEyp+ssu+QVj/wHaId
+         0sr/MJbo3A72JgZGNhD66mPHni9sF6kFFe7T5lofx+VpHyPtq92us7f04iuZMJTQJ1mT
+         BK5UCYHlj08YBSwKHHQG1sxCkkrD5HYlJcWe+bhyrOvr+2EUDGgQnxxbCB6RgHizblNV
+         oIMlttqkGEJ6ok3NtBKDQ7/5IsQquQI8rlm2YBykPARrMU4qdCaL3JlMfatHjDAz9N6m
+         P42w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:content-transfer-encoding
+         :spamdiagnosticmetadata:spamdiagnosticoutput:content-language
+         :accept-language:in-reply-to:references:message-id:date:thread-index
+         :thread-topic:subject:cc:to:from:dkim-signature;
+        bh=an8U3VRPbhjqVtfaFbm5zPzkH/aKI0GGHhq44Ic8kKk=;
+        b=YMILwTMYl5+yTRf7X35GT/ySAiUSwJoEqfGbd1pJUVJVzVeY0RfESX9WGPLkMEEw3e
+         8r8YchX7TRWhioqgR+Q5CtpWYcc12gOZ8VN9QnhYpdCLQyKbvvpCyu9XlX9z7VdjSNTC
+         tbQfpk9A9UXh1Lsco/ZUhl4qyJPPRFSzOXPblmRivcE41oXl1VPKyvFLO7FIaN9FnuBG
+         QIafLefU/VGeNqWvSZiKLYVI3CEJj/FtwrTxsS3GEyh5iidKyfFAzB7J9znttiTL5kF7
+         fm9Ur/dpND9LZOfL5ov8MpccgWkBXrTYVtsHRgmjZ8ZO1ao0+7mHCFnlOPrNLxcWEXrU
+         GfDQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@nxp.com header.s=selector1 header.b=efHgzZD5;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=nxp.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id z188-v6si831938pgb.75.2018.11.07.07.33.46;
+        Wed, 07 Nov 2018 07:34:01 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731109AbeKHBE2 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:04:28 -0500
+Received: from mail-eopbgr40073.outbound.protection.outlook.com ([40.107.4.73]:2145
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727387AbeKHBE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:04:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=an8U3VRPbhjqVtfaFbm5zPzkH/aKI0GGHhq44Ic8kKk=;
+ b=efHgzZD5cZcj+wJtDnRYRShk+oNy4kLJ6EQIaF+P2EbFdxpldwhsTMmeCLIo6HXSE9+GvPjm8jm8kE7g1i8gUpIfoTNVgliXcugBk/6r3yv4MHemIn6ejM0hRLLm2VpNT4ow/h/jV+TirxTU1tovD2LVmMCcDD3lG0vN11fa+c8=
+Received: from AM0PR04MB4290.eurprd04.prod.outlook.com (52.134.126.145) by
+ AM0PR04MB4962.eurprd04.prod.outlook.com (20.176.215.223) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1294.26; Wed, 7 Nov 2018 15:33:32 +0000
+Received: from AM0PR04MB4290.eurprd04.prod.outlook.com
+ ([fe80::a059:70be:9c00:a3c4]) by AM0PR04MB4290.eurprd04.prod.outlook.com
+ ([fe80::a059:70be:9c00:a3c4%2]) with mapi id 15.20.1294.034; Wed, 7 Nov 2018
+ 15:33:32 +0000
+From: Leonard Crestez <leonard.crestez@nxp.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller " <davem@davemloft.net>,
+        Marek Vasut <marek.vasut@gmail.com>
+CC: Horia Geanta <horia.geanta@nxp.com>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [RESEND 2/2] crypto: mxs-dcp - Add support for dcp clk
+Thread-Topic: [RESEND 2/2] crypto: mxs-dcp - Add support for dcp clk
+Thread-Index: AQHUdq89AqAM4y1B+0GiCHEkkSl5iw==
+Date: Wed, 7 Nov 2018 15:33:32 +0000
+Message-ID: <d59eb933624a2da6432a31cdab7616629fe6ac71.1541604742.git.leonard.crestez@nxp.com>
+References: <cover.1541604742.git.leonard.crestez@nxp.com>
+In-Reply-To: <cover.1541604742.git.leonard.crestez@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [95.76.156.53]
+x-mailer: git-send-email 2.17.1
+x-clientproxiedby: AM5PR0701CA0008.eurprd07.prod.outlook.com
+ (2603:10a6:203:51::18) To AM0PR04MB4290.eurprd04.prod.outlook.com
+ (2603:10a6:208:67::17)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-microsoft-exchange-diagnostics: 1;AM0PR04MB4962;6:Gyw6GYkjKJ0vt4AJpNGW9EyvUlQ+N6R/6tzMczGt1b8iVH+L0Toe5S3+pqQuq1M7v/psP5YNabncGoLQlzNFyLD5QAyLzDl9VSyktdIVIaiPjmRA7SCKPoJSHBK0plpGZPlQayLHyXJmqfuCKHsSaLk0PuBUbxewaZ3jYuwUJu3R9fUrF5+LGTeGSR7Qk83C447D7JrBIdp6++NtG2CcuypnOjNs529cmU86QKdFOMJ93kziFK/s/xHSVFHhkMVge5Y9tUQkaoViGFwlyK3qTbB3ImVg9w1vL9vElKws7Ohg/s19O8lslRscxx1IiHvrMJGaCjSvExUmEK3N2oKmU0QXr2XPmeLxmMdQv5Nf1oQJIBetnlrDppcAKAZ0W+t++2NsLYB7pKLBJnL0YqZHYGVTxirP3frgsBafm7IgtVUo3PNPcGvreBGyzfJXEGCxgRh1Gkqn6fRN2VS0uh5NSw==;5:m0NEtZUmmHYR2YdhbULoFpqxej4r1z7rItQrNgZe7ehZOXU2MKkmSYJocGbSU96DbtIRxnahKwQzI8l5JnPefSbxhCmhiHqqftfzypTH08iC0+U+Ull5X0Z5Hsli1x7yh1RUq1/e3bud6cdygdhp5B1NoY9dyq9XR9F63pAa/JM=;7:PDraW6tV/RWvX4fD0VvKMGZXAloReXp2vQihzv3Z26n6M0IkTdQQSyqnjgZSpoqyIX0fMs50QZ+TgFlJwbDkBrPtKJuQbULk/WVIlOhIetmSZ9IagVtaz7Ek3r00fmB0xnQV37Vp952cMFn4Bbo3aQ==
+x-ms-office365-filtering-correlation-id: 8dfcb6a9-8711-4390-e391-08d644c65fce
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600074)(711020)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB4962;
+x-ms-traffictypediagnostic: AM0PR04MB4962:
+x-microsoft-antispam-prvs: <AM0PR04MB4962C8D4D516364E22D35B2FEEC40@AM0PR04MB4962.eurprd04.prod.outlook.com>
+x-exchange-antispam-report-test: UriScan:(185117386973197)(85827821059158);
+x-ms-exchange-senderadcheck: 1
+x-exchange-antispam-report-cfa-test: BCL:0;PCL:0;RULEID:(8211001083)(6040522)(2401047)(8121501046)(5005006)(10201501046)(3002001)(3231382)(944501410)(52105095)(93006095)(93001095)(6055026)(148016)(149066)(150057)(6041310)(20161123560045)(20161123562045)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(20161123564045)(20161123558120)(201708071742011)(7699051)(76991095);SRVR:AM0PR04MB4962;BCL:0;PCL:0;RULEID:;SRVR:AM0PR04MB4962;
+x-forefront-prvs: 08497C3D99
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(366004)(396003)(346002)(376002)(189003)(199004)(2616005)(54906003)(186003)(25786009)(102836004)(2900100001)(5660300001)(71190400001)(316002)(76176011)(2906002)(36756003)(97736004)(71200400001)(81156014)(8676002)(6506007)(118296001)(39060400002)(66066001)(68736007)(386003)(81166006)(110136005)(6486002)(4326008)(6512007)(7736002)(99286004)(26005)(105586002)(106356001)(256004)(8936002)(53936002)(50226002)(86362001)(6436002)(3846002)(305945005)(446003)(52116002)(14454004)(6116002)(478600001)(486006)(11346002)(44832011)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4962;H:AM0PR04MB4290.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-microsoft-antispam-message-info: +tpzYHNCi/V40qvp4JFiGhf3LJk3xgXdHDk9oyvhZ2lpUps8P5Q/+fsBhSSwwNeWWVxcB77rosfVv336NJqKJsLYQD8HhkFmU2AWFRwZPPmxyMj0pLc7s+lbEuD+q8sx575FfKl274XBhwdzpR1zoknqdbG4S1OzoB9m4UMFFiP6nhN7LBgLjxuFJ0Ggr1rDatTzMTEmKSsWC5PLXhL++/xmjZsOFYKwxh/0lTiHMZHPDR8fJIX/27IRzX33vz1laF2NsDqkvMKLcg/keuRZtcIG2JkF6kPZqGdKfyd4m4TIAeTVVPKfpFog1X4JOzIA/TfX8mM2s00TV7+vfage/5pQE9P9a3LUQBjT+Th0PSo=
+spamdiagnosticoutput: 1:99
+spamdiagnosticmetadata: NSPM
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8dfcb6a9-8711-4390-e391-08d644c65fce
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2018 15:33:32.3767
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4962
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3nUnqBeNb+xYYAA--.969S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxWw45ZF18tF1UZr1fWrykXwb_yoW5KF1kpF
+	WDJrWrKr4rA34I9a43X3W8tr1Fy3WSqF17trW3G3WkA3y5trs29FW0ka4UtF48AFWktw47
+	Aay7tr4xCr4kZF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Yb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE
+	2Ix0cI8IcVAFwI0_JFI_Gr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCYIxAIcV
+	C2z280aVAFwI0_GcCE3s1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij
+	64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr
+	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+	17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCbIYCT
+	nIWIevJa73UjIFyTuYvjxUTGQDUUUUU
+
+On 6ull and 6sll the DCP block has a clock which needs to be explicitly
+enabled.
+
+Add minimal handling for this at probe/remove time.
+
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+---
+ drivers/crypto/mxs-dcp.c | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/crypto/mxs-dcp.c b/drivers/crypto/mxs-dcp.c
+index 4e6ff32f8a7e..a2105cf33abb 100644
+--- a/drivers/crypto/mxs-dcp.c
++++ b/drivers/crypto/mxs-dcp.c
+@@ -18,10 +18,11 @@
+ #include <linux/kthread.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/stmp_device.h>
++#include <linux/clk.h>
+=20
+ #include <crypto/aes.h>
+ #include <crypto/sha.h>
+ #include <crypto/internal/hash.h>
+ #include <crypto/internal/skcipher.h>
+@@ -80,10 +81,11 @@ struct dcp {
+=20
+ 	struct completion		completion[DCP_MAX_CHANS];
+ 	spinlock_t			lock[DCP_MAX_CHANS];
+ 	struct task_struct		*thread[DCP_MAX_CHANS];
+ 	struct crypto_queue		queue[DCP_MAX_CHANS];
++	struct clk			*dcp_clk;
+ };
+=20
+ enum dcp_chan {
+ 	DCP_CHAN_HASH_SHA	=3D 0,
+ 	DCP_CHAN_CRYPTO		=3D 2,
+@@ -1051,15 +1053,28 @@ static int mxs_dcp_probe(struct platform_device *pd=
+ev)
+ 		return -ENOMEM;
+=20
+ 	/* Re-align the structure so it fits the DCP constraints. */
+ 	sdcp->coh =3D PTR_ALIGN(sdcp->coh, DCP_ALIGNMENT);
+=20
+-	/* Restart the DCP block. */
+-	ret =3D stmp_reset_block(sdcp->base);
++	/* DCP clock is optional, only used on some SOCs */
++	sdcp->dcp_clk =3D devm_clk_get(dev, "dcp");
++	if (IS_ERR(sdcp->dcp_clk)) {
++		if (sdcp->dcp_clk !=3D ERR_PTR(-ENOENT))
++			return PTR_ERR(sdcp->dcp_clk);
++		sdcp->dcp_clk =3D NULL;
++	}
++	ret =3D clk_prepare_enable(sdcp->dcp_clk);
+ 	if (ret)
+ 		return ret;
+=20
++	/* Restart the DCP block. */
++	ret =3D stmp_reset_block(sdcp->base);
++	if (ret) {
++		dev_err(dev, "Failed reset\n");
++		goto err_disable_unprepare_clk;
++	}
++
+ 	/* Initialize control register. */
+ 	writel(MXS_DCP_CTRL_GATHER_RESIDUAL_WRITES |
+ 	       MXS_DCP_CTRL_ENABLE_CONTEXT_CACHING | 0xf,
+ 	       sdcp->base + MXS_DCP_CTRL);
+=20
+@@ -1092,11 +1107,12 @@ static int mxs_dcp_probe(struct platform_device *pd=
+ev)
+ 	/* Create the SHA and AES handler threads. */
+ 	sdcp->thread[DCP_CHAN_HASH_SHA] =3D kthread_run(dcp_chan_thread_sha,
+ 						      NULL, "mxs_dcp_chan/sha");
+ 	if (IS_ERR(sdcp->thread[DCP_CHAN_HASH_SHA])) {
+ 		dev_err(dev, "Error starting SHA thread!\n");
+-		return PTR_ERR(sdcp->thread[DCP_CHAN_HASH_SHA]);
++		ret =3D PTR_ERR(sdcp->thread[DCP_CHAN_HASH_SHA]);
++		goto err_disable_unprepare_clk;
+ 	}
+=20
+ 	sdcp->thread[DCP_CHAN_CRYPTO] =3D kthread_run(dcp_chan_thread_aes,
+ 						    NULL, "mxs_dcp_chan/aes");
+ 	if (IS_ERR(sdcp->thread[DCP_CHAN_CRYPTO])) {
+@@ -1149,10 +1165,14 @@ static int mxs_dcp_probe(struct platform_device *pd=
+ev)
+ err_destroy_aes_thread:
+ 	kthread_stop(sdcp->thread[DCP_CHAN_CRYPTO]);
+=20
+ err_destroy_sha_thread:
+ 	kthread_stop(sdcp->thread[DCP_CHAN_HASH_SHA]);
++
++err_disable_unprepare_clk:
++	clk_disable_unprepare(sdcp->dcp_clk);
++
+ 	return ret;
+ }
+=20
+ static int mxs_dcp_remove(struct platform_device *pdev)
+ {
+@@ -1168,10 +1188,12 @@ static int mxs_dcp_remove(struct platform_device *p=
+dev)
+ 		crypto_unregister_algs(dcp_aes_algs, ARRAY_SIZE(dcp_aes_algs));
+=20
+ 	kthread_stop(sdcp->thread[DCP_CHAN_HASH_SHA]);
+ 	kthread_stop(sdcp->thread[DCP_CHAN_CRYPTO]);
+=20
++	clk_disable_unprepare(sdcp->dcp_clk);
++
+ 	platform_set_drvdata(pdev, NULL);
+=20
+ 	global_sdcp =3D NULL;
+=20
+ 	return 0;
+--=20
+2.17.1

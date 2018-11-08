@@ -1,0 +1,188 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:29 -0000
+Received: from icoremail.net (unknown [209.85.214.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3__tZKeNb7cpZAQ--.27121S3;
+	Thu, 08 Nov 2018 02:05:14 +0800 (CST)
+Received: from mail-pl1-f170.google.com (unknown [209.85.214.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHHztXKeNbKcEYAA--.66S3;
+	Thu, 08 Nov 2018 02:05:11 +0800 (CST)
+Received: by mail-pl1-f170.google.com with SMTP id t6-v6so8206804plo.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:05:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :thread-topic:thread-index:date:message-id:references:in-reply-to
+         :accept-language:content-language:content-id
+         :content-transfer-encoding:mime-version:sender:precedence:list-id;
+        bh=iaEcaU+4GRs7X3tNXY/HSWtgmmZpToVTTqHr9ZxKrRU=;
+        b=F8uzmJh3zqRgnxaBIxU6cKvpm9bSXBly/NC2udHc7T+D03b2gLgRvcTtvgtp9QCgmA
+         wOYlGWywKzXUKyUgdIz7kkAbQ/Gb2mFTG0wAditqfbLdu35nuzazhAMzrYJfO1W8nxIm
+         g6G5gK3O8RNpqgV1XbFHdPuZK4Wz72XHfloTkAvcLVNh7vCp6NPctt5IwNAH8LWEPCkm
+         7Kh1QyLmZDojfgOA05jbD8oa5R3SDjF/69gqgKihksGNuX9HQcQEF5ECxpwQxsr4G0qJ
+         Y3jYWPMOEt/POkxCAqFJcI1iYHR9YxIKoqi2oHH3e7K1gIFExBTTsHMNSPebVg9y/sr8
+         pl2g==
+X-Gm-Message-State: AGRZ1gI9YT3PEvL3mwIJ9362VzZHr0fpwAPPmSzzY6zpGnxS+6a9e8zQ
+	ejoXAAcwkpVTGd6KTva7MWFIIuRI93mv6eOcUw4B/8liGbj1FZbgrg==
+X-Received: by 2002:a17:902:a5cc:: with SMTP id t12-v6mr1208435plq.298.1541613910861;
+        Wed, 07 Nov 2018 10:05:10 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5558273pjt;
+        Wed, 7 Nov 2018 10:05:10 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ccpenJpg0QBhJEqhkd3ci9aUocEGkbZK91jkQmyqLX5d+hocFRvDZtmgovgAunn8ZNu1Iy
+X-Received: by 2002:a63:9f0a:: with SMTP id g10-v6mr957260pge.232.1541613910194;
+        Wed, 07 Nov 2018 10:05:10 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541613910; cv=none;
+        d=google.com; s=arc-20160816;
+        b=FL3/V7CPX0fr5vOiRSDMzgZNB+5hEpkm2D7TTHfv1U1wlAxGxVm0jXD/CH7SOBmw1Y
+         kuR/K8GiGeb3OOeNx0NBF0bTGHC07R32IQuyHcK3M2Gp9SMmttLU0ZaUkEtQt57lmO9k
+         IOGWjV/hBjIyIm6rS69HG+P5qEEXtUJKMxjP+px7eGXXTI6VKPP3EGLju/Qcm5E3v2y8
+         z9bakywmBdoku8CRWuHt9nxwZiyf1yulAa1NfhElXfshBslbmTsgvtpEb7N+U8lnfThb
+         fOPYELOi+AJbUtWyAyRkAKe6egBDecbRhr+KxXYrOpBjelLq9yxQZABJ2vFLf4alvD3f
+         RYgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:content-transfer-encoding
+         :content-id:content-language:accept-language:in-reply-to:references
+         :message-id:date:thread-index:thread-topic:subject:cc:to:from
+         :dkim-signature;
+        bh=iaEcaU+4GRs7X3tNXY/HSWtgmmZpToVTTqHr9ZxKrRU=;
+        b=dpdAuQR746ZWw+P2fywK9b9y93QuoPqYKOaodFvNK6+VcmbxS/bu3483nfN2cKokkg
+         ClvS/zfH6lDmgO+5jBvdBxmHoCET1MF27iDPiS+7T7CvyymdlIwj8UU+xlpeYVKb7ORu
+         j251GZacYTKSJREfSw24dUwUNpSvm1/rsd+M4TFOH2DHkov4lR16Qc+A4SOSIuTV4Nrg
+         oE0EKmwCKzOq3vW8MnivsZhq82WTyEZq6l7rE0j3skYBq5kouiilXLC/ZlH7UOlJgMy9
+         aIKwXNerZbmlXjxhkfO/1mmdBZvNP/IGQQvGD9k69u2+CGFQ2eHxcD5eM8kVDA+iI4hX
+         Chcw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@cisco.com header.s=iport header.b=BOZalumJ;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=cisco.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v141-v6si1295029pfc.193.2018.11.07.10.04.52;
+        Wed, 07 Nov 2018 10:05:10 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728026AbeKHDgL (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:36:11 -0500
+Received: from rcdn-iport-9.cisco.com ([173.37.86.80]:1185 "EHLO
+        rcdn-iport-9.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727604AbeKHDgL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:36:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=2296; q=dns/txt; s=iport;
+  t=1541613881; x=1542823481;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=iaEcaU+4GRs7X3tNXY/HSWtgmmZpToVTTqHr9ZxKrRU=;
+  b=BOZalumJ/bXwbmPqNLofeNOtR9ll307RisZApFnN3Mc9XX0dZMIWnbmv
+   wa57uYVJQLcc75gDGEqnqDyU9fRV66dYWSbueBDevrL55HV5JVCix72B6
+   7dLd8sgzllF4a9ZO94M/Y16yu+qJhGV6EzvK+Z+t54V62dHVTX7pKgS5m
+   Q=;
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0ADAAB0KONb/5tdJa1kGQEBAQEBAQE?=
+ =?us-ascii?q?BAQEBAQcBAQEBAQGBUQQBAQEBAQsBggNmgQInCoNuiBiLfIFoJZcwgXoLAQE?=
+ =?us-ascii?q?YDYRHAheCciI0DQ0BAwEBAgEBAm0cDIU7AQEBAwEiEUUQAgEIDgoCAiYCAgI?=
+ =?us-ascii?q?mChUQAgQOBYMhAYIBD6g3gS6ELQGFcxR3im0XgUE/gTgME4JMgxsDAoFegwQ?=
+ =?us-ascii?q?xgiYCn0EJAoZthg2EFhiCI45FjRmKJwIRFIEmHTiBVXAVSBMKAYJBCYsThT5?=
+ =?us-ascii?q?BMQGMQYEfAQE?=
+X-IronPort-AV: E=Sophos;i="5.54,476,1534809600"; 
+   d="scan'208";a="393482958"
+Received: from rcdn-core-4.cisco.com ([173.37.93.155])
+  by rcdn-iport-9.cisco.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 18:04:39 +0000
+Received: from XCH-RTP-002.cisco.com (xch-rtp-002.cisco.com [64.101.220.142])
+        by rcdn-core-4.cisco.com (8.15.2/8.15.2) with ESMTPS id wA7I4ajq019177
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=FAIL);
+        Wed, 7 Nov 2018 18:04:37 GMT
+Received: from xch-rtp-001.cisco.com (64.101.220.141) by XCH-RTP-002.cisco.com
+ (64.101.220.142) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 7 Nov
+ 2018 13:04:35 -0500
+Received: from xch-rtp-001.cisco.com ([64.101.220.141]) by
+ XCH-RTP-001.cisco.com ([64.101.220.141]) with mapi id 15.00.1395.000; Wed, 7
+ Nov 2018 13:04:35 -0500
+From: "Nikunj Kela (nkela)" <nkela@cisco.com>
+To: David Woodhouse <dwmw2@infradead.org>
+CC: "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] jffs2: implement mount option to configure endianness
+Thread-Topic: [PATCH] jffs2: implement mount option to configure endianness
+Thread-Index: AQHUdhqbTj/3Cc5mIU2fPUfH4B/ycqVEWbYAgACWlIA=
+Date: Wed, 7 Nov 2018 18:04:35 +0000
+Message-ID: <591D4732-BC3E-4F85-9277-25E049FFF4BA@cisco.com>
+References: <20181106214928.40020-1-nkela@cisco.com>
+ <921b0f78cf67d7307a0555e1fd6f2c2976310adc.camel@infradead.org>
+In-Reply-To: <921b0f78cf67d7307a0555e1fd6f2c2976310adc.camel@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.41.48.252]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <01205EDF9E5AF841A6C38CAD04ACCD40@emea.cisco.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Outbound-SMTP-Client: 64.101.220.142, xch-rtp-002.cisco.com
+X-Outbound-Node: rcdn-core-4.cisco.com
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHHztXKeNbKcEYAA--.66S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7KFWrKFW8ZryDCryfKr1xXwb_yoW8Xw1xpF
+	yxXF4UGFWkGF18Jwn2ka1xGrWrG348Ca4UXryDXrW8Zwn8JF13WrsFqFy5WFy3Aw4I9w1j
+	vF1Sva4a9F9rZa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUdqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWlnx0E6VACY4
+	xI67k04243AVACY4xI67k04243AVAKzVAKj4xI6x02cVCv0xWle2I262IYc4CY6c8Ij28I
+	cVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx
+	0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACY4xI67k04243AVAKzVAK
+	j4xxMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02
+	Avz4vEIxC_XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIx
+	AIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0E
+	Y4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
+	0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l6VACY4xI67k04243AbIYCTnIWI
+	evJa73UjIFyTuYvjxUBo7NUUUUU
+
+T24gMTEvNy8xOCwgMTowNSBBTSwgIkRhdmlkIFdvb2Rob3VzZSIgPGR3bXcyQGluZnJhZGVhZC5v
+cmc+IHdyb3RlOg0KDQogICAgT24gVHVlLCAyMDE4LTExLTA2IGF0IDEzOjQ5IC0wODAwLCBOaWt1
+bmogS2VsYSB3cm90ZToNCiAgID4+IFRoaXMgcGF0Y2ggYWxsb3dzIHRoZSBlbmRpYW5uZXNzIG9m
+IHRoZSBKRlNTMiBmaWxlc3lzdGVtIHRvIGJlDQogICAgPj4gc3BlY2lmaWVkIGJ5IG1vdW50IG9w
+dGlvbiAnZm9yY2VfZW5kaWFuPWJpZ3xsaXR0bGV8bmF0aXZlJy4gSWYNCiAgICA+PiBlbmRpYW5u
+ZXNzIGlzIG5vdCBzcGVjaWZpZWQsIGl0IGRlZmF1bHRzIHRvICduYXRpdmUnIGVuZGlhbm5lc3MN
+CiAgICA+PiB0aHVzIHJldGFpbmluZyB0aGUgZXhpc3RpbmcgYmVoYXZpb3IuDQogICAgPj4gDQog
+ICAgPj4gU29tZSBhcmNoaXRlY3R1cmVzIGJlbmVmaXQgZnJvbSBoYXZpbmcgYSBzaW5nbGUga25v
+d24gZW5kaWFubmVzcw0KICAgID4+IG9mIEpGRlMyIGZpbGVzeXN0ZW0gKGZvciBkYXRhLCBub3Qg
+ZXhlY3V0YWJsZXMpIGluZGVwZW5kZW50IG9mIHRoZQ0KICAgID4+IGVuZGlhbm5lc3Mgb2YgdGhl
+IHByb2Nlc3NvciAoQVJNIHByb2Nlc3NvcnMgY2FuIGJlIHN3aXRjaGVkIHRvIGVpdGhlcg0KICAg
+ID4+IGVuZGlhbm5lc3MgYXQgcnVuLXRpbWUpLg0KICAgID4+IA0KICAgID4+IFdlIGhhdmUgYm9h
+cmRzIHRoYXQgYXJlIHNoaXBwZWQgd2l0aCBCRSBqZmZzMiBhbmQgQkUga2VybmVsLiBXZSBhcmUN
+CiAgICA+PiBub3cgbWlncmF0aW5nIHRvIExFIGtlcm5lbC4gVGhpcyBtb3VudCBvcHRpb24gaGVs
+cHMgdXMgaW4gbW91bnRpbmcNCiAgICA+PiBCRSBqZmZzMiBvbiBMRSBrZXJuZWwuDQogICAgDQog
+ICAgPlRoYW5rcyBmb3IgaW1wbGVtZW50aW5nIHRoaXMuIEpGRlMyIGhhcyBvZnRlbiBiZWVuIHZl
+cnkgc2Vuc2l0aXZlIHRvDQogICAgPnBlcmZvcm1hbmNlIGF0IG1vdW50IHRpbWUg4oCUIEknZCBs
+b3ZlIHRvIHNlZSBob3cgdGhpcyBhZmZlY3RzIHRoZSB0aW1lDQogICAgPnRha2VuIHRvIG1vdW50
+IGEgbGFyZ2UgZmlsZSBzeXN0ZW0uIElmIGl0J3Mgc2lnbmlmaWNhbnQsIHdlIG1heSB3YW50IGEN
+CiAgICA+Y29uZmlnIG9wdGlvbiB0byBtYWtlIHRoaXMgY29uZGl0aW9uYWw/DQogICAgPg0KICAg
+ID5BbHNvLCBwZXJoYXBzIHdlIHNob3VsZCBpbXByb3ZlIHRoZSBiZWhhdmlvdXIgd2hlbiB0aGUg
+dXNlcg0KICAgID5hY2NpZGVudGFsbHkgdHJpZXMgdG8gbW91bnQgYSB3cm9uZy1lbmRpYW4gZmls
+ZSBzeXN0ZW0uIElmIHdlIGNhbid0DQogICAgPmp1c3QgbWFrZSBpdCBhdXRvZGV0ZWN0IGFuZCB1
+c2UgdGhlICJjb3JyZWN0IiBlbmRpYW5uZXNzLCBwZXJoYXBzIHdlDQogICAgPnNob3VsZCBhdCBs
+ZWFzdCBwcmludGsgYSBtZXNzYWdlIHN1Z2dlc3RpbmcgdGhhdCB0aGUgdXNlciB0cnkgYWdhaW4N
+CiAgICA+d2l0aCB0aGUgb3RoZXIgZW5kaWFubmVzcz8NCg0KSSBoYWQgdHJpZWQgdG8gdXNlIGNv
+bmZpZ3MgdG8gc3RhcnQgd2l0aCB2aWEgdGhlIGZvbGxvd2luZyBwYXRjaCBob3dldmVyIEkgd2Fz
+IGFkdmlzZWQgdG8gaGF2ZSBhIG1vdW50IG9wdGlvbjoNCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL3BpcGVybWFpbC9saW51eC1tdGQvMjAxOC1Ob3ZlbWJlci8wODUxMjYuaHRtbA0KDQpUaGFu
+a3MsDQotTmlrdW5qDQogICAgDQoNCg==

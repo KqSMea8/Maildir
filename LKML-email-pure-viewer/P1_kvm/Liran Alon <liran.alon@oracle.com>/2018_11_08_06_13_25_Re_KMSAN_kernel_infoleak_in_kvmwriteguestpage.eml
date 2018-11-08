@@ -1,0 +1,278 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:56 -0000
+Received: from icoremail.net (unknown [209.85.214.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3yS5Y+NbdRhbAQ--.27679S3;
+	Thu, 08 Nov 2018 06:14:18 +0800 (CST)
+Received: from mail-pl1-f170.google.com (unknown [209.85.214.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3FEC2Y+NbX4YZAA--.1630S3;
+	Thu, 08 Nov 2018 06:14:14 +0800 (CST)
+Received: by mail-pl1-f170.google.com with SMTP id n4-v6so8503287plp.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:14:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version:subject
+         :from:in-reply-to:date:cc:content-transfer-encoding:message-id
+         :references:to:sender:precedence:list-id;
+        bh=az1iP6jLwmZMKJf5dIWJ1VabA5mRINyfJJRvDweTwp8=;
+        b=nCtPXHzNcWPZQREa9YSgCBuv3Nq0TF7yU8IVyH3Ppfkc3eUiiMAPLXYetm4DXkKU59
+         af0xI1bsBIFiv8odBScAMrBy78mDNA8hnU5wcMhpjMsv4bCFzu5UyuiZCzi8FuFjqnU7
+         cdfQuaTLNJoft92heupxbZ0cE1U9gSlqcgGLAvN5RRe4iJlmL7ebb2zBfksBgmopTmN5
+         4iVPoK8ndtfo0uwZl9eCI0xRlpyzy3n673j8HPjsYBOSZOBVjCTDDFlouX/gRJ8nDULp
+         6LjnL/wKWsY9TDyMCGDEzS6sP1leOA6d321jVDhUuYPCPiQrfZJUkAT22GqnzLB/xX8y
+         j6jg==
+X-Gm-Message-State: AGRZ1gI0M6yJ5z+RhtdnohGgu+C+I7YVdSSIcn83ItD3SGe4b8DORRzP
+	i1dQD8IaduG7+mngi8ez8ket+axKFz013IDls1b3wj37nhIXqN6Nhw==
+X-Received: by 2002:a17:902:b598:: with SMTP id a24-v6mr2073359pls.231.1541628854151;
+        Wed, 07 Nov 2018 14:14:14 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp65950pjt;
+        Wed, 7 Nov 2018 14:14:12 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fQHB0H0hYR6sQfazxHXpuqNA04lSo+Gc7CcsgaZM/MHsxM7UGZkeHFCcZSB3ei+qXT/cGH
+X-Received: by 2002:a65:6144:: with SMTP id o4-v6mr1742861pgv.387.1541628852878;
+        Wed, 07 Nov 2018 14:14:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541628852; cv=none;
+        d=google.com; s=arc-20160816;
+        b=tLmv4EHNa1b9scRdcq9DqHP6by6mUW1CQyeW4qWTTG02p/ChqI9WmGQBdkSOp/HS8w
+         YJfSYpdgsytc7vJPTAIjk0BG8+M2vfbHDziilbWPNNnQ6CZaMMx6pyppgLxIP8Yj0Hjy
+         nqTyANDh+w6CWErQhxLWwYQ65llhBR3Ei6gpg5GjVR3oTSA9HM4Ty2ThhVvpWVk9ii2e
+         1Xiqc5aOv7cgmiHH0fcTxkZ2v3xiDG3p2rc4BmVZAv2N6yGF8Qyxf0ukja7c5+Io4z7F
+         hF5YZmWaqVsYt7jJRPMOAYeipvP1/SzIltGeyOOfQv/5qcyRzqd4NeO1iTAiwwxsIyWv
+         jthQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:to:references:message-id
+         :content-transfer-encoding:cc:date:in-reply-to:from:subject
+         :mime-version:dkim-signature;
+        bh=az1iP6jLwmZMKJf5dIWJ1VabA5mRINyfJJRvDweTwp8=;
+        b=mqF5ix/bsjQJcAiL5MxkyqA4XqJtmM1pIMVW40x7h6ZBBtKGtrnuOtXXrRsAfANTwZ
+         SfadF8Hnyue5hE+HagMKFTTVnSESqoxm5vsjsPxKiZXGVczYugEyzzG8tK3XvuFNq3Hy
+         fRBkWlcZ//BIrjzceM7RIIz8q8rYoHof0KzB1ELhJmWwIKrmrVMY6/7q0rap5DJRZFx2
+         Bq/uiZt79TQjhewxfyq95+DQU7SsP5zQvYtqbSq+8skU3Hl0slMSVUBci49uE8O0zZB6
+         jKzdfIxm9duKbW+ot9+Io+6cNhfrTYC6VHQ0wURlPAqnvkYUlIGnZxRsGnuIBwarWY9c
+         mrYA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@oracle.com header.s=corp-2018-07-02 header.b=KSHJePkD;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=oracle.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id t33si1495697pgk.466.2018.11.07.14.13.56;
+        Wed, 07 Nov 2018 14:14:12 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727710AbeKHHqB (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:46:01 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:39494 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbeKHHqA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:46:00 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.22/8.16.0.22) with SMTP id wA7M8v8o064369;
+        Wed, 7 Nov 2018 22:13:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=az1iP6jLwmZMKJf5dIWJ1VabA5mRINyfJJRvDweTwp8=;
+ b=KSHJePkDbMMNHFAi7Gm6CaY+ORAPEhrt2CxDVZ8oPwa0gh5Rrz5Mn/Mf4DGyDy1gMIP8
+ Gddv2ZH+KIfPdy1mtLLBkvE1d/kAXVlQEyASszXoCaYZQwnL3YyPN8qy/RWeYrwhIHoN
+ I6qtx/WPFXnK/tiohwtQBbaArYi7qz+p7AgkVPCarMY6sTY3SFb7G2Mwm4gnuMvf4mm8
+ CRoExhKcdeGJs+h4b72Z0AKqqW/5PqVBls4HkqLRnIaMr0MdtQxCVkoj1s02gXRKaLxW
+ zukNJPA5kFQB3L4N4TOWPL6a63GQpj3xFVJurpRM2sclzH9V+o8EbAPUEXuz6GCdNwY+ Og== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by userp2120.oracle.com with ESMTP id 2nh4aqx5ju-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 07 Nov 2018 22:13:32 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id wA7MDVon004920
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 7 Nov 2018 22:13:31 GMT
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id wA7MDUsw030904;
+        Wed, 7 Nov 2018 22:13:30 GMT
+Received: from [192.168.14.112] (/79.178.245.51)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 07 Nov 2018 14:13:30 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: KMSAN: kernel-infoleak in kvm_write_guest_page
+From: Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <000000000000b10cfe057a17b246@google.com>
+Date: Thu, 8 Nov 2018 00:13:25 +0200
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com,
+        syzkaller-bugs@googlegroups.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C6FA81C5-D725-43F8-B08D-9EFAC011FBC7@oracle.com>
+References: <000000000000b10cfe057a17b246@google.com>
+To: syzbot <syzbot+a8ef68d71211ba264f56@syzkaller.appspotmail.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9070 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=957
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1807170000 definitions=main-1811070196
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3FEC2Y+NbX4YZAA--.1630S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3AFWkWrWktF48Kr15CFy3Arb_yoWxAw45pF
+	WDtFZ7Gr4Fqa48tFy8KF1UAr18XFy5CF47Jw1xGr43Ca17twnrCr18tr47CF1UCrWvyFy5
+	twn8Zw48tw18Jw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6Fylc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07be
+	iSdUUUUU=
+
+
+
+> On 7 Nov 2018, at 20:58, syzbot =
+<syzbot+a8ef68d71211ba264f56@syzkaller.appspotmail.com> wrote:
+>=20
+> Hello,
+>=20
+> syzbot found the following crash on:
+>=20
+> HEAD commit:    7438a3b20295 kmsan: print user address when reporting =
+info..
+> git tree:       =
+https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__github.com_google_k=
+msan.git_master&d=3DDwIBaQ&c=3DRoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE=
+&r=3DJk6Q8nNzkQ6LJ6g42qARkg6ryIDGQr-yKXPNGZbpTx0&m=3D_zu2xJguqdkES0k8nx8Ul=
+glUdOiAHk72aWKl44bi2Sw&s=3DfcwxYfHP71V16E_WRx7hgde6KeNMFBzprI2k6PzzZEo&e=3D=
+
+> console output: =
+https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__syzkaller.appspot.c=
+om_x_log.txt-3Fx-3D10d782f5400000&d=3DDwIBaQ&c=3DRoP1YumCXCgaWHvlZYR8PZh8B=
+v7qIrMUB65eapI_JnE&r=3DJk6Q8nNzkQ6LJ6g42qARkg6ryIDGQr-yKXPNGZbpTx0&m=3D_zu=
+2xJguqdkES0k8nx8UlglUdOiAHk72aWKl44bi2Sw&s=3DG8EVFBcgaTj-Rg8XsqlSgOVE7Hjg9=
+gU5JEG7hA0ry1I&e=3D
+> kernel config:  =
+https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__syzkaller.appspot.c=
+om_x_.config-3Fx-3D8df5fc509a1b351b&d=3DDwIBaQ&c=3DRoP1YumCXCgaWHvlZYR8PZh=
+8Bv7qIrMUB65eapI_JnE&r=3DJk6Q8nNzkQ6LJ6g42qARkg6ryIDGQr-yKXPNGZbpTx0&m=3D_=
+zu2xJguqdkES0k8nx8UlglUdOiAHk72aWKl44bi2Sw&s=3DyxSBwzSyc6oRH7v1EJAKQMbq9Vg=
+hK3Nme98FwYd8iJA&e=3D
+> dashboard link: =
+https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__syzkaller.appspot.c=
+om_bug-3Fextid-3Da8ef68d71211ba264f56&d=3DDwIBaQ&c=3DRoP1YumCXCgaWHvlZYR8P=
+Zh8Bv7qIrMUB65eapI_JnE&r=3DJk6Q8nNzkQ6LJ6g42qARkg6ryIDGQr-yKXPNGZbpTx0&m=3D=
+_zu2xJguqdkES0k8nx8UlglUdOiAHk72aWKl44bi2Sw&s=3DFqvBbzpE2srFcjavB0i99ekCvz=
+nCaHFOuWgIwYzmrXs&e=3D
+> compiler:       clang version 8.0.0 (trunk 343298)
+> syz repro:      =
+https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__syzkaller.appspot.c=
+om_x_repro.syz-3Fx-3D15f09133400000&d=3DDwIBaQ&c=3DRoP1YumCXCgaWHvlZYR8PZh=
+8Bv7qIrMUB65eapI_JnE&r=3DJk6Q8nNzkQ6LJ6g42qARkg6ryIDGQr-yKXPNGZbpTx0&m=3D_=
+zu2xJguqdkES0k8nx8UlglUdOiAHk72aWKl44bi2Sw&s=3D0JDFhFc1yLDbhcyTkAE1NO9PulB=
+lKC3ZAsRaieLSDWg&e=3D
+> C reproducer:   =
+https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__syzkaller.appspot.c=
+om_x_repro.c-3Fx-3D15a39e05400000&d=3DDwIBaQ&c=3DRoP1YumCXCgaWHvlZYR8PZh8B=
+v7qIrMUB65eapI_JnE&r=3DJk6Q8nNzkQ6LJ6g42qARkg6ryIDGQr-yKXPNGZbpTx0&m=3D_zu=
+2xJguqdkES0k8nx8UlglUdOiAHk72aWKl44bi2Sw&s=3DFSZ1iQgxwIrifJ7X_cwC7-L4zPR3q=
+H5jVMEFYpP2770&e=3D
+>=20
+> IMPORTANT: if you fix the bug, please add the following tag to the =
+commit:
+> Reported-by: syzbot+a8ef68d71211ba264f56@syzkaller.appspotmail.com
+>=20
+> L1TF CPU bug present and SMT on, data leak possible. See CVE-2018-3646 =
+and =
+https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__www.kernel.org_doc_=
+html_latest_admin-2Dguide_l1tf.html&d=3DDwIBaQ&c=3DRoP1YumCXCgaWHvlZYR8PZh=
+8Bv7qIrMUB65eapI_JnE&r=3DJk6Q8nNzkQ6LJ6g42qARkg6ryIDGQr-yKXPNGZbpTx0&m=3D_=
+zu2xJguqdkES0k8nx8UlglUdOiAHk72aWKl44bi2Sw&s=3DRlJUg93Uo3_bn1O3eehqy8r8h6I=
+XBRoE0YNsIVFQY2A&e=3D for details.
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> BUG: KMSAN: kernel-infoleak in __copy_to_user =
+include/linux/uaccess.h:121 [inline]
+> BUG: KMSAN: kernel-infoleak in __kvm_write_guest_page =
+arch/x86/kvm/../../../virt/kvm/kvm_main.c:1849 [inline]
+> BUG: KMSAN: kernel-infoleak in kvm_write_guest_page+0x373/0x500 =
+arch/x86/kvm/../../../virt/kvm/kvm_main.c:1861
+> CPU: 1 PID: 6274 Comm: syz-executor149 Not tainted 4.19.0+ #78
+> Hardware name: Google Google Compute Engine/Google Compute Engine, =
+BIOS Google 01/01/2011
+> Call Trace:
+> __dump_stack lib/dump_stack.c:77 [inline]
+> dump_stack+0x32d/0x480 lib/dump_stack.c:113
+> kmsan_report+0x19f/0x300 mm/kmsan/kmsan.c:911
+> kmsan_internal_check_memory+0x35f/0x450 mm/kmsan/kmsan.c:993
+> kmsan_copy_to_user+0x7c/0xe0 mm/kmsan/kmsan_hooks.c:552
+> __copy_to_user include/linux/uaccess.h:121 [inline]
+> __kvm_write_guest_page arch/x86/kvm/../../../virt/kvm/kvm_main.c:1849 =
+[inline]
+> kvm_write_guest_page+0x373/0x500 =
+arch/x86/kvm/../../../virt/kvm/kvm_main.c:1861
+> kvm_write_guest+0x1e1/0x360 =
+arch/x86/kvm/../../../virt/kvm/kvm_main.c:1883
+> kvm_pv_clock_pairing arch/x86/kvm/x86.c:6793 [inline]
+> kvm_emulate_hypercall+0x1c96/0x21b0 arch/x86/kvm/x86.c:6866
+> handle_vmcall+0x41/0x50 arch/x86/kvm/vmx.c:7487
+> vmx_handle_exit+0x1e81/0xbac0 arch/x86/kvm/vmx.c:10128
+> vcpu_enter_guest arch/x86/kvm/x86.c:7667 [inline]
+> vcpu_run arch/x86/kvm/x86.c:7730 [inline]
+> kvm_arch_vcpu_ioctl_run+0xac32/0x11d80 arch/x86/kvm/x86.c:7930
+> kvm_vcpu_ioctl+0xfb1/0x1f90 =
+arch/x86/kvm/../../../virt/kvm/kvm_main.c:2590
+> do_vfs_ioctl+0xf77/0x2d30 fs/ioctl.c:46
+> ksys_ioctl fs/ioctl.c:702 [inline]
+> __do_sys_ioctl fs/ioctl.c:709 [inline]
+> __se_sys_ioctl+0x1da/0x270 fs/ioctl.c:707
+> __x64_sys_ioctl+0x4a/0x70 fs/ioctl.c:707
+> do_syscall_64+0xcf/0x110 arch/x86/entry/common.c:291
+> entry_SYSCALL_64_after_hwframe+0x63/0xe7
+> RIP: 0033:0x442b39
+> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 =
+89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d =
+01 f0 ff ff 0f 83 1b 0c fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007ffcb4e05478 EFLAGS: 00000217 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000442b39
+> RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 0000000000000007
+> RBP: 00000000006cd018 R08: 0000000020000100 R09: 0000000020000100
+> R10: 0000000000000000 R11: 0000000000000217 R12: 0000000000403be0
+> R13: 0000000000403c70 R14: 0000000000000000 R15: 0000000000000000
+>=20
+> Local variable description: ----clock_pairing.i@kvm_emulate_hypercall
+> Variable was created at:
+> kvm_emulate_hypercall+0x60/0x21b0 arch/x86/kvm/x86.c:6827
+> handle_vmcall+0x41/0x50 arch/x86/kvm/vmx.c:7487
+>=20
+> Bytes 28-63 of 64 are uninitialized
+> Memory access of size 64 starts at ffff8801aac5f3d8
+> Data copied to user address 0000000020000000
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+The info-leak here seems to be pretty obvious.
+kvm_pv_clock_pairing() copies entire =E2=80=9Cclock_pairing=E2=80=9D var =
+to guest using kvm_write_guest(),
+but it doesn=E2=80=99t initialize clock_pairing.pad[] bytes (which is =
+exactly bytes 28-63).
+
+I will submit a patch to fix this=E2=80=A6
+
+-Liran
+
+
+

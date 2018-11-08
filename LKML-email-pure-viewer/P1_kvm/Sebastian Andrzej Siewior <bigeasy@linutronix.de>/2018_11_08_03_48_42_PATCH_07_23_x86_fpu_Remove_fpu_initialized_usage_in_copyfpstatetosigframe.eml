@@ -1,0 +1,176 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:04 -0000
+Received: from icoremail.net (unknown [209.85.215.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3ySYQuNbAFVaAQ--.27411S3;
+	Thu, 08 Nov 2018 03:52:57 +0800 (CST)
+Received: from mail-pg1-f173.google.com (unknown [209.85.215.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3FECWQuNbeRUZAA--.736S3;
+	Thu, 08 Nov 2018 03:52:54 +0800 (CST)
+Received: by mail-pg1-f173.google.com with SMTP id 70so2180338pgh.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:52:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=cJkmmcx/TAubOFsA83SVWrNputIGMetJYXNiDNNMfA0=;
+        b=gF4yXaI1P6jtJnf5pefmHsLtival5fNqZ7oXv/7oZcoCRyXRCiaVi/iTSjK+zq18ZO
+         ue+O9DakQyHRiyfq8huFFc2ldr0ATL1BidH6Q34hSYHkmcEiYGk3gbbrdJNs1MRv9SF7
+         9JU/5ogIaRFrZ1c3GWBVL8hQTzgwl0qzUfV3zU56AKZjEYNY9BmWjgSOLIGM1Fhgm6yW
+         xOv/vK0tudefBWXQZv242ZFqWq1CYDz59vC4iKSSjiAfc0l5hT5Y7kOE+bYqRkFDUwpt
+         H/d23hAkurQtmpaGff15E7j68wiyUMBXyT+uNpEY2bb+lfjSWXXmblT+20soV9cOlEeg
+         eHqQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIZeWrWsi6IsCimJouKzJ+q8ROwzHPDxv3K3x0zXjmtDDtyORFr
+	eqmUvR0N1veQKY1eNHxDoDnursYqiXbq8I7XzJxcs77LTl/93gAA2Q==
+X-Received: by 2002:a62:ce8e:: with SMTP id y136-v6mr1588106pfg.201.1541620374421;
+        Wed, 07 Nov 2018 11:52:54 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5672260pjt;
+        Wed, 7 Nov 2018 11:52:53 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f6DI8wPbVXrFDwcJ50zd/kz8a+xyfjAwgZQI3iTMkQlc90IzlgikW1DeX6usWJ3aZb8llO
+X-Received: by 2002:a17:902:e01:: with SMTP id 1-v6mr1519753plw.251.1541620373769;
+        Wed, 07 Nov 2018 11:52:53 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541620373; cv=none;
+        d=google.com; s=arc-20160816;
+        b=XHJMGxK4NJ1G8AiaqH0xNSSx/0veO8Ey64l9Zn7sHc+EdLRXiXEYx9w+dY5HesP/Su
+         5PHnPgrVIWd8kVX87aizVDV1R/t8K+WXhNu3aQUM+g619l64Lpobk5lkhjnJ6KPzQwsu
+         nGUDDCbDcCUdvet5YnJqqJdJfUjSlJM8kfGpHp7Vr9+T6Xku1FKWb7n9FJ89/PwCAdO8
+         CjYIRUSO5oiSJEQL0sAcRSkVdvs2MabV5i8qAUKHPBgVbvYtdYlmiPPiRmeCibx3JqYU
+         v3xBvErY/YLEyAGwojRiJZADJp6RqKlxltRZSdSHejhSYC82/tBCDVLE+vOfh+hym3A9
+         2FOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=cJkmmcx/TAubOFsA83SVWrNputIGMetJYXNiDNNMfA0=;
+        b=sf/SiYafLq+b+VC50jNwtrsXDNm2D2//TozR8RStaZ9YomNzI/r5Fuhuk9LTEPcPNL
+         KM10e+9t+BmkTy3l7jbxHoqHS1Z0yedRPn+PTsZYbZ7YKtDPLFWZt6NMogYqPN3bsakc
+         f5A5y+WV8fejQcOyKCxAFgyJ0+UzutzGaJ0FP8g+QBnoSi8dqgGe7xKcaaNe+CGmpBDu
+         pR2aKwuTTayV5MwSMAkpFGvNcyfLDUDl3UJa1948Av7tpvtRBMNJexpxtvDHBP0yrMzj
+         9PrT9W/cPjVSxhcbCKbMCDYZLB0y8Any1jWDwLyAVoPn23Q5Uzd8XLKzV12go0zlzY1R
+         GLJA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id t21-v6si1397913pgg.123.2018.11.07.11.52.20;
+        Wed, 07 Nov 2018 11:52:53 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727274AbeKHFVG (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:21:06 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:41861 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbeKHFVF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:21:05 -0500
+Received: from localhost ([127.0.0.1] helo=bazinga.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1gKTp9-00070Q-7D; Wed, 07 Nov 2018 20:49:11 +0100
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 07/23] x86/fpu: Remove fpu->initialized usage in copy_fpstate_to_sigframe()
+Date: Wed,  7 Nov 2018 20:48:42 +0100
+Message-Id: <20181107194858.9380-8-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107194858.9380-1-bigeasy@linutronix.de>
+References: <20181107194858.9380-1-bigeasy@linutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3FECWQuNbeRUZAA--.736S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ar45CF1rKF18KF18ZF4fZrb_yoW8Kr1xpr
+	ZrKwsxKr18Z3W3XF1DZF48Z395Gws7J3Wj93yDGa4rtF1Y9wn5tr9FkFW0yrWYyr9agr1f
+	trWjvr4rAFs8J3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
+	0EwIxGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44l
+	c2xSY4AK6IIF6rWlc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMx
+	vI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1l
+	cIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4
+	C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x
+	07bL5lnUUUUU=
+
+Since ->initialized is always true for user tasks and kernel threads
+don't get this far, we always save the registers directly to userspace.
+
+Remove check for ->initialized because it is always true and remove the
+false condition.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/x86/kernel/fpu/signal.c | 30 ++++++------------------------
+ 1 file changed, 6 insertions(+), 24 deletions(-)
+
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index 5777ee0c32fed..30e65085dc4d9 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -157,7 +157,6 @@ static inline int copy_fpregs_to_sigframe(struct xregs_state __user *buf)
+ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
+ {
+ 	struct fpu *fpu = &current->thread.fpu;
+-	struct xregs_state *xsave = &fpu->state.xsave;
+ 	struct task_struct *tsk = current;
+ 	int ia32_fxstate = (buf != buf_fx);
+ 
+@@ -172,29 +171,12 @@ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
+ 			sizeof(struct user_i387_ia32_struct), NULL,
+ 			(struct _fpstate_32 __user *) buf) ? -1 : 1;
+ 
+-	if (fpu->initialized || using_compacted_format()) {
+-		/* Save the live register state to the user directly. */
+-		if (copy_fpregs_to_sigframe(buf_fx))
+-			return -1;
+-		/* Update the thread's fxstate to save the fsave header. */
+-		if (ia32_fxstate)
+-			copy_fxregs_to_kernel(fpu);
+-	} else {
+-		/*
+-		 * It is a *bug* if kernel uses compacted-format for xsave
+-		 * area and we copy it out directly to a signal frame. It
+-		 * should have been handled above by saving the registers
+-		 * directly.
+-		 */
+-		if (boot_cpu_has(X86_FEATURE_XSAVES)) {
+-			WARN_ONCE(1, "x86/fpu: saving compacted-format xsave area to a signal frame!\n");
+-			return -1;
+-		}
+-
+-		fpstate_sanitize_xstate(fpu);
+-		if (__copy_to_user(buf_fx, xsave, fpu_user_xstate_size))
+-			return -1;
+-	}
++	/* Save the live register state to the user directly. */
++	if (copy_fpregs_to_sigframe(buf_fx))
++		return -1;
++	/* Update the thread's fxstate to save the fsave header. */
++	if (ia32_fxstate)
++		copy_fxregs_to_kernel(fpu);
+ 
+ 	/* Save the fsave header for the 32-bit frames. */
+ 	if ((ia32_fxstate || !use_fxsr()) && save_fsave_header(tsk, buf))
+-- 
+2.19.1

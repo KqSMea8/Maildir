@@ -1,0 +1,116 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:44 -0000
+Received: from icoremail.net (unknown [209.85.215.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_yddDeNbvApZAQ--.26838S3;
+	Thu, 08 Nov 2018 00:05:51 +0800 (CST)
+Received: from mail-pg1-f177.google.com (unknown [209.85.215.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAX+URbDeNbnzkYAA--.47S3;
+	Thu, 08 Nov 2018 00:05:47 +0800 (CST)
+Received: by mail-pg1-f177.google.com with SMTP id k1-v6so7510975pgq.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:05:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=lzHUdJ3AHMHcqf9XjqaxKb6lxQhI4+oN/t5Mgclgxp0=;
+        b=Y0KR4XdWzSGiQOjN9XrXQlOujSfPoeFvehIivUApsaI2BRtn3ZgkFyjQQx64QfOyJa
+         jd1lHi4xcS4KYCBFel1N9wDXlEzxjrSH3nYlMvJixWRo0xDM6ZhbXeVJfrWj/c6+VXTK
+         SBEH7FcWSCC2jOer9rDouQU2CS5JOJQtAuezfYW++MPkc2uJ5HwFNK/KKY+5zC9jYaZO
+         aCzekyzov4Zfz6u0J5CvO96CXs4wPrCHUHQ7SuCbeManbZBlXmb25tTbfj6BIX1M5FmG
+         /h+dgbTi4gt8G6lcGyMGyua8xGUwdjOhfcRw5ql86eLxORozLNTNfZ1MgmquKFjrzGrg
+         m0Gg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=8bytes.org
+X-Gm-Message-State: AGRZ1gIefxmVUY+Cs9tCOWiAwOT/pNR1+ZEPcSWMbYP3EgKnxl2digX8
+	H3byeYKHhQNwTG+BDH+O9UODATzOWTHt3SqpdzJwL/BZPyVaG+1sKg==
+X-Received: by 2002:a62:d084:: with SMTP id p126-v6mr807687pfg.147.1541606747406;
+        Wed, 07 Nov 2018 08:05:47 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5424377pjt;
+        Wed, 7 Nov 2018 08:05:46 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fPqBLVyKOL/0I0n7c6ndRtEZPn2outEOD5ABNvfe2FbwEYNgH+wt4b3AyRIS4GJOoOZEb6
+X-Received: by 2002:a63:f34b:: with SMTP id t11mr650829pgj.341.1541606746398;
+        Wed, 07 Nov 2018 08:05:46 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541606746; cv=none;
+        d=google.com; s=arc-20160816;
+        b=iHJ+DSMudAdm2zelEObHw1VH1dkS2bCwezi1qLRJH6nm0/NPfK1t21ZWYN1NxoxPL/
+         vVNYTVDt9JMcWj8SWwu4Hc4cYfj8KWAx+tbUOmh046lgGnb4Fa2J8LYnia6xmiHQMgJD
+         zu1yK1jMBcpha41wDzmw8Gava7FWqI6q5AcDE0rMF9B+oSGjJGKB4dbInui6+OEWfN0O
+         Y/K2EAttkex/MTisYZH8T/9zA5PlJaodQFe1y3uyUUOmb3i3UEUrK3y6yYJ7hC6osdbJ
+         GFkmEM8VmrtmfDo8pe7IMrc9DbdfPyjpVPqzfXrS8OwJ7OmZFteaHGAN1DmqBsDJ48Rs
+         wRZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=lzHUdJ3AHMHcqf9XjqaxKb6lxQhI4+oN/t5Mgclgxp0=;
+        b=dcZzGmShgge3lSMGsCEB3KDMvCcKKi/v/ARJ8QyxexB6tCA2Q+BXpGV5WaKALxKFt5
+         RG17WB8s/CQ5E561nX6mj0AkB07qOEJ/yrWljPZ+VPMc9FPXdx68zPOsJ/YKDDCuCE67
+         CmURStCHpg5a6Pdt5W6KekBJM3kuCHTFs7SOPS/yOAQVTbXNM+g/2f1O6GAW1fqcjGDP
+         nEnXw1b1E7tbBzz8BG55vc1pYTgo2mYniXbLpPYbkbhMpHGArqK0V2v26VmyAAeRDHbh
+         0a3L7aJAXxmlo+LTcHTRWN+UD78/J7ZVa3fnEu4y9Yf5+24ZLs8RRnIi6zr3BcocNhOP
+         e4CQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=8bytes.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d20-v6si723731pls.170.2018.11.07.08.05.29;
+        Wed, 07 Nov 2018 08:05:46 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731353AbeKHBf3 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:35:29 -0500
+Received: from 8bytes.org ([81.169.241.247]:40154 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727561AbeKHBf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:35:29 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 3841B2C4; Wed,  7 Nov 2018 17:04:30 +0100 (CET)
+Date: Wed, 7 Nov 2018 17:04:28 +0100
+From: Joerg Roedel <joro@8bytes.org>
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "Mehta, Sohil" <sohil.mehta@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v2] iommu/vt-d: respect max guest address width in agaw
+Message-ID: <20181107160428.awgpvo73mp3lbdro@8bytes.org>
+References: <1541544435-52624-1-git-send-email-jacob.jun.pan@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1541544435-52624-1-git-send-email-jacob.jun.pan@linux.intel.com>
+User-Agent: NeoMutt/20170421 (1.8.2)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAX+URbDeNbnzkYAA--.47S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUYI7k0a2IF6F1UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8JV
+	W8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE
+	2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcV
+	C2z280aVAFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_Gr1l42xK82IYc2Ij
+	64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr
+	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCT
+	nIWIevJa73UjIFyTuYvjxU0sqXDUUUU
+
+On Tue, Nov 06, 2018 at 02:47:15PM -0800, Jacob Pan wrote:
+>  drivers/iommu/intel-iommu.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+
+Applied, thanks.

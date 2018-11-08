@@ -1,0 +1,254 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:43 -0000
+Received: from icoremail.net (unknown [209.85.215.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX9_CMuNb__5ZAQ--.26965S3;
+	Thu, 08 Nov 2018 02:45:23 +0800 (CST)
+Received: from mail-pg1-f179.google.com (unknown [209.85.215.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBnTUm_MuNbuOIYAA--.305S3;
+	Thu, 08 Nov 2018 02:45:19 +0800 (CST)
+Received: by mail-pg1-f179.google.com with SMTP id y4so7241662pgc.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:45:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :references:in-reply-to:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=bZBtL8GlluFABM8CDN/PPTJ9bkuOUzL2FDyLXIArNec=;
+        b=dBf8r6KxLLTbIiUm7+gtWTtgzyCVfx7vBkoiF73OlHalx5aR7WsKQ1jEu1tbB20DMt
+         GlAxPHh4mC7rpKODzLHSmYE2Y53ErHsAnA23PECwsnADiheb3Eyt066tA8G0NUuNWu8V
+         PGCtP+E4d4tzYnQXy2gkFyk2HbN01u6pqQ3SUsnMp01h8yGc+TdNrZWHP4sCvkUyLDz1
+         3b3b73oTtw7c8PP+brakRbwyH0ouAGuV2+arnd+vKjlYx+YCPS8wX62p6G9OhSm3V7Mk
+         C4V++GzkvA9aEDv2FWokONeljsDbtLQCXYUb398SPlJZ8RQcMyeBYlg5csNJ2P6oFGP8
+         34yw==
+X-Gm-Message-State: AGRZ1gIpuFd3afnfvTEbIURW3+gc+fMmm95BoOFoFRZgAS5V42B1WK9Q
+	wOJvCIsv+sJ2ysp8VCBudJkFIDVgZlUI+UdjV+PYGj6wyA7r/RRorg==
+X-Received: by 2002:a62:c184:: with SMTP id i126-v6mr1366844pfg.53.1541616318798;
+        Wed, 07 Nov 2018 10:45:18 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5603388pjt;
+        Wed, 7 Nov 2018 10:45:17 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ed96t/fXulPI8K1BNZtJNhed+xT2pX82qEip0MwHLjrm/p9DzTBE6md1gWb8s7UqvwnxcV
+X-Received: by 2002:a62:adb:: with SMTP id 88-v6mr1320480pfk.121.1541616317768;
+        Wed, 07 Nov 2018 10:45:17 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541616317; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ZTkDuTkKBJtB4CjoXBFOnFehpI+pO+AB7Q6gXEyqjvRXiT508svugMPoUK9h6yNsEB
+         XNM9U2WJ0DtbyVEYx7khyRuJgNtFYt7tQ4VLL0fD0PSuhzJBNUd032Y/KKWgbAx2if9v
+         34Pd5v12ROUtLlLwdFrYsTFDMQQTmvEP4Yqs3OwaT1VqOWPTeq5Z3INZDZokPjlztgdW
+         Zb2u9fuNDjlurqqbdae8IAUbPX0VT3jUABoLip5xjca3D7l3EIPrW+zNYhAOWs4o55k0
+         FFcJtabqCgRJ4bgKbobr27Yinsc9GwF1tL4ghRAiqHHrd+UX9EoKJh9BN9qhUne4+Xi7
+         CF+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=bZBtL8GlluFABM8CDN/PPTJ9bkuOUzL2FDyLXIArNec=;
+        b=vdOJHzIsg8pQwuC0bqcfK+/Erul4OxifQ4GhvKp/Lu7gfpMONIczYA1m9YwytHL1Md
+         pkrOh4IGLXPpXqB7sgqYLThuxshpe1nlbp3ct3tZt5BfcgDSXt955O+uYBm0ggMfgVM7
+         tL86KcU5+N7m1yi0zyyMTQPXkoTbs2DkuTz7phC/vMCd3EhmLG++h2BC0PpI6+PkOB2Z
+         V6+JSwiLxy4jpzjs7bBTi5Rs9db7e0aweHq46xgJfUEKvjzdQN1i+DzjccaUV2LX22OQ
+         mlpC12uIQRThNGk/+kmHkv68oT/XYxlGxNSIBfr4yZyW9XcroqIJalD/+WL53Rn3z91/
+         sS0A==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@chromium.org header.s=google header.b=WqTOKQNF;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=chromium.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id bh4-v6si1317529plb.386.2018.11.07.10.45.02;
+        Wed, 07 Nov 2018 10:45:17 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728905AbeKHEQY (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:16:24 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:46306 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726938AbeKHEQX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:16:23 -0500
+Received: by mail-vs1-f65.google.com with SMTP id r14so10019665vsc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 10:44:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bZBtL8GlluFABM8CDN/PPTJ9bkuOUzL2FDyLXIArNec=;
+        b=WqTOKQNFDu3MMYVKmHrHxzCuwhtkxTmx2UvAyV5YIKnRWGs0l609bcPE828l62Sxne
+         Bvn5kghBF/GpQmqt/e9b4tXZq1dMPGeeTrdGpIJ/g97P+lJU8bY+2zgs/bbnpJhYy2Zo
+         l8SgxXkDw16Bxl10RZBIFeIoePZNx7NCw2Uwg=
+X-Received: by 2002:a67:db06:: with SMTP id z6mr575302vsj.73.1541616284418;
+        Wed, 07 Nov 2018 10:44:44 -0800 (PST)
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
+        by smtp.gmail.com with ESMTPSA id a2sm337174uaa.15.2018.11.07.10.44.43
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 10:44:43 -0800 (PST)
+Received: by mail-ua1-f44.google.com with SMTP id o17so6233004uad.8
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 10:44:43 -0800 (PST)
+X-Received: by 2002:ab0:650e:: with SMTP id w14mr636398uam.83.1541616283078;
+ Wed, 07 Nov 2018 10:44:43 -0800 (PST)
+MIME-Version: 1.0
+References: <20181107010028.184543-1-dianders@chromium.org>
+ <20181107010028.184543-5-dianders@chromium.org> <20181107123032.ytwzfkkwajuo4tsj@holly.lan>
+In-Reply-To: <20181107123032.ytwzfkkwajuo4tsj@holly.lan>
+From: Doug Anderson <dianders@chromium.org>
+Date: Wed, 7 Nov 2018 10:44:31 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=UzCRS9HYAs4WAL_Wqj52nrNO7eDpxNDtZevdG7i0nuEw@mail.gmail.com>
+Message-ID: <CAD=FV=UzCRS9HYAs4WAL_Wqj52nrNO7eDpxNDtZevdG7i0nuEw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] kdb: Don't back trace on a cpu that didn't round up
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Jason Wessel <jason.wessel@windriver.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Peter Zijlstra <peterz@infradead.org>, christophe.leroy@c-s.fr,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBnTUm_MuNbuOIYAA--.305S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxGw4kWrWkGFWUtw4UGF4xCrg_yoWrtw4kpr
+	WUKF1UCFWDJ3Z3u34xZw48Xa4YyrZ3Ar15GFyaganYyasxJFnagFW0ga1Yvrykurs2qw42
+	qF4j93WkKFs0vFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6rylc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bP
+	Ap5UUUUU=
+
+Hi,
+
+On Wed, Nov 7, 2018 at 4:30 AM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Tue, Nov 06, 2018 at 05:00:28PM -0800, Douglas Anderson wrote:
+> > If you have a CPU that fails to round up and then run 'btc' you'll end
+> > up crashing in kdb becaue we dereferenced NULL.  Let's add a check.
+> > It's wise to also set the task to NULL when leaving the debugger so
+> > that if we fail to round up on a later entry into the debugger we
+> > won't backtrace a stale task.
+> >
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> >
+> > Changes in v3:
+> > - New for v3.
+> >
+> > Changes in v2: None
+> >
+> >  kernel/debug/debug_core.c |  1 +
+> >  kernel/debug/kdb/kdb_bt.c | 11 ++++++++++-
+> >  2 files changed, 11 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+> > index 324cba8917f1..08851077c20a 100644
+> > --- a/kernel/debug/debug_core.c
+> > +++ b/kernel/debug/debug_core.c
+> > @@ -587,6 +587,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+> >                       kgdb_info[cpu].exception_state &=
+> >                               ~(DCPU_WANT_MASTER | DCPU_IS_SLAVE);
+> >                       kgdb_info[cpu].enter_kgdb--;
+> > +                     kgdb_info[cpu].task = NULL;
+>
+> This code isn't quite right.
+>
+> In particular there are two exit paths from kgdb_cpu_enter() and this
+> code path is for slave exit only (and master may change the next time we
+> re-enter kgdb).
+
+Ah, good point!  Right that the master could be the the one that later
+fails to round up.
+
+
+> It also looks very odd to have an unconditional clear
+> next to a decrement that takes account of debugger re-entrancy.
+
+Would it look less odd if I write it like this?
+
+if (kgdb_info[cpu].enter_kgdb == 0)
+  kgdb_info[cpu].task = NULL;
+
+In general, though, "enter_kgdb" looks to be more of a boolean value
+then a true counter.  The only place that modifies "enter_kgdb" is
+kgdb_cpu_enter(). It increments it upon entry to the function and
+decrements it upon exit.  All the callers to kgdb_cpu_enter() confirm
+that "enter_kgdb" is 0 before calling it.  I'll further note that
+kgdb_cpu_enter() unconditionally clobbers things like
+"kgdb_info[cpu].debuggerinfo" upon entry.
+
+I could add a patch that converts "enter_kgdb" to a true boolean if
+that helps, though at this point I'm getting pretty far afield of my
+original purpose of trying to fix the problem lockdep yelled about.
+:-P  ...and I probably need to get back to my day job.
+
+I'd also note that the other bits of code around here look pretty
+unconditional to me, but my kdb/kgdb knowledge is not very strong (as
+you've seen) so I could be wrong.  We are unconditionally clearing
+bits from the "exception_state", unconditionally turning tracing on,
+unconditionally calling correct_hw_break(), etc.  ...hmmmm, I suppose
+it could look less odd if I moved my unconditional bit to be up a
+little higher.  I could put it up above to the unconditional clearing
+of "exception_state"  ;-P
+
+
+> Note also that there is similar code in kdb_debugger.c (search for "zero
+> out any offline cpu data") which should be tidied up if we decide to do
+> the same clean up in a different way.
+>
+> I'll leave it to you whether to fix the existing code or add new code
+> here but if you do add it in kgdb_cpu_enter() it must cover both return
+> paths, include debuggerinfo as well, and kdb_debugger.c needs to be
+> tidied up.
+
+OK, so I _think_ the answer here is to just get rid of the code from
+kdb_debugger.c and rely on my new code.
+
+Specifically I'd rather CPUs clear their own "kgdb_info" so we don't
+need to worry about races where a CPU rounds up really late at some
+time when we're not expecting it.  ...and once CPUs always clear its
+own "kgdb_info" when exiting we don't need any special case code to
+have the master try to clear state of offline CPUs.  Thanks for
+pointing me to this code to get rid of.
+
+---
+
+So the tl;dr:
+
+1. Though I'm 99% certain that "enter_kgdb" is truly a bool that is
+either 0 or 1, I won't write a patch to change this myself in the
+hopes that I can wrap up this patch series.  I'll add a note in my CL
+description indicating that I believe things are safe because
+"enter_kgdb" is really a bool.
+
+2. I will add clearing of "debuggerinfo".
+
+3. I will add the same clearing of "task" and "debuggerinfo" to when
+the master exits.  I won't try to unify the code in my patch and leave
+that for a future person working on this code.
+
+4. To make it look less odd, I'll move my clearing to above the
+"kgdb_info[cpu].exception_state &=" line.  It doesn't really matter
+and why not make it look less odd?
+
+5. I will remove the clearing of "debuggerinfo" and "task" from
+kdb_stub() since it will no longer be needed.
+
+
+...and again, thank you for all your timely and awesome reviews and
+advice here.  It is certainly appreciated.
+
+
+-Doug

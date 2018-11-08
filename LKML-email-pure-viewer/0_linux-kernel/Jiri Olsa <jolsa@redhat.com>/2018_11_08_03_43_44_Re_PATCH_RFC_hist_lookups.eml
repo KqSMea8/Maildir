@@ -1,0 +1,183 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:55 -0000
+Received: from icoremail.net (unknown [209.85.214.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_wucQONbpEpaAQ--.27149S3;
+	Thu, 08 Nov 2018 03:44:29 +0800 (CST)
+Received: from mail-pl1-f173.google.com (unknown [209.85.214.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCHb0uaQONbfg8ZAA--.1486S3;
+	Thu, 08 Nov 2018 03:44:27 +0800 (CST)
+Received: by mail-pl1-f173.google.com with SMTP id b5-v6so8322157pla.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:44:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=ikNZKgnHxa83pP6llICIILI/bCE5jdBXOIBBFV58kKM=;
+        b=aq6Ynwb1+9xHF9xKJjPUSJs/DnIlS0vf3hPjK3YzVQ7Vlj5XZcnmoHf1pRMrmzl2+w
+         gJhiK4QxShJ7HMPm1zPIYhzOE76Ywcs1729yCwpUow3UzuuQW1vrKiXl7joJQExwcAkb
+         tTgrkLgj1eyDadxzFfEdsZ0aw7SqrSOAfWQWw/+Ac0pF6PQcNeU5kXJbT3AUZaoAjhmk
+         VIA+wk0vhRm1UARCaCoKxQlVtWX+DsSeuk+B9FCoAG563bh9w96oJFrzTEmuhNOthMMA
+         tTiyZPd9ot99LXoINrHY3M1znWhR2rVRc/LCYwqNefC1KTfS4CCJYb7LasrN0/3gzzx1
+         4+jg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+X-Gm-Message-State: AGRZ1gLOY96HKpfx4ueFmaCsInD1zrdyjclPPYA3gjJr5aL8xWX6Xg9Q
+	Rh/ygmouyVxRpgqrUJCBoNZ3NHiFxTdNNFZ4XzYe7fOtfx5cdw4CrQ==
+X-Received: by 2002:a17:902:166:: with SMTP id 93-v6mr1546640plb.68.1541619866640;
+        Wed, 07 Nov 2018 11:44:26 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5664490pjt;
+        Wed, 7 Nov 2018 11:44:25 -0800 (PST)
+X-Google-Smtp-Source: AJdET5e4NcmxUoqpwT7Apt7ixDv273gmGNL+tAUiXBk/G1djJaDmkdRvVbHUuwZUSxHU4nM3xr6q
+X-Received: by 2002:a62:f94b:: with SMTP id g11-v6mr1542257pfm.244.1541619865558;
+        Wed, 07 Nov 2018 11:44:25 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541619865; cv=none;
+        d=google.com; s=arc-20160816;
+        b=yf1B7Nvy9IogsiSVD2xgbPet569wM0gyXAF/o2SuQUvtblT9dRnJ6lQIqmMWwXsv0S
+         mk76iF+8Kb8Yt85mekZPvMahEdFs/hqVP80Ia625nZqn6eVRUHWGNDNzDvcq2jAbubgt
+         O84NmBTBX69L5J49xzr18OXNHXQOR5DFwTlZqq+PT1/F08IkKpCwMPtx6/9sX33W7iON
+         uhmfjqHTNDUbzkXmqzj5Lt6C7ZZfEzWVI+5bLe+/LEwXtKTGAMNOaitmJ0e1kQ/WRIkm
+         K/EuDYhCESpFyCdioqkq4US8aHMqwFeItnarond2LKwOKJcR4BDHQOED4UoMzDdkuNv7
+         VWZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=ikNZKgnHxa83pP6llICIILI/bCE5jdBXOIBBFV58kKM=;
+        b=l7HHS20yrdexEsQSWyQZMEDojBr7lHXedRX1dCY8xW8Tc86BUKVfgBIaWP55WPsAMG
+         yjFqAGRCiAiOLURweYVe1qXHeajOLvBvZY8HSyNELewj1wkdRpGCcq3vEipyLa3ZQhmT
+         OwnfnpomjeiuY8c6/tWM5kPuFGCCYFbZy5s1hOQqaLukrUQfS6CXUq6OmeegakuL2Os5
+         2bjZQv423X2qTqZILoRTV7rzosRngdIgyE/f4clwCjuY7GSpN5It4IOsKdU9qrfJHmmQ
+         00/2GmulvSOIC8zy2m84oefUx2M0b1uxyUPRsXuGhUXaLfQtOmNgKCiPEJUTpuYBJvIa
+         0sLw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=redhat.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id n7-v6si1543231plp.43.2018.11.07.11.44.10;
+        Wed, 07 Nov 2018 11:44:25 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726770AbeKHFPf (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 00:15:35 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:41210 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725746AbeKHFPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 00:15:35 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 12D5E88311;
+        Wed,  7 Nov 2018 19:43:47 +0000 (UTC)
+Received: from krava (ovpn-204-25.brq.redhat.com [10.40.204.25])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 79E5919082;
+        Wed,  7 Nov 2018 19:43:45 +0000 (UTC)
+Date: Wed, 7 Nov 2018 20:43:44 +0100
+From: Jiri Olsa <jolsa@redhat.com>
+To: David Miller <davem@davemloft.net>
+Cc: acme@kernel.org, linux-kernel@vger.kernel.org, namhyung@kernel.org,
+        jolsa@kernel.org
+Subject: Re: [PATCH RFC] hist lookups
+Message-ID: <20181107194344.GA29732@krava>
+References: <20181105.200321.1569039579935458312.davem@davemloft.net>
+ <20181105.205342.1568518551892125916.davem@davemloft.net>
+ <20181106204255.GB25020@krava>
+ <20181106.221349.1296959035550004994.davem@davemloft.net>
+ <20181107083217.GA12870@krava>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181107083217.GA12870@krava>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 07 Nov 2018 19:43:47 +0000 (UTC)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCHb0uaQONbfg8ZAA--.1486S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxJry7uF43Wryfur43KryDJrb_yoW8ur4DpF
+	WrKay3Ka1vqrW7ZwnFvr1kXr9Iv3yxJrs8Xrn7tFWjyry5uF1IqrWxKw4a9FZ5Ars7Ga42
+	vw4jq398W34DXFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bJ
+	ksgUUUUU=
+
+On Wed, Nov 07, 2018 at 09:32:17AM +0100, Jiri Olsa wrote:
+> On Tue, Nov 06, 2018 at 10:13:49PM -0800, David Miller wrote:
+> > From: Jiri Olsa <jolsa@redhat.com>
+> > Date: Tue, 6 Nov 2018 21:42:55 +0100
+> > 
+> > > I pushed that fix in perf/fixes branch, but I'm still occasionaly
+> > > hitting the namespace crash.. working on it ;-)
+> > 
+> > Jiri, how can this new scheme work without setting copy_on_queue
+> > for the queued_events we use here?
+> 
+> aahh.. it won't, setting it up ;-)
+> 
+> > 
+> > I don't see copy_on_queue being set and that means the queued event
+> > structures reference the event memory directly in the mmaps, after the
+> > mmap thread has released them back to the queue.
+> > 
+> > That means new events can come in to the mmap ring and overwrite what
+> > was there previously, maybe even while deliver_event() is in the
+> > middle of parsing the event.
+> > 
+> > Setting copy_on_queue for data[0] and data[1] makes all of the crashes
+> > go away for me.
+> > 
+> > I get a lot of "[unknown]" shared objects shortly after perf top
+> > starts up during a full workload.  I've been wondering about one
+> > side effect of how the mmap queues are processed, consider the
+> > following:
+> > 
+> > 	cpu 0			cpu 1
+> > 
+> > 				exec
+> > 				create new mmap2 events
+> > 				scheduled to cpu 0 for whatever reason
+> > 	sample 1
+> > 	sample 2
+> > 
+> > And let's say that perf top is backlogged processing the mmap ring of
+> > events generated for cpu 0, and sees sample 1 and sample 2 before
+> > getting to any of cpu 1's events.
+> > 
+> > This means the thread and map and symbol objects won't exist and
+> > we'll get those '[Unknown]' histogram entries, and they won't go
+> > away.
+> > 
+> > When it finally stops looping over the mmap ring for cpu 0's events
+> > it gets to cpu 1's mmap ring and sees the exec and mmap2 events
+> > but at that point it's far too late.
+> > 
+> > I surmise from what I see with perf top right now that this happens
+> > a lot.
+> 
+> right, there's no reason why top should have different standards than
+> record/report.. above can definitely happen, I'll enable time sample
+> type and use ordered events for the queue
+
+I pushed new version in my perf/fixes branch
+
+jirka

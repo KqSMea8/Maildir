@@ -1,0 +1,157 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:33 -0000
+Received: from icoremail.net (unknown [209.85.214.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv359UONbgKZaAQ--.27796S3;
+	Thu, 08 Nov 2018 04:52:14 +0800 (CST)
+Received: from mail-pl1-f170.google.com (unknown [209.85.214.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBXNkJ5UONbo0IZAA--.1102S3;
+	Thu, 08 Nov 2018 04:52:09 +0800 (CST)
+Received: by mail-pl1-f170.google.com with SMTP id n4-v6so8408643plp.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:52:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding:sender:precedence
+         :list-id;
+        bh=JXE+oj1dK2zsJGBS6SPC0YF5lcXtCoHawI4SwCGgKPo=;
+        b=Ef+ccHiXMAvoHXY44ool+l56yLcXBIjYn/sQPrNiKCd/8JTClUfcYCFU6pLa8KhtTv
+         scG0tR6JAqe028Qfdoe6EV0QmmVTKNv3m8hN9E9fMClobwQI8gKpZiqfWJ4D6S+f28cx
+         QTyhbEazInxMnA2WRkUDzhs9xgYNTO5vvTpxus8HuFQRW8swfGFwY9TmoHh6rTUf3bxj
+         +p7qBvKXzqacR8C7cficz1a1EZBEvtgy0uBEVBzrvQ1PhJFtAqmPsa6dGwCNC69XCd7x
+         EZQGZmYUNTzT2hsk+q/PDH/Y93fb+y8irRe8hQ+BT/KWtP8US0uVuf+56VXsbNDoFPRK
+         wV/Q==
+X-Gm-Message-State: AGRZ1gJsxMw2Bd9Yh4QPB7FB7MbTnCuXpmAVtGtbx/liZtRjPfWX/RLJ
+	Z5/tvMnXLg0csTU80gpdTecCbFu/ssQ3P83W11KGQpKrTwQHCjwMCw==
+X-Received: by 2002:a17:902:bd4a:: with SMTP id b10-v6mr1748196plx.171.1541623928667;
+        Wed, 07 Nov 2018 12:52:08 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5729374pjt;
+        Wed, 7 Nov 2018 12:52:07 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dWMM1yVtXUsJoMb8mC1ZjmeIki/hKYP+YUMkx/3chMLm4LkS28V0JVbVBnBE1O1nkgs2rx
+X-Received: by 2002:a63:f811:: with SMTP id n17mr1560830pgh.23.1541623927920;
+        Wed, 07 Nov 2018 12:52:07 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541623927; cv=none;
+        d=google.com; s=arc-20160816;
+        b=cl5CAN553zXeJ4SB+9PT0XZx/wUzSRQW1iLLFx19pqU+OWpy5WnnPcqvdsW+WB6SJO
+         sVpqlDFoULVRzqzIBA0qwm3MStScTujDvlp/zJks5wL41K/qeZWSdi5TsiFh9TUjf4fS
+         aEYWHGB7wZSCIHO+ZD+gnef0O/vzp/q3DQfMiDfdDUIZJkVSoFPwQpHP1g812MxL92MK
+         PcyidKM6Jo1aH840q+4ltN757km087bkztd8OkNtn+Hi7CiQSlEwJPBSOsH2HgWSC0F+
+         a/ijp4aiYWFXhHKJ/xAipLVbVzu6B3wgPVMdtR9+APixf6rzJjKzMYQQoGhMG8DK7MTX
+         C3ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:dkim-signature;
+        bh=JXE+oj1dK2zsJGBS6SPC0YF5lcXtCoHawI4SwCGgKPo=;
+        b=pblO3lyEwCyhRhuGfWJDSyiBB8Y3aDyWBLsmAE2A0fUR3rXaDTq87Hd5dz2ReOKGDD
+         bhJUN+sVKwfGpP8NX3TGf208UmcXRWfrKZLCWURe7iRdBG/uwA9N65AgsjXkfy2Wmk0s
+         soQcKgb//h49NDPErCXb1RbGEeqWwnmpdCJYXYnoDeBOoSufOvtpZyQJlaKn9sgVAdQb
+         psrFxxmKyZ5Q4rymYWN7QM0Gr9KCrSZtCcN+1X7UQWlqPqB4Rwvhp7dSuOAgdUbwZZ/U
+         ZehsVisDmzZDovMBvWQIRHJF69AGz30UFQql5eb6l7jeZYbBg5izPnLB/rmgO8tYLcgf
+         fTeQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b=LhB52KcJ;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id t25-v6si1883537pfm.152.2018.11.07.12.51.49;
+        Wed, 07 Nov 2018 12:52:07 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726996AbeKHGXr (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:23:47 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:32937 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbeKHGXq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:23:46 -0500
+Received: by mail-lf1-f67.google.com with SMTP id i26so12531852lfc.0;
+        Wed, 07 Nov 2018 12:51:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JXE+oj1dK2zsJGBS6SPC0YF5lcXtCoHawI4SwCGgKPo=;
+        b=LhB52KcJcvblFoN7sMHXMJ8nn0xcjGbNIuzapL2EvgCDgtZjEVbjCJw7l9GvuJtgEz
+         Ha67zdSw2yg/XqQf5eI4qnMXsXtmT7h++Q7haSQkGbBj8SSazriuKF/xdrFLb6k0sfzZ
+         8FNtGtQLjMPWPfNqncHvwEWdU+YUyYBrwkChnfT9UIXuZ6Z0JwMnjQ3Vjw/ADpWnGlhU
+         YjXGR1IL60y7zRVLb4FUNAdJ3a1e5YJSTa4wfKLj9UktYF0w6L/WcEAKZVqJINYyxj3B
+         mzDgPzylRlhxitIIelwu47ERWhVu8NAvZ0tDskiaiV+igexhosd4+785fuI7etF8vZC4
+         eZTQ==
+X-Received: by 2002:a19:914b:: with SMTP id y11mr1016480lfj.98.1541623899155;
+        Wed, 07 Nov 2018 12:51:39 -0800 (PST)
+Received: from [192.168.1.18] (dnl153.neoplus.adsl.tpnet.pl. [83.24.93.153])
+        by smtp.gmail.com with ESMTPSA id k21-v6sm289842ljc.15.2018.11.07.12.51.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 12:51:38 -0800 (PST)
+Subject: Re: [PATCH 01/24] leds: class: Improve LED and LED flash class
+ registration API
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Rob Herring <robh@kernel.org>, Daniel Mack <daniel@zonque.org>,
+        Dan Murphy <dmurphy@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Oleh Kravchenko <oleg@kaa.org.ua>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Simon Shields <simon@lineageos.org>,
+        Xiaotong Lu <xiaotong.lu@spreadtrum.com>
+References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
+ <1541542052-10081-2-git-send-email-jacek.anaszewski@gmail.com>
+ <CAMz4kuJrfCfe7xJptVU_EGa-GM0-pfMaH2xb8+BksEia9W=bEw@mail.gmail.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <92792704-1017-f2dc-1b2f-c2b0cf540b4f@gmail.com>
+Date: Wed, 7 Nov 2018 21:51:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <CAMz4kuJrfCfe7xJptVU_EGa-GM0-pfMaH2xb8+BksEia9W=bEw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBXNkJ5UONbo0IZAA--.1102S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUO37k0a2IF6F1UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JMx02cVCv0xWlc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0264kExVAv
+	wVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VW7MxkI7II2jI8vz4vEwI
+	xGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJV
+	WxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I
+	3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
+	WUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8I
+	cIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IU0F4iUUUUUU==
+
+Hi Baolin,
+
+Thanks for the review. Will address the remarks in a v2.
+
+On 11/07/2018 07:55 AM, Baolin Wang wrote:
+> Hi Jacek,
+> 
+> On 7 November 2018 at 06:07, Jacek Anaszewski
+[...]
+> 
+> It can work well for SC27XX LED, FWIW you can add my tested tag.
+> Tested-by: Baolin Wang <baolin.wang@linaro.org>
+> 
+
+-- 
+Best regards,
+Jacek Anaszewski

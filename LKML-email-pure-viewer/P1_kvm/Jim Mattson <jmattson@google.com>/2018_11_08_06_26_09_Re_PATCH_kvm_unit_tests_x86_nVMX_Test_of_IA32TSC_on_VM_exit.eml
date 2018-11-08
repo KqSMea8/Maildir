@@ -1,0 +1,128 @@
+Return-Path: <kvm-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:59 -0000
+Received: from icoremail.net (unknown [209.85.214.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX1+qZuNb3ihbAQ--.27540S3;
+	Thu, 08 Nov 2018 06:26:51 +0800 (CST)
+Received: from mail-pl1-f174.google.com (unknown [209.85.214.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnCkaoZuNbnpEZAA--.1712S3;
+	Thu, 08 Nov 2018 06:26:48 +0800 (CST)
+Received: by mail-pl1-f174.google.com with SMTP id b5-v6so8512589pla.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:26:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :in-reply-to:references:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=6kILW4IbMtaqS//hTjKM5p2y5VoPs4BvifwhFlCNqDo=;
+        b=djPzWxvZdHy3xL1kZtk0uSZ266AAwD9Cw4IGVg1JHYDB9z6qHwKlj27vg7fc6rYFK2
+         e1NxP04kw8+CnPJP2L6cx50+m6AfbSpHM5M6b4HKX8ECZGvBuk4T2ypLdy+0tyou5VwE
+         bs+js3dFYmNIOdHdkh23bEuLg7qDK5ifQFRKtpc0Opgy+0CuaYOSEeLVoL/sYlMn2HiX
+         a/n/y0bL4njeJO5ZZHpSkr19YDL2Sy5xC0T0+trkCsP9B+o/zBI6lSFqLZwrFtrFFiHp
+         mZjUSO4T3MtoF1w/gCgEt4Th89GbVZw0Ii0JIxxh2MTcELs/4vatjjmIPwx38eTKYS0a
+         lxdg==
+X-Gm-Message-State: AGRZ1gKMkbjYUeF4Bko22l81vbdN/vgVi86BCVDUldjVoAHtdUsDLtiw
+	NjoCFo68sToQnqUN3vG/tPnGqlnKHIX2kuHiRh0RPcrW5szy5H4ymA==
+X-Received: by 2002:a17:902:9698:: with SMTP id n24-v6mr2173478plp.9.1541629608068;
+        Wed, 07 Nov 2018 14:26:48 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp76277pjt;
+        Wed, 7 Nov 2018 14:26:46 -0800 (PST)
+X-Google-Smtp-Source: AJdET5et6RHAlpd2fYudF0/5YUKJjACTug8BBvN3UGAKCsBhVzlpM5ujsEvqdJ34XF7J2ZYK96/J
+X-Received: by 2002:a62:4641:: with SMTP id t62-v6mr2136158pfa.200.1541629606488;
+        Wed, 07 Nov 2018 14:26:46 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541629606; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Dr1lMuPMfMV1eAeVG4NzgSgGedK9//pydp5PiNutpcNDW9bZP1udcUBVpM+BjJkxG/
+         leirN3IfRq0/SiI+RzBWqOwHJwchoP7kpeL5MCpymAZDYRdi73T5pBSLb+1lWAY8+0ab
+         vz3psn3w592w8jd5o6ihEaBWnLmKSo8AuVMieYDBVedsxPMs5ofIfT02P7rbtNlJbZwc
+         Qugy3vCd0tPYSxZxrArhlXhd/msvLBVak8yhEwoAnMbrsIgg0/oNrgRFyVf7mcKLsXz5
+         cPLwytdVf/TVJNZrrdBgW38kNTIBecO8GJhTBvDCy/C1WslTgy/GHSDMu4ESemXCpOMF
+         hW2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :references:in-reply-to:mime-version:dkim-signature;
+        bh=6kILW4IbMtaqS//hTjKM5p2y5VoPs4BvifwhFlCNqDo=;
+        b=RDJzrJq6pKRxUx+Ruu6Ey2rRQfSs6rGvc1DP8CoRN68X71pmoE4dICbzY2BPsdsPvi
+         DtbD6zTPqtBHJYb9ZIg8Ik64TKpVIvpT6BNO5dfZHFrwHlgtfNWlV59IW7P9ktl6vyUO
+         +bbVeNjqZRsUUeZGGLAdeJ7fEuybP3vo8EkOTkC40ngKoN8N6yogpBSrq0dQ9AnIxM0E
+         Irjg5qhl+AqfDNuRKNj8XJj8qv/U1nR6v8jAF4eZD8ClEa2AYu7JF7JL7yOY/utk6VXW
+         sIj10DO2I/GGZBJvE066JrS48wFp2g8slOdSI9mHt/U5PP7AqjNFesbt1nsRAobBx3/k
+         ZVRg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@google.com header.s=20161025 header.b=Sg9htb4M;
+       spf=pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=kvm-owner@vger.kernel.org;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=google.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id y35-v6si1782978pgl.14.2018.11.07.14.26.32;
+        Wed, 07 Nov 2018 14:26:46 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727591AbeKHH6g (ORCPT <rfc822;fanshuming2011@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:58:36 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33845 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727495AbeKHH6g (ORCPT <rfc822;kvm@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:58:36 -0500
+Received: by mail-ot1-f68.google.com with SMTP id t5so12729017otk.1
+        for <kvm@vger.kernel.org>; Wed, 07 Nov 2018 14:26:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=6kILW4IbMtaqS//hTjKM5p2y5VoPs4BvifwhFlCNqDo=;
+        b=Sg9htb4MxOnKTvy6Ni33ZgR648D/Jx/zLeRYN/nfOk2CRbmtRkGNmfsja8ySUfwveB
+         TIrpS/DHqBegFi9fe5voSeJGbeSkJPBayO+f9R85EeAXgl4h5jQ4i3mhPHmJC7tKw0Wt
+         mFthqumeDtGZTm9Yy0RyT62Me6sPRSPtPvREFE306rWKqN53GrLWyJmuhalTfWprlIF0
+         2T9CvFa7WXOBGNkzkGpKPZjqyY3RC9FLqXOsKX/fQqrynJd6eKF3w1jqyARwGZGMwmHv
+         xgc1Xdx75tXDdKMVenCkZlFuYL4CQhT9+knTx5E6iuRuR6X3qMe05QFP/qpuelFlo4qg
+         mjQQ==
+X-Received: by 2002:a9d:3c0c:: with SMTP id q12mr1224089otc.63.1541629569890;
+ Wed, 07 Nov 2018 14:26:09 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:ac9:31a7:0:0:0:0:0 with HTTP; Wed, 7 Nov 2018 14:26:09 -0800 (PST)
+In-Reply-To: <9C0319A6-2371-4436-B90F-DE01D673F7AF@oracle.com>
+References: <20181107212528.15022-1-jmattson@google.com> <9C0319A6-2371-4436-B90F-DE01D673F7AF@oracle.com>
+From: Jim Mattson <jmattson@google.com>
+Date: Wed, 7 Nov 2018 14:26:09 -0800
+Message-ID: <CALMp9eQ3aersxVTWdRxCa9V1PSKXjWYcpj6jYdjzFzJGWvLtiQ@mail.gmail.com>
+Subject: Re: [PATCH kvm-unit-tests] x86: nVMX: Test of IA32_TSC on VM-exit
+ MSR-store list
+To: Liran Alon <liran.alon@oracle.com>
+Cc: kvm list <kvm@vger.kernel.org>, Marc Orr <marcorr@google.com>,
+        Peter Shier <pshier@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <kvm.vger.kernel.org>
+X-Mailing-List: kvm@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnCkaoZuNbnpEZAA--.1712S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUYu7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW3MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY
+	6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IU5fD
+	G5UUUUU==
+
+On Wed, Nov 7, 2018 at 1:38 PM, Liran Alon <liran.alon@oracle.com> wrote:
+
+> Should you use report_skip() instead of printf()?
+
+Indeed. I didn't know about (or had forgotten about) report_skip. I'm
+out all day tomorrow, but I'll send a V2 on Friday.
+
+Thanks!

@@ -1,0 +1,196 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:41:25 -0000
+Received: from icoremail.net (unknown [209.85.215.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3yR8hONbK9RbAQ--.27928S3;
+	Thu, 08 Nov 2018 08:34:04 +0800 (CST)
+Received: from mail-pg1-f180.google.com (unknown [209.85.215.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwD32UV6hONbBe8ZAA--.2416S3;
+	Thu, 08 Nov 2018 08:34:02 +0800 (CST)
+Received: by mail-pg1-f180.google.com with SMTP id 70so2471258pgh.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 16:34:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references:sender
+         :precedence:list-id;
+        bh=Y0U1KmI/AvUKN7JgLb7JJgJrjojs/oJhnNN7w8PMuT4=;
+        b=cd+AP9XmB42PmqVFZVvdSCspkHpuwqodJfQ7OTBRpKuPkYNu0Rv/BHK9e5RAtWCSM3
+         vu9T++D1edxsYc7xjroNIGtB0cXKyklxJ7MdpMQPVUWYCBMiVqp7CEnoEKOSP+hq9/6K
+         GBPHdpRcN7xv0dylKHNSsu0kzjDT83KCBtYF3PltgEdL5Amfp1CsUTEU7jnGt6R804/d
+         Ixo7lptfqpaNYlGBWeSJDZdTSwUcWXRc3xtF41YD449yaOAU7h4yBwm9CKK7Soivz+2e
+         v3/w7f/B/3GdnnsahWuIGs7VKHtlyFAZlekS9M6OkeIcsr+IJ60cHm4o4CP52mwZeYFz
+         ghqg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gLz5qNsl0phkI/jIw4qGQbhLtA0aPyMS1ypkjzBnIRlF1qy/s5i
+	zasmDB4B1IFMTeV/gQTYzebY+a5i0exPAEGt8porQEeP0/LfuZ2r5g==
+X-Received: by 2002:a63:4044:: with SMTP id n65mr2040780pga.90.1541637242163;
+        Wed, 07 Nov 2018 16:34:02 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp177211pjt;
+        Wed, 7 Nov 2018 16:34:01 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eRePlc74yKFlWxPI9abloI76+90KPEZc2+4D90jiIJRk8sIbExVxgvQtDCGi+ZVtnPvpLv
+X-Received: by 2002:a62:da54:: with SMTP id w20-v6mr2490750pfl.106.1541637241220;
+        Wed, 07 Nov 2018 16:34:01 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541637241; cv=none;
+        d=google.com; s=arc-20160816;
+        b=t/LvIVi175t6/3gw7oodGXOq6Gw2oWAu/5acGkwCc+Hx5LW5bVa9H8ERh6vc2FgtqF
+         iKyD8J+GeOv/je6U/ikon/gMG8Se+XVIiI4Xw1CNZZ197zluSIIdHVrH0l4VyzXVFLwe
+         6I41KQoMlQ0yL4Dyv4fGJblPMITer3rot2nm0fiuR64jDZ7QTVG+deEeV8Wg/OT517Y4
+         eMe6UDJ3zvSkZhJDanM1yPbGgntd7ZwhszNW8Yi/JVyOxlQB9J/8/EE89ymz9gU98YkS
+         /2hA2GFskVQ5SRl/ATJZVtb9PeiOo21B6rvYNQsy7z4P1KvjnUyIXmKaItXeZbCgBpoA
+         6L5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from;
+        bh=Y0U1KmI/AvUKN7JgLb7JJgJrjojs/oJhnNN7w8PMuT4=;
+        b=T2S5ctWxzS9hbO6s/8n45U1hoOcyHusulFva9vlUtsh809jRpIFy8g0IMgCkgfPmJY
+         AvxESFat40R3yJn8XEyII2AxDEDdE/bwVYUZrX1+cM4OcGvk7f+69pOVUscE7eDbNrwP
+         8nvgD2r8vqr21PjiFwhQlz4pNVLZ5Fn/p8n/RBMSEMwIhqWuyAL4I8GnAq7P537Ptnf3
+         wo0k4HXfebZ+s4CN1PRSy/Xbxb3XlhRUCAHpHXe3mDNbqqjvXRNtypPs8jOCuzF+stGd
+         jUw4d6AlDsAHLZbeidRVRjAEkvfG8VyoFVcK4Gi5f/Pwv1KA2ND2R6zLtKpwob9+HP5+
+         6UmA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 33-v6si2369991pls.173.2018.11.07.16.33.46;
+        Wed, 07 Nov 2018 16:34:01 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728267AbeKHKG3 (ORCPT <rfc822;yamahata.lkml@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 05:06:29 -0500
+Received: from mga03.intel.com ([134.134.136.65]:17841 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727525AbeKHKG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 05:06:28 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 16:33:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,477,1534834800"; 
+   d="scan'208";a="279252392"
+Received: from aubrey-skl.sh.intel.com ([10.239.53.9])
+  by fmsmga006.fm.intel.com with ESMTP; 07 Nov 2018 16:33:36 -0800
+From: Aubrey Li <aubrey.li@intel.com>
+To: tglx@linutronix.de, mingo@redhat.com, peterz@infradead.org,
+        hpa@zytor.com
+Cc: ak@linux.intel.com, tim.c.chen@linux.intel.com,
+        arjan@linux.intel.com, aubrey.li@intel.com,
+        linux-kernel@vger.kernel.org, Aubrey Li <aubrey.li@linux.intel.com>
+Subject: [RFC PATCH v2 2/2] proc: add /proc/<pid>/thread_state
+Date: Thu,  8 Nov 2018 01:16:22 +0800
+Message-Id: <1541610982-33478-2-git-send-email-aubrey.li@intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1541610982-33478-1-git-send-email-aubrey.li@intel.com>
+References: <1541610982-33478-1-git-send-email-aubrey.li@intel.com>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwD32UV6hONbBe8ZAA--.2416S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw47JryrZw1kAryUtryxZrb_yoW5Jr15pF
+	Z8ZFs3Gr45GF47Xr93AF1DZrn0gw1vgFy3Kr97Ga47tF13tr43XFsYyF9Iyr4Fkry8Gwnx
+	XFyagFZrC3yDAF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmab7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M280x2IEY4vE77IFxVWUZVW8XwA2ocxC64kIII0Yj41l84x0c7CEw4AK67
+	xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E
+	14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14
+	v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xf
+	McIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7
+	v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca
+	8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VWDMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7
+	IYx2IY67AKxVWUCVW8JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMxvI42IY6I8E
+	87Iv67AKxVWxJr0_GcWlcIIF0xvEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdMxAIw28IcxkI7V
+	AKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j
+	6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF7vcSsG
+	vfC2KfnxnUUI43ZEXa7IU5DsqJUUUUU==
+
+Expose the per-task cpu specific thread state value, it's helpful
+for userland to classify and schedule the tasks by different policies
+
+Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+---
+ arch/x86/kernel/fpu/xstate.c | 13 +++++++++++++
+ fs/proc/base.c               | 13 +++++++++++++
+ 2 files changed, 26 insertions(+)
+
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 87a57b7..5a4a1d5 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -7,6 +7,7 @@
+ #include <linux/cpu.h>
+ #include <linux/mman.h>
+ #include <linux/pkeys.h>
++#include <linux/seq_file.h>
+ 
+ #include <asm/fpu/api.h>
+ #include <asm/fpu/internal.h>
+@@ -1245,3 +1246,15 @@ int copy_user_to_xstate(struct xregs_state *xsave, const void __user *ubuf)
+ 
+ 	return 0;
+ }
++
++/*
++ * report AVX state
++ */
++void arch_thread_state(struct seq_file *m, struct task_struct *task)
++{
++	if (task->thread.fpu.avx.state)
++		seq_putc(m, '1');
++	else
++		seq_putc(m, '0');
++	seq_putc(m, '\n');
++}
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index aaffc0c..be24327 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -2893,6 +2893,17 @@ static int proc_pid_patch_state(struct seq_file *m, struct pid_namespace *ns,
+ }
+ #endif /* CONFIG_LIVEPATCH */
+ 
++void __weak arch_thread_state(struct seq_file *m, struct task_struct *task)
++{
++}
++
++static int proc_pid_thread_state(struct seq_file *m, struct pid_namespace *ns,
++				 struct pid *pid, struct task_struct *task)
++{
++	arch_thread_state(m, task);
++	return 0;
++}
++
+ /*
+  * Thread groups
+  */
+@@ -2994,6 +3005,7 @@ static const struct pid_entry tgid_base_stuff[] = {
+ #ifdef CONFIG_LIVEPATCH
+ 	ONE("patch_state",  S_IRUSR, proc_pid_patch_state),
+ #endif
++	ONE("thread_state",  S_IRUSR, proc_pid_thread_state),
+ };
+ 
+ static int proc_tgid_base_readdir(struct file *file, struct dir_context *ctx)
+@@ -3372,6 +3384,7 @@ static const struct pid_entry tid_base_stuff[] = {
+ #ifdef CONFIG_LIVEPATCH
+ 	ONE("patch_state",  S_IRUSR, proc_pid_patch_state),
+ #endif
++	ONE("thread_state",  S_IRUSR, proc_pid_thread_state),
+ };
+ 
+ static int proc_tid_base_readdir(struct file *file, struct dir_context *ctx)
+-- 
+2.7.4

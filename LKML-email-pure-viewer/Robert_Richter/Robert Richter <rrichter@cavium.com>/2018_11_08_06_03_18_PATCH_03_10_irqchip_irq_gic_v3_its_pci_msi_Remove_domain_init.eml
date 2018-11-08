@@ -1,0 +1,299 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:50 -0000
+Received: from icoremail.net (unknown [209.85.214.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH95bYeNb1QpbAQ--.27103S3;
+	Thu, 08 Nov 2018 06:04:11 +0800 (CST)
+Received: from mail-pl1-f179.google.com (unknown [209.85.214.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3X0tYYeNb2n0ZAA--.1605S3;
+	Thu, 08 Nov 2018 06:04:08 +0800 (CST)
+Received: by mail-pl1-f179.google.com with SMTP id g59-v6so8480254plb.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:04:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :thread-topic:thread-index:date:message-id:references:in-reply-to
+         :accept-language:content-language:spamdiagnosticoutput
+         :spamdiagnosticmetadata:content-transfer-encoding:mime-version
+         :sender:precedence:list-id;
+        bh=dEqSRyxg+X7syJAyBlpOWnQo615RYOtMty1tKH1sdqQ=;
+        b=GgCbe9GM237THTFA2cyl+XnndcnIB2Q2/h3GILEWzHH/famph3p+jLEcpI0EBIZTvu
+         9wObhM+hKCNYAZmsg/O/btVjw/oOFI+/lYseESN3Wfg4hxv1aUGYkPTOn56HN+HS4kVz
+         RgnPMYN8QGOPdSvX+4LGDyiNHgLxngGSQQ/WB5kAOOXxqrnxRnht06JrsUff2x3oASlz
+         zguIjvk/C8S2efuhZUPxQEMzPCTgYm8KfnXTslyzFYZ6Y8zZbCQ7Xxe5I78Up2MGb92l
+         6cYh8Tr8Zn0tzSuyI30g1IeVGDVi1xadvnQvnaXHPrcIDk5QjzPnD0qD/HWWEyooUpvU
+         Rh8w==
+X-Gm-Message-State: AGRZ1gKLTrculxW9bD9/feO52SjUP4wIJN2MQlDIORYffPQ21p2biu30
+	hWiQl5JZMFpLmnnZTOJGO/dFo1DwP0Fldn5fBJNKVvMJNCxweQ0ZZw==
+X-Received: by 2002:a17:902:50e3:: with SMTP id c32-v6mr2021814plj.39.1541628248472;
+        Wed, 07 Nov 2018 14:04:08 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp56336pjt;
+        Wed, 7 Nov 2018 14:04:05 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dAU9SI1JT7wMtDcAj3f5BwEesRx5sHJCBqPk8n1caTDcKkvVAkmxDdQKt1cnyhTBTzEajR
+X-Received: by 2002:a62:13d6:: with SMTP id 83-v6mr2020923pft.34.1541628245809;
+        Wed, 07 Nov 2018 14:04:05 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541628245; cv=none;
+        d=google.com; s=arc-20160816;
+        b=T4HLMCdvqAmeOCrbfDkQAvAMI3sGrlsKhIG3YUEPt18jt5w1skt+wfiPh8t9nO8t3Z
+         0jvFFxziHEInu9+MkSLSLyFTxRg2tBjh4/mg+kd2RTzi9gRwL324CiN1qefeiwChTUsp
+         gR2oLqiwICJwHLVZvNgEQ4PRy5fW44NLn30xHM9ydq6U8B6Ew7+KdSuVlBKo+P5Pwz/u
+         ktkmmpU7/IljF+uyWLhySSzZq+Oglj6ErCyo8VjEHehjIc8V8ffxV0MX+k5ZbwxAfwr/
+         5yxNDy4rzo1PUh4iF3GVp8GrxOenmLnkPRE0sbDutoojqq78szcFTHr6GsqGuLuZLhgJ
+         +3Xw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:content-transfer-encoding
+         :spamdiagnosticmetadata:spamdiagnosticoutput:content-language
+         :accept-language:in-reply-to:references:message-id:date:thread-index
+         :thread-topic:subject:cc:to:from:dkim-signature;
+        bh=dEqSRyxg+X7syJAyBlpOWnQo615RYOtMty1tKH1sdqQ=;
+        b=VwcNaxiWC1+iKGR7+VBjeYIKamAAhgvkvGIvIf1k9Av0uO11nOm2l3KjdY/gnXDsVQ
+         EtCCXEq+OrU0VjoA1MRhl0S5llfJXXTS2Mk/2YyXEXHQZuUc7/XdgD3NRXsyZ7PgdI6b
+         V4dnJtbxmiCCLZJq3ZsXjIlVfhfs9JUK981HOg7F09HTjzvgP309gAI8BiWiId84EmA2
+         3t/6Ch1Vpx7mFupo9QQf3yXMrgmMyKisCPKqSR6PcL0u9pTMZ0Va8O1rtYnBoLBxn1SS
+         iTmYokqgxCI/195j7T2bEzK6P2R4EpqwAT5oG/Ng/T4bkUAeHFDqISeKgzZIoOs+tNIA
+         sffA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@CAVIUMNETWORKS.onmicrosoft.com header.s=selector1-cavium-com header.b=edwCP7IL;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id c85-v6si1985930pfe.60.2018.11.07.14.03.32;
+        Wed, 07 Nov 2018 14:04:05 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727816AbeKHHfm (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:35:42 -0500
+Received: from mail-eopbgr730050.outbound.protection.outlook.com ([40.107.73.50]:33907
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727127AbeKHHfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:35:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=CAVIUMNETWORKS.onmicrosoft.com; s=selector1-cavium-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dEqSRyxg+X7syJAyBlpOWnQo615RYOtMty1tKH1sdqQ=;
+ b=edwCP7IL9OpxlAa6QsWdT+NFEEoQV2fD6XubH2x1KFv2psgoSwDte85tLp/yftlB/tpptvztwWFE+SWgp5jEO7oGdCCg2/xHZlYO13QmCU5aPVGVGnLh4xGfus9m+CVHJ9jD1kx7RaLTuya8vO7avnAQDVlzts/aqNSL+YIwTL4=
+Received: from SN6PR07MB5326.namprd07.prod.outlook.com (52.135.105.33) by
+ SN6PR07MB5232.namprd07.prod.outlook.com (52.135.120.211) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1294.22; Wed, 7 Nov 2018 22:03:18 +0000
+Received: from SN6PR07MB5326.namprd07.prod.outlook.com
+ ([fe80::f0b9:acf9:7513:c149]) by SN6PR07MB5326.namprd07.prod.outlook.com
+ ([fe80::f0b9:acf9:7513:c149%5]) with mapi id 15.20.1294.034; Wed, 7 Nov 2018
+ 22:03:18 +0000
+From: Robert Richter <rrichter@cavium.com>
+To: Marc Zyngier <marc.zyngier@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+CC: "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        "Richter, Robert" <Robert.Richter@cavium.com>
+Subject: [PATCH 03/10] irqchip/irq-gic-v3-its-pci-msi: Remove domain init
+ order dependencies
+Thread-Topic: [PATCH 03/10] irqchip/irq-gic-v3-its-pci-msi: Remove domain init
+ order dependencies
+Thread-Index: AQHUduWwz70Juxgk6EWnduSjhzzlwQ==
+Date: Wed, 7 Nov 2018 22:03:18 +0000
+Message-ID: <20181107220254.6116-4-rrichter@cavium.com>
+References: <20181107220254.6116-1-rrichter@cavium.com>
+In-Reply-To: <20181107220254.6116-1-rrichter@cavium.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6PR03CA0033.eurprd03.prod.outlook.com (2603:10a6:20b::46)
+ To SN6PR07MB5326.namprd07.prod.outlook.com (2603:10b6:805:73::33)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [77.180.181.154]
+x-ms-publictraffictype: Email
+x-microsoft-exchange-diagnostics: 1;SN6PR07MB5232;6:xJndUGydXmU1Yum4ZIibQ1Q0U5eD+tq3f0tWeJmUeCxcl7niWzfx4g/TNbP6bq27NXGvg0lPCZIDihgrkKeRGXWFwVlPqUXlQ7TWDbkN1JVJdwegq22G47JJAYKcqfScXvZ9j8SQs3ialn/QHyKzxJzWN5PoAyNT4UO0k3YGG44zmNMcwVgdtwGT8pHIlcpbBeZplaQnBBclIdausy6BYUA2BJ5ePIkb74HHq5Uwppdh/jV3D7fc311YLMFeGomm6CVoxXx0j7H77oI7mz8b7ObhDTdUdEZlvGUIUsLkS88QGrnX4BhzzXUUvVTYyrdhpyHNyf765PCYooBcJhl0fmr3eVzmXXlScTzXkImVozj4dpzcLbCaU+46SxY1y5xdIS3Rk3nwNt8R+PjlA5G8Ab+ndxs4xSRNZOtr5bYfaPWx//D6oDJ64UF741FzdKbKERpQ4e2DiTpymUqbdVrY7g==;5:V08LRANL3BHeu7hN1Le/3hIFTs3GXGigsu08YxUNKzaTkdtSt4zuFql2NkR5gZbiMf4LnLfN7l/bpJqFicl/vxZTwPGRShj7Qust/HYxh8hVikZGp2IC10M3wNfTU60cslfFeOlRIHvZJ25A/bZKr0hcXCGx90c72CMlvbsaD7U=;7:OGYLRqZtWAqaQQseDzfGZpW3WXGj6NDaJzpk9d+H5S+KExwWRA0LxGs6Y3eJM7ZSnNCWtO0dPG9muJR56lQxi/N5GWInhoohH8Jr3ElBcboIdMyir3HfZYArZDSy5tj+y9Sly0GqaFd1Z60dCx2bpQ==
+x-ms-office365-filtering-correlation-id: a60ae2b5-4f78-4d26-a2ae-08d644fcd2d4
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(7020095)(4652040)(8989299)(5600074)(711020)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:SN6PR07MB5232;
+x-ms-traffictypediagnostic: SN6PR07MB5232:
+x-microsoft-antispam-prvs: <SN6PR07MB5232F9D03D2B4C6C56D2688BF1C40@SN6PR07MB5232.namprd07.prod.outlook.com>
+x-exchange-antispam-report-test: UriScan:(269456686620040);
+x-ms-exchange-senderadcheck: 1
+x-exchange-antispam-report-cfa-test: BCL:0;PCL:0;RULEID:(8211001083)(6040522)(2401047)(8121501046)(5005006)(93006095)(93001095)(10201501046)(3002001)(3231382)(944501410)(52105095)(148016)(149066)(150057)(6041310)(20161123564045)(20161123560045)(20161123562045)(20161123558120)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(201708071742011)(7699051)(76991095);SRVR:SN6PR07MB5232;BCL:0;PCL:0;RULEID:;SRVR:SN6PR07MB5232;
+x-forefront-prvs: 08497C3D99
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(39860400002)(346002)(396003)(376002)(189003)(199004)(71200400001)(7736002)(71190400001)(39060400002)(6486002)(3846002)(66066001)(6436002)(186003)(36756003)(476003)(478600001)(2616005)(53936002)(256004)(14444005)(446003)(305945005)(11346002)(6512007)(54906003)(1076002)(316002)(107886003)(25786009)(110136005)(6116002)(2906002)(97736004)(4326008)(6506007)(386003)(72206003)(105586002)(99286004)(486006)(5660300001)(7416002)(8936002)(102836004)(106356001)(68736007)(8676002)(14454004)(81156014)(76176011)(81166006)(2900100001)(52116002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR07MB5232;H:SN6PR07MB5326.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: cavium.com does not designate
+ permitted sender hosts)
+x-microsoft-antispam-message-info: ZairD0bqm1gD0QhykaJ9qn22Rp9/6cB26aL02qBkZ5V9b7iJuyN7grNuxVF8TekZk95NhmiVYk8Pf4IvdD2BMZqWOLcE6CPQ04rXJhTqNt7lKd9PG+4nkDOvJjjVzRue1vTtCgrCvM4ZuFKHWD8sCbGSjvZ788SgulcQdU0Q9eVqyyWxFZXxZdnYRYFmsANIY6uKY+FdAZG680GaDQSGEPfcxMuw8E9/18QlHdCNFt9eCc6ulMtLl92g1+GokVgN48//WEA/mME2Y+E4JA6Vgxw8GHySzusseAIzfCxgkkneIakH5FW60A+71BloNgA61h2dVq+McP6VyByKiiqgEkLTxJrbHywoSnFGceQxDVs=
+spamdiagnosticoutput: 1:99
+spamdiagnosticmetadata: NSPM
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: cavium.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a60ae2b5-4f78-4d26-a2ae-08d644fcd2d4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2018 22:03:18.3344
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 711e4ccf-2e9b-4bcf-a551-4094005b6194
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR07MB5232
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3X0tYYeNb2n0ZAA--.1605S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxZry5Wry7Kry5JF4kGw17ZFb_yoW5tFWxpF
+	WrXrWUZr4fJayxur47J3WkZFy3tr9Yka4xta1xGw1xJr1jkrWq9F1xtF1akF1fJ3y8Wa1Y
+	vFW8XF4UGa1DAF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBab7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwCjxxvEa2IrMxkF7I
+	0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6Fylc2IjII80
+	xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r1I6r4UMxvI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77
+	IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVCF04
+	k26cxKx2IYs7xG6r1j6r1xYxBIdaVFxhVjvjDU0xZFpf9x07bYeHDUUUUU=
+
+Use new irq_domain_request_host_*() interface which allows independent
+parent and child initialization using an irq domain request handler.
+This makes it possible to move its initialization to a later point
+during boot. All domains can be initialized in the same initcall level
+then.
+
+Signed-off-by: Robert Richter <rrichter@cavium.com>
+---
+ drivers/irqchip/irq-gic-v3-its-pci-msi.c | 66 ++++++++++++++++++----------=
+----
+ 1 file changed, 38 insertions(+), 28 deletions(-)
+
+diff --git a/drivers/irqchip/irq-gic-v3-its-pci-msi.c b/drivers/irqchip/irq=
+-gic-v3-its-pci-msi.c
+index 8d6d009d1d58..7d7366d55d34 100644
+--- a/drivers/irqchip/irq-gic-v3-its-pci-msi.c
++++ b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
+@@ -116,27 +116,50 @@ static struct of_device_id its_device_id[] =3D {
+ 	{},
+ };
+=20
+-static int __init its_pci_msi_init_one(struct fwnode_handle *handle,
+-				       const char *name)
++static int __init its_pci_create_irq_domain(struct irq_domain *parent,
++					void *priv)
+ {
+-	struct irq_domain *parent;
++	char *name =3D priv;
++	int err =3D 0;
+=20
+-	parent =3D irq_find_matching_fwnode(handle, DOMAIN_BUS_NEXUS);
+-	if (!parent || !msi_get_domain_info(parent)) {
+-		pr_err("%s: Unable to locate ITS domain\n", name);
+-		return -ENXIO;
++	if (!msi_get_domain_info(parent)) {
++		err =3D -ENODEV;
++		goto out;
+ 	}
+=20
+-	if (!pci_msi_create_irq_domain(handle, &its_pci_msi_domain_info,
++	if (!pci_msi_create_irq_domain(parent->fwnode, &its_pci_msi_domain_info,
+ 				       parent)) {
+-		pr_err("%s: Unable to create PCI domain\n", name);
+-		return -ENOMEM;
++		err =3D -ENOMEM;
++		goto out;
+ 	}
+=20
+-	return 0;
++	pr_info("PCI/MSI: %s domain created\n", name);
++out:
++	if (err)
++		pr_err("PCI/MSI: Failed to create %s domain: %d\n", name, err);
++
++	kfree(name);
++	return err;
++}
++
++static int __init its_pci_msi_init_one(struct fwnode_handle *handle,
++				       const char *name)
++{
++	void *priv =3D kstrdup(name, GFP_KERNEL);
++	int err;
++
++	err =3D irq_domain_request_fwnode(handle, DOMAIN_BUS_NEXUS,
++					its_pci_create_irq_domain, name, priv);
++	if (err) {
++		pr_err("PCI/MSI: Failed to register %s domain: %d\n",
++			name, err);
++		kfree(priv);
++	}
++
++	return err;
+ }
+=20
+-static int __init its_pci_of_msi_init(void)
++static void __init its_pci_of_msi_init(void)
+ {
+ 	struct device_node *np;
+=20
+@@ -147,13 +170,8 @@ static int __init its_pci_of_msi_init(void)
+ 		if (!of_property_read_bool(np, "msi-controller"))
+ 			continue;
+=20
+-		if (its_pci_msi_init_one(of_node_to_fwnode(np), np->full_name))
+-			continue;
+-
+-		pr_info("PCI/MSI: %pOF domain created\n", np);
++		its_pci_msi_init_one(of_node_to_fwnode(np), np->full_name);
+ 	}
+-
+-	return 0;
+ }
+=20
+ #ifdef CONFIG_ACPI
+@@ -177,32 +195,24 @@ its_pci_msi_parse_madt(struct acpi_subtable_header *h=
+eader,
+ 	}
+=20
+ 	err =3D its_pci_msi_init_one(dom_handle, node_name);
+-	if (!err)
+-		pr_info("PCI/MSI: %s domain created\n", node_name);
+-
+ out:
+ 	kfree(node_name);
+ 	return err;
+ }
+=20
+-static int __init its_pci_acpi_msi_init(void)
++static void __init its_pci_acpi_msi_init(void)
+ {
+ 	acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_TRANSLATOR,
+ 			      its_pci_msi_parse_madt, 0);
+-	return 0;
+ }
+ #else
+-static int __init its_pci_acpi_msi_init(void)
+-{
+-	return 0;
+-}
++static void __init its_pci_acpi_msi_init(void) { }
+ #endif
+=20
+ static int __init its_pci_msi_init(void)
+ {
+ 	its_pci_of_msi_init();
+ 	its_pci_acpi_msi_init();
+-
+ 	return 0;
+ }
+ early_initcall(its_pci_msi_init);
+--=20
+2.11.0

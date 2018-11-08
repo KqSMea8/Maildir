@@ -1,0 +1,363 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:50 -0000
+Received: from icoremail.net (unknown [209.85.214.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH3p3OeNb4SFaAQ--.26759S3;
+	Thu, 08 Nov 2018 03:14:01 +0800 (CST)
+Received: from mail-pl1-f176.google.com (unknown [209.85.214.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3VkJ1OeNbIfkYAA--.516S3;
+	Thu, 08 Nov 2018 03:13:57 +0800 (CST)
+Received: by mail-pl1-f176.google.com with SMTP id o19-v6so8270816pll.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:13:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=p5Lw+4jChNndEjetsb1d1aMcOGAqFHMxBB+/5N3ESBM=;
+        b=ke0H0EYVB+1RIGXWUTBnLKOfaAbKZE5WEY2cyVAXgfj1Phw8+NtMdFFkgD3gxL8NW8
+         +wy2EFFHU9sM75f5h+Nfx3rNAlztN50lHOKWzoTJWnDagFn2HF+ey2ytlg6yNnyBX/7n
+         OGtQDB+LgGZjHLSpSH/CUMGoXWV9krHxbeZAa/0KSxjPetWP5UThGM2T2dz0HlQW/iY0
+         TJR6Klcw3pbuxeZ3fstYuBGILMFLa97TX9a4d7ajuOZ/Hx0JXhUoc2XzEIw2Og2ms6wx
+         ZT/F7GbwU3n+fSGZGB6ut75ii2PGuhuEKXMpEcmrYDyNuWhS+18K1s4y2VhaUSQ5ltzx
+         q58A==
+X-Gm-Message-State: AGRZ1gJawMMWsGXWWghimSD3cJ6YexbSOtPesFtar6H+GqLpoMDsqdbr
+	NUDYj0f2ek+CwlIV+jUw6ywkVz8ZcuiyEPioTjeN8jS1pwKzJYZWrA==
+X-Received: by 2002:a17:902:166:: with SMTP id 93-v6mr1443817plb.68.1541618037045;
+        Wed, 07 Nov 2018 11:13:57 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5634902pjt;
+        Wed, 7 Nov 2018 11:13:55 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ex6clOwQvHe2GfO3s02rwimeHzMymS+imaCyKtrH5ohZ3EMHzBTbkKH9MQqfCpwzW7o29q
+X-Received: by 2002:a17:902:9043:: with SMTP id w3-v6mr1440780plz.32.1541618035844;
+        Wed, 07 Nov 2018 11:13:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541618035; cv=none;
+        d=google.com; s=arc-20160816;
+        b=bhuzgusSbpYhaNrUSrAg0ZnunGEoxEztZSZ11J5M7OCE3FffF4hZB6T4Z4XCPBgT4Y
+         Oymv06FV0t3We/8EuV1Kxr6j7WrADSoo70XuP8/cnsgl5L4kuSdjyD0pbIuV9/yGLHqx
+         nPJFtlSLNg9q8dIiGmUgv5LL+RBFqo6/D2ZC1VFKcGxoPUR93y0+/10B+2Ai5qc9VCaO
+         8w2Ff3Hx7zmU19Yq4WJ/mKOBal+HORO6ns+LCMXvfecEJULGU8ugQOMFdarEBUJNyiXM
+         PU23/NFSnICCtavO+j7Y/eHhnctjO/3uVSQ622+ZyWtGDRpNrG+laQMVfrF23Tm0U3Ss
+         P5IQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=p5Lw+4jChNndEjetsb1d1aMcOGAqFHMxBB+/5N3ESBM=;
+        b=xtejzIrAp6y2MCa62xD37EEKgPVI6xhsroDZnCACAU9NI+CIWx6KjDJveLWkPU0woN
+         pLTcIC0Vf1mFYCV+JCID2LhYk/TFyuKpzxKa5fo0hxPFFIHDNMr3aFQ/xPnixv11tfxl
+         u0PAQPXzeugeWKh/pkOsBDnrH0l/7v3WhaeQl0J2xyCCyiy+1ciFW/YCQamGVf6r2QSu
+         P8RoARkLVQRUAzozEWdJ0PGakZupAdzVwb2+B30BnvJa4ycvK26CMYYmAqLf0iQVjroX
+         zgxZTrY9dr+pnhFdV5a6mu9+6lcdWDuVTfwb2Fc7LymZ92ss6/4YiPgcFwIMjp2T9blN
+         BxWg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@baylibre-com.20150623.gappssmtp.com header.s=20150623 header.b=uQrwD7lG;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id a2si1353089pgm.154.2018.11.07.11.13.40;
+        Wed, 07 Nov 2018 11:13:55 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1729494AbeKHEo4 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:44:56 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38441 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbeKHEoz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:44:55 -0500
+Received: by mail-wr1-f66.google.com with SMTP id d10-v6so18613296wrs.5
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 11:13:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=p5Lw+4jChNndEjetsb1d1aMcOGAqFHMxBB+/5N3ESBM=;
+        b=uQrwD7lGFHOoX2HWT9Y2R+0K/5iKTYGImuLTnA6brJgu6jgzvulW+eQhCVpQVC1Q13
+         gZh1nGIj5sndZDumu2ybDUEKAN6StmdvhLClDYHxvaYYioQ8ByjogNRVHNLBuE9HGxr7
+         RKzA106a0gBFFFbg+TgG1ekCGF9bVjCno0cmBmrfUELBR08oKZvBrfAl0OL14ItsDLoc
+         k5QM4lwwH5PNoNFskrTJJJ8aPeP3+GR9SPP8UB/CMZjaXMM3RXXR6ye+fUZK9tjFe+4o
+         nL+YmkJupfdShFPbTcPUpfisDuYgSHGj1GZjlGmb0XVJzqAyKR7D333GWP1huuIi6U37
+         i7LA==
+X-Received: by 2002:adf:c7d1:: with SMTP id y17-v6mr1377153wrg.230.1541617991609;
+        Wed, 07 Nov 2018 11:13:11 -0800 (PST)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id e14-v6sm747167wrv.93.2018.11.07.11.13.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 11:13:10 -0800 (PST)
+Date: Wed, 7 Nov 2018 20:13:08 +0100
+From: LABBE Corentin <clabbe@baylibre.com>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] crypto: crypto_user_stat: split user space crypto
+ stat structures
+Message-ID: <20181107191308.GD5133@Red>
+References: <1541422274-40060-1-git-send-email-clabbe@baylibre.com>
+ <1541422274-40060-4-git-send-email-clabbe@baylibre.com>
+ <20181106014419.GE28490@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181106014419.GE28490@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3VkJ1OeNbIfkYAA--.516S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW3GF48JryUJw13CFyxCFyDJrb_yoWxKFWkpF
+	s8G395trWDXFy5KrW0qrZ5KrZFv348AF13ArW8W3W3WFnFvr1rWFy2vrykKr43AryrG3Za
+	kr4qyw15Gws8XFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB0b7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkIecxEwVCI4VWrMxkI7II2jI8vz4vE
+	wIxGrwCYIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4U
+	JVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I
+	8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AK
+	xVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI
+	8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUqXdbUUUUU
+
+On Mon, Nov 05, 2018 at 05:44:19PM -0800, Eric Biggers wrote:
+> Hi Corentin,
+> 
+> On Mon, Nov 05, 2018 at 12:51:12PM +0000, Corentin Labbe wrote:
+> > It is cleaner to have each stat in their own structures.
+> > 
+> > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> > ---
+> >  crypto/crypto_user_stat.c       |  20 +++----
+> >  include/uapi/linux/cryptouser.h | 101 ++++++++++++++++++++------------
+> >  2 files changed, 73 insertions(+), 48 deletions(-)
+> > 
+> > diff --git a/crypto/crypto_user_stat.c b/crypto/crypto_user_stat.c
+> > index 352569f378a0..3c14be2f7a1b 100644
+> > --- a/crypto/crypto_user_stat.c
+> > +++ b/crypto/crypto_user_stat.c
+> > @@ -33,7 +33,7 @@ struct crypto_dump_info {
+> >  
+> >  static int crypto_report_aead(struct sk_buff *skb, struct crypto_alg *alg)
+> >  {
+> > -	struct crypto_stat raead;
+> > +	struct crypto_stat_aead raead;
+> >  	u64 v64;
+> >  
+> >  	memset(&raead, 0, sizeof(raead));
+> > @@ -56,7 +56,7 @@ static int crypto_report_aead(struct sk_buff *skb, struct crypto_alg *alg)
+> >  
+> >  static int crypto_report_cipher(struct sk_buff *skb, struct crypto_alg *alg)
+> >  {
+> > -	struct crypto_stat rcipher;
+> > +	struct crypto_stat_cipher rcipher;
+> >  	u64 v64;
+> >  
+> >  	memset(&rcipher, 0, sizeof(rcipher));
+> > @@ -79,7 +79,7 @@ static int crypto_report_cipher(struct sk_buff *skb, struct crypto_alg *alg)
+> >  
+> >  static int crypto_report_comp(struct sk_buff *skb, struct crypto_alg *alg)
+> >  {
+> > -	struct crypto_stat rcomp;
+> > +	struct crypto_stat_compress rcomp;
+> >  	u64 v64;
+> >  
+> >  	memset(&rcomp, 0, sizeof(rcomp));
+> > @@ -101,7 +101,7 @@ static int crypto_report_comp(struct sk_buff *skb, struct crypto_alg *alg)
+> >  
+> >  static int crypto_report_acomp(struct sk_buff *skb, struct crypto_alg *alg)
+> >  {
+> > -	struct crypto_stat racomp;
+> > +	struct crypto_stat_compress racomp;
+> >  	u64 v64;
+> >  
+> >  	memset(&racomp, 0, sizeof(racomp));
+> > @@ -123,7 +123,7 @@ static int crypto_report_acomp(struct sk_buff *skb, struct crypto_alg *alg)
+> >  
+> >  static int crypto_report_akcipher(struct sk_buff *skb, struct crypto_alg *alg)
+> >  {
+> > -	struct crypto_stat rakcipher;
+> > +	struct crypto_stat_akcipher rakcipher;
+> >  	u64 v64;
+> >  
+> >  	memset(&rakcipher, 0, sizeof(rakcipher));
+> > @@ -150,7 +150,7 @@ static int crypto_report_akcipher(struct sk_buff *skb, struct crypto_alg *alg)
+> >  
+> >  static int crypto_report_kpp(struct sk_buff *skb, struct crypto_alg *alg)
+> >  {
+> > -	struct crypto_stat rkpp;
+> > +	struct crypto_stat_kpp rkpp;
+> >  	u64 v;
+> >  
+> >  	memset(&rkpp, 0, sizeof(rkpp));
+> > @@ -171,7 +171,7 @@ static int crypto_report_kpp(struct sk_buff *skb, struct crypto_alg *alg)
+> >  
+> >  static int crypto_report_ahash(struct sk_buff *skb, struct crypto_alg *alg)
+> >  {
+> > -	struct crypto_stat rhash;
+> > +	struct crypto_stat_hash rhash;
+> >  	u64 v64;
+> >  
+> >  	memset(&rhash, 0, sizeof(rhash));
+> > @@ -190,7 +190,7 @@ static int crypto_report_ahash(struct sk_buff *skb, struct crypto_alg *alg)
+> >  
+> >  static int crypto_report_shash(struct sk_buff *skb, struct crypto_alg *alg)
+> >  {
+> > -	struct crypto_stat rhash;
+> > +	struct crypto_stat_hash rhash;
+> >  	u64 v64;
+> >  
+> >  	memset(&rhash, 0, sizeof(rhash));
+> > @@ -209,7 +209,7 @@ static int crypto_report_shash(struct sk_buff *skb, struct crypto_alg *alg)
+> >  
+> >  static int crypto_report_rng(struct sk_buff *skb, struct crypto_alg *alg)
+> >  {
+> > -	struct crypto_stat rrng;
+> > +	struct crypto_stat_rng rrng;
+> >  	u64 v64;
+> >  
+> >  	memset(&rrng, 0, sizeof(rrng));
+> > @@ -248,7 +248,7 @@ static int crypto_reportstat_one(struct crypto_alg *alg,
+> >  	if (nla_put_u32(skb, CRYPTOCFGA_PRIORITY_VAL, alg->cra_priority))
+> >  		goto nla_put_failure;
+> >  	if (alg->cra_flags & CRYPTO_ALG_LARVAL) {
+> > -		struct crypto_stat rl;
+> > +		struct crypto_stat_larval rl;
+> >  
+> >  		memset(&rl, 0, sizeof(rl));
+> >  		strscpy(rl.type, "larval", sizeof(rl.type));
+> > diff --git a/include/uapi/linux/cryptouser.h b/include/uapi/linux/cryptouser.h
+> > index 9f8187077ce4..790b5c6511e5 100644
+> > --- a/include/uapi/linux/cryptouser.h
+> > +++ b/include/uapi/linux/cryptouser.h
+> > @@ -76,47 +76,72 @@ struct crypto_user_alg {
+> >  	__u32 cru_flags;
+> >  };
+> >  
+> > -struct crypto_stat {
+> > -	char type[CRYPTO_MAX_NAME];
+> > -	union {
+> > -		__u64 stat_encrypt_cnt;
+> > -		__u64 stat_compress_cnt;
+> > -		__u64 stat_generate_cnt;
+> > -		__u64 stat_hash_cnt;
+> > -		__u64 stat_setsecret_cnt;
+> > -	};
+> > -	union {
+> > -		__u64 stat_encrypt_tlen;
+> > -		__u64 stat_compress_tlen;
+> > -		__u64 stat_generate_tlen;
+> > -		__u64 stat_hash_tlen;
+> > -	};
+> > -	union {
+> > -		__u64 stat_akcipher_err_cnt;
+> > -		__u64 stat_cipher_err_cnt;
+> > -		__u64 stat_compress_err_cnt;
+> > -		__u64 stat_aead_err_cnt;
+> > -		__u64 stat_hash_err_cnt;
+> > -		__u64 stat_rng_err_cnt;
+> > -		__u64 stat_kpp_err_cnt;
+> > -	};
+> > -	union {
+> > -		__u64 stat_decrypt_cnt;
+> > -		__u64 stat_decompress_cnt;
+> > -		__u64 stat_seed_cnt;
+> > -		__u64 stat_generate_public_key_cnt;
+> > -	};
+> > -	union {
+> > -		__u64 stat_decrypt_tlen;
+> > -		__u64 stat_decompress_tlen;
+> > -	};
+> > -	union {
+> > -		__u64 stat_verify_cnt;
+> > -		__u64 stat_compute_shared_secret_cnt;
+> > -	};
+> > +struct crypto_stat_cipher {
+> > +	char type[CRYPTO_MAX_NAME];
+> > +	__u64 stat_encrypt_cnt;
+> > +	__u64 stat_encrypt_tlen;
+> > +	__u64 stat_decrypt_cnt;
+> > +	__u64 stat_decrypt_tlen;
+> > +	__u64 stat_cipher_err_cnt;
+> > +};
+> > +
+> > +struct crypto_stat_aead {
+> > +	char type[CRYPTO_MAX_NAME];
+> > +	__u64 stat_encrypt_cnt;
+> > +	__u64 stat_encrypt_tlen;
+> > +	__u64 stat_decrypt_cnt;
+> > +	__u64 stat_decrypt_tlen;
+> > +	__u64 stat_cipher_err_cnt;
+> > +	__u64 stat_aead_err_cnt;
+> > +};
+> > +
+> > +struct crypto_stat_akcipher {
+> > +	char type[CRYPTO_MAX_NAME];
+> > +	__u64 stat_encrypt_cnt;
+> > +	__u64 stat_encrypt_tlen;
+> > +	__u64 stat_decrypt_cnt;
+> > +	__u64 stat_decrypt_tlen;
+> > +	__u64 stat_akcipher_err_cnt;
+> > +	__u64 stat_verify_cnt;
+> >  	__u64 stat_sign_cnt;
+> >  };
+> >  
+> > +struct crypto_stat_compress {
+> > +	char type[CRYPTO_MAX_NAME];
+> > +	__u64 stat_compress_cnt;
+> > +	__u64 stat_compress_tlen;
+> > +	__u64 stat_decompress_cnt;
+> > +	__u64 stat_decompress_tlen;
+> > +	__u64 stat_compress_err_cnt;
+> > +};
+> > +
+> > +struct crypto_stat_rng {
+> > +	char type[CRYPTO_MAX_NAME];
+> > +	__u64 stat_generate_cnt;
+> > +	__u64 stat_generate_tlen;
+> > +	__u64 stat_rng_err_cnt;
+> > +	__u64 stat_seed_cnt;
+> > +};
+> > +
+> > +struct crypto_stat_hash {
+> > +	char type[CRYPTO_MAX_NAME];
+> > +	__u64 stat_hash_cnt;
+> > +	__u64 stat_hash_tlen;
+> > +	__u64 stat_hash_err_cnt;
+> > +};
+> > +
+> > +struct crypto_stat_kpp {
+> > +	char type[CRYPTO_MAX_NAME];
+> > +	__u64 stat_setsecret_cnt;
+> > +	__u64 stat_kpp_err_cnt;
+> > +	__u64 stat_generate_public_key_cnt;
+> > +	__u64 stat_compute_shared_secret_cnt;
+> > +};
+> > +
+> > +struct crypto_stat_larval {
+> > +	char type[CRYPTO_MAX_NAME];
+> > +};
+> > +
+> >  struct crypto_report_larval {
+> >  	char type[CRYPTO_MAX_NAME];
+> >  };
+> > -- 
+> > 2.18.1
+> > 
+> 
+> Is there any particular reason this patch only changes the UAPI structures, 
+> not the internal structures in 'struct crypto_alg'?
+> 
+
+While changing it for user space will be clearly better, I didnt see any benefit for the internal ones.
+But perhaps it is cleaner to have the sames.
+I will do it.
+
+Regards

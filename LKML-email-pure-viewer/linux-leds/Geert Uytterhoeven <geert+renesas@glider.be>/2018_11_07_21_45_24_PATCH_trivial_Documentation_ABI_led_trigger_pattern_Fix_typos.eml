@@ -1,0 +1,136 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:00 -0000
+Received: from icoremail.net (unknown [209.85.210.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH97x7OJbpkpYAQ--.26138S3;
+	Wed, 07 Nov 2018 21:47:31 +0800 (CST)
+Received: from mail-pf1-f180.google.com (unknown [209.85.210.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH6kXv7OJbFKwXAA--.5874S3;
+	Wed, 07 Nov 2018 21:47:27 +0800 (CST)
+Received: by mail-pf1-f180.google.com with SMTP id u13-v6so7729301pfm.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:47:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:sender:precedence:list-id;
+        bh=K+nwUhyluavQkBs2z2gPmg9V/X2sMGDKkYNmeR26Amw=;
+        b=RFiYX6z3T7XQumSGMT8LC9TjU6oNXYN8KMZGfTcyuy4p3QLxvGHvwN2ciI0I3udHcN
+         L64WXmGoNWcwD0CACFvjaZu9dH+Xa0fsvjNK4C4O1CFxsh8IvWfbaHuR2BOXT1Fqq3KN
+         n4lhRwd3CEcOjScNzklIegsLrKnEbSqny+hK5ln6e1TqPbaT0X3Ce8HCsQlREu0QdAPu
+         +8eTtBnBv3a5/AHhUJFQf2Wo6CkaKBowanHgKuxu3PI7sKLHW6GEqMGaGN3vkwclMW8Z
+         zJCzRWLqfvAeXJKggTwUuAGBsfeRlAPTeJZlKnhDIF6Vdn5skjhaLrxRdBzgLpIs8c42
+         manw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJLsBFi1nEzLFup+b7ElgXWzA9va31k3MAQ99Y0eqG6i09zV7fE
+	tJzdW+GLiR9AZoUYZw1HElTBi74sr5VDAx+xDSYKRWyeCJmO5zNOwA==
+X-Received: by 2002:a63:460a:: with SMTP id t10-v6mr229443pga.197.1541598447618;
+        Wed, 07 Nov 2018 05:47:27 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5265367pjt;
+        Wed, 7 Nov 2018 05:47:27 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fIx3XtZ2EiTiVTRQ8QTHJz9WTSJxU4tUaa7GmKRWHmDK3t6qGlG6L02IAdIT9e13rKGC6s
+X-Received: by 2002:a17:902:e81:: with SMTP id 1-v6mr319685plx.48.1541598447042;
+        Wed, 07 Nov 2018 05:47:27 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541598447; cv=none;
+        d=google.com; s=arc-20160816;
+        b=HjHrbKePdrtMTDSsWrfiJLS8qZMw317UECVlYHehQOcMgAOxX96PATvMCvrd0WkUQg
+         lGm4yXgxY3Jc0W2g3Q1Fwmyr9U4Ho4eGYpYnLTaiE2e9jxI9Ou6iZknNbhluSc2suddU
+         7YyANQy9bvX3VGZcmpyFtqnM3e+TLou6IPYhX3qjOmfvYcE+DYVrYJryr5gHScxoyF9s
+         WGVc80X7i/edYGaSCRcCfeikttHnMnMkxeW0+E9DhZ5Y+0tkdoD9JJbB0c+4gwZ5yGw2
+         wsEVZwQ3ylV75bxnqi7/NwyjJL/zdxbVLOmfvxIAjGbP2RRenrUAGRsxXNckZERQHYVa
+         ZtsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:date:subject:cc:to:from;
+        bh=K+nwUhyluavQkBs2z2gPmg9V/X2sMGDKkYNmeR26Amw=;
+        b=fw6OkjqNPxmz8+N+Rz403vqH4czDsCDIRvq8YK5DYazaRdgC9GfV/KcuD9YcBp+5+b
+         mepm8QZpRdybLQqw5VzLcijpT+FNPQ8EAmnqKgJBxtwj27gtp+S0sk9LxT1DlSy51PMw
+         isEUZaFP7QMZga4ao23vd4KeNFeOK+8HIZUtSwEFi5G6gnVf3g5q3qdk5xRYvXdea4Wz
+         r5sdVNWbvH6T6PwPJCKb+uapu/Cc4HlsHlqUpLq5NDYBGfJrocGqj9TYMcA0ObBgdEIO
+         qx8IbuWrdvesqNIANiKM+CUbFLkM6AxlKa6QX5RODWode7kZ8zQoBQA3Q7Pq2k+Je6HY
+         N4sQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id h13-v6si617261pgq.285.2018.11.07.05.47.11;
+        Wed, 07 Nov 2018 05:47:27 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730693AbeKGXPx (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:15:53 -0500
+Received: from xavier.telenet-ops.be ([195.130.132.52]:34836 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727350AbeKGXPx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:15:53 -0500
+Received: from ramsan.of.borg ([84.194.111.163])
+        by xavier.telenet-ops.be with bizsmtp
+        id x1lR1y0043XaVaC011lRw3; Wed, 07 Nov 2018 14:45:25 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtp (Exim 4.86_2)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1gKO97-0005CZ-7b; Wed, 07 Nov 2018 14:45:25 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1gKO97-0003eN-4h; Wed, 07 Nov 2018 14:45:25 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Jiri Kosina <trivial@kernel.org>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH trivial] Documentation: ABI: led-trigger-pattern: Fix typos
+Date: Wed,  7 Nov 2018 14:45:24 +0100
+Message-Id: <20181107134524.13989-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH6kXv7OJbFKwXAA--.5874S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gry7JFy8Ary8CryfZw4UXFb_yoWkCFc_KF
+	Z5t3WqyayUWrWFqrnrXrs09F4UJanrur40g3yDWrs3tr9IywsxWr95JrWfZw1fuFWS9ryf
+	AFsrXrWakFn7KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUba8YjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc2IjII80xcxEwVAKI48JMxvI42IY
+	6xIIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0x
+	vEx4A2jsIE14v26rxl6s0DMxvI42IY6I8E87Iv6xkF7I0E14v26rxl6s0DMxAIw28IcxkI
+	7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r
+	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+	b7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcS
+	sGvfC2KfnxnUUI43ZEXa7IUn_-PUUUUUU==
+
+  - Spelling s/brigntess/brightness/,
+  - Double "use".
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/ABI/testing/sysfs-class-led-trigger-pattern | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-class-led-trigger-pattern b/Documentation/ABI/testing/sysfs-class-led-trigger-pattern
+index fb3d1e03b8819bb9..1e5d172e064624d9 100644
+--- a/Documentation/ABI/testing/sysfs-class-led-trigger-pattern
++++ b/Documentation/ABI/testing/sysfs-class-led-trigger-pattern
+@@ -37,8 +37,8 @@ Description:
+ 		  0-|   /             \/             \/
+ 		    +---0----1----2----3----4----5----6------------> time (s)
+ 
+-		2. To make the LED go instantly from one brigntess value to another,
+-		we should use use zero-time lengths (the brightness must be same as
++		2. To make the LED go instantly from one brightness value to another,
++		we should use zero-time lengths (the brightness must be same as
+ 		the previous tuple's). So the format should be:
+ 		"brightness_1 duration_1 brightness_1 0 brightness_2 duration_2
+ 		brightness_2 0 ...". For example:
+-- 
+2.17.1

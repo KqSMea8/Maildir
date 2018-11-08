@@ -1,0 +1,224 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:42 -0000
+Received: from icoremail.net (unknown [209.85.210.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH8K9C+Nbfv9YAQ--.26746S3;
+	Wed, 07 Nov 2018 23:58:53 +0800 (CST)
+Received: from mail-pf1-f172.google.com (unknown [209.85.210.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDHp0O7C+Nb+zEYAA--.27S3;
+	Wed, 07 Nov 2018 23:58:51 +0800 (CST)
+Received: by mail-pf1-f172.google.com with SMTP id g7-v6so5604332pfo.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:58:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding:sender:precedence
+         :list-id;
+        bh=w916eGqKYP1jjLzCXTMmsTdj+BbJ3ZC3m8I+i5a0GtA=;
+        b=KsCkaNbnMM8WsyJS67kQBmV8BxGAcAVy2t1yFooV0On9l/MY65C4dHi4JvOYJ9Meu9
+         gbe+9sOKBp9hNYQN8FMI6kUq5okyXcbXL08DhOLC6/swd5TxiRY/uh36V3tRIn0JwTIF
+         AyUYq4o7Ih/dSudseOOTRQuLBSZAkXn5hTHaLJImahUqzZsoVC2uuIRn0rIfhVClm8l+
+         P4nTJNJuLPEzxMyun4NL7rBHs/2eDs9iVm0eSR9q9vvkbUHClUvxeE8hCjSSk1MTJ5Iv
+         uFNGmvIw0aHem6WIQRgarXzok+pv6n7MdesbQC6zVWbtRwkoZyBSs48Jien0GPfY/9iu
+         nUCg==
+X-Gm-Message-State: AGRZ1gK6+RCcY8Tigzon6yR2m9ZKran0ffPWx0rconIPajozYxshjKlQ
+	66MkF15wAleyg8wJr92o9/9wsseUM1dLLmX7l+Zh7vs/0eBSnM/fpg==
+X-Received: by 2002:a65:66ce:: with SMTP id c14mr639017pgw.450.1541606330906;
+        Wed, 07 Nov 2018 07:58:50 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5415516pjt;
+        Wed, 7 Nov 2018 07:58:50 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d8w+QtPHUwIebsF8xDnjF+1gPNOMkuti59Exo75CV/zunKXqx+SOnf4HJOwC0Sq0lcHt/v
+X-Received: by 2002:a63:344e:: with SMTP id b75mr632153pga.184.1541606330054;
+        Wed, 07 Nov 2018 07:58:50 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541606330; cv=none;
+        d=google.com; s=arc-20160816;
+        b=FcluDJwvH2xp43YrEDRTlskogzczh8vqwulDk2Ql6kZb7ISEPkBnjBvpzbku/fywrF
+         jU/Kt9nsoYhAiwaFbG9lZuMh/SS1Y6sQ3LbAzLjViODX11RHpEqjN/4YgyNuLlFrpfSd
+         2Fb1b7R3HX6TzkeKvOiq1plxsn4Jd13cPwDOAVmrdxcLEYtGqqQRTbQZwhp/GbVezPOh
+         n8AZ4o68QDqPYJb6oaKxI33VEQgieqBWAaBviPsRYfPQMNYuqfTyClEFfj+xdsnY32DT
+         ZfOLBAosfzVvhAMXDuh5U4sA6cN/PJluqtA8pq/MbXBWYy2EChViytKsLpH2Q3UGSOOR
+         1fJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:dkim-signature;
+        bh=w916eGqKYP1jjLzCXTMmsTdj+BbJ3ZC3m8I+i5a0GtA=;
+        b=xxkZ4AUMUJR0NFM/4ID6UexXROdxS14BVoszz8ASF6QAa0v2PjRY3XZTMCSIVBRUp9
+         BqGwN0XvuDibi5KZTcr5q76VeN+LApBx6F0zDW66UnUk/QKwAoK9PP4/crjCcfu9Qifo
+         OMiAxTAtePC8eZpyJUpQoKi3F67WjPMWB5L6p0VNXzCPi9+ZKw1ClLpfAtmbttTdRBIb
+         ecqlnOyAIeFm94ZqmEO6nnP9TaD8YAhN9rRLVlRbrpeUUmog/MWfuV0xXr4VRtWVsFB3
+         wZk2z7q2suV9wCtLYX7T4THR6DqwTO1XYJBWxQ+iUXbx0KxIcx4k0knoD+Y0KETWQ8Ba
+         ioSA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@broadcom.com header.s=google header.b=Bge7TpD2;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=broadcom.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d69si989026pga.184.2018.11.07.07.58.35;
+        Wed, 07 Nov 2018 07:58:50 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731333AbeKHB3X (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 20:29:23 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:33406 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728092AbeKHB3W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 20:29:22 -0500
+Received: by mail-yw1-f66.google.com with SMTP id z72-v6so6785567ywa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 07:58:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=w916eGqKYP1jjLzCXTMmsTdj+BbJ3ZC3m8I+i5a0GtA=;
+        b=Bge7TpD2RkYW7COsMF9BfNqF1i4CuDcltYR1hAwNEIqaXBt9t7oIC1nP4gLhB2wabz
+         CRKSJ77GBFyvIYFAXEhsxGBTU2r1EwxJO5AzfPPmYMVlU1QeupgP1YhnmC/zIGr7AQ5K
+         0b480nTOyGYSjHENm25CR7FU47jSMpu0/cGgs=
+X-Received: by 2002:a0d:db02:: with SMTP id d2-v6mr744499ywe.402.1541606304711;
+        Wed, 07 Nov 2018 07:58:24 -0800 (PST)
+Received: from [10.28.17.185] ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id h186-v6sm245503ywe.103.2018.11.07.07.58.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 07:58:24 -0800 (PST)
+Subject: Re: [PATCH V3 4/6] usb: ohci-platform: Add support for Broadcom STB
+ SoC's
+To: Alan Stern <stern@rowland.harvard.edu>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc: Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org,
+        Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Avi Fishman <avifishman70@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jianguo Sun <sunjianguo1@huawei.com>,
+        Johan Hovold <johan@kernel.org>,
+        Kees Cook <keescook@chromium.org>, linux-usb@vger.kernel.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>, Roger Quadros <rogerq@ti.com>
+References: <Pine.LNX.4.44L0.1811071019090.1542-100000@iolanthe.rowland.org>
+From: Al Cooper <al.cooper@broadcom.com>
+Message-ID: <e4f2a868-c265-58c8-7b7b-91de91f2cf0b@broadcom.com>
+Date: Wed, 7 Nov 2018 10:58:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <Pine.LNX.4.44L0.1811071019090.1542-100000@iolanthe.rowland.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDHp0O7C+Nb+zEYAA--.27S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxCr1kKryfKFWDJF43GF1DAwb_yoW5Aw4Upa
+	92kFWjkr4DJrZYyw1qgw40kFy2yr45KayUWrykJFy8ZwsIqr9YqF42qFs0ga4DXrs2ka1j
+	qr4Yqa43uFn8ZFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik2
+	6cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6ryrMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7
+	IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E
+	87Iv67AKxVW0oVCq3wCYIxAIcVC2z280aVCY1x0267AKxVW0oVCq3wCF04k20xvY0x0EwI
+	xGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
+	AFwI0_Wrv_Gr1UMIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JbIYCTnI
+	WIevJa73UjIFyTuYvjxUHFApUUUUU
+
+On 11/7/18 10:23 AM, Alan Stern wrote:
+> On Tue, 6 Nov 2018, Florian Fainelli wrote:
+> 
+>> On 11/6/18 1:40 PM, Al Cooper wrote:
+>>> On 11/6/18 11:08 AM, Alan Stern wrote:
+>>>> On Mon, 5 Nov 2018, Al Cooper wrote:
+>>>>
+>>>>> Add support for Broadcom STB SoC's to the ohci platform driver.
+>>>>>
+>>>>> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+>>>>> ---
+>>>>
+>>>>> @@ -177,6 +189,8 @@ static int ohci_platform_probe(struct
+>>>>> platform_device *dev)
+>>>>>            ohci->flags |= OHCI_QUIRK_FRAME_NO;
+>>>>>        if (pdata->num_ports)
+>>>>>            ohci->num_ports = pdata->num_ports;
+>>>>> +    if (pdata->suspend_without_phy_exit)
+>>>>> +        hcd->suspend_without_phy_exit = 1;
+>>>>
+>>>> Sorry if I missed this in the earlier discussions...  Is there any
+>>>> possibility of adding a DT binding that could express this requirement,
+>>>> instead of putting it in the platform data?
+>>>>
+>>>> Alan Stern
+>>>>
+>>>
+>>> Alan,
+>>>
+>>> That was my original approach but internal review suggested that I use
+>>> pdata instead. Below is my original patch for:
+>>
+>> And the reason for that suggestion was really because it was percevied
+>> as encoding a driver behavior as a Device Tree property as opposed to
+>> describing something that was inherently and strictly a hardware
+>> behavior (therefore suitable for Device Tree).
+> 
+> Right.  The best way to approach this problem is to identify and
+> characterize the hardware behavior which makes this override necessary.
+> Then _that_ can be added to DT, since it will be a property of the
+> hardware rather than of the driver.
+> 
+>>> Add the ability to skip calling the PHY's exit routine on suspend
+>>> and the PHY's init routine on resume. This is to handle a USB PHY
+>>> that should have it's power_off function called on suspend but cannot
+>>> have it's exit function called because on exit it will disable the
+>>> PHY to the point where register accesses to the Host Controllers
+>>> using the PHY will be disabled and the host drivers will crash.
+> 
+> What's special about this PHY?  Why does the exit function mess the PHY
+> up?  Or to put it another way, why doesn't the exit function mess up
+> other PHYs in the same way?
+> 
+> For that matter, can we change the code so that suspend doesn't call
+> the exit function for _any_ PHY?  Will just calling the power_off
+> function be good enough?  If not, then why not?
+> 
+> Alan Stern
+> 
+
+In our USB hardware the USB PHY supplies a clock for the EHCI/OHCI and 
+XHCI host controllers and if the PHY is totally shut down the EHCI, OHCI 
+and XHCI registers will cause an exception if accessed and cause the 
+EHCI, OHCI and XHCI drivers to crash. There is always talk of fixing 
+this in the hardware by adding an aux clock that will takeover when the 
+PHY clock is shut down, but this hasn't happened yet. It seems like 
+"exit on suspend" still makes sense on systems that don't have this 
+problem (additional power savings?) so removing the exit on suspend for 
+all systems is not a good idea.
+
+Al

@@ -1,0 +1,183 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:31 -0000
+Received: from icoremail.net (unknown [209.85.214.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f0E2T+Nb+J5aAQ--.26926S3;
+	Thu, 08 Nov 2018 04:46:48 +0800 (CST)
+Received: from mail-pl1-f181.google.com (unknown [209.85.214.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3l0M1T+NbLT4ZAA--.1664S3;
+	Thu, 08 Nov 2018 04:46:45 +0800 (CST)
+Received: by mail-pl1-f181.google.com with SMTP id g59-v6so8390897plb.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 12:46:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:message-id:cc:reply-to:in-reply-to:references:to:subject
+         :git-commit-id:robot-id:robot-unsubscribe:mime-version
+         :content-transfer-encoding:content-disposition:sender:precedence
+         :list-id;
+        bh=kvhreMEahtcfLUsz62SOK9Mpgib5alQTm7fH1QEwEiU=;
+        b=KCeA+f6yK4TkYNDFkzssfXwpHBH7CJoigyInXUFvAYbtQG96BU/Y8OM6A/ozaz8Thb
+         m6ff1ru9orvigBpVKEGPhinutLWZ1WpFzzGwR3VnzNp1mZdMKLk9HDRgVjo7ygolTAO+
+         Ca8phgBwc3cjhjC5aAnRIe2KVa3e/etVjq2NQLElrizha/GhBaz/XR272V8Y2H2xYpmo
+         TsgtBdSH4D8XJvRu9Wgu+CXQgyHqNxgnV41TPpeKIxma7WQixBKBPI3kWyQxrYP0yZZt
+         q/Ws+RT/EVI6X1n/u8LzkeO0Jwe6weSACftZkaW4YFVWIK7/7HKMS+aMcLHGeSkqlDwQ
+         kfvA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKrEcJI6am8InMuL5Ih5ceUChjQEdFYP+YZnb3dBHV8U2i4cdTy
+	bfPWBXl6XPsIPQ4bL6DBUlkdRehCYfBwyGZECto9HSZo+YicJUbn4Q==
+X-Received: by 2002:a17:902:6686:: with SMTP id e6-v6mr1762745plk.173.1541623605096;
+        Wed, 07 Nov 2018 12:46:45 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5724865pjt;
+        Wed, 7 Nov 2018 12:46:44 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eRcYL05V7L6Nl7ebnGeS8LYhGS4Mac0iOByksoZfR6W+32mtIbaFtg9M6wx1p5bXbB1oqM
+X-Received: by 2002:a62:9f42:: with SMTP id g63-v6mr1769994pfe.144.1541623604377;
+        Wed, 07 Nov 2018 12:46:44 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541623604; cv=none;
+        d=google.com; s=arc-20160816;
+        b=P9FiF/GgYpBK5YrbGvzbBXP5SjSaXTnk/+VibDPVnuOFK2ZSyIM6HMtwTIflWDn2Jc
+         +bJ3arqiU5d79aPZpcdfGLl4uhGdxDc1UxpvScv0kfrzRHoTdOL//EMRoXE4vP0thEBf
+         cQOb4Qftcww+iAEgVw6pUX7EXzvcBmAb3fvuuugDen3XKDV483y/vdeZCDT/VQCs5zKR
+         ApW+qTQPnwXr2ih5CNZaJ034HBoosVizR0v0mTDQcfoREdDvrLIaAb2mpAq5YgJRuLnU
+         89nIEuGeFp3rV5LJkH0Kx6+80y/LwiFjfI5cBYZJRaXCGVQQ6lN3KUqa1xx+7/Q5xGtE
+         h9pQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-disposition
+         :content-transfer-encoding:mime-version:robot-unsubscribe:robot-id
+         :git-commit-id:subject:to:references:in-reply-to:reply-to:cc
+         :message-id:from:date;
+        bh=kvhreMEahtcfLUsz62SOK9Mpgib5alQTm7fH1QEwEiU=;
+        b=DIN/5XzO5Vpr3PtQohknWsfzJM3WtOMLAqrHp9ltn6RCSIM8RmegdgQGIX+nHpy4G2
+         VKr5n9LbxQQyz1PEfD+Y1NJccpAT/UXksgg1GJBpPfrXcH4JWYC31Brvhxkj5PmthawJ
+         s744GDYBW5F6VY6/WZ0PR3WxvO47D1p+YjHOKro8kBeHTxOeweLgrRXXE3+yjOKr00vz
+         UVR/wbYQ/o5abbKUwaxmVAjx6amvXv3K1/4f1fezrINRXeeuaZpTAPmX96KxncxBgSRu
+         H0ukLNeM0sbWauzVW4lOpwWYcgId5F89Y+JR7/C0XsHVdewag+ElZAIYJDR4rP99Lna9
+         jGyw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id c85-v6si1736249pfe.60.2018.11.07.12.46.29;
+        Wed, 07 Nov 2018 12:46:44 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727427AbeKHGRl (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:17:41 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:51753 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbeKHGRj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:17:39 -0500
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id wA7KibZg1607948
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 7 Nov 2018 12:44:37 -0800
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id wA7Kib6S1607945;
+        Wed, 7 Nov 2018 12:44:37 -0800
+Date: Wed, 7 Nov 2018 12:44:37 -0800
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From: "tip-bot for Woods, Brian" <tipbot@zytor.com>
+Message-ID: <tip-210ba1201ff950b3d05bfd8fa5d47540cea393c0@git.kernel.org>
+Cc: bhelgaas@google.com, mingo@redhat.com, bp@suse.de,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        linux@roeck-us.net, puwen@hygon.cn, tglx@linutronix.de,
+        linux-pci@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Brian.Woods@amd.com, mingo@kernel.org, brian.woods@amd.com,
+        qianyue.zj@alibaba-inc.com, jdelvare@suse.com, clemens@ladisch.de
+Reply-To: tglx@linutronix.de, linux-hwmon@vger.kernel.org,
+          linux-pci@vger.kernel.org, mingo@kernel.org, brian.woods@amd.com,
+          Brian.Woods@amd.com, clemens@ladisch.de, jdelvare@suse.com,
+          qianyue.zj@alibaba-inc.com, bhelgaas@google.com,
+          mingo@redhat.com, hpa@zytor.com, x86@kernel.org, bp@suse.de,
+          linux-kernel@vger.kernel.org, puwen@hygon.cn, linux@roeck-us.net
+In-Reply-To: <20181106200754.60722-5-brian.woods@amd.com>
+References: <20181106200754.60722-5-brian.woods@amd.com>
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/amd-nb] hwmon/k10temp: Add support for AMD family 17h,
+ model 30h CPUs
+Git-Commit-ID: 210ba1201ff950b3d05bfd8fa5d47540cea393c0
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+X-Spam-Status: No, score=1.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        DATE_IN_FUTURE_96_Q,URIBL_SBL,URIBL_SBL_A autolearn=no
+        autolearn_force=no version=3.4.2
+X-Spam-Level: *
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on terminus.zytor.com
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3l0M1T+NbLT4ZAA--.1664S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr18ZFyUKr1DWw1xAw17trb_yoW8CFy3pF
+	sxuFs3KrWUJry8Xa4vkF1v9Fy3C3Z5Wrya9r97J3s7XFyxJFZ8ur1Yva13Zrs3XF1kK39r
+	X3W2gw18K3Z5Ja7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9ab7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE
+	2Ix0cI8IcVAFwI0_Xr0_Ar1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcV
+	C2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28I
+	cxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_Zr
+	UvcSsGvfC2KfnxnUUI43ZEXa7IUn_-PUUUUUU==
+
+Commit-ID:  210ba1201ff950b3d05bfd8fa5d47540cea393c0
+Gitweb:     https://git.kernel.org/tip/210ba1201ff950b3d05bfd8fa5d47540cea393c0
+Author:     Woods, Brian <Brian.Woods@amd.com>
+AuthorDate: Tue, 6 Nov 2018 20:08:21 +0000
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Wed, 7 Nov 2018 21:39:13 +0100
+
+hwmon/k10temp: Add support for AMD family 17h, model 30h CPUs
+
+Add support for AMD family 17h model 30h processors for k10temp. Model
+30h is functionally the same as model 01h processors (as far as k10temp
+is concerned), just the PCI device IDs need to be updated.
+
+Signed-off-by: Brian Woods <brian.woods@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+CC: Bjorn Helgaas <bhelgaas@google.com>
+CC: Clemens Ladisch <clemens@ladisch.de>
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Jean Delvare <jdelvare@suse.com>
+CC: Jia Zhang <qianyue.zj@alibaba-inc.com>
+CC: <linux-hwmon@vger.kernel.org>
+CC: <linux-pci@vger.kernel.org>
+CC: Pu Wen <puwen@hygon.cn>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: x86-ml <x86@kernel.org>
+Link: http://lkml.kernel.org/r/20181106200754.60722-5-brian.woods@amd.com
+---
+ drivers/hwmon/k10temp.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
+index bc6871c8dd4e..9790f1f5eb98 100644
+--- a/drivers/hwmon/k10temp.c
++++ b/drivers/hwmon/k10temp.c
+@@ -360,6 +360,7 @@ static const struct pci_device_id k10temp_id_table[] = {
+ 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_16H_M30H_NB_F3) },
+ 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_DF_F3) },
+ 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
++	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(pci, k10temp_id_table);

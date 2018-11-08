@@ -1,0 +1,238 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:44 -0000
+Received: from icoremail.net (unknown [209.85.215.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn3_i9WeNbguNaAQ--.27275S3;
+	Thu, 08 Nov 2018 05:31:42 +0800 (CST)
+Received: from mail-pg1-f170.google.com (unknown [209.85.215.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHHzu7WeNbImQZAA--.1355S3;
+	Thu, 08 Nov 2018 05:31:40 +0800 (CST)
+Received: by mail-pg1-f170.google.com with SMTP id w7so7844010pgp.13
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 13:31:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:from:to:cc
+         :subject:message-id:references:mime-version:content-disposition
+         :in-reply-to:user-agent:sender:precedence:list-id;
+        bh=NtT+9gJUGE1iWJgjMHlElDiLh3yhFA0NeUcrLrB1BD8=;
+        b=Doy04lxfVGh8BpOesmN1wcJMfp9uTDy8oIx7sA1Gn2IkozrHZ2BVrk7vfTh+3hQtqH
+         7wSo3m3bmlbaMy3dDV7Ya1CglqZUOcPMr7ZIkWVgi99hu0aMFcptJk02ZnV7FE/mlIbq
+         9RnoPuDkOSuvPZ8JZvdN+AWG7ZLZ05fogqjuf1B5dNdATGBQAZgPbVpp432CWwcuxg10
+         5kewSTMAqhGA/o+O2jJBy/kVX0bWu3Vmvif+hp/gF4GTHsKZL/TqmWOIC074GF7kngSA
+         j4PEV3AmK7eOE8Xx3twq6gclL64NjWGPncEFcO3olUWVi0xJMmnnx1WKDfXTDHPtKXEf
+         1Q8A==
+X-Gm-Message-State: AGRZ1gJ2Mn7CxNxXTEJF7znH3CRViG2CV0nPYAh5ckTe5jK0Ma2cPkdD
+	OlmONu3NTHbburFPsdFksjB8r3FmjOnh9UpMz+NHOrAkhtsrxZYQXQ==
+X-Received: by 2002:a63:9402:: with SMTP id m2mr1576218pge.93.1541626299669;
+        Wed, 07 Nov 2018 13:31:39 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp28611pjt;
+        Wed, 7 Nov 2018 13:31:38 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f0pQ0+fcSNW7ddK5EcQbohBcu+1+cSTiLHZpv8dp4hQrIjXIyOiZIL6XdoT0N9t2A/6tGy
+X-Received: by 2002:a17:902:a9cb:: with SMTP id b11-v6mr1917276plr.219.1541626298638;
+        Wed, 07 Nov 2018 13:31:38 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541626298; cv=none;
+        d=google.com; s=arc-20160816;
+        b=OsWNzrRsn0q551Aaa0wWeJMFedFYWtj5iEwqYY/E4V0LXTPHt+bGuNn1LCB1KNzSBs
+         6jSvTx1Zspt4hxZqsxhjefJwXZiFssJlij0lm8D5lT7Jsogy6v6/LZ0As6dIxI8FDLbW
+         8H7ogdiiw/t8vmttRo6Tto8Ek4TM170Wl/KyFCF69WsN/bkqW4XIr35zt+b5Omnrqh2R
+         7DDbZiV/cRntW8FoE9L7rSdQyK2KDToqTn/1/LEMr9dkQl4D28kg1Dxja8z8Y+Y1Z+YB
+         fOEPU6CK/gnO3Zr9FKSxgvvhAH8pYYFtVyu6/zFcVP0iYZ5GmVM20Uo3patos1ZnDxcf
+         6sAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:dkim-signature;
+        bh=NtT+9gJUGE1iWJgjMHlElDiLh3yhFA0NeUcrLrB1BD8=;
+        b=dlhB8sv1D2PjaL5GX8FeqF7TioDqgIkKeZyj2OQzZZt1v106MI5yZbamU97zvEZM39
+         K9+QXzbol20ur3M4KivYlEjlKfOPIo0dPyBQyv8qQhk05LzElks/y8GLB3K56kxnlPh7
+         JRhTTNOIcSx7G6OKhxfcbctjhH8XMs04mYraN11bsnBS4uxm5MJEgNGuq3fYpEMn0IO2
+         jtIKawuuI9sswcWyWWmX7YDkp7Q9ueplFbO3Ojojpk6qD8q4+KiEFIfUZmVkFAktu7u8
+         wusoM6VpULUI3qw5VExo3nEt3V2xKblcqZag3/oI2xAMNGHUIGaZDcXx5tXJa/EdAGAV
+         CV5w==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kernel.org header.s=default header.b=pyjKRkiY;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 69-v6si1919709pft.177.2018.11.07.13.31.22;
+        Wed, 07 Nov 2018 13:31:38 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727517AbeKHHDT (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:03:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727451AbeKHHDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:03:19 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7554620989;
+        Wed,  7 Nov 2018 21:31:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1541626264;
+        bh=9OcHz1ZO9RiJIz00bdBrKdzIAigrSQHuInkicXsdwkI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pyjKRkiYL4HpIad0mRaiwAgRDWqBLpOkiwqWK4eRIbqTLOcf7+jCqdpqz1Zo0p3mh
+         W09pcDm8ELYfnmqeNjsbpNDTjXVPokRQG69fD+qXQ94chEJzg/YiPDqXY9E3UyIWy2
+         SellyX5qUhdzLnchbnRPTzLLkJDG0/ZqnUwsDJ1Y=
+Date: Wed, 7 Nov 2018 15:31:03 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Borislav Petkov <bp@alien8.de>,
+        "Woods, Brian" <Brian.Woods@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>, Pu Wen <puwen@hygon.cn>,
+        Jia Zhang <qianyue.zj@alibaba-inc.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 2/4] x86/amd_nb: add support for newer PCI topologies
+Message-ID: <20181107213103.GA41183@google.com>
+References: <20181102181055.130531-1-brian.woods@amd.com>
+ <20181102181055.130531-3-brian.woods@amd.com>
+ <20181102195925.GB160487@google.com>
+ <20181102232948.GC26770@zn.tnic>
+ <20181105214537.GA19420@google.com>
+ <20181105215650.GG26868@zn.tnic>
+ <20181106214256.GA65443@google.com>
+ <20181106220059.GA4139@zn.tnic>
+ <20181106232040.GA85755@google.com>
+ <75748b089ee696d5cbaa5c0ce68bad228699894c.camel@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <75748b089ee696d5cbaa5c0ce68bad228699894c.camel@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHHzu7WeNbImQZAA--.1355S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxuF1DGw1DAF1rZr4rZF1kKrg_yoWrJw1fpF
+	W5WFyUKFyDGFsYvwnFvw4rXFZ8tr4Fv3yrXr1rK34Y9ws8ZryaqFy3tFWYva4rursxC3Wj
+	yFWjqr48A3srZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPYb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK
+	6IIF6F4lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c
+	8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64
+	vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07beCJPU
+	UUUU=
+
+On Wed, Nov 07, 2018 at 11:15:37AM -0800, Srinivas Pandruvada wrote:
+> On Tue, 2018-11-06 at 17:20 -0600, Bjorn Helgaas wrote:
+> > [+cc Sumeet, Srinivas for INT3401 questions below]
+> > [Beginning of thread:
+> > 
+> https://lore.kernel.org/linux-pci/20181102181055.130531-1-brian.woods@amd.com/
+> > ]
+> > 
+> > On Tue, Nov 06, 2018 at 11:00:59PM +0100, Borislav Petkov wrote:
+> > > On Tue, Nov 06, 2018 at 03:42:56PM -0600, Bjorn Helgaas wrote:
+> > > > This isn't some complicated new device where the programming
+> > > > model changed on the new CPU.  This is a thermometer that was
+> > > > already supported.  ACPI provides plenty of functionality that
+> > > > could be used to support this generically, e.g., see
+> > > > drivers/acpi/thermal.c,
+> > > > drivers/thermal/int340x_thermal/processor_thermal_device.c,
+> > > > etc.
+> > > 
+> > > Ok, you say ACPI but how do you envision practically doing that?
+> > > I mean, this is used by old boxes too - ever since K8. So how do
+> > > we go and add ACPI functionality to old boxes?
+> > > 
+> > > Or do you mean it should simply be converted to do
+> > > pci_register_driver() with a struct pci_driver pointer which has
+> > > all those PCI device IDs in a table? I'm looking at the last
+> > > example
+> > > drivers/thermal/int340x_thermal/processor_thermal_device.c you
+> > > gave above.
+> > 
+> > No, there would be no need to change anything for boxes already in
+> > the field.  But for *new* systems, you could make devices or
+> > thermal zones in the ACPI namespace (they might even already be
+> > there for use by Windows).
+> > 
+> > drivers/thermal/int340x_thermal/processor_thermal_device.c claims
+> > either INT3401 ACPI devices or listed PCI devices. 
+> 
+> To enumerate a driver to get processor temperature and get power
+> properties, we have two methods:
+> -  The older Atom processors valleyview and Baytrail had no PCI device
+> for the processor thermal management. There was INT3401 ACPI device to
+> handle this.
+> 
+> - The newer processors for core and Atom, has a dedicate PCI device and
+> there is no INT3401 ACPI device anymore.
+
+This is really interesting because it's completely the reverse of what
+I would have expected.
+
+You use INT3401 on the *older* processors, where int3401_add() is
+called for any platform devices with INT3401 PNP ID:
+
+  int3401_add(plat_dev)                   # platform/ACPI .probe
+    proc_thermal_add(dev)
+      adev = ACPI_COMPANION(dev)
+      int340x_thermal_zone_add(adev)
+	thermal_zone_device_register()
+
+The sensors are read in this path, where thermal_zone_get_temp() is
+the generic thermal entry point:
+
+  thermal_zone_get_temp()
+    tz->ops->get_temp()
+      int340x_thermal_get_zone_temp()    # ops.get_temp
+	acpi_evaluate_integer(..., "_TMP", ...)
+
+The above works for any platform that supplies the INT3401 device
+because the _TMP method that actually reads the sensor is supplied by
+the platform firmware.
+
+On *newer* processors, you apparently use this path:
+
+  proc_thermal_pci_probe(pci_dev)        # PCI .probe
+    pci_enable_device(pci_dev)
+    proc_thermal_add(dev)
+      adev = ACPI_COMPANION(dev)
+      int340x_thermal_zone_add(adev)
+	thermal_zone_device_register()
+
+Except for enabling the PCI device and a BSW_THERMAL hack, this is
+exactly the *SAME*: you add a thermal zone for the ACPI device and
+read the sensor using ACPI _TMP methods.
+
+But now you have to add new PCI IDs (Skylake, Broxton, CannonLake,
+CoffeeLake, GeminiLake, etc) for every new platform.  This seems like
+a regression, not an improvement.  What am I missing?
+
+> Since OEM systems will have different power properties and thermal
+> trips, there is a companion ACPI device, which provides PPCC and
+> thermal trips and optionally output from another temperature sensor
+> from the default on processor cores.
+
+Bjorn

@@ -1,0 +1,127 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:00 -0000
+Received: from icoremail.net (unknown [209.85.214.171])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX9NRZ+NbjStbAQ--.27389S3;
+	Thu, 08 Nov 2018 06:29:37 +0800 (CST)
+Received: from mail-pl1-f171.google.com (unknown [209.85.214.171])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAX_klOZ+NbYpMZAA--.2302S3;
+	Thu, 08 Nov 2018 06:29:35 +0800 (CST)
+Received: by mail-pl1-f171.google.com with SMTP id w24-v6so8518388plq.3
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:29:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=0lNfUqGuj/jXLsMor7r+07GdZ023b1GGw81mx3TB+3M=;
+        b=owKbHGAmurJyVMHt0cs3vBzKz+Pvj1QtQQDX2msK1J1CnhAz8n8z0ZdThu38BVYMaI
+         rGWEdIw0XhPekoGwoolRiS9UbACyE3Qc0paLXGswvWkBjRiz4LdQ1UNdbAP3MH2FQeNF
+         9fNcXSWvoNc3n7CKLuyo9Vjov5kdvRPQABDrL/VkHO6TFP1HppZfjRtiEXNxivW5zHD7
+         8Wh1mqWlx2GBLg3a52haSLlYO9NWh/gpf18vT0MT5//TT80fxx9+k5M8y9N96PlZnNcA
+         qwlqxINgu4VC3mvnW4s3AEctq6Eg7vgOjVzXvM3XJQbUUMY29QEOD9d3LVzRLKlwTtYA
+         V1QQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gI2vATWUBnhCylAHQcTD4kqp5J13rRvABRsUPtyL7j4d79wIify
+	cCvFPejgAuXm7wmiUkld6Ah/AstcdyiC9USSrcchn5uLb+o35BVD8Q==
+X-Received: by 2002:a17:902:8e81:: with SMTP id bg1-v6mr2133538plb.192.1541629774818;
+        Wed, 07 Nov 2018 14:29:34 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp78369pjt;
+        Wed, 7 Nov 2018 14:29:34 -0800 (PST)
+X-Google-Smtp-Source: AJdET5c0nzxWKb2IupUZLwB/jHQs/Z5S0UGRIswTksftT/IynFdl9dCAqL9h9JykfeRTxuU7suH2
+X-Received: by 2002:a65:6542:: with SMTP id a2mr1757637pgw.389.1541629774072;
+        Wed, 07 Nov 2018 14:29:34 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541629774; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Pqhl3r7RjJA5un8d6v/LCfSjC1u5YrlFHMa6+pdNcW3bv5c0Fo94xSZXpefYaegBaq
+         kNLE+H6cAdWOmGfdpi4077QVyZLjJjXflpskuzO6BvNxW0U5w2rorLpXQdrdiAoc8uEp
+         vnfUO/6W3rz9F8bStFHx+uMybsTlTA0DNULGwzS0vbiSvs1yt36QxBnkNlPWlpYBXK0B
+         ERRPwXVl62QItrel0Ccc/n5+a/Se4BI98oHmtetD5VtW/I53yeslNK1BofKrgbO3xk4f
+         j/7ThJgkwjkBfv7EBY1ugp6dX6xI9LcwYga0TNHeAQui1Q3dwnGl5Zq5cSk0W2C20BH9
+         yzfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :organization:references:in-reply-to:message-id:subject:cc:to:from
+         :date;
+        bh=0lNfUqGuj/jXLsMor7r+07GdZ023b1GGw81mx3TB+3M=;
+        b=i+eSnFJKq+a31AuM/ZbWmSzlQu/JPz/sZI4NzfvG24nRm1+dYTSTLF8BFfo2QtIq+9
+         FFo5GChfIjoVt+EiWYiuKQ1arGBgLgcA1NkgkKydKfVzCgbR4JujDeaLdx1dPZKq7nNW
+         /U0e/QhhKDHTkDev8bdkoL10JnJfPsqf1zdnOIefFyusINZa8PGJr/IrOZqx6W5IFcNs
+         vsfLFS3ZGO0F/8k6j/SjRwhPaYtEbq5eXKmZlc307PdYSqUJ1CXsfWNGRqSIvcZk/zA3
+         TYg9ds5iP7o4IV2b+WHGq9n973EIfiCkXoqaTIZ2MoYB8jaCqGdqChjLjJWd1L4sAG3A
+         cu/w==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id s17si1608707pgi.513.2018.11.07.14.29.18;
+        Wed, 07 Nov 2018 14:29:34 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728129AbeKHIAO (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:00:14 -0500
+Received: from ms.lwn.net ([45.79.88.28]:45822 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727708AbeKHIAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:00:14 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 86B172ED;
+        Wed,  7 Nov 2018 22:27:48 +0000 (UTC)
+Date: Wed, 7 Nov 2018 15:27:47 -0700
+From: Jonathan Corbet <corbet@lwn.net>
+To: Waiman Long <longman@redhat.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH v2] Documentation/proc.txt: Add 2 missing fields for
+ /proc/<pid>/status
+Message-ID: <20181107152747.1f52f768@lwn.net>
+In-Reply-To: <1540329951-22431-1-git-send-email-longman@redhat.com>
+References: <1540329951-22431-1-git-send-email-longman@redhat.com>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAX_klOZ+NbYpMZAA--.2302S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUO17k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IY64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY
+	4VCF77xAMxkIecxEwVCI4VW3MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxV
+	W8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8
+	Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42
+	xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2Iq
+	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+	1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2Kfnx
+	nUUI43ZEXa7IU5fDG5UUUUU==
+
+On Tue, 23 Oct 2018 17:25:51 -0400
+Waiman Long <longman@redhat.com> wrote:
+
+> It was found that two of the fields in the /proc/<pid>/status file were
+> missing - CapAmb & Speculation_Store_Bypass. They are now added to the
+> proc.txt documentation file.
+> 
+> v2: Update the example as well.
+> 
+> Signed-off-by: Waiman Long <longman@redhat.com>
+
+Applied, thanks.
+
+jon

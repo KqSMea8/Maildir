@@ -1,0 +1,233 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:59 -0000
+Received: from icoremail.net (unknown [209.85.215.176])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH+aDGeNbMVZZAQ--.26519S3;
+	Thu, 08 Nov 2018 00:57:40 +0800 (CST)
+Received: from mail-pg1-f176.google.com (unknown [209.85.215.176])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHJ0OCGeNbN2wYAA--.359S3;
+	Thu, 08 Nov 2018 00:57:38 +0800 (CST)
+Received: by mail-pg1-f176.google.com with SMTP id y4so7117371pgc.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:57:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :message-id:in-reply-to:references:from:subject:to:cc:date:sender
+         :precedence:list-id;
+        bh=tRzRrq140dwek8c/0uV5qfOcYGo08MTYILt7JwnbvXo=;
+        b=It03XCMzfrdGQ97TKnD971M8c9CJHHh1cIOJxtIhqAUjVyZrbTQkJ54sJoXjoOBadX
+         gvNnM+nrbBJEqES629mEJd+kkOAncq4TOl6MKFc4k03YHCUWdpVBSu1DF4zUYFWKySai
+         av5SgL8V7se5fe3JTyJnQEXU6CXSLivIlaOFi/RbMEDWhWzWX8dahJ+16e78aS3r5Fpj
+         Jxnhejv4IQLzi7C/IIrtNTQ8RotiR6OBvfTal8v0G8rM0bHOtpGKPuv3gpGrHq1r/HGJ
+         r/1rCCR+BSo2cIYp+YderSCt2mcbUjrYlGKKEZi/kB/YQ0jcp7mngkEuHGMCZVWOElGe
+         eVsQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIHlv1IjV//lkEvOZ/nrJ/5wS1D/o6HNUMFRjoOWReh43W82I5t
+	BccsIYdR5/e2XeBAQti71n9GizY6YMA3dJCsDQkcAndA1orOkoHFzQ==
+X-Received: by 2002:a63:2315:: with SMTP id j21mr813085pgj.297.1541609858173;
+        Wed, 07 Nov 2018 08:57:38 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5481468pjt;
+        Wed, 7 Nov 2018 08:57:37 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cnR6uicbrq3U/yVmMfsEsgAPcfbAVUq9XqrgA11LOgCXaB7Wa6GLZ7mwBHxzINIq1b1qRy
+X-Received: by 2002:a62:e0dd:: with SMTP id d90-v6mr954745pfm.214.1541609857332;
+        Wed, 07 Nov 2018 08:57:37 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541609857; cv=none;
+        d=google.com; s=arc-20160816;
+        b=q8gWi/bOE08SbC6QxhfPnNKmz/ncMI5QkkwRp2jZrckctosTlBs1GBURJ7g6gXetU3
+         2k8gMt1Cq2N+7AZ4HLr5iA2vXpsG02SGqpoj8TCxb8lOEofg5PiShkgpnoWwRH3Yd036
+         q1wUF4o24Aixf0on7uDBkrskCDz/Zms1peorLkXBAaZBFiVuTKPWpIEfCqyUAoSCp2JA
+         AIr5aHHSQHSET2JrOmnUyAMwubWxzgnKMEKx2N23SJSWqIynwpUCHwe3K/PUN4lKsjDV
+         431hdKgIz6UQNMI9AXWeuSIuyt8lZLjqi8ujlwb3MeJDkwO3g/q0+A8LdOsZDf59CPpD
+         jkeA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:date:cc:to:subject:from:references
+         :in-reply-to:message-id;
+        bh=tRzRrq140dwek8c/0uV5qfOcYGo08MTYILt7JwnbvXo=;
+        b=b4x8bQqdkBMHRTyuD5B2tUkLB33xSMCshVAh3s6ERrcezkU48XDpqbSPYQchW4O2vC
+         pGmsdTmBk2iPMpmsrgeKvJb9QEqr4Hns4pZHeCndVOJu59aTqs01cUSSmA2+LZFWFj1b
+         uPj5OLFzVCvOlxfE/vuCX4mwDWJPGi/6xkDxa9CXQYv8XtjAX+yAC25nvp+YMFQonjGM
+         ASNgH+n8mlXFN7oR0qY67umOmZ2rYqs1+T+sTTmoV3hO/ttONUrq3KuAkCLdkvtN31WQ
+         cmXO1aIHFP2ZVaYDuQ/u/UljaRNXgFT4knAnPU6ggWJnzYgrimC+Pbr5M4ok7d3HLlSI
+         7eAw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id b65si1044315pgc.259.2018.11.07.08.57.21;
+        Wed, 07 Nov 2018 08:57:37 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731413AbeKHC1q (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:27:46 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:54055 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727699AbeKHC1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:27:44 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 42qsy53WMsz9tvr0;
+        Wed,  7 Nov 2018 17:56:29 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id CeMppXwPGisB; Wed,  7 Nov 2018 17:56:29 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 42qsy52yNRz9tvqG;
+        Wed,  7 Nov 2018 17:56:29 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8E3708B815;
+        Wed,  7 Nov 2018 17:56:31 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ekpdvan6Fb7m; Wed,  7 Nov 2018 17:56:31 +0100 (CET)
+Received: from po14163vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.2])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 61FA08B814;
+        Wed,  7 Nov 2018 17:56:31 +0100 (CET)
+Received: by po14163vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 58DF76995E; Wed,  7 Nov 2018 16:56:31 +0000 (UTC)
+Message-Id: <1b27e980fa8dda09955b35be09c99bb1e22fef70.1541568127.git.christophe.leroy@c-s.fr>
+In-Reply-To: <ab8fcb458e1a6ad86382767b3ce7f7cc0d5b7121.1541568127.git.christophe.leroy@c-s.fr>
+References: <ab8fcb458e1a6ad86382767b3ce7f7cc0d5b7121.1541568127.git.christophe.leroy@c-s.fr>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [RFC PATCH v1 3/6] powerpc: Add skeleton for Kernel Userspace
+ Execution Prevention
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, ruscur@russell.cc
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date: Wed,  7 Nov 2018 16:56:31 +0000 (UTC)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHJ0OCGeNbN2wYAA--.359S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxJw15Kr4xAw1DCr1DCr1UAwb_yoWrJr4Up3
+	WqyF92yw42g3Wrtay7JF1xuF4ak3Z7AF15tw4DK3ykZFnFvr97t3ZYvr17XF4kXrWDKF1I
+	qF4fKw1akrnrCw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4w
+	CY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VWUMxkI
+	7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJVW8Jr1lcIIF0xvEx4A2jsIEc7Cj
+	xVAFwI0_Gr0_Gr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnV
+	CjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
+	AIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IUOAku3UUUUU==
+
+This patch adds a skeleton for Kernel Userspace Execution Prevention.
+
+Then subarches implementing it have to define CONFIG_PPC_HAVE_KUEP
+and provide setup_kuep() function.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ Documentation/admin-guide/kernel-parameters.txt |  2 +-
+ arch/powerpc/include/asm/mmu.h                  |  6 ++++++
+ arch/powerpc/mm/fault.c                         |  3 ++-
+ arch/powerpc/mm/init-common.c                   | 11 +++++++++++
+ arch/powerpc/platforms/Kconfig.cputype          | 12 ++++++++++++
+ 5 files changed, 32 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 81d1d5a74728..1103549363bb 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2796,7 +2796,7 @@
+ 			Disable SMAP (Supervisor Mode Access Prevention)
+ 			even if it is supported by processor.
+ 
+-	nosmep		[X86]
++	nosmep		[X86,PPC]
+ 			Disable SMEP (Supervisor Mode Execution Prevention)
+ 			even if it is supported by processor.
+ 
+diff --git a/arch/powerpc/include/asm/mmu.h b/arch/powerpc/include/asm/mmu.h
+index 39c51dcba8f4..cf92f2a813a8 100644
+--- a/arch/powerpc/include/asm/mmu.h
++++ b/arch/powerpc/include/asm/mmu.h
+@@ -270,6 +270,12 @@ static inline u16 get_mm_addr_key(struct mm_struct *mm, unsigned long address)
+ 
+ void setup_kup(void);
+ 
++#ifdef CONFIG_PPC_KUEP
++void setup_kuep(bool disabled);
++#else
++static inline void setup_kuep(bool disabled) { }
++#endif
++
+ #endif /* !__ASSEMBLY__ */
+ 
+ /* The kernel use the constants below to index in the page sizes array.
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index 50e5c790d11e..e57bd46cf25b 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -230,8 +230,9 @@ static bool bad_kernel_fault(bool is_exec, unsigned long error_code,
+ 	if (is_exec && (error_code & (DSISR_NOEXEC_OR_G | DSISR_KEYFAULT |
+ 				      DSISR_PROTFAULT))) {
+ 		printk_ratelimited(KERN_CRIT "kernel tried to execute"
+-				   " exec-protected page (%lx) -"
++				   " %s page (%lx) -"
+ 				   "exploit attempt? (uid: %d)\n",
++				   address >= TASK_SIZE ? "exec-protected" : "user",
+ 				   address, from_kuid(&init_user_ns,
+ 						      current_uid()));
+ 	}
+diff --git a/arch/powerpc/mm/init-common.c b/arch/powerpc/mm/init-common.c
+index e469814e8290..89c8bd58509e 100644
+--- a/arch/powerpc/mm/init-common.c
++++ b/arch/powerpc/mm/init-common.c
+@@ -25,8 +25,19 @@
+ #include <asm/pgalloc.h>
+ #include <asm/pgtable.h>
+ 
++static bool disable_kuep = !IS_ENABLED(CONFIG_PPC_KUEP);
++
++static int __init parse_nosmep(char *p)
++{
++	disable_kuep = true;
++	pr_warn("Disabling Kernel Userspace Execution Prevention\n");
++	return 0;
++}
++early_param("nosmep", parse_nosmep);
++
+ void setup_kup(void)
+ {
++	setup_kuep(disable_kuep);
+ }
+ 
+ static void pgd_ctor(void *addr)
+diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
+index f4e2c5729374..70830cb3c18a 100644
+--- a/arch/powerpc/platforms/Kconfig.cputype
++++ b/arch/powerpc/platforms/Kconfig.cputype
+@@ -351,6 +351,18 @@ config PPC_RADIX_MMU_DEFAULT
+ 
+ 	  If you're unsure, say Y.
+ 
++config PPC_HAVE_KUEP
++	bool
++
++config PPC_KUEP
++	bool "Kernel Userspace Execution Prevention"
++	depends on PPC_HAVE_KUEP
++	default y
++	help
++	  Enable support for Kernel Userspace Execution Prevention (KUEP)
++
++	  If you're unsure, say Y.
++
+ config ARCH_ENABLE_HUGEPAGE_MIGRATION
+ 	def_bool y
+ 	depends on PPC_BOOK3S_64 && HUGETLB_PAGE && MIGRATION
+-- 
+2.13.3

@@ -1,0 +1,227 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:58 -0000
+Received: from icoremail.net (unknown [209.85.214.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX_sBGeNbAVNZAQ--.26902S3;
+	Thu, 08 Nov 2018 00:55:29 +0800 (CST)
+Received: from mail-pl1-f177.google.com (unknown [209.85.214.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3mUX2GONbzmkYAA--.394S3;
+	Thu, 08 Nov 2018 00:55:18 +0800 (CST)
+Received: by mail-pl1-f177.google.com with SMTP id p16-v6so8119614plr.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:55:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=4+bgnUsQ4B/pWxe3xfB3158N3edCIKKEMBRy5SxcNFI=;
+        b=Uksqz62L6G4/rq6C1ZkTf4DiCsXiPa0UOj5sXqikbUef0t6VtIHUpPPg8hOXeoVy7t
+         RVRuGhdUPPoLqikZBRkMybZTuP+1FFLPFdJ9eSeOLslsTR6YLnGGZkdDTeFBMPgnESKk
+         2/2EFpnIEuOaLUt65emlN+YjK/GtSlVGUBhHRbYNEOqb4MYNFCDnEDqRjp1fcahn8KOU
+         X2i9Bj3rP0Hrb9SlmGqeJ+0aDX7tTHBnvN8LVlhOu7kxOC70CPMIFSrVxAQ6zhUj5AVl
+         CI8eN5k4qj4ATdsFM6DIHQz09wvrZUrWOuX5saipkrZpGY4t8QikOl2npbXrS6xE2AQJ
+         sJiw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIRb/QXM2jWW6rrToHplQA6Rr3/9ac555+sh0XNuxXmpJ8ze67y
+	Jo8vGlDz+F+wnT3ZzqbM12lr4G36moCBR0JCezYeBswucLWL9NG5sg==
+X-Received: by 2002:a17:902:50e3:: with SMTP id c32-v6mr963914plj.39.1541609717976;
+        Wed, 07 Nov 2018 08:55:17 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5479260pjt;
+        Wed, 7 Nov 2018 08:55:17 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fv3oHwQTt4Gmq2AKBG/zw05zx6m67PtW/Fy6K27j1WVfun91etoXD1K79OndXH0ZQzLWw4
+X-Received: by 2002:a17:902:8504:: with SMTP id bj4-v6mr933697plb.99.1541609717178;
+        Wed, 07 Nov 2018 08:55:17 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541609717; cv=none;
+        d=google.com; s=arc-20160816;
+        b=gUx87a29o0aNu5G2p3nObRpgjHsep78k8te2WpH6fbdykSLcXHkKb4dKu0d4n0bhCe
+         I4Cag5nPW9zQWvpX48Ot2y3MQ19AzzaJG4TbKQ3nmTbdazgnh+Bvwyh6TdB7IezrCBsQ
+         vtWyck40Tx4zS5SZw6gKZ5cOgg7Hv4NA4Avf5Y61tTqmpaIOQxxi4yyYEb3inSZ+L7kG
+         2eFUdWKEERJ3oy1eVOTM3aIXdkgkFS5LgwO0UaR6A3EUu+aVfuoVEMENqRkASTLswKgT
+         7nAY8OKF+bDUfqKThUeiNJ248xMfRNNUu2bcVg6RKhx5zx1SYRa8V8/3PXVjtkfWo3lF
+         iRwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=4+bgnUsQ4B/pWxe3xfB3158N3edCIKKEMBRy5SxcNFI=;
+        b=hQ0bNwpBiI9Zxhn9uXqe0RQwOVPgHAhhEy7oE2lyHCLdoJNzhhoXHw09h7ZIFZf6Nf
+         tSjkq7gixTdwZR4aSSYJH2Q3yEckiOPfWvSk+9QdHWELwoBEQoe0ovkD3xyBYuj6TgDW
+         HWJJg2g4Tedw5d18fjSt14Y1PLhpFv3pk2O7rKmPxTmecRlrlPlx4OFB/+uQcRfcbTbc
+         n09+Q4gaMs8B/0qsvCcIPaqylWZzdc17vL0jPOo33AMWP3oRp2LgHD0kgCkBfPM+ittZ
+         hNcoseGCfh4hwptj8Eoyw5sAmecXiM8iSsWaTMlYM63Dm1mm41CjhW3+0+LnzjYpC/By
+         ugzg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id l3-v6si1142270plt.412.2018.11.07.08.55.01;
+        Wed, 07 Nov 2018 08:55:17 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731325AbeKHCZ6 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:25:58 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54442 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727546AbeKHCZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:25:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38F9FA78;
+        Wed,  7 Nov 2018 08:54:47 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 636373F5BD;
+        Wed,  7 Nov 2018 08:54:41 -0800 (PST)
+Date: Wed, 7 Nov 2018 16:54:38 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Andrey Konovalov <andreyknvl@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Dave Martin <dave.martin@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Paul Lawrence <paullawrence@google.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sparse@vger.kernel.org, linux-mm@kvack.org,
+        linux-kbuild@vger.kernel.org, Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Jann Horn <jannh@google.com>,
+        Mark Brand <markbrand@google.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Vishwath Mohan <vishwath@google.com>
+Subject: Re: [PATCH v10 06/22] kasan, arm64: adjust shadow size for tag-based
+ mode
+Message-ID: <20181107165438.34kb5ufoe5ve2f6i@lakrids.cambridge.arm.com>
+References: <cover.1541525354.git.andreyknvl@google.com>
+ <86d1b17c755d8bfd6e44e6869a16f4a409e7bd06.1541525354.git.andreyknvl@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86d1b17c755d8bfd6e44e6869a16f4a409e7bd06.1541525354.git.andreyknvl@google.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3mUX2GONbzmkYAA--.394S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxXryfKFy8Cw4DtrW7WF4xXrb_yoW5Wr4Dpr
+	s0kFWvkr1vkF12g34Fk3WDGr1jyw4kG3Z0qr95XrWrKw13Z397tr10gFWktrykWF47tF4F
+	9F1vkFWDXrWDJ3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPab7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VWUMxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJVW8Jr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4
+	vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8Jr1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxU
+	qldgDUUUU
+
+Hi Andrey,
+
+On Tue, Nov 06, 2018 at 06:30:21PM +0100, Andrey Konovalov wrote:
+> Tag-based KASAN uses 1 shadow byte for 16 bytes of kernel memory, so it
+> requires 1/16th of the kernel virtual address space for the shadow memory.
+> 
+> This commit sets KASAN_SHADOW_SCALE_SHIFT to 4 when the tag-based KASAN
+> mode is enabled.
+> 
+> Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> ---
+>  arch/arm64/Makefile             |  2 +-
+>  arch/arm64/include/asm/memory.h | 13 +++++++++----
+>  2 files changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+> index 6cb9fc7e9382..9887492381d9 100644
+> --- a/arch/arm64/Makefile
+> +++ b/arch/arm64/Makefile
+> @@ -94,7 +94,7 @@ endif
+>  # KASAN_SHADOW_OFFSET = VA_START + (1 << (VA_BITS - KASAN_SHADOW_SCALE_SHIFT))
+>  #				 - (1 << (64 - KASAN_SHADOW_SCALE_SHIFT))
+>  # in 32-bit arithmetic
+> -KASAN_SHADOW_SCALE_SHIFT := 3
+> +KASAN_SHADOW_SCALE_SHIFT := $(if $(CONFIG_KASAN_SW_TAGS), 4, 3)
+
+
+We could make this something like:
+
+ifeq ($(CONFIG_KASAN_SW_TAGS), y)
+KASAN_SHADOW_SCALE_SHIFT := 4
+else
+KASAN_SHADOW_SCALE_SHIFT := 3
+endif
+
+KBUILD_CFLAGS += -DKASAN_SHADOW_SCALE_SHIFT=$(KASAN_SHADOW_SCALE_SHIFT)
+
+>  KASAN_SHADOW_OFFSET := $(shell printf "0x%08x00000000\n" $$(( \
+>  	(0xffffffff & (-1 << ($(CONFIG_ARM64_VA_BITS) - 32))) \
+>  	+ (1 << ($(CONFIG_ARM64_VA_BITS) - 32 - $(KASAN_SHADOW_SCALE_SHIFT))) \
+> diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+> index b96442960aea..0f1e024a951f 100644
+> --- a/arch/arm64/include/asm/memory.h
+> +++ b/arch/arm64/include/asm/memory.h
+> @@ -74,12 +74,17 @@
+>  #define KERNEL_END        _end
+>  
+>  /*
+> - * KASAN requires 1/8th of the kernel virtual address space for the shadow
+> - * region. KASAN can bloat the stack significantly, so double the (minimum)
+> - * stack size when KASAN is in use.
+> + * Generic and tag-based KASAN require 1/8th and 1/16th of the kernel virtual
+> + * address space for the shadow region respectively. They can bloat the stack
+> + * significantly, so double the (minimum) stack size when they are in use.
+>   */
+> -#ifdef CONFIG_KASAN
+> +#ifdef CONFIG_KASAN_GENERIC
+>  #define KASAN_SHADOW_SCALE_SHIFT 3
+> +#endif
+> +#ifdef CONFIG_KASAN_SW_TAGS
+> +#define KASAN_SHADOW_SCALE_SHIFT 4
+> +#endif
+> +#ifdef CONFIG_KASAN
+
+... and remove the constant entirely here, avoiding duplication.
+
+Maybe factor that into a Makefile.kasan if things are going to get much
+more complicated.
+
+Thanks,
+Mark.
+
+>  #define KASAN_SHADOW_SIZE	(UL(1) << (VA_BITS - KASAN_SHADOW_SCALE_SHIFT))
+>  #define KASAN_THREAD_SHIFT	1
+>  #else
+> -- 
+> 2.19.1.930.g4563a0d9d0-goog
+> 

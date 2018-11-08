@@ -1,0 +1,427 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:22 -0000
+Received: from icoremail.net (unknown [209.85.210.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX++C_+JbU7VYAQ--.26853S3;
+	Wed, 07 Nov 2018 23:06:43 +0800 (CST)
+Received: from mail-pf1-f169.google.com (unknown [209.85.210.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwD320eB_+JbcPoXAA--.11558S3;
+	Wed, 07 Nov 2018 23:06:41 +0800 (CST)
+Received: by mail-pf1-f169.google.com with SMTP id u10-v6so2063475pfn.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:06:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :in-reply-to:message-id:date:sender:precedence:list-id;
+        bh=7tRCzqcPitxGL5dZoGjLNGsk5bDMjoui+2koknIzju0=;
+        b=TlzVfg9GzU8tGV6pXxuQM0dD6syZTeOaQR2MSNthvWWnQiTYr1og0v18H79OMLJDk0
+         iWCHBLw4d54l78XnQ5H5JePnwgXxZlZZxRCcY57Ng05nLu6xy4gWVky3j/TKt0S6Qzgm
+         hkJqJefQdGkcgR+eC3zfVSvk1eVsMc3pijCJDc1wRIRQbYLmR7JJVUyCtrTGZGfYFd/o
+         1ydOpVtxeAh0IeFK+lT/vCmE4Rx+gXSY53ARTmqWfOYi0q5pe1KcXJC7shNzouNLOfSv
+         mX7VEM3+S48SEpPiXj7lK6pxMv6vAHcUESm/mcrqSdh+pJyvabzeswT5EuhFXKDnOoBd
+         ILOQ==
+X-Gm-Message-State: AGRZ1gIVeVIEvT7/syE+Vm6ApenABlwOr0UXLtRrwCPu8qvtNj4txZ14
+	77LFQ2yoOCa4kgT266L1N1EVG9pC25K8jg8ODnsSq1X3Ua1FlvFKNQ==
+X-Received: by 2002:a65:64d5:: with SMTP id t21-v6mr492432pgv.428.1541603201524;
+        Wed, 07 Nov 2018 07:06:41 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5357521pjt;
+        Wed, 7 Nov 2018 07:06:40 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d/Lp5nZgtkO2NB1UQkY3E6On9y/LXEqEqKdUGSOteTpXNSwiAdsWf4HKPL0F5zAKz9OEPA
+X-Received: by 2002:a62:b2c9:: with SMTP id z70-v6mr570581pfl.79.1541603200573;
+        Wed, 07 Nov 2018 07:06:40 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541603200; cv=none;
+        d=google.com; s=arc-20160816;
+        b=hv5kU8i+xAzoGapx4ar1FCGAdx65Wyyl8EktL2eWY0m6LGPXwD4qIxTifidMZDEC1Y
+         zhxnCoy0bHSNi2yF2zBjzkLXB/FRvvRvYHU/UQ9gQjOrXHElWlWSx5ce7FF6Ap9fTfIv
+         v1qRRFHfcQai21I6pWVFyKd+UidmGEykl33MnHS1mLcIDxxm4ujl7mYQsjIr1foY8Q7x
+         QXLsH2TFO2VVvJnFFgC+IN3xyt39D4emn7agJ0LXDcyo4cqWMWzx3qJvoFDfqdg8mju3
+         wH5si8Z5nLtDZFlC3aUt/h6kwwnlvpm7hvr7gEmRti1pgbtNGUy5+gWTtAAV+ui5TwXH
+         JJmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:date:message-id:in-reply-to:subject:cc:to
+         :from:dkim-signature;
+        bh=7tRCzqcPitxGL5dZoGjLNGsk5bDMjoui+2koknIzju0=;
+        b=u+Aa7WkVTnt9TqSmAaxg/kiTtXMXIZc1UTYkh/9wjHFmRwbqZqMTU/pWTLt4GgO82Y
+         Vg5BitfXR/YGJVSQcP0LMY+dtFSqzLd392fVYqRdqJPQpn+Z/5jCInyfbmlMYjaUTnz4
+         E5/DETTBe5GtcR4PxaEdqdjf+iUK4ZfCVt9aKwxDP2SAAnnQRAlV15PjXg7vyKSjxVZ1
+         qyFkZwIFlqahZxryIxQ2QUu5ikMCQc/zp9ukra5ym84g5/HJFu2j9WTHE0LOx9/S4ktX
+         ug7stPT6I/uHP0eq3yEn3CeO4mKthgjgX1ku6qwNuNa2sprsEVfpwcwVnfWUmRMy8O3H
+         FAng==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@sirena.org.uk header.s=20170815-heliosphere header.b="N5Ur/KJ1";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d8-v6si844903pgh.45.2018.11.07.07.06.18;
+        Wed, 07 Nov 2018 07:06:40 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727991AbeKHAgx (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:36:53 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48510 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbeKHAgx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:36:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=7tRCzqcPitxGL5dZoGjLNGsk5bDMjoui+2koknIzju0=; b=N5Ur/KJ1BzX4
+        J1HzTafMOBoDFvO5/vI/qQgb6YrLkhaHfF68ZRLqIyoVqri7HxSneP5rs07lXKvvWqQRmQSpLDy5n
+        7vcEh2obU8I4pijA9CZe12bGUEenFYXC6cGlMym8bsqcrZw9ooWBti5np1j3ugu/87WWOvnUtUk5W
+        kgmL8=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1gKPOv-0006cA-Uw; Wed, 07 Nov 2018 15:05:50 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id A68641124E14; Wed,  7 Nov 2018 15:05:49 +0000 (GMT)
+From: Mark Brown <broonie@kernel.org>
+To: Piotr Bugalski <bugalski.piotr@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Mark Brown <broonie@kernel.org>,
+        linux-spi@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Cyrille Pitchen <cyrille.pitchen@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        linux-spi@vger.kernel.org
+Subject: Applied "mtd: spi-nor: atmel-quadspi: Add spi-mem support to atmel-quadspi" to the spi tree
+In-Reply-To: <20181105103625.9644-3-bugalski.piotr@gmail.com>
+Message-Id: <20181107150549.A68641124E14@debutante.sirena.org.uk>
+Date: Wed,  7 Nov 2018 15:05:49 +0000 (GMT)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwD320eB_+JbcPoXAA--.11558S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxKrW5CF4xJF4xXF13GF48Zwb_yoW3tw4UpF
+	WUGry3tr48Jr43XwsrJan5Za4rK34rKrWDC345GFZrX3ZFgFZ8WFsYkFySyFZ8GF97ua43
+	Za18Zayagr4jyFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4wCY1x
+	0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VW5WwCY0x0I
+	x7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804x
+	Wl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE42xK8V
+	AvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IUOWSoJUUUUU==
+
+The patch
+
+   mtd: spi-nor: atmel-quadspi: Add spi-mem support to atmel-quadspi
+
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From d5433def31531bd07984f167f6ab0afef70b6a3e Mon Sep 17 00:00:00 2001
+From: Piotr Bugalski <bugalski.piotr@gmail.com>
+Date: Mon, 5 Nov 2018 11:36:21 +0100
+Subject: [PATCH] mtd: spi-nor: atmel-quadspi: Add spi-mem support to
+ atmel-quadspi
+
+This patch adds new interface to existing driver. New code is not used yet,
+it will be enabled later.
+Changes are prepared in small steps to keep patches readable.
+
+Suggested-by: Boris Brezillon <boris.brezillon@bootlin.com>
+Signed-off-by: Piotr Bugalski <bugalski.piotr@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/mtd/spi-nor/atmel-quadspi.c | 211 ++++++++++++++++++++++++++++
+ 1 file changed, 211 insertions(+)
+
+diff --git a/drivers/mtd/spi-nor/atmel-quadspi.c b/drivers/mtd/spi-nor/atmel-quadspi.c
+index 1c5ba8feaa5e..896478a290ec 100644
+--- a/drivers/mtd/spi-nor/atmel-quadspi.c
++++ b/drivers/mtd/spi-nor/atmel-quadspi.c
+@@ -2,8 +2,10 @@
+  * Driver for Atmel QSPI Controller
+  *
+  * Copyright (C) 2015 Atmel Corporation
++ * Copyright (C) 2018 Cryptera A/S
+  *
+  * Author: Cyrille Pitchen <cyrille.pitchen@atmel.com>
++ * Author: Piotr Bugalski <bugalski.piotr@gmail.com>
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+@@ -35,6 +37,7 @@
+ 
+ #include <linux/io.h>
+ #include <linux/gpio/consumer.h>
++#include <linux/spi/spi-mem.h>
+ 
+ /* QSPI register offsets */
+ #define QSPI_CR      0x0000  /* Control Register */
+@@ -186,6 +189,23 @@ struct atmel_qspi_command {
+ 	void		*rx_buf;
+ };
+ 
++struct qspi_mode {
++	u8 cmd_buswidth;
++	u8 addr_buswidth;
++	u8 data_buswidth;
++	u32 config;
++};
++
++static const struct qspi_mode sama5d2_qspi_modes[] = {
++	{ 1, 1, 1, QSPI_IFR_WIDTH_SINGLE_BIT_SPI },
++	{ 1, 1, 2, QSPI_IFR_WIDTH_DUAL_OUTPUT },
++	{ 1, 1, 4, QSPI_IFR_WIDTH_QUAD_OUTPUT },
++	{ 1, 2, 2, QSPI_IFR_WIDTH_DUAL_IO },
++	{ 1, 4, 4, QSPI_IFR_WIDTH_QUAD_IO },
++	{ 2, 2, 2, QSPI_IFR_WIDTH_DUAL_CMD },
++	{ 4, 4, 4, QSPI_IFR_WIDTH_QUAD_CMD },
++};
++
+ /* Register access functions */
+ static inline u32 qspi_readl(struct atmel_qspi *aq, u32 reg)
+ {
+@@ -197,6 +217,196 @@ static inline void qspi_writel(struct atmel_qspi *aq, u32 reg, u32 value)
+ 	writel_relaxed(value, aq->regs + reg);
+ }
+ 
++static inline bool is_compatible(const struct spi_mem_op *op,
++				 const struct qspi_mode *mode)
++{
++	if (op->cmd.buswidth != mode->cmd_buswidth)
++		return false;
++
++	if (op->addr.nbytes && op->addr.buswidth != mode->addr_buswidth)
++		return false;
++
++	if (op->data.nbytes && op->data.buswidth != mode->data_buswidth)
++		return false;
++
++	return true;
++}
++
++static int find_mode(const struct spi_mem_op *op)
++{
++	u32 i;
++
++	for (i = 0; i < ARRAY_SIZE(sama5d2_qspi_modes); i++)
++		if (is_compatible(op, &sama5d2_qspi_modes[i]))
++			return i;
++
++	return -1;
++}
++
++static bool atmel_qspi_supports_op(struct spi_mem *mem,
++				   const struct spi_mem_op *op)
++{
++	if (find_mode(op) < 0)
++		return false;
++
++	/* special case not supported by hardware */
++	if (op->addr.nbytes == 2 && op->cmd.buswidth != op->addr.buswidth &&
++		op->dummy.nbytes == 0)
++		return false;
++
++	return true;
++}
++
++static int atmel_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
++{
++	struct atmel_qspi *aq = spi_controller_get_devdata(mem->spi->master);
++	int mode;
++	u32 dummy_cycles = 0;
++	u32 iar, icr, ifr, sr;
++	int err = 0;
++
++	iar = 0;
++	icr = QSPI_ICR_INST(op->cmd.opcode);
++	ifr = QSPI_IFR_INSTEN;
++
++	qspi_writel(aq, QSPI_MR, QSPI_MR_SMM);
++
++	mode = find_mode(op);
++	if (mode < 0)
++		return -ENOTSUPP;
++
++	ifr |= sama5d2_qspi_modes[mode].config;
++
++	if (op->dummy.buswidth && op->dummy.nbytes)
++		dummy_cycles = op->dummy.nbytes * 8 / op->dummy.buswidth;
++
++	if (op->addr.buswidth) {
++		switch (op->addr.nbytes) {
++		case 0:
++			break;
++		case 1:
++			ifr |= QSPI_IFR_OPTEN | QSPI_IFR_OPTL_8BIT;
++			icr |= QSPI_ICR_OPT(op->addr.val & 0xff);
++			break;
++		case 2:
++			if (dummy_cycles < 8 / op->addr.buswidth) {
++				ifr &= ~QSPI_IFR_INSTEN;
++				ifr |= QSPI_IFR_ADDREN;
++				iar = (op->cmd.opcode << 16) |
++					(op->addr.val & 0xffff);
++			} else {
++				ifr |= QSPI_IFR_ADDREN;
++				iar = (op->addr.val << 8) & 0xffffff;
++				dummy_cycles -= 8 / op->addr.buswidth;
++			}
++			break;
++		case 3:
++			ifr |= QSPI_IFR_ADDREN;
++			iar = op->addr.val & 0xffffff;
++			break;
++		case 4:
++			ifr |= QSPI_IFR_ADDREN | QSPI_IFR_ADDRL;
++			iar = op->addr.val & 0x7ffffff;
++			break;
++		default:
++			return -ENOTSUPP;
++		}
++	}
++
++	/* Set number of dummy cycles */
++	if (dummy_cycles)
++		ifr |= QSPI_IFR_NBDUM(dummy_cycles);
++
++	/* Set data enable */
++	if (op->data.nbytes)
++		ifr |= QSPI_IFR_DATAEN;
++
++	if (op->data.dir == SPI_MEM_DATA_IN && op->data.nbytes)
++		ifr |= QSPI_IFR_TFRTYP_TRSFR_READ;
++	else
++		ifr |= QSPI_IFR_TFRTYP_TRSFR_WRITE;
++
++	/* Clear pending interrupts */
++	(void)qspi_readl(aq, QSPI_SR);
++
++	/* Set QSPI Instruction Frame registers */
++	qspi_writel(aq, QSPI_IAR, iar);
++	qspi_writel(aq, QSPI_ICR, icr);
++	qspi_writel(aq, QSPI_IFR, ifr);
++
++	/* Skip to the final steps if there is no data */
++	if (op->data.nbytes) {
++		/* Dummy read of QSPI_IFR to synchronize APB and AHB accesses */
++		(void)qspi_readl(aq, QSPI_IFR);
++
++		/* Send/Receive data */
++		if (op->data.dir == SPI_MEM_DATA_IN)
++			_memcpy_fromio(op->data.buf.in,
++				aq->mem + iar, op->data.nbytes);
++		else
++			_memcpy_toio(aq->mem + iar,
++				op->data.buf.out, op->data.nbytes);
++
++		/* Release the chip-select */
++		qspi_writel(aq, QSPI_CR, QSPI_CR_LASTXFER);
++	}
++
++	/* Poll INSTRuction End status */
++	sr = qspi_readl(aq, QSPI_SR);
++	if ((sr & QSPI_SR_CMD_COMPLETED) == QSPI_SR_CMD_COMPLETED)
++		return err;
++
++	/* Wait for INSTRuction End interrupt */
++	reinit_completion(&aq->cmd_completion);
++	aq->pending = sr & QSPI_SR_CMD_COMPLETED;
++	qspi_writel(aq, QSPI_IER, QSPI_SR_CMD_COMPLETED);
++	if (!wait_for_completion_timeout(&aq->cmd_completion,
++					 msecs_to_jiffies(1000)))
++		err = -ETIMEDOUT;
++	qspi_writel(aq, QSPI_IDR, QSPI_SR_CMD_COMPLETED);
++
++	return err;
++}
++
++const char *atmel_qspi_get_name(struct spi_mem *spimem)
++{
++	return dev_name(spimem->spi->dev.parent);
++}
++
++static const struct spi_controller_mem_ops atmel_qspi_mem_ops = {
++	.supports_op = atmel_qspi_supports_op,
++	.exec_op = atmel_qspi_exec_op,
++	.get_name = atmel_qspi_get_name
++};
++
++static int atmel_qspi_setup(struct spi_device *spi)
++{
++	struct spi_controller *ctrl = spi->master;
++	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
++	unsigned long src_rate;
++	u32 scr, scbr;
++
++	if (ctrl->busy)
++		return -EBUSY;
++
++	if (!spi->max_speed_hz)
++		return -EINVAL;
++
++	src_rate = clk_get_rate(aq->clk);
++	if (!src_rate)
++		return -EINVAL;
++
++	/* Compute the QSPI baudrate */
++	scbr = DIV_ROUND_UP(src_rate, spi->max_speed_hz);
++	if (scbr > 0)
++		scbr--;
++
++	scr = QSPI_SCR_SCBR(scbr);
++	qspi_writel(aq, QSPI_SCR, scr);
++
++	return 0;
++}
++
+ static int atmel_qspi_run_transfer(struct atmel_qspi *aq,
+ 				   const struct atmel_qspi_command *cmd)
+ {
+@@ -777,5 +987,6 @@ static struct platform_driver atmel_qspi_driver = {
+ module_platform_driver(atmel_qspi_driver);
+ 
+ MODULE_AUTHOR("Cyrille Pitchen <cyrille.pitchen@atmel.com>");
++MODULE_AUTHOR("Piotr Bugalski <bugalski.piotr@gmail.com");
+ MODULE_DESCRIPTION("Atmel QSPI Controller driver");
+ MODULE_LICENSE("GPL v2");
+-- 
+2.19.0.rc2

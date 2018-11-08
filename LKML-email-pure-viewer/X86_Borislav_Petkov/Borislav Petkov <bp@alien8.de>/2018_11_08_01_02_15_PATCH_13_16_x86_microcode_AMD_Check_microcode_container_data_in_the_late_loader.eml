@@ -1,0 +1,205 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:02 -0000
+Received: from icoremail.net (unknown [209.85.214.177])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_2PxGuNbhl5ZAQ--.26316S3;
+	Thu, 08 Nov 2018 01:03:46 +0800 (CST)
+Received: from mail-pl1-f177.google.com (unknown [209.85.214.177])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAXkEzmGuNb4XIYAA--.484S3;
+	Thu, 08 Nov 2018 01:03:34 +0800 (CST)
+Received: by mail-pl1-f177.google.com with SMTP id t6-v6so8129958plo.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:03:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=oGHEXBQC5TO8YtH0Z6m+jcb0+SOvH6RFHXkGK36JTjw=;
+        b=RQ6pKu82U+NtgqYvodSIRiALG/xhwsNNVVz23xoiob/TSIpmqPYroj59iqTkdfakLF
+         up9fjPTndt4Kh6J87WUglEzFmvK+K0roL5PEQmM4x0SZJ0YC23T+AGSTfIEqg5paqIUl
+         hwNV2OnLyXzyX+MPXnGin8sQkEs2LTwoRyaHZwwMyQ1duADpazDNxXBpBFlFSBNU32/L
+         nZ2xgR9dr+8Bti/KDnTJLRlZvHSr+CHTs6pcdyGc4WGfR04k/2KTJY/bJieKHX2wCLJ/
+         EfKlXjA7zI8iAwZoh6KvN8XVHVrP5cctWmGwa/PZfKlGvSjaQhfM/jLZfHhcTerC8tAA
+         x06g==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJi4eFHC38v+lug26tMTSdNaGAwlCfFvvLjkKdCt+UwE6P9YXFD
+	d74QNp5d4+Rf1NtIrdvNNI1tg3z50RXk6NXa67W82bS1Jw57OAzFgQ==
+X-Received: by 2002:a17:902:a5cc:: with SMTP id t12-v6mr1009264plq.298.1541610213993;
+        Wed, 07 Nov 2018 09:03:33 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5488538pjt;
+        Wed, 7 Nov 2018 09:03:33 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dRtseVlzkPw9VGYyffKuQk3C9qUmFhiwZrBU0XlVN8yVFSPyOnd3fjiKQFh04lMmYT8IUB
+X-Received: by 2002:a65:5a8e:: with SMTP id c14mr824300pgt.137.1541610213096;
+        Wed, 07 Nov 2018 09:03:33 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610213; cv=none;
+        d=google.com; s=arc-20160816;
+        b=KO+Xtb65f69BdJaCApeU8KA97XbIAXQZOalhybZ9OLMiz00ud5d38Zl3crRSzU+QNf
+         2Hjh8tUi7P+JZnsbnr0KFPtWRMEl8IY9ZmdCBHsMT/GDeppdttYxncX24iMjesLW26+c
+         4ReuAUYHKJtaAlRpwHsWoyAwGCO6nB0NSW77oIxceszEj4Qsu/RNt4DnAMJ7WaYDmxQb
+         Y04Ql9zWNsOlsjOOGO8bxoUu0raKQMj1pOm/yvZ9Krql2dnVqekjbupQUlL278rSdimp
+         D189+ZST5/gtXU1yLl8iU2TPoX/W7kfUofU00kBM7cbunv+42WJHvc1AsQBO3/NWhdDj
+         tV0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=oGHEXBQC5TO8YtH0Z6m+jcb0+SOvH6RFHXkGK36JTjw=;
+        b=PDZJltYRyZ1GI7txmfxLgG51GAlWYIo+uv7oCYiz9WB+rBJ4cfcI64QOwmNpoRV402
+         iS0CYwcseQkyT5QOtAbB64QFNPl9pGQZ4gf826nO24RZtEp6vAgEaim6luSGkWhdudJ5
+         tn+rSQQ3mUpWCK0prxt1Z6wQVJt75W7JuQbvXk/JzwlOYEr0BJdX3QWwtI7mh6azWltU
+         1kCf8ubGSNOkwzimHCrVRJ7k+ZW3xvo86XnmH6WCVgY5nOhYEEbUijCrDg2W3tEWAI1A
+         q8dCbTUfaCu8hUlpP3lJY0dcq04srW41QtAvbOq58A/msVYCW9C5VGBAfjOIkbijoCBm
+         wVmg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id t130si933976pgb.521.2018.11.07.09.03.15;
+        Wed, 07 Nov 2018 09:03:33 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731576AbeKHCdz (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:33:55 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:46638 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728180AbeKHCdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:33:55 -0500
+X-Virus-Scanned: Nedap ESD1 at mail.skyhub.de
+Received: from mail.skyhub.de ([127.0.0.1])
+        by localhost (blast.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id F-F_6045cQq9; Wed,  7 Nov 2018 18:02:40 +0100 (CET)
+Received: from zn.tnic (p200300EC2BCBE000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2bcb:e000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6BC981EC0AC9;
+        Wed,  7 Nov 2018 18:02:40 +0100 (CET)
+From: Borislav Petkov <bp@alien8.de>
+To: X86 ML <x86@kernel.org>
+Cc: "Maciej S . Szmigiero" <mail@maciej.szmigiero.name>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH 13/16] x86/microcode/AMD: Check microcode container data in the late loader
+Date: Wed,  7 Nov 2018 18:02:15 +0100
+Message-Id: <20181107170218.7596-14-bp@alien8.de>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107170218.7596-1-bp@alien8.de>
+References: <20181107170218.7596-1-bp@alien8.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAXkEzmGuNb4XIYAA--.484S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxGw1rtr1rJFWkKrWrWrykKrg_yoW5XF13pr
+	1fG34DKr15X345Aa4kJws8WF90yw4DtasIgw4UW3sak3W3tw1kG3Wvyry7ta48Z340ya1r
+	tFyvqF1jkF4xZrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPSb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
+	Ij64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xA
+	MxkIecxEwVCI4VW8MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5Jw
+	CYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJVW8Jr1l
+	cIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI
+	0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF7vcSsGvfC2KfnxnUUI43ZEXa7I
+	U5nqXPUUUUU==
+
+From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+
+Convert the late loading path to use the newly introduced microcode
+container data checking functions as it was previously done for the
+early loader.
+
+Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+[ Keep header length addition in install_equiv_cpu_table() and rediff. ]
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ arch/x86/kernel/cpu/microcode/amd.c | 38 +++++++++++++----------------
+ 1 file changed, 17 insertions(+), 21 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+index 1f9a4b41218e..5d822ed295b5 100644
+--- a/arch/x86/kernel/cpu/microcode/amd.c
++++ b/arch/x86/kernel/cpu/microcode/amd.c
+@@ -705,28 +705,27 @@ static enum ucode_state apply_microcode_amd(int cpu)
+ 	return ret;
+ }
+ 
+-static int install_equiv_cpu_table(const u8 *buf)
++static size_t install_equiv_cpu_table(const u8 *buf, size_t buf_size)
+ {
+-	unsigned int *ibuf = (unsigned int *)buf;
+-	unsigned int type = ibuf[1];
+-	unsigned int size = ibuf[2];
++	u32 equiv_tbl_len;
++	const u32 *hdr;
+ 
+-	if (type != UCODE_EQUIV_CPU_TABLE_TYPE || !size) {
+-		pr_err("empty section/"
+-		       "invalid type field in container file section header\n");
+-		return -EINVAL;
+-	}
++	if (!verify_equivalence_table(buf, buf_size, false))
++		return 0;
+ 
+-	equiv_cpu_table = vmalloc(size);
++	hdr = (const u32 *)buf;
++	equiv_tbl_len = hdr[2];
++
++	equiv_cpu_table = vmalloc(equiv_tbl_len);
+ 	if (!equiv_cpu_table) {
+ 		pr_err("failed to allocate equivalent CPU table\n");
+-		return -ENOMEM;
++		return 0;
+ 	}
+ 
+-	memcpy(equiv_cpu_table, buf + CONTAINER_HDR_SZ, size);
++	memcpy(equiv_cpu_table, buf + CONTAINER_HDR_SZ, equiv_tbl_len);
+ 
+ 	/* add header length */
+-	return size + CONTAINER_HDR_SZ;
++	return equiv_tbl_len + CONTAINER_HDR_SZ;
+ }
+ 
+ static void free_equiv_cpu_table(void)
+@@ -793,13 +792,12 @@ static enum ucode_state __load_microcode_amd(u8 family, const u8 *data,
+ 					     size_t size)
+ {
+ 	u8 *fw = (u8 *)data;
+-	int offset;
++	size_t offset;
+ 
+-	offset = install_equiv_cpu_table(data);
+-	if (offset < 0) {
+-		pr_err("failed to create equivalent cpu table\n");
++	offset = install_equiv_cpu_table(data, size);
++	if (!offset)
+ 		return UCODE_ERROR;
+-	}
++
+ 	fw   += offset;
+ 	size -= offset;
+ 
+@@ -897,10 +895,8 @@ static enum ucode_state request_microcode_amd(int cpu, struct device *device,
+ 	}
+ 
+ 	ret = UCODE_ERROR;
+-	if (*(u32 *)fw->data != UCODE_MAGIC) {
+-		pr_err("invalid magic value (0x%08x)\n", *(u32 *)fw->data);
++	if (!verify_container(fw->data, fw->size, false))
+ 		goto fw_release;
+-	}
+ 
+ 	ret = load_microcode_amd(bsp, c->x86, fw->data, fw->size);
+ 
+-- 
+2.19.1

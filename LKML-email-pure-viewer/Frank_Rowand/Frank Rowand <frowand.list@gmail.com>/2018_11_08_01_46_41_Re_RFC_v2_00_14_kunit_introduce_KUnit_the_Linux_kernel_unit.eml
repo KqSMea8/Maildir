@@ -1,0 +1,164 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:22 -0000
+Received: from icoremail.net (unknown [209.85.210.172])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_5slJeNbLbZZAQ--.26528S3;
+	Thu, 08 Nov 2018 01:47:18 +0800 (CST)
+Received: from mail-pf1-f172.google.com (unknown [209.85.210.172])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHLkohJeNbU7EYAA--.14S3;
+	Thu, 08 Nov 2018 01:47:13 +0800 (CST)
+Received: by mail-pf1-f172.google.com with SMTP id v68-v6so4417095pfk.0
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:47:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding:sender:precedence
+         :list-id;
+        bh=LOKLPVL/KsT8t3RMSP3F8SnKPuBYykBW3BXpx0B7TBk=;
+        b=H+bz5bSAC0oppLtac2zQ4t1wL9Ie/vQQoSEDrVX3Una/mu0bOfSgyo5pCce0RqGlFY
+         c4t/7T3HLqjWCu8EcpmbJAT13uHEiAiyPXM+1klRtJ5570kJWIBvNKi8SHlRGASUn1uj
+         YyzXxeawNbicxKYhxmayvM8So+nwSgmmzOfvUbgOjUWe4yrharuTd16G+Zhdvbaa5xiq
+         QzKFzLF9KmsCg71j5rgV2LY5Bq2GYm8lh50iSKy6wLRHmaMUC6VrqRdOXmWJoH58yaXG
+         mow4X20hgOqrjTtX9O4xDd/INR2HeNK/PvO9010PB3omVgDC6o+s+3gxO7YPSEzJgXax
+         fUgw==
+X-Gm-Message-State: AGRZ1gLzd2gvQvMTc5US3jchi/3Nv8fLZ5m7HEtbTY9V5TmbT+OuVDoo
+	aGCWGazhkhe4/fiO4TsD8U1NfRk/coX1mopBvWKgJXHOkDsDsqTjow==
+X-Received: by 2002:a62:da54:: with SMTP id w20-v6mr1152524pfl.106.1541612833430;
+        Wed, 07 Nov 2018 09:47:13 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5538568pjt;
+        Wed, 7 Nov 2018 09:47:12 -0800 (PST)
+X-Google-Smtp-Source: AJdET5d3iQ9VYU3ySa9S6z/EbVOAtRT4h+ACi96sun6PN9iz5TITDm8gtdlrrjsx7qNL5AS/h7yM
+X-Received: by 2002:a62:c184:: with SMTP id i126-v6mr1140607pfg.53.1541612832440;
+        Wed, 07 Nov 2018 09:47:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541612832; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Vmg0vVcreazF5iYYFAo1izENCNEyxzcS50sc1VRHrFfk2v7Eq0TzE6dCXiwIgcMFUF
+         ffM9U8oik3AlGLmmKzPAoyNuk+EjX6nR21rH4lkFEcT+JbtBKMqjH8BxAS1wKPPxi2Hp
+         DwniFtEQLbmmBSxH1uYHIKhPfllaaxSPF6G1EK8H+RwHALhcoX9MEy9GnZ2UsojZb/Ce
+         3vmzyiB0siihrDfFD0X1QAK8HDpv9wsKP2mOXMB+hQn4574pBIslghHRmzsIQQzxdPED
+         wDjPHWSimlt2sA87ezJ8lO53usLKI03mxFlzkkMPJBGnpBxiYhMEJ8I6SWAUmRl+XFNZ
+         91Sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:dkim-signature;
+        bh=LOKLPVL/KsT8t3RMSP3F8SnKPuBYykBW3BXpx0B7TBk=;
+        b=UyBYdT5qXl1lM6rr8rFxZE7H5MjaKARfEcTqbJaP3dHWUWH0Q71GPyaz0kl+vHKm4s
+         4eyAkgr+5U2qJ27COkyC+jPkNgabdZ8KTg9zMEpa7xc7q/BzU1lPdT5qItXZTzjh1+L4
+         D1Hk8s+AKa1gmGCiVr4987Sh99r8VVaM1WSNM4CCBkkIbgLmyhdBvzUm8+YrrAQsUb6A
+         FWkYEMWnvrG8w2ZQcDFE8fcz7ayGAYR29fNUlX1Rw5NvAyvgMiWzooqdNahKjs9H2vaf
+         4LXslicuBZWpTCrFfGNxvAQetX6vLdkH866KJOlZlY/naKvw7/YjS+i3R1Qt5FwbAffK
+         GIqw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20161025 header.b="aCxDCj/Z";
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id w31-v6si1222706pla.347.2018.11.07.09.46.56;
+        Wed, 07 Nov 2018 09:47:12 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731456AbeKHDSL (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:18:11 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39590 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728085AbeKHDSL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:18:11 -0500
+Received: by mail-pf1-f195.google.com with SMTP id n11-v6so8006611pfb.6;
+        Wed, 07 Nov 2018 09:46:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LOKLPVL/KsT8t3RMSP3F8SnKPuBYykBW3BXpx0B7TBk=;
+        b=aCxDCj/ZVIuuue4FlryrytMrDD0EdMT/YvVSappfIxQtBGieOhDw8WCTN4GE3GIzFE
+         2URThU0PNOlGj2dA6/R0rJ1iwBN+xYmKDPpU9ZdT4I+kczrcm1PhoINeqzN83sUJQpTh
+         oPq0fbneVwMMLnJd/TVQK4cZ3/j4k9LKNdCxr8VLZirxv9cfTKJ2iUtHvBBwbCZSXltB
+         lQq+EeWwF2d9xmRgAXQC/Ziat/98DyTaQKvekErsbmH/n0n5ZPH6bI3dWJD7W2FEfbHh
+         WYNfKw+l1tiCNs63eUmT65Ls9KLW8FTx88XVajKM24pplB1M9kR7i8BTMDJxCLYoodFY
+         dr1g==
+X-Received: by 2002:a62:7f8c:: with SMTP id a134-v6mr1186753pfd.22.1541612804598;
+        Wed, 07 Nov 2018 09:46:44 -0800 (PST)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id x123-v6sm1370196pfb.124.2018.11.07.09.46.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 09:46:43 -0800 (PST)
+Subject: Re: [RFC v2 00/14] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To: Brendan Higgins <brendanhiggins@google.com>, shuah@kernel.org
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@google.com>, mcgrof@kernel.org,
+        Joel Stanley <joel@jms.id.au>, mpe@ellerman.id.au,
+        joe@perches.com, brakmo@fb.com, rostedt@goodmis.org,
+        Tim.Bird@sony.com, khilman@baylibre.com,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        jdike@addtoit.com, richard@nod.at, linux-um@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, Rob Herring <robh@kernel.org>,
+        dan.j.williams@intel.com, linux-nvdimm@lists.01.org,
+        kieran.bingham@ideasonboard.com
+References: <20181023235750.103146-1-brendanhiggins@google.com>
+ <f3682d48-6f27-5eef-8274-02f90dd65188@kernel.org>
+ <CAFd5g45Tgcx4RisrCF8QHneR7ELezPfpEPKh_mH8KEUi3skE7g@mail.gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Message-ID: <04f677b1-bc44-f004-cf2a-51b47baf0965@gmail.com>
+Date: Wed, 7 Nov 2018 09:46:41 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <CAFd5g45Tgcx4RisrCF8QHneR7ELezPfpEPKh_mH8KEUi3skE7g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHLkohJeNbU7EYAA--.14S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUOf7k0a2IF6F4UM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvEwIxGrwCjxxvEa2IrMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAK
+	zI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Avz4vEIxC_GwCY0x0Ix7I2Y4
+	AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AKxV
+	W8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCr
+	MxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xAIw20E
+	Y4v20xvaj40_Zr0_Wr1UYxBIdaVFxhVjvjDU0xZFpf9x07bb_-PUUUUU=
+
+On 11/6/18 5:17 PM, Brendan Higgins wrote:
+> On Fri, Nov 2, 2018 at 11:23 AM Shuah Khan <shuah@kernel.org> wrote:
+>>
+>> Hi Brendan,
+> <snip>
+>> Framework looks good. I think it would be helpful to include a real test
+> 
+> Great to hear!
+> 
+>> in the patch series to get a feel for how effective it is.
+> 
+> Alright, will do. Rob suggested converting
+> https://elixir.bootlin.com/linux/v4.19/source/drivers/of/unittest.c to
+> KUnit, so that might offer a good comparison.
+
+drivers/of/unittest.c might be a bit bigger and more complex test than
+you want to start with.
+
+-Frank
+
+< snip >

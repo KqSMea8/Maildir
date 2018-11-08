@@ -1,0 +1,220 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:20 -0000
+Received: from icoremail.net (unknown [209.85.215.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH7ZSI+NbOqVZAQ--.27052S3;
+	Thu, 08 Nov 2018 01:39:31 +0800 (CST)
+Received: from mail-pg1-f173.google.com (unknown [209.85.215.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDXsT1QI+NbzqMYAA--.11S3;
+	Thu, 08 Nov 2018 01:39:29 +0800 (CST)
+Received: by mail-pg1-f173.google.com with SMTP id c10-v6so7613303pgq.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:39:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:sender:precedence:list-id;
+        bh=Izl7FQIjX6vtgzV3Bh7GUeX8NbhWtWlS4nwo7NYT9mE=;
+        b=YokgqTS1EIAmGiuwJa74KS8Oo/9vSxwtD14WGoKupQzqTHqQN7jIBlvxEinxE2OrNZ
+         wAOe7zHdYfTo2S1iQR2R8wTI43pGWIoOBrkYvedNTC6yYsolJsXh//Rwpet2IGZBSa6z
+         nK2rsSmO/coBewdDYP0ofmgFqYHfcWCS7QrcatjPmpAzjyIrsZzJA0uMfwz9eYB9JHbL
+         VTJP4siNWyzdei0TI34gRqwpziDwf/kQHrpFMwLbOqq7KS5f7lVlA3CkuSdA2nTaPck/
+         OdV1llaS+cdYmK3ATUV8xPmQT0hmykcxyhREfpXOYiLqmSCGLWRtKFuJ9/vVep4fVG6b
+         THYg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKuPT/1khNuf+6MvOyLFBlBE6t76AikwgDToeKdFWccEf5Phfm9
+	dxUryTDNZQi++SyjdI0p+S3Gg6LNLWcUKol3wuZiyjpa+EaFFsnSGg==
+X-Received: by 2002:a62:1c53:: with SMTP id c80-v6mr1128899pfc.14.1541612368696;
+        Wed, 07 Nov 2018 09:39:28 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5530245pjt;
+        Wed, 7 Nov 2018 09:39:27 -0800 (PST)
+X-Google-Smtp-Source: AJdET5e0JtKBsbrUzZt2OQihasZAsLCbbBT0d8dZbVtN4Z/rMBDljBeAws2234fk1yQBnQksmUg4
+X-Received: by 2002:a17:902:6bc1:: with SMTP id m1-v6mr1172710plt.34.1541612367836;
+        Wed, 07 Nov 2018 09:39:27 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541612367; cv=none;
+        d=google.com; s=arc-20160816;
+        b=xxQ+0y4Dx7ES0VaBR9zFgfiiVladaKnPJQta0IReGYHkzk3Bxqr4KNWbKxYTRTs0Pr
+         qH4ElnxLUlLzUw54gWib67Wlz2I3xAKeEUZrZbE2bAkK8HLby1q5b/lBpTDkNfRzPFRs
+         54YwnYA8RgjbeHNSAVAo2za+mYDg98LCdt3ET5mT4XzT2UCOaBJ8M+U63kBqOFkEBYbx
+         3zMBAIplW8UbNzht6VDlM7EKHQ3PbmD6gB/GSgCIKhSxa1RDKK+KrCtnrBuk2v9gYvY9
+         Kx+Oa6MJs6Df3Vp9dZ9wF8ggfsc6SKkQfutIsOnmtUI1PAcaWmpXBQEbzaKW3K7TtyXC
+         THhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:subject:content-transfer-encoding
+         :mime-version:references:in-reply-to:message-id:date:cc:to:from;
+        bh=Izl7FQIjX6vtgzV3Bh7GUeX8NbhWtWlS4nwo7NYT9mE=;
+        b=lmxw39QnkFRLSxD7XbiW7+M6Dj4sz5U8mq+bNYLiEiXeyjqmJMMHRofKL65OgoC0Ka
+         TavYkU9dI9QrLYp/MAJeiAP4lNWNFiK3H4p7DNWbAloS4HIl72hb48J1MuzrGyQL3pNY
+         myAXvJAGeK0vw8wqMCoK67HkfKR1pGNlEB8E1EkHov7PIzMI4aUgD9uFkc79udCBieEz
+         0DhrZXOg4UnoEtEcFc+9Lj3QO9upAbphS04oBmyGRkjglZmOYHanXwbvWNcpoVmRI673
+         n1VgrxGDdC3CJ4PAHt9PaWeshuoqs+c7KibEdtvaTyw6MqvoB0+gT17/FDYX8f3iw+Jw
+         Vg6Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id a12si1164553pgk.291.2018.11.07.09.39.12;
+        Wed, 07 Nov 2018 09:39:27 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731591AbeKHDKb (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:10:31 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:48330 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728083AbeKHDKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:10:30 -0500
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1gKRnB-0003U5-I0; Wed, 07 Nov 2018 10:39:02 -0700
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1gKRnA-0006HQ-Fv; Wed, 07 Nov 2018 10:39:00 -0700
+From: Logan Gunthorpe <logang@deltatee.com>
+To: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc: Stephen Bates <sbates@raithlin.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Date: Wed,  7 Nov 2018 10:38:58 -0700
+Message-Id: <20181107173859.24096-2-logang@deltatee.com>
+X-Mailer: git-send-email 2.19.0
+In-Reply-To: <20181107173859.24096-1-logang@deltatee.com>
+References: <20181107173859.24096-1-logang@deltatee.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-mm@kvack.org, linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-sh@vger.kernel.org, akpm@linux-foundation.org, sbates@raithlin.com, palmer@sifive.com, aou@eecs.berkeley.edu, hch@lst.de, arnd@arndb.de, logang@deltatee.com, catalin.marinas@arm.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.1 (2015-04-28) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,MYRULES_NO_TEXT autolearn=ham autolearn_force=no
+        version=3.4.1
+Subject: [PATCH 1/2] mm: Introduce common STRUCT_PAGE_MAX_SHIFT define
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDXsT1QI+NbzqMYAA--.11S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxAF1kJw4rZrW7Wr4UWr4DJwb_yoW5ZrykpF
+	s8u3WxCr4Ykr1xu397twnruw15AanYk3W7JrWjgryFkF1aqa4kGr4qgFW3ArykG3yDuFWF
+	9FnFg3y5Za4Dt3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPvb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
+	Ij64vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xA
+	MxkIecxEwVCI4VW8MxkI7II2jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5Jw
+	CYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1U
+	MxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64
+	kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
+	IYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCbIYCTnIWIevJa73UjIFyTuY
+	vjxUqjjgUUUUU
+
+This define is used by arm64 to calculate the size of the vmemmap
+region. It is defined as the log2 of the upper bound on the size
+of a struct page.
+
+We move it into mm_types.h so it can be defined properly instead of
+set and checked with a build bug. This also allows us to use the same
+define for riscv.
+
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christoph Hellwig <hch@lst.de>
+---
+ arch/arm64/include/asm/memory.h | 9 ---------
+ arch/arm64/mm/init.c            | 8 --------
+ include/asm-generic/fixmap.h    | 1 +
+ include/linux/mm_types.h        | 5 +++++
+ 4 files changed, 6 insertions(+), 17 deletions(-)
+
+diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+index b96442960aea..f0a5c9531e8b 100644
+--- a/arch/arm64/include/asm/memory.h
++++ b/arch/arm64/include/asm/memory.h
+@@ -34,15 +34,6 @@
+  */
+ #define PCI_IO_SIZE		SZ_16M
+ 
+-/*
+- * Log2 of the upper bound of the size of a struct page. Used for sizing
+- * the vmemmap region only, does not affect actual memory footprint.
+- * We don't use sizeof(struct page) directly since taking its size here
+- * requires its definition to be available at this point in the inclusion
+- * chain, and it may not be a power of 2 in the first place.
+- */
+-#define STRUCT_PAGE_MAX_SHIFT	6
+-
+ /*
+  * VMEMMAP_SIZE - allows the whole linear region to be covered by
+  *                a struct page array
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 9d9582cac6c4..1a3e411a1d08 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -612,14 +612,6 @@ void __init mem_init(void)
+ 	BUILD_BUG_ON(TASK_SIZE_32			> TASK_SIZE_64);
+ #endif
+ 
+-#ifdef CONFIG_SPARSEMEM_VMEMMAP
+-	/*
+-	 * Make sure we chose the upper bound of sizeof(struct page)
+-	 * correctly when sizing the VMEMMAP array.
+-	 */
+-	BUILD_BUG_ON(sizeof(struct page) > (1 << STRUCT_PAGE_MAX_SHIFT));
+-#endif
+-
+ 	if (PAGE_SIZE >= 16384 && get_num_physpages() <= 128) {
+ 		extern int sysctl_overcommit_memory;
+ 		/*
+diff --git a/include/asm-generic/fixmap.h b/include/asm-generic/fixmap.h
+index 827e4d3bbc7a..8cc7b09c1bc7 100644
+--- a/include/asm-generic/fixmap.h
++++ b/include/asm-generic/fixmap.h
+@@ -16,6 +16,7 @@
+ #define __ASM_GENERIC_FIXMAP_H
+ 
+ #include <linux/bug.h>
++#include <linux/mm_types.h>
+ 
+ #define __fix_to_virt(x)	(FIXADDR_TOP - ((x) << PAGE_SHIFT))
+ #define __virt_to_fix(x)	((FIXADDR_TOP - ((x)&PAGE_MASK)) >> PAGE_SHIFT)
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 5ed8f6292a53..2c471a2c43fa 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -206,6 +206,11 @@ struct page {
+ #endif
+ } _struct_page_alignment;
+ 
++/*
++ * Used for sizing the vmemmap region on some architectures
++ */
++#define STRUCT_PAGE_MAX_SHIFT	(order_base_2(sizeof(struct page)))
++
+ #define PAGE_FRAG_CACHE_MAX_SIZE	__ALIGN_MASK(32768, ~PAGE_MASK)
+ #define PAGE_FRAG_CACHE_MAX_ORDER	get_order(PAGE_FRAG_CACHE_MAX_SIZE)
+ 
+-- 
+2.19.0

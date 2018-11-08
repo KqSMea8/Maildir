@@ -1,0 +1,227 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:07 -0000
+Received: from icoremail.net (unknown [209.85.215.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH+ZsHONb_mdZAQ--.26550S3;
+	Thu, 08 Nov 2018 01:10:17 +0800 (CST)
+Received: from mail-pg1-f178.google.com (unknown [209.85.215.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnyEQ4G+NbQHQYAA--.442S3;
+	Thu, 08 Nov 2018 01:04:56 +0800 (CST)
+Received: by mail-pg1-f178.google.com with SMTP id w3-v6so7555799pgs.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:04:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=nrfL9af1CnhtpDI+s0tmUig0wrvdHXv6qo9bneNv/Hw=;
+        b=SehFabdLd5OTL9mMF3az7D3KqxGIA64WDJN/znzv9Q+ScdZzJ/P1KHhWAPPZvH8TdF
+         qtNo+pXPidX6AL2z+bfunFDRWbMh/mCV7Nzg5EOFot8Wk2KK0C9OzXIZ77yrR2vJRy08
+         YKtJXK464RiM64wulk/B+dHWLPY4ETp5EryrDTN7ORARMbYgdRpF1MVSMSOZdyMlTn+B
+         WYSXFR86x+8+nrUaRrZjuOK9/btoTUYegO6MAVwdrNLFVPaLmn0NST7DFFsuX/cAxvfL
+         mAo+wZ6R4Uzr4vkdtBZfaFsjGWfCEuBomySe7LJ27f4EzvDn0JACvTDExyDXBmPGbOxE
+         ey2A==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gI41+OdRR3FkEMlzUHyLSh5KwQ9EbE4+l/HIz7YKKRrYeQM/Ofn
+	W9Lv8H8w+pxSHuCaM+MmE/zs2ENfnXterM3y/N9UlTvyjJ6xP1/Jdw==
+X-Received: by 2002:a63:1e17:: with SMTP id e23mr848728pge.130.1541610296088;
+        Wed, 07 Nov 2018 09:04:56 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5490439pjt;
+        Wed, 7 Nov 2018 09:04:55 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cHeH6OXWgv2Rc23tYNMoRTH3J0LPiCm/k5Y3VK/nZcv88+XaSAt1Rv0m+MAMeGAIO5MYfh
+X-Received: by 2002:a17:902:6a4:: with SMTP id 33-v6mr1036335plh.268.1541610295446;
+        Wed, 07 Nov 2018 09:04:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610295; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Q7rwLwkHt8c3Yvzic28/7FTu9JUxe/z6oBQ9DIDwrnKD2ZDqOwAipcvhMfd9kRF7aq
+         g71Hp1gGc5+5Are+6kOjFSuYFczy1bGBFh8ZOYpnMHaM/ZZV4qe7pkFFwKi5zDK9SpQZ
+         Sh8oAwFXlp5n9gRESwUPGMAQSSVPMeQNjRlBwSfq1ITainEHc5AHh64hWJCbAJdHpqOF
+         BUuUJxVw3oCn4NUOaCQHTp9wOQaq7xZV7G7Dq8pinpvW4U0lhxKrQBpUJafp4hQHbMx+
+         ZOqKcA72oouvUQgAcYfXY53rkD9TyYoNukNI6Beh8yL8N4UJsJb81NqpuWLaSJJLdZmB
+         eGnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from;
+        bh=nrfL9af1CnhtpDI+s0tmUig0wrvdHXv6qo9bneNv/Hw=;
+        b=frrxpIzO3CMf4o5C9NBpv4QFmfpYrLBFOfH5RE1n0gbONXcXsQrhUubHOiUNknsYey
+         ROZoKC6xun/fJ9Bk3jQkfMq+8eZfY6zUYGLPOHZVETnjqXDyTzh7G1ygx//UEtQMm9Bl
+         oAoelN1RmQcdXG9+L18m6u91ifLskXGmngat3SJtABYavwKS3u4GatOtISDMCRz2wojA
+         42SNnOieHXq9Xz1Nq1b4NhLXoT3ulJp9B9nKlO6+BHYKFFElMHPC3R8N3J32DseA2MXH
+         rs8I0AIlfJY87AoD5O3SrJsSfBAbqHXCtTcxlUMGbY5ymaDzM8tmVQUy/8FDBP7x23by
+         OJvQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id bf10-v6si1129470plb.200.2018.11.07.09.04.39;
+        Wed, 07 Nov 2018 09:04:55 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731635AbeKHCe4 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:34:56 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:46498 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731397AbeKHCdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:33:45 -0500
+X-Virus-Scanned: Nedap ESD1 at mail.skyhub.de
+Received: from mail.skyhub.de ([127.0.0.1])
+        by localhost (blast.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id fhsl2TsyX1D3; Wed,  7 Nov 2018 18:02:31 +0100 (CET)
+Received: from zn.tnic (p200300EC2BCBE000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2bcb:e000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 852661EC0291;
+        Wed,  7 Nov 2018 18:02:31 +0100 (CET)
+From: Borislav Petkov <bp@alien8.de>
+To: X86 ML <x86@kernel.org>
+Cc: "Maciej S . Szmigiero" <mail@maciej.szmigiero.name>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH 03/16] x86/microcode/AMD: Move verify_patch_size() up in the file
+Date: Wed,  7 Nov 2018 18:02:05 +0100
+Message-Id: <20181107170218.7596-4-bp@alien8.de>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20181107170218.7596-1-bp@alien8.de>
+References: <20181107170218.7596-1-bp@alien8.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnyEQ4G+NbQHQYAA--.442S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxGF45Ar1rAFy3KF1fJFy8uFg_yoW5WrW7pr
+	srAFWvqr4jqFn3J34xtan093Z8AF4xAasFkry3Ga4DAFyDJw1Yqr1vkFy3urW8Z3s5uan3
+	Gr4DWr4F9an7trJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBIb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
+	kI7VAKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkIecxEwVCI4VW8MxkI7II2
+	jI8vz4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCYIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMxvI42IY6I8E87Iv67AKxVWxJVW8Jr1lcIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Gr0_Gr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjx
+	CrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xAIw2
+	0EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IUepuWJUUUUU==
+
+From: Borislav Petkov <bp@suse.de>
+
+... to enable later improvements.
+
+No functional changes.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ arch/x86/kernel/cpu/microcode/amd.c | 82 ++++++++++++++---------------
+ 1 file changed, 41 insertions(+), 41 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+index 36aeb01b3ae8..f8d60cb9bb9a 100644
+--- a/arch/x86/kernel/cpu/microcode/amd.c
++++ b/arch/x86/kernel/cpu/microcode/amd.c
+@@ -174,6 +174,47 @@ static bool verify_patch_section(const u8 *buf, size_t buf_size, bool early)
+ 	return true;
+ }
+ 
++/*
++ * Check whether the passed remaining file @size is large enough to contain a
++ * patch of the indicated @patch_size (and also whether this size does not
++ * exceed the per-family maximum).
++ */
++static unsigned int verify_patch_size(u8 family, u32 patch_size, unsigned int size)
++{
++	u32 max_size;
++
++#define F1XH_MPB_MAX_SIZE 2048
++#define F14H_MPB_MAX_SIZE 1824
++#define F15H_MPB_MAX_SIZE 4096
++#define F16H_MPB_MAX_SIZE 3458
++#define F17H_MPB_MAX_SIZE 3200
++
++	switch (family) {
++	case 0x14:
++		max_size = F14H_MPB_MAX_SIZE;
++		break;
++	case 0x15:
++		max_size = F15H_MPB_MAX_SIZE;
++		break;
++	case 0x16:
++		max_size = F16H_MPB_MAX_SIZE;
++		break;
++	case 0x17:
++		max_size = F17H_MPB_MAX_SIZE;
++		break;
++	default:
++		max_size = F1XH_MPB_MAX_SIZE;
++		break;
++	}
++
++	if (patch_size > min_t(u32, size, max_size)) {
++		pr_err("patch size mismatch\n");
++		return 0;
++	}
++
++	return patch_size;
++}
++
+ /*
+  * This scans the ucode blob for the proper container as we can have multiple
+  * containers glued together. Returns the equivalence ID from the equivalence
+@@ -562,47 +603,6 @@ static int collect_cpu_info_amd(int cpu, struct cpu_signature *csig)
+ 	return 0;
+ }
+ 
+-/*
+- * Check whether the passed remaining file @size is large enough to contain a
+- * patch of the indicated @patch_size (and also whether this size does not
+- * exceed the per-family maximum).
+- */
+-static unsigned int verify_patch_size(u8 family, u32 patch_size, unsigned int size)
+-{
+-	u32 max_size;
+-
+-#define F1XH_MPB_MAX_SIZE 2048
+-#define F14H_MPB_MAX_SIZE 1824
+-#define F15H_MPB_MAX_SIZE 4096
+-#define F16H_MPB_MAX_SIZE 3458
+-#define F17H_MPB_MAX_SIZE 3200
+-
+-	switch (family) {
+-	case 0x14:
+-		max_size = F14H_MPB_MAX_SIZE;
+-		break;
+-	case 0x15:
+-		max_size = F15H_MPB_MAX_SIZE;
+-		break;
+-	case 0x16:
+-		max_size = F16H_MPB_MAX_SIZE;
+-		break;
+-	case 0x17:
+-		max_size = F17H_MPB_MAX_SIZE;
+-		break;
+-	default:
+-		max_size = F1XH_MPB_MAX_SIZE;
+-		break;
+-	}
+-
+-	if (patch_size > min_t(u32, size, max_size)) {
+-		pr_err("patch size mismatch\n");
+-		return 0;
+-	}
+-
+-	return patch_size;
+-}
+-
+ static enum ucode_state apply_microcode_amd(int cpu)
+ {
+ 	struct cpuinfo_x86 *c = &cpu_data(cpu);
+-- 
+2.19.1

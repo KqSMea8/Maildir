@@ -1,0 +1,162 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:55 -0000
+Received: from icoremail.net (unknown [209.85.214.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f9GJY+NbbRdbAQ--.27144S3;
+	Thu, 08 Nov 2018 06:13:29 +0800 (CST)
+Received: from mail-pl1-f179.google.com (unknown [209.85.214.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBX0EyHY+NbtoUZAA--.1631S3;
+	Thu, 08 Nov 2018 06:13:27 +0800 (CST)
+Received: by mail-pl1-f179.google.com with SMTP id f12-v6so7311910plo.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:13:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=jxaL3Qc12kOorw1MglE3wThL9ZDfYuwRjYd8gTj8/Wk=;
+        b=OhSbIRFKyKDt6S0bwRPmxx5kpb7gRhQmWSMJeTauWka+bYqjvEHuzjyvN4uu847YPo
+         bnagRdYC4kLCZf489TiMBRBu6p2mw2KhxkXa3i/WkN4itxLCsOfQmqodB3EuOD8j1JRz
+         F/KjVClY4fCokDUG8z6Jc8KCipfw4S2cLlr8YOwysdGHAn8dyAVCU61JbXKhVeffYD9p
+         vkKzR6x1kfKQeNz7E0o8KxgoobqXKkFo7dnU7NwH8NC09+c1o97g+1ohSQ1WvzB2dBP9
+         RqJtm8Zo2NDmSa4kHfreKzY2teSRdGR2VNAIlLSRVtj9H6YIVHLP1YvjPAOAGPDXXYij
+         Q7hw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIA3A76hm6VMd+WHKgh7+YVy+pBznG+B/Zy8wRNWKsxnY4Y10Er
+	lwXk63q5Kv3otso7svdn1k3TgB/PiCgz8T2gqEo6mkfTa3LWAINFkg==
+X-Received: by 2002:a17:902:bd4a:: with SMTP id b10-v6mr2015701plx.171.1541628807012;
+        Wed, 07 Nov 2018 14:13:27 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp65251pjt;
+        Wed, 7 Nov 2018 14:13:26 -0800 (PST)
+X-Google-Smtp-Source: AJdET5ewIzACTtwRz7yXJou08uikVmMvmZ8vxBf4jitmoCxpYXp+ha2Pcc9TBsYF1YZHgNwLo9oK
+X-Received: by 2002:a17:902:bc83:: with SMTP id bb3-v6mr1659704plb.223.1541628806375;
+        Wed, 07 Nov 2018 14:13:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541628806; cv=none;
+        d=google.com; s=arc-20160816;
+        b=DlqHISTjfs75i0ZCHSmVGZG3XBGeSHhTbzogPcmISWIo6MenS7G/zTdxsQPBKOjV0d
+         kTe1YULCQHj78NeJKkAGhoaV8Ez4V5V2LASDL/+XMM/6SgB3qqqjUy96YIIDiwR9rfag
+         7j+kmRetiXf0Zau5lQN8zIqLFYiGhwPrzi4v8YeGcEAP4J0gVHTFYAHDM24QVVKQdmfY
+         cXfTwxgM4r6uwc4KYA05DTEhIGmToq3GHhscxmZ7Tny4mR5uMIsfnfDpWKxKucGxqwKw
+         Ow+fYo2Ghyr4QmJhwOfCTpcZ0wfcSf/QUm0EvUXnG6QNCaw5U+ESS/wj6+dwLvoP3xFw
+         BmEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:subject:cc:to:from:date;
+        bh=jxaL3Qc12kOorw1MglE3wThL9ZDfYuwRjYd8gTj8/Wk=;
+        b=XFekYJu4YSo0A/UT/DiC6qwiVexAtTfdowMkm2NTz9Rr8L4ZrPj55nf40fQEW/v4sr
+         A+56Cg3HYX/+li1VnmSHI+lxhR7mROHrn3qEK7m9HIA9+oB7qZ/oRJkXt7D9gXQ7R1qH
+         JwuKG3PUMJLG3ew5hGqpygPJ8B1sfTW7xqewnZ/XBwOleW2qfAKKCiJrchs4kX5PQcnj
+         l6ijVUhQs4qHAq7Nrh+crWXjwh4h97BkvSgfBbLd0EJMuOAP0PphjxVZKcrsNNFlg+VM
+         gy3nClHYls4pkSG7G+oL/ApVuyelG0Hf3RpUTL7vhK9T8Lxl4q7RG2h2/tCY2uNzNhFP
+         CBDg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id c85-v6si1985930pfe.60.2018.11.07.14.13.11;
+        Wed, 07 Nov 2018 14:13:26 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727973AbeKHHpJ (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:45:09 -0500
+Received: from mail.linuxfoundation.org ([140.211.169.12]:45988 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727454AbeKHHpJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:45:09 -0500
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 268B0B37;
+        Wed,  7 Nov 2018 22:12:46 +0000 (UTC)
+Date: Wed, 7 Nov 2018 14:12:44 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Alexey Skidanov <alexey.skidanov@intel.com>
+Cc: sbates@raithlin.com, logang@deltatee.com, danielmentz@google.com,
+        mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+        labbott@redhat.com
+Subject: Re: [PATCH] lib/genaloc: Fix allocation of aligned buffer from
+ non-aligned chunk
+Message-Id: <20181107141244.624161486d7b187eb02b714a@linux-foundation.org>
+In-Reply-To: <fa2b502b-13a1-2f93-02aa-de1121b6e602@intel.com>
+References: <1541506853-10685-1-git-send-email-alexey.skidanov@intel.com>
+        <20181106141542.08a9d7de30a439ec9fe50486@linux-foundation.org>
+        <fa2b502b-13a1-2f93-02aa-de1121b6e602@intel.com>
+X-Mailer: Sylpheed 3.6.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBX0EyHY+NbtoUZAA--.1631S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Aw4xXw17JrW3Kw4xWw1kAFb_yoW8XF1xpF
+	y2g3W7KFZxXr4Ivr1jvw13tF15KrW3KF47Xr43Gr1j9F1vqr1fJFW7WwsI93yku3yDWa4a
+	vwsF9FW29FW5A37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPIb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6Fylc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26ryj6F1UMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07b0
+	gAwUUUUU=
+
+On Wed, 7 Nov 2018 08:27:31 +0200 Alexey Skidanov <alexey.skidanov@intel.com> wrote:
+
+> 
+> 
+> On 11/7/18 12:15 AM, Andrew Morton wrote:
+> > On Tue,  6 Nov 2018 14:20:53 +0200 Alexey Skidanov <alexey.skidanov@intel.com> wrote:
+> > 
+> >> On success, gen_pool_first_fit_align() returns the bit number such that
+> >> chunk_start_addr + (bit << order) is properly aligned. On failure,
+> >> the bitmap size parameter is returned.
+> >>
+> >> When the chunk_start_addr isn't aligned properly, the
+> >> chunk_start_addr + (bit << order) isn't aligned too.
+> >>
+> >> To fix this, gen_pool_first_fit_align() takes into account
+> >> the chunk_start_addr alignment and returns the bit value such that
+> >> chunk_start_addr + (bit << order) is properly aligned
+> >> (exactly as it done in CMA).
+> >>
+> >> ...
+> >>
+> >> --- a/include/linux/genalloc.h
+> >> +++ b/include/linux/genalloc.h
+> >>
+> >> ...
+> >>
+> >> +		struct gen_pool *pool, unsigned long start_add)
+> >>
+> >> ...
+> >>
+> >> +		struct gen_pool *pool, unsigned long start_add)
+> >>
+> >> ...
+> >>
+> >> +		struct gen_pool *pool, unsigned long start_add)
+> >>
+> >> ...
+> >>
+> > 
+> > We have three typos here.  Which makes me wonder why we're passing the
+> > new argument and then not using it?
+> > 
+> genpool uses allocation callbacks function that implement some
+> allocation strategy - bes fit, first fit, ... All of them has the same
+> type. The added chunk start_addr is used only in one of them -
+> gen_pool_first_fit_align()
+
+OK, but the argument name here is start_add, not start_addr.

@@ -1,0 +1,133 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:00 -0000
+Received: from icoremail.net (unknown [209.85.214.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH97Y7OJbK0pYAQ--.26137S3;
+	Wed, 07 Nov 2018 21:47:06 +0800 (CST)
+Received: from mail-pl1-f181.google.com (unknown [209.85.214.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnC0fW7OJbw6sXAA--.6640S3;
+	Wed, 07 Nov 2018 21:47:03 +0800 (CST)
+Received: by mail-pl1-f181.google.com with SMTP id g59-v6so7885411plb.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:47:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:sender:precedence:list-id;
+        bh=XOHvYbCAeJfKDyPZtUu2s5BSZR+kt1WWP4DXQhldKAQ=;
+        b=ZElndrqO94jVAJEV+/AboFxc7tOHs1LVEP//HndIG1MFlc6shcH3UxMV2xJNwviIkG
+         zqNFNVCFmLHJbThYfRXpkOSsogEbTw0yoZ/fFkH74fMZ5xo/F2KDSXLQfju0APdKIrsL
+         u2wiEmVy7GlfEMTQjk/Z3JJaR41mNHojEFbd2IIJDGGa13tX4uchAR//a11p0Pgj90qf
+         MDz542qgoukAHje39Aja6XUPOlAXpS84M3FA6ehR08UQVGoajQ2JC21V5dmH8WKmEzSM
+         8/aEvQr7N/oA8VUww1rnhvmdkpS/6/txxE3cEGh05G/eeH9y6yyV0lRyUHsVLYUwAiZK
+         o7Rw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJNX/2j3A9obUM2NEx5suukvP3DAV2NGee2yoV0milDVEhxgJYk
+	q0VcKzGbC/fUHyQBUQynAMQ2K9VRdIfl2aC7/QyvWZnJU/9GDcN6Ig==
+X-Received: by 2002:a17:902:a5cc:: with SMTP id t12-v6mr296088plq.298.1541598422822;
+        Wed, 07 Nov 2018 05:47:02 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5264970pjt;
+        Wed, 7 Nov 2018 05:47:02 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dFH+tf+UX2N9tYxGfLJpk684Lqqa2ic+q60fccE5dMA3r60QiJ080o7FhXf7MmzADUEal3
+X-Received: by 2002:a63:374e:: with SMTP id g14mr239861pgn.59.1541598422230;
+        Wed, 07 Nov 2018 05:47:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541598422; cv=none;
+        d=google.com; s=arc-20160816;
+        b=bZ8BBoEjEM+t5UjtXlXO4PuPN2cZxqVqKVcODgMaQe1bTA0rpR2ijgLvUaUX67Tl3Z
+         oz2DB28jQkEpOGuDPOsSgO8e4P4nuix8Sg7GjVQ/G2ZeiX3h7aAmLACaCZyZGfPM3tj/
+         ot/3bdGcxZ7KcerBw1ni8a4JBSlvUmywdy246d8OrSIyAXX4ZiHycjsU7qkKUIk2QtgC
+         dM7ykczazBf4Jd7FiED2UTeu+Er3PlmTFfgi1gcCFL+2Z9UgR7yYYKMTKDEvN2O9jB+m
+         6E16qfNcpogtKpWCZAqZHaz4k1QdZbJdXtWkfKWa6irhQiq80ZiLOl1NJPJoudYm8twS
+         z9HA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:message-id:date:subject:cc:to:from;
+        bh=XOHvYbCAeJfKDyPZtUu2s5BSZR+kt1WWP4DXQhldKAQ=;
+        b=ErLJExAzB9cV+iVF1BoKRiiEv/8Nw2uyrQpg5OA6cDFAIlE6xRZbBya4e4craY/vKl
+         H1MAJRkBYsq/PBnRG67xiFcbClAQtQa6Xi6vYGJ0rnDJ69x6nIUliJ8yEmKI5ogxBhVJ
+         7WR+hzJi8jbX6bduSw4c6fsG19l2k+ecHC3FE9Urr9i6A5zGA5S3OfhVPhN9aALh1GPz
+         FMTMrgKeqE8rEb5PIfG8PgLW6/17Qv3ivHLG1dcHFyGYcuErL3RqigI/XSGqi5Jhd587
+         3hSTYYH1lOWpSYESstFhxkKLeC3/tjYW07vY5TitoYoP8Fmpj6Ufk8Wxy9hi0xKYVKyo
+         c2aw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id q15-v6si493934pgv.437.2018.11.07.05.46.47;
+        Wed, 07 Nov 2018 05:47:02 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727709AbeKGXQq (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:16:46 -0500
+Received: from laurent.telenet-ops.be ([195.130.137.89]:39134 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbeKGXQq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:16:46 -0500
+Received: from ramsan.of.borg ([84.194.111.163])
+        by laurent.telenet-ops.be with bizsmtp
+        id x1mJ1y00K3XaVaC011mJaz; Wed, 07 Nov 2018 14:46:18 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtp (Exim 4.86_2)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1gKO9y-0005D3-96; Wed, 07 Nov 2018 14:46:18 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1gKO9y-0003g1-7Z; Wed, 07 Nov 2018 14:46:18 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jiri Kosina <trivial@kernel.org>
+Cc: linux-edac@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] [trivial] Documentation/ras: Typo s/use use/use/
+Date: Wed,  7 Nov 2018 14:46:17 +0100
+Message-Id: <20181107134617.14092-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnC0fW7OJbw6sXAA--.6640S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWruF1fKr48tr4rGw4UWr1xXwb_yoWfGFXEya
+	s2qan3GFy8t348Xr4avan8tFnrZF4fKa48Arn5AFsrK3srJ3s8Ka4kK393ZrW8Wr4I9ry5
+	uas5Xr18trnrCjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbfxYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc2xSY4AK6IIF6ry8MxkI7II2jI8v
+	z4vEwIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UMxvI42IY6I8E87Iv67AKxVW0oVCq3wCYIxAIcVC2z280aVCY1x0267AKxVW0
+	oVCq3wCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2
+	IYs7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bbhFxUUUUU=
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/admin-guide/ras.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/admin-guide/ras.rst b/Documentation/admin-guide/ras.rst
+index 197896718f813036..c7495e42e6f48bcb 100644
+--- a/Documentation/admin-guide/ras.rst
++++ b/Documentation/admin-guide/ras.rst
+@@ -54,7 +54,7 @@ those errors are correctable.
+ Types of errors
+ ---------------
+ 
+-Most mechanisms used on modern systems use use technologies like Hamming
++Most mechanisms used on modern systems use technologies like Hamming
+ Codes that allow error correction when the number of errors on a bit packet
+ is below a threshold. If the number of errors is above, those mechanisms
+ can indicate with a high degree of confidence that an error happened, but
+-- 
+2.17.1

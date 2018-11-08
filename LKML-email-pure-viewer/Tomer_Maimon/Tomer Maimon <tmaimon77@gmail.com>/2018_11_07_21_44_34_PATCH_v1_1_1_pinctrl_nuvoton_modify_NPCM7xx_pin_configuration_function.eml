@@ -1,0 +1,150 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:31:59 -0000
+Received: from icoremail.net (unknown [209.85.210.174])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX1+N7OJb20hYAQ--.26487S3;
+	Wed, 07 Nov 2018 21:45:50 +0800 (CST)
+Received: from mail-pf1-f174.google.com (unknown [209.85.210.174])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDXvEiM7OJbzqoXAA--.6732S3;
+	Wed, 07 Nov 2018 21:45:49 +0800 (CST)
+Received: by mail-pf1-f174.google.com with SMTP id x2-v6so3636903pfm.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:45:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references:sender
+         :precedence:list-id;
+        bh=0CIzE+94aSTrH6CLTD189GZFRz5460byBfejEvTQjpo=;
+        b=bsTpQVaWALqv7Q57uNFjlqeYXMSkZ3V8pLsb28LHwrU0tZu4hYuOiLApxgt2J4UIC0
+         prb7vCFvIgPsg+QXv1XfHJb4bSP28Hc6BT4mN/uNDkg78HiV80tZZ7recuL1gKsbc3yK
+         Z10taGtwdSWiuyF412flT61tgyI/QncCUJGFV3Of8ZyDsllLaRoWqqy73j1G/qY6tetD
+         7g4CmjOds462K0dI6axOhxyNKqZXhtgTueQ9OV/FJniK8PaCczAI5/ZEpKSpiHP/Nwac
+         SWVPBZUdZa9EHpYgnryNn8VsapwPyqnGWfgVI5rBh5bIZLV80Sx3+iHXZyhE8jl/xxO/
+         x8dg==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+X-Gm-Message-State: AGRZ1gJuzOCyXfJ6bLvyxZI5bRfSet6yvSpOER23ClHzRCBsQEeSIxhf
+	mcrnMRyHMhbGT0jTvyX+IEiTvnuZE4LWxjX6FBWL2m2U6/EnYb3xhA==
+X-Received: by 2002:a63:1e17:: with SMTP id e23mr247870pge.130.1541598348696;
+        Wed, 07 Nov 2018 05:45:48 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5263605pjt;
+        Wed, 7 Nov 2018 05:45:47 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fKS5kXnPY5i4k2vOdp/eE2lVQQTo7z4wxyE1cB8Ln37wyfxfCBkmgZeNdBNVUgK1xFK9Cm
+X-Received: by 2002:a63:2e02:: with SMTP id u2mr236165pgu.9.1541598347564;
+        Wed, 07 Nov 2018 05:45:47 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541598347; cv=none;
+        d=google.com; s=arc-20160816;
+        b=gJkrwDk9TDbuiYbly92l8AHHmckLRKoBp/ssYRAb/A0rDPgCcOVdOagWUizkUzOYl2
+         zpNa3AvWk3kbZDKGwI8vW8ONoi39mSISIz8fQ97rdNkdj2spyHofgNOks1pZbnAnshx0
+         BuOz+/iPFNGwCWqkWXC0yPqMqALIqvEsQX7qLApf6if5dsfm85RZnfTf7B7/ERP64jd0
+         LOYD52aZSA7x0FfDJG01wTPM3vwKLTxEd42CNpNzVwCUxZZpdTYoz1zplTnvrlTjRV8F
+         L6S4cPZWN4MeHh13Wmp64eKyIidw0CtneibKH5909HJNR5W02o6FHqTl2Ajiz9epfMsI
+         ub5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from;
+        bh=0CIzE+94aSTrH6CLTD189GZFRz5460byBfejEvTQjpo=;
+        b=bnrCFoDpeh7x2Ib8+8yIvEWntkgpo+ntcW+8ue7RulilT4VD6W+qHo2XEleEKAJwwW
+         gDY8HZj/MtsW0K0atmsmR2jv189FESEXN7Jn/D97tesj8Vf3wA9DEb00g7BHIhjvLHHJ
+         pvJjfkygtr9mOXIoX7xOSrhaBYuyjWVb06qNhLIOEn6hzA/UNraWpWzlXjLOiSXdq+IV
+         6GjEUHQzpbCYVRVRy2sX+uyle/ZD3PfBEj+LyWzzVpd85l44kZgMqUsZv9OhaLx9TsCt
+         JVlcHc0Auy2M27t13+qFK+rz/zHu76PqGI/asbShgx6o+nLzxJXzh99CQvmwq4wgDEq3
+         Aa6g==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id v33-v6si570349pga.450.2018.11.07.05.45.32;
+        Wed, 07 Nov 2018 05:45:47 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727781AbeKGXPb (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:15:31 -0500
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:54919 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727350AbeKGXPb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:15:31 -0500
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id wA7DEbCo011300;
+        Wed, 7 Nov 2018 15:14:37 +0200
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+        id 8C8F2630CB; Wed,  7 Nov 2018 15:44:35 +0200 (IST)
+From: Tomer Maimon <tmaimon77@gmail.com>
+To: linus.walleij@linaro.org, yuenn@google.com, venture@google.com,
+        benjaminfair@google.com, brendanhiggins@google.com,
+        avifishman70@gmail.com, joel@jms.id.au, kunyi@google.com
+Cc: linux-gpio@vger.kernel.org, openbmc@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1 1/1] pinctrl: nuvoton: modify NPCM7xx pin configuration function
+Date: Wed,  7 Nov 2018 15:44:34 +0200
+Message-Id: <20181107134434.354795-2-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.14.1
+In-Reply-To: <20181107134434.354795-1-tmaimon77@gmail.com>
+References: <20181107134434.354795-1-tmaimon77@gmail.com>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDXvEiM7OJbzqoXAA--.6732S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw4kKFW3Ww45uFyxJr4xJFb_yoW8WrWkpF
+	Z3urWSkwn7tFs7ta42ya4Yvry3GayxJF18Gw129ryfXr4Yqryq9a4YgF1Fvr48GFykJFsx
+	Xr4fZryj9r43CwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmab7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vE
+	x4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAac4AC62xK8x
+	CEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80
+	ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4
+	AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkF
+	s20EY4vE44CYbxCE4x80FwCY02Avz4vEIxC_Xr4lc2IjII80xcxEwVAKI48JMxvI42IY6x
+	IIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvE
+	x4A2jsIE14v26rxl6s0DMxvI42IY6I8E87Iv6xkF7I0E14v26rxl6s0DMxAIw28IcxkI7V
+	AKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j
+	6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsG
+	vfC2KfnxnUUI43ZEXa7IU5fpnPUUUUU==
+
+Modify GPIO direction setting in pin configuration function by using
+generic GPIO functions to set the GPIO direction instead of direct
+access to the GPIO direction register.
+
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+index 7ad50d9268aa..b455209382a5 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+@@ -1799,19 +1799,12 @@ static int npcm7xx_config_set_one(struct npcm7xx_pinctrl *npcm,
+ 		npcm_gpio_set(&bank->gc, bank->base + NPCM7XX_GP_N_PU, gpio);
+ 		break;
+ 	case PIN_CONFIG_INPUT_ENABLE:
+-		if (arg) {
+-			iowrite32(gpio, bank->base + NPCM7XX_GP_N_OEC);
+-			npcm_gpio_set(&bank->gc, bank->base + NPCM7XX_GP_N_IEM,
+-				      gpio);
+-		} else
+-			npcm_gpio_clr(&bank->gc, bank->base + NPCM7XX_GP_N_IEM,
+-				      gpio);
++		iowrite32(gpio, bank->base + NPCM7XX_GP_N_OEC);
++		bank->direction_input(&bank->gc, pin % bank->gc.ngpio);
+ 		break;
+ 	case PIN_CONFIG_OUTPUT:
+-		npcm_gpio_clr(&bank->gc, bank->base + NPCM7XX_GP_N_IEM, gpio);
+-		iowrite32(gpio, arg ? bank->base + NPCM7XX_GP_N_DOS :
+-			  bank->base + NPCM7XX_GP_N_DOC);
+ 		iowrite32(gpio, bank->base + NPCM7XX_GP_N_OES);
++		bank->direction_output(&bank->gc, pin % bank->gc.ngpio, arg);
+ 		break;
+ 	case PIN_CONFIG_DRIVE_PUSH_PULL:
+ 		npcm_gpio_clr(&bank->gc, bank->base + NPCM7XX_GP_N_OTYP, gpio);
+-- 
+2.14.1

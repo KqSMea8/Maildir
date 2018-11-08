@@ -1,0 +1,229 @@
+Return-Path: <kvm-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:39 -0000
+Received: from icoremail.net (unknown [209.85.214.169])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX+9uWONb5NxaAQ--.27653S3;
+	Thu, 08 Nov 2018 05:26:07 +0800 (CST)
+Received: from mail-pl1-f169.google.com (unknown [209.85.214.169])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHwExpWONbcV8ZAA--.1286S3;
+	Thu, 08 Nov 2018 05:26:01 +0800 (CST)
+Received: by mail-pl1-f169.google.com with SMTP id p6-v6so8438537pll.4
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 13:26:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:date:message-id
+         :mime-version:subject:from:to:cc:sender:precedence:list-id;
+        bh=mGVWJ04bXB8Eo+RRbhf71Vr7lGS2Nsa7KwnulAArpoo=;
+        b=FOmMhAj+a2dZuWlCkBfeIRQPkv63WRS3JxDOl6wyEi2ESYJRf7MTGXsr3BYkuOWHvZ
+         57wJj/k2X0a1URLDXvVncJNpZ7KWbvoLE0Yqv+yhmvVIB9HsT/Xnv52YkAK9tanWPZR0
+         /vKcku1T97q6LEjlI1U1c7+e5sJmMWgp7TXsrSWraDvqliXbAB7DY8P4rf/WjaoO5koh
+         SDyyUVTnvMrpU6n+q3cph5uGm/1nr9lWDM4AZMZaBqM1prRwjd9Xs6rKpq0OWDphkhZv
+         uWVE41xmzGZ22l02EKNdvHKYQYGAvbatc+qNvBIXoxns8e/m9oIcBNUvbMcQMBxWInr6
+         UfkA==
+X-Gm-Message-State: AGRZ1gK6F4hem7h8WO6P42v4PXQk66BkVkavYg9EAneZ+YakEfPZMsY6
+	+HuK65iFH4k69KYzsAWR9S/pwt/X0MK1eyJ/HIjpBv2hUG9We2tW/g==
+X-Received: by 2002:a17:902:7082:: with SMTP id z2-v6mr1970501plk.78.1541625960992;
+        Wed, 07 Nov 2018 13:26:00 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp23238pjt;
+        Wed, 7 Nov 2018 13:26:00 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cEyiohU1dNIV6fVeqMLRx72jri9Vli1GeDd8MP/HiuH/TCTI44qUnn2iihvVUfLYoVBTWx
+X-Received: by 2002:a63:e101:: with SMTP id z1mr1644076pgh.310.1541625960208;
+        Wed, 07 Nov 2018 13:26:00 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541625960; cv=none;
+        d=google.com; s=arc-20160816;
+        b=mq1nM5e3oxaogHqdR2IoR9ablS7/onex4Z/dqWUgvFeB7giBW2DP1z81lRnmTBHs80
+         M3N5phhUUkbxB8GH3ezkxo82ZhLzRp1Tecxbua2mSwk84r+am6PRew/oZv19SOiz+AES
+         zJ6XIUAYq2Pt8LRTLoYQ6MIC5rlGx7/pINw+yxg8tHeEMsU4Mr9MStm22Yr6vDIz8niD
+         qL7vqKeN21rG6RllwN+s9wOb+J81oDBh9YODsFYraN0ac32L/Vbfz//bfD4T9SCfWr0p
+         VgRGzeUC0oA5bqzAvgiVSbsIWAROLdzm/PNmkc+Bkol0lyCYzLVVJ5XOFopqZHCyHqN9
+         V9Fg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:from:subject:mime-version
+         :message-id:date:dkim-signature;
+        bh=mGVWJ04bXB8Eo+RRbhf71Vr7lGS2Nsa7KwnulAArpoo=;
+        b=V2wQxiGMbeu+E8d60yEDxfTholV1EX+cXXm7hE4LQtzOR3ViDptMqsHSlaIq2MI4xQ
+         4wbrlgVeRcqzzsjVGmyyyqRFsK2oucYHmRYuMRv2c1WrPsLMYstxH6C4Xny0AFIpo858
+         ufB4hAPzaHw+EOHltzdDiVx1ysiyqRMdoTo8mXNkY0i+5vrnlz4pC53eSCwYFucDd8tC
+         a6dOjoVxWNAM8PKJnYuV3mJ5rJEdOwe5Kt3if+H3vaMc8pVtYAeTdwQ2TfGXbzhat54g
+         K2otvCPxKKrzyjRPfnbtqTIvNaeTn3sz9YN+btKjz4FUt1F+kHu7LswUwMeSdiibDtFZ
+         B6cw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@google.com header.s=20161025 header.b=HotyFS9y;
+       spf=pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=kvm-owner@vger.kernel.org;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=google.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id t1-v6si1431992pgv.349.2018.11.07.13.25.46;
+        Wed, 07 Nov 2018 13:26:00 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of kvm-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727271AbeKHG5z (ORCPT <rfc822;fanshuming2011@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 01:57:55 -0500
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:50352 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbeKHG5z (ORCPT <rfc822;kvm@vger.kernel.org>);
+        Thu, 8 Nov 2018 01:57:55 -0500
+Received: by mail-pl1-f202.google.com with SMTP id b3-v6so17095183plr.17
+        for <kvm@vger.kernel.org>; Wed, 07 Nov 2018 13:25:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=mGVWJ04bXB8Eo+RRbhf71Vr7lGS2Nsa7KwnulAArpoo=;
+        b=HotyFS9y9QVGLNrNYpdviHrhflNWluyAIJitCzYeXAKC6VxxbIoGMGH+IoUXOVo27d
+         MKToUw3mE2Rj/xQ5oPCPoMhwiHoaqF9XW/Q7EiuQTLCpqgN+gzCSYBpVelDWPwOAQUYr
+         9CR5WnpU4LcExVlXZ+VBbtgSnaGWpwOFGLDwjcXAvAipAKPZAjm/+tgj7Y4tnC0sJnfV
+         nsJ//6e4ab7H6fP75HYrC2HCeibb7fs3WpwaH3lqhkNquUvoXvRV6qoLaeYbW1ykTJ4v
+         7b3XdZ/DJgZfREDXxqn9ictEmMz+V3W37NV0loCStzvF6oO8ZSePdG4VAHpPX9xiFXgN
+         yEMg==
+X-Received: by 2002:a63:5fd6:: with SMTP id t205mr1023154pgb.77.1541625942548;
+ Wed, 07 Nov 2018 13:25:42 -0800 (PST)
+Date: Wed,  7 Nov 2018 13:25:28 -0800
+Message-Id: <20181107212528.15022-1-jmattson@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.19.1.930.g4563a0d9d0-goog
+Subject: [PATCH kvm-unit-tests] x86: nVMX: Test of IA32_TSC on VM-exit
+ MSR-store list
+From: Jim Mattson <jmattson@google.com>
+To: kvm@vger.kernel.org
+Cc: Marc Orr <marcorr@google.com>, Peter Shier <pshier@google.com>,
+        Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <kvm.vger.kernel.org>
+X-Mailing-List: kvm@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHwExpWONbcV8ZAA--.1286S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxArWxJr45GF1fWw4xAFWrKrg_yoW5uF13pa
+	yfZr1YgFW0vas7X3Z3tFyUCF1fZFWxGryfurZrAr1UCFsrX3W2yF1UKa48AFyrC340v3Wr
+	Za40gr9rW34jyFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPab7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xS
+	Y4AK6IIF6F4lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r1j6r1xMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26c
+	xK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2
+	Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxU
+	djQDDUUUU
+
+When IA32_TSC is on the VM-exit MSR-store list, the value saved is not
+subject to the "use TSC offsetting" VM-execution control for the
+current VMCS.
+
+Prior to commit e79f245ddec17 ("X86/KVM: Properly update 'tsc_offset'
+to represent the running guest"), kvm did not handle this situation
+properly.
+
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Marc Orr <marcorr@google.com>
+Reviewed-by: Peter Shier <pshier@google.com>
+---
+ x86/unittests.cfg |  6 ++++++
+ x86/vmx.h         |  1 +
+ x86/vmx_tests.c   | 45 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 52 insertions(+)
+
+diff --git a/x86/unittests.cfg b/x86/unittests.cfg
+index 3b21a85..9448409 100644
+--- a/x86/unittests.cfg
++++ b/x86/unittests.cfg
+@@ -572,6 +572,12 @@ extra_params = -cpu host,+vmx -m 2560 -append vmx_pending_event_hlt_test
+ arch = x86_64
+ groups = vmx
+ 
++[vmx_store_tsc_test]
++file = vmx.flat
++extra_params = -cpu host,+vmx -m 2560 -append vmx_store_tsc_test
++arch = x86_64
++groups = vmx
++
+ [vmx_db_test]
+ file = vmx.flat
+ extra_params = -cpu host,+vmx -m 2560 -append vmx_db_test
+diff --git a/x86/vmx.h b/x86/vmx.h
+index ba47455..8a00f73 100644
+--- a/x86/vmx.h
++++ b/x86/vmx.h
+@@ -384,6 +384,7 @@ enum Ctrl_pin {
+ 
+ enum Ctrl0 {
+ 	CPU_INTR_WINDOW		= 1ul << 2,
++	CPU_USE_TSC_OFFSET	= 1ul << 3,
+ 	CPU_HLT			= 1ul << 7,
+ 	CPU_INVLPG		= 1ul << 9,
+ 	CPU_MWAIT		= 1ul << 10,
+diff --git a/x86/vmx_tests.c b/x86/vmx_tests.c
+index b105b23..d223dea 100644
+--- a/x86/vmx_tests.c
++++ b/x86/vmx_tests.c
+@@ -5031,6 +5031,50 @@ static void vmx_pending_event_hlt_test(void)
+ 	vmx_pending_event_test_core(true);
+ }
+ 
++#define GUEST_TSC_OFFSET (1u << 30)
++
++static u64 guest_tsc;
++
++static void vmx_store_tsc_test_guest(void)
++{
++	guest_tsc = rdtsc();
++}
++
++/*
++ * This test ensures that when IA32_TSC is in the VM-exit MSR-store
++ * list, the value saved is not subject to the TSC offset that is
++ * applied to RDTSC/RDTSCP/RDMSR(IA32_TSC) in guest execution.
++ */
++static void vmx_store_tsc_test(void)
++{
++	struct vmx_msr_entry msr_entry = { .index = MSR_IA32_TSC };
++	u64 low, high;
++
++	if (!(ctrl_cpu_rev[0].clr & CPU_USE_TSC_OFFSET)) {
++		printf("\t'Use TSC offsetting' not supported.\n");
++		return;
++	}
++
++	test_set_guest(vmx_store_tsc_test_guest);
++
++	vmcs_set_bits(CPU_EXEC_CTRL0, CPU_USE_TSC_OFFSET);
++	vmcs_write(EXI_MSR_ST_CNT, 1);
++	vmcs_write(EXIT_MSR_ST_ADDR, virt_to_phys(&msr_entry));
++	vmcs_write(TSC_OFFSET, GUEST_TSC_OFFSET);
++
++	low = rdtsc();
++	enter_guest();
++	high = rdtsc();
++
++	report("RDTSC value in the guest (%lu) is in range [%lu, %lu]",
++	       low + GUEST_TSC_OFFSET <= guest_tsc &&
++	       guest_tsc <= high + GUEST_TSC_OFFSET,
++	       guest_tsc, low + GUEST_TSC_OFFSET, high + GUEST_TSC_OFFSET);
++	report("IA32_TSC value saved in the VM-exit MSR-store list (%lu) is in range [%lu, %lu]",
++	       low <= msr_entry.value && msr_entry.value <= high,
++	       msr_entry.value, low, high);
++}
++
+ static void vmx_db_test_guest(void)
+ {
+ 	/*
+@@ -5835,6 +5879,7 @@ struct vmx_test vmx_tests[] = {
+ 	TEST(vmx_db_test),
+ 	TEST(vmx_pending_event_test),
+ 	TEST(vmx_pending_event_hlt_test),
++	TEST(vmx_store_tsc_test),
+ 	/* EPT access tests. */
+ 	TEST(ept_access_test_not_present),
+ 	TEST(ept_access_test_read_only),
+-- 
+2.19.1.930.g4563a0d9d0-goog

@@ -1,0 +1,215 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:40 -0000
+Received: from icoremail.net (unknown [209.85.214.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH7abMeNbdPhZAQ--.27169S3;
+	Thu, 08 Nov 2018 02:40:28 +0800 (CST)
+Received: from mail-pl1-f178.google.com (unknown [209.85.214.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBX0EyWMeNbft4YAA--.336S3;
+	Thu, 08 Nov 2018 02:40:22 +0800 (CST)
+Received: by mail-pl1-f178.google.com with SMTP id p16-v6so8250312plr.8
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:40:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references:sender
+         :precedence:list-id;
+        bh=dND1HJUjUePw+l635OqYOpQ6CSyeMttq8pyyBWyK/os=;
+        b=YT1Z8bz1onzZiGT0RRnK9Kq9jJ+o8yi3EvSY5IXp0Od2f+WBVAgyjG1cU365XEKRnn
+         w13XneC1sULxTGYHbvlxURmV+C4YyTe6BMEBwXueuX9h35Q3C43/PxD/787nQ6emSq+2
+         5Qhoz1TxTsw7GARGxXQeQ0YSG1HsIvIdve0sNXJg87dqqBGX/+xHwQJjqdvnk8tswDFz
+         vGnjaSzGMqN5d+3hbgaCgUeY8XOStOAlHcXUCYfRmdy6y1ikARGxRWjcVfHCeEtzcb7I
+         x2mNPkWx9XWOkTeFJVtNA181+b0D+KqsLBMS9AQprY3F3K8vMvMVbuBHBPLxUlYr4HE/
+         kZlA==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIVVqV9cMsGakzMtH9j9F7Oxch3YKOQeqom9nQCjpblhhEEATNv
+	5hPE1FMgrhaisbx/sk7g75p8UoYyLxoGWnjSIG/4grdHoccZ3MyI6Q==
+X-Received: by 2002:a17:902:7882:: with SMTP id q2-v6mr1382396pll.188.1541616022521;
+        Wed, 07 Nov 2018 10:40:22 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5597967pjt;
+        Wed, 7 Nov 2018 10:40:21 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eXEfxjxCow3Kll7sb5xLeYDYWEpGgk2VcNQNB9/DrVbhubQqS92UdJoFnlSY0V5wa68kVq
+X-Received: by 2002:a63:1cd:: with SMTP id 196-v6mr1154457pgb.152.1541616021877;
+        Wed, 07 Nov 2018 10:40:21 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541616021; cv=none;
+        d=google.com; s=arc-20160816;
+        b=09yNTlr2dWSnmJ0KS5XVV01noIjPrXdzfMDUQcTNmv/qmqY/RiwGuiJ3KgYjtAMn42
+         Yd/5H0dDb1OJVDmgYbfQ/mECdwXGhHovWRZodgqaof1L+cGm9w5QKuqQhfqJzmkC3rBV
+         HzDM3JPTf4Lpwb1ZJ9TRtSEpqZh/kkDxm4qT/4YA7sZyQqS0hMxiankZkPIyKHVLcww1
+         AWqs3KEtOJyTTXf8I1Ty+45rIGnYEpW2jzYM900v7YSJfyR2YBK1gmdxRVNwhVe3DD9g
+         hX/z8Si5f7XAJhC0JyZQBIwDnpkFa5i99h2UqNt/T1cGaEiy881PbGNvYSvMeez3cDDR
+         z9jA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from;
+        bh=dND1HJUjUePw+l635OqYOpQ6CSyeMttq8pyyBWyK/os=;
+        b=grloMc8bVA6k4z0MrU05th+0gCmMUa9unXb36ozJRtqAqHdPuc9slfYIVa0inTmcD4
+         2fluR7pdxDkghzLoq6u7HCfF9nbUTTuknEtLyHuzmbn32W+ViL/Ao1PgWtdtWyO84hlE
+         zM4q1qfaDTwMovMjsT6d6M/jOLw7VFxbG51XO+VG69pjB14j3VaJO6zyZUMrWAmck1v6
+         ks21/gogfBUoI29YYEqkgZ+Hiw+Xb530UVi6ep4+WyX8c7mQOKR1CvFLJ50D5lPpSgUL
+         O5rNyvMkvHo9foPfw44Jpg69SkqkQWqeAPwL0pWmJnG3yb6ECQxW30uiVu790sKu3u7r
+         NIKg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 27si1180333pgp.135.2018.11.07.10.40.01;
+        Wed, 07 Nov 2018 10:40:21 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728190AbeKHEKC (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:10:02 -0500
+Received: from outbound-smtp10.blacknight.com ([46.22.139.15]:57623 "EHLO
+        outbound-smtp10.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726726AbeKHEKC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:10:02 -0500
+Received: from mail.blacknight.com (pemlinmail06.blacknight.ie [81.17.255.152])
+        by outbound-smtp10.blacknight.com (Postfix) with ESMTPS id E323F1C1E17
+        for <linux-kernel@vger.kernel.org>; Wed,  7 Nov 2018 18:38:23 +0000 (GMT)
+Received: (qmail 19823 invoked from network); 7 Nov 2018 18:38:23 -0000
+Received: from unknown (HELO stampy.163woodhaven.lan) (mgorman@techsingularity.net@[37.228.229.69])
+  by 81.17.254.9 with ESMTPA; 7 Nov 2018 18:38:23 -0000
+From: Mel Gorman <mgorman@techsingularity.net>
+To: Linux-MM <linux-mm@kvack.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Zi Yan <zi.yan@cs.rutgers.edu>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>
+Subject: [PATCH 2/5] mm: Move zone watermark accesses behind an accessor
+Date: Wed,  7 Nov 2018 18:38:19 +0000
+Message-Id: <20181107183822.15567-3-mgorman@techsingularity.net>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20181107183822.15567-1-mgorman@techsingularity.net>
+References: <20181107183822.15567-1-mgorman@techsingularity.net>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBX0EyWMeNbft4YAA--.336S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxZFyrXw1kuryUJrW3trWrXwb_yoW5Kr4rpF
+	yxKF1DCay8tFn8WrZ7Ga4vkFW7Ww47WFs3Gr1vg34Ivw13tr9aqr1vkry5AFWYvry8XFWU
+	XFsrKay29F13ZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmFb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
+	0EwIxGrwCjxxvEa2IrMxkF7I0Ew4C26cxK6c8Ij28IcwCY1Ik267vv6cIUMxkFs20EY4vE
+	44CYbxCE4x80FwCY02Avz4vEIxC_XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcV
+	AFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAF
+	wI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI4
+	8JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4U
+	MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
+	AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IUoUDG7UUUUU==
+
+This is a preparation patch only, no functional change.
+
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+---
+ include/linux/mmzone.h |  9 +++++----
+ mm/compaction.c        |  2 +-
+ mm/page_alloc.c        | 12 ++++++------
+ 3 files changed, 12 insertions(+), 11 deletions(-)
+
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 847705a6d0ec..e43e8e79db99 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -269,9 +269,10 @@ enum zone_watermarks {
+ 	NR_WMARK
+ };
+ 
+-#define min_wmark_pages(z) (z->watermark[WMARK_MIN])
+-#define low_wmark_pages(z) (z->watermark[WMARK_LOW])
+-#define high_wmark_pages(z) (z->watermark[WMARK_HIGH])
++#define min_wmark_pages(z) (z->_watermark[WMARK_MIN])
++#define low_wmark_pages(z) (z->_watermark[WMARK_LOW])
++#define high_wmark_pages(z) (z->_watermark[WMARK_HIGH])
++#define wmark_pages(z, i) (z->_watermark[i])
+ 
+ struct per_cpu_pages {
+ 	int count;		/* number of pages in the list */
+@@ -362,7 +363,7 @@ struct zone {
+ 	/* Read-mostly fields */
+ 
+ 	/* zone watermarks, access with *_wmark_pages(zone) macros */
+-	unsigned long watermark[NR_WMARK];
++	unsigned long _watermark[NR_WMARK];
+ 
+ 	unsigned long nr_reserved_highatomic;
+ 
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 7c607479de4a..ef29490b0f46 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -1431,7 +1431,7 @@ static enum compact_result __compaction_suitable(struct zone *zone, int order,
+ 	if (is_via_compact_memory(order))
+ 		return COMPACT_CONTINUE;
+ 
+-	watermark = zone->watermark[alloc_flags & ALLOC_WMARK_MASK];
++	watermark = wmark_pages(zone, alloc_flags & ALLOC_WMARK_MASK);
+ 	/*
+ 	 * If watermarks for high-order allocation are already met, there
+ 	 * should be no need for compaction at all.
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 5db746c642df..ad996a769bd5 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -3370,7 +3370,7 @@ get_page_from_freelist(gfp_t gfp_mask, unsigned int order, int alloc_flags,
+ 			}
+ 		}
+ 
+-		mark = zone->watermark[alloc_flags & ALLOC_WMARK_MASK];
++		mark = wmark_pages(zone, alloc_flags & ALLOC_WMARK_MASK);
+ 		if (!zone_watermark_fast(zone, order, mark,
+ 				       ac_classzone_idx(ac), alloc_flags)) {
+ 			int ret;
+@@ -4792,7 +4792,7 @@ long si_mem_available(void)
+ 		pages[lru] = global_node_page_state(NR_LRU_BASE + lru);
+ 
+ 	for_each_zone(zone)
+-		wmark_low += zone->watermark[WMARK_LOW];
++		wmark_low += low_wmark_pages(zone);
+ 
+ 	/*
+ 	 * Estimate the amount of memory available for userspace allocations,
+@@ -7418,13 +7418,13 @@ static void __setup_per_zone_wmarks(void)
+ 
+ 			min_pages = zone->managed_pages / 1024;
+ 			min_pages = clamp(min_pages, SWAP_CLUSTER_MAX, 128UL);
+-			zone->watermark[WMARK_MIN] = min_pages;
++			zone->_watermark[WMARK_MIN] = min_pages;
+ 		} else {
+ 			/*
+ 			 * If it's a lowmem zone, reserve a number of pages
+ 			 * proportionate to the zone's size.
+ 			 */
+-			zone->watermark[WMARK_MIN] = tmp;
++			zone->_watermark[WMARK_MIN] = tmp;
+ 		}
+ 
+ 		/*
+@@ -7436,8 +7436,8 @@ static void __setup_per_zone_wmarks(void)
+ 			    mult_frac(zone->managed_pages,
+ 				      watermark_scale_factor, 10000));
+ 
+-		zone->watermark[WMARK_LOW]  = min_wmark_pages(zone) + tmp;
+-		zone->watermark[WMARK_HIGH] = min_wmark_pages(zone) + tmp * 2;
++		zone->_watermark[WMARK_LOW]  = min_wmark_pages(zone) + tmp;
++		zone->_watermark[WMARK_HIGH] = min_wmark_pages(zone) + tmp * 2;
+ 
+ 		spin_unlock_irqrestore(&zone->lock, flags);
+ 	}
+-- 
+2.16.4

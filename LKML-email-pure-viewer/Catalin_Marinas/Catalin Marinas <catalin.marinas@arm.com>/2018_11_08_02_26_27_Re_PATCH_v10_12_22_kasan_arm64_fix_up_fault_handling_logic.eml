@@ -1,0 +1,173 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:37 -0000
+Received: from icoremail.net (unknown [209.85.214.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f7V8LuNbdOVZAQ--.26793S3;
+	Thu, 08 Nov 2018 02:27:09 +0800 (CST)
+Received: from mail-pl1-f181.google.com (unknown [209.85.214.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnvTl7LuNbkNIYAA--.177S3;
+	Thu, 08 Nov 2018 02:27:07 +0800 (CST)
+Received: by mail-pl1-f181.google.com with SMTP id s5-v6so8215994plq.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 10:27:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent:sender:precedence
+         :list-id;
+        bh=dk+TPL7jKifCpaU9sr+ZDa6RIGw/R+Ree8RqKZC7+wk=;
+        b=ooD7Q7f0t8AYBlB8Pkd/cOpnuaBOFd/8nd8+yg7FfKnqYhNVjpeg3GULQTz2+waS85
+         UAUiBtuKlgVxxpZJR6NNHLMLnav91WTLtm25frQL96CwrZ2zT4w8xJT1Aw90+U2Hh0JR
+         0hHMr1sUwUJI0u5U5NDJT/+AOVsEMc8en6PI62ApovE28Vjzte29tRzbHV6le5pFQ9E6
+         hGS5g6NR7zLSz1Ifs1O2CHtNWmk46X7/PQ3l0S2tuxX4OGmB7W/o5EvDSfR8osrNSwmB
+         pK57lei+dae+VbjlN1WzbKj+f8sWthZap3PbEvMlpyFDsxnD8VL0aaNGtu5IXK4TXolQ
+         t2Hw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gLogAsPGLC3DZNV6g1Kc4ajslqbn4/hhwHffdPeIi+4Fxx7hhx8
+	VF8H76WyggT5PQ/v88nmgnV4dD3jfFcgo0irYAe0D0YxB6xTam8OPg==
+X-Received: by 2002:a17:902:7082:: with SMTP id z2-v6mr1326265plk.78.1541615226649;
+        Wed, 07 Nov 2018 10:27:06 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5583006pjt;
+        Wed, 7 Nov 2018 10:27:05 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fWh2kr1EBuecqwVxT789silHW6Htf0NNYWqtW2d+g4sORxZSJlTQT91OzXUzW2EK3puPqF
+X-Received: by 2002:a62:4784:: with SMTP id p4-v6mr1244506pfi.257.1541615225471;
+        Wed, 07 Nov 2018 10:27:05 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541615225; cv=none;
+        d=google.com; s=arc-20160816;
+        b=T1QRCWdGI+d2vS2CHr1gPOUON6e1ZnP2ndfSylBBpY0ChK3GzLVzmadq1n0uHiDHMd
+         /SPSaT4PO/oy1nzQMHir25d1KLUdrf2CERX4J4pPhVSfRYsrJL9s2KvCeBxYRk6+qyyc
+         /jyJHl2nGVsjqVZcEsxk3iQPAXJrdptb2mbfWnL6LGICo7/CgTGnqyfZ6X1uoWAs1teV
+         W98SnYzJaOci208/vHPClbX4JHI8SremzV7a3z1j9nRiGgOsUHonbDC0pxPzu8VsZv5T
+         4kShPn1G4XAGaxAOqArKwclB+POIkZVqBjnqajXn54p6N55PBi6W63EkLOZb84SCiJNo
+         Ktww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=dk+TPL7jKifCpaU9sr+ZDa6RIGw/R+Ree8RqKZC7+wk=;
+        b=IYlR+hpR86OFRbfbbtx9AwtxlQ0rJ6bUK6I4LSm6QpnypNh8SgPoWkBJA8EQ18pux/
+         Pm9mtBrFr2k5f1t1O5uvneZ4cYZsjk6cFBIfyRRmfZ16+Hhl+tXZVpFn4WEiAlQkiOgC
+         A18pJC/VyxUZtiBZ5WVDiVvqN7CmzMZltyZGNgUm7FxOZzOK+7n6+YgwcdzOjyZfLBt7
+         CtPdAC6bxuKB2W3o9hh25VGLSLEHSdWkxR2qJvh236DIrbK/iiuiH4oaFPWHwS0bCcBe
+         HYsp18UZGp+MLUlrDL/V6mHn2Kehfrg0vfzx0b4494VG6+Quj9pRsQEsoN0Y8HdUSlaS
+         V/+w==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id o31si1210718pgb.273.2018.11.07.10.26.49;
+        Wed, 07 Nov 2018 10:27:05 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728214AbeKHD6L (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 22:58:11 -0500
+Received: from foss.arm.com ([217.140.101.70]:56604 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726356AbeKHD6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 22:58:10 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A54C3A78;
+        Wed,  7 Nov 2018 10:26:35 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF5703F5C0;
+        Wed,  7 Nov 2018 10:26:29 -0800 (PST)
+Date: Wed, 7 Nov 2018 18:26:27 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Andrey Konovalov <andreyknvl@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Dave Martin <dave.martin@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Paul Lawrence <paullawrence@google.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sparse@vger.kernel.org, linux-mm@kvack.org,
+        linux-kbuild@vger.kernel.org, Vishwath Mohan <vishwath@google.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Jann Horn <jannh@google.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Mark Brand <markbrand@google.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Evgeniy Stepanov <eugenis@google.com>
+Subject: Re: [PATCH v10 12/22] kasan, arm64: fix up fault handling logic
+Message-ID: <20181107182626.GD255021@arrakis.emea.arm.com>
+References: <cover.1541525354.git.andreyknvl@google.com>
+ <4891a504adf61c0daf1e83642b6f7519328dfd5f.1541525354.git.andreyknvl@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4891a504adf61c0daf1e83642b6f7519328dfd5f.1541525354.git.andreyknvl@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnvTl7LuNbkNIYAA--.177S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoWrtF1kXrW7trWUXFyfCFW3Wrg_yoW3WFcEkw
+	n2yw4UW3Z5Ar1jgF1SyFy3CryY934YkrnYqFn3Zrs7JF1DX348Kwsaq39rGw4UW3ZY9rZa
+	gF9xG343C39IgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbfAYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	GVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkIecxEwVCI4VW5MxkI7II2jI8vz4vE
+	wIxGrwCYIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	4j6F4UMxvI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4U
+	JVWxJr1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I
+	8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AK
+	xVWUGVWUWwC2zVAF1VAY17CE14v26rWY6r4UJwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4
+	v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IUe3UU5UUUUU==
+
+On Tue, Nov 06, 2018 at 06:30:27PM +0100, Andrey Konovalov wrote:
+> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> index 7d9571f4ae3d..d9a84d6f3343 100644
+> --- a/arch/arm64/mm/fault.c
+> +++ b/arch/arm64/mm/fault.c
+> @@ -32,6 +32,7 @@
+>  #include <linux/perf_event.h>
+>  #include <linux/preempt.h>
+>  #include <linux/hugetlb.h>
+> +#include <linux/kasan.h>
+>  
+>  #include <asm/bug.h>
+>  #include <asm/cmpxchg.h>
+> @@ -141,6 +142,8 @@ void show_pte(unsigned long addr)
+>  	pgd_t *pgdp;
+>  	pgd_t pgd;
+>  
+> +	addr = (unsigned long)kasan_reset_tag((void *)addr);
+> +
+>  	if (addr < TASK_SIZE) {
+>  		/* TTBR0 */
+>  		mm = current->active_mm;
+
+I think we should clear the tag earlier on in the fault handling code,
+before reaching show_pte().
+
+-- 
+Catalin

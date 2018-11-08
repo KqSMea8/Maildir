@@ -1,0 +1,130 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:57 -0000
+Received: from icoremail.net (unknown [209.85.210.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn35hAZONb0BtbAQ--.27317S3;
+	Thu, 08 Nov 2018 06:16:33 +0800 (CST)
+Received: from mail-pf1-f179.google.com (unknown [209.85.210.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH5UA+ZONb4YgZAA--.1655S3;
+	Thu, 08 Nov 2018 06:16:30 +0800 (CST)
+Received: by mail-pf1-f179.google.com with SMTP id p17-v6so7933786pfj.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:16:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding:sender:precedence:list-id;
+        bh=pYWLSSNk7aMTwWRNzvkvoxfrBrGiW3xuUC73/vKzR4c=;
+        b=Wvd8802qM/PW7lQYU7InNcbPp6cJAXvipYJUKzoq/GmkKLVN7KHzYv4aFfjsY+8MIC
+         DQrRp0SiGYz/2WIcEnt1rLw0X7E3/Ve7msdTWeVTQ82vEfdJJ89Tp5a7KqIn/VQgNY95
+         Lr2FisfCniAuo0eFK1PHSHtN/6Nu63i78olfMy39/ycSbHf+tuDOrKRllKHjci+29O6X
+         NK/A0NiJjg9wk/Xx0G7VzwfAyZomolJn2dlFZlpL675w4RYSPhU3OVoD+6WpybCJAKJD
+         1fYiyyTE26H4e9PJqz0yq9DFS/aCvLVuzfJdKs6Awggjd2vCRPZxgbthKMLAqREofw85
+         3IFw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gIBdEDexu8Un7xQepOktVJGdOjjNuUIKPYDMT0Z0DsflU3VDM8k
+	Wox/1AWX/PeH+zc8BTRDs3w4x9RaN5Qrg7J3lfkGaUCNuT+1N1kU9Q==
+X-Received: by 2002:a62:da54:: with SMTP id w20-v6mr2112085pfl.106.1541628990045;
+        Wed, 07 Nov 2018 14:16:30 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp68049pjt;
+        Wed, 7 Nov 2018 14:16:29 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eOymT+x79npHsprCTUDi0V+YYRozjOqVUsHOZl3y8AYI+CxK1XUqIpy88mdUWKBp8Cwr6q
+X-Received: by 2002:a17:902:7683:: with SMTP id m3-v6mr2143236pll.180.1541628989341;
+        Wed, 07 Nov 2018 14:16:29 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541628989; cv=none;
+        d=google.com; s=arc-20160816;
+        b=YEIlMyhDXYtw1bGGLjqxto0/HB3CEpxB694BBEyXs9h1vnN8b5IkNmWqy+hvh2iFBB
+         peSfT3BwJ7U92LYBcQDRkxlc2ZUXi7APC4EaYlUOyI7snsKf3kKgczAZdnxTbq4sXCHx
+         kf4Sv0Dt6/40yx5v+MmXJXYYqM0SvSyHzwqNwSo3CSAA1J9bCqWekHDCqnU/yFipNNyO
+         lXM1K4iW7eBfXnX7bjehjAhadl0wdsPQ0Y+3JYVj4ffTYRpi3T3XVd3DzC9gQCE4iJ6R
+         /dceKdliukyYH/mvH2Pv0gM+iRz1YGilG8Wngm4CqcHDIUqY3AIsv6r92Mzs5E/4aIyd
+         M3Eg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :references:in-reply-to:message-id:subject:cc:to:from:date;
+        bh=pYWLSSNk7aMTwWRNzvkvoxfrBrGiW3xuUC73/vKzR4c=;
+        b=j7NDe8eeBXfi+Fguu0qbKCW+Co398biEZm8WHs4VHLDm1C8kTuQni1e3ZxUTAex+h1
+         e+BK+0sQw8NV56k45ofKXj4czajZroTKNrZtBlADJCViyz38+8/pVacNsJLIpva8iIYt
+         IBKOyDYFN1hOOs522YGBoo4USsuH+v25i25kwoW0LVxlwGlSaCV6GESU6RXxN1kMbYQh
+         4ydvv1pSiN0ZL8yIoXdTgX419aXeLka2Ni8voE05jG1Q4zwcVTgxuYqu5WcHSnoePGEn
+         Pv33kU06Qr+Zs8CNZvTYJmQ0Yr24BCZ/v0pY9xoYYsqrOLec56CNoeddOJolWgU7QgjA
+         /GUg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id q13si1678021pgj.86.2018.11.07.14.16.13;
+        Wed, 07 Nov 2018 14:16:29 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727883AbeKHHqx (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:46:53 -0500
+Received: from mail.linuxfoundation.org ([140.211.169.12]:46022 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727127AbeKHHqx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:46:53 -0500
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 77AD9B37;
+        Wed,  7 Nov 2018 22:14:29 +0000 (UTC)
+Date: Wed, 7 Nov 2018 14:14:28 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Alexey Skidanov <alexey.skidanov@intel.com>
+Cc: sbates@raithlin.com, logang@deltatee.com, danielmentz@google.com,
+        mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+        labbott@redhat.com
+Subject: Re: [PATCH] lib/genaloc: Fix allocation of aligned buffer from
+ non-aligned chunk
+Message-Id: <20181107141428.bd1f8b1a989449633394d8c1@linux-foundation.org>
+In-Reply-To: <d76d64cf-70a9-9c1f-6f11-2d812aacaaef@intel.com>
+References: <1541506853-10685-1-git-send-email-alexey.skidanov@intel.com>
+        <20181106141131.76e94f6b1ff2859d96792aca@linux-foundation.org>
+        <d76d64cf-70a9-9c1f-6f11-2d812aacaaef@intel.com>
+X-Mailer: Sylpheed 3.6.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH5UA+ZONb4YgZAA--.1655S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvdXoW7JF18CF1UGF4UXw45tFykGrg_yoW3WFX_uF
+	WxJa98ua47JF43tan7ta4kCrnagry0vF18tFsYvFnxWFyfAFWjqF4qvw1rXw1rZws5WFy3
+	tFnFva1Yyr9rujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAU7a7-sFnT
+	9fnUUIcSsGvfJTRUUUbhxYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY0x0I
+	x7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnV
+	CjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	AIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IUevzutUUUUU==
+
+On Wed, 7 Nov 2018 08:21:07 +0200 Alexey Skidanov <alexey.skidanov@intel.com> wrote:
+
+> > Why does this need "fixing"?  Are there current callers which can
+> > misalign chunk_start_addr?  Or is there a requirement that future
+> > callers can misalign chunk_start_addr?
+> > 
+> I work on adding aligned allocation support for ION heaps
+> (https://www.spinics.net/lists/linux-driver-devel/msg118754.html). Two
+> of these heaps use genpool internally.
+> 
+> If you want to have an ability to allocate buffers aligned on different
+> boundaries (for example, 4K, 1MB, ...), this fix actually removes the
+> requirement for chunk_start_addr to be aligned on the max possible
+> alignment.
+
+OK.  This sort of information should be in the changelog, please.  In
+much detail.

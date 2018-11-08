@@ -1,0 +1,188 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:53 -0000
+Received: from icoremail.net (unknown [209.85.214.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv+56FONb_jdZAQ--.26851S3;
+	Thu, 08 Nov 2018 00:36:12 +0800 (CST)
+Received: from mail-pl1-f181.google.com (unknown [209.85.214.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3HkpEE+NbwVEYAA--.172S3;
+	Thu, 08 Nov 2018 00:31:00 +0800 (CST)
+Received: by mail-pl1-f181.google.com with SMTP id o19-v6so8071028pll.12
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 08:31:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:organization:user-agent:sender
+         :precedence:list-id;
+        bh=JB33kkJMf+jrZHh0tP0eQHCkVGnOMm0knWmoXJpL+7Q=;
+        b=m0mOfjoXBXx9C3fWEKzMF02FdzWB+7W5Dba93uJt2/J0NpXRZ5z/RywoIzyVh7H12r
+         uHvlhILnmfc+I8rhiOwfEkhTKMIPQwW46FPS950szcZ/v4wwdEZzhN7o+M8JXXUyI128
+         t8iZnx1sbgM4QRVyW7FwftFMe5+XHXKOFZxF5II9HxNQ4rJ0XwFgXwdlNuAIapBESYU+
+         2EbPFquydgjDDxyCpi6gNCUP+/oOgA3PiedkD0g0wq/ebndUA/Jjv//Fv8f4ecNQG88H
+         1dXIhiBmPyzGOP6ji35QrrpUcfLkfbO2qaRa4Jnf8qY5D8W5qpUa9e9nMBLuMju8gwE7
+         CI0g==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+X-Gm-Message-State: AGRZ1gKL6ajwbTdKN2kvT3v04VVdkcOLuHg1Q4Cd+lh1Qi5aDSZUGQGE
+	mVn2dfJn56y6lyfSEeGEw7dU4ul2ASklZwudTb318UgpMiyDsrgrjg==
+X-Received: by 2002:a17:902:bd4a:: with SMTP id b10-v6mr859096plx.171.1541608259264;
+        Wed, 07 Nov 2018 08:30:59 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5453924pjt;
+        Wed, 7 Nov 2018 08:30:58 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dsw9AtPrgbMm0pyhqMZnHD5X5+LVxHZYKiYD6NzlgPbElGF4v1EJX3qjUAW/J9ZBIgZeDL
+X-Received: by 2002:a63:7d0f:: with SMTP id y15-v6mr736471pgc.171.1541608258157;
+        Wed, 07 Nov 2018 08:30:58 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541608258; cv=none;
+        d=google.com; s=arc-20160816;
+        b=cPEwTXBpVGXFQrwIAmX/pgXGSMjVTJj2zIxFQDCu+hB9JDY8P7cXfQ3XudTXxxaNOT
+         j4y3HcEUk8KkLoaQOYQymoH/ekm9oQJFJ7TKcShDJmvZ6Nb4O4FwgYhsQ/ABxwv43Azw
+         6zO2XreZz3FZGg6czVtisU2brBI/IdPKOpEnKjsiftvsJmyuUzA4Lnh8mqBWpzlGqYRY
+         pAxndK/NW9XlZPXHrKxZgdgVeZvCL5lIYeV2GAnhaGyt9/6lT9IpJs+hX6xl40uhLGhb
+         t5hAOh46YDA2WyMVhqGrzLginL44hvrL8b0ihhIs0SJcRPKVDSV2p3tJX+wEdmj/8kBe
+         8Usg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:organization:in-reply-to
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date;
+        bh=JB33kkJMf+jrZHh0tP0eQHCkVGnOMm0knWmoXJpL+7Q=;
+        b=DwRo0ci1IAyVeDgutkcB83Vk4QxpZpM+I8W9aetQCLi3gIaLjEkFg3Fso5/fBNPqvI
+         wCZBl4QMpSoXAQDUPWEtiByarb6XNV0JMhDFDKvzKUVJCBHhItfOBZ6FjEz2ir92J4dg
+         uOqhmlMHpuZoeEiAEQ4Q5rJj9rqeih2AqVUpKE1DysYn3FN1n+Yv6fCJwtEeOZGbNElf
+         X0Fk3HL4P7SHdVXXgUzW3CafGImIjtgg9teY22vD6IEWBKC9d15FY5nZ3UpR5NBkX/bf
+         ssZDzNfBrOVp6tCX7iY9wNQDZFbvJUPBOufJc6bsLQeg7ckBlbJ35nk3+fT24LX9m/5n
+         NMGA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=intel.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id g80-v6si1209884pfj.37.2018.11.07.08.30.42;
+        Wed, 07 Nov 2018 08:30:58 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731287AbeKHCBg (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:01:36 -0500
+Received: from mga14.intel.com ([192.55.52.115]:51994 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727312AbeKHCBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:01:35 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2018 08:30:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.54,476,1534834800"; 
+   d="scan'208";a="84702378"
+Received: from kaczmarx-mobl.ger.corp.intel.com (HELO localhost) ([10.249.254.132])
+  by fmsmga008.fm.intel.com with ESMTP; 07 Nov 2018 08:30:22 -0800
+Date: Wed, 7 Nov 2018 18:30:19 +0200
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-sgx@vger.kernel.org, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        mark.shanahan@intel.com, andriy.shevchenko@linux.intel.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v15 23/23] x86/sgx: Driver documentation
+Message-ID: <20181107163019.GA11509@linux.intel.com>
+References: <20181102231320.29164-1-jarkko.sakkinen@linux.intel.com>
+ <20181102231320.29164-24-jarkko.sakkinen@linux.intel.com>
+ <154ded23-fd1d-f324-4e0a-9de8eddcda6d@intel.com>
+ <20181106054911.GA15575@linux.intel.com>
+ <e7b4c432-7005-308c-4da0-a80e0d294244@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e7b4c432-7005-308c-4da0-a80e0d294244@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3HkpEE+NbwVEYAA--.172S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7tryfZryftFyUKw1kZF4xJFb_yoW8Kw1kpF
+	45J3W2kr4DJF17Ar92qw48Zr4Skan3Ja15JF15G34UAFW5uasayF4IyayYv3Z5Gr4fGw42
+	vry7tryDW3WUAa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB0b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcx
+	kEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
+	6r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc2xSY4AK6IIF6r1lc2IjII80xcxE
+	wVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26r4j6F4UMxvI42IY6I8E87Iv6xkF7I0E14v26r4j
+	6r4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2
+	IYs7xG6Fyj6rWUJbIYCTnIWIevJa73UjIFyTuYvjxUDm9aDUUUU
+
+On Tue, Nov 06, 2018 at 08:45:37AM -0800, Dave Hansen wrote:
+> On 11/5/18 9:49 PM, Jarkko Sakkinen wrote:
+> > On Mon, Nov 05, 2018 at 12:27:11PM -0800, Dave Hansen wrote:
+> >> The ABI seems entirely undocumented and rather lightly designed, which
+> >> seems like something we should fix before this is merged.
+> > 
+> > ABI is documented in arch/x86/include/uapi/asm/sgx.h that from which the
+> > documentation is included to intel_sgx.rst. I'm not saying that there is
+> > no space refine it but it is neither undocumented.
+> 
+> I specifically mean the instruction flow around asynchronous exits or
+> explicit enclave exit calls via EEXIT.  Signals are part of the ABI but
+> go unmentioned in the documentation.
+
+Ok, thanks for clarification. We will document it.
+> 
+> It's also worth noting that EENTER *can* act (from the kernel's
+> perspective) like an instruction that both jumps and sets a bunch of
+> registers (including %rsp).  It's certainly abnormal in that regard.
+
+Agreed.
+
+> In fact, in the docs:
+> 
+> > +Enclave can only execute code inside the ELRANGE. Instructions that may cause
+> > +VMEXIT, IO instructions and instructions that require a privilege change are
+> > +prohibited inside the enclave. Interrupts and exceptions always cause enclave
+> > +to exit and jump to an address outside the enclave given when the enclave is
+> > +entered by using the leaf instruction ENCLS(EENTER).
+> 
+> it's probably a really good idea to explain that the address outside of
+> the enclave is enclave-provided, and is not, for instance, just the next
+> instruction after EENTER.
+> 
+> >> Also, for a feature as massive and complicated as this one, it seems
+> >> irresponsible to not have a selftest.  Is that not feasible for some reason?
+> > 
+> > I do have the in-kernel launch enclave stuff backed up here:
+> > 
+> > https://github.com/jsakkine-intel/sgx-le-host
+> > https://github.com/jsakkine-intel/sgx-le
+> > 
+> > This is about as simple as it gets without any type of run-time.
+> 
+> Does this code run when I type "make kselftest"?  If not, I think we
+> should rectify that.
+
+No, it doesn't. It is just my backup for the non-SDK user space code
+that I've made that I will use to fork my user space SGX projects in
+the future.
+
+I can work-out a selftest (and provide a new patch in the series) but
+I'm still wondering what the enclave should do. I would suggest that
+we start with an enclave that does just EEXIT and nothing else.
+
+/Jarkko

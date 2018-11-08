@@ -1,0 +1,164 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:04 -0000
+Received: from icoremail.net (unknown [209.85.215.178])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv0KhaONbhjNbAQ--.27076S3;
+	Thu, 08 Nov 2018 06:35:15 +0800 (CST)
+Received: from mail-pg1-f178.google.com (unknown [209.85.215.178])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwC3nUmfaONbSJcZAA--.1675S3;
+	Thu, 08 Nov 2018 06:35:11 +0800 (CST)
+Received: by mail-pg1-f178.google.com with SMTP id k1-v6so7940617pgq.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:35:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=M+5Ho9nHUAtTPSzbS1VSN1O9czvQcmQgR95Lw7M30Go=;
+        b=LL6wvurlP5bwCuDOzzBzlcjuPQRvmDHaG6RGjGn6tXh5ih5JoXwFvLTBXVkdT4dhot
+         XQ2zbeQkQgEueuNQ/NQ1IjF8CEos4HgWzzwSbTZc79VlIPBSG+9wCQp0j82dLYGhqya1
+         ZwX44KuGz6k3ycLM0UGIZYmBikk4XrkRrQA55IvgzrXZOahe0aL0EhfrsCVdL7jXQ2CT
+         W+KNsU0w3IIro/QtCW9M7WG1z6TvvEJ3hIRfVJl3Yb0Drg85zt9jbErOFxGFxFhL3kPT
+         JX+axM7+wNQoo+5Yfty6TI5Vi6o9pWwpex5ViLTRGsPV70BI/qxt+3iQ2TxhRp7J/5fF
+         BF+A==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+X-Gm-Message-State: AGRZ1gKryE3sevVQiLrcFkE6jlp3/bU2PWGO8L4ckk9njSO8iB3LgcWQ
+	pLcGDLsEWnvCbTuuBU7cZGl13FqRfCOGLdqckSAksyvg8XSga/zL4A==
+X-Received: by 2002:a63:2c0e:: with SMTP id s14mr1860190pgs.132.1541630111407;
+        Wed, 07 Nov 2018 14:35:11 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp83069pjt;
+        Wed, 7 Nov 2018 14:35:10 -0800 (PST)
+X-Google-Smtp-Source: AJdET5f+84oBO9V5Qc5Hdvzm52tY4c3Qqgfs3HBkFWLXvcGEVgI2O4/0o8KhhnrdZJlxsF90sdgf
+X-Received: by 2002:a63:6bc1:: with SMTP id g184mr1840452pgc.25.1541630110765;
+        Wed, 07 Nov 2018 14:35:10 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541630110; cv=none;
+        d=google.com; s=arc-20160816;
+        b=hnJXQiiX65efYqec3YKP5meQUbzEzMWddwrPI19ZJMNx6+qOl9J5tqS/ZRx37SnVfq
+         Y/TYxA4K99+IUskTpu+ZI27wXwkek/16g1sy6q+vYUEL9d36HH0mYOux53KMYFgdJ4Io
+         TKOihGPEeenk2fy5p2065M57N8fd47b7HTN4Cz72zLPu+3EgxPheEZ5rlOo+OBrbH6gv
+         rwmwRrDrkauoGWCQFmDz9Z4agA93nfWyRe7TxngUB1fX1MO4740Q3ca3jNUvha8pFPGt
+         Fsgvg8Pk+ahoudk4id8RwS6Xm0AwsJWzMdOxy1qNxgRxmFZdncsydrB1c+WXNbLMNdwG
+         nGDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :message-id:date:subject:cc:to:from;
+        bh=M+5Ho9nHUAtTPSzbS1VSN1O9czvQcmQgR95Lw7M30Go=;
+        b=hjMGC97C/XxxjDeLkRbTrrZsFSFi5Qh42YqnUNcn7iIbPavSG/T+4dNO3j6e2DVPfk
+         W1JL2ueR4jdx9ZZ0Y2ea4TzNdrjolPLqhBULV0gokV1yJxOs4Dfk2LiMuJhtmjmovyj5
+         JEc2A+JokuMkVp2rpl28mVXKjt/eNsEekou6plvfZ1G5YDwraDQ4Cm5FSH+QnQ/OrWzj
+         5AaGAfkK8QKWWQAuUh2Xmlk28JnmH5H4U22HUD+jQ21MTcgzA4BJr37x+PNinWovod5o
+         JG0yHxhcpI2bo16ts34h8zeBWv7FuBc9YUFpCwp4NFH7D8xbxnXTK4kG0QG7PQQi7ZA9
+         w2Tg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d2-v6si1994976plo.210.2018.11.07.14.34.55;
+        Wed, 07 Nov 2018 14:35:10 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728050AbeKHIEV (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 03:04:21 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36245 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727271AbeKHIEV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 03:04:21 -0500
+Received: by mail-ot1-f65.google.com with SMTP id k98so6139240otk.3;
+        Wed, 07 Nov 2018 14:31:53 -0800 (PST)
+X-Received: by 2002:a9d:5605:: with SMTP id e5mr1403264oti.226.1541629913129;
+        Wed, 07 Nov 2018 14:31:53 -0800 (PST)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id f9sm750959oth.17.2018.11.07.14.31.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 14:31:52 -0800 (PST)
+From: Rob Herring <robh@kernel.org>
+To: "David S. Miller" <davem@davemloft.net>
+Cc: Frank Rowand <frowand.list@gmail.com>,
+        linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org
+Subject: [PATCH 0/8] sparc: OF name and device_type rework
+Date: Wed,  7 Nov 2018 16:31:43 -0600
+Message-Id: <20181107223151.14991-1-robh@kernel.org>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwC3nUmfaONbSJcZAA--.1675S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZF47Kry5CF4UZFWrtFy3XFb_yoW8uFy7pF
+	Zakr9xXr4Uu3yfuw13Ar1DuFy5Aw1S934xX3Z8K34Fq3429r1UXr1vvrn2qry2qry8Ga10
+	gFWqqry2y3WUGwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Sb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc2IjII80xcxEwVAKI48JMxvI42IY
+	6xIIjxv20xvE14v26ryj6F1UMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0x
+	vEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwCF04k2
+	0xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
+	1xYxBIdaVFxhVjvjDU0xZFpf9x07bSCJQUUUUU=
+
+All other platforms have been converted to only store the local node name
+in device_node.full_name except Sparc. Sparc was complicated by having a
+path_component_name in addition to full_name and name. By switching
+full_name to just the local node name, path_component_name becomes
+redundant and can be removed.
+
+The rest of the series converts the sparc code to use printf specifiers
+and helper functions to access node name and device_type instead of
+directly accessing device_node full_name, name and type pointers.
+
+I've tested this series under qemu.
+
+Rob
+
+Rob Herring (8):
+  fs/openpromfs: use full_name instead of path_component_name
+  of: Drop full path from Sparc PDT full_name
+  sparc: prom: use property "name" directly to construct node names
+  sparc: Convert to using %pOF instead of full_name
+  sparc: Convert to using %pOFn instead of device_node.name
+  sparc: Use of_node_name_eq for node name comparisons
+  sparc: Remove unused leon_trans_init
+  sparc: Use device_type helpers to access the node type
+
+ arch/sparc/include/asm/leon.h        |  1 -
+ arch/sparc/kernel/auxio_64.c         | 11 ++--
+ arch/sparc/kernel/central.c          |  2 +-
+ arch/sparc/kernel/chmc.c             |  8 +--
+ arch/sparc/kernel/irq_64.c           |  2 +-
+ arch/sparc/kernel/leon_kernel.c      | 14 ------
+ arch/sparc/kernel/of_device_32.c     | 19 ++++---
+ arch/sparc/kernel/of_device_64.c     | 56 ++++++++++-----------
+ arch/sparc/kernel/of_device_common.c |  4 +-
+ arch/sparc/kernel/pci.c              | 44 +++++++---------
+ arch/sparc/kernel/pci_sabre.c        |  2 +-
+ arch/sparc/kernel/power.c            |  4 +-
+ arch/sparc/kernel/process_32.c       |  2 +-
+ arch/sparc/kernel/prom_32.c          | 44 ++++++++--------
+ arch/sparc/kernel/prom_64.c          | 75 +++++++++++++++-------------
+ arch/sparc/kernel/prom_irqtrans.c    | 20 ++++----
+ arch/sparc/kernel/reboot.c           |  3 +-
+ arch/sparc/kernel/sbus.c             |  4 +-
+ arch/sparc/kernel/sun4d_irq.c        | 14 +++---
+ arch/sparc/kernel/time_64.c          | 16 +++---
+ arch/sparc/kernel/vio.c              |  9 ++--
+ drivers/of/pdt.c                     | 26 ++--------
+ fs/openpromfs/inode.c                |  9 ++--
+ include/linux/of.h                   |  1 -
+ 24 files changed, 174 insertions(+), 216 deletions(-)
+
+--
+2.19.1

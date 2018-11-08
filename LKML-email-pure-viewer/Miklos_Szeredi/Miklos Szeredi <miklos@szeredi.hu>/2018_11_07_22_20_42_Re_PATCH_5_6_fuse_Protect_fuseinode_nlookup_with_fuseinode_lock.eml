@@ -1,0 +1,187 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:08 -0000
+Received: from icoremail.net (unknown [209.85.210.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHHyYj9eJb93dYAQ--.26800S3;
+	Wed, 07 Nov 2018 22:22:28 +0800 (CST)
+Received: from mail-pf1-f179.google.com (unknown [209.85.210.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3WUUh9eJbiswXAA--.10536S3;
+	Wed, 07 Nov 2018 22:22:25 +0800 (CST)
+Received: by mail-pf1-f179.google.com with SMTP id g7-v6so5492949pfo.10
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:22:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version
+         :in-reply-to:references:from:date:message-id:subject:to:cc:sender
+         :precedence:list-id;
+        bh=UysIRM1+s3ufQpuvCORn3iMWOhSABN5WwdkCPVKKkrY=;
+        b=eusyMoMngoMEI1S1U77hPE+AuysvLXPV1Ubizmu978wgasXYRF0G/v+vPZELLcu7oc
+         781PoTmq0mPGwDeB5uaBKfG4bWIJ9foK/5M2CQ7Idm0EM6gZD2N/MYLH8hxUFLYMGckQ
+         eBMvL6zLOfV4Sla+yXXNN5M6MBk3ctOxb80/yx9UNhxZAAK8tvs4Yf27+RdZO8J3k3hR
+         IGh7eagDHoIz0JwlNg+mooK9Tbx0/6r2+4plmaUSGW4Yb1+1kV/0z5Kjt9s0RV+EtgbZ
+         QRl7FukVirujYlLWyiUN1ZrFP5+Z2MPiwxVI6D7F06Su0NJUYec2PEM4oQF6AQatP/8W
+         ATSw==
+X-Gm-Message-State: AGRZ1gKqIXUYA2vddBVAUPpeBLUeIEe7PPl7eGkmZpohYvaafOXOePxh
+	rHllB70l2f0RwJs/e3ptdTx4ZnguhcYwkK2t45n+qej+EQtHxN9CmQ==
+X-Received: by 2002:a62:22c3:: with SMTP id p64-v6mr412624pfj.9.1541600544947;
+        Wed, 07 Nov 2018 06:22:24 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5306941pjt;
+        Wed, 7 Nov 2018 06:22:23 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fZ59/rXMhUUKDgoeMY9h7nZ7xeyMUlzjLJnBWU63KFVperHt1dx4QgY8RHNi/3ryvffNYN
+X-Received: by 2002:a63:b105:: with SMTP id r5mr342548pgf.442.1541600543403;
+        Wed, 07 Nov 2018 06:22:23 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541600543; cv=none;
+        d=google.com; s=arc-20160816;
+        b=up2vHRmOsllIt7txkYUukXqkyBaXSC/1K3M7gJDzJdOm0SiCA9QuXUtthXyKGHaykr
+         t6z9RoElvBxg1+fMzxX9/cu8VCfJlclMIJAfOD3nhe1MV2sgAdcS/Jyrj4GaprQx3mds
+         AudVRzO0Zat+7RQ4uKZpCNFILW/SRxj5OfPvVdFKLn1xpvMmBZ52VgEXBlGJQdhJmziF
+         x94YKAabugxel3WLfMQHMmYhbtTYj95Wmm4E+pMCDeRC3Y6PAoH0JeuPcKORFweR/i2T
+         YNw/fQubK1ttCewOiz3nnRsKNnHRFm54TGkn3aZzV0h0+90SjH9uxuUiEWgvGN0kp47O
+         vx3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :references:in-reply-to:mime-version:dkim-signature;
+        bh=UysIRM1+s3ufQpuvCORn3iMWOhSABN5WwdkCPVKKkrY=;
+        b=u1bikChDc01P30iPMDWRKSatb2nmHM0HpjnScClqDN8rAEV+VoGT0Alk1SC3wv4cW9
+         KSJvM+OJ6QD8htDVNRxSZd127EXNBTVSImwFqwvKJ0Q6gfdqIf+TYjIkbxhwVOH+XoPj
+         9kYNxMxU4pYKZ/9ch4JYK3/1fi/6hX0lyQWGG8PWho6QLrhD0mEVCBnCZ9Q67uHSm65Z
+         Eq8eJliHg4+/oWBX+Rm7ks0mj4eDUhkR2Z2d1E31PxDyVkOWgz5048ItLLyX6OyPYstJ
+         42I3oSgnGzCnzLjag45Xbd24IC6+YhPmH4i7xIFu2Iufw/5RVGSaQTFAJcgWLyQDmx9D
+         LLtQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=temperror (no key for signature) header.i=@szeredi.hu header.s=google header.b=aMhK7rLB;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id z16-v6si701707pga.177.2018.11.07.06.22.07;
+        Wed, 07 Nov 2018 06:22:23 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730642AbeKGXvS (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:51:18 -0500
+Received: from mail-it1-f195.google.com ([209.85.166.195]:33064 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726830AbeKGXvS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:51:18 -0500
+Received: by mail-it1-f195.google.com with SMTP id p11-v6so13189932itf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 06:20:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=UysIRM1+s3ufQpuvCORn3iMWOhSABN5WwdkCPVKKkrY=;
+        b=aMhK7rLBmfZ/wBM+cXqOSVSveFoxRbs7Rji6eFqpzdO2yXFXS+raKYT0jo+GCj6wFU
+         9x4LAg8Q9q2LWadfey0wwexjLssNSVBJxAlWssdI/s42JphIHGOhu2282MdkHGMZKzrV
+         7x7DysAfavS3uge2xbx75VEcIREcMkUm2/HQE=
+X-Received: by 2002:a24:fe88:: with SMTP id w130-v6mr320641ith.69.1541600443235;
+ Wed, 07 Nov 2018 06:20:43 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a6b:ac42:0:0:0:0:0 with HTTP; Wed, 7 Nov 2018 06:20:42 -0800 (PST)
+X-Originating-IP: [212.96.48.140]
+In-Reply-To: <154149744356.18189.13444618369955494886.stgit@localhost.localdomain>
+References: <154149673368.18189.14752124997476502777.stgit@localhost.localdomain>
+ <154149744356.18189.13444618369955494886.stgit@localhost.localdomain>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Wed, 7 Nov 2018 15:20:42 +0100
+Message-ID: <CAJfpegtnCTY_eWsyNPRPaE0=wPeyMPAXScWQ4scV7vXXcWyamA@mail.gmail.com>
+Subject: Re: [PATCH 5/6] fuse: Protect fuse_inode::nlookup with fuse_inode::lock
+To: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3WUUh9eJbiswXAA--.10536S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFW7Kw43ZFW8Cw4kZF13urg_yoW8tw47pr
+	W8Kay5Kw4xXryUW3Z2kr4j9r1Yqa4fWr4UGrZ3Jw1j9ry5X3sayr1FvasI9r10vrnrWFsI
+	qF1jg3sxZrWDZ3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4wCY1x
+	0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VW5XwCY0x0I
+	x7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804x
+	Wl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE42xK8V
+	AvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IUOyOJ5UUUUU==
+
+On Tue, Nov 6, 2018 at 10:44 AM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+> This continues previous patch and introduces the same
+> protection for nlookup field. It goes as separate patch
+> since it's separate logic change (sadly, but it looks
+> impossible to split previous patch more then in this way).
+
+Well, the way you can split things up better is to just add the fine
+grained lock first, which you can do in multiple patches, since all of
+it is going to be a no-op.  And when that is done, remove the coarse
+grained lock in yet another patch, which hopefully will result in
+better performance and no other change.
+
+>
+> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> ---
+>  fs/fuse/dir.c     |    4 ++--
+>  fs/fuse/inode.c   |    4 ++--
+>  fs/fuse/readdir.c |    4 ++--
+>  3 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+> index 35f3b3d1e044..ac8519285327 100644
+> --- a/fs/fuse/dir.c
+> +++ b/fs/fuse/dir.c
+> @@ -222,9 +222,9 @@ static int fuse_dentry_revalidate(struct dentry *entry, unsigned int flags)
+>                                 fuse_queue_forget(fc, forget, outarg.nodeid, 1);
+>                                 goto invalid;
+>                         }
+> -                       spin_lock(&fc->lock);
+> +                       spin_lock(&fi->lock);
+>                         fi->nlookup++;
+> -                       spin_unlock(&fc->lock);
+> +                       spin_unlock(&fi->lock);
+>                 }
+>                 kfree(forget);
+>                 if (ret == -ENOMEM)
+> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> index 5f488b019cd9..b8092d49a4b2 100644
+> --- a/fs/fuse/inode.c
+> +++ b/fs/fuse/inode.c
+> @@ -327,9 +327,9 @@ struct inode *fuse_iget(struct super_block *sb, u64 nodeid,
+>         }
+>
+>         fi = get_fuse_inode(inode);
+> -       spin_lock(&fc->lock);
+> +       spin_lock(&fi->lock);
+>         fi->nlookup++;
+> -       spin_unlock(&fc->lock);
+> +       spin_unlock(&fi->lock);
+>         fuse_change_attributes(inode, attr, attr_valid, attr_version);
+>
+>         return inode;
+> diff --git a/fs/fuse/readdir.c b/fs/fuse/readdir.c
+> index ab18b78f4755..574d03f8a573 100644
+> --- a/fs/fuse/readdir.c
+> +++ b/fs/fuse/readdir.c
+> @@ -213,9 +213,9 @@ static int fuse_direntplus_link(struct file *file,
+>                 }
+>
+>                 fi = get_fuse_inode(inode);
+> -               spin_lock(&fc->lock);
+> +               spin_lock(&fi->lock);
+>                 fi->nlookup++;
+> -               spin_unlock(&fc->lock);
+> +               spin_unlock(&fi->lock);
+>
+>                 forget_all_cached_acls(inode);
+>                 fuse_change_attributes(inode, &o->attr,
+>

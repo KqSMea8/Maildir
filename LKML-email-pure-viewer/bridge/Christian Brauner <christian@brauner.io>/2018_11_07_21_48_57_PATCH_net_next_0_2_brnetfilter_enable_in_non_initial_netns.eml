@@ -1,0 +1,180 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:01 -0000
+Received: from icoremail.net (unknown [209.85.214.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH7aN7eJbwE1YAQ--.26526S3;
+	Wed, 07 Nov 2018 21:50:06 +0800 (CST)
+Received: from mail-pl1-f175.google.com (unknown [209.85.214.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAnC0eH7eJbPK4XAA--.6658S3;
+	Wed, 07 Nov 2018 21:49:59 +0800 (CST)
+Received: by mail-pl1-f175.google.com with SMTP id f12-v6so6710624plo.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:49:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:mime-version:content-transfer-encoding:sender
+         :precedence:list-id;
+        bh=uJ6ZT8E5/I+O1wiMOAR9lKmGCXZmgtKp4kCHVfIL2j4=;
+        b=Q5QkORX/vtetYHtExNt/9K12McPd1bTEQTDrHf8r0Z4TiqUQhwI9o/+XgYIKL556rC
+         Bdh4a7aufycVPYC1s53fzmdtvlcC/3BeLwJNMJfVDm3XB4Otldh0sMyC+J6ox55dWT45
+         3JNhN1/eSS/beUvpi09W4fmXp6k1wLcEH4ZWCLi5yv/693tDqkyWRh17bkFIjL+zwrKe
+         Stv0jhL0+4mSz3lmzbrezBE1CV4+aoKGCVLWNQvEPxoZGxpn0RamRQswHcByo824MJQ+
+         rAMigDhRCGsXzadJzQrse86LIL313B5mQlzvsspkYR7ysDYeWA7hOAM8OAchVPefnnRG
+         iGUQ==
+X-Gm-Message-State: AGRZ1gL9xzjtp8yKcv8GvryAMy9u7JoSxeWkZaQxR2bAji6gbvURStbL
+	pS2DWaujHhQt4HUFNEVmzPai3+4kymfzcmBwwCH0d1M+Az+WlpkggA==
+X-Received: by 2002:a17:902:1026:: with SMTP id b35-v6mr287788pla.283.1541598598814;
+        Wed, 07 Nov 2018 05:49:58 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5267979pjt;
+        Wed, 7 Nov 2018 05:49:58 -0800 (PST)
+X-Google-Smtp-Source: AJdET5eJ6Mk8E8EeGVZVZa+RnfeRkO3ncsER1sA0yWPGfQkFezgeTRebflaCP+hpQrucMaVl0oLJ
+X-Received: by 2002:a63:1d10:: with SMTP id d16-v6mr247414pgd.228.1541598598051;
+        Wed, 07 Nov 2018 05:49:58 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541598598; cv=none;
+        d=google.com; s=arc-20160816;
+        b=KHdCoQUdURfVErMjo9jnch9tVe/Pbnl/lnJVjvlLvAJMuxUf5oyJH8m0CfonQ0s31N
+         XdVV/rLSof7k4o22Op1CCbVocYYraHm1onj7LbFe6X2PciPD9NdMrlpxKcUm9vLTUkPb
+         tHz9lcV17C63RSbpjzA6MHVlyx+tnYzYHSr9Gu3eJkldnPjXo7V8ki0vGVm2Ies4suOy
+         hfuazC2XEnrkTaHuG/Rqh/KRIqsnupU41XioISdFAEFQNAU6Ob7QylS7QgveRSwEh2Be
+         PzIDg3mxW8bT3eQqAVysdfAG6M2OlNx7N1VJCDrAF9mDHs+mxwAs8Kv2ixxm+9MZeRVS
+         lmIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:mime-version
+         :message-id:date:subject:cc:to:from:dkim-signature;
+        bh=uJ6ZT8E5/I+O1wiMOAR9lKmGCXZmgtKp4kCHVfIL2j4=;
+        b=zKNfDwoIr61Ij1fUOOlww7uNAKemuitsQpdy4/yiRX9jhO+Ik8IA3OFaaLGIbQkATB
+         r+L2kAUx99Kx6AXtyX02wc4OjzEYiSVwpRnGw1DuWNfg3CgMjPSleMmji4Z/fIaDq7cP
+         kdI7bnZotqxrab9oX6RqhwF1mQ9+nmq5jgbhObCBaWQfZpHNZnV23dDuEcJiI6wwvzoN
+         a/K9Cx4ItMfuvA0AXhjGG4cHaO5ROXjbL9wj4tFxGZcl6p3vo4dEgkaf8x1gtY3oHMJ9
+         U4AgzWM6X/70f1pQ3PGV30iz2ud2mMg+xC/wgN1/orzsj2XpmI1WDtGwyRm3Iq1Ng80b
+         xEPw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@brauner.io header.s=google header.b=Oy8s3hhg;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id h1-v6si694770pls.281.2018.11.07.05.49.42;
+        Wed, 07 Nov 2018 05:49:58 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727759AbeKGXT7 (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:19:59 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43110 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727168AbeKGXT7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:19:59 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y3-v6so17172334wrh.10
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 05:49:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uJ6ZT8E5/I+O1wiMOAR9lKmGCXZmgtKp4kCHVfIL2j4=;
+        b=Oy8s3hhgyzVgyIiOzCyqpRA14stnzybiMKyY2OaXtZEfahTJpk0hPolFrYiv9bEl4Z
+         xBq1uj+trqf0WmQC4xTlImUrcOgRXo5FOlZwYT8EhsmZwshUskAkVQyFrU+1ZSI8gA3a
+         gFnFjkd66VKny8RO+xhfHiqJ5s+JYMREFGjsLFTvVB3VCKWiuTvcqqK2oPTiQyLTRiSu
+         tvBS+p4tMJxLI5AQzsuXR6LoSihLYmnbQrqWzn8XMfTgm+av/X7HZjOuRSiK9X5sjXaQ
+         FYZd/QoRY1YxwgPzBj0DJEGyUiIpqeOM74qzgECyjInmR1ZMt5/8M2SzMOZBBqdf6VvG
+         YbfA==
+X-Received: by 2002:adf:8361:: with SMTP id 88-v6mr303071wrd.192.1541598570442;
+        Wed, 07 Nov 2018 05:49:30 -0800 (PST)
+Received: from localhost.localdomain ([2a02:8070:8895:9700:887:8ecc:df73:24eb])
+        by smtp.gmail.com with ESMTPSA id y83-v6sm1206778wmb.20.2018.11.07.05.49.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 05:49:29 -0800 (PST)
+From: Christian Brauner <christian@brauner.io>
+To: davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, bridge@lists.linux-foundation.org
+Cc: tyhicks@canonical.com, pablo@netfilter.org,
+        kadlec@blackhole.kfki.hu, fw@strlen.de, roopa@cumulusnetworks.com,
+        nikolay@cumulusnetworks.com,
+        Christian Brauner <christian@brauner.io>
+Subject: [PATCH net-next 0/2] br_netfilter: enable in non-initial netns
+Date: Wed,  7 Nov 2018 14:48:57 +0100
+Message-Id: <20181107134859.19896-1-christian@brauner.io>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAnC0eH7eJbPK4XAA--.6658S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7CF18Cry8ur4kurW5tFWkWFg_yoW8tF4rpF
+	4S9a43Jr43Wr9Fyws7ArWxtr4fGrs5GFZ8G3s2v34fZF1UWFyUJrWSyryYvasrurZ5GFZx
+	AFWUtw4rtwn5ZF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW5GwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7V
+	AKI48JMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJrUvcSsGvfC2KfnxnUUI43ZEXa7IUOA8
+	n7UUUUU==
+
+Hey everyone,
+
+Over time I have seen multiple reports by users who want to run applications
+(Kubernetes e.g. via [1]) that require the br_netfilter module in
+non-initial network namespaces [2], [3], [4], [5] (There are more issues
+where this requirement is reported.).
+Currently, the /proc/sys/net/bridge folder is only created in the
+initial network namespace. This patch series ensures that the
+/proc/sys/net/bridge folder is available in each network namespace if
+the module is loaded and disappears from all network namespaces when the
+module is unloaded.
+The patch series also makes the sysctls:
+
+bridge-nf-call-arptables
+bridge-nf-call-ip6tables
+bridge-nf-call-iptables
+bridge-nf-filter-pppoe-tagged
+bridge-nf-filter-vlan-tagged
+bridge-nf-pass-vlan-input-dev
+
+apply per network namespace. This unblocks some use-cases where users
+would like to e.g. not do bridge filtering for bridges in a specific
+network namespace while doing so for bridges located in another network
+namespace.
+The netfilter rules are afaict already per network namespace so it
+should be safe for users to specify whether a bridge device inside their
+network namespace is supposed to go through iptables et al. or not.
+Also, this can already be done by setting an option for each individual
+bridge via Netlink. It should also be possible to do this for all
+bridges in a network namespace via sysctls.
+
+Thanks!
+Christian
+
+[1]: https://github.com/zimmertr/Bootstrap-Kubernetes-with-Ansible
+[2]: https://github.com/lxc/lxd/issues/5193
+[3]: https://discuss.linuxcontainers.org/t/bridge-nf-call-iptables-and-swap-error-on-lxd-with-kubeadm/2204
+[4]: https://github.com/lxc/lxd/issues/3306
+[5]: https://gitlab.com/gitlab-org/gitlab-runner/issues/3705
+
+Christian Brauner (2):
+  br_netfilter: add struct netns_brnf
+  br_netfilter: namespace bridge netfilter sysctls
+
+ include/net/net_namespace.h          |   3 +
+ include/net/netfilter/br_netfilter.h |   3 +-
+ include/net/netns/netfilter.h        |  16 +++
+ net/bridge/br_netfilter_hooks.c      | 166 ++++++++++++++++++---------
+ net/bridge/br_netfilter_ipv6.c       |   2 +-
+ 5 files changed, 134 insertions(+), 56 deletions(-)
+
+-- 
+2.19.1

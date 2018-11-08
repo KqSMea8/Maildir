@@ -1,0 +1,140 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:35:00 -0000
+Received: from icoremail.net (unknown [209.85.215.179])
+	by mail-app2 (Coremail) with SMTP id by_KCgC3f9HuZuNb+ClbAQ--.27187S3;
+	Thu, 08 Nov 2018 06:27:59 +0800 (CST)
+Received: from mail-pg1-f179.google.com (unknown [209.85.215.179])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAH5UDrZuNbZpIZAA--.1725S3;
+	Thu, 08 Nov 2018 06:27:55 +0800 (CST)
+Received: by mail-pg1-f179.google.com with SMTP id z10so6042188pgp.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:27:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:subject:to:cc
+         :references:from:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding:sender:precedence
+         :list-id;
+        bh=A62tAQXmtBI5NycZY1pVq4/dnVnZGCescpp3IudPZFY=;
+        b=QeeUBYB5GzifQxYdvaW9koN8FDtkSl6bvvg6GpY8f4/AaY5eZ1CXwTdhBg10mKRGEF
+         YWoOki3VJBUnzovVh89+s/mzaSH4E+rHOagsP4t4kk/PTZBsxiHvngAdSYUZ6phhCyy2
+         E9PIuDwx05FFaTttRq6u0t7XU81Qc3TUkKdfqPvcduvLpAty/+y2NC8THVWs/VYRSUsm
+         hag4BDPYnHPVPrPhJnG3z5OG6F1GSL8UCojuBTzxmXa7mP2vgPr+2paxh0rdfhYpiSOk
+         rtvV17C4VDS9bpJ0K+J07bikQpugJPPAbteLKekGTT5B2hx2Aenm5z586mLYmLiDsirz
+         rJoQ==
+X-Gm-Message-State: AGRZ1gLL2ZtTL7b18CpZRRaLdWEhcAlwOHvUbdwwop61FeEBhCd61k05
+	XsCHPLPP2/34ed4cj36ks0K+KDQmqYVnzmnCnnl6glYcPni77wGxyQ==
+X-Received: by 2002:a63:fd53:: with SMTP id m19mr1821289pgj.340.1541629674837;
+        Wed, 07 Nov 2018 14:27:54 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp77079pjt;
+        Wed, 7 Nov 2018 14:27:54 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fsjITYJPSN9TGUgUZ8qKYiAif8bwER2lBPCrRfuey1CVZ1fyC51AQn5qOQ9PNsPccc/I2l
+X-Received: by 2002:aa7:8603:: with SMTP id p3-v6mr2109598pfn.247.1541629674010;
+        Wed, 07 Nov 2018 14:27:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541629673; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Sv4/1GXJoiu0StAE+lX/DAc7/cfJbMhTCFCnigLfjxAKrs+kDF6BC0/4YYrzWEmxhd
+         FCvXYCS+Gq559o6xfdoxy+cpWQgXcE1+Cronbsg5PnqpP1BzqT6FZskKCO41qXrGJH9y
+         f8kzXA1loi8VMYPtRkYDqEOWSE2v77K3MyzQIRg1QU0mJTIBdM4sepi2+cWvqyAGrOVZ
+         MWiWLQ0m+XWfSS2pFDfIz6w8BC95fAj8EatMgf9/UQumgEauGTQyzQVfVJzY3rtaIQm/
+         D+6wJcPtoRSuVkGBmr7SUVEH/8ojLTAruuspGchY3gAE66RRypQBcFfZ/NU2ZMnpleih
+         77qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding
+         :content-language:in-reply-to:mime-version:user-agent:date
+         :message-id:from:references:cc:to:subject:dkim-signature;
+        bh=A62tAQXmtBI5NycZY1pVq4/dnVnZGCescpp3IudPZFY=;
+        b=Bik/5enP/ir3ETWFt9n2zqko+3mR0qtVv3Tu3yz1P93jmlvgw+lXixWGbU9ExEtWSd
+         WkpuyUmm0GFATC8cUB2Afskr4dwJS0JcHnEqbseEfpHiQyqGpLJRboC12PnNzVsJr2l5
+         BeW2i/nCgaPiIHO8v7wrlvk3TY8+LWhQUpQ8hk+8wBwe8Z2W342zyI7dnqnEoUCvvC3/
+         TtUL4ogcdg/nRNu6lpLBPg9oYwleumA1FRVZKGcVXdyy2TBgHzi4rbUL55RSZGaj2e0b
+         f7HTwpUeNNyqf6asnoZNT0fWuYR0QuDZg5ft43Fpx9asjOkRXtHOR3VoQ3YFHb6Okkrj
+         BMQg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@kernel-dk.20150623.gappssmtp.com header.s=20150623 header.b=BSTmX390;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id l186si1815932pge.205.2018.11.07.14.27.39;
+        Wed, 07 Nov 2018 14:27:53 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728050AbeKHH7p (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:59:45 -0500
+Received: from mail-it1-f194.google.com ([209.85.166.194]:55096 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727495AbeKHH7o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:59:44 -0500
+Received: by mail-it1-f194.google.com with SMTP id d6so25317547itl.4
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 14:27:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=A62tAQXmtBI5NycZY1pVq4/dnVnZGCescpp3IudPZFY=;
+        b=BSTmX3901VwShKnh0AT8KoiUe7I0wFyiKp9BLZATgcqM9fLifI8BniK8VU0rgrSewP
+         4ShUDuWmpKpaHDMe+IczT8URp16T6ZlxwnjCbeNo777GHJT9/B9XSP7fcBvrAs8RMU5h
+         /Xe1Qfy8XDxGY2qHgw5FyTQ1oYe/PO2GoOO6RgdLWPHiw23HH+iQR1aZ3HufTUlTFgTe
+         /jbu4kAnJWAkhzePy0nMMP7OEp4/0bCTUjAVp/cxj1xgi12kuMIkYAEYTHqVrgWNHbsL
+         RwragaUO27vg46Z/P87RpcC1bL3SWOsv9ofWYFSXZa7OecZ3V5G2n+zlYsXhqB2DIN8g
+         /GZw==
+X-Received: by 2002:a24:9045:: with SMTP id x66-v6mr1689479itd.155.1541629637640;
+        Wed, 07 Nov 2018 14:27:17 -0800 (PST)
+Received: from [192.168.1.56] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id v204-v6sm898731itb.6.2018.11.07.14.27.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Nov 2018 14:27:16 -0800 (PST)
+Subject: Re: [PATCH] MAINTAINERS: Fix remaining pointers to obsolete
+ libata.git
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+        Tejun Heo <tj@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mikael Pettersson <mikpelinux@gmail.com>
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20181107094757.31210-1-geert+renesas@glider.be>
+From: Jens Axboe <axboe@kernel.dk>
+Message-ID: <55c99084-f15f-5162-f1fa-71a74c1aef0d@kernel.dk>
+Date: Wed, 7 Nov 2018 15:27:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20181107094757.31210-1-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAH5UDrZuNbZpIZAA--.1725S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjp_UUUOs7k0a2IF6FyUM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IY64vIr41l7I0Y6sxI4wCYjI0SjxkI62AI1cAE67vIY487MxkF7I0Ew4C26cxK
+	6c8Ij28IcwCY1Ik26cxK6xAEc7vF6xCjj44lc2xSY4AK6IIF6Fylc2IjII80xcxEwVAKI4
+	8JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1lcIIF0xvEx4A2jsIE14v26r4UJVWxJr1lcIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F
+	4UJwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28IcwCF72vE77IF4wCFx2Iq
+	xVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
+	106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVCF04k26cxKx2IY
+	s7xG6r4j6FyUYxBIdaVFxhVjvjDU0xZFpf9x07bYeHDUUUUU=
+
+On 11/7/18 2:47 AM, Geert Uytterhoeven wrote:
+> libata.git no longer exists.  Replace the remaining pointers to it by
+> pointers to the block tree, which is where all libata development
+> happens now.
+
+Thanks, applied.
+
+-- 
+Jens Axboe

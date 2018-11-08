@@ -1,0 +1,236 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:34:51 -0000
+Received: from icoremail.net (unknown [209.85.214.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn35iJYeNbBQxbAQ--.27293S3;
+	Thu, 08 Nov 2018 06:04:59 +0800 (CST)
+Received: from mail-pl1-f181.google.com (unknown [209.85.214.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwCngT2HYeNbs34ZAA--.1606S3;
+	Thu, 08 Nov 2018 06:04:55 +0800 (CST)
+Received: by mail-pl1-f181.google.com with SMTP id p4-v6so6099472plo.5
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 14:04:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :thread-topic:thread-index:date:message-id:references:in-reply-to
+         :accept-language:content-language:spamdiagnosticoutput
+         :spamdiagnosticmetadata:content-transfer-encoding:mime-version
+         :sender:precedence:list-id;
+        bh=63O86WtqYE4lfiBL34hoKJ5lQTXr+NwWTlJyCQ0B74g=;
+        b=YTG0HhvaFqWAKFPIR1OsXgLMcpIufBf7Cwq0ftN/4JAGqe2HAVlIS4N3X9CsDL1HKt
+         Dwl/TQJ86i3SOeo/F7CdkvlkAfdiS3janPzYMZ3hASyv1phwBFentUjzdMUCe467ONUC
+         WvKCWIuf6Zmh0AsSooJq6JGyRnkd5dcqD8W28xNHEPTj5pBvks7jYycsn5klumzfreNr
+         utosRsSGy3VwsiRtoLGmMAd12zFZhQOANM1RiT3xw6bvtexZ3x3qD+zcpVt/0TW/tZV1
+         EjZLM0ANSVHXeavPOSFxc3VlN9nVglWJSGl5iEyJtmN5YgpS7VyQM6asXTlWf0BtMlHE
+         DHrA==
+X-Gm-Message-State: AGRZ1gJ/cqbSBUpb7ocVqPsLEwVAiktaW5ksz2ncjWRVJwmT2DO/CRXD
+	WHtt0A+V5xcdDuPie9oJxVLx83I5zV/Wl3XZZnoJWZNyLJPTk75ylg==
+X-Received: by 2002:a17:902:b598:: with SMTP id a24-v6mr2034250pls.231.1541628295060;
+        Wed, 07 Nov 2018 14:04:55 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp57274pjt;
+        Wed, 7 Nov 2018 14:04:54 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dsXQcLbINsULTnVLtwkChjADj9CSUgFtiO0IUfUwfdnf+Nk/ZlfARzKOPGHbviPAurmqo1
+X-Received: by 2002:a63:d949:: with SMTP id e9mr1755881pgj.24.1541628294369;
+        Wed, 07 Nov 2018 14:04:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541628294; cv=none;
+        d=google.com; s=arc-20160816;
+        b=NrYhwJ5sE8BL31+q0Hb/BVcshCgbKoaZWcM8qdiWzsAAQ1xuwou0MHuLj6teBL16OC
+         mLzZQYTHJm9lPoE5/fGpZ4kuCxPnf3tB/B8H2pK4qI4HSdeptCGhMZkFkA0GF+VSFywS
+         dOfdK3exNub3s2JexgGebFjPtJwF/34O+oeMB3l97OpAOzBtmMxO9nTNJobrzz4ZRsCK
+         pSLHk3jDWDErKgrDsU55nqC4PUejvNcJyNNjTItqR2jlYlH12egU92PuE4AVTJg6Naw/
+         KqeGs3um9pr56+lFfq60PZAU3htiEDnRppomPaqjVl39Py99NpoRBO+U9B6d3S8k30HC
+         rvhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:mime-version:content-transfer-encoding
+         :spamdiagnosticmetadata:spamdiagnosticoutput:content-language
+         :accept-language:in-reply-to:references:message-id:date:thread-index
+         :thread-topic:subject:cc:to:from:dkim-signature;
+        bh=63O86WtqYE4lfiBL34hoKJ5lQTXr+NwWTlJyCQ0B74g=;
+        b=ZP0ycLJIkW7CQFE/PTLSJVKQASlSZNdDKTiDPgRbSAjYa7gPXI4lwctlvvaZlydGJl
+         le+gH3B+zCXjL0GymNeVhicc56ro+mTL85+IGbEClAFng0fKvho/cYGpnfI++FJhCIWp
+         aAlVegaKKdR0Nz6olQeNflBIUdfTeqNUu+MlJT3Frwza6RlCYnscy8bY/5okjFTKjDbl
+         0QR5nmHYH4wnUpUeGJF4p3Tolvg+mz5Jxfk8VaoSK5rfqAYFKd7br5A/RGkJFIjZKi0y
+         tArdlvfUHujI4efX+y0cSI3nUCRkUc9xRN1xH+bA0RQxaJBa3/zq9e1J6nLzlwjUD6LR
+         JGUA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@CAVIUMNETWORKS.onmicrosoft.com header.s=selector1-cavium-com header.b=Ay9Ietxh;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id j19-v6si1836376pfh.63.2018.11.07.14.04.30;
+        Wed, 07 Nov 2018 14:04:54 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728158AbeKHHgQ (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Thu, 8 Nov 2018 02:36:16 -0500
+Received: from mail-eopbgr730056.outbound.protection.outlook.com ([40.107.73.56]:17664
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727945AbeKHHgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Nov 2018 02:36:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=CAVIUMNETWORKS.onmicrosoft.com; s=selector1-cavium-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=63O86WtqYE4lfiBL34hoKJ5lQTXr+NwWTlJyCQ0B74g=;
+ b=Ay9IetxhVLAOYiSsf9xRrWxuxzj5IlPoq6vpB7tAYgooCa/0NKZvdEbpR8ZO6w43H3fXP98FuZ1D2F7AHwyShWaNY8q7vcrfEd27g/FhMJfY2P9Mv9aTch8spKqlzIzqK9ZQYHji3qhCrSzL4bIhH7fyK7XTTvwHSFoHtK9zdNE=
+Received: from SN6PR07MB5326.namprd07.prod.outlook.com (52.135.105.33) by
+ SN6PR07MB5232.namprd07.prod.outlook.com (52.135.120.211) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1294.22; Wed, 7 Nov 2018 22:03:39 +0000
+Received: from SN6PR07MB5326.namprd07.prod.outlook.com
+ ([fe80::f0b9:acf9:7513:c149]) by SN6PR07MB5326.namprd07.prod.outlook.com
+ ([fe80::f0b9:acf9:7513:c149%5]) with mapi id 15.20.1294.034; Wed, 7 Nov 2018
+ 22:03:39 +0000
+From: Robert Richter <rrichter@cavium.com>
+To: Marc Zyngier <marc.zyngier@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+CC: "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        "Richter, Robert" <Robert.Richter@cavium.com>
+Subject: [PATCH 09/10] irqchip/gic-v3-its: Initialize its nodes later
+Thread-Topic: [PATCH 09/10] irqchip/gic-v3-its: Initialize its nodes later
+Thread-Index: AQHUduW9H28TYQeuq0q3ZPDCnEjlYA==
+Date: Wed, 7 Nov 2018 22:03:39 +0000
+Message-ID: <20181107220254.6116-10-rrichter@cavium.com>
+References: <20181107220254.6116-1-rrichter@cavium.com>
+In-Reply-To: <20181107220254.6116-1-rrichter@cavium.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6PR03CA0033.eurprd03.prod.outlook.com (2603:10a6:20b::46)
+ To SN6PR07MB5326.namprd07.prod.outlook.com (2603:10b6:805:73::33)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [77.180.181.154]
+x-ms-publictraffictype: Email
+x-microsoft-exchange-diagnostics: 1;SN6PR07MB5232;6:9zlO7XmWud2q5ElCgSTc6H7QS8QdKOvz+uGCp77+G5Moainp3GRPr8nGi+lXq/ri8euXahRqv2YQSZ6Zu5jm9yB6jYlsRhMouebfgd7en/e0SPOZBkKByYWEuwDO+PAlnUXvnUoXTWBudaP7bhCR5UVG6ASosTsZwkMtBKFQN1hRFjoeaOVadx+f4n+qyowMSm96S8lbZrknMdCYHms9X3ftVXXISVDpmNUzEV8GExMEjUahlNy0/AdHnGaQHwYBxwcXJHlTDDxJ+EP+gG5+iEK3HVKCsmf0KhTvYIDIsMiGjc1il13I4+fNh4CAba5lT/9anlP4P01sDlmsTzrJ1H/E4NksA3grgB+s0w0fMzQ2qqI2KJzrXzOdBgjDBYkp/8ZwpmEBlVWi4ljis0Ad1eNJUfgZCSeilFaQBJpESyEtemqm9EXa4osQ4yOITTTCVz1CM78IYIVlPDmReAexrA==;5:DqPYdv7jcxdsbzjQAVph0LeyxPcyRcJqaHp8KcfyKl/IDU7O6u95yJdEw8cRqeHuselJUQQ7/GumFqtWU6PEP3qgTCJq6F/Vr359kovEVjrNxJWvb6115luwmXvwLC7AKFcRf8Y9Ph8TxNO8lJCQccU9OmdlU0Z43p9At1ZncrQ=;7:HfPdnLNqGqtpXIstLU/zBHk7O9NjIBMJ5Jb9+f5b0r20Q+0BGnTtuh+p2W4jCId7AEO26zhLKCnx5kW5gdBGeJnGqt6ntUpsuuV+Abv0Q2XOrQwWXkOJ1KBRTQsrUQ/AHUiS8YVo58KfJa+pjtdfFw==
+x-ms-office365-filtering-correlation-id: cf6f5872-ad7c-442c-2299-08d644fcdf55
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(7020095)(4652040)(8989299)(5600074)(711020)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:SN6PR07MB5232;
+x-ms-traffictypediagnostic: SN6PR07MB5232:
+x-microsoft-antispam-prvs: <SN6PR07MB5232110758F906D6D1A55E48F1C40@SN6PR07MB5232.namprd07.prod.outlook.com>
+x-exchange-antispam-report-test: UriScan:;
+x-ms-exchange-senderadcheck: 1
+x-exchange-antispam-report-cfa-test: BCL:0;PCL:0;RULEID:(8211001083)(6040522)(2401047)(8121501046)(5005006)(93006095)(93001095)(10201501046)(3002001)(3231382)(944501410)(52105095)(148016)(149066)(150057)(6041310)(20161123564045)(20161123560045)(20161123562045)(20161123558120)(201703131423095)(201702281528075)(20161123555045)(201703061421075)(201703061406153)(201708071742011)(7699051)(76991095);SRVR:SN6PR07MB5232;BCL:0;PCL:0;RULEID:;SRVR:SN6PR07MB5232;
+x-forefront-prvs: 08497C3D99
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(39860400002)(346002)(396003)(376002)(189003)(199004)(71200400001)(7736002)(71190400001)(39060400002)(6486002)(3846002)(66066001)(6436002)(186003)(36756003)(476003)(478600001)(2616005)(53936002)(256004)(446003)(305945005)(11346002)(6512007)(54906003)(1076002)(316002)(107886003)(25786009)(110136005)(6116002)(2906002)(97736004)(4326008)(6506007)(386003)(72206003)(105586002)(99286004)(486006)(5660300001)(7416002)(8936002)(102836004)(106356001)(68736007)(8676002)(14454004)(81156014)(76176011)(81166006)(2900100001)(52116002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR07MB5232;H:SN6PR07MB5326.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: cavium.com does not designate
+ permitted sender hosts)
+x-microsoft-antispam-message-info: xDtJIv0UvoPpExeWnibemLaKr2Z27KZbicYjlqJq1VzrSfjiU2DPUHvz2h1blSKXUxJNjlq208DIXyziSwLoVPyo89doChO2PiTHhHBmZXK2yi7N02mLmfYKDRmLmXIijmpAF0jp41XP5hWkTbZhSL2aexjkXq+QT85Fn1X/nypS8N0JUEWqyRG/ivK6BFaXwuGwuqiTtj/UFbl8MrFi2m75xJy0IsFUPuvH48sTSE4Ph0Osf7m1lcN7bVMcB0FmTkA5qKCCdZDEFhIYY084KarXMMw08w08CkA4E9pwQi1NWM0QUtycWoEZNhBP+ukMNVqavsFF8kokY/iDydfl4qZFEcT7LIntmig1AkKZlHA=
+spamdiagnosticoutput: 1:99
+spamdiagnosticmetadata: NSPM
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: cavium.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf6f5872-ad7c-442c-2299-08d644fcdf55
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2018 22:03:39.4784
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 711e4ccf-2e9b-4bcf-a551-4094005b6194
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR07MB5232
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwCngT2HYeNbs34ZAA--.1606S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr1kWrW7Jw48CryxKr4rZrb_yoW8KrWUpa
+	y5X3s7Ar4fCFW8Wr4DAa1DZFy3tw1vk3y7J3y8Was7uwn0kFyDCF1rAFy5Zr1fXr4xG3W5
+	ur4FqFyUWa1UAF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvSb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwCjxxvEa2IrMxkF7I
+	0Ew4C26cxK6c8Ij28IcwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_
+	Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_Gr1j6F
+	4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI48JMxAIw28I
+	cVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+	ZwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF7vcSsGvfC2KfnxnUUI43
+	ZEXa7IUersqJUUUUU==
+
+Use an initcall to initialize its. This allows us to use the device
+framework during initialization that is up at this point. We use
+subsys_initcall() here since we need the arch to be initialized
+first. It is before pci and platform device probe where devices are
+bound to msi interrupts.
+
+Signed-off-by: Robert Richter <rrichter@cavium.com>
+---
+ drivers/irqchip/irq-gic-v3-its.c   | 3 ++-
+ drivers/irqchip/irq-gic-v3.c       | 4 ----
+ include/linux/irqchip/arm-gic-v3.h | 1 -
+ 3 files changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-=
+its.c
+index fd8561fcfdf3..13cf56c66483 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -3920,7 +3920,7 @@ int __init its_probe(struct fwnode_handle *handle, st=
+ruct rdists *rdists,
+ 	return 0;
+ }
+=20
+-int __init its_init(void)
++static int __init its_init(void)
+ {
+ 	struct its_node *its;
+ 	bool has_v4 =3D false;
+@@ -3982,3 +3982,4 @@ int __init its_init(void)
+=20
+ 	return 0;
+ }
++subsys_initcall(its_init);
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index d2942efdb6d5..01538876ad15 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -1323,8 +1323,6 @@ static int __init gic_of_init(struct device_node *nod=
+e, struct device_node *pare
+ 	if (static_branch_likely(&supports_deactivate_key))
+ 		gic_of_setup_kvm_info(node);
+=20
+-	its_init();
+-
+ 	return 0;
+=20
+ out_unmap_rdist:
+@@ -1628,8 +1626,6 @@ gic_acpi_init(struct acpi_subtable_header *header, co=
+nst unsigned long end)
+ 	if (static_branch_likely(&supports_deactivate_key))
+ 		gic_acpi_setup_kvm_info();
+=20
+-	its_init();
+-
+ 	return 0;
+=20
+ out_fwhandle_free:
+diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm=
+-gic-v3.h
+index f4348fa4260a..885d5a4e239a 100644
+--- a/include/linux/irqchip/arm-gic-v3.h
++++ b/include/linux/irqchip/arm-gic-v3.h
+@@ -604,7 +604,6 @@ struct irq_domain;
+ struct fwnode_handle;
+ int its_probe(struct fwnode_handle *handle, struct rdists *rdists,
+ 	      struct irq_domain *domain);
+-int its_init(void);
+ int mbi_init(struct fwnode_handle *fwnode, struct irq_domain *parent);
+=20
+ static inline bool gic_enable_sre(void)
+--=20
+2.11.0

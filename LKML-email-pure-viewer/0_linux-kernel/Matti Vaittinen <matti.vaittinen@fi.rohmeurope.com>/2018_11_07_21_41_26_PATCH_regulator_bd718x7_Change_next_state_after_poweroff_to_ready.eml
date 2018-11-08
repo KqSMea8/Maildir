@@ -1,0 +1,172 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:31:59 -0000
+Received: from icoremail.net (unknown [209.85.215.180])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3_2On6+Jbk0BYAQ--.25950S3;
+	Wed, 07 Nov 2018 21:42:00 +0800 (CST)
+Received: from mail-pg1-f180.google.com (unknown [209.85.215.180])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3G0em6+JbW6QXAA--.12765S3;
+	Wed, 07 Nov 2018 21:41:58 +0800 (CST)
+Received: by mail-pg1-f180.google.com with SMTP id r9-v6so7340665pgv.6
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 05:41:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent:sender:precedence:list-id;
+        bh=hUw/f3pfAWGmgfsftKGiw4xWCDUlJ7/A3a2ZWIb2gf4=;
+        b=hskwWAqxDGPnan74Fx2EOQUsVgIF8xH1OLJJVIKQN5l39tpq1YBu8Ubv9LPD+p1Qmu
+         LOHFZKfLxqrDxyWmmEXXYhPxJbOBj4auDi6s7Wb3/7Ql6X/r48kvanJnCkmNtRoFWLtI
+         /wkDPAJjKrupP3LVzuwm5UV2at1sYYTgV30EIPb8zUnN6b1Al1QVInq+5ga3pkjtu2nJ
+         l1OmkygPjRfNSAxE5AF52tHxo0f2ZndreFnfgEaHO5FbEua7XH6jSOQuXy3ufDcWmuFn
+         hgOZ+GWjPAK/WCC4smpmMRcnNkBkupK2ivdQVgbiQ0d3MrBgWum9Ki/pQ4mJtSs7r8+Z
+         xvPw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gKgQXarZH4JqM4JMl9ALoz2bzqhecAPX5ZdlmHXa55ZWt0UD1F9
+	/VdvMOxhKfnGT1xrC7SzxsF/HOeEv1/vp2tnyleRSdTUl0s3ygGo6Q==
+X-Received: by 2002:a62:3301:: with SMTP id z1-v6mr249969pfz.85.1541598117920;
+        Wed, 07 Nov 2018 05:41:57 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5259726pjt;
+        Wed, 7 Nov 2018 05:41:57 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fe9SOIzMu74IAN1SAHoGAi1c7LOxd7gW6N7CUlTjWJMqNY4trqfWvb47uEA8opCUFzOxrG
+X-Received: by 2002:a17:902:d24:: with SMTP id 33-v6mr254179plu.319.1541598117224;
+        Wed, 07 Nov 2018 05:41:57 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541598117; cv=none;
+        d=google.com; s=arc-20160816;
+        b=ZkURt9xvNqChYZ2bnw4iN+LjQPsTo0Z6ge523XpQHRCE5sasOgYw//05d/kSR98tr3
+         ucASAsGTtEQT4iFo9vr5xh/P6Gv6ukwSM+GmgUckBBQAFCiouzHf48gnvsV9YFjygoaS
+         ZGR+FHM826qTjcemvemtaIWArCIrL6wT2PK6uPWbf00XoplqXBbwKDibHLcKc5hFYjTj
+         0jo/20LAFn9J/PxjqT9jTqSZWWbWXG4VSJeVjW6TqGPFv9GWpp0NlCNFYHSKH208mLGp
+         AOA5xM90szmE+YXCKL7VAfe6wxiihALUAQR4Oa4dlYnOQEtIDnnQA3xt5rIpM8iDSFDY
+         ZedQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:user-agent:content-disposition
+         :mime-version:message-id:subject:cc:to:from:date;
+        bh=hUw/f3pfAWGmgfsftKGiw4xWCDUlJ7/A3a2ZWIb2gf4=;
+        b=VAJV1uXqIG0wh4333z9wkFUU1UPoHnkSgZXTZXqYkeclwJtRcTm9CUCFUMVh8O7A5L
+         EQRMwUTfjrO5g+L+UUGA1x29+n7WLmX8vwXRB35QoxdmjtOGBZVF/qRQd1RSbRatRFCe
+         +b/z3zLospFcPvIG0So9/XKNtO60zmESJTHCd5ci1wbqmyNi2gc4wdSUhku+4DAdIbRk
+         z5rmxDoST5vEwEifivFv4GECE8es5Aa/aaba7M/Zwrws6YdojfjP3Oh8v30VFaWs4FUE
+         xZE716nBl52jMbkKBFyp3kDT7VmOuD8FPuU8zPLrFq8DOB8IQMCBWJoEh+sk1Zj6NBnV
+         eeuw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id 194si495528pgg.519.2018.11.07.05.41.41;
+        Wed, 07 Nov 2018 05:41:57 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1727286AbeKGXMC (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 18:12:02 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43093 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726762AbeKGXMC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 18:12:02 -0500
+Received: by mail-lf1-f68.google.com with SMTP id u18so11470777lff.10
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 05:41:36 -0800 (PST)
+X-Received: by 2002:a19:9904:: with SMTP id b4mr143476lfe.95.1541598095317;
+        Wed, 07 Nov 2018 05:41:35 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id c5-v6sm120753lja.62.2018.11.07.05.41.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Nov 2018 05:41:34 -0800 (PST)
+Date: Wed, 7 Nov 2018 15:41:26 +0200
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, mazziesaccount@gmail.com
+Cc: linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com,
+        mikko.mutanen@fi.rohmeurope.com
+Subject: [PATCH] regulator: bd718x7: Change next state after poweroff to ready
+Message-ID: <20181107134126.GA4030@localhost.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.2 (2017-12-15)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3G0em6+JbW6QXAA--.12765S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cr17AFW8Kry3WF43Cr4rXwb_yoW8Kr45pr
+	ZxArsxCw4ktF1fAa1fKa1I9as8W3ZayasrC3yIgw4F9a15XF97Jrn8trWrCFn7CrykJr4Y
+	yFy3Zr18CFWDuFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP0b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vE
+	x4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzx
+	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	GVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE44CYbxCE4x80FwCY02Av
+	z4vEIxC_Xr4lc2IjII80xcxEwVAKI48JMxvI42IY6xIIjxv20xvE14v26r4j6ryUMxvI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lcIIF0xvEx4A2jsIE14v26rxl6s0DMxvI42IY
+	6I8E87Iv6xkF7I0E14v26rxl6s0DMxAIw28IcxkI7VAKI48JMxAIw28IcVAKzI0EY4vE52
+	x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
+	xGrwCI42IY6xAIw20EY4v20xvaj40_JFI_GrUvcSsGvfC2KfnxnUUI43ZEXa7IUOQID7UU
+	UUU==
+
+BD71837 and BD71847 have a HW functionality which leave power
+rails OFF after powerof state:
+- if they have been controlled by SW.
+- if state transition from poweroff is done to SNVS
+
+BD71837 can after reset transition from power-off to SNVS or
+READY state depending on reset reason. By default only wathcdog
+reset changes state from poweroff to ready. Change PMIC
+configuration to always transition to READY in order to avoid
+crucial power rails being OFF after reset.
+
+If SNVS is required the crucial power rails should not be
+controlled by SW - eg corresponding regulator control register
+should have SEL bit kept zero. Currently the driver assumes all
+regulators to be controlled by SW so it sets all SEL bits to 1.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ drivers/regulator/bd718x7-regulator.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/drivers/regulator/bd718x7-regulator.c b/drivers/regulator/bd718x7-regulator.c
+index 3a47e0372e77..63669f9038cc 100644
+--- a/drivers/regulator/bd718x7-regulator.c
++++ b/drivers/regulator/bd718x7-regulator.c
+@@ -1053,6 +1053,29 @@ static int bd718xx_probe(struct platform_device *pdev)
+ 			BD718XX_REG_REGLOCK);
+ 	}
+ 
++	/* At poweroff transition PMIC HW disables EN bit for regulators but
++	 * leaves SEL bit untouched. So if state transition from POWEROFF
++	 * is done to SNVS - then all power rails controlled by SW (having
++	 * SEL bit set) stay disabled as EN is cleared. This may result boot
++	 * failure if any crucial systems are powered by these rails.
++	 *
++	 * Change the next stage from poweroff to be READY instead of SNVS
++	 * for all reset types because OTP loading at READY will clear SEL
++	 * bit allowing HW defaults for power rails to be used
++	 */
++	err = regmap_update_bits(mfd->regmap, BD718XX_REG_TRANS_COND1,
++				 BD718XX_ON_REQ_POWEROFF_MASK |
++				 BD718XX_SWRESET_POWEROFF_MASK |
++				 BD718XX_WDOG_POWEROFF_MASK |
++				 BD718XX_KEY_L_POWEROFF_MASK,
++				 BD718XX_POWOFF_TO_RDY);
++	if (err) {
++		dev_err(&pdev->dev, "Failed to change reset target\n");
++		goto err;
++	} else {
++		dev_dbg(&pdev->dev, "Changed all resets from SVNS to READY\n");
++	}
++
+ 	for (i = 0; i < pmic_regulators[mfd->chip_type].r_amount; i++) {
+ 
+ 		const struct regulator_desc *desc;
+-- 
+2.14.3
+

@@ -1,0 +1,163 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:15 -0000
+Received: from icoremail.net (unknown [209.85.210.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv94P_eJbyaZYAQ--.26617S3;
+	Wed, 07 Nov 2018 22:56:18 +0800 (CST)
+Received: from mail-pf1-f175.google.com (unknown [209.85.210.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwBHK0cL_eJbwO4XAA--.616S3;
+	Wed, 07 Nov 2018 22:56:11 +0800 (CST)
+Received: by mail-pf1-f175.google.com with SMTP id v9-v6so5498974pff.2
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:56:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:sender:precedence:list-id;
+        bh=Si/L+aKbHRPfmPtIIt65UmaAers0MBMp/4VW44YjVBQ=;
+        b=L0Yj9Wle97BGdgzpxcaAVCkExtF9waYKBh3t71/q89dSl1lMgNf0oxR4hTu79SrGWg
+         NnCgMexY/CmL2pPoNYqjzVZJ8zlw64HLwF6OOnpoeAMK0a8kzSrVj8YKvlsYswGMFg/r
+         E45IhVljKkWadu3UDYm2XB/zwQbJXhJ1a6IDvXbX6TtviiPtbalNThKEWYIxnG537oSk
+         AiOrFfBiVctThtWmjY2HbxbwYKjDnP93SpntLcW7kcy4er6rkphXmt9RkojZ8DJt0c59
+         vC0AfsPAAtRv7uS3zvoNWpacr4vQEv5Hc8E1brKe4ix4Lv0CJLhpQnuVeXiZJjusDUpZ
+         sYqQ==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJsB9IdLif7gB5aOQz3JVwqxJ5lVvCLYHjPHTiNjbeaDWBajEMi
+	K326Tz+2o+ui/r8uchdOhwu7INDJqk9VDhVDribs6K7H7565Eeos5w==
+X-Received: by 2002:a62:5e83:: with SMTP id s125-v6mr523013pfb.232.1541602571248;
+        Wed, 07 Nov 2018 06:56:11 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5344837pjt;
+        Wed, 7 Nov 2018 06:56:10 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cgC8Mxt2roe3AwPCf4YNn045+nnOp4kbLUuFRZIoBBVSWBcsLTFGYDIWBn7UW1yI2M8WYD
+X-Received: by 2002:a62:b802:: with SMTP id p2-v6mr516432pfe.1.1541602570537;
+        Wed, 07 Nov 2018 06:56:10 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541602570; cv=none;
+        d=google.com; s=arc-20160816;
+        b=DWl5cHWGNtuevm6PtVApI+6BH1lrSzMIcgPWTfEabBGMTofQkYMi5/H9hYmzQGqath
+         +nZIo02m+xxlaTdlKk8EavYHkt+FLQ4fK2zs21Uke+7LUOfa3c9ZNNrxY8qMe9EQsmyo
+         dPFHTR9LtDxoyASYNoEorj2ful9PaIfbGnW44pzuXb8I7LOUTbkL2OIayWmETEoXv7+h
+         fU/eIp+QPirUlZ5YgqI7vw+OUhq0+49dxtDHPDXM/0atNc7dPl/dOR+FR8zjgKQ6oAC4
+         dbVDul1pivu7itJZfJZ3tjAjDLVE3WSm6U8OSAFkf9sw14mzLJ1W9MENT7KV0eIYmLW/
+         qCqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version;
+        bh=Si/L+aKbHRPfmPtIIt65UmaAers0MBMp/4VW44YjVBQ=;
+        b=dtsrip2ig1cerT6BHYJsTW1RX/bmGMpUCYDioHC1j9wd/ro0Q/k6pbRIFu7+sfIpDu
+         BlcgilP033HLYU+Bx5YB1VpOE+2CjlfJVBBRCsQKgebDXyWTSQlgYT0jsxzUGGZuhKrw
+         vJIPO7HxbhrGTORiMqbd3bF2fRga+bsNqZN/VZmes1hjJbjop+sC4h63EwuEu8G7FBuo
+         8PW6lQytsYmnmoDyxc5RZ/jc7dbU6faeEVF/HXKO7MWlRf1SMxGR9Td+8UBV1ZrB5ruS
+         bbM3stiwHIdO42r7rUfKV5Ed2CJ0Z7am6ADgX3ThePeSyS3IM7H5TIEDBVukzMdBIntM
+         s2xg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id u9-v6si870067pls.150.2018.11.07.06.55.55;
+        Wed, 07 Nov 2018 06:56:10 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S2387534AbeKHA0W (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:26:22 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41574 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727203AbeKHA0V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:26:21 -0500
+Received: by mail-qk1-f195.google.com with SMTP id 189so21203282qkj.8;
+        Wed, 07 Nov 2018 06:55:39 -0800 (PST)
+X-Received: by 2002:a37:a3c6:: with SMTP id m189mr500468qke.173.1541602538796;
+ Wed, 07 Nov 2018 06:55:38 -0800 (PST)
+MIME-Version: 1.0
+References: <20181107003250.5832-1-elder@linaro.org> <20181107003250.5832-11-elder@linaro.org>
+In-Reply-To: <20181107003250.5832-11-elder@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Wed, 7 Nov 2018 15:55:22 +0100
+Message-ID: <CAK8P3a0nkfwFCCVHaTJ+kJGWxO+qFTzTLnRgB-NG0AyMEsv3bA@mail.gmail.com>
+Subject: Re: [RFC PATCH 10/12] soc: qcom: ipa: data path
+To: Alex Elder <elder@linaro.org>
+Cc: David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Networking <netdev@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-soc@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        syadagir@codeaurora.org, mjavid@codeaurora.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwBHK0cL_eJbwO4XAA--.616S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7trykCr1rtr48uw15GF48Zwb_yoW8ZF13pF
+	WfCa1DCr4DAF10k347Xa18Ar1Syrs5Zr43Gr1rt34jywnIgFnY9F13tayYqanxW39Yg34j
+	qw1Yva1UWw1qk3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPjb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxE
+	wVCI4VW5XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lcIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07
+	x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
+	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI4
+	8JMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCbIYCTnIWIevJa73UjIFyTuYvjxUQrHUDUUU
+	U
+
+On Wed, Nov 7, 2018 at 1:33 AM Alex Elder <elder@linaro.org> wrote:
+>
+> This patch contains "ipa_dp.c", which includes the bulk of the data
+> path code.  There is an overview in the code of how things operate,
+> but there are already plans to rework this portion of the driver.
+>
+> In particular:
+>   - Interrupt handling will be replaced with a threaded interrupt
+>     handler.  Currently handling occurs in a combination of
+>     interrupt and workqueue context, and this requires locking
+>     and atomic operations for proper synchronization.
+
+You probably don't want to use just a threaded IRQ handler to
+start the poll function, that would still require an extra indirection.
+
+However, you can probably use the top half of the threaded
+handler to request the poll function if necessary but use
+the bottom half for anything that does not go through poll.
+
+>   - Currently, only receive endpoints use NAPI.  Transmit
+>     completion interrupts are disabled, and are handled in batches
+>     by periodically scheduling an interrupting no-op request.
+>     The plan is to arrange for transmit requests to generate
+>     interrupts, and their completion will be processed with other
+>     completions in the NAPI poll function.  This will also allow
+>     accurate feedback about packet sojourn time to be provided to
+>     queue limiting mechanisms.
+
+Right, that is definitely required here. I also had a look at
+the gsi_channel_queue() function, which sits in the middle of
+the transmit function and is rather unoptimized. I'd suggest moving
+that into the caller so we can see what is going on, and then
+optimizing it from there.
+
+>   - Not all receive endpoints use NAPI.  The plan is for *all*
+>     endpoints to use NAPI.  And because all endpoints share a
+>     common GSI interrupt, a single NAPI structure will used to
+>     managing the processing for all completions on all endpoints.
+>   - Receive buffers are posted to the hardware by a workqueue
+>     function.  Instead, the plan is to have this done by the
+>     NAPI poll routine.
+
+Makes sense, yes.
+
+      Arnd

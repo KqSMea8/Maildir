@@ -1,0 +1,171 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:49 -0000
+Received: from icoremail.net (unknown [209.85.215.175])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnX9+mNuNbUhJaAQ--.26983S3;
+	Thu, 08 Nov 2018 03:01:58 +0800 (CST)
+Received: from mail-pg1-f175.google.com (unknown [209.85.215.175])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwAX_kmjNuNbIe8YAA--.1057S3;
+	Thu, 08 Nov 2018 03:01:55 +0800 (CST)
+Received: by mail-pg1-f175.google.com with SMTP id z10so5824575pgp.7
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 11:01:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :mime-version:date:message-id:subject:from:to
+         :content-transfer-encoding:sender:precedence:list-id;
+        bh=WcFTKclafqKHvD5XX8AFxeH8l3c61ghKK/bFBxMd+tY=;
+        b=BEo9OwfMndjyk2IZ/I9ZccCGLbdeW707hgoWmERoSEHBHCqdkEC6St78xrlsrtogFs
+         EQriJxs/lAKIooUXtEhmA5Le/+3dyOfx8A7YF8Jjk35uqsfoE9RFDnqFqJCnhlw6W0EG
+         k7lpRNnPtRZV9URzfVK4oePuTeo04pSkLrqkRqhEce/AnJ44ieW2QT3xzrJkwnGI044C
+         zeWhqyOBKWiDnGHcvVoQLF027LhUcehN3JnAQhC0nb9C7bExfxLGE1hE71o2h0XJ0Nyp
+         0Kw6keUSY2oUbo8MlffELgV4zCoSrFuiw3rSy5dnu3iUxFQ7VSlyUA3Gp8k0sKQ1JltM
+         OR/Q==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=appspotmail.com
+X-Gm-Message-State: AGRZ1gKzML+T6Nkqzg3xqViAydCxnd6mEyeM3ezVwLfTFcrxrvAt1LDy
+	LbWusc7xigMoCTZu6ymuUQH6okpiMJ+obMFHXD7438JxtJUumjQbEw==
+X-Received: by 2002:aa7:87d0:: with SMTP id i16-v6mr1422914pfo.20.1541617315313;
+        Wed, 07 Nov 2018 11:01:55 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5620534pjt;
+        Wed, 7 Nov 2018 11:01:54 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cpl+j5Ck6gEscQfMyOyCR3nHbAOxOhE8rGzrEPABhCZFBVDRpUe1k0YEv0GR7g0YoYQBSb
+X-Received: by 2002:a63:fa46:: with SMTP id g6mr1231210pgk.18.1541617314266;
+        Wed, 07 Nov 2018 11:01:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541617314; cv=none;
+        d=google.com; s=arc-20160816;
+        b=D/JVbzGiJ9PZbWLUon5gc0/+JCIdml0SVYlcy90QKg8rp5yjJ+CCNRSs12vRQMouHY
+         GHvLE0KJP5CEkcg3DVbEA8zjF3p8tEtU2uKtbHn6ZV4B0udHDO+TAgQ4euvASUpFR76X
+         dPZaNC35dKEda4jzNEnJeRTljXDme3YkD8AT3baL0dgRjM/VqZXfoMtPMb3c0jvSZ4zz
+         TyCo2Ia1Xyz01ZesfY9xcisM1oE3IfaZSF9p8yLfVwpzqRzTR0caPwqF5zZJ4y60YOeN
+         b0GqVhu9JbXvonrKaH5D56Kyo4JPGi51c+Oc0fdIvEHiAY2lvJ7XVV3VanriIO9Ql0JR
+         YG9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:content-transfer-encoding:to:from:subject
+         :message-id:date:mime-version;
+        bh=WcFTKclafqKHvD5XX8AFxeH8l3c61ghKK/bFBxMd+tY=;
+        b=iYcAxgLs/8/wFI8SsTTzDgG59z8h7GPgg61PMiI9i71uJYlBUoAD5kv3AXnV2IK7E7
+         +nQlYIsnSKESBnvfowkXggcS04a5Dj+BIZyJgI/v+uzWCD/msprMzhIp9OJR/QR5phwX
+         qGAq0WDYrYKvVL8HptCAfzKLMn0OUb6ndYbpJjleJkmjlQQ4SE7HMKSXRUJXLI0yTxv2
+         pODFqlgukCAFbMGmXd8JGkuLsJ9fGonqEDBba4ax0Bn98KMJ17KYV2aYAhlsnWmWXl2n
+         2aCuHNZhhKdRuBlF+TlkqJspYE7qmYjKz0zjTMoT+MZi9hS/MSKw5OSShYCsnQxGOTiL
+         9kUQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=appspotmail.com
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id e69-v6si1544178pfh.147.2018.11.07.11.01.38;
+        Wed, 07 Nov 2018 11:01:54 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1729082AbeKHEbp (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 23:31:45 -0500
+Received: from mail-it1-f199.google.com ([209.85.166.199]:41261 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbeKHEbo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 23:31:44 -0500
+Received: by mail-it1-f199.google.com with SMTP id s195-v6so3746832itc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Nov 2018 11:00:04 -0800 (PST)
+MIME-Version: 1.0
+X-Received: by 2002:a02:4d44:: with SMTP id l65-v6mr1102124jab.6.1541617204454;
+ Wed, 07 Nov 2018 11:00:04 -0800 (PST)
+Date: Wed, 07 Nov 2018 11:00:04 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d9f094057a17b97b@google.com>
+Subject: WARNING in rollback_registered_many (2)
+From: syzbot <syzbot+40918e4d826fb2ff9b96@syzkaller.appspotmail.com>
+To: avagin@virtuozzo.com, davem@davemloft.net, ebiederm@xmission.com,
+        edumazet@google.com, ktkhai@virtuozzo.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, tyhicks@canonical.com,
+        willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: base64
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwAX_kmjNuNbIe8YAA--.1057S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxJFWDWFW3GFWftFyxWFy8Krg_yoW5ur47pF
+	W3Ka98GrW0qw42yrW0q3WUKFyrCr93Aay5WFZ7Xw1Fka13Kr1UGF92yFW7WrWDAr1rKa43
+	Jas8Zw4vqw1kXaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUJmb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa7VCE64xvF2
+	IEb7IF0Fy264xvF2IEb7IF0Fy264kE64k0F2IE7I0Y6sxI4wAac4AC62xK8xCEY4vEwIxC
+	4wAac4AC6c804VACYs8I8VAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4
+	xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWx
+	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFcxC0VAYjxAxZF0Ew4CEw7xC0w
+	ACY4xI67k04243AVC20s07Mx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkFs20EY4vE
+	44CYbxCE4x80FwCY02Avz4vEIxC_WwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcV
+	AFwI0_Gr0_Xr1lcIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAF
+	wI0_Gr1j6F4UJwCYIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UMxAIw28IcxkI7VAKI4
+	8JMxAIw28IcVAKzI0EY4vE52x082I5MxCjnVCjjxCrMxC20s026xCaFVCjc4AY6r1j6r4U
+	MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
+	AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_Zr1l6VACY4xI
+	67k04243AbIYCTnIWIevJa73UjIFyTuYvjxUdFoGDUUUU
+
+SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
+bW1pdDogICAgMDQyY2I1NjQ3ODE1IG5ldDogcGh5OiBBbGxvdyBCQ001NDYxNlMgUEhZIHRvIHNl
+dHVwIGludGVybi4uDQpnaXQgdHJlZTogICAgICAgbmV0DQpjb25zb2xlIG91dHB1dDogaHR0cHM6
+Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9sb2cudHh0P3g9MTVjMDEwMmI0MDAwMDANCmtlcm5l
+bCBjb25maWc6ICBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94Ly5jb25maWc/eD04ZjU1
+OWZlZTJmYzMzNzVhDQpkYXNoYm9hcmQgbGluazogaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5j
+b20vYnVnP2V4dGlkPTQwOTE4ZTRkODI2ZmIyZmY5Yjk2DQpjb21waWxlcjogICAgICAgZ2NjIChH
+Q0MpIDguMC4xIDIwMTgwNDEzIChleHBlcmltZW50YWwpDQoNClVuZm9ydHVuYXRlbHksIEkgZG9u
+J3QgaGF2ZSBhbnkgcmVwcm9kdWNlciBmb3IgdGhpcyBjcmFzaCB5ZXQuDQoNCklNUE9SVEFOVDog
+aWYgeW91IGZpeCB0aGUgYnVnLCBwbGVhc2UgYWRkIHRoZSBmb2xsb3dpbmcgdGFnIHRvIHRoZSBj
+b21taXQ6DQpSZXBvcnRlZC1ieTogc3l6Ym90KzQwOTE4ZTRkODI2ZmIyZmY5Yjk2QHN5emthbGxl
+ci5hcHBzcG90bWFpbC5jb20NCg0KZGV2aWNlIGJyaWRnZV9zbGF2ZV8wIGxlZnQgcHJvbWlzY3Vv
+dXMgbW9kZQ0K77+977+9OiBwb3J0IDEoYnJpZGdlX3NsYXZlXzApIGVudGVyZWQgZGlzYWJsZWQg
+c3RhdGUNCmJvbmQyICh1bnJlZ2lzdGVyaW5nKTogUmVsZWFzZWQgYWxsIHNsYXZlcw0KYm9uZDEg
+KHVucmVnaXN0ZXJpbmcpOiBSZWxlYXNlZCBhbGwgc2xhdmVzDQpib25kMCAodW5yZWdpc3Rlcmlu
+Zyk6IFJlbGVhc2VkIGFsbCBzbGF2ZXMNCldBUk5JTkc6IENQVTogMSBQSUQ6IDk3NDggYXQgbmV0
+L2NvcmUvZGV2LmM6ODAyMiAgDQpyb2xsYmFja19yZWdpc3RlcmVkX21hbnkrMHhlY2EvMHgxMjUw
+IG5ldC9jb3JlL2Rldi5jOjgwMjINCktlcm5lbCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBwYW5pY19v
+bl93YXJuIHNldCAuLi4NCkNQVTogMSBQSUQ6IDk3NDggQ29tbToga3dvcmtlci91NDo1IE5vdCB0
+YWludGVkIDQuMjAuMC1yYzErICMxNzQNCkhhcmR3YXJlIG5hbWU6IEdvb2dsZSBHb29nbGUgQ29t
+cHV0ZSBFbmdpbmUvR29vZ2xlIENvbXB1dGUgRW5naW5lLCBCSU9TICANCkdvb2dsZSAwMS8wMS8y
+MDExDQpXb3JrcXVldWU6IG5ldG5zIGNsZWFudXBfbmV0DQpDYWxsIFRyYWNlOg0KICBfX2R1bXBf
+c3RhY2sgbGliL2R1bXBfc3RhY2suYzo3NyBbaW5saW5lXQ0KICBkdW1wX3N0YWNrKzB4MjQ0LzB4
+MzlkIGxpYi9kdW1wX3N0YWNrLmM6MTEzDQogIHBhbmljKzB4MmFkLzB4NTVjIGtlcm5lbC9wYW5p
+Yy5jOjE4OA0KICBfX3dhcm4uY29sZC44KzB4MjAvMHg0NSBrZXJuZWwvcGFuaWMuYzo1NDANCiAg
+cmVwb3J0X2J1ZysweDI1NC8weDJkMCBsaWIvYnVnLmM6MTg2DQogIGZpeHVwX2J1ZyBhcmNoL3g4
+Ni9rZXJuZWwvdHJhcHMuYzoxNzggW2lubGluZV0NCiAgZG9fZXJyb3JfdHJhcCsweDExYi8weDIw
+MCBhcmNoL3g4Ni9rZXJuZWwvdHJhcHMuYzoyNzENCiAgZG9faW52YWxpZF9vcCsweDM2LzB4NDAg
+YXJjaC94ODYva2VybmVsL3RyYXBzLmM6MjkwDQogIGludmFsaWRfb3ArMHgxNC8weDIwIGFyY2gv
+eDg2L2VudHJ5L2VudHJ5XzY0LlM6OTY5DQpSSVA6IDAwMTA6cm9sbGJhY2tfcmVnaXN0ZXJlZF9t
+YW55KzB4ZWNhLzB4MTI1MCBuZXQvY29yZS9kZXYuYzo4MDIyDQpDb2RlOiA1NyAxOSAwMCAwMCA0
+OCBjNyBjNiBlMCAwMSBiYiA4OCA0OCBjNyBjNyAyMCAwMiBiYiA4OCBjNiAwNSBlYSAyZSBlZCAg
+DQowMyAwMSBlOCBlMiBjMCAyNCBmYiAwZiAwYiBlOSBhNiBmOSBmZiBmZiBlOCAwNiA1ZiA1YiBm
+YiA8MGY+IDBiIGU5IDdiIGY5ICANCmZmIGZmIGU4IGZhIDVlIDViIGZiIDBmIDBiIGU5IGVhIGY5
+IGZmIGZmIGU4IGVlIDVlDQpSU1A6IDAwMTg6ZmZmZjg4MDFiYmMxNzA1OCBFRkxBR1M6IDAwMDEw
+MjkzDQpSQVg6IGZmZmY4ODAxODc4NDgyODAgUkJYOiBmZmZmODgwMTkyYzMxMjQwIFJDWDogZmZm
+ZmZmZmY4NjI0MjUzMw0KUkRYOiAwMDAwMDAwMDAwMDAwMDAwIFJTSTogZmZmZmZmZmY4NjI0MmJi
+YSBSREk6IDAwMDAwMDAwMDAwMDAwMDENClJCUDogZmZmZjg4MDFiYmMxNzJhMCBSMDg6IGZmZmY4
+ODAxODc4NDgyODAgUjA5OiBmZmZmZmJmZmYxM2RlZTYwDQpSMTA6IGZmZmZmYmZmZjEzZGVlNjAg
+UjExOiBmZmZmZmZmZjg5ZWY3MzA3IFIxMjogZGZmZmZjMDAwMDAwMDAwMA0KUjEzOiAwMDAwMDAw
+MDAwMDAwMDAxIFIxNDogZmZmZmZmZmY4NDg4OTMwMCBSMTU6IGZmZmY4ODAxYmJjMTcxMzgNCiAg
+dW5yZWdpc3Rlcl9uZXRkZXZpY2VfbWFueSsweGZhLzB4NGMwIG5ldC9jb3JlL2Rldi5jOjkxMDcN
+CiAgZGVmYXVsdF9kZXZpY2VfZXhpdF9iYXRjaCsweDQzYS8weDU0MCBuZXQvY29yZS9kZXYuYzo5
+NTc2DQogIG9wc19leGl0X2xpc3QuaXNyYS41KzB4MTA1LzB4MTYwIG5ldC9jb3JlL25ldF9uYW1l
+c3BhY2UuYzoxNTYNCiAgY2xlYW51cF9uZXQrMHg1NTUvMHhiMTAgbmV0L2NvcmUvbmV0X25hbWVz
+cGFjZS5jOjU1MQ0KICBwcm9jZXNzX29uZV93b3JrKzB4YzkwLzB4MWM0MCBrZXJuZWwvd29ya3F1
+ZXVlLmM6MjE1Mw0KICB3b3JrZXJfdGhyZWFkKzB4MTdmLzB4MTM5MCBrZXJuZWwvd29ya3F1ZXVl
+LmM6MjI5Ng0KICBrdGhyZWFkKzB4MzVhLzB4NDQwIGtlcm5lbC9rdGhyZWFkLmM6MjQ2DQogIHJl
+dF9mcm9tX2ZvcmsrMHgzYS8weDUwIGFyY2gveDg2L2VudHJ5L2VudHJ5XzY0LlM6MzUyDQpLZXJu
+ZWwgT2Zmc2V0OiBkaXNhYmxlZA0KUmVib290aW5nIGluIDg2NDAwIHNlY29uZHMuLg0KDQoNCi0t
+LQ0KVGhpcyBidWcgaXMgZ2VuZXJhdGVkIGJ5IGEgYm90LiBJdCBtYXkgY29udGFpbiBlcnJvcnMu
+DQpTZWUgaHR0cHM6Ly9nb28uZ2wvdHBzbUVKIGZvciBtb3JlIGluZm9ybWF0aW9uIGFib3V0IHN5
+emJvdC4NCnN5emJvdCBlbmdpbmVlcnMgY2FuIGJlIHJlYWNoZWQgYXQgc3l6a2FsbGVyQGdvb2ds
+ZWdyb3Vwcy5jb20uDQoNCnN5emJvdCB3aWxsIGtlZXAgdHJhY2sgb2YgdGhpcyBidWcgcmVwb3J0
+LiBTZWU6DQpodHRwczovL2dvby5nbC90cHNtRUojYnVnLXN0YXR1cy10cmFja2luZyBmb3IgaG93
+IHRvIGNvbW11bmljYXRlIHdpdGggIA0Kc3l6Ym90Lg0K

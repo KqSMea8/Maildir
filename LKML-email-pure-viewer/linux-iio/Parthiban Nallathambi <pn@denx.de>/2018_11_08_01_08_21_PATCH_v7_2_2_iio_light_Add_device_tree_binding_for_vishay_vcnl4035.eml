@@ -1,0 +1,180 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:33:12 -0000
+Received: from icoremail.net (unknown [209.85.214.181])
+	by mail-app2 (Coremail) with SMTP id by_KCgCn35iAHeNbJXJZAQ--.26726S3;
+	Thu, 08 Nov 2018 01:14:41 +0800 (CST)
+Received: from mail-pl1-f181.google.com (unknown [209.85.214.181])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwDnyERIHONbnngYAA--.482S3;
+	Thu, 08 Nov 2018 01:09:28 +0800 (CST)
+Received: by mail-pl1-f181.google.com with SMTP id s5-v6so8121128plq.11
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 09:09:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-original-authentication-results:x-gm-message-state:delivered-to
+         :from:to:cc:subject:date:message-id:in-reply-to:references:sender
+         :precedence:list-id;
+        bh=5rruz3MmNy/luI1ZrQJOfFAbkfJQwJbuZCYwCJlBu2A=;
+        b=c8sDwiDsNjVnB1jL4Qw1B19LGMmAQtzWR5+rtXoVUkvEH3h0I+RcdBW/aK8Cxb6Cpa
+         f99GZ0/cbtU/S0FiCxOKCgkZRnBDQ7/gtwI+4RQ3GutrMsWqBsVaOJlDqxIJ/sgzomod
+         TfX9c8mziuxSwjT7s7IOZSyrhH+AS961bubUr855HwUwTZowhPl+SP3e7Tn+G51ujiWV
+         GIPkO8i7f0YTXl4dgjKj0xs2UuQzn1xzTtcy3u72IcQ9nt9yZR13D0ux3wOPMAKn2jLQ
+         kNRMH0Pxbsfw9j+N8j5vHx9ZjS1SkH6ar2wR9iw9xsVn41aOGiCovG2RQKAA/bHpgdJb
+         pEKw==
+X-Original-Authentication-Results: mx.google.com;       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+X-Gm-Message-State: AGRZ1gJ8dCcQZIUp08NESB4wEwK4lD0VebH4+CsMEk0K1vhlrgKyIMPd
+	yyYAIhbXtccKXFoM+OOKA/gAiJKSJ6fUYed8uDM15QFNWCAtpBt8qw==
+X-Received: by 2002:a17:902:a5cc:: with SMTP id t12-v6mr1030034plq.298.1541610568409;
+        Wed, 07 Nov 2018 09:09:28 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5495956pjt;
+        Wed, 7 Nov 2018 09:09:27 -0800 (PST)
+X-Google-Smtp-Source: AJdET5cdXolzOV9CnX80F92QQlt83AyxcZo60EqDgP5z5vCmH37csU1ZJmc4PFrSryEBsbdmNsk4
+X-Received: by 2002:a65:430b:: with SMTP id j11-v6mr850447pgq.269.1541610567760;
+        Wed, 07 Nov 2018 09:09:27 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541610567; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Zi1zKB5oAa1T4BxLR88cXmvcAyIGzU9xn6tpDQ3/Mi/u+zG2tXrLam9elBNiHSZyVF
+         OhIZHOfPLE0wDnaoYxuzIYv46hpKtveUAw8Gr28AxPDI0os5TeN5e6hpzr2opKmYFZ4/
+         h4bbCyUJgJ457c6t1tao5ZxVwhT2NS9BrGD2b7q53TqXetMvZnrpSTtcfcWh7bdhFHFs
+         AlucnKds3uQwtbeBbwEjv9I/hHezdm9cLCyxlbvN1oTUN29bY7q/4q9oGoV4wBmA4sv5
+         OuZbqb6J3TUhCypYz+sCbQd+IeyKU/VTXT2VzFNXX9HWH7FyCxwx9K+wrUsIChKAPgHB
+         U5LQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from;
+        bh=5rruz3MmNy/luI1ZrQJOfFAbkfJQwJbuZCYwCJlBu2A=;
+        b=w7uH7T+4SUvW13vDQrjlbvLT2kTUBiyNtBvMpJbNFG9Fmqo16NO5tMnVWyCJHDG6LD
+         zqy7/PJniyTHftyUXnhPD6+DiQ+YvphjT/qj16XOqIPRdzVXpNayGROdH3V1xDF13uXa
+         IY/+MIpGiRYqEjK6kyj++jC0GiPX82q998trU8K6U7dYzXCqFJtCkZsQQC05RhLXJPUp
+         jsNREdffjxl4Ljd26IQk9WhT+ICj0QbL1g5dextmKtgNjLtp+l5UEZEt8UEQw+jY6kLn
+         SUAkCP8KWI9bLDUWz8yYbywep+JLuOj2g+f7zdZGZueN7vxmjFscn+/zbArSDXMRR9FB
+         /D9Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id d4-v6si1141055pla.203.2018.11.07.09.09.10;
+        Wed, 07 Nov 2018 09:09:27 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S2387668AbeKHCkK (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 21:40:10 -0500
+Received: from mail-out.m-online.net ([212.18.0.10]:35321 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727757AbeKHCkJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 21:40:09 -0500
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 42qtDN2zKNz1qwHy;
+        Wed,  7 Nov 2018 18:08:52 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 42qtDN1rW8z1qrn2;
+        Wed,  7 Nov 2018 18:08:52 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id v5qSsqEu69pD; Wed,  7 Nov 2018 18:08:50 +0100 (CET)
+X-Auth-Info: WiNfnnfLcZ/YXbHQ3H5zm+LZEJbkmGVVh/JbvFi3GsU=
+Received: from xpert.denx.de (unknown [62.91.23.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Wed,  7 Nov 2018 18:08:50 +0100 (CET)
+From: Parthiban Nallathambi <pn@denx.de>
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, robh+dt@kernel.org, andy.shevchenko@gmail.com
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        matthias.bgg@gmail.com, Parthiban Nallathambi <pn@denx.de>
+Subject: [PATCH v7 2/2] iio: light: Add device tree binding for vishay vcnl4035
+Date: Wed,  7 Nov 2018 18:08:21 +0100
+Message-Id: <20181107170821.1171886-2-pn@denx.de>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20181107170821.1171886-1-pn@denx.de>
+References: <20181107170821.1171886-1-pn@denx.de>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwDnyERIHONbnngYAA--.482S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww18Xw4rAF47JFWkXw4DCFg_yoW8urWxpF
+	y8C3W3tFWkWF1Iga97tF1xAr15Xw18AF4YgFZ7X3s7tFsrWFWFvw1akr9Yva48Cr48ZFW7
+	XF40kF1rK34DAw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9lb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0x
+	vYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
+	xVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
+	kI7VAKI48JMx02cVCv0xWlc7CjxVAKzI0EY4vE52x082I5MxkI7II2jI8vz4vEwIxGrwCY
+	IxAIcVC0I7IYx2IY67AKxVW7JVWDJwCYIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMx
+	vI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMxvI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804xWl4I8I3I0E4I
+	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
+	WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE42xK8VAvwI8IcIk0rV
+	W8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxU9J73DUUUU
+
+Adding device tree binding for vcnl4035 and vendor
+prefix for Vishay Intertechnology
+
+Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+
+Notes:
+    Changelog in v4:
+    - commit message fix
+    - same indexing/space in binding
+    
+    Changelog in v3:
+    - removed interrupt-parent property reference in documentation
+    - renamed vcnl4035 to light-sensor
+
+ .../devicetree/bindings/iio/light/vcnl4035.txt | 18 ++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt    |  1 +
+ 2 files changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4035.txt
+
+diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4035.txt b/Documentation/devicetree/bindings/iio/light/vcnl4035.txt
+new file mode 100644
+index 000000000000..c07c7f052556
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/vcnl4035.txt
+@@ -0,0 +1,18 @@
++VISHAY VCNL4035 -  Ambient Light and proximity sensor
++
++Link to datasheet: https://www.vishay.com/docs/84251/vcnl4035x01.pdf
++
++Required properties:
++
++	-compatible: should be "vishay,vcnl4035"
++	-reg: I2C address of the sensor, should be 0x60
++	-interrupts: interrupt mapping for GPIO IRQ (level active low)
++
++Example:
++
++light-sensor@60 {
++	compatible = "vishay,vcnl4035";
++	reg = <0x60>;
++	interrupt-parent = <&gpio4>;
++	interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
++};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 4b1a2a8fcc16..3c5e0c6f6cee 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -415,6 +415,7 @@ vamrs	Vamrs Ltd.
+ variscite	Variscite Ltd.
+ via	VIA Technologies, Inc.
+ virtio	Virtual I/O Device Specification, developed by the OASIS consortium
++vishay	Vishay Intertechnology, Inc
+ vitesse	Vitesse Semiconductor Corporation
+ vivante	Vivante Corporation
+ vocore VoCore Studio
+-- 
+2.17.2

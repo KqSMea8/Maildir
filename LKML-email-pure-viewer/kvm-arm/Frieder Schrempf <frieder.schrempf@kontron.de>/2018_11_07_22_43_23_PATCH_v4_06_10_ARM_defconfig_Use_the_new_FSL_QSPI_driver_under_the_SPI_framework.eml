@@ -1,0 +1,194 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:17 -0000
+Received: from icoremail.net (unknown [209.85.214.170])
+	by mail-app2 (Coremail) with SMTP id by_KCgDHH+5H_eJbk6hYAQ--.26562S3;
+	Wed, 07 Nov 2018 22:57:12 +0800 (CST)
+Received: from mail-pl1-f170.google.com (unknown [209.85.214.170])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwA3H0tC_eJbAPAXAA--.7173S3;
+	Wed, 07 Nov 2018 22:57:06 +0800 (CST)
+Received: by mail-pl1-f170.google.com with SMTP id t6-v6so7971498plo.9
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 06:57:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :date:message-id:in-reply-to:references:sender:precedence:list-id;
+        bh=qKI5p72oD5P72bfecS5mOjC8U8i4P7cXirDOakM/dVo=;
+        b=tl6eCQITXEFHlU/BVrsOD6W/cKXbktRdZOA+ZiyWMWcOOUAdioocL7hb5IpQ0OG7UY
+         wxANPo39ebhnJW5jr0zrXju51Vy7umqBpwaozbHZW3GXVKN6RRvdR+DC3dEPK6poPBFM
+         uY+5mtSLsvMlLgtD/+LEULaiC0iBxi8HcFDl1tWa+RIeNpxh1Vu8Vp76f7VDl0/JKH/q
+         6sAgKmBr97qUrrG+gUvmceM3uOUB2vFqFeWP8dyqsUK26rxigRKQZs//hnyr47yb4ZK8
+         Mh6Tv7XARzy/aEuulNbgms6UdGN/ioulzvREWuPRh/hMavzS9Sb6z9OUNqnn2zuJGnYt
+         Bzxw==
+X-Gm-Message-State: AGRZ1gJtXOBQ032Ptuu3ZaoeqGEoBWJdd4FHdkqD7mHev5Y5mezsNI2N
+	s54ddRqgdh+/cJO3Ma+FgttVBMl3hLUoQZNxODpxeBFxUN58Sl3/XQ==
+X-Received: by 2002:a17:902:a9:: with SMTP id a38-v6mr548808pla.7.1541602626485;
+        Wed, 07 Nov 2018 06:57:06 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5345910pjt;
+        Wed, 7 Nov 2018 06:57:05 -0800 (PST)
+X-Google-Smtp-Source: AJdET5dttzmUmNoEE1jaZIo6aiViKhrSh9ruzV8D9/6YsKNTccx9NCoYGWDRq3KR4M6r/0WrsZmV
+X-Received: by 2002:a17:902:50ec:: with SMTP id c41-v6mr538603plj.176.1541602625618;
+        Wed, 07 Nov 2018 06:57:05 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541602625; cv=none;
+        d=google.com; s=arc-20160816;
+        b=gWYpQ0Tfh7vGmC0vxWh+JzFmfqqh191l+2PltjKk9pG+vU7b5WlQkIRxYX0/We5uh4
+         zvosblK/Ca5VN4qr6t6FfkSAwrYvUHg7lWkaoGsyfp2+R2Lpb2N9LIz8Hckfbe+to+W3
+         kXVCw3Ko6Hpdt42BmUAUozYW2pvhkIzFZAHkYPl13tQVCze9NL3TwskIHpD9RcBHcc2q
+         CwT+waCUmfvbbSeP3y1zcx0DN67EL5BSAbzBczHIzhITeskMA2YPFpZ0Fuqwc9OGFnSE
+         btF0cQGD/bYzJiYvM6MCklHBddTS0DtvhMuxycxyLC4mNGfyE8wJ7+AuKKRyHE5cO7IK
+         TDJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:references:in-reply-to:message-id:date
+         :subject:cc:to:from:dkim-signature;
+        bh=qKI5p72oD5P72bfecS5mOjC8U8i4P7cXirDOakM/dVo=;
+        b=rdkDKRG8oDIIlqlbLSU8Df3XheykhP6kgK9rt6ejQyinykzPmh1R2grMAzD8NiLmZD
+         3SCB13FIG60LwxXkwXHVE0aiN7pEO57S76zgYvXshUX6dhZWMDjGXZQCPW9m9Qhk4DHO
+         MTDiMMygKkJr5oPBOw5e2QZlxcTKA09mQLVsnZDXysYrO3DY/cZgcCEmmBSJCyjgyk+a
+         pV3n+AI6JYlQJRA4wxqTQuqJQ60W5SfWqznA7IUZHTTweISjFb94aon5UR2Tk3lcxzLK
+         lerpwyFh0SU6AjvqHLDvqzF4bXEEuMDvjBgwrInG3aAC8QQPrjZlvqgKiWSkZOrIDcks
+         fMBg==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@as-electronics.de header.s=strato-dkim-0002 header.b=UXqZlrCj;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id go17si853962plb.266.2018.11.07.06.56.50;
+        Wed, 07 Nov 2018 06:57:05 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S2387733AbeKHA0j (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:26:39 -0500
+Received: from mo4-p05-ob.smtp.rzone.de ([85.215.255.135]:16637 "EHLO
+        mo4-p05-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbeKHA0h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:26:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1541602554;
+        s=strato-dkim-0002; d=as-electronics.de;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=qKI5p72oD5P72bfecS5mOjC8U8i4P7cXirDOakM/dVo=;
+        b=UXqZlrCj/UJhWI6NYzA36O4AKQx3j9FqyVuaRQD7LYGdHKixj9/7gUGgKqV0NeiT+9
+        OlNQTCSE8o3NQ+U9SoYs7MNh33v9GByQnxxF4VPSP0+u37bnlKPp/c6y4OBCQ7enPtrU
+        xbIT7Eo8eskmHA1TniREee3B6rcq0cdy5fRUbkydZ8X8BluLBjm/6KsxhvmeoGMe+sYZ
+        M69aTX+Qsv98iBcFk6dcf4xooW7lOTpPZ5VjIvw6kEKuxG3H/0p9GUz58FEXYFE0NYbg
+        VxxnnmZq+hiIpQxRUKkQ4KUl4NsnNVRVT0ixDiQhD2kcWcc8aEx7puolVtVqu52SN7hm
+        PiHA==
+X-RZG-AUTH: ":LX8JdEmkW/4tAFwMkcNJIloh1hrA5u3owhPk7bdT5Fx22AatU+eLaHfutoZdl+X9BETxn4/4+IVqx7ZdE8mPU5nMS5P2QgHAetWm5FNngAjmE0pFNjw="
+X-RZG-CLASS-ID: mo05
+Received: from fs-work.fritz.box
+        by smtp.strato.de (RZmta 44.3 AUTH)
+        with ESMTPSA id j097e4uA7EiVUQr
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 7 Nov 2018 15:44:31 +0100 (CET)
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
+To: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com,
+        linux-spi@vger.kernel.org
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com,
+        marek.vasut@gmail.com, richard@nod.at, miquel.raynal@bootlin.com,
+        broonie@kernel.org, david.wolfe@nxp.com, fabio.estevam@nxp.com,
+        prabhakar.kushwaha@nxp.com, yogeshnarayan.gaur@nxp.com,
+        han.xu@nxp.com, shawnguo@kernel.org,
+        Frieder Schrempf <frieder.schrempf@exceet.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Eric Anholt <eric@anholt.net>, Stefan Agner <stefan@agner.ch>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Tony Lindgren <tony@atomide.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>,
+        Olof Johansson <olof@lixom.net>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 06/10] ARM: defconfig: Use the new FSL QSPI driver under the SPI framework
+Date: Wed,  7 Nov 2018 15:43:23 +0100
+Message-Id: <1541601809-16950-7-git-send-email-frieder.schrempf@kontron.de>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1541601809-16950-1-git-send-email-frieder.schrempf@kontron.de>
+References: <1541601809-16950-1-git-send-email-frieder.schrempf@kontron.de>
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwA3H0tC_eJbAPAXAA--.7173S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoW7uw1xGw4kuw4fXrykKF4fGrg_yoW8AFyxpF
+	1kArs7JFW8ury5JFW7C34vgFZ8tF9rWrWj9r4UJ3W5Cwn3X3yUXFn5tFW3JrsFqFZrXayr
+	CF93GrnIy3W5XwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP2b7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l7I0Y6sxI4wCY1x0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkI
+	ecxEwVCI4VW5XwCY0x0Ix7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwV
+	Aq07x20xyl4x8a6x804xWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26rWY6r4UJwCIc40Y0x
+	0EwIxGrwCI42IY6xAIw20EY4v20xvaj40_Gr0_ZrUvcSsGvfC2KfnxnUUI43ZEXa7IU5Oj
+	jDUUUUU==
+
+From: Frieder Schrempf <frieder.schrempf@exceet.de>
+
+The new driver at spi/spi-fsl-qspi.c replaces the old SPI NOR driver
+at mtd/fsl-quadspi.c. Switch to the new driver in the defconfigs.
+
+Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
+---
+ arch/arm/configs/imx_v6_v7_defconfig | 2 +-
+ arch/arm/configs/multi_v7_defconfig  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+index 1ad5736..1741d87 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -113,7 +113,6 @@ CONFIG_MTD_NAND_GPMI_NAND=y
+ CONFIG_MTD_NAND_VF610_NFC=y
+ CONFIG_MTD_NAND_MXC=y
+ CONFIG_MTD_SPI_NOR=y
+-CONFIG_SPI_FSL_QUADSPI=y
+ CONFIG_MTD_UBI=y
+ CONFIG_MTD_UBI_FASTMAP=y
+ CONFIG_MTD_UBI_BLOCK=y
+@@ -204,6 +203,7 @@ CONFIG_I2C_ALGOPCA=m
+ CONFIG_I2C_GPIO=y
+ CONFIG_I2C_IMX=y
+ CONFIG_SPI=y
++CONFIG_SPI_FSL_QSPI=y
+ CONFIG_SPI_GPIO=y
+ CONFIG_SPI_IMX=y
+ CONFIG_SPI_FSL_DSPI=y
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 1c76168..faddf29 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -193,7 +193,6 @@ CONFIG_MTD_NAND_BRCMNAND=y
+ CONFIG_MTD_NAND_VF610_NFC=y
+ CONFIG_MTD_NAND_DAVINCI=y
+ CONFIG_MTD_SPI_NOR=y
+-CONFIG_SPI_FSL_QUADSPI=m
+ CONFIG_MTD_UBI=y
+ CONFIG_BLK_DEV_LOOP=y
+ CONFIG_BLK_DEV_RAM=y
+@@ -383,6 +382,7 @@ CONFIG_SPI_BCM2835=y
+ CONFIG_SPI_BCM2835AUX=y
+ CONFIG_SPI_CADENCE=y
+ CONFIG_SPI_DAVINCI=y
++CONFIG_SPI_FSL_QSPI=m
+ CONFIG_SPI_GPIO=m
+ CONFIG_SPI_FSL_DSPI=m
+ CONFIG_SPI_OMAP24XX=y
+-- 
+2.7.4

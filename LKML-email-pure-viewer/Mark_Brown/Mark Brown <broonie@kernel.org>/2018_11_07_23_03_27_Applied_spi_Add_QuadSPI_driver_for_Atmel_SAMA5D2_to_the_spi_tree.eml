@@ -1,0 +1,250 @@
+Return-Path: <linux-kernel-owner@vger.kernel.org>
+Delivered-To: unknown
+Received: from pop3.zju.edu.cn (124.160.105.205:110) by
+  likexu-MOBL1.ccr.corp.intel.com with POP3; 08 Nov 2018 00:32:22 -0000
+Received: from icoremail.net (unknown [209.85.210.173])
+	by mail-app2 (Coremail) with SMTP id by_KCgDXv9L1_uJbCLJYAQ--.26643S3;
+	Wed, 07 Nov 2018 23:04:21 +0800 (CST)
+Received: from mail-pf1-f173.google.com (unknown [209.85.210.173])
+	by mx2.icoremail.net (Coremail) with SMTP id AQAAfwB3WUX0_uJbyPcXAA--.10825S3;
+	Wed, 07 Nov 2018 23:04:20 +0800 (CST)
+Received: by mail-pf1-f173.google.com with SMTP id y18-v6so5417040pfn.1
+        for <xuliker@zju.edu.cn>; Wed, 07 Nov 2018 07:04:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:from:to:cc:subject
+         :in-reply-to:message-id:date:sender:precedence:list-id;
+        bh=yJbVVOPDbgh7nsjX5fvW1U3U3vCDDK95tB2zy72b6Yk=;
+        b=HU595oa28fST3r6hQeLs+PIuvfxJ73sALIusKQ1iuBoXduSG0lHn5SRb5ErixPMu+3
+         uXOyfJwdeMlbVVEt4mfnrOc2KkDmBoD9KmFFNclFPIOjDFWzA5rvQfXycLsL8429dhAk
+         Z8+kc5pYC+U52jP5lyLLICAOkPo2ksb0+lapljbXSjtsHnw5oeTNF9Yv9nyPcXj4604M
+         kuuN/PGeU3FuwsjN40KKvHXBhJhL95K+rO0u050QlXNAEPRw+ckiP0m7f3ThsvPw0vLp
+         ZMtitUHIZz2pBTVlq957vAiFeKWMmCrfw621h6RLIIkh9Qe+VNg/63EVdpSzhSyfqbht
+         MiXQ==
+X-Gm-Message-State: AGRZ1gLBU/VWENhaTfZMinp+VwcFpW/4pwPdTEm2L0H5xzUy0emU9QAa
+	rKzwJPwStkrrHqoM4c8ST7eSY/ZDiU+2IwoxiNLCGmhNy5TlGVuO1Q==
+X-Received: by 2002:a63:2315:: with SMTP id j21mr460560pgj.297.1541603059814;
+        Wed, 07 Nov 2018 07:04:19 -0800 (PST)
+X-Forwarded-To: xuliker@zju.edu.cn
+X-Forwarded-For: liker.xu@gmail.com xuliker@zju.edu.cn
+Delivered-To: liker.xu@gmail.com
+Received: by 2002:a17:90a:c304:0:0:0:0 with SMTP id g4-v6csp5354518pjt;
+        Wed, 7 Nov 2018 07:04:18 -0800 (PST)
+X-Google-Smtp-Source: AJdET5fQlJmcLjhQeYIxhUj2mwlK6XZv080DFI5bTEb3cqn7wkPNuOmqv/XSnOxGWSG68/H+rPCw
+X-Received: by 2002:a17:902:76cc:: with SMTP id j12-v6mr554229plt.339.1541603058958;
+        Wed, 07 Nov 2018 07:04:18 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1541603058; cv=none;
+        d=google.com; s=arc-20160816;
+        b=h8xPtp9Hs2SxlPglgfWAXlFJH3yYd8ZNCqwN36opjeeoJTzKpgz3xBH+gy7RNsceHA
+         wogcaf4hQyHTo4Deguq+V2RTgLPujd4uJ5OGxjfUuATlQNYextaCQAQd5AIhnHNEmBug
+         6sTIyDoUnr3RRkw6qob1egnZnIFxQxikHYbB4J0oQJ4VJPuk3CC1XbWDD6n/0scBxhp4
+         jwmfdICDFQi646HH5CXo9zfC4PpvzE+k+cXwvl/3wxFCuiqUIeS6QfWz2JWGMCKDuYwu
+         DgtLU5Mq2UaWUlvdwlIxZR1OJOzYREE567bdmNRbDX+9nfPflE2PTT0XFL9TPgGtcZD9
+         O1qw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=list-id:precedence:sender:date:message-id:in-reply-to:subject:cc:to
+         :from:dkim-signature;
+        bh=yJbVVOPDbgh7nsjX5fvW1U3U3vCDDK95tB2zy72b6Yk=;
+        b=zDx9Y5RGF89Uzwkei0abR6+yIEhbsnUEeWviVZJAWreNTNzxrJNOFV1GYZ5LVyV3cm
+         Oj7N2+tXlEGfRvDLyiJ/LdhNpEORog5A78zFD9fq4rmRVgIh469F83TFgIdBicQQ84wp
+         OyLYc4nIyaVC0qFDLe015wpAABtKXLnx/ha9ul+g89Fut6QEW/bgtqxi3OZp+SqHaOuI
+         mtQUk6guH068wRDjMUAfG67AItK5RWrjQ936Iq58fXzFO3Tmf/ibypJbACru2FrMoeP8
+         hNua3R2XaRsVzZWMySoaq+IZFST6z9DSQCwEppBPCMHpcb0rXUCtBITx6XWgi03A2MjM
+         s1ww==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=fail header.i=@sirena.org.uk header.s=20170815-heliosphere header.b=HncpOtX2;
+       spf=pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) smtp.mailfrom=linux-kernel-owner@vger.kernel.org;
+       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=kernel.org
+Received: from vger.kernel.org (vger.kernel.org. [209.132.180.67])
+        by mx.google.com with ESMTP id h37-v6si737565pgh.537.2018.11.07.07.04.02;
+        Wed, 07 Nov 2018 07:04:18 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of linux-kernel-owner@vger.kernel.org designates 209.132.180.67 as permitted sender) client-ip=209.132.180.67;
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731055AbeKHAea (ORCPT <rfc822;wanghaifine@gmail.com>
+        + 99 others); Wed, 7 Nov 2018 19:34:30 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44534 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbeKHAea (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Nov 2018 19:34:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=yJbVVOPDbgh7nsjX5fvW1U3U3vCDDK95tB2zy72b6Yk=; b=HncpOtX2sV3F
+        WzOTz2MkNtQmh3uqn4ivKFv+IGx8u8OsXd0+dQRGIdsvlunXX/JDbK2H/qi572e1S9EUETs6c7Hhy
+        eRqrUCccFsc3eBadZDotX9uOhZqJ7XyebRxfDNhPR23QffJY5itqdEUpvM2hknJnnIPba3uqOdEyY
+        c2/ZA=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1gKPMe-0006bX-0m; Wed, 07 Nov 2018 15:03:28 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id B6DC41124E14; Wed,  7 Nov 2018 15:03:27 +0000 (GMT)
+From: Mark Brown <broonie@kernel.org>
+To: Piotr Bugalski <bugalski.piotr@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Mark Brown <broonie@kernel.org>,
+        linux-spi@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Cyrille Pitchen <cyrille.pitchen@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        linux-spi@vger.kernel.org
+Subject: Applied "spi: Add QuadSPI driver for Atmel SAMA5D2" to the spi tree
+In-Reply-To: <20181105103625.9644-6-bugalski.piotr@gmail.com>
+Message-Id: <20181107150327.B6DC41124E14@debutante.sirena.org.uk>
+Date: Wed,  7 Nov 2018 15:03:27 +0000 (GMT)
+Sender: liker.xu+caf_=xuliker=zju.edu.cn@gmail.com
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
+X-CM-TRANSID: AQAAfwB3WUX0_uJbyPcXAA--.10825S3
+Authentication-Results: mail-app2; spf=pass smtp.mail=liker.xu+caf_=xu
+	liker=zju.edu.cn@gmail.com;
+X-Coremail-Antispam: 1UD129KBjvJXoWxWFW3XrW7Kw1kAr4DXrW7twb_yoW7JF4Dpa
+	1rGrWkAr4kJa4UJwsrC34kGFy5ta97W34Uu3ZxK3yYqrnYvFy5ZrZxtF9ayF1DuFn7XFy8
+	try7GasxCw15J3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUU0bIjqfuFe4nvWSU8nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CIcVAF
+	z4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
+	8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2
+	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1l7I0Y6sxI4wCY1x
+	0264kExVAvwVAq07x20xylc7Ca8VAvwVCFzxkY4VCF77xAMxkIecxEwVCI4VW5WwCY0x0I
+	x7I2Y4AK64vIr41lcIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lcIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCYIxAIcVC2z280aVAFwI0_GcCE3s1lcIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_GcCE3s1l42xK82IYc2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4x8a6x804x
+	Wl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE42xK8V
+	AvwI8IcIk0rVW8JVW3JbIYCTnIWIevJa73UjIFyTuYvjxUHFApUUUUU
+
+The patch
+
+   spi: Add QuadSPI driver for Atmel SAMA5D2
+
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 0e6aae08e9ae7c2dc3c83bf6960d824feb14b706 Mon Sep 17 00:00:00 2001
+From: Piotr Bugalski <bugalski.piotr@gmail.com>
+Date: Mon, 5 Nov 2018 11:36:24 +0100
+Subject: [PATCH] spi: Add QuadSPI driver for Atmel SAMA5D2
+
+Kernel contains QSPI driver strongly tied to MTD and nor-flash memory.
+New spi-mem interface allows usage also other memory types, especially
+much larger NAND with SPI interface. This driver works as SPI controller
+and is not related to MTD, however can work with NAND-flash or other
+peripherals using spi-mem interface.
+
+Suggested-by: Boris Brezillon <boris.brezillon@bootlin.com>
+Signed-off-by: Piotr Bugalski <bugalski.piotr@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/mtd/spi-nor/Kconfig                  | 9 ---------
+ drivers/mtd/spi-nor/Makefile                 | 1 -
+ drivers/spi/Kconfig                          | 9 +++++++++
+ drivers/spi/Makefile                         | 1 +
+ drivers/{mtd/spi-nor => spi}/atmel-quadspi.c | 0
+ 5 files changed, 10 insertions(+), 10 deletions(-)
+ rename drivers/{mtd/spi-nor => spi}/atmel-quadspi.c (100%)
+
+diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
+index 6cc9c929ff57..44fe8018733c 100644
+--- a/drivers/mtd/spi-nor/Kconfig
++++ b/drivers/mtd/spi-nor/Kconfig
+@@ -39,15 +39,6 @@ config SPI_ASPEED_SMC
+ 	  and support for the SPI flash memory controller (SPI) for
+ 	  the host firmware. The implementation only supports SPI NOR.
+ 
+-config SPI_ATMEL_QUADSPI
+-	tristate "Atmel Quad SPI Controller"
+-	depends on ARCH_AT91 || (ARM && COMPILE_TEST)
+-	depends on OF && HAS_IOMEM
+-	help
+-	  This enables support for the Quad SPI controller in master mode.
+-	  This driver does not support generic SPI. The implementation only
+-	  supports SPI NOR.
+-
+ config SPI_CADENCE_QUADSPI
+ 	tristate "Cadence Quad SPI controller"
+ 	depends on OF && (ARM || ARM64 || COMPILE_TEST)
+diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
+index f4c61d282abd..a552efd22958 100644
+--- a/drivers/mtd/spi-nor/Makefile
++++ b/drivers/mtd/spi-nor/Makefile
+@@ -1,7 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor.o
+ obj-$(CONFIG_SPI_ASPEED_SMC)	+= aspeed-smc.o
+-obj-$(CONFIG_SPI_ATMEL_QUADSPI)	+= atmel-quadspi.o
+ obj-$(CONFIG_SPI_CADENCE_QUADSPI)	+= cadence-quadspi.o
+ obj-$(CONFIG_SPI_FSL_QUADSPI)	+= fsl-quadspi.o
+ obj-$(CONFIG_SPI_HISI_SFC)	+= hisi-sfc.o
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index 7d3a5c94727e..ca68ac63c6c3 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -91,6 +91,15 @@ config SPI_AT91_USART
+ 	  This selects a driver for the AT91 USART Controller as SPI Master,
+ 	  present on AT91 and SAMA5 SoC series.
+ 
++config SPI_ATMEL_QUADSPI
++	tristate "Atmel Quad SPI Controller"
++	depends on ARCH_AT91 || (ARM && COMPILE_TEST)
++	depends on OF && HAS_IOMEM
++	help
++	  This enables support for the Quad SPI controller in master mode.
++	  This driver does not support generic SPI. The implementation only
++	  supports spi-mem interface.
++
+ config SPI_AU1550
+ 	tristate "Au1550/Au1200/Au1300 SPI Controller"
+ 	depends on MIPS_ALCHEMY
+diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+index 3575205c5c27..258917db3f56 100644
+--- a/drivers/spi/Makefile
++++ b/drivers/spi/Makefile
+@@ -16,6 +16,7 @@ obj-$(CONFIG_SPI_LOOPBACK_TEST)		+= spi-loopback-test.o
+ obj-$(CONFIG_SPI_ALTERA)		+= spi-altera.o
+ obj-$(CONFIG_SPI_ARMADA_3700)		+= spi-armada-3700.o
+ obj-$(CONFIG_SPI_ATMEL)			+= spi-atmel.o
++obj-$(CONFIG_SPI_ATMEL_QUADSPI)		+= atmel-quadspi.o
+ obj-$(CONFIG_SPI_AT91_USART)		+= spi-at91-usart.o
+ obj-$(CONFIG_SPI_ATH79)			+= spi-ath79.o
+ obj-$(CONFIG_SPI_AU1550)		+= spi-au1550.o
+diff --git a/drivers/mtd/spi-nor/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
+similarity index 100%
+rename from drivers/mtd/spi-nor/atmel-quadspi.c
+rename to drivers/spi/atmel-quadspi.c
+-- 
+2.19.0.rc2
